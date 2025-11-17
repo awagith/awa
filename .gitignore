@@ -1,0 +1,49 @@
+# Magento 2 .gitignore
+
+# Arquivos de configuração sensíveis
+/app/etc/env.php
+/app/etc/config.php
+auth.json
+
+# Cache e arquivos temporários
+/var/*
+!/var/.htaccess
+/pub/media/*
+!/pub/media/.htaccess
+!/pub/media/customer
+!/pub/media/downloadable
+!/pub/media/import
+!/pub/media/theme_customization
+/pub/static/*
+!/pub/static/.htaccess
+
+# Arquivos gerados
+/generated/*
+!/generated/.htaccess
+
+# Dependências (gerenciadas pelo Composer)
+/vendor/
+
+# Logs
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node modules (se usar frontend build)
+node_modules/
+
+# Backup files
+*.bak
+*.backup
+*.sql
+*.gz
+*.zip
