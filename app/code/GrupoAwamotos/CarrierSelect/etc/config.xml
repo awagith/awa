@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <carriers>
+            <carrierselect>
+                <active>1</active>
+                <title>Selecionar Transportadora</title>
+                <name>Transportadora a Escolher</name>
+                <price>0</price>
+                <handling_type>F</handling_type>
+                <handling_fee>0</handling_fee>
+                <specificerrmsg>Este método de envio não está disponível no momento.</specificerrmsg>
+                <sallowspecific>0</sallowspecific>
+                <model>GrupoAwamotos\CarrierSelect\Model\Carrier\CarrierSelect</model>
+                <showmethod>1</showmethod>
+                <sort_order>10</sort_order>
+            </carrierselect>
+        </carriers>
+    </default>
+</config>

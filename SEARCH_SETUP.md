@@ -1,3 +1,50 @@
+## Dummy OpenSearch Ativo (28/11/2025)
+
+- Motivo: não é mais necessário manter cluster OpenSearch/Elasticsearch dedicado. Para atender health checks do Magento sem dependência externa, usamos o Dummy OpenSearch local.
+- Engine atual: `catalog/search/engine = opensearch` apontando para `http://127.0.0.1:9200`.
+- Como iniciar o dummy:
+
+```bash
+cd /home/jessessh/htdocs/srv1113343.hstgr.cloud
+./start_dummy_opensearch.sh
+```
+
+- Como aplicar/forçar a configuração de busca:
+
+```bash
+cd /home/jessessh/htdocs/srv1113343.hstgr.cloud
+php scripts/configure_search.php --engine opensearch --host 127.0.0.1 --port 9200 --test 1
+```
+
+- Indexadores: manter em `schedule`. Caso necessário reindexar manualmente, evite o `catalogsearch_fulltext` quando o dummy não estiver rodando.
+
+```bash
+# Reindex geral (com dummy ativo)
+php bin/magento indexer:reindex
+
+# Reindex seletivo (pular busca quando dummy estiver parado)
+for idx in $(php bin/magento indexer:info | awk '{print $1}' | grep -v catalogsearch_fulltext); do \
+  php bin/magento indexer:reindex "$idx"; \
+done
+```
+
+- Fallback de busca: o módulo `GrupoAwamotos/Fitment` provê a busca fallback. Recompile a tabela quando houver alterações grandes de catálogo:
+
+```bash
+php scripts/fallback_search_rebuild.php --batch 500 --truncate 1
+# ou delta
+php scripts/fallback_search_delta.php --since "YYYY-MM-DD"
+```
+
+- Como voltar para cluster real no futuro:
+
+```bash
+php scripts/configure_search.php --engine opensearch --host <HOST_REAL> --port 9200 --user <USER> --pass <PASS>
+php bin/magento indexer:reindex catalogsearch_fulltext
+```
+
+Observação: documentar no PR/mudança quando o dummy for ligado/desligado para manter rastreabilidade.
+
 # Configuração do Motor de Busca (OpenSearch)
 
 Magento 2.4 exige Elasticsearch ou OpenSearch para indexação e pesquisa de catálogo.

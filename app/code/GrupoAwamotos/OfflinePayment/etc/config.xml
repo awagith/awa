@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <payment>
+            <acombinar>
+                <active>1</active>
+                <model>GrupoAwamotos\OfflinePayment\Model\Payment\ACombinar</model>
+                <order_status>pending</order_status>
+                <title>A Combinar</title>
+                <allowspecific>0</allowspecific>
+                <group>offline</group>
+                <payment_action>authorize</payment_action>
+                <instructions>O pagamento será combinado diretamente com nossa equipe. Entraremos em contato para definir a melhor forma de pagamento.</instructions>
+            </acombinar>
+        </payment>
+    </default>
+</config>
