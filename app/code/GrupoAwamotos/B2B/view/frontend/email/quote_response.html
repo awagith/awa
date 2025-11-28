@@ -1,0 +1,77 @@
+<!--
+/**
+ * Email template: Quote Response (Approved)
+ */
+-->
+<!--@subject Seu Orçamento B2B está pronto! @-->
+<!--@vars {
+"var customer_name":"Customer Name",
+"var quote_id":"Quote ID",
+"var quoted_total":"Quoted Total",
+"var expires_at":"Expires At",
+"var admin_notes":"Admin Notes",
+"var store.getFrontendName()":"Store Name"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <h1 style="font-size: 24px; font-weight: 700; color: #1f2937; margin: 0 0 15px;">
+                Olá, {{var customer_name}}!
+            </h1>
+            <p style="font-size: 16px; color: #4b5563; margin: 0 0 20px;">
+                Ótimas notícias! Analisamos sua solicitação de cotação e preparamos um orçamento especial para você.
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table style="width: 100%; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 25px; margin: 20px 0;">
+                <tr>
+                    <td style="text-align: center;">
+                        <span style="display: block; font-size: 14px; color: #166534; margin-bottom: 5px;">Valor Total do Orçamento</span>
+                        <span style="display: block; font-size: 36px; font-weight: 700; color: #15803d;">{{var quoted_total}}</span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table style="width: 100%; background: #f9fafb; border-radius: 8px; padding: 20px;">
+                <tr>
+                    <td>
+                        <p style="margin: 0 0 10px;"><strong>Cotação Nº:</strong> #{{var quote_id}}</p>
+                        <p style="margin: 0 0 10px;"><strong>Válido até:</strong> {{var expires_at}}</p>
+                        {{depend admin_notes}}
+                        <p style="margin: 10px 0 0;"><strong>Observações:</strong></p>
+                        <p style="margin: 5px 0 0; color: #6b7280; font-style: italic;">{{var admin_notes}}</p>
+                        {{/depend}}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 30px 0; text-align: center;">
+            <p style="font-size: 14px; color: #6b7280; margin: 0 0 20px;">
+                Acesse sua conta para ver os detalhes completos e finalizar sua compra.
+            </p>
+            <a href="{{store url='b2b/account/dashboard'}}" 
+               style="display: inline-block; padding: 14px 30px; background: #2563eb; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                Ver Meu Orçamento
+            </a>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p style="font-size: 14px; color: #9ca3af; text-align: center;">
+                Este orçamento é válido até a data informada. Após essa data, os valores podem sofrer alterações.
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

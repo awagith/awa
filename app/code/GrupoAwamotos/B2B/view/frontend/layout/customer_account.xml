@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Customer Account Layout - Add B2B Links
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="customer_account_navigation">
+            <!-- Minhas Cotações -->
+            <block class="Magento\Customer\Block\Account\SortLinkInterface"
+                   name="customer-account-navigation-b2b-quotes-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Minhas Cotações</argument>
+                    <argument name="path" xsi:type="string">b2b/quote/history</argument>
+                    <argument name="sortOrder" xsi:type="number">250</argument>
+                </arguments>
+            </block>
+            <!-- Listas de Compras -->
+            <block class="Magento\Customer\Block\Account\SortLinkInterface"
+                   name="customer-account-navigation-b2b-shoppinglist-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Listas de Compras</argument>
+                    <argument name="path" xsi:type="string">b2b/shoppinglist</argument>
+                    <argument name="sortOrder" xsi:type="number">260</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

@@ -1,0 +1,38 @@
+<div class="top-home-content">
+	<div class="container">
+		<div class="banner-slider-top">
+			<div class="col-xs-12 col-sm-9 block_slider">
+				<div class="banner-slider banner-slider3">
+					<?php echo $this->getLayout()->createBlock('Rokanthemes\SlideBanner\Block\Slider')->setslider_id('homepageslider')->toHtml(); ?>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-3 block_banner">
+				<div>
+					<div class="list-ads1">
+						<?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('list_ads1')->toHtml(); ?>
+					</div>
+				</div>
+			</div>
+		 </div>
+	</div>
+</div>
+<script type="text/javascript">
+require([
+		'jquery',
+		'mage/mage',
+		'rokanthemes/owl'
+	], function ($) {
+		'use strict';
+	$( document ).ready(function() {
+		$("ul.tabs li").click(function() {
+			$(this).closest("ul").find("li").removeClass("active");
+			$(this).addClass("active");
+			$(this).closest(".common-tab-system-fixed").find(".tab_content").hide();
+			$(this).closest(".common-tab-system-fixed").find(".tab_content").removeClass("animate1");
+			var activeTab = $(this).attr("rel");
+			$("#"+activeTab) .addClass("animate1");
+			$("#"+activeTab).fadeIn();
+		});
+	});
+});
+</script>

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limpeza de Service Workers e Cache</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border-left: 4px solid #ccc;
+        }
+        .status.info {
+            background: #e3f2fd;
+            border-color: #2196f3;
+            color: #0d47a1;
+        }
+        .status.success {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #1b5e20;
+        }
+        .status.warning {
+            background: #fff3e0;
+            border-color: #ff9800;
+            color: #e65100;
+        }
+        .status.error {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #b71c1c;
+        }
+        button {
+            background: #2196f3;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 10px 10px 0;
+        }
+        button:hover {
+            background: #1976d2;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        pre {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .code {
+            font-family: 'Courier New', monospace;
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧹 Limpeza de Service Workers e Cache</h1>
+        
+        <div class="status info">
+            <strong>ℹ️ Informação</strong><br>
+            Esta página ajuda a limpar Service Workers e caches do navegador que podem estar causando requisições para recursos inexistentes (erro 404).
+        </div>
+
+        <h2>Status Atual</h2>
+        <div id="status" class="status info">
+            <strong>Verificando...</strong>
+        </div>
+
+        <h2>Ações</h2>
+        <button onclick="unregisterServiceWorkers()">🗑️ Remover Service Workers</button>
+        <button onclick="clearCaches()">🧽 Limpar Caches</button>
+        <button onclick="clearAll()">🔥 Limpar Tudo</button>
+
+        <h2>Log de Atividades</h2>
+        <pre id="log">Aguardando ações...</pre>
+
+        <h2>Instruções Manuais (DevTools)</h2>
+        <div class="status warning">
+            <strong>Chrome/Edge:</strong><br>
+            1. Abra DevTools (F12)<br>
+            2. Vá em <span class="code">Application</span> > <span class="code">Service Workers</span><br>
+            3. Clique em "Unregister" em cada worker listado<br>
+            4. Em <span class="code">Storage</span>, clique em "Clear site data"
+        </div>
+
+        <div class="status warning">
+            <strong>Firefox:</strong><br>
+            1. Digite <span class="code">about:debugging</span> na barra de endereços<br>
+            2. Clique em "This Firefox"<br>
+            3. Encontre Service Workers e clique em "Unregister"<br>
+            4. DevTools (F12) > Storage > Clear All
+        </div>
+
+        <h2>Console Alternativo</h2>
+        <p>Cole este código no Console do DevTools (F12):</p>
+        <pre>navigator.serviceWorker.getRegistrations().then(registrations => {
+    registrations.forEach(registration => {
+        console.log('Removendo SW:', registration.scope);
+        registration.unregister();
+    });
+    console.log('Service Workers removidos!');
+});
+
+caches.keys().then(cacheNames => {
+    cacheNames.forEach(cacheName => {
+        console.log('Removendo cache:', cacheName);
+        caches.delete(cacheName);
+    });
+    console.log('Caches limpos!');
+});</pre>
+    </div>
+
+    <script>
+        const logElement = document.getElementById('log');
+        const statusElement = document.getElementById('status');
+
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString('pt-BR');
+            logElement.textContent += `[${timestamp}] ${message}\n`;
+            logElement.scrollTop = logElement.scrollHeight;
+        }
+
+        async function checkStatus() {
+            try {
+                if (!('serviceWorker' in navigator)) {
+                    statusElement.className = 'status warning';
+                    statusElement.innerHTML = '<strong>⚠️ Aviso</strong><br>Service Workers não são suportados neste navegador.';
+                    log('Service Workers não suportados');
+                    return;
+                }
+
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                const cacheNames = await caches.keys();
+
+                let statusHTML = '<strong>Status Atual:</strong><br>';
+                statusHTML += `📝 Service Workers ativos: <strong>${registrations.length}</strong><br>`;
+                statusHTML += `💾 Caches armazenados: <strong>${cacheNames.length}</strong><br>`;
+
+                if (registrations.length === 0 && cacheNames.length === 0) {
+                    statusElement.className = 'status success';
+                    statusHTML += '<br>✅ Tudo limpo! Nenhum Service Worker ou cache encontrado.';
+                } else {
+                    statusElement.className = 'status info';
+                }
+
+                if (registrations.length > 0) {
+                    statusHTML += '<br><br><strong>Service Workers encontrados:</strong><br>';
+                    registrations.forEach((reg, i) => {
+                        statusHTML += `${i + 1}. ${reg.scope}<br>`;
+                    });
+                }
+
+                if (cacheNames.length > 0) {
+                    statusHTML += '<br><strong>Caches encontrados:</strong><br>';
+                    cacheNames.forEach((name, i) => {
+                        statusHTML += `${i + 1}. ${name}<br>`;
+                    });
+                }
+
+                statusElement.innerHTML = statusHTML;
+                log(`Status verificado: ${registrations.length} SW, ${cacheNames.length} caches`);
+            } catch (error) {
+                statusElement.className = 'status error';
+                statusElement.innerHTML = `<strong>❌ Erro</strong><br>${error.message}`;
+                log(`Erro ao verificar status: ${error.message}`);
+            }
+        }
+
+        async function unregisterServiceWorkers() {
+            log('Iniciando remoção de Service Workers...');
+            try {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                
+                if (registrations.length === 0) {
+                    log('⚠️ Nenhum Service Worker encontrado');
+                    alert('Nenhum Service Worker encontrado para remover.');
+                    return;
+                }
+
+                let count = 0;
+                for (const registration of registrations) {
+                    log(`Removendo SW: ${registration.scope}`);
+                    await registration.unregister();
+                    count++;
+                }
+
+                log(`✅ ${count} Service Worker(s) removido(s) com sucesso!`);
+                alert(`${count} Service Worker(s) removido(s)! Recarregue a página.`);
+                await checkStatus();
+            } catch (error) {
+                log(`❌ Erro: ${error.message}`);
+                alert(`Erro ao remover Service Workers: ${error.message}`);
+            }
+        }
+
+        async function clearCaches() {
+            log('Iniciando limpeza de caches...');
+            try {
+                const cacheNames = await caches.keys();
+                
+                if (cacheNames.length === 0) {
+                    log('⚠️ Nenhum cache encontrado');
+                    alert('Nenhum cache encontrado para limpar.');
+                    return;
+                }
+
+                let count = 0;
+                for (const cacheName of cacheNames) {
+                    log(`Removendo cache: ${cacheName}`);
+                    await caches.delete(cacheName);
+                    count++;
+                }
+
+                log(`✅ ${count} cache(s) limpo(s) com sucesso!`);
+                alert(`${count} cache(s) limpo(s)!`);
+                await checkStatus();
+            } catch (error) {
+                log(`❌ Erro: ${error.message}`);
+                alert(`Erro ao limpar caches: ${error.message}`);
+            }
+        }
+
+        async function clearAll() {
+            log('🔥 Iniciando limpeza completa...');
+            await unregisterServiceWorkers();
+            await clearCaches();
+            log('🎉 Limpeza completa finalizada! Recarregue a página para confirmar.');
+            
+            // Opcional: recarregar após 2 segundos
+            setTimeout(() => {
+                if (confirm('Deseja recarregar a página agora?')) {
+                    window.location.reload();
+                }
+            }, 2000);
+        }
+
+        // Verificar status ao carregar a página
+        window.addEventListener('load', () => {
+            log('Página carregada. Verificando status...');
+            checkStatus();
+        });
+    </script>
+</body>
+</html>

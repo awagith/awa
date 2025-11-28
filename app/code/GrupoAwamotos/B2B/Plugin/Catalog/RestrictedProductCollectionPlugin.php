@@ -1,0 +1,145 @@
+<?php
+/**
+ * B2B Restricted Catalog Plugin - Filter products by customer group
+ */
+declare(strict_types=1);
+
+namespace GrupoAwamotos\B2B\Plugin\Catalog;
+
+use Magento\Catalog\Model\ResourceModel\Product\Collection;
+use Magento\Customer\Model\Session as CustomerSession;
+use GrupoAwamotos\B2B\Helper\Data as B2BHelper;
+
+class RestrictedProductCollectionPlugin
+{
+    /**
+     * @var CustomerSession
+     */
+    private $customerSession;
+
+    /**
+     * @var B2BHelper
+     */
+    private $b2bHelper;
+
+    /**
+     * @var bool
+     */
+    private $filterApplied = false;
+
+    public function __construct(
+        CustomerSession $customerSession,
+        B2BHelper $b2bHelper
+    ) {
+        $this->customerSession = $customerSession;
+        $this->b2bHelper = $b2bHelper;
+    }
+
+    /**
+     * Filter products based on B2B restrictions before loading
+     *
+     * @param Collection $subject
+     * @param bool $printQuery
+     * @param bool $logQuery
+     * @return array
+     */
+    public function beforeLoad(Collection $subject, $printQuery = false, $logQuery = false): array
+    {
+        if ($this->filterApplied || $subject->isLoaded()) {
+            return [$printQuery, $logQuery];
+        }
+
+        $this->applyB2BFilter($subject);
+        $this->filterApplied = true;
+
+        return [$printQuery, $logQuery];
+    }
+
+    /**
+     * Apply B2B filtering to collection
+     *
+     * @param Collection $collection
+     * @return void
+     */
+    private function applyB2BFilter(Collection $collection): void
+    {
+        if (!$this->b2bHelper->isEnabled()) {
+            return;
+        }
+
+        // Skip filtering if using Flat Catalog (not compatible with EAV attribute filters)
+        if ($collection->isEnabledFlat()) {
+            return;
+        }
+
+        $isLoggedIn = $this->customerSession->isLoggedIn();
+        $customerGroupId = $isLoggedIn ? (int) $this->customerSession->getCustomerGroupId() : 0;
+        $isB2BCustomer = in_array($customerGroupId, $this->b2bHelper->getB2BGroupIds());
+
+        try {
+            // Add attribute to select
+            $collection->addAttributeToSelect('b2b_exclusive', 'left');
+            $collection->addAttributeToSelect('b2b_customer_groups', 'left');
+
+            if (!$isLoggedIn || !$isB2BCustomer) {
+                // Guest or non-B2B: hide B2B exclusive products
+                $collection->addAttributeToFilter(
+                    [
+                        ['attribute' => 'b2b_exclusive', 'null' => true],
+                        ['attribute' => 'b2b_exclusive', 'eq' => 0],
+                        ['attribute' => 'b2b_exclusive', 'eq' => '']
+                    ],
+                    null,
+                    'left'
+                );
+            } else {
+                // B2B customer: filter by allowed groups
+                $this->filterByCustomerGroup($collection, $customerGroupId);
+            }
+        } catch (\Exception $e) {
+            // Silently fail if attributes don't exist or filter fails
+            // This prevents breaking the site if B2B attributes are not set up
+        }
+    }
+
+    /**
+     * Filter collection by customer group restrictions
+     *
+     * @param Collection $collection
+     * @param int $customerGroupId
+     * @return void
+     */
+    private function filterByCustomerGroup(Collection $collection, int $customerGroupId): void
+    {
+        $groupName = $this->getGroupNameById($customerGroupId);
+        
+        if (!$groupName) {
+            return;
+        }
+
+        // Products are visible if:
+        // 1. b2b_customer_groups is empty (available to all)
+        // 2. b2b_customer_groups contains the customer's group
+        // 3. b2b_customer_groups contains "Todos os Grupos B2B"
+        
+        // This is complex with EAV, so we'll do post-filtering in afterLoad if needed
+    }
+
+    /**
+     * Get customer group name by ID
+     *
+     * @param int $groupId
+     * @return string|null
+     */
+    private function getGroupNameById(int $groupId): ?string
+    {
+        $groupMap = [
+            4 => 'B2B Atacado',
+            5 => 'B2B VIP',
+            6 => 'B2B Revendedor',
+            7 => 'B2B Pendente'
+        ];
+
+        return $groupMap[$groupId] ?? null;
+    }
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Admin Customer Pending Layout
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Clientes B2B Pendentes</title>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <uiComponent name="grupoawamotos_b2b_customer_pending_listing"/>
+        </referenceContainer>
+    </body>
+</page>

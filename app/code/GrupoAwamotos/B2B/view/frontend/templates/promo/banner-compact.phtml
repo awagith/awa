@@ -1,0 +1,78 @@
+<?php
+/**
+ * B2B Compact Promotional Banner Template
+ * @var \GrupoAwamotos\B2B\Block\PromoBlock $block
+ */
+?>
+<?php if ($block->shouldDisplay()): ?>
+<div class="b2b-promo-compact">
+    <div class="b2b-compact-content">
+        <div class="b2b-compact-text">
+            <span class="b2b-compact-badge">B2B</span>
+            <strong><?= $block->escapeHtml(__('É empresa? Tenha até 20% de desconto!')) ?></strong>
+        </div>
+        <a href="<?= $block->escapeUrl($block->getRegisterUrl()) ?>" 
+           class="action primary b2b-compact-btn">
+            <?= $block->escapeHtml(__('Cadastrar')) ?>
+        </a>
+    </div>
+</div>
+
+<style>
+.b2b-promo-compact {
+    background: linear-gradient(90deg, #1a1a2e, #16213e);
+    padding: 15px 25px;
+    border-radius: 8px;
+    margin: 15px 0;
+}
+
+.b2b-compact-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.b2b-compact-text {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #fff;
+}
+
+.b2b-compact-badge {
+    background: linear-gradient(90deg, #f39c12, #e74c3c);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.b2b-compact-text strong {
+    font-size: 15px;
+}
+
+.b2b-compact-btn {
+    background: linear-gradient(90deg, #f39c12, #e67e22) !important;
+    border: none !important;
+    padding: 10px 25px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    border-radius: 6px !important;
+}
+
+@media (max-width: 576px) {
+    .b2b-compact-content {
+        justify-content: center;
+        text-align: center;
+    }
+    
+    .b2b-compact-text {
+        flex-direction: column;
+        gap: 8px;
+    }
+}
+</style>
+<?php endif; ?>

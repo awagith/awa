@@ -1,0 +1,52 @@
+<!--@subject {{trans "Sua Conta B2B Foi Aprovada!"}} @-->
+<!--@vars {
+"var customer_name":"Nome do Cliente",
+"var store_name":"Nome da Loja",
+"var store_url":"URL da Loja",
+"var login_url":"URL de Login"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <p class="greeting">{{trans "Olá %customer_name," customer_name=$customer_name}}</p>
+            <p>
+                {{trans "Ótimas notícias! Sua conta B2B em %store_name foi aprovada com sucesso." store_name=$store_name}}
+            </p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <p>
+                {{trans "Agora você tem acesso completo à nossa loja e pode:"}}
+            </p>
+            <ul style="margin: 15px 0; padding-left: 20px;">
+                <li style="margin-bottom: 8px;">{{trans "Visualizar preços exclusivos para B2B"}}</li>
+                <li style="margin-bottom: 8px;">{{trans "Adicionar produtos ao carrinho e finalizar compras"}}</li>
+                <li style="margin-bottom: 8px;">{{trans "Solicitar cotações personalizadas"}}</li>
+                <li style="margin-bottom: 8px;">{{trans "Acessar condições especiais de pagamento"}}</li>
+            </ul>
+        </td>
+    </tr>
+    <tr class="email-action">
+        <td style="text-align: center; padding: 20px;">
+            <a href="{{var login_url}}" style="background-color: #1979c3; color: #fff; padding: 15px 35px; text-decoration: none; border-radius: 4px; display: inline-block; font-size: 16px;">
+                {{trans "Acessar Minha Conta"}}
+            </a>
+        </td>
+    </tr>
+    <tr class="email-outro">
+        <td>
+            <p>
+                {{trans "Se tiver qualquer dúvida, não hesite em nos contatar."}}
+            </p>
+            <p>
+                {{trans "Obrigado por escolher %store_name!" store_name=$store_name}}
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

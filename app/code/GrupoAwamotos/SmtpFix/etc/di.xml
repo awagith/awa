@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Plugin DI para interceptar o MagePal SMTP e corrigir o header Reply-To
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    
+    <!-- Substituir a classe Smtp do MagePal pela nossa versão corrigida -->
+    <preference for="MagePal\GmailSmtpApp\Mail\Smtp" 
+                type="GrupoAwamotos\SmtpFix\Mail\Smtp"/>
+    
+</config>

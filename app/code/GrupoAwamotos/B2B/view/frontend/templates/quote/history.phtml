@@ -1,0 +1,155 @@
+<?php
+/**
+ * Quote History Template
+ * 
+ * @var \GrupoAwamotos\B2B\Block\Quote\History $block
+ */
+?>
+<div class="b2b-quote-history">
+    <div class="block-title">
+        <strong><?= $block->escapeHtml(__('Minhas Cotações')) ?></strong>
+    </div>
+    
+    <?php if (!$block->hasQuoteRequests()): ?>
+        <div class="message info empty">
+            <span><?= $block->escapeHtml(__('Você ainda não possui solicitações de cotação.')) ?></span>
+        </div>
+        <div class="actions">
+            <a href="<?= $block->escapeUrl($block->getUrl('/')) ?>" class="action primary">
+                <span><?= $block->escapeHtml(__('Continuar Comprando')) ?></span>
+            </a>
+        </div>
+    <?php else: ?>
+        <div class="table-wrapper quote-history">
+            <table class="data table table-quote-history" id="quote-history-table">
+                <caption class="table-caption"><?= $block->escapeHtml(__('Minhas Cotações')) ?></caption>
+                <thead>
+                    <tr>
+                        <th scope="col" class="col id"><?= $block->escapeHtml(__('Nº')) ?></th>
+                        <th scope="col" class="col date"><?= $block->escapeHtml(__('Data')) ?></th>
+                        <th scope="col" class="col status"><?= $block->escapeHtml(__('Status')) ?></th>
+                        <th scope="col" class="col total"><?= $block->escapeHtml(__('Valor')) ?></th>
+                        <th scope="col" class="col expires"><?= $block->escapeHtml(__('Validade')) ?></th>
+                        <th scope="col" class="col actions"><?= $block->escapeHtml(__('Ações')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($block->getQuoteRequests() as $quote): ?>
+                        <?php 
+                        $statusClass = '';
+                        switch ($quote->getStatus()) {
+                            case 'approved':
+                            case 'quoted':
+                                $statusClass = 'status-success';
+                                break;
+                            case 'pending':
+                            case 'processing':
+                                $statusClass = 'status-pending';
+                                break;
+                            case 'rejected':
+                            case 'expired':
+                                $statusClass = 'status-failed';
+                                break;
+                            case 'converted':
+                                $statusClass = 'status-complete';
+                                break;
+                        }
+                        ?>
+                        <tr>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Nº')) ?>" class="col id">
+                                #<?= (int) $quote->getRequestId() ?>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Data')) ?>" class="col date">
+                                <?= $block->escapeHtml($block->formatQuoteDate($quote->getCreatedAt())) ?>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Status')) ?>" class="col status">
+                                <span class="quote-status <?= $block->escapeHtmlAttr($statusClass) ?>">
+                                    <?= $block->escapeHtml($quote->getStatusLabel()) ?>
+                                </span>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Valor')) ?>" class="col total">
+                                <?php if ($quote->getQuotedTotal()): ?>
+                                    <?= $block->escapeHtml($block->formatPrice($quote->getQuotedTotal())) ?>
+                                <?php else: ?>
+                                    <span class="no-value"><?= $block->escapeHtml(__('Aguardando')) ?></span>
+                                <?php endif; ?>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Validade')) ?>" class="col expires">
+                                <?php if ($quote->getExpiresAt()): ?>
+                                    <?php if ($quote->isExpired()): ?>
+                                        <span class="expired"><?= $block->escapeHtml(__('Expirada')) ?></span>
+                                    <?php else: ?>
+                                        <?= $block->escapeHtml($block->formatQuoteDate($quote->getExpiresAt())) ?>
+                                    <?php endif; ?>
+                                <?php else: ?>
+                                    -
+                                <?php endif; ?>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Ações')) ?>" class="col actions">
+                                <a href="<?= $block->escapeUrl($block->getViewUrl($quote->getRequestId())) ?>" 
+                                   class="action view"
+                                   title="<?= $block->escapeHtmlAttr(__('Ver Detalhes')) ?>">
+                                    <span><?= $block->escapeHtml(__('Ver')) ?></span>
+                                </a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+</div>
+
+<style>
+    .b2b-quote-history .block-title {
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .b2b-quote-history .block-title strong {
+        font-size: 1.4rem;
+    }
+    
+    .quote-status {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    
+    .quote-status.status-success {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+    
+    .quote-status.status-pending {
+        background: #fff3e0;
+        color: #e65100;
+    }
+    
+    .quote-status.status-failed {
+        background: #ffebee;
+        color: #c62828;
+    }
+    
+    .quote-status.status-complete {
+        background: #e3f2fd;
+        color: #1565c0;
+    }
+    
+    .no-value {
+        color: #999;
+        font-style: italic;
+    }
+    
+    .expired {
+        color: #c62828;
+        font-weight: 600;
+    }
+    
+    .table-quote-history .col.actions .action {
+        margin-right: 10px;
+    }
+</style>

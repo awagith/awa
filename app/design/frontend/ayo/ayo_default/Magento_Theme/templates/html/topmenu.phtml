@@ -1,0 +1,34 @@
+<?php
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Top menu for store
+ *
+ * @see \Magento\Theme\Block\Html\Topmenu
+ */
+?>
+<?php $columnsLimit = $block->getColumnsLimit() ?: 0; ?>
+<?php $_menu = $block->getHtml('level-top', 'submenu', $columnsLimit) ?>
+<?php
+// Inserir aria-current="page" em links de itens ativos
+$_menu = preg_replace_callback(
+	'/(<li[^>]*class=\"[^\"]*\bactive\b[^\"]*\"[^>]*>)(\s*)<a\s+/i',
+	function ($m) {
+		return $m[1] . $m[2] . '<a aria-current="page" ';
+	},
+	(string)$_menu
+);
+?>
+	<nav id="site-navigation" class="navigation" role="navigation" aria-label="<?php echo $block->escapeHtmlAttr(__('Navegação principal')); ?>">
+		<ul data-mage-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
+			<li class="menu-home level0 nav-0 first level-top ui-menu-item"><a class="level-top ui-corner-all" href="#"><?php echo __('Home')?></a></li>
+			<?php /* @escapeNotVerified */ echo $_menu; ?>
+		</ul>
+	</nav>

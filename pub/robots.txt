@@ -1,0 +1,19 @@
+User-agent: *
+# Bloqueios básicos de áreas privadas e páginas sem valor para SEO
+Disallow: /admin/
+Disallow: /customer/
+Disallow: /checkout/
+Disallow: /catalogsearch/
+Disallow: /search/
+Disallow: /wishlist/
+Disallow: /sendfriend/
+Disallow: /review/
+
+# Permitir o restante
+Allow: /
+
+# Sitemap padrão (ajustar para domínio final se necessário)
+Sitemap: /sitemap.xml
+
+# Observação: Magento também pode gerir robots via Admin.
+# Este arquivo físico prevalece sobre as configurações dinâmicas.

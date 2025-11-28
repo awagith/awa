@@ -1,0 +1,189 @@
+<?php
+/**
+ * Shopping List Index Template
+ * @var \GrupoAwamotos\B2B\Block\Customer\ShoppingList\ListBlock $block
+ * @var \GrupoAwamotos\B2B\ViewModel\ShoppingListViewModel $viewModel
+ */
+$viewModel = $block->getData('view_model');
+$lists = $viewModel->getCustomerLists();
+?>
+
+<div class="b2b-shopping-lists">
+    <div class="block-title">
+        <strong><?= $block->escapeHtml(__('Minhas Listas de Compras')) ?></strong>
+    </div>
+    
+    <div class="actions-toolbar mb-4">
+        <button type="button" 
+                class="action primary" 
+                data-toggle="modal" 
+                data-target="#create-list-modal"
+                onclick="document.getElementById('create-list-modal').style.display='block'">
+            <span><?= $block->escapeHtml(__('Nova Lista')) ?></span>
+        </button>
+    </div>
+
+    <?php if ($lists->getSize() > 0): ?>
+        <div class="table-wrapper shopping-lists-table">
+            <table class="data table table-shopping-lists" id="shopping-lists-table">
+                <thead>
+                    <tr>
+                        <th scope="col" class="col name"><?= $block->escapeHtml(__('Nome da Lista')) ?></th>
+                        <th scope="col" class="col items"><?= $block->escapeHtml(__('Itens')) ?></th>
+                        <th scope="col" class="col total"><?= $block->escapeHtml(__('Total Estimado')) ?></th>
+                        <th scope="col" class="col date"><?= $block->escapeHtml(__('Atualizado em')) ?></th>
+                        <th scope="col" class="col actions"><?= $block->escapeHtml(__('Ações')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($lists as $list): ?>
+                        <tr>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Nome da Lista')) ?>" class="col name">
+                                <a href="<?= $block->escapeUrl($block->getViewUrl((int)$list->getId())) ?>">
+                                    <?= $block->escapeHtml($list->getName()) ?>
+                                </a>
+                                <?php if ($list->getDescription()): ?>
+                                    <br><small class="text-muted"><?= $block->escapeHtml($list->getDescription()) ?></small>
+                                <?php endif; ?>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Itens')) ?>" class="col items">
+                                <?= (int)$viewModel->getItemsCount((int)$list->getId()) ?>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Total Estimado')) ?>" class="col total">
+                                <?= /* @noEscape */ $viewModel->getListTotal((int)$list->getId()) ?>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Atualizado em')) ?>" class="col date">
+                                <?= $block->escapeHtml(date('d/m/Y H:i', strtotime($list->getUpdatedAt()))) ?>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Ações')) ?>" class="col actions">
+                                <div class="actions">
+                                    <a href="<?= $block->escapeUrl($block->getViewUrl((int)$list->getId())) ?>" 
+                                       class="action view" 
+                                       title="<?= $block->escapeHtmlAttr(__('Ver Lista')) ?>">
+                                        <span><?= $block->escapeHtml(__('Ver')) ?></span>
+                                    </a>
+                                    <form action="<?= $block->escapeUrl($block->getAddToCartUrl((int)$list->getId())) ?>" 
+                                          method="post" 
+                                          style="display:inline;">
+                                        <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                                        <button type="submit" 
+                                                class="action tocart" 
+                                                title="<?= $block->escapeHtmlAttr(__('Adicionar ao Carrinho')) ?>">
+                                            <span><?= $block->escapeHtml(__('Comprar')) ?></span>
+                                        </button>
+                                    </form>
+                                    <form action="<?= $block->escapeUrl($block->getDeleteUrl((int)$list->getId())) ?>" 
+                                          method="post" 
+                                          style="display:inline;"
+                                          onsubmit="return confirm('<?= $block->escapeJs(__('Tem certeza que deseja excluir esta lista?')) ?>');">
+                                        <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                                        <button type="submit" 
+                                                class="action delete" 
+                                                title="<?= $block->escapeHtmlAttr(__('Excluir Lista')) ?>">
+                                            <span><?= $block->escapeHtml(__('Excluir')) ?></span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php else: ?>
+        <div class="message info empty">
+            <span><?= $block->escapeHtml(__('Você ainda não tem listas de compras.')) ?></span>
+        </div>
+    <?php endif; ?>
+</div>
+
+<!-- Modal Criar Lista -->
+<div id="create-list-modal" class="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999;">
+    <div class="modal-content" style="background:#fff; max-width:500px; margin:10% auto; padding:20px; border-radius:5px;">
+        <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 style="margin:0;"><?= $block->escapeHtml(__('Criar Nova Lista')) ?></h3>
+            <button type="button" onclick="document.getElementById('create-list-modal').style.display='none'" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
+        </div>
+        <form action="<?= $block->escapeUrl($block->getCreateUrl()) ?>" method="post">
+            <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+            <div class="field required" style="margin-bottom:15px;">
+                <label for="list-name" class="label">
+                    <span><?= $block->escapeHtml(__('Nome da Lista')) ?></span>
+                </label>
+                <div class="control">
+                    <input type="text" 
+                           id="list-name" 
+                           name="name" 
+                           class="input-text" 
+                           required 
+                           style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;"
+                           placeholder="<?= $block->escapeHtmlAttr(__('Ex: Peças para Manutenção')) ?>">
+                </div>
+            </div>
+            <div class="field" style="margin-bottom:20px;">
+                <label for="list-description" class="label">
+                    <span><?= $block->escapeHtml(__('Descrição (opcional)')) ?></span>
+                </label>
+                <div class="control">
+                    <textarea id="list-description" 
+                              name="description" 
+                              class="input-text" 
+                              rows="3"
+                              style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;"
+                              placeholder="<?= $block->escapeHtmlAttr(__('Descrição da lista...')) ?>"></textarea>
+                </div>
+            </div>
+            <div class="actions-toolbar">
+                <button type="submit" class="action primary" style="padding:10px 20px;">
+                    <span><?= $block->escapeHtml(__('Criar Lista')) ?></span>
+                </button>
+                <button type="button" 
+                        class="action secondary" 
+                        onclick="document.getElementById('create-list-modal').style.display='none'"
+                        style="padding:10px 20px; margin-left:10px;">
+                    <span><?= $block->escapeHtml(__('Cancelar')) ?></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+.b2b-shopping-lists .table-shopping-lists {
+    width: 100%;
+    border-collapse: collapse;
+}
+.b2b-shopping-lists .table-shopping-lists th,
+.b2b-shopping-lists .table-shopping-lists td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+.b2b-shopping-lists .table-shopping-lists th {
+    background: #f5f5f5;
+    font-weight: 600;
+}
+.b2b-shopping-lists .actions a,
+.b2b-shopping-lists .actions button {
+    margin-right: 10px;
+    color: #006bb4;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+.b2b-shopping-lists .actions a:hover,
+.b2b-shopping-lists .actions button:hover {
+    text-decoration: underline;
+}
+.b2b-shopping-lists .actions .delete {
+    color: #e02b27;
+}
+.b2b-shopping-lists .message.empty {
+    padding: 20px;
+    background: #f5f5f5;
+    text-align: center;
+    border-radius: 4px;
+}
+</style>

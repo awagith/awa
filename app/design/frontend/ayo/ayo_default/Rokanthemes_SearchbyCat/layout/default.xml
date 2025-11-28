@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+	<referenceBlock name="top.search" remove="true"/>
+	<referenceContainer name="toki_header">
+		<block class="Rokanthemes\SearchbyCat\Block\Form" name="top.search.bycat" as="topSearchByCat" template="Rokanthemes_SearchbyCat::search/form.mini.phtml" after="top.search"/>
+	</referenceContainer>
+</page>

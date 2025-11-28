@@ -1,0 +1,194 @@
+	<?php
+use Magento\Framework\App\Action\Action;
+	$enable = $block->getConfig('enabled');
+	if($enable < 1) return ;
+	$items = $block->getConfig('items');
+	$speed = $block->getConfig('speed');
+	$qty = $block->getConfig('qty');
+	$showCart = $block->getConfig('addtocart');
+	$showWishlist = $block->getConfig('wishlist');
+	$showCompare = $block->getConfig('compare');
+	$show_navigation = $block->getConfig('navigation');
+	$show_pagination = $block->getConfig('pagination');
+	$auto = $block->getConfig('auto');
+	$imageBlock =  $block->getLayout()->createBlock('Magento\Catalog\Block\Product\Image');
+	$image = 'new_products_content_widget_grid';
+	$type = 'widget-new-grid';
+	$templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
+	$rows = 2;
+	?>
+<div class="list-tab-product common-tab-system-fixed">
+	<div class="rokan-product-heading clearfix">
+    	<h2><?php echo __('Top Features') ?><span class="sup-title"> <?php echo __('Products 2020') ?></span></h2>
+    </div>
+	<div class="clearfix">
+        <div class="vc_tta-tabs-container">
+	        <ul class="tabs">
+		        <?php
+		        $tab_contents = $block->getTabContent() ;
+		        foreach($tab_contents as $tab) {
+		          ?>
+		          <li rel="tab_<?php echo $tab['id'];?>" class="<?php echo $tab['class']; ?>"><a> <?php echo $tab['name'];?></a></li>
+		          <?php
+		        }
+		        ?>
+	        </ul>
+        </div>
+    </div>
+    <div class="row">
+		<div class="tab_container">
+		   <?php
+			foreach($tab_contents as $tab) {
+			?>
+			 <div id="tab_<?php echo $tab['id'];?>" class="product-tab-slider tab_content <?php echo $tab['class']; ?>">
+			 	<div class="productTabContent">
+				<?php
+					$i=0;
+					$productItems =  $tab['productInfo'];
+					foreach($productItems as $_item) {
+							$productImage = $block->getImage($_item, $image);
+							$productImageThumb = $block->getImage($_item, 'category_page_grid-1');
+					?>
+						<?php if($i++%$rows==0) { ?> <div class="product_row"> <?php } ?>
+						<div class="item-product-parent">
+							<div class="item-product listview">
+								<div class="product-thumb">
+									<a href="<?php /* @escapeNotVerified */ echo $_item->getProductUrl() ?>" class="product-thumb-link">
+										<?php $productImageThumb = $block->getImage($_item, 'category_image_second_small');?>
+										<span class="first-thumb">
+											<?php echo $productImage->toHtml(); ?>
+										</span>
+										<?php $productType = $_item->getTypeID();
+										if($productType == "simple"): ?>
+											<span class="second-thumb">
+												<?php echo $productImageThumb->toHtml(); ?>
+											</span>
+				                		<?php endif; ?>
+									</a>
+									<div class="hot-onsale">
+										<?php if ( $_item->getFinalPrice() < $_item->getPrice() ): ?>
+											
+												<span class="onsale">
+												<span class="sale-bg"></span>
+												<span class="sale-text"><?php echo $block->showLableSalePrice($_item); ?>
+												</span>
+												</span>
+										<?php endif; ?>
+										<?php $helper = $this->helper('Rokanthemes\RokanBase\Helper\Newlabel'); ?>
+											<?php if($helper->isProductNew($_item)): ?>
+											<div class="onsale new-lable">
+											    <?php echo __('New'); ?>
+											</div>
+										<?php endif; ?>
+									</div>					
+							    </div>
+							    <div class="product-info">
+									<h3 class="product-name">
+			 							<a title="<?php echo $_item->getName(); ?>" href="<?php /* @escapeNotVerified */ echo $_item->getProductUrl() ?>" class="product-item-link">
+											<?php echo $_item->getName(); ?>
+										</a>
+									</h3>
+									<div class="product-rating">
+										<?php if ($templateType): ?>
+												<?php echo $block->getReviewsSummaryHtml($_item, $templateType,true); ?>
+											<?php endif; ?>
+									</div>
+									<div class="sold-by">
+										<?php
+											$cats = $_item->getAttributeText('sold_by');
+											echo ' <span>'.__('Sold by:').'</span>' .$cats;
+										 ?>
+									</div>
+									<div class="info-price">
+										<?php /* @escapeNotVerified */ echo $this->helper('Rokanthemes\Themeoption\Helper\Data')->getPriceDisplayCustom($block->getProductPrice($_item)) ?>
+									</div>
+									<div class="product-info-cart">
+						                <?php if ($showCart): ?>
+						                    <div class="actions-primary addcart-link">
+						                      <?php if ($_item->isSaleable()): ?>
+						                        <?php
+						                          $postDataHelper = $this->helper('Magento\Framework\Data\Helper\PostHelper');
+						                          $postData = $postDataHelper->getPostData($block->getAddToCartUrl($_item), ['product' => $_item->getEntityId()]);
+						                          $postParams = json_decode($postData, true);
+						                          ?>
+						                        <form data-role="tocart-form" action="<?php /* @escapeNotVerified */ echo $postParams['action']; ?>" method="post">
+						                          <input type="hidden" name="product" value="<?php /* @escapeNotVerified */ echo $postParams['data']['product']; ?>">
+						                          <input type="hidden" name="<?php /* @escapeNotVerified */ echo Action::PARAM_NAME_URL_ENCODED; ?>" value="<?php /* @escapeNotVerified */ echo $postParams['data'][Action::PARAM_NAME_URL_ENCODED]; ?>">
+						                          <?php echo $block->getBlockHtml('formkey')?>
+						                          <button type="submit"
+						                              title="<?php echo $block->escapeHtml(__('Add to Cart')); ?>"
+						                              class="btn-add-to-cart action tocart">
+						                            <span><?php echo $block->escapeHtml(__('Add to Cart')); ?></span>
+						                          </button>
+						                        </form>
+						                      <?php else: ?>
+						                        <?php if ($_item->getIsSalable()): ?>
+						                          <div class="stock available"><span><?php echo __('In stock') ?></span></div>
+						                        <?php else: ?>
+						                          <div class="stock unavailable"><span><?php echo __('Out of stock') ?></span></div>
+						                        <?php endif; ?>
+						                      <?php endif; ?>
+						                    </div>
+			  							<?php endif; ?>
+		  							</div>
+								</div>
+							</div>
+						</div>
+						 <?php if($i%$rows==0 || $i == count($productItems)) { ?> </div> <?php }?>
+					<?php
+					}
+					?>
+				</div>
+			 </div>
+			<?php
+			}
+			?>
+		</div>
+	</div>
+</div>
+<script type="text/x-magento-init">
+{
+	"[data-role=tocart-form], .form.map.checkout": {
+		"catalogAddToCart": {}
+	}
+}
+</script>
+<script>
+	require([
+		'jquery',
+		'mage/mage',
+		'rokanthemes/owl'
+	], function ($) {
+		'use strict';
+
+		jQuery(".productTabContent").owlCarousel({
+			lazyLoad:true,
+			autoPlay : false,
+			items : 3,
+			itemsDesktop : [1366,3],
+			itemsDesktopSmall : [1199,2],
+			itemsTablet: [991,2],
+			itemsMobile : [680,1],
+			slideSpeed : 500,
+			paginationSpeed : 500,
+			rewindSpeed : 500,
+			navigation : true,
+			stopOnHover : true,
+			pagination : true,
+			scrollPerPage:true,
+			afterAction: function(el){
+		     this.$owlItems.removeClass('first-active')
+		     this.$owlItems .eq(this.currentItem).addClass('first-active')  
+		    }
+		});
+	});
+</script>
+<script type="text/javascript">
+require(["jquery", 'mage/mage', "rokanthemes/owl"], function($){
+	'use strict';
+	$( document ).ready(function() {
+		$(".list-tab-product .tab_content").hide();
+		$(".list-tab-product .tab_content:first").show();	
+	});
+});
+</script>

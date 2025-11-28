@@ -1,0 +1,76 @@
+<!--
+/**
+ * Email template: Quote Rejected
+ */
+-->
+<!--@subject Atualização sobre sua Cotação B2B @-->
+<!--@vars {
+"var customer_name":"Customer Name",
+"var quote_id":"Quote ID",
+"var admin_notes":"Admin Notes",
+"var store.getFrontendName()":"Store Name"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <h1 style="font-size: 24px; font-weight: 700; color: #1f2937; margin: 0 0 15px;">
+                Olá, {{var customer_name}}
+            </h1>
+            <p style="font-size: 16px; color: #4b5563; margin: 0 0 20px;">
+                Agradecemos seu interesse e sua solicitação de cotação. Infelizmente, não foi possível atender a esta solicitação neste momento.
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table style="width: 100%; background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 20px; margin: 20px 0;">
+                <tr>
+                    <td>
+                        <p style="margin: 0; font-size: 14px; color: #991b1b;">
+                            <strong>Cotação Nº #{{var quote_id}}</strong> - Não foi possível atender
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    {{depend admin_notes}}
+    <tr>
+        <td>
+            <table style="width: 100%; background: #f9fafb; border-radius: 8px; padding: 20px;">
+                <tr>
+                    <td>
+                        <p style="margin: 0 0 10px; font-weight: 600; color: #374151;">Motivo:</p>
+                        <p style="margin: 0; color: #6b7280;">{{var admin_notes}}</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    {{/depend}}
+    <tr>
+        <td style="padding: 30px 0;">
+            <p style="font-size: 15px; color: #4b5563; margin: 0 0 20px;">
+                Você pode enviar uma nova solicitação a qualquer momento. Nossa equipe está à disposição para ajudá-lo a encontrar a melhor solução para suas necessidades.
+            </p>
+            <p style="text-align: center;">
+                <a href="{{store url='b2b/quote/request'}}" 
+                   style="display: inline-block; padding: 14px 30px; background: #2563eb; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                    Nova Cotação
+                </a>
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <p style="font-size: 14px; color: #9ca3af; text-align: center;">
+                Dúvidas? Entre em contato conosco pelo e-mail ou telefone disponíveis em nosso site.
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

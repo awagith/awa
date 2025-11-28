@@ -1,0 +1,278 @@
+<?php
+/**
+ * B2B Promotional Banner Template
+ * @var \GrupoAwamotos\B2B\Block\PromoBlock $block
+ */
+?>
+<?php if ($block->shouldDisplay()): ?>
+<div class="b2b-promo-banner">
+    <div class="b2b-promo-inner">
+        <div class="b2b-promo-content">
+            <div class="b2b-promo-badge">
+                <span class="badge-text">ATACADO</span>
+            </div>
+            <h2 class="b2b-promo-title">
+                <?= $block->escapeHtml(__('Sua Empresa Merece Mais!')) ?>
+            </h2>
+            <p class="b2b-promo-subtitle">
+                <?= $block->escapeHtml(__('Torne-se um revendedor e tenha acesso a benefícios exclusivos')) ?>
+            </p>
+            
+            <div class="b2b-benefits-grid">
+                <?php foreach ($block->getBenefits() as $benefit): ?>
+                <div class="b2b-benefit-item">
+                    <div class="benefit-icon">
+                        <span class="icon-<?= $block->escapeHtmlAttr($benefit['icon']) ?>"></span>
+                    </div>
+                    <div class="benefit-content">
+                        <strong><?= $block->escapeHtml(__($benefit['title'])) ?></strong>
+                        <span><?= $block->escapeHtml(__($benefit['description'])) ?></span>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+            
+            <div class="b2b-promo-actions">
+                <a href="<?= $block->escapeUrl($block->getRegisterUrl()) ?>" 
+                   class="action primary b2b-register-btn"
+                   title="<?= $block->escapeHtmlAttr(__('Cadastrar Minha Empresa')) ?>">
+                    <span><?= $block->escapeHtml(__('Cadastrar Minha Empresa')) ?></span>
+                </a>
+                <span class="promo-note">
+                    <?= $block->escapeHtml(__('Cadastro rápido - Análise em até 24h')) ?>
+                </span>
+            </div>
+        </div>
+        
+        <div class="b2b-promo-visual">
+            <div class="discount-badge-large">
+                <span class="discount-up">ATÉ</span>
+                <span class="discount-value">20%</span>
+                <span class="discount-off">OFF</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.b2b-promo-banner {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    border-radius: 12px;
+    padding: 40px;
+    margin: 30px 0;
+    color: #fff;
+    overflow: hidden;
+    position: relative;
+}
+
+.b2b-promo-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 40px;
+}
+
+.b2b-promo-content {
+    flex: 1;
+}
+
+.b2b-promo-badge {
+    display: inline-block;
+    background: linear-gradient(90deg, #f39c12, #e74c3c);
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+}
+
+.badge-text {
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.b2b-promo-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    line-height: 1.2;
+}
+
+.b2b-promo-subtitle {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0 0 25px;
+}
+
+.b2b-benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.b2b-benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 12px 15px;
+    border-radius: 8px;
+    transition: background 0.3s;
+}
+
+.b2b-benefit-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.benefit-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(243, 156, 18, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.benefit-icon span::before {
+    font-size: 18px;
+    color: #f39c12;
+}
+
+.icon-percent::before { content: '%'; font-weight: bold; }
+.icon-credit-card::before { content: '💳'; }
+.icon-file-text::before { content: '📋'; }
+.icon-truck::before { content: '🚚'; }
+
+.benefit-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.benefit-content strong {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.benefit-content span {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.b2b-promo-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.b2b-register-btn {
+    background: linear-gradient(90deg, #f39c12, #e67e22) !important;
+    border: none !important;
+    padding: 15px 35px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    border-radius: 8px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    transition: transform 0.3s, box-shadow 0.3s !important;
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4) !important;
+}
+
+.b2b-register-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(243, 156, 18, 0.5) !important;
+}
+
+.promo-note {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.b2b-promo-visual {
+    flex-shrink: 0;
+}
+
+.discount-badge-large {
+    width: 160px;
+    height: 160px;
+    background: linear-gradient(135deg, #f39c12, #e74c3c);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 40px rgba(243, 156, 18, 0.4);
+    animation: pulse-badge 2s infinite;
+}
+
+.discount-up {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 3px;
+}
+
+.discount-value {
+    font-size: 48px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.discount-off {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 3px;
+}
+
+@keyframes pulse-badge {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .b2b-promo-banner {
+        padding: 25px;
+    }
+    
+    .b2b-promo-inner {
+        flex-direction: column-reverse;
+        text-align: center;
+    }
+    
+    .b2b-promo-title {
+        font-size: 24px;
+    }
+    
+    .b2b-benefits-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .b2b-benefit-item {
+        text-align: left;
+    }
+    
+    .b2b-promo-actions {
+        flex-direction: column;
+    }
+    
+    .discount-badge-large {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .discount-value {
+        font-size: 36px;
+    }
+}
+</style>
+<?php endif; ?>

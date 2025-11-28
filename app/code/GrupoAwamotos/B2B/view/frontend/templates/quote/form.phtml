@@ -1,0 +1,274 @@
+<?php
+/**
+ * Quote Request Form Template
+ * 
+ * @var \GrupoAwamotos\B2B\Block\Quote\Form $block
+ */
+?>
+<div class="b2b-quote-form-container">
+    <div class="page-title-wrapper">
+        <h1 class="page-title">
+            <span class="base"><?= $block->escapeHtml(__('Solicitar Cotação')) ?></span>
+        </h1>
+    </div>
+    
+    <?php if (!$block->hasItems()): ?>
+        <div class="message info empty">
+            <span><?= $block->escapeHtml(__('Seu carrinho está vazio. Adicione produtos antes de solicitar uma cotação.')) ?></span>
+        </div>
+        <div class="actions">
+            <a href="<?= $block->escapeUrl($block->getUrl('/')) ?>" class="action primary">
+                <span><?= $block->escapeHtml(__('Continuar Comprando')) ?></span>
+            </a>
+        </div>
+    <?php else: ?>
+        <div class="b2b-quote-wrapper">
+            <!-- Itens do Carrinho -->
+            <div class="b2b-quote-items">
+                <h2><?= $block->escapeHtml(__('Itens para Cotação')) ?></h2>
+                <table class="data table" id="quote-items-table">
+                    <thead>
+                        <tr>
+                            <th class="col item"><?= $block->escapeHtml(__('Produto')) ?></th>
+                            <th class="col qty"><?= $block->escapeHtml(__('Qtd')) ?></th>
+                            <th class="col price"><?= $block->escapeHtml(__('Preço Unit.')) ?></th>
+                            <th class="col subtotal"><?= $block->escapeHtml(__('Subtotal')) ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($block->getCartItems() as $item): ?>
+                            <tr>
+                                <td class="col item" data-th="<?= $block->escapeHtmlAttr(__('Produto')) ?>">
+                                    <strong><?= $block->escapeHtml($item->getName()) ?></strong>
+                                    <br><small>SKU: <?= $block->escapeHtml($item->getSku()) ?></small>
+                                </td>
+                                <td class="col qty" data-th="<?= $block->escapeHtmlAttr(__('Qtd')) ?>">
+                                    <?= (int) $item->getQty() ?>
+                                </td>
+                                <td class="col price" data-th="<?= $block->escapeHtmlAttr(__('Preço Unit.')) ?>">
+                                    R$ <?= number_format($item->getPrice(), 2, ',', '.') ?>
+                                </td>
+                                <td class="col subtotal" data-th="<?= $block->escapeHtmlAttr(__('Subtotal')) ?>">
+                                    R$ <?= number_format($item->getRowTotal(), 2, ',', '.') ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr class="grand totals">
+                            <td colspan="3" class="mark">
+                                <strong><?= $block->escapeHtml(__('Total Estimado')) ?></strong>
+                            </td>
+                            <td class="amount">
+                                <strong>R$ <?= number_format($block->getCartTotal(), 2, ',', '.') ?></strong>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+                <p class="note">
+                    <small><?= $block->escapeHtml(__('* Os preços são estimados. O valor final será informado na cotação.')) ?></small>
+                </p>
+            </div>
+            
+            <!-- Formulário -->
+            <div class="b2b-quote-form">
+                <h2><?= $block->escapeHtml(__('Seus Dados')) ?></h2>
+                <form action="<?= $block->escapeUrl($block->getSubmitUrl()) ?>" 
+                      method="post" 
+                      id="quote-request-form"
+                      class="form"
+                      data-mage-init='{"validation":{}}'>
+                    <?= $block->getBlockHtml('formkey') ?>
+                    
+                    <fieldset class="fieldset">
+                        <div class="field name required">
+                            <label class="label" for="name">
+                                <span><?= $block->escapeHtml(__('Nome Completo')) ?></span>
+                            </label>
+                            <div class="control">
+                                <input type="text" 
+                                       name="name" 
+                                       id="name" 
+                                       value="<?= $block->escapeHtmlAttr($block->getCustomerName()) ?>"
+                                       class="input-text"
+                                       data-validate="{required:true}"
+                                       <?= $block->isLoggedIn() ? 'readonly' : '' ?>>
+                            </div>
+                        </div>
+                        
+                        <div class="field email required">
+                            <label class="label" for="email">
+                                <span><?= $block->escapeHtml(__('E-mail')) ?></span>
+                            </label>
+                            <div class="control">
+                                <input type="email" 
+                                       name="email" 
+                                       id="email" 
+                                       value="<?= $block->escapeHtmlAttr($block->getCustomerEmail()) ?>"
+                                       class="input-text"
+                                       data-validate="{required:true, 'validate-email':true}"
+                                       <?= $block->isLoggedIn() ? 'readonly' : '' ?>>
+                            </div>
+                        </div>
+                        
+                        <div class="field company_name">
+                            <label class="label" for="company_name">
+                                <span><?= $block->escapeHtml(__('Razão Social / Empresa')) ?></span>
+                            </label>
+                            <div class="control">
+                                <input type="text" 
+                                       name="company_name" 
+                                       id="company_name" 
+                                       value="<?= $block->escapeHtmlAttr($block->getCompanyName()) ?>"
+                                       class="input-text">
+                            </div>
+                        </div>
+                        
+                        <div class="field cnpj">
+                            <label class="label" for="cnpj">
+                                <span><?= $block->escapeHtml(__('CNPJ')) ?></span>
+                            </label>
+                            <div class="control">
+                                <input type="text" 
+                                       name="cnpj" 
+                                       id="cnpj" 
+                                       value="<?= $block->escapeHtmlAttr($block->getCnpj()) ?>"
+                                       class="input-text"
+                                       placeholder="00.000.000/0000-00">
+                            </div>
+                        </div>
+                        
+                        <div class="field phone">
+                            <label class="label" for="phone">
+                                <span><?= $block->escapeHtml(__('Telefone')) ?></span>
+                            </label>
+                            <div class="control">
+                                <input type="tel" 
+                                       name="phone" 
+                                       id="phone" 
+                                       value="<?= $block->escapeHtmlAttr($block->getPhone()) ?>"
+                                       class="input-text"
+                                       placeholder="(00) 00000-0000">
+                            </div>
+                        </div>
+                        
+                        <div class="field message">
+                            <label class="label" for="message">
+                                <span><?= $block->escapeHtml(__('Mensagem / Observações')) ?></span>
+                            </label>
+                            <div class="control">
+                                <textarea name="message" 
+                                          id="message" 
+                                          class="input-text"
+                                          rows="4"
+                                          placeholder="<?= $block->escapeHtmlAttr(__('Informe detalhes adicionais, condições especiais desejadas, prazo de entrega, etc.')) ?>"></textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+                    
+                    <div class="b2b-quote-info">
+                        <p>
+                            <i class="fa fa-info-circle"></i>
+                            <?= $block->escapeHtml(__('Sua cotação terá validade de %1 dias após o envio.', $block->getExpiryDays())) ?>
+                        </p>
+                    </div>
+                    
+                    <div class="actions-toolbar">
+                        <div class="secondary">
+                            <a href="<?= $block->escapeUrl($block->getCartUrl()) ?>" class="action back">
+                                <span><?= $block->escapeHtml(__('Voltar ao Carrinho')) ?></span>
+                            </a>
+                        </div>
+                        <div class="primary">
+                            <button type="submit" class="action primary submit" title="<?= $block->escapeHtmlAttr(__('Enviar Solicitação')) ?>">
+                                <span><?= $block->escapeHtml(__('Enviar Solicitação de Cotação')) ?></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
+
+<style>
+    .b2b-quote-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+        margin-top: 20px;
+    }
+    
+    @media (max-width: 768px) {
+        .b2b-quote-wrapper {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    .b2b-quote-items,
+    .b2b-quote-form {
+        background: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+    }
+    
+    .b2b-quote-items h2,
+    .b2b-quote-form h2 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #e0e0e0;
+    }
+    
+    .b2b-quote-items table {
+        width: 100%;
+    }
+    
+    .b2b-quote-items .note {
+        margin-top: 10px;
+        color: #666;
+    }
+    
+    .b2b-quote-info {
+        background: #e3f2fd;
+        padding: 15px;
+        border-radius: 4px;
+        margin: 20px 0;
+        border-left: 4px solid #1976d2;
+    }
+    
+    .b2b-quote-info p {
+        margin: 0;
+        color: #1565c0;
+    }
+    
+    .b2b-quote-form .field {
+        margin-bottom: 15px;
+    }
+    
+    .b2b-quote-form .field.required .label:after {
+        content: '*';
+        color: #e74c3c;
+        margin-left: 3px;
+    }
+    
+    .actions-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e0e0e0;
+    }
+    
+    .action.primary.submit {
+        background: #1976d2;
+        border-color: #1976d2;
+        padding: 12px 30px;
+        font-size: 1.1rem;
+    }
+    
+    .action.primary.submit:hover {
+        background: #1565c0;
+    }
+</style>

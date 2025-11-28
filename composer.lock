@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e2b1b1dc8de7bb1edf48bc64be6ddbf5",
+    "content-hash": "18b557a67915c9ebc8d34e699f795005",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -18758,6 +18758,128 @@
             "time": "2025-06-20T07:55:02+00:00"
         },
         {
+            "name": "magepal/magento2-core",
+            "version": "1.1.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/magepal/magento2-core.git",
+                "reference": "75005e3dba946ce7afa1825fd4f19c8291db2887"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/magepal/magento2-core/zipball/75005e3dba946ce7afa1825fd4f19c8291db2887",
+                "reference": "75005e3dba946ce7afa1825fd4f19c8291db2887",
+                "shasum": ""
+            },
+            "require": {
+                "magento/framework": "*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "MagePal\\Core\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Renon Stewart",
+                    "email": "renon@magepal.com",
+                    "homepage": "https://www.magepal.com/",
+                    "role": "Leader"
+                }
+            ],
+            "description": "MagePal core extension",
+            "homepage": "https://www.magepal.com/",
+            "keywords": [
+                "magento 2",
+                "magepal core extension"
+            ],
+            "support": {
+                "email": "support@magepal.com",
+                "issues": "https://github.com/magepal/magento2-core/issues/",
+                "source": "https://github.com/magepal/magento2-core/tree/1.1.13"
+            },
+            "time": "2023-06-06T14:01:13+00:00"
+        },
+        {
+            "name": "magepal/magento2-gmailsmtpapp",
+            "version": "3.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/magepal/magento2-gmail-smtp-app.git",
+                "reference": "bdb0533f55828d8efc990013722be891184bcf4f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/magepal/magento2-gmail-smtp-app/zipball/bdb0533f55828d8efc990013722be891184bcf4f",
+                "reference": "bdb0533f55828d8efc990013722be891184bcf4f",
+                "shasum": ""
+            },
+            "require": {
+                "magento/framework": "103.0.*",
+                "magento/module-backend": "102.0.*",
+                "magento/module-email": "101.1.8||101.1.8-p1||101.1.8-p2||101.1.8-p3",
+                "magepal/magento2-core": ">1.1.0",
+                "php": "~8.2.0||~8.3.0||~8.4.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "MagePal\\GmailSmtpApp\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Renon Stewart",
+                    "email": "renon@magepal.com",
+                    "homepage": "https://www.magepal.com/",
+                    "role": "Leader"
+                }
+            ],
+            "description": "Magento 2 SMTP Extension - Configure Magento 2 to send all transactional email using Gmail, G Suite, Amazon SES, Office360, Mailgun, SendGrid, Mandrill or any other SMTP servers",
+            "homepage": "https://www.magepal.com/",
+            "keywords": [
+                "Amazon SES",
+                "Amazon Simple Email Service",
+                "g suite",
+                "gmail smtp",
+                "google app",
+                "how to configure magento email",
+                "how to setup email magento2",
+                "magento 2",
+                "magento2 email",
+                "magento2 email setup",
+                "magento2 smtp",
+                "send email magento2"
+            ],
+            "support": {
+                "email": "support@magepal.com",
+                "issues": "https://github.com/magepal/magento2-gmail-smtp-app/issues/",
+                "source": "https://github.com/magepal/magento2-gmail-smtp-app/tree/3.0.3"
+            },
+            "funding": [
+                {
+                    "url": "https://www.magepal.com/custom-smtp.html?utm_source=smtp&utm_medium=github%20sponsor",
+                    "type": "custom"
+                }
+            ],
+            "time": "2025-11-21T21:16:28+00:00"
+        },
+        {
             "name": "marc-mabe/php-enum",
             "version": "v4.7.2",
             "source": {
@@ -20968,6 +21090,59 @@
                 "source": "https://github.com/php-fig/log/tree/3.0.2"
             },
             "time": "2024-09-11T13:17:53+00:00"
+        },
+        {
+            "name": "rafaelstz/traducao_magento2_pt_br",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rafaelstz/traducao_magento2_pt_br.git",
+                "reference": "dac44535a1886dd6b25807fd0c1d7090de19032e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rafaelstz/traducao_magento2_pt_br/zipball/dac44535a1886dd6b25807fd0c1d7090de19032e",
+                "reference": "dac44535a1886dd6b25807fd0c1d7090de19032e",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "magento2-language",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rafael Corrêa Gomes",
+                    "homepage": "https://github.com/rafaelstz"
+                },
+                {
+                    "name": "Magento official translations project for Magento 2",
+                    "homepage": "https://crowdin.com/project/magento-2"
+                }
+            ],
+            "description": "Tradução Magento 2 para Português do Brasil oficial da Magento ",
+            "homepage": "https://github.com/rafaelstz/traducao_magento2_pt_br",
+            "support": {
+                "issues": "https://github.com/rafaelstz/traducao_magento2_pt_br/issues",
+                "source": "https://github.com/rafaelstz/traducao_magento2_pt_br/tree/master"
+            },
+            "funding": [
+                {
+                    "url": "https://www.buymeacoffee.com/rafaelcg",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/rafaelstz",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-12-16T22:23:30+00:00"
         },
         {
             "name": "ralouphie/getallheaders",
@@ -29678,7 +29853,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "pdepend/pdepend": 20,
-        "phpmd/phpmd": 20
+        "phpmd/phpmd": 20,
+        "rafaelstz/traducao_magento2_pt_br": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

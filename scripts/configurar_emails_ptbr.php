@@ -1,0 +1,168 @@
+<?php
+use Magento\Config\Model\ResourceModel\Config as ConfigResource;
+use Magento\Email\Model\TemplateFactory;
+use Magento\Email\Model\ResourceModel\Template\CollectionFactory as TemplateCollectionFactory;
+use Magento\Framework\App\Bootstrap;
+use Magento\Framework\App\State;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+
+require __DIR__ . '/../app/bootstrap.php';
+
+$bootstrap = Bootstrap::create(BP, $_SERVER);
+$objectManager = $bootstrap->getObjectManager();
+
+/** @var State $state */
+$state = $objectManager->get(State::class);
+try {
+    $state->setAreaCode('adminhtml');
+} catch (\Throwable $e) {
+    // already set
+}
+
+/** @var TemplateFactory $templateFactory */
+$templateFactory = $objectManager->get(TemplateFactory::class);
+/** @var TemplateCollectionFactory $templateCollectionFactory */
+$templateCollectionFactory = $objectManager->get(TemplateCollectionFactory::class);
+/** @var ConfigResource $configResource */
+$configResource = $objectManager->get(ConfigResource::class);
+
+$basePath = BP . '/app/design/frontend/ayo/ayo_default';
+
+$templates = [
+    [
+        'code' => 'grupoawamotos_sales_order_new_ptbr',
+        'file' => $basePath . '/Magento_Sales/email/order_new.html',
+        'subject' => 'Pedido #{{var order.increment_id}} confirmado',
+        'orig' => 'sales_email_order_template',
+        'config_paths' => [
+            'sales_email/order/template',
+            'sales_email/order_guest/template',
+            'sales_email/order_comment/template',
+            'sales_email/order_comment_guest/template',
+        ],
+    ],
+    [
+        'code' => 'grupoawamotos_sales_invoice_new_ptbr',
+        'file' => $basePath . '/Magento_Sales/email/invoice_new.html',
+        'subject' => 'Fatura emitida para o pedido {{var order.increment_id}}',
+        'orig' => 'sales_email_invoice_template',
+        'config_paths' => [
+            'sales_email/invoice/template',
+            'sales_email/invoice_guest/template',
+        ],
+    ],
+    [
+        'code' => 'grupoawamotos_sales_shipment_new_ptbr',
+        'file' => $basePath . '/Magento_Sales/email/shipment_new.html',
+        'subject' => 'Seu pedido {{var order.increment_id}} saiu para entrega',
+        'orig' => 'sales_email_shipment_template',
+        'config_paths' => [
+            'sales_email/shipment/template',
+            'sales_email/shipment_guest/template',
+            'sales_email/shipment_comment/template',
+            'sales_email/shipment_comment_guest/template',
+        ],
+    ],
+    [
+        'code' => 'grupoawamotos_sales_creditmemo_new_ptbr',
+        'file' => $basePath . '/Magento_Sales/email/creditmemo_new.html',
+        'subject' => 'Estorno do pedido {{var order.increment_id}}',
+        'orig' => 'sales_email_creditmemo_template',
+        'config_paths' => [
+            'sales_email/creditmemo/template',
+            'sales_email/creditmemo_guest/template',
+            'sales_email/creditmemo_comment/template',
+            'sales_email/creditmemo_comment_guest/template',
+        ],
+    ],
+    [
+        'code' => 'grupoawamotos_customer_account_new_ptbr',
+        'file' => $basePath . '/Magento_Customer/email/account_new.html',
+        'subject' => 'Bem-vindo à {{var store.frontend_name}}',
+        'orig' => 'customer_create_account_email',
+        'config_paths' => [
+            'customer/create_account/email_template',
+        ],
+    ],
+    [
+        'code' => 'grupoawamotos_customer_password_reset_ptbr',
+        'file' => $basePath . '/Magento_Customer/email/password_reset_confirmation.html',
+        'subject' => 'Redefina sua senha na {{var store.frontend_name}}',
+        'orig' => 'customer_password_forgot_email_template',
+        'config_paths' => [
+            'customer/password_forgot/email_template',
+        ],
+    ],
+    [
+        'code' => 'grupoawamotos_newsletter_confirm_ptbr',
+        'file' => $basePath . '/Magento_Newsletter/email/subscription_confirm.html',
+        'subject' => 'Confirme sua inscrição na newsletter',
+        'orig' => 'newsletter_subscription_confirm_email_template',
+        'config_paths' => [
+            'newsletter/subscription/confirm_email_template',
+        ],
+    ],
+    [
+        'code' => 'grupoawamotos_newsletter_success_ptbr',
+        'file' => $basePath . '/Magento_Newsletter/email/subscription_confirm_success.html',
+        'subject' => 'Inscrição confirmada com sucesso',
+        'orig' => 'newsletter_subscription_success_email_template',
+        'config_paths' => [
+            'newsletter/subscription/success_email_template',
+        ],
+    ],
+    [
+        'code' => 'grupoawamotos_newsletter_unsubscribe_ptbr',
+        'file' => $basePath . '/Magento_Newsletter/email/subscription_unsubscribe_success.html',
+        'subject' => 'Descadastro confirmado',
+        'orig' => 'newsletter_subscription_un_email_template',
+        'config_paths' => [
+            'newsletter/subscription/un_email_template',
+        ],
+    ],
+    [
+        'code' => 'grupoawamotos_contact_form_ptbr',
+        'file' => $basePath . '/Magento_Contact/email/contact_form.html',
+        'subject' => 'Nova mensagem de contato',
+        'orig' => 'contact_email_email_template',
+        'config_paths' => [
+            'contact/email/email_template',
+        ],
+    ],
+];
+
+$success = true;
+foreach ($templates as $templateData) {
+    if (!is_readable($templateData['file'])) {
+        echo sprintf("[ERRO] Template %s não encontrado em %s\n", $templateData['code'], $templateData['file']);
+        $success = false;
+        continue;
+    }
+
+    $content = file_get_contents($templateData['file']);
+    $collection = $templateCollectionFactory->create();
+    $collection->addFieldToFilter('template_code', $templateData['code']);
+    $existing = $collection->getFirstItem();
+    $template = $existing && $existing->getId() ? $existing : $templateFactory->create();
+    $template->setTemplateCode($templateData['code']);
+    $template->setTemplateText($content);
+    $template->setTemplateType(\Magento\Email\Model\Template::TYPE_HTML);
+    $template->setTemplateSubject($templateData['subject']);
+    $template->setOrigTemplateCode($templateData['orig']);
+    $template->setOrigTemplateVariables('{}');
+    $template->save();
+
+    $templateId = (int) $template->getId();
+    foreach ($templateData['config_paths'] as $path) {
+        $configResource->saveConfig($path, $templateId, ScopeConfigInterface::SCOPE_TYPE_DEFAULT, 0);
+    }
+
+    echo sprintf("[OK] %s aplicado (ID %d)\n", $templateData['code'], $templateId);
+}
+
+if ($success) {
+    echo "Todas as configurações foram aplicadas com sucesso.\n";
+} else {
+    echo "Existem erros nos templates listados acima.\n";
+}

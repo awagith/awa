@@ -1,0 +1,82 @@
+<?php
+/**
+ * Approval Status Source Model
+ */
+declare(strict_types=1);
+
+namespace GrupoAwamotos\B2B\Model\Customer\Attribute\Source;
+
+use Magento\Eav\Model\Entity\Attribute\Source\AbstractSource;
+
+class ApprovalStatus extends AbstractSource
+{
+    const STATUS_PENDING = 'pending';
+    const STATUS_APPROVED = 'approved';
+    const STATUS_REJECTED = 'rejected';
+    const STATUS_SUSPENDED = 'suspended';
+    
+    /**
+     * Get all options
+     *
+     * @return array
+     */
+    public function getAllOptions(): array
+    {
+        if ($this->_options === null) {
+            $this->_options = [
+                ['value' => self::STATUS_PENDING, 'label' => __('Pendente de Aprovação')],
+                ['value' => self::STATUS_APPROVED, 'label' => __('Aprovado')],
+                ['value' => self::STATUS_REJECTED, 'label' => __('Rejeitado')],
+                ['value' => self::STATUS_SUSPENDED, 'label' => __('Suspenso')],
+            ];
+        }
+        return $this->_options;
+    }
+    
+    /**
+     * Get option text by value
+     *
+     * @param string $value
+     * @return string|bool
+     */
+    public function getOptionText($value)
+    {
+        foreach ($this->getAllOptions() as $option) {
+            if ($option['value'] == $value) {
+                return $option['label'];
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Check if status allows purchase
+     *
+     * @param string $status
+     * @return bool
+     */
+    public static function canPurchase(string $status): bool
+    {
+        return $status === self::STATUS_APPROVED;
+    }
+    
+    /**
+     * Check if status allows viewing prices
+     *
+     * @param string $status
+     * @param bool $showPricePending
+     * @return bool
+     */
+    public static function canViewPrices(string $status, bool $showPricePending = false): bool
+    {
+        if ($status === self::STATUS_APPROVED) {
+            return true;
+        }
+        
+        if ($status === self::STATUS_PENDING && $showPricePending) {
+            return true;
+        }
+        
+        return false;
+    }
+}

@@ -1,0 +1,252 @@
+<?php
+/**
+ * B2B Dashboard Template
+ * @var \GrupoAwamotos\B2B\Block\Account\Dashboard $block
+ */
+?>
+<div class="b2b-dashboard">
+    <?php if (!$block->isB2BCustomer()): ?>
+        <div class="message info">
+            <span><?= $block->escapeHtml(__('Esta área é exclusiva para clientes B2B. Se você é uma empresa, solicite seu cadastro B2B.')) ?></span>
+        </div>
+    <?php else: ?>
+        <!-- Header com Status -->
+        <div class="b2b-dashboard-header">
+            <div class="b2b-welcome">
+                <h1><?= $block->escapeHtml(__('Olá, %1', $block->getCustomer() ? $block->getCustomer()->getFirstname() : '')) ?></h1>
+                <p class="b2b-group-badge <?= $block->isApproved() ? 'approved' : 'pending' ?>">
+                    <?= $block->escapeHtml($block->getCustomerGroupName()) ?>
+                    <?php if (!$block->isApproved()): ?>
+                        <span class="pending-label">(Aguardando Aprovação)</span>
+                    <?php endif; ?>
+                </p>
+            </div>
+            
+            <?php if ($block->isApproved() && $block->getDiscountPercentage() > 0): ?>
+                <div class="b2b-discount-badge">
+                    <span class="discount-value"><?= (int)$block->getDiscountPercentage() ?>%</span>
+                    <span class="discount-label">Desconto B2B</span>
+                </div>
+            <?php endif; ?>
+        </div>
+
+        <!-- Dados da Empresa -->
+        <div class="b2b-company-info">
+            <h3><?= $block->escapeHtml(__('Dados da Empresa')) ?></h3>
+            <div class="company-details">
+                <?php if ($block->getRazaoSocial()): ?>
+                    <div class="detail-item">
+                        <span class="label"><?= $block->escapeHtml(__('Razão Social:')) ?></span>
+                        <span class="value"><?= $block->escapeHtml($block->getRazaoSocial()) ?></span>
+                    </div>
+                <?php endif; ?>
+                <?php if ($block->getCnpj()): ?>
+                    <div class="detail-item">
+                        <span class="label"><?= $block->escapeHtml(__('CNPJ:')) ?></span>
+                        <span class="value"><?= $block->escapeHtml($block->getCnpj()) ?></span>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Cards de Resumo -->
+        <div class="b2b-summary-cards">
+            <!-- Limite de Crédito -->
+            <?php $credit = $block->getCreditLimit(); ?>
+            <?php if ($credit): ?>
+                <div class="summary-card credit-card">
+                    <div class="card-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div class="card-content">
+                        <h4><?= $block->escapeHtml(__('Limite de Crédito')) ?></h4>
+                        <div class="credit-info">
+                            <div class="credit-row">
+                                <span class="credit-label"><?= $block->escapeHtml(__('Limite Total:')) ?></span>
+                                <span class="credit-value"><?= $block->formatPrice($credit['limit']) ?></span>
+                            </div>
+                            <div class="credit-row">
+                                <span class="credit-label"><?= $block->escapeHtml(__('Utilizado:')) ?></span>
+                                <span class="credit-value used"><?= $block->formatPrice($credit['used']) ?></span>
+                            </div>
+                            <div class="credit-row available">
+                                <span class="credit-label"><?= $block->escapeHtml(__('Disponível:')) ?></span>
+                                <span class="credit-value"><?= $block->formatPrice($credit['available']) ?></span>
+                            </div>
+                        </div>
+                        <div class="credit-bar">
+                            <?php $percentage = $credit['limit'] > 0 ? ($credit['used'] / $credit['limit']) * 100 : 0; ?>
+                            <div class="credit-bar-fill" style="width: <?= min($percentage, 100) ?>%"></div>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
+
+            <!-- Compras do Mês -->
+            <div class="summary-card purchases-card">
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </div>
+                <div class="card-content">
+                    <h4><?= $block->escapeHtml(__('Compras (30 dias)')) ?></h4>
+                    <p class="card-value"><?= $block->formatPrice($block->getTotalOrdersAmount()) ?></p>
+                </div>
+            </div>
+
+            <!-- Cotações -->
+            <div class="summary-card quotes-card">
+                <div class="card-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                </div>
+                <div class="card-content">
+                    <h4><?= $block->escapeHtml(__('Cotações')) ?></h4>
+                    <div class="quotes-stats">
+                        <span class="stat pending"><?= (int)$block->getPendingQuotesCount() ?> pendentes</span>
+                        <span class="stat approved"><?= (int)$block->getApprovedQuotesCount() ?> aprovadas</span>
+                    </div>
+                    <a href="<?= $block->escapeUrl($block->getQuoteRequestUrl()) ?>" class="action primary">
+                        <?= $block->escapeHtml(__('Solicitar Cotação')) ?>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Últimas Cotações -->
+        <?php $quotes = $block->getQuoteRequests(5); ?>
+        <?php if ($quotes->getSize() > 0): ?>
+            <div class="b2b-section quotes-section">
+                <div class="section-header">
+                    <h3><?= $block->escapeHtml(__('Últimas Cotações')) ?></h3>
+                    <a href="<?= $block->escapeUrl($block->getQuotesListUrl()) ?>" class="view-all">
+                        <?= $block->escapeHtml(__('Ver Todas')) ?>
+                    </a>
+                </div>
+                <table class="data-table quotes-table">
+                    <thead>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Nº')) ?></th>
+                            <th><?= $block->escapeHtml(__('Data')) ?></th>
+                            <th><?= $block->escapeHtml(__('Status')) ?></th>
+                            <th><?= $block->escapeHtml(__('Valor Cotado')) ?></th>
+                            <th><?= $block->escapeHtml(__('Válido Até')) ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($quotes as $quote): ?>
+                            <tr>
+                                <td>#<?= (int)$quote->getId() ?></td>
+                                <td><?= $block->escapeHtml(date('d/m/Y H:i', strtotime($quote->getCreatedAt()))) ?></td>
+                                <td>
+                                    <span class="status-badge <?= $block->escapeHtmlAttr($block->getStatusClass($quote->getStatus())) ?>">
+                                        <?= $block->escapeHtml($block->getStatusLabel($quote->getStatus())) ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <?php if ($quote->getQuotedTotal()): ?>
+                                        <?= $block->formatPrice($quote->getQuotedTotal()) ?>
+                                    <?php else: ?>
+                                        <span class="no-value">-</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if ($quote->getExpiresAt()): ?>
+                                        <?= $block->escapeHtml(date('d/m/Y', strtotime($quote->getExpiresAt()))) ?>
+                                    <?php else: ?>
+                                        <span class="no-value">-</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
+
+        <!-- Últimos Pedidos -->
+        <?php $orders = $block->getRecentOrders(5); ?>
+        <?php if ($orders->getSize() > 0): ?>
+            <div class="b2b-section orders-section">
+                <div class="section-header">
+                    <h3><?= $block->escapeHtml(__('Últimos Pedidos')) ?></h3>
+                    <a href="<?= $block->escapeUrl($block->getOrdersUrl()) ?>" class="view-all">
+                        <?= $block->escapeHtml(__('Ver Todos')) ?>
+                    </a>
+                </div>
+                <table class="data-table orders-table">
+                    <thead>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Pedido')) ?></th>
+                            <th><?= $block->escapeHtml(__('Data')) ?></th>
+                            <th><?= $block->escapeHtml(__('Status')) ?></th>
+                            <th><?= $block->escapeHtml(__('Total')) ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($orders as $order): ?>
+                            <tr>
+                                <td>
+                                    <a href="<?= $block->escapeUrl($block->getUrl('sales/order/view', ['order_id' => $order->getId()])) ?>">
+                                        #<?= $block->escapeHtml($order->getIncrementId()) ?>
+                                    </a>
+                                </td>
+                                <td><?= $block->escapeHtml(date('d/m/Y H:i', strtotime($order->getCreatedAt()))) ?></td>
+                                <td><?= $block->escapeHtml($order->getStatusLabel()) ?></td>
+                                <td><?= $block->formatPrice($order->getGrandTotal()) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        <?php endif; ?>
+
+        <!-- Ações Rápidas -->
+        <div class="b2b-quick-actions">
+            <h3><?= $block->escapeHtml(__('Ações Rápidas')) ?></h3>
+            <div class="actions-grid">
+                <a href="<?= $block->escapeUrl($block->getQuoteRequestUrl()) ?>" class="action-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="12" y1="18" x2="12" y2="12"></line>
+                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                    </svg>
+                    <span><?= $block->escapeHtml(__('Nova Cotação')) ?></span>
+                </a>
+                <a href="<?= $block->escapeUrl($block->getUrl('catalog/category/view')) ?>" class="action-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <span><?= $block->escapeHtml(__('Ver Catálogo')) ?></span>
+                </a>
+                <a href="<?= $block->escapeUrl($block->getOrdersUrl()) ?>" class="action-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span><?= $block->escapeHtml(__('Meus Pedidos')) ?></span>
+                </a>
+                <a href="<?= $block->escapeUrl($block->getUrl('customer/account')) ?>" class="action-item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span><?= $block->escapeHtml(__('Minha Conta')) ?></span>
+                </a>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>

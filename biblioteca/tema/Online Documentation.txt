@@ -1,0 +1,5 @@
+- Documentation for Magento
+https://ayo.nextsky.co/documentation/
+
+
+crie o banco de dados no MySql e importe toda base e configure e instala todos modulos do magento segue o link https://ayo.nextsky.co/documentation/ da documentacao do tema e faca o que for preciso para deixar tudo funcionando 100%

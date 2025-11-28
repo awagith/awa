@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- 
+            Fix Broken Reference: Create header.links because it was removed by the theme, 
+            but Webkul_Marketplace tries to add blocks to it.
+        -->
+        <referenceContainer name="page.wrapper">
+            <block class="Magento\Framework\View\Element\Html\Links" name="header.links" />
+        </referenceContainer>
+
+        <!-- 
+            Move the Marketplace links to top.links so they are rendered by the theme's header.phtml 
+        -->
+        <move element="marketplace-top-link" destination="top.links" after="-"/>
+        <move element="marketplace-account-switch-link" destination="top.links" after="-"/>
+    </body>
+</page>

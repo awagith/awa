@@ -1,0 +1,231 @@
+<?php
+/**
+ * Template de resposta de cotação no admin
+ * 
+ * @var \GrupoAwamotos\B2B\Block\Adminhtml\Quote\Respond $block
+ */
+
+$quote = $block->getQuoteRequest();
+if (!$quote) {
+    echo '<div class="message message-error">Cotação não encontrada.</div>';
+    return;
+}
+
+$items = $block->getItems();
+?>
+
+<div class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $block->escapeHtml(__('Detalhes da Cotação #%1', $quote->getRequestId())) ?></span>
+    </div>
+    
+    <div class="admin__page-section-content">
+        <div class="admin__field-complex">
+            <table class="admin__table-secondary">
+                <tr>
+                    <th><?= $block->escapeHtml(__('Cliente')) ?></th>
+                    <td><?= $block->escapeHtml($quote->getCustomerName()) ?></td>
+                </tr>
+                <tr>
+                    <th><?= $block->escapeHtml(__('E-mail')) ?></th>
+                    <td><?= $block->escapeHtml($quote->getCustomerEmail()) ?></td>
+                </tr>
+                <tr>
+                    <th><?= $block->escapeHtml(__('Empresa')) ?></th>
+                    <td><?= $block->escapeHtml($quote->getCompanyName() ?: '-') ?></td>
+                </tr>
+                <tr>
+                    <th><?= $block->escapeHtml(__('CNPJ')) ?></th>
+                    <td><?= $block->escapeHtml($quote->getCnpj() ?: '-') ?></td>
+                </tr>
+                <tr>
+                    <th><?= $block->escapeHtml(__('Telefone')) ?></th>
+                    <td><?= $block->escapeHtml($quote->getPhone() ?: '-') ?></td>
+                </tr>
+                <tr>
+                    <th><?= $block->escapeHtml(__('Status')) ?></th>
+                    <td>
+                        <span class="quote-status-<?= $block->escapeHtmlAttr($quote->getStatus()) ?>">
+                            <?= $block->escapeHtml($block->getStatusLabel($quote->getStatus())) ?>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <th><?= $block->escapeHtml(__('Data da Solicitação')) ?></th>
+                    <td><?= $block->escapeHtml(date('d/m/Y H:i', strtotime($quote->getCreatedAt()))) ?></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<?php if ($quote->getMessage()): ?>
+<div class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $block->escapeHtml(__('Mensagem do Cliente')) ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <div class="admin__field-complex">
+            <p><?= nl2br($block->escapeHtml($quote->getMessage())) ?></p>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<div class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $block->escapeHtml(__('Itens Solicitados')) ?></span>
+    </div>
+    
+    <div class="admin__page-section-content">
+        <?php if (!empty($items)): ?>
+        <table class="admin__table-primary" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th><?= $block->escapeHtml(__('Produto')) ?></th>
+                    <th><?= $block->escapeHtml(__('SKU')) ?></th>
+                    <th style="text-align: center;"><?= $block->escapeHtml(__('Qtd')) ?></th>
+                    <th style="text-align: right;"><?= $block->escapeHtml(__('Preço Unit.')) ?></th>
+                    <th style="text-align: right;"><?= $block->escapeHtml(__('Subtotal')) ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($items as $item): ?>
+                <tr>
+                    <td><?= $block->escapeHtml($item['name'] ?? 'N/A') ?></td>
+                    <td><?= $block->escapeHtml($item['sku'] ?? 'N/A') ?></td>
+                    <td style="text-align: center;"><?= (int) ($item['qty'] ?? 1) ?></td>
+                    <td style="text-align: right;"><?= $block->formatPrice((float) ($item['price'] ?? 0)) ?></td>
+                    <td style="text-align: right;">
+                        <?= $block->formatPrice((float) ($item['price'] ?? 0) * (float) ($item['qty'] ?? 1)) ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="4" style="text-align: right;"><strong><?= $block->escapeHtml(__('Total Sugerido:')) ?></strong></td>
+                    <td style="text-align: right;"><strong><?= $block->formatPrice($block->getSuggestedTotal()) ?></strong></td>
+                </tr>
+            </tfoot>
+        </table>
+        <?php else: ?>
+        <p><?= $block->escapeHtml(__('Nenhum item na cotação.')) ?></p>
+        <?php endif; ?>
+    </div>
+</div>
+
+<?php if (in_array($quote->getStatus(), ['pending', 'processing'])): ?>
+<div class="admin__page-section">
+    <div class="admin__page-section-title">
+        <span class="title"><?= $block->escapeHtml(__('Responder Cotação')) ?></span>
+    </div>
+    
+    <div class="admin__page-section-content">
+        <form action="<?= $block->escapeUrl($block->getSaveUrl()) ?>" method="post" id="quote_respond_form">
+            <input type="hidden" name="form_key" value="<?= $block->escapeHtmlAttr($block->getFormKey()) ?>"/>
+            <input type="hidden" name="request_id" value="<?= (int) $quote->getRequestId() ?>"/>
+            
+            <div class="admin__field">
+                <label class="admin__field-label" for="quoted_total">
+                    <span><?= $block->escapeHtml(__('Valor Total da Cotação (R$)')) ?></span>
+                </label>
+                <div class="admin__field-control">
+                    <input type="number" 
+                           id="quoted_total" 
+                           name="quoted_total" 
+                           class="admin__control-text" 
+                           step="0.01" 
+                           min="0"
+                           value="<?= number_format($block->getSuggestedTotal(), 2, '.', '') ?>"
+                           style="width: 200px;"/>
+                </div>
+            </div>
+            
+            <div class="admin__field">
+                <label class="admin__field-label" for="expiry_days">
+                    <span><?= $block->escapeHtml(__('Validade (dias)')) ?></span>
+                </label>
+                <div class="admin__field-control">
+                    <input type="number" 
+                           id="expiry_days" 
+                           name="expiry_days" 
+                           class="admin__control-text" 
+                           min="1" 
+                           max="90"
+                           value="<?= (int) $block->getDefaultExpiryDays() ?>"
+                           style="width: 100px;"/>
+                </div>
+            </div>
+            
+            <div class="admin__field">
+                <label class="admin__field-label" for="admin_notes">
+                    <span><?= $block->escapeHtml(__('Observações / Condições')) ?></span>
+                </label>
+                <div class="admin__field-control">
+                    <textarea id="admin_notes" 
+                              name="admin_notes" 
+                              class="admin__control-textarea" 
+                              rows="4" 
+                              style="width: 100%;"
+                              placeholder="<?= $block->escapeHtmlAttr(__('Condições de pagamento, prazo de entrega, etc.')) ?>"></textarea>
+                </div>
+            </div>
+            
+            <div class="admin__page-actions" style="margin-top: 20px;">
+                <button type="submit" 
+                        name="action" 
+                        value="approve" 
+                        class="action-default scalable save primary"
+                        style="margin-right: 10px;">
+                    <span><?= $block->escapeHtml(__('Enviar Orçamento')) ?></span>
+                </button>
+                
+                <button type="submit" 
+                        name="action" 
+                        value="reject" 
+                        class="action-default scalable"
+                        onclick="return confirm('<?= $block->escapeJs(__('Tem certeza que deseja rejeitar esta cotação?')) ?>');">
+                    <span><?= $block->escapeHtml(__('Rejeitar Cotação')) ?></span>
+                </button>
+                
+                <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action-default scalable back">
+                    <span><?= $block->escapeHtml(__('Voltar')) ?></span>
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+<?php else: ?>
+<div class="admin__page-section">
+    <div class="admin__page-section-content">
+        <div class="message message-notice">
+            <?= $block->escapeHtml(__('Esta cotação já foi respondida e não pode ser alterada.')) ?>
+        </div>
+        
+        <?php if ($quote->getQuotedTotal()): ?>
+        <p><strong><?= $block->escapeHtml(__('Valor cotado:')) ?></strong> <?= $block->formatPrice($quote->getQuotedTotal()) ?></p>
+        <?php endif; ?>
+        
+        <?php if ($quote->getAdminNotes()): ?>
+        <p><strong><?= $block->escapeHtml(__('Observações:')) ?></strong><br/><?= nl2br($block->escapeHtml($quote->getAdminNotes())) ?></p>
+        <?php endif; ?>
+        
+        <div class="admin__page-actions" style="margin-top: 20px;">
+            <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action-default scalable back">
+                <span><?= $block->escapeHtml(__('Voltar')) ?></span>
+            </a>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<style>
+    .quote-status-pending { color: #eb5202; font-weight: bold; }
+    .quote-status-processing { color: #1979c3; font-weight: bold; }
+    .quote-status-quoted { color: #185a00; font-weight: bold; }
+    .quote-status-accepted { color: #006400; font-weight: bold; }
+    .quote-status-rejected { color: #e22626; font-weight: bold; }
+    .quote-status-expired { color: #999; font-weight: bold; }
+    .quote-status-converted { color: #006bb4; font-weight: bold; }
+</style>

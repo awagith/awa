@@ -1,0 +1,5533 @@
+{
+    "timestamp": "2025-11-19T16:54:43+01:00",
+    "input": "_csv\/catalog_product.csv",
+    "image_dir": "pub\/media\/import",
+    "dry_run": true,
+    "changes": {
+        "sku": [
+            {
+                "from": "617 PT",
+                "to": "617-PT"
+            },
+            {
+                "from": "340 DR",
+                "to": "340-DR"
+            },
+            {
+                "from": "4017 LA",
+                "to": "4017-LA"
+            },
+            {
+                "from": "623 DIR",
+                "to": "623-DIR"
+            },
+            {
+                "from": "623 ESQ",
+                "to": "623-ESQ"
+            },
+            {
+                "from": "624 DIR",
+                "to": "624-DIR"
+            },
+            {
+                "from": "624 ESQ",
+                "to": "624-ESQ"
+            },
+            {
+                "from": "501 CV",
+                "to": "501-CV"
+            },
+            {
+                "from": "613 CV",
+                "to": "613-CV"
+            },
+            {
+                "from": "614 CV",
+                "to": "614-CV"
+            },
+            {
+                "from": "2236 CV",
+                "to": "2236-CV"
+            },
+            {
+                "from": "2247 CV",
+                "to": "2247-CV"
+            },
+            {
+                "from": "619 CR",
+                "to": "619-CR"
+            },
+            {
+                "from": "619 PT",
+                "to": "619-PT"
+            },
+            {
+                "from": "619 VM",
+                "to": "619-VM"
+            },
+            {
+                "from": "617 VM",
+                "to": "617-VM"
+            },
+            {
+                "from": "621 PT",
+                "to": "621-PT"
+            },
+            {
+                "from": "622 PT",
+                "to": "622-PT"
+            },
+            {
+                "from": "621 VM",
+                "to": "621-VM"
+            },
+            {
+                "from": "622 VM",
+                "to": "622-VM"
+            },
+            {
+                "from": "621 AZ",
+                "to": "621-AZ"
+            },
+            {
+                "from": "622 AZ",
+                "to": "622-AZ"
+            },
+            {
+                "from": "621 RS",
+                "to": "621-RS"
+            },
+            {
+                "from": "619 DR",
+                "to": "619-DR"
+            },
+            {
+                "from": "617 DR",
+                "to": "617-DR"
+            },
+            {
+                "from": "617 CR",
+                "to": "617-CR"
+            },
+            {
+                "from": "0047 PT",
+                "to": "0047-PT"
+            },
+            {
+                "from": "0098 PT",
+                "to": "0098-PT"
+            },
+            {
+                "from": "0096 PT",
+                "to": "0096-PT"
+            },
+            {
+                "from": "0097 PT",
+                "to": "0097-PT"
+            },
+            {
+                "from": "0079 AZ",
+                "to": "0079-AZ"
+            },
+            {
+                "from": "1139 RX",
+                "to": "1139-RX"
+            },
+            {
+                "from": "1139 AZ",
+                "to": "1139-AZ"
+            },
+            {
+                "from": "1139 BR",
+                "to": "1139-BR"
+            },
+            {
+                "from": "1139 VM",
+                "to": "1139-VM"
+            },
+            {
+                "from": "4032 VM",
+                "to": "4032-VM"
+            },
+            {
+                "from": "4032 CRS",
+                "to": "4032-CRS"
+            },
+            {
+                "from": "4031 VM",
+                "to": "4031-VM"
+            },
+            {
+                "from": "4031 CRS",
+                "to": "4031-CRS"
+            },
+            {
+                "from": "1010 CRS",
+                "to": "1010-CRS"
+            },
+            {
+                "from": "1010 FC",
+                "to": "1010-FC"
+            },
+            {
+                "from": "1010 FA",
+                "to": "1010-FA"
+            },
+            {
+                "from": "1010 LA",
+                "to": "1010-LA"
+            },
+            {
+                "from": "1001 FA",
+                "to": "1001-FA"
+            },
+            {
+                "from": "1001 LA",
+                "to": "1001-LA"
+            },
+            {
+                "from": "1018 CRS DD",
+                "to": "1018-CRS-DD"
+            },
+            {
+                "from": "1018 CRS DE",
+                "to": "1018-CRS-DE"
+            },
+            {
+                "from": "1018 FC DD",
+                "to": "1018-FC-DD"
+            },
+            {
+                "from": "1018 FC DE",
+                "to": "1018-FC-DE"
+            },
+            {
+                "from": "1018 LA DD",
+                "to": "1018-LA-DD"
+            },
+            {
+                "from": "1018 LA DE",
+                "to": "1018-LA-DE"
+            },
+            {
+                "from": "1021 CRS",
+                "to": "1021-CRS"
+            },
+            {
+                "from": "1021 LA",
+                "to": "1021-LA"
+            },
+            {
+                "from": "1004 CRS DD",
+                "to": "1004-CRS-DD"
+            },
+            {
+                "from": "1004 LA DD",
+                "to": "1004-LA-DD"
+            },
+            {
+                "from": "1004 CRS DE",
+                "to": "1004-CRS-DE"
+            },
+            {
+                "from": "1004 LA DE",
+                "to": "1004-LA-DE"
+            },
+            {
+                "from": "1020 CRS DD",
+                "to": "1020-CRS-DD"
+            },
+            {
+                "from": "1020 CRS DE",
+                "to": "1020-CRS-DE"
+            },
+            {
+                "from": "1020 FA DD",
+                "to": "1020-FA-DD"
+            },
+            {
+                "from": "1020 FA DE",
+                "to": "1020-FA-DE"
+            },
+            {
+                "from": "1020 LA DD",
+                "to": "1020-LA-DD"
+            },
+            {
+                "from": "1020 LA DE",
+                "to": "1020-LA-DE"
+            },
+            {
+                "from": "1030 CRS DD",
+                "to": "1030-CRS-DD"
+            },
+            {
+                "from": "1030 CRS DE",
+                "to": "1030-CRS-DE"
+            },
+            {
+                "from": "1030 FA DD",
+                "to": "1030-FA-DD"
+            },
+            {
+                "from": "1030 FA DE",
+                "to": "1030-FA-DE"
+            },
+            {
+                "from": "1030 LA DD",
+                "to": "1030-LA-DD"
+            },
+            {
+                "from": "1030 LA DE",
+                "to": "1030-LA-DE"
+            },
+            {
+                "from": "1025 CRS DD",
+                "to": "1025-CRS-DD"
+            },
+            {
+                "from": "1025 CRS DE",
+                "to": "1025-CRS-DE"
+            },
+            {
+                "from": "1025 FA DE",
+                "to": "1025-FA-DE"
+            },
+            {
+                "from": "1025 FC DD",
+                "to": "1025-FC-DD"
+            },
+            {
+                "from": "1025 FC DE",
+                "to": "1025-FC-DE"
+            },
+            {
+                "from": "1025 LA DD",
+                "to": "1025-LA-DD"
+            },
+            {
+                "from": "1025 LA DE",
+                "to": "1025-LA-DE"
+            },
+            {
+                "from": "1024 LA",
+                "to": "1024-LA"
+            },
+            {
+                "from": "1024 FC",
+                "to": "1024-FC"
+            },
+            {
+                "from": "1024 FA",
+                "to": "1024-FA"
+            },
+            {
+                "from": "1024 CRS",
+                "to": "1024-CRS"
+            },
+            {
+                "from": "1045 CRS DE",
+                "to": "1045-CRS-DE"
+            },
+            {
+                "from": "1045 LA DD",
+                "to": "1045-LA-DD"
+            },
+            {
+                "from": "1045 LA DE",
+                "to": "1045-LA-DE"
+            },
+            {
+                "from": "4001 VM",
+                "to": "4001-VM"
+            },
+            {
+                "from": "4017 CRS",
+                "to": "4017-CRS"
+            },
+            {
+                "from": "4017 FA",
+                "to": "4017-FA"
+            },
+            {
+                "from": "4017 FC",
+                "to": "4017-FC"
+            },
+            {
+                "from": "4017 VM",
+                "to": "4017-VM"
+            },
+            {
+                "from": "4015 LA DD",
+                "to": "4015-LA-DD"
+            },
+            {
+                "from": "4015 VM DD",
+                "to": "4015-VM-DD"
+            },
+            {
+                "from": "4015 LA DE",
+                "to": "4015-LA-DE"
+            },
+            {
+                "from": "4015 VM DE",
+                "to": "4015-VM-DE"
+            },
+            {
+                "from": "4018 CRS",
+                "to": "4018-CRS"
+            },
+            {
+                "from": "4018 LA",
+                "to": "4018-LA"
+            },
+            {
+                "from": "4012 CRS",
+                "to": "4012-CRS"
+            },
+            {
+                "from": "4012 FA",
+                "to": "4012-FA"
+            },
+            {
+                "from": "4012 FC",
+                "to": "4012-FC"
+            },
+            {
+                "from": "4012 LA",
+                "to": "4012-LA"
+            },
+            {
+                "from": "4004 CRS",
+                "to": "4004-CRS"
+            },
+            {
+                "from": "4004 VM",
+                "to": "4004-VM"
+            },
+            {
+                "from": "4001 CRS",
+                "to": "4001-CRS"
+            },
+            {
+                "from": "4001 FA",
+                "to": "4001-FA"
+            },
+            {
+                "from": "4019 FC DD",
+                "to": "4019-FC-DD"
+            },
+            {
+                "from": "4019 LA DD",
+                "to": "4019-LA-DD"
+            },
+            {
+                "from": "4019 CRS DD",
+                "to": "4019-CRS-DD"
+            },
+            {
+                "from": "4019 CRS DE",
+                "to": "4019-CRS-DE"
+            },
+            {
+                "from": "4019 FA DD",
+                "to": "4019-FA-DD"
+            },
+            {
+                "from": "4019 LA DE",
+                "to": "4019-LA-DE"
+            },
+            {
+                "from": "4021 CRS",
+                "to": "4021-CRS"
+            },
+            {
+                "from": "2360 BR",
+                "to": "2360-BR"
+            },
+            {
+                "from": "410 AZ",
+                "to": "410-AZ"
+            },
+            {
+                "from": "410 VM",
+                "to": "410-VM"
+            },
+            {
+                "from": "410 AM",
+                "to": "410-AM"
+            },
+            {
+                "from": "410 PT",
+                "to": "410-PT"
+            },
+            {
+                "from": "410 RS",
+                "to": "410-RS"
+            },
+            {
+                "from": "410 DR",
+                "to": "410-DR"
+            },
+            {
+                "from": "410 BR",
+                "to": "410-BR"
+            },
+            {
+                "from": "410 TP AZ",
+                "to": "410-TP-AZ"
+            },
+            {
+                "from": "410 TP VM",
+                "to": "410-TP-VM"
+            },
+            {
+                "from": "410 TP AM",
+                "to": "410-TP-AM"
+            },
+            {
+                "from": "410 TP PT",
+                "to": "410-TP-PT"
+            },
+            {
+                "from": "410 TP RS",
+                "to": "410-TP-RS"
+            },
+            {
+                "from": "410 TP DR",
+                "to": "410-TP-DR"
+            },
+            {
+                "from": "410 TP BR",
+                "to": "410-TP-BR"
+            },
+            {
+                "from": "T410 VM",
+                "to": "T410-VM"
+            },
+            {
+                "from": "T410 AM",
+                "to": "T410-AM"
+            },
+            {
+                "from": "T410 PR",
+                "to": "T410-PR"
+            },
+            {
+                "from": "T410 RS",
+                "to": "T410-RS"
+            },
+            {
+                "from": "T410 DR",
+                "to": "T410-DR"
+            },
+            {
+                "from": "T410 PT",
+                "to": "T410-PT"
+            },
+            {
+                "from": "T410 BR",
+                "to": "T410-BR"
+            },
+            {
+                "from": "340 AZ",
+                "to": "340-AZ"
+            },
+            {
+                "from": "340 VM",
+                "to": "340-VM"
+            },
+            {
+                "from": "340 AM",
+                "to": "340-AM"
+            },
+            {
+                "from": "340 PT",
+                "to": "340-PT"
+            },
+            {
+                "from": "340 RS",
+                "to": "340-RS"
+            },
+            {
+                "from": "340 BR",
+                "to": "340-BR"
+            },
+            {
+                "from": "290 AZ",
+                "to": "290-AZ"
+            },
+            {
+                "from": "290 VM",
+                "to": "290-VM"
+            },
+            {
+                "from": "290 PR",
+                "to": "290-PR"
+            },
+            {
+                "from": "290 AM",
+                "to": "290-AM"
+            },
+            {
+                "from": "290 PT",
+                "to": "290-PT"
+            },
+            {
+                "from": "290 RS",
+                "to": "290-RS"
+            },
+            {
+                "from": "290 DR",
+                "to": "290-DR"
+            },
+            {
+                "from": "290 BR",
+                "to": "290-BR"
+            },
+            {
+                "from": "290 TP AZ",
+                "to": "290-TP-AZ"
+            },
+            {
+                "from": "290 TP VM",
+                "to": "290-TP-VM"
+            },
+            {
+                "from": "290 TP PR",
+                "to": "290-TP-PR"
+            },
+            {
+                "from": "290 TP AM",
+                "to": "290-TP-AM"
+            },
+            {
+                "from": "290 TP PT",
+                "to": "290-TP-PT"
+            },
+            {
+                "from": "290 TP RS",
+                "to": "290-TP-RS"
+            },
+            {
+                "from": "290 TP DR",
+                "to": "290-TP-DR"
+            },
+            {
+                "from": "290 TP BR",
+                "to": "290-TP-BR"
+            },
+            {
+                "from": "T290 AM",
+                "to": "T290-AM"
+            },
+            {
+                "from": "T290 VM",
+                "to": "T290-VM"
+            },
+            {
+                "from": "T290 AZ",
+                "to": "T290-AZ"
+            },
+            {
+                "from": "T290 PR",
+                "to": "T290-PR"
+            },
+            {
+                "from": "T290 RS",
+                "to": "T290-RS"
+            },
+            {
+                "from": "T290 PT",
+                "to": "T290-PT"
+            },
+            {
+                "from": "T290 DR",
+                "to": "T290-DR"
+            },
+            {
+                "from": "T290 BR",
+                "to": "T290-BR"
+            },
+            {
+                "from": "410 TP VD",
+                "to": "410-TP-VD"
+            },
+            {
+                "from": "410 VD",
+                "to": "410-VD"
+            },
+            {
+                "from": "3094 CR",
+                "to": "3094-CR"
+            },
+            {
+                "from": "3095 CR",
+                "to": "3095-CR"
+            },
+            {
+                "from": "3096 CR",
+                "to": "3096-CR"
+            },
+            {
+                "from": "3098 CR",
+                "to": "3098-CR"
+            },
+            {
+                "from": "340 VD",
+                "to": "340-VD"
+            },
+            {
+                "from": "683 CR",
+                "to": "683-CR"
+            },
+            {
+                "from": "683 PT",
+                "to": "683-PT"
+            },
+            {
+                "from": "340 VH",
+                "to": "340-VH"
+            },
+            {
+                "from": "290 TP VH",
+                "to": "290-TP-VH"
+            },
+            {
+                "from": "290 VH",
+                "to": "290-VH"
+            },
+            {
+                "from": "3097 CR",
+                "to": "3097-CR"
+            },
+            {
+                "from": "410 BLACK",
+                "to": "410-BLACK"
+            },
+            {
+                "from": "410 TP VH",
+                "to": "410-TP-VH"
+            },
+            {
+                "from": "410 VH",
+                "to": "410-VH"
+            },
+            {
+                "from": "L290 DIR",
+                "to": "L290-DIR"
+            },
+            {
+                "from": "L290 ESQ",
+                "to": "L290-ESQ"
+            },
+            {
+                "from": "L340 DIR",
+                "to": "L340-DIR"
+            },
+            {
+                "from": "L340 ESQ",
+                "to": "L340-ESQ"
+            },
+            {
+                "from": "L410 DIR",
+                "to": "L410-DIR"
+            },
+            {
+                "from": "L410 ESQ",
+                "to": "L410-ESQ"
+            },
+            {
+                "from": "1048 CRS DD",
+                "to": "1048-CRS-DD"
+            },
+            {
+                "from": "1048 CRS DE",
+                "to": "1048-CRS-DE"
+            },
+            {
+                "from": "1048 LA DD",
+                "to": "1048-LA-DD"
+            },
+            {
+                "from": "1048 LA DE",
+                "to": "1048-LA-DE"
+            },
+            {
+                "from": "4022 CRS",
+                "to": "4022-CRS"
+            },
+            {
+                "from": "4022 LA",
+                "to": "4022-LA"
+            },
+            {
+                "from": "520 CV",
+                "to": "520-CV"
+            }
+        ],
+        "url_key": [
+            {
+                "sku": "2220",
+                "url_key": "retrovisor-biz-100-cr-redondo-universal"
+            },
+            {
+                "sku": "2246",
+                "url_key": "retrovisor-cb-300-modelo-11-padrao-yamaha-dir-esq-cromado"
+            },
+            {
+                "sku": "501",
+                "url_key": "retrovisor-titan-2000-03-d-e-awa-motos"
+            },
+            {
+                "sku": "624",
+                "url_key": "retrovisor-biz-18-20-padrao-honda-d-e"
+            },
+            {
+                "sku": "557",
+                "url_key": "retrovisor-xl-h-curta-dt-200-h-curta-preto"
+            },
+            {
+                "sku": "549",
+                "url_key": "retrovisor-mini-ybr-d-e-honda"
+            },
+            {
+                "sku": "617-PT",
+                "url_key": "retrovisor-arrow-capa-cromada-haste-de-aluminio-preta-universal-dir-esq"
+            },
+            {
+                "sku": "3030",
+                "url_key": "protetor-de-carenagem-titan-150-mod-14-15-fan-160-mod-16-22-preto-fosco"
+            },
+            {
+                "sku": "2305",
+                "url_key": "guidao-bros-nxr-125-150-mod-03-08-cromado"
+            },
+            {
+                "sku": "340-DR",
+                "url_key": "bauleto-awa-modelo-proos-34-litros-dourado"
+            },
+            {
+                "sku": "4017-LA",
+                "url_key": "lente-mini-pisca-titan-2000-frisado-la"
+            },
+            {
+                "sku": "2345",
+                "url_key": "guidao-fazer-250-2005-2017-mod-orig-cromado"
+            },
+            {
+                "sku": "69",
+                "url_key": "bucha-da-coroa-titan-150-jg-c-4-pcs"
+            },
+            {
+                "sku": "2015",
+                "url_key": "carcaca-inferior-cg-titan-125-mod-00-04-preta"
+            },
+            {
+                "sku": "506",
+                "url_key": "retrovisor-ybr-factor-125-mod-08-16-rosca-honda"
+            },
+            {
+                "sku": "508",
+                "url_key": "retrovisor-bros-ate-2008-d-e-honda"
+            },
+            {
+                "sku": "511",
+                "url_key": "retrovisor-dt-200-h-preta-rosca-padrao-honda"
+            },
+            {
+                "sku": "512",
+                "url_key": "retrovisor-dt-200-h-preta-rosca-padrao-yam"
+            },
+            {
+                "sku": "515",
+                "url_key": "retrovisor-fazer-mod-orig-rosca-padrao-honda-d-e"
+            },
+            {
+                "sku": "513",
+                "url_key": "retrovisor-fazer-mod-orig-yam-d-e"
+            },
+            {
+                "sku": "503",
+                "url_key": "retrovisor-biz-100-mod-redondo-unv"
+            },
+            {
+                "sku": "509",
+                "url_key": "retrovisor-twister-cbx-250-300-preto-dir-esq-strada"
+            },
+            {
+                "sku": "504",
+                "url_key": "retrovisor-biz-125-bross-09-pop-d-e"
+            },
+            {
+                "sku": "210",
+                "url_key": "retrovisor-suzuki-burgman-d-e"
+            },
+            {
+                "sku": "502",
+                "url_key": "retrovisor-titan-150-mod-08-13-padrao-honda-dir-esq"
+            },
+            {
+                "sku": "587",
+                "url_key": "retrovisor-xl-h-curta-dt-200-h-curta-preto-yam"
+            },
+            {
+                "sku": "510",
+                "url_key": "retrovisor-xre-300-mod-original"
+            },
+            {
+                "sku": "595",
+                "url_key": "retrovisor-xre-300-mod-original-rosca-m8"
+            },
+            {
+                "sku": "543",
+                "url_key": "retrovisor-mini-redondo-articulado-dir-esq-preto"
+            },
+            {
+                "sku": "505",
+                "url_key": "retrovisor-ybr-factor-125-mod-08-16-rosca-yamaha"
+            },
+            {
+                "sku": "588",
+                "url_key": "retrovisor-ybr-mod-original-d-e-articulado-por-esfera-yamaha"
+            },
+            {
+                "sku": "517",
+                "url_key": "retrovisor-lead-110-honda-rosca-m8-inversa"
+            },
+            {
+                "sku": "514",
+                "url_key": "retrovisor-fazer-2015-mod-original-d-e"
+            },
+            {
+                "sku": "518",
+                "url_key": "retrovisor-fazer-2015-mod-original-d-e-rosca-honda"
+            },
+            {
+                "sku": "597",
+                "url_key": "retrovisor-twister-2016-modelo-original-d-e"
+            },
+            {
+                "sku": "525",
+                "url_key": "retrovisor-xt-660-rotativo-padrao-honda-dir-esq"
+            },
+            {
+                "sku": "526",
+                "url_key": "retrovisor-xt-660-rotativo-padrao-yam-dir-esq"
+            },
+            {
+                "sku": "576",
+                "url_key": "retrovisor-titan-125-150-2014-dir-esq"
+            },
+            {
+                "sku": "520",
+                "url_key": "retrovisor-cb-300-mod-11-15-preto-dir-esq"
+            },
+            {
+                "sku": "2245",
+                "url_key": "retrovisor-cb-300-cr-modelo-11-padrao-honda-d-e"
+            },
+            {
+                "sku": "615",
+                "url_key": "retrovisor-cg-125-mi-turuna-padrao-honda-dir-esq"
+            },
+            {
+                "sku": "616",
+                "url_key": "retrovisor-cg-125-mi-turuna-padrao-yam-dir-esq"
+            },
+            {
+                "sku": "623",
+                "url_key": "retrovisor-cg-160-titan-mod-18-25-padrao-honda-dir-esq-rosca-esquerda"
+            },
+            {
+                "sku": "623-DIR",
+                "url_key": "retrovisor-titan-modelo-2018-padrao-honda-dir-rosca-esquerda"
+            },
+            {
+                "sku": "623-ESQ",
+                "url_key": "retrovisor-titan-modelo-2018-padrao-honda-esq-rosca-esquerda"
+            },
+            {
+                "sku": "624-DIR",
+                "url_key": "retrovisor-biz-125-direito-mod-2018-padrao-honda-rosca-esquerda"
+            },
+            {
+                "sku": "624-ESQ",
+                "url_key": "retrovisor-biz-125-esquerda-mod-2018-padrao-honda-rosca-esquerda"
+            },
+            {
+                "sku": "625",
+                "url_key": "retrovisor-bmw-gs-650-800-padrao-honda-dir-esq"
+            },
+            {
+                "sku": "626",
+                "url_key": "retrovisor-bmw-gs-650-800-padrao-yam-dir-esq"
+            },
+            {
+                "sku": "627",
+                "url_key": "retrovisor-bmw-gs-650-800-rotativo-padrao-honda-dir-esq"
+            },
+            {
+                "sku": "628",
+                "url_key": "retrovisor-bmw-gs-650-800-rotativo-padrao-yam-dir-esq"
+            },
+            {
+                "sku": "629",
+                "url_key": "retrovisor-pcx-150-padrao-honda-dir-esq-rosca-esquerda"
+            },
+            {
+                "sku": "631",
+                "url_key": "retrovisor-sh150i-modelo-2017-padrao-honda-dir-esq-rosca-esquerda"
+            },
+            {
+                "sku": "632",
+                "url_key": "retrovisor-mini-titan-160-modelo-2018-2023-padrao-honda-dir-esq-rosca-esquerda"
+            },
+            {
+                "sku": "643",
+                "url_key": "retrovisor-fazer-250-modelo-original-19-20-dir-esq"
+            },
+            {
+                "sku": "644",
+                "url_key": "retrovisor-nmax-160-19-20-neo-125-crosser-150-factor-150-fazer-150-18-20-modelo-original-dir-esq"
+            },
+            {
+                "sku": "645",
+                "url_key": "retrovisor-biz-125-modelo-19-20-padrao-honda-dir-esq-rosca-esquerda"
+            },
+            {
+                "sku": "646",
+                "url_key": "retrovisor-xtz-lander-250-modelo-original-19-20-dir-esq"
+            },
+            {
+                "sku": "630",
+                "url_key": "retrovisor-sh300i-modelo-2016-padrao-honda-dir-esq-rosca-esquerda"
+            },
+            {
+                "sku": "649",
+                "url_key": "retrovisor-bmw-gs-650-800-haste-curta-padrao-honda-dir-esq"
+            },
+            {
+                "sku": "650",
+                "url_key": "retrovisor-bmw-gs-650-800-haste-curta-padrao-yam-dir-esq"
+            },
+            {
+                "sku": "662",
+                "url_key": "retrovisor-mini-bmw-gs-650-f-800-padrao-honda-dir-esq"
+            },
+            {
+                "sku": "663",
+                "url_key": "retrovisor-mini-bmw-gs-650-f-800-padrao-yamaha-dir-esq"
+            },
+            {
+                "sku": "668",
+                "url_key": "retrovisor-bmw-gs-650-800-haste-90-padrao-honda-dir-esq"
+            },
+            {
+                "sku": "680",
+                "url_key": "retrovisor-xre-300-mod-13-24-haste-longa-rosca-m10-honda-dir-esq-uso-sem-adaptador"
+            },
+            {
+                "sku": "501-CV",
+                "url_key": "retrovisor-titan-2000-03-d-e"
+            },
+            {
+                "sku": "613-CV",
+                "url_key": "retrovisor-titan-150-padrao-yamaha-d-e"
+            },
+            {
+                "sku": "614-CV",
+                "url_key": "retrovisor-biz-125-padrao-yamaha-dir-esq-convexo"
+            },
+            {
+                "sku": "540",
+                "url_key": "retrovisor-mini-titan-2000-articulado-d-e-yam"
+            },
+            {
+                "sku": "584",
+                "url_key": "retrovisor-mini-biz-125-articulado-d-e"
+            },
+            {
+                "sku": "558",
+                "url_key": "retrovisor-mini-biz-125-d-e"
+            },
+            {
+                "sku": "559",
+                "url_key": "retrovisor-mini-biz-125-d-e-yam"
+            },
+            {
+                "sku": "537",
+                "url_key": "retrovisor-mini-cb-300-preto-d-e"
+            },
+            {
+                "sku": "538",
+                "url_key": "retrovisor-mini-cb-300-preto-d-e-yam"
+            },
+            {
+                "sku": "585",
+                "url_key": "retrovisor-mini-dt-200-mod-honda-90o-univ-preto-d-e"
+            },
+            {
+                "sku": "2225",
+                "url_key": "retrovisor-mini-redondo-cr-d-e-yam"
+            },
+            {
+                "sku": "577",
+                "url_key": "retrovisor-mini-titan-125-150-modelo-2014-dir-esq"
+            },
+            {
+                "sku": "578",
+                "url_key": "retrovisor-mini-titan-2014-125-150-d-e-yam"
+            },
+            {
+                "sku": "580",
+                "url_key": "retrovisor-mini-titan-150-articulado-d-e-yam"
+            },
+            {
+                "sku": "533",
+                "url_key": "retrovisor-mini-titan-150-d-e"
+            },
+            {
+                "sku": "581",
+                "url_key": "retrovisor-mini-titan-2014-articulado-d-e"
+            },
+            {
+                "sku": "582",
+                "url_key": "retrovisor-mini-titan-2014-articulado-d-e-yam"
+            },
+            {
+                "sku": "560",
+                "url_key": "retrovisor-mini-twister-d-e-cbx-250"
+            },
+            {
+                "sku": "561",
+                "url_key": "retrovisor-mini-twister-d-e-yam"
+            },
+            {
+                "sku": "550",
+                "url_key": "retrovisor-mini-ybr-d-e-yam"
+            },
+            {
+                "sku": "544",
+                "url_key": "retrovisor-mini-redondo-d-e-yam-articulado"
+            },
+            {
+                "sku": "542",
+                "url_key": "retrovisor-mini-redondo-d-e-yam"
+            },
+            {
+                "sku": "541",
+                "url_key": "retrovisor-mini-redondo-univ"
+            },
+            {
+                "sku": "539",
+                "url_key": "retrovisor-mini-titan-2000-articulado-d-e"
+            },
+            {
+                "sku": "536",
+                "url_key": "retrovisor-mini-titan-2000-d-e-yam"
+            },
+            {
+                "sku": "567",
+                "url_key": "retrovisor-mini-redondo-90o-univ-honda"
+            },
+            {
+                "sku": "568",
+                "url_key": "retrovisor-mini-redondo-90o-univ-yam"
+            },
+            {
+                "sku": "579",
+                "url_key": "retrovisor-mini-titan-150-articulado-d-e"
+            },
+            {
+                "sku": "535",
+                "url_key": "retrovisor-mini-titan-2000-d-e"
+            },
+            {
+                "sku": "598",
+                "url_key": "retrovisor-fazer-2015-haste-curta-honda"
+            },
+            {
+                "sku": "599",
+                "url_key": "retrovisor-fazer-2015-haste-curta-yam"
+            },
+            {
+                "sku": "534",
+                "url_key": "retrovisor-mini-titan-150-d-e-yam"
+            },
+            {
+                "sku": "676",
+                "url_key": "retrovisor-sport-mini-kawasaki-z400-modelo-honda-dir-esq"
+            },
+            {
+                "sku": "601",
+                "url_key": "retrovisor-micro-redondo-padrao-honda-universal"
+            },
+            {
+                "sku": "2241",
+                "url_key": "retrovisor-micro-olho-de-gato-cromado-padrao-yamaha-dir-esq"
+            },
+            {
+                "sku": "1504",
+                "url_key": "retrovisor-mini-redondo-hc-univ"
+            },
+            {
+                "sku": "1513",
+                "url_key": "retrovisor-dt-200-hc-90o-d-e-yam-haste-dobra"
+            },
+            {
+                "sku": "1515",
+                "url_key": "retrovisor-dt-200-90-honda-haste-cromada"
+            },
+            {
+                "sku": "1512",
+                "url_key": "retrovisor-dt-200-hc-univ-rosca-padrao-honda"
+            },
+            {
+                "sku": "1511",
+                "url_key": "retrovisor-dt-200-hc-d-e-yam-xtz125-xt225"
+            },
+            {
+                "sku": "1514",
+                "url_key": "retrovisor-mini-dt-200-hc-rosca-padrao-honda"
+            },
+            {
+                "sku": "1507",
+                "url_key": "retrovisor-mini-dt-200-hc-90o-haste-dobra-yam"
+            },
+            {
+                "sku": "1508",
+                "url_key": "retrovisor-mini-dt-200-hc-90o-haste-dobra-rosca-padrao-honda"
+            },
+            {
+                "sku": "1496",
+                "url_key": "retrovisor-mini-titan-2014-125-150-hc"
+            },
+            {
+                "sku": "1500",
+                "url_key": "retrovisor-mini-titan-2000-d-e-hc"
+            },
+            {
+                "sku": "1505",
+                "url_key": "retrovisor-mini-redondo-hc-d-e-yam"
+            },
+            {
+                "sku": "2221",
+                "url_key": "retrovisor-biz-100-cr-redondo-d-e-yam"
+            },
+            {
+                "sku": "2231",
+                "url_key": "retrovisor-biz-125-cr-d-e"
+            },
+            {
+                "sku": "2218",
+                "url_key": "retrovisor-mini-biz-125-cr-d-e"
+            },
+            {
+                "sku": "2205",
+                "url_key": "retrovisor-mini-cb300-cr-d-e-honda"
+            },
+            {
+                "sku": "2234",
+                "url_key": "retrovisor-mini-cb-500-cr-d-e-honda"
+            },
+            {
+                "sku": "2214",
+                "url_key": "retrovisor-mini-titan-2000-cr-d-e"
+            },
+            {
+                "sku": "2213",
+                "url_key": "retrovisor-mini-twister-cr-d-e-yam"
+            },
+            {
+                "sku": "2226",
+                "url_key": "retrovisor-twister-cbx-250-cr-d-e"
+            },
+            {
+                "sku": "2236-CV",
+                "url_key": "retrovisor-twister-cbx250-300-d-e-crom-yam"
+            },
+            {
+                "sku": "2247-CV",
+                "url_key": "retrovisor-hornet-2011-d-e-cromado"
+            },
+            {
+                "sku": "619-CR",
+                "url_key": "retrovisor-arrow-capa-preto-brilhante-haste-de-aluminio-cromada-universal-dir-esq"
+            },
+            {
+                "sku": "619-PT",
+                "url_key": "retrovisor-arrow-capa-preto-brilhante-haste-de-aluminio-preta-universal-dir-esq"
+            },
+            {
+                "sku": "619-VM",
+                "url_key": "retrovisor-arrow-capa-preto-brilhante-haste-de-aluminio-vermelho-universal-dir-esq"
+            },
+            {
+                "sku": "617-VM",
+                "url_key": "retrovisor-arrow-capa-cromada-haste-de-aluminio-vermelha-universal-dir-esq"
+            },
+            {
+                "sku": "621-PT",
+                "url_key": "retrovisor-arrow-capa-preta-haste-de-aco-preta-articulado-esferico-rosca-honda-dir-esq"
+            },
+            {
+                "sku": "622-PT",
+                "url_key": "retrovisor-arrow-capa-preta-haste-de-aco-preta-articulado-esferico-rosca-yamaha-dir-esq"
+            },
+            {
+                "sku": "621-VM",
+                "url_key": "retrovisor-arrow-capa-vermelha-haste-de-aco-preta-articulado-esferico-rosca-honda-dir-esq"
+            },
+            {
+                "sku": "622-VM",
+                "url_key": "retrovisor-arrow-capa-vermelha-haste-de-aco-preta-articulado-esferico-rosca-yamaha-dir-esq"
+            },
+            {
+                "sku": "621-AZ",
+                "url_key": "retrovisor-arrow-capa-azul-haste-de-aco-preta-articulado-esferico-rosca-honda-dir-esq"
+            },
+            {
+                "sku": "622-AZ",
+                "url_key": "retrovisor-arrow-capa-azul-haste-de-aco-preta-articulado-esferico-rosca-yamaha-dir-esq"
+            },
+            {
+                "sku": "621-RS",
+                "url_key": "retrovisor-arrow-capa-rosa-haste-de-aco-preta-articulado-esferico-rosca-honda-dir-esq"
+            },
+            {
+                "sku": "619-DR",
+                "url_key": "retrovisor-arrow-capa-preto-brilhante-haste-de-aluminio-dourada-universal-dir-esq"
+            },
+            {
+                "sku": "617-DR",
+                "url_key": "retrovisor-arrow-capa-cromada-haste-de-aluminio-dourada-universal-dir-esq"
+            },
+            {
+                "sku": "635",
+                "url_key": "retrovisor-arrow-capa-prata-iron-nail-metalico-haste-de-aluminio-preta-universal-dir-esq"
+            },
+            {
+                "sku": "638",
+                "url_key": "retrovisor-arrow-capa-azul-metalico-haste-de-aluminio-cromada-universal-dir-esq"
+            },
+            {
+                "sku": "653",
+                "url_key": "retrovisor-mt-03-07-09-padrao-yam-rotativo-dir-esq"
+            },
+            {
+                "sku": "652",
+                "url_key": "retrovisor-mt-03-07-09-padrao-honda-rotativo-dir-esq"
+            },
+            {
+                "sku": "617-CR",
+                "url_key": "retrovisor-arrow-capa-cromada-haste-de-aluminio-cromada-universal-dir-esq"
+            },
+            {
+                "sku": "74",
+                "url_key": "borracha-do-estribo-da-biz-125-2011-2022-par"
+            },
+            {
+                "sku": "60",
+                "url_key": "borracha-do-estribo-honda-biz-2006-2010-par"
+            },
+            {
+                "sku": "52",
+                "url_key": "borracha-do-estribo-titan-150-2000-par"
+            },
+            {
+                "sku": "71",
+                "url_key": "borracha-do-estribo-twister-2001-2008-par"
+            },
+            {
+                "sku": "54",
+                "url_key": "borracha-do-estribo-titan-160-mod-16-25-par"
+            },
+            {
+                "sku": "48",
+                "url_key": "pedaleira-dianteira-traseira-dir-twister-cb-300-strada-titan-150-sport-2005-2008"
+            },
+            {
+                "sku": "49",
+                "url_key": "pedaleira-dianteira-traseira-esq-twister-cb-300-strada-titan-150-sport-2005-2008"
+            },
+            {
+                "sku": "45",
+                "url_key": "pedaleira-traseira-titan160-e-fan160-2016-2023-twister250-2016-2019-start160-2016-2020-dir"
+            },
+            {
+                "sku": "46",
+                "url_key": "pedaleira-traseira-titan160-e-fan160-2016-2023-twister250-2016-2019-start160-2016-2020-esq"
+            },
+            {
+                "sku": "44",
+                "url_key": "borracha-pedaleira-tras-titan160-e-fan160-2016-2023-twister250-2016-2019-start160-2016-2023-par"
+            },
+            {
+                "sku": "39",
+                "url_key": "pedaleira-traseira-dir-cg-125-00-04-cg-150-04-08-cg-fan-125-150-08-15-honda-biz-98"
+            },
+            {
+                "sku": "38",
+                "url_key": "pedaleira-traseira-esq-cg-125-00-04-cg-150-04-08-cg-fan-125-150-08-15-honda-biz-98"
+            },
+            {
+                "sku": "67",
+                "url_key": "borracha-do-estribo-yes-par"
+            },
+            {
+                "sku": "37",
+                "url_key": "pedaleira-traseira-univ-cg-titan-125-modelo-2000-2004"
+            },
+            {
+                "sku": "34",
+                "url_key": "pedaleira-dianteira-esq-fazer-250-xj6-600-mt03-mt07-mt09"
+            },
+            {
+                "sku": "33",
+                "url_key": "pedaleira-dianteira-dir-fazer-250-xj6-600-mt03-mt07-mt09"
+            },
+            {
+                "sku": "35",
+                "url_key": "pedaleira-dianteira-dir-cb-twister-250-2016-2019"
+            },
+            {
+                "sku": "36",
+                "url_key": "pedaleira-dianteira-esq-cb-twister-250-2016-2019"
+            },
+            {
+                "sku": "30",
+                "url_key": "borracha-da-pedaleira-traseira-nxr-150-160-bros-xre-300-par"
+            },
+            {
+                "sku": "76",
+                "url_key": "borracha-do-estribo-crypton-115-2010-2016-par"
+            },
+            {
+                "sku": "24",
+                "url_key": "pedaleira-traseira-esq-titan-125-es-2000-2004-titan-150-ks-2004-2008-titan-150-2008-2010-bross"
+            },
+            {
+                "sku": "23",
+                "url_key": "pedaleira-traseira-dir-titan-125-es-2000-2004-titan-150-ks-2004-2008-titan-150-2008-2010-bross"
+            },
+            {
+                "sku": "77",
+                "url_key": "borracha-do-estribo-da-fazer-factor-150-modelo-16-22-par"
+            },
+            {
+                "sku": "1118",
+                "url_key": "palla-preta"
+            },
+            {
+                "sku": "70",
+                "url_key": "suporte-de-placa-inteiro-de-polipropileno-preto-grande-com-kit"
+            },
+            {
+                "sku": "62",
+                "url_key": "sup-de-placa-inteiro-pequena"
+            },
+            {
+                "sku": "75",
+                "url_key": "sup-de-placa-inteirico-de-ferro-grande-com-parafuso-arruela-e-porca-cj-5-pecas"
+            },
+            {
+                "sku": "0047-PT",
+                "url_key": "capa-da-corrente-titan-150-2004-2013-e-fan-150-2009-2013-preta"
+            },
+            {
+                "sku": "1200",
+                "url_key": "farol-completo-titan-150-2004-2008"
+            },
+            {
+                "sku": "1201",
+                "url_key": "farol-completo-titan-2000-125-2000-2008"
+            },
+            {
+                "sku": "95",
+                "url_key": "manopla-biz-125-2006-2018"
+            },
+            {
+                "sku": "0098-PT",
+                "url_key": "manopla-c-roldana-xl-250-350-tornado-125-150-2009-2014-pt"
+            },
+            {
+                "sku": "0096-PT",
+                "url_key": "manopla-enduro-bross-tornado-preto"
+            },
+            {
+                "sku": "81",
+                "url_key": "manopla-twister-2001-2008"
+            },
+            {
+                "sku": "87",
+                "url_key": "manopla-titan-150-titan-cg-160-mod-16-25-preta"
+            },
+            {
+                "sku": "0097-PT",
+                "url_key": "manopla-c-roldana-titan-00-150-cg-jg-pt"
+            },
+            {
+                "sku": "0079-AZ",
+                "url_key": "manopla-esportiva-aluminio-blue-azul"
+            },
+            {
+                "sku": "100",
+                "url_key": "roldana-do-acelerador-da-bros-160-xl-250-350-tornado-125-150-2009-2014"
+            },
+            {
+                "sku": "99",
+                "url_key": "roldana-do-acelerador-titan-00-150-ate-2014"
+            },
+            {
+                "sku": "102",
+                "url_key": "roldana-do-acelerador-da-cbx-150-200-twister-2001-2008"
+            },
+            {
+                "sku": "2032",
+                "url_key": "carcaca-superior-twister-250-mod-01-08-prata"
+            },
+            {
+                "sku": "2042",
+                "url_key": "carcaca-superior-fan-125-mod-05-08-com-acrilico-preta"
+            },
+            {
+                "sku": "2041",
+                "url_key": "carcaca-superior-cg-titan-125-mod-00-04-com-acrilico-preta"
+            },
+            {
+                "sku": "2043",
+                "url_key": "carcaca-superior-titan-150-mod-04-08-cromada"
+            },
+            {
+                "sku": "2030",
+                "url_key": "carcaca-superior-titan-150-mod-04-08-prata"
+            },
+            {
+                "sku": "2029",
+                "url_key": "carcaca-superior-titan-150-mod-04-08-preta"
+            },
+            {
+                "sku": "2038",
+                "url_key": "carcaca-superior-do-painel-fazer-250-mod-05-10-com-acrilico-preta"
+            },
+            {
+                "sku": "2048",
+                "url_key": "carcaca-superior-cb-300-mod-09-15-com-acrilico-preta"
+            },
+            {
+                "sku": "2056",
+                "url_key": "carcaca-interna-cg-titan-125-mod-00-04-branca"
+            },
+            {
+                "sku": "2022",
+                "url_key": "carcaca-interna-nx-400-falcon-mod-01-08-branca"
+            },
+            {
+                "sku": "2046",
+                "url_key": "carcaca-interna-cg-titan-150-mod-04-08-branca"
+            },
+            {
+                "sku": "2047",
+                "url_key": "carcaca-interna-twister-250-mod-01-08-branca"
+            },
+            {
+                "sku": "2039",
+                "url_key": "carcaca-interna-fazer-250-mod-05-10-branca"
+            },
+            {
+                "sku": "2049",
+                "url_key": "carcaca-inferior-cb-500-mod-98-04-dafra-speed-150-mod-08-15-preta"
+            },
+            {
+                "sku": "2031",
+                "url_key": "carcaca-inferior-fazer-250-mod-05-10-preta"
+            },
+            {
+                "sku": "2036",
+                "url_key": "carcaca-inferior-cg-titan-ks-150-mod-04-08-preta"
+            },
+            {
+                "sku": "2017",
+                "url_key": "carcaca-inferior-yes-125-mod-07-15-preta"
+            },
+            {
+                "sku": "2035",
+                "url_key": "carcaca-inferior-twister-250-mod-01-08-preta"
+            },
+            {
+                "sku": "2019",
+                "url_key": "carcaca-do-farol-cb-500-mod-98-04-preta"
+            },
+            {
+                "sku": "2021",
+                "url_key": "carcaca-do-farol-cg-titan-125-mod-00-04-fan-125-mod-05-08-com-bucha-de-metal-preta"
+            },
+            {
+                "sku": "2027",
+                "url_key": "carcaca-farol-titan-150-mod-04-08-com-bucha-de-metal-preta"
+            },
+            {
+                "sku": "1170",
+                "url_key": "bloco-otico-biz-100-mod-1998-2005-com-soquete-para-pisca-e-lampada"
+            },
+            {
+                "sku": "1171",
+                "url_key": "bloco-otico-titan-150-2004-2008"
+            },
+            {
+                "sku": "1173",
+                "url_key": "bloco-otico-ybr-fazer-2005-2010-com-aro-cromado-interno"
+            },
+            {
+                "sku": "1172",
+                "url_key": "bloco-otico-ybr-fazer-2005-2010-sem-aro"
+            },
+            {
+                "sku": "1169",
+                "url_key": "lente-do-bloco-otico-titan-150-2000"
+            },
+            {
+                "sku": "1190",
+                "url_key": "aro-do-farol-ferro-titan-2000-125-2000-2008-150-2004-2008-preto"
+            },
+            {
+                "sku": "1161",
+                "url_key": "guia-de-cabo-de-freio-e-veloc-titan-125-150"
+            },
+            {
+                "sku": "1129",
+                "url_key": "adaptador-interno-m10-rosca-esq-externo-m8-rosca-dir-cj-5-pecas"
+            },
+            {
+                "sku": "1128",
+                "url_key": "adaptador-burgman-interno-m10-rosca-dir-externo-m8-rosca-dir-cj-5-pecas"
+            },
+            {
+                "sku": "1130",
+                "url_key": "adaptador-interno-m10-rosca-dir-externo-m10-rosca-esq-cj-5-pecas"
+            },
+            {
+                "sku": "1131",
+                "url_key": "adaptador-interno-m10-rosca-esq-externo-m10-rosca-dir-cj-5-pecas"
+            },
+            {
+                "sku": "1137",
+                "url_key": "barra-de-guidao-com-abracadeira-de-nylon-cromada"
+            },
+            {
+                "sku": "1138",
+                "url_key": "barra-de-guidao-com-abracadeira-de-nylon-preta"
+            },
+            {
+                "sku": "1139-RX",
+                "url_key": "barra-de-guidao-com-abracadeira-de-nylon-roxa"
+            },
+            {
+                "sku": "1139-AZ",
+                "url_key": "barra-de-guidao-com-abracadeira-de-nylon-azul"
+            },
+            {
+                "sku": "1139-BR",
+                "url_key": "barra-de-guidao-com-abracadeira-de-nylon-branca"
+            },
+            {
+                "sku": "1122",
+                "url_key": "adaptador-interno-m10-rosca-dir-externo-m10-rosca-dir-cj-5-pecas"
+            },
+            {
+                "sku": "1139-VM",
+                "url_key": "barra-de-guidao-com-abracadeira-de-nylon-vermelha"
+            },
+            {
+                "sku": "1125",
+                "url_key": "antena-anti-cerol-fixa-pacote-com-10-pc-s"
+            },
+            {
+                "sku": "1124",
+                "url_key": "antena-anti-cerol-retratil-com-abracadeira-de-nylon"
+            },
+            {
+                "sku": "1123",
+                "url_key": "antena-anti-cerol-retratil-para-manicoto"
+            },
+            {
+                "sku": "4032-VM",
+                "url_key": "lente-traseira-titan-2000-2000-2008-vm"
+            },
+            {
+                "sku": "4032-CRS",
+                "url_key": "lente-traseira-titan-2000-2000-2008-crs"
+            },
+            {
+                "sku": "4031-VM",
+                "url_key": "lente-traseira-titan-150-2004-2008-vm"
+            },
+            {
+                "sku": "4031-CRS",
+                "url_key": "lente-traseira-titan-150-cristal"
+            },
+            {
+                "sku": "1010-CRS",
+                "url_key": "mini-pisca-titan-125-mod-00-04-titan-150-mod-04-08-completo-lente-frisada-cristal"
+            },
+            {
+                "sku": "1010-FC",
+                "url_key": "mini-pisca-titan-125-mod-00-04-titan-150-mod-04-08-completo-lente-frisada-fume-claro"
+            },
+            {
+                "sku": "1010-FA",
+                "url_key": "mini-pisca-titan-125-mod-00-04-titan-150-mod-04-08-completo-lente-frisada-fume-amarelado"
+            },
+            {
+                "sku": "1010-LA",
+                "url_key": "mini-pisca-titan-125-mod-00-04-titan-150-mod-04-08-completo-lente-frisada-laranja"
+            },
+            {
+                "sku": "1001-FA",
+                "url_key": "mini-pisca-titan-2000-lisa-fume-amarelado"
+            },
+            {
+                "sku": "1001-LA",
+                "url_key": "mini-pisca-titan-2000-lisa-la"
+            },
+            {
+                "sku": "1018-CRS-DD",
+                "url_key": "pisca-titan-125-mod-00-04-completo-lente-frisada-cristal-dianteiro-direito"
+            },
+            {
+                "sku": "1018-CRS-DE",
+                "url_key": "pisca-titan-125-mod-00-04-completo-lente-frisada-cristal-dianteiro-esquerdo"
+            },
+            {
+                "sku": "1018-FC-DD",
+                "url_key": "pisca-titan-125-mod-00-04-completo-lente-frisada-fume-claro-dianteiro-direito"
+            },
+            {
+                "sku": "1018-FC-DE",
+                "url_key": "pisca-titan-125-mod-00-04-completo-lente-frisada-fume-claro-dianteiro-esquerdo"
+            },
+            {
+                "sku": "1018-LA-DD",
+                "url_key": "pisca-titan-125-mod-00-04-completo-lente-frisada-laranja-dianteiro-direito"
+            },
+            {
+                "sku": "1018-LA-DE",
+                "url_key": "pisca-titan-125-mod-00-04-completo-lente-frisada-laranja-dianteiro-esquerda"
+            },
+            {
+                "sku": "1021-CRS",
+                "url_key": "pisca-yes-mod-04-22-completo-lente-cristal-frisada"
+            },
+            {
+                "sku": "1021-LA",
+                "url_key": "pisca-yes-mod-04-22-completo-lente-laranja-frisada"
+            },
+            {
+                "sku": "1004-CRS-DD",
+                "url_key": "mini-pisca-bros-mod-13-15-titan-125-mod-00-04-completo-lente-cristal-dianteiro-dir"
+            },
+            {
+                "sku": "1004-LA-DD",
+                "url_key": "mini-pisca-bros-mod-13-15-titan-125-mod-00-04-completo-lente-laranja-dianteiro-dir"
+            },
+            {
+                "sku": "1004-CRS-DE",
+                "url_key": "mini-pisca-bros-mod-13-15-titan-125-mod-00-04-completo-lente-cristal-dianteiro-esq"
+            },
+            {
+                "sku": "1004-LA-DE",
+                "url_key": "mini-pisca-bros-mod-13-15-titan-125-mod-00-04-completo-lente-laranja-dianteiro-esq"
+            },
+            {
+                "sku": "1020-CRS-DD",
+                "url_key": "pisca-titan-fan-150-mod-14-15-completo-lente-cristal-dianteiro-direito-terminal-eletrico"
+            },
+            {
+                "sku": "1020-CRS-DE",
+                "url_key": "pisca-titan-fan-150-mod-14-15-completo-lente-cristal-dianteiro-esquerdo-terminal-eletrico"
+            },
+            {
+                "sku": "1020-FA-DD",
+                "url_key": "pisca-titan-fan-150-mod-14-15-completo-lente-fume-amarelado-dianteiro-direito-terminal-eletrico"
+            },
+            {
+                "sku": "1020-FA-DE",
+                "url_key": "pisca-titan-fan-150-mod-14-15-completo-lente-fume-amarelado-dianteiro-esquerdo-terminal-eletrico"
+            },
+            {
+                "sku": "1020-LA-DD",
+                "url_key": "pisca-titan-fan-150-mod-14-15-completo-lente-laranja-dianteiro-direito-terminal-eletrico"
+            },
+            {
+                "sku": "1020-LA-DE",
+                "url_key": "pisca-titan-fan-150-mod-14-15-completo-lente-laranja-dianteiro-esquerdo-terminal-eletrico"
+            },
+            {
+                "sku": "1030-CRS-DD",
+                "url_key": "pisca-titan-titan-160-16-25-twister-16-18-completo-lente-cristal-dianteiro-dir-conector"
+            },
+            {
+                "sku": "1030-CRS-DE",
+                "url_key": "pisca-titan-titan-160-16-25-twister-16-18-completo-lente-cristal-dianteiro-esq-conector"
+            },
+            {
+                "sku": "1030-FA-DD",
+                "url_key": "pisca-titan-titan-160-16-25-twister-16-18-completo-lente-fume-amarelado-dianteiro-dir-conector"
+            },
+            {
+                "sku": "1030-FA-DE",
+                "url_key": "pisca-titan-titan-160-16-25-twister-16-18-completo-lente-fume-amarelado-dianteiro-esq-conector"
+            },
+            {
+                "sku": "1030-LA-DD",
+                "url_key": "pisca-titan-titan-160-16-25-twister-16-18-completo-lente-laranja-dianteiro-dir-conector"
+            },
+            {
+                "sku": "1030-LA-DE",
+                "url_key": "pisca-titan-titan-160-16-25-twister-16-18-completo-lente-laranja-dianteiro-esq-conector"
+            },
+            {
+                "sku": "1025-CRS-DD",
+                "url_key": "pisca-bros-mod-13-22-xre-190-mod-16-18-completo-lente-cristal-dianteiro-direito"
+            },
+            {
+                "sku": "1025-CRS-DE",
+                "url_key": "pisca-bros-mod-13-22-xre-190-mod-16-18-completo-lente-cristal-dianteiro-esquerdo"
+            },
+            {
+                "sku": "1025-FA-DE",
+                "url_key": "pisca-bros-mod-13-22-xre-190-mod-16-18-completo-lente-fume-amarelado-dianteiro-esquerdo"
+            },
+            {
+                "sku": "1025-FC-DD",
+                "url_key": "pisca-bros-mod-13-22-xre-190-mod-16-18-completo-lente-fume-claro-dianteiro-direito"
+            },
+            {
+                "sku": "1025-FC-DE",
+                "url_key": "pisca-bros-mod-13-22-xre-190-mod-16-18-completo-lente-fume-claro-dianteiro-esquerdo"
+            },
+            {
+                "sku": "1025-LA-DD",
+                "url_key": "pisca-bros-mod-13-22-xre-190-mod-16-18-completo-lente-laranja-dianteiro-direito"
+            },
+            {
+                "sku": "1025-LA-DE",
+                "url_key": "pisca-bros-mod-13-22-xre-190-mod-16-18-completo-lente-laranja-dianteiro-esquerdo"
+            },
+            {
+                "sku": "1024-LA",
+                "url_key": "pisca-titan-125-mod-00-04-cb-300-xre-300-09-14-completo-lente-frisada-laranja-universal"
+            },
+            {
+                "sku": "1024-FC",
+                "url_key": "pisca-titan-125-mod-00-04-cb-300-xre-300-09-14-completo-lente-frisada-fume-claro-universal"
+            },
+            {
+                "sku": "1024-FA",
+                "url_key": "pisca-titan-125-mod-00-04-cb-300-xre-300-09-14-completo-lente-frisada-fume-amarelado-universal"
+            },
+            {
+                "sku": "1024-CRS",
+                "url_key": "pisca-titan-125-mod-00-04-cb-300-xre-300-09-14-completo-lente-frisada-cristal-universal"
+            },
+            {
+                "sku": "1045-CRS-DE",
+                "url_key": "pisca-fazer-250-mod-11-14-com-carcaca-preta-e-lente-cristal-lisa-dianteiro-esq-com-lampada"
+            },
+            {
+                "sku": "1045-LA-DD",
+                "url_key": "pisca-fazer-250-mod-11-14-com-carcaca-preta-e-lente-laranja-lisa-dianteiro-dir-com-lampada"
+            },
+            {
+                "sku": "1045-LA-DE",
+                "url_key": "pisca-fazer-250-mod-11-14-com-carcaca-preta-e-lente-laranja-lisa-dianteiro-esq-com-lampada"
+            },
+            {
+                "sku": "4001-VM",
+                "url_key": "lente-mini-pisca-titan-2000-lisa-vm"
+            },
+            {
+                "sku": "4017-CRS",
+                "url_key": "lente-mini-pisca-titan-2000-frisado-cr"
+            },
+            {
+                "sku": "4017-FA",
+                "url_key": "lente-mini-pisca-titan-2000-frisado-fa"
+            },
+            {
+                "sku": "4017-FC",
+                "url_key": "lente-mini-pisca-titan-2000-frisado-fc"
+            },
+            {
+                "sku": "4017-VM",
+                "url_key": "lente-mini-pisca-titan-2000-frisado-vm"
+            },
+            {
+                "sku": "4015-LA-DD",
+                "url_key": "lente-do-pisca-biz-la-awa"
+            },
+            {
+                "sku": "4015-VM-DD",
+                "url_key": "lente-do-pisca-biz-vm-awa"
+            },
+            {
+                "sku": "4015-LA-DE",
+                "url_key": "lente-do-pisca-biz-la"
+            },
+            {
+                "sku": "4015-VM-DE",
+                "url_key": "lente-do-pisca-biz-vm"
+            },
+            {
+                "sku": "4018-CRS",
+                "url_key": "lente-pisca-yes-frisado-cr"
+            },
+            {
+                "sku": "4018-LA",
+                "url_key": "lente-pisca-yes-frisado-la"
+            },
+            {
+                "sku": "4040",
+                "url_key": "lente-do-pisca-xre-300-original-frisada-fume-cristalizado"
+            },
+            {
+                "sku": "4012-CRS",
+                "url_key": "lente-frisado-do-pisca-titan-00-150-twister-xre-300-cb-300-cr"
+            },
+            {
+                "sku": "4012-FA",
+                "url_key": "lente-frisado-do-pisca-titan-00-150-twister-xre-300-cb-300-fa"
+            },
+            {
+                "sku": "4012-FC",
+                "url_key": "lente-frisado-do-pisca-titan-00-150-twister-xre-300-cb-300-fc"
+            },
+            {
+                "sku": "4012-LA",
+                "url_key": "lente-frisado-do-pisca-titan-00-150-twister-xre-300-cb-300-la"
+            },
+            {
+                "sku": "4004-CRS",
+                "url_key": "lente-lisa-pisca-titan-00-150-twister-xre-300-cb-300-cr"
+            },
+            {
+                "sku": "4004-VM",
+                "url_key": "lente-lisa-pisca-titan-00-150-twister-xre-300-cb-300-vm"
+            },
+            {
+                "sku": "4001-CRS",
+                "url_key": "lente-mini-pisca-titan-2000-lisa-cr"
+            },
+            {
+                "sku": "4001-FA",
+                "url_key": "lente-mini-pisca-lisa-titan-2000-fume-amarelado"
+            },
+            {
+                "sku": "4019-FC-DD",
+                "url_key": "lente-pisca-titan-150-125-2014-fume-claro-dianteiro-direito"
+            },
+            {
+                "sku": "4019-LA-DD",
+                "url_key": "lente-pisca-titan-150-125-2014-laranja-dianteiro-direito"
+            },
+            {
+                "sku": "4019-CRS-DD",
+                "url_key": "lente-pisca-titan-150-125-2014-cristal-dianteiro-direito"
+            },
+            {
+                "sku": "4019-CRS-DE",
+                "url_key": "lente-pisca-titan-150-125-2014-cristal-dianteiro-esquerdo"
+            },
+            {
+                "sku": "4019-FA-DD",
+                "url_key": "lente-pisca-titan-150-125-2014-fume-amarelado-dianteiro-direito"
+            },
+            {
+                "sku": "4019-LA-DE",
+                "url_key": "lente-pisca-titan-150-125-2014-laranja-dianteiro-esquerdo"
+            },
+            {
+                "sku": "4021-CRS",
+                "url_key": "lente-lisa-pisca-fazer-250-mod-11-14-factor-125-mod-09-12-factor-150-mod-19-21-cristal"
+            },
+            {
+                "sku": "3015",
+                "url_key": "bagageiro-titan-125-modelo-00-04-fan-125-modelo-05-08-cromado-macico"
+            },
+            {
+                "sku": "3000",
+                "url_key": "bagageiro-titan-150-09-13-modelo-preto-macico"
+            },
+            {
+                "sku": "3018",
+                "url_key": "bagageiro-biz-100-110i-125-modelo-11-17-preto-macico"
+            },
+            {
+                "sku": "3016",
+                "url_key": "bagageiro-ybr-factor-125-modelo-09-15-preto-macico"
+            },
+            {
+                "sku": "3012",
+                "url_key": "bagageiro-twister-cbx-250-modelo-01-08-preto-macico"
+            },
+            {
+                "sku": "3006",
+                "url_key": "bagageiro-titan-150-modelo-04-08-preto-macico"
+            },
+            {
+                "sku": "3008",
+                "url_key": "bagageiro-fazer-250-modelo-05-17-preto-macico"
+            },
+            {
+                "sku": "3007",
+                "url_key": "bagageiro-titan-150-modelo-04-08-cromado-macico"
+            },
+            {
+                "sku": "3004",
+                "url_key": "bagageiro-fazer-150-modelo-14-22-e-factor-150-modelo-16-22-preto-macico"
+            },
+            {
+                "sku": "3010",
+                "url_key": "bagageiro-cb-300-modelo-09-15-preto-macico"
+            },
+            {
+                "sku": "3001",
+                "url_key": "bagageiro-titan-150-modelo-09-13-cromado-macico"
+            },
+            {
+                "sku": "3014",
+                "url_key": "bagageiro-titan-125-modelo-00-04-fan-125-modelo-05-08-preto-macico"
+            },
+            {
+                "sku": "3002",
+                "url_key": "bagageiro-titan-125-modelo-14-16-fan-160-modelo-16-24-preto-macico"
+            },
+            {
+                "sku": "3003",
+                "url_key": "bagageiro-titan-125-150-modelo-14-16-fan-160-modelo-16-23-cromado-macico"
+            },
+            {
+                "sku": "3020",
+                "url_key": "bagageiro-ybr-125-modelo-00-08-preto-macico"
+            },
+            {
+                "sku": "3022",
+                "url_key": "bagageiro-cg-160-titan-modelo-16-22-preto-macico"
+            },
+            {
+                "sku": "3023",
+                "url_key": "bagageiro-cg-160-titan-modelo-16-22-cromado-macico"
+            },
+            {
+                "sku": "3024",
+                "url_key": "bagageiro-twister-250-modelo-16-19-preto-macico"
+            },
+            {
+                "sku": "3028",
+                "url_key": "bagageiro-biz-125-modelo-06-10-preto-macico"
+            },
+            {
+                "sku": "3040",
+                "url_key": "protetor-de-carenagem-xre-300-mod-09-22-preto-fosco"
+            },
+            {
+                "sku": "3050",
+                "url_key": "protetor-de-carenagem-factor-125-mod-09-14-preto-fosco"
+            },
+            {
+                "sku": "3060",
+                "url_key": "protetor-de-carenagem-fazer-150-mod-13-22-preto-fosco"
+            },
+            {
+                "sku": "2008",
+                "url_key": "bagageiro-biz-100-modelo-98-05-preto-macico"
+            },
+            {
+                "sku": "3070",
+                "url_key": "protetor-de-carenagem-bros-160-mod-15-20-preto-fosco"
+            },
+            {
+                "sku": "3080",
+                "url_key": "protetor-de-carenagem-fazer-250-mod-2018-2020-preto-fosco"
+            },
+            {
+                "sku": "3095",
+                "url_key": "protetor-de-carter-tenere-250-modelo-2013-2019-preto-fosco"
+            },
+            {
+                "sku": "2006",
+                "url_key": "bagageiro-pop-110-modelo-15-22-preto-macico"
+            },
+            {
+                "sku": "3085",
+                "url_key": "protetor-de-carenagem-fazer-250-mod-09-17-preto-fosco"
+            },
+            {
+                "sku": "3036",
+                "url_key": "protetor-de-carenagem-titan-160-mod-16-22-preto-fosco"
+            },
+            {
+                "sku": "2004",
+                "url_key": "bagageiro-xtz-125-modelo-02-16-preto-macico"
+            },
+            {
+                "sku": "40",
+                "url_key": "estribo-cg-titan-125-modelo-83-00-02-04-e-fan-125-modelo-04-08-macico"
+            },
+            {
+                "sku": "41",
+                "url_key": "estribo-titan-150-04-08-e-fan-150-modelo-11-macico"
+            },
+            {
+                "sku": "2314",
+                "url_key": "guidao-bros-nxr-125-150-mod-03-08-cinza"
+            },
+            {
+                "sku": "2352",
+                "url_key": "guidao-cb-300-mod-09-15-cromado-com-bucha-para-fixacao-de-peso"
+            },
+            {
+                "sku": "2311",
+                "url_key": "guidao-cg-ml-125-1983-1989-mod-mod-orig-polido-cromado"
+            },
+            {
+                "sku": "2321",
+                "url_key": "guidon-falcon-nx-400-modelo-original-preto"
+            },
+            {
+                "sku": "2363",
+                "url_key": "guidao-hornet-600-mod-08-13-cromado-com-bucha-para-fixacao-de-peso"
+            },
+            {
+                "sku": "2319",
+                "url_key": "guidao-titan-125-150-fan-125-150-mod-09-13-cromado-com-bucha-para-fixacao-de-peso"
+            },
+            {
+                "sku": "2308",
+                "url_key": "guidao-titan-150-mod-04-08-cromado-com-bucha-para-fixacao-de-peso"
+            },
+            {
+                "sku": "2357",
+                "url_key": "guidao-titan-150-mod-04-08-preto"
+            },
+            {
+                "sku": "2301",
+                "url_key": "guidao-twister-cbx-250-2001-2008-mod-orig-cromado"
+            },
+            {
+                "sku": "2312",
+                "url_key": "guidao-twister-cbx-250-2001-2008-mod-orig-c-peso-polido-cromado"
+            },
+            {
+                "sku": "2304",
+                "url_key": "guidao-bros-nxr-125-150-mod-03-08-preto"
+            },
+            {
+                "sku": "2359",
+                "url_key": "guidon-cg-ml-83-modelo-original-preto"
+            },
+            {
+                "sku": "2300",
+                "url_key": "guidao-titan-150-mod-04-08-cromado"
+            },
+            {
+                "sku": "2303",
+                "url_key": "guidao-titan-125-150-fan-125-150-mod-09-13-cromado"
+            },
+            {
+                "sku": "2309",
+                "url_key": "guidao-titan-125-mod-00-04-fan-125-mod-05-08-cromado"
+            },
+            {
+                "sku": "2317",
+                "url_key": "guidao-cg-titan-125-mod-95-02-cromado"
+            },
+            {
+                "sku": "2338",
+                "url_key": "guidao-cbx-200-strada-mod-94-02-preto-com-bucha-para-fixacao-de-peso"
+            },
+            {
+                "sku": "2353",
+                "url_key": "guidao-xre-300-mod-10-15-cinza-com-bucha-para-fixacao-de-peso"
+            },
+            {
+                "sku": "2379",
+                "url_key": "guidao-fazer-250-mod-18-21-preto-fosco-com-bucha-para-fixacao-de-peso"
+            },
+            {
+                "sku": "2383",
+                "url_key": "guidao-cb-250-twister-mod-16-21-preto-acetinado-com-bucha-para-fixacao-de-peso"
+            },
+            {
+                "sku": "2384",
+                "url_key": "guidao-bros-160-esd-ed-mod-15-23-xre-190-mod-16-19-cinza-com-bucha-para-fixacao-de-peso"
+            },
+            {
+                "sku": "2346",
+                "url_key": "guidao-fazer-250-2005-2017-mod-orig-c-peso-polido-cromado"
+            },
+            {
+                "sku": "2302",
+                "url_key": "guidao-ybr-125-factor-mod-00-09-cromado"
+            },
+            {
+                "sku": "2351",
+                "url_key": "guidon-yes-07-13-modelo-original-preto"
+            },
+            {
+                "sku": "2360-BR",
+                "url_key": "guidao-overhead-polido-branco"
+            },
+            {
+                "sku": "2362",
+                "url_key": "guidon-overhead-cromado"
+            },
+            {
+                "sku": "2373",
+                "url_key": "guidao-titan-150-fan-2014-2016-mod-orig-polido-cromado"
+            },
+            {
+                "sku": "2375",
+                "url_key": "guidao-motoboy-universal-cg-125-mod-00-08-titan-150-mod-04-08-preto-com-barra"
+            },
+            {
+                "sku": "2374",
+                "url_key": "guidao-titan-150-fan-14-16-mod-orig-c-peso-polido-cromado"
+            },
+            {
+                "sku": "6000",
+                "url_key": "manete-embreagem-cg-titan-125-150-95-99-titan-00-titan-160-16-25-preto"
+            },
+            {
+                "sku": "6003",
+                "url_key": "manete-freio-a-disco-strada-cbx-200-titan-150-titan-160-titan-00-twister-cb-300-preto"
+            },
+            {
+                "sku": "6001",
+                "url_key": "manete-freio-a-tambor-cg-titan-ks-150-titan-ks-95-99-titan-ks-00-preto"
+            },
+            {
+                "sku": "6007",
+                "url_key": "manete-freio-a-disco-biz-125-modelo-06-20-preto"
+            },
+            {
+                "sku": "6008",
+                "url_key": "manete-freio-a-disco-bros-160-modelo-16-22-preto"
+            },
+            {
+                "sku": "6009",
+                "url_key": "manete-embreagem-bros-150-nxr-bros-160-xre-190-300-xr-250-tornado-nx400-falcon-preto"
+            },
+            {
+                "sku": "6010",
+                "url_key": "manete-embreagem-fazer-250-mod-05-15-xtz-250-lander-mod-07-15-xtz-250-tenere-mod-10-20-metalizado"
+            },
+            {
+                "sku": "6011",
+                "url_key": "manete-embreagem-fazer-150-mod-14-fazer-250-mod-07-22-factor-150-mod-23-metalizado"
+            },
+            {
+                "sku": "6012",
+                "url_key": "manete-embreagem-cb-300-400-450-cbx-150-aero-cbx-200-cbx-250-twister-preto"
+            },
+            {
+                "sku": "6013",
+                "url_key": "manete-freio-disco-xtz-250-tenere-xtz-250-lander-xtz-125-fazer-150-250-ybr-125-factor-125-metalizado"
+            },
+            {
+                "sku": "6014",
+                "url_key": "manete-freio-a-tambor-ybr-125-factor-mod-10-13-xtz-mod-10-20-metalizado"
+            },
+            {
+                "sku": "6015",
+                "url_key": "manete-freio-a-tambor-nxr-bros-125-nxr-bros-160-nxr-bros-150-xlr-125-250-xlx-350-preto"
+            },
+            {
+                "sku": "6016",
+                "url_key": "manete-freio-a-disco-ybr-factor-125-mod-10-13-xtz-250-lander-mod-07-10-metalizado"
+            },
+            {
+                "sku": "410-AZ",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-azul"
+            },
+            {
+                "sku": "410-VM",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-vermelho"
+            },
+            {
+                "sku": "410-AM",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-amarelo"
+            },
+            {
+                "sku": "410-PT",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-preto-brilhante"
+            },
+            {
+                "sku": "410-RS",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-rosa"
+            },
+            {
+                "sku": "410-DR",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-dourado"
+            },
+            {
+                "sku": "410-BR",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-branco"
+            },
+            {
+                "sku": "410-TP-AZ",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-com-tampa-azul"
+            },
+            {
+                "sku": "410-TP-VM",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-com-tampa-vermelho"
+            },
+            {
+                "sku": "410-TP-AM",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-com-tampa-amarelo"
+            },
+            {
+                "sku": "410-TP-PT",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-com-tampa-preto-brilhante"
+            },
+            {
+                "sku": "410-TP-RS",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-com-tampa-rosa"
+            },
+            {
+                "sku": "410-TP-DR",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-com-tampa-dourado"
+            },
+            {
+                "sku": "410-TP-BR",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-com-tampa-branco"
+            },
+            {
+                "sku": "T410-VM",
+                "url_key": "tampa-superior-vermelho"
+            },
+            {
+                "sku": "T410-AM",
+                "url_key": "tampa-superior-amarela"
+            },
+            {
+                "sku": "T410-PR",
+                "url_key": "tampa-superior-prata"
+            },
+            {
+                "sku": "T410-RS",
+                "url_key": "tampa-superior-rosa"
+            },
+            {
+                "sku": "T410-DR",
+                "url_key": "tampa-superior-dourada"
+            },
+            {
+                "sku": "T410-PT",
+                "url_key": "tampa-superior-preta"
+            },
+            {
+                "sku": "T410-BR",
+                "url_key": "tampa-superior-branca"
+            },
+            {
+                "sku": "340-AZ",
+                "url_key": "bauleto-awa-modelo-proos-34-litros-azul"
+            },
+            {
+                "sku": "340-VM",
+                "url_key": "bauleto-awa-modelo-proos-34-litros-vermelho"
+            },
+            {
+                "sku": "340-AM",
+                "url_key": "bauleto-awa-modelo-proos-34-litros-amarelo"
+            },
+            {
+                "sku": "340-PT",
+                "url_key": "bauleto-awa-modelo-proos-34-litros-preto-brilhante"
+            },
+            {
+                "sku": "340-RS",
+                "url_key": "bauleto-awa-modelo-proos-34-litros-rosa"
+            },
+            {
+                "sku": "340-BR",
+                "url_key": "bauleto-awa-modelo-proos-34-litros-branco"
+            },
+            {
+                "sku": "F340",
+                "url_key": "fechadura-para-bauleto"
+            },
+            {
+                "sku": "CJ340",
+                "url_key": "conjunto-de-fixacao-da-base"
+            },
+            {
+                "sku": "B340",
+                "url_key": "base-para-bauleto-awa-modelo-proos"
+            },
+            {
+                "sku": "290-AZ",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-azul"
+            },
+            {
+                "sku": "290-VM",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-vermelho"
+            },
+            {
+                "sku": "290-PR",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-prata"
+            },
+            {
+                "sku": "290-AM",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-amarelo"
+            },
+            {
+                "sku": "290-PT",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-preto-brilhante"
+            },
+            {
+                "sku": "290-RS",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-rosa"
+            },
+            {
+                "sku": "290-DR",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-dourado"
+            },
+            {
+                "sku": "290-BR",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-branco"
+            },
+            {
+                "sku": "290-TP-AZ",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-com-tampa-azul"
+            },
+            {
+                "sku": "290-TP-VM",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-com-tampa-vermelho"
+            },
+            {
+                "sku": "290-TP-PR",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-com-tampa-prata"
+            },
+            {
+                "sku": "290-TP-AM",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-com-tampa-amarelo"
+            },
+            {
+                "sku": "290-TP-PT",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-com-tampa-preto-brilhante"
+            },
+            {
+                "sku": "290-TP-RS",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-com-tampa-rosa"
+            },
+            {
+                "sku": "290-TP-DR",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-com-tampa-dourado"
+            },
+            {
+                "sku": "290-TP-BR",
+                "url_key": "bauleto-awa-modelo-proos-29-litros-com-tampa-branco"
+            },
+            {
+                "sku": "T290-AM",
+                "url_key": "tampa-superior-amarela-awa-motos"
+            },
+            {
+                "sku": "T290-VM",
+                "url_key": "tampa-superior-vermelha-awa-motos"
+            },
+            {
+                "sku": "T290-AZ",
+                "url_key": "tampa-superior-azul-awa-motos"
+            },
+            {
+                "sku": "T290-PR",
+                "url_key": "tampa-superior-prata-awa-motos"
+            },
+            {
+                "sku": "T290-RS",
+                "url_key": "tampa-superior-rosa-awa-motos"
+            },
+            {
+                "sku": "T290-PT",
+                "url_key": "tampa-superior-preta-awa-motos"
+            },
+            {
+                "sku": "T290-DR",
+                "url_key": "tampa-superior-dourada-awa-motos"
+            },
+            {
+                "sku": "T290-BR",
+                "url_key": "tampa-superior-branca-awa-motos"
+            },
+            {
+                "sku": "3094",
+                "url_key": "protetor-de-carter-nxr-bros-160-mod-15-24-preto-fosco"
+            },
+            {
+                "sku": "3509",
+                "url_key": "cavalete-lateral-com-borracha-titan-125-150-160-preto"
+            },
+            {
+                "sku": "3510",
+                "url_key": "cavalete-lateral-biz-125-mod-06-23-biz-110-mod-16-23-preto"
+            },
+            {
+                "sku": "3511",
+                "url_key": "cavalete-lateral-biz-100-pop-100-pop-110-mod-98-15-preto"
+            },
+            {
+                "sku": "3512",
+                "url_key": "cavalete-lateral-twister-mod-02-08-cb-300-mod-10-15-preto"
+            },
+            {
+                "sku": "3096",
+                "url_key": "protetor-de-carter-lander-250-mod-11-24-preto-fosco"
+            },
+            {
+                "sku": "3097",
+                "url_key": "protetor-de-carter-xre-300-mod-10-23-preto-fosco"
+            },
+            {
+                "sku": "3098",
+                "url_key": "protetor-de-carter-xre-190-mod-2016-2022-preto-fosco"
+            },
+            {
+                "sku": "679",
+                "url_key": "retrovisor-sport-mini-kawasaki-z400-haste-90-modelo-yamaha-dir-esq"
+            },
+            {
+                "sku": "410-TP-VD",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-com-tampa-verde-ninja"
+            },
+            {
+                "sku": "410-VD",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-verde-ninja"
+            },
+            {
+                "sku": "3094-CR",
+                "url_key": "protetor-de-carter-nxr-bros-160-mod-15-24-cromado"
+            },
+            {
+                "sku": "3095-CR",
+                "url_key": "protetor-de-carter-tenere-250-modelo-2013-2019-cromado"
+            },
+            {
+                "sku": "3096-CR",
+                "url_key": "protetor-de-carter-lander-250-mod-11-24-cromado"
+            },
+            {
+                "sku": "3098-CR",
+                "url_key": "protetor-de-carter-xre-190-mod-2016-2022-cromado"
+            },
+            {
+                "sku": "340-VD",
+                "url_key": "bauleto-awa-modelo-proos-34-litros-verde-ninja"
+            },
+            {
+                "sku": "683-CR",
+                "url_key": "retrovisor-awa-scorpion-haste-metalizada-honda-dir-esq"
+            },
+            {
+                "sku": "683-PT",
+                "url_key": "retrovisor-awa-scorpion-haste-preta-honda-dir-esq"
+            },
+            {
+                "sku": "340-VH",
+                "url_key": "bauleto-awa-modelo-proos-34-litros-vinho-perolizado"
+            },
+            {
+                "sku": "290-TP-VH",
+                "url_key": "bauleto-awa-modelo-pross-29-litros-com-tampa-vinho-perolizado"
+            },
+            {
+                "sku": "290-VH",
+                "url_key": "bauleto-awa-modelo-pross-29-litros-vinho-perolizado"
+            },
+            {
+                "sku": "3097-CR",
+                "url_key": "protetor-de-carter-xre-300-mod-10-23-cromado"
+            },
+            {
+                "sku": "3122",
+                "url_key": "bagageiro-cg-160-titan-modelo-25-preto-macico"
+            },
+            {
+                "sku": "410-BLACK",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-com-tampa-preto-brilhante-versao-lente-black"
+            },
+            {
+                "sku": "410-TP-VH",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-com-tampa-vinho-perolizado"
+            },
+            {
+                "sku": "410-VH",
+                "url_key": "bauleto-awa-modelo-proos-41-litros-vinho-perolizado"
+            },
+            {
+                "sku": "L290-DIR",
+                "url_key": "lente-superior-rubi-direita"
+            },
+            {
+                "sku": "L290-ESQ",
+                "url_key": "lente-superior-rubi-esquerda"
+            },
+            {
+                "sku": "L340-DIR",
+                "url_key": "lente-superior-rubi-direita-awa"
+            },
+            {
+                "sku": "L340-ESQ",
+                "url_key": "lente-superior-rubi-esquerda-awa"
+            },
+            {
+                "sku": "L410-DIR",
+                "url_key": "lente-superior-rubi-direita-awa-motos"
+            },
+            {
+                "sku": "L410-ESQ",
+                "url_key": "lente-superior-rubi-esquerda-awa-motos"
+            },
+            {
+                "sku": "684",
+                "url_key": "retrovisor-xre-300-sahara-mod-24-25-xr300l-tornado-mod-25-dir-esq-rosca-esquerda"
+            },
+            {
+                "sku": "3104",
+                "url_key": "bagageiro-yamaha-fz15-modelo-22-24-preto-macico"
+            },
+            {
+                "sku": "669",
+                "url_key": "retrovisor-bmw-gs-650-800-haste-90-padrao-yam-dir-esq"
+            },
+            {
+                "sku": "2385",
+                "url_key": "guidon-cg-cargo-160-modelo-original-17-23-cromado-com-peso"
+            },
+            {
+                "sku": "2388",
+                "url_key": "guidao-cb-300f-twister-mod-23-24-cromado-texturizado"
+            },
+            {
+                "sku": "2389",
+                "url_key": "guidao-cg-titan-160-start-160-fan-160-mod-25-cromado-texturizado-com-bucha-para-fixacao-de-peso"
+            },
+            {
+                "sku": "3513",
+                "url_key": "cavalete-lateral-com-borracha-bros-mod-13-24-xre-mod-16-24-preto"
+            },
+            {
+                "sku": "1048-CRS-DD",
+                "url_key": "pisca-fazer-250-mod-11-14-com-carcaca-preta-e-lente-cristal-frisada-dianteiro-dir-com-lampada"
+            },
+            {
+                "sku": "1048-CRS-DE",
+                "url_key": "pisca-fazer-250-mod-11-14-com-carcaca-preta-e-lente-cristal-frisada-dianteiro-esq-com-lampada"
+            },
+            {
+                "sku": "1048-LA-DD",
+                "url_key": "pisca-fazer-250-mod-11-14-com-carcaca-preta-e-lente-laranja-frisada-dianteiro-dir-com-lampada"
+            },
+            {
+                "sku": "1048-LA-DE",
+                "url_key": "pisca-fazer-250-mod-11-14-com-carcaca-preta-e-lente-laranja-frisada-dianteiro-esq-com-lampada"
+            },
+            {
+                "sku": "4022-CRS",
+                "url_key": "lente-frisada-pisca-fazer-250-mod-11-14-factor-125-mod-09-12-factor-150-mod-19-21-cristal"
+            },
+            {
+                "sku": "4022-LA",
+                "url_key": "lente-frisada-pisca-fazer-250-mod-11-14-factor-125-mod-09-12-factor-150-mod-19-21-laranja"
+            },
+            {
+                "sku": "2",
+                "url_key": "estribo-de-ferro-cg-titan-160-mod-2025-macico"
+            },
+            {
+                "sku": "86",
+                "url_key": "manopla-cg-cargo-160-mod-18-22-cb-250-twister-mod-16-22-preta-vazada"
+            },
+            {
+                "sku": "1012",
+                "url_key": "retrovisor-redondo-moto-eletrica-padrao-m8-rosca-dir-preto"
+            },
+            {
+                "sku": "520-CV",
+                "url_key": "retrovisor-cb-300-mod-11-15-preto-com-espelho-convexo-dir-esq"
+            },
+            {
+                "sku": "686",
+                "url_key": "retrovisor-elite-125-mod-2025-dir-esq-m8-rosca-esquerda"
+            },
+            {
+                "sku": "3518",
+                "url_key": "cavalete-lateral-com-borracha-cg-160-start-fan-titan-cargo-mod-2025-preto"
+            }
+        ]
+    },
+    "missing_images": [
+        {
+            "sku": "2246",
+            "field": "image",
+            "file": "catalog\/products\/11967.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11967.jpg"
+        },
+        {
+            "sku": "2246",
+            "field": "small_image",
+            "file": "catalog\/products\/11967.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11967.jpg"
+        },
+        {
+            "sku": "2246",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11967.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11967.jpg"
+        },
+        {
+            "sku": "2246",
+            "field": "additional_images",
+            "file": "catalog\/products\/11967.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11967.jpg"
+        },
+        {
+            "sku": "617-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11813.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11813.jpg"
+        },
+        {
+            "sku": "511",
+            "field": "additional_images",
+            "file": "catalog\/products\/11821.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11821.jpg"
+        },
+        {
+            "sku": "515",
+            "field": "additional_images",
+            "file": "catalog\/products\/11822.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11822.jpg"
+        },
+        {
+            "sku": "210",
+            "field": "additional_images",
+            "file": "catalog\/products\/11823.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11823.jpg"
+        },
+        {
+            "sku": "502",
+            "field": "additional_images",
+            "file": "catalog\/products\/11824.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11824.jpg"
+        },
+        {
+            "sku": "505",
+            "field": "additional_images",
+            "file": "catalog\/products\/11825.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11825.jpg"
+        },
+        {
+            "sku": "505",
+            "field": "additional_images",
+            "file": "catalog\/products\/11826.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11826.jpg"
+        },
+        {
+            "sku": "588",
+            "field": "additional_images",
+            "file": "catalog\/products\/11827.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11827.jpg"
+        },
+        {
+            "sku": "518",
+            "field": "additional_images",
+            "file": "catalog\/products\/11828.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11828.jpg"
+        },
+        {
+            "sku": "525",
+            "field": "additional_images",
+            "file": "catalog\/products\/11829.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11829.jpg"
+        },
+        {
+            "sku": "576",
+            "field": "additional_images",
+            "file": "catalog\/products\/11830.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11830.jpg"
+        },
+        {
+            "sku": "2245",
+            "field": "additional_images",
+            "file": "catalog\/products\/11831.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11831.jpg"
+        },
+        {
+            "sku": "615",
+            "field": "additional_images",
+            "file": "catalog\/products\/11832.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11832.jpg"
+        },
+        {
+            "sku": "616",
+            "field": "additional_images",
+            "file": "catalog\/products\/11833.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11833.jpg"
+        },
+        {
+            "sku": "623",
+            "field": "additional_images",
+            "file": "catalog\/products\/11834.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11834.jpg"
+        },
+        {
+            "sku": "623-DIR",
+            "field": "image",
+            "file": "catalog\/products\/11837.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11837.jpg"
+        },
+        {
+            "sku": "623-DIR",
+            "field": "small_image",
+            "file": "catalog\/products\/11837.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11837.jpg"
+        },
+        {
+            "sku": "623-DIR",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11837.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11837.jpg"
+        },
+        {
+            "sku": "623-DIR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11837.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11837.jpg"
+        },
+        {
+            "sku": "623-DIR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11838.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11838.jpg"
+        },
+        {
+            "sku": "623-ESQ",
+            "field": "image",
+            "file": "catalog\/products\/11835.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11835.jpg"
+        },
+        {
+            "sku": "623-ESQ",
+            "field": "small_image",
+            "file": "catalog\/products\/11835.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11835.jpg"
+        },
+        {
+            "sku": "623-ESQ",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11835.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11835.jpg"
+        },
+        {
+            "sku": "623-ESQ",
+            "field": "additional_images",
+            "file": "catalog\/products\/11835.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11835.jpg"
+        },
+        {
+            "sku": "623-ESQ",
+            "field": "additional_images",
+            "file": "catalog\/products\/11836.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11836.jpg"
+        },
+        {
+            "sku": "624-DIR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11839.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11839.jpg"
+        },
+        {
+            "sku": "624-ESQ",
+            "field": "additional_images",
+            "file": "catalog\/products\/11840.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11840.jpg"
+        },
+        {
+            "sku": "625",
+            "field": "additional_images",
+            "file": "catalog\/products\/11841.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11841.jpg"
+        },
+        {
+            "sku": "626",
+            "field": "additional_images",
+            "file": "catalog\/products\/11845.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11845.jpg"
+        },
+        {
+            "sku": "627",
+            "field": "additional_images",
+            "file": "catalog\/products\/11846.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11846.jpg"
+        },
+        {
+            "sku": "628",
+            "field": "additional_images",
+            "file": "catalog\/products\/11847.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11847.jpg"
+        },
+        {
+            "sku": "629",
+            "field": "additional_images",
+            "file": "catalog\/products\/11849.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11849.jpg"
+        },
+        {
+            "sku": "631",
+            "field": "additional_images",
+            "file": "catalog\/products\/11851.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11851.jpg"
+        },
+        {
+            "sku": "643",
+            "field": "additional_images",
+            "file": "catalog\/products\/11856.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11856.jpg"
+        },
+        {
+            "sku": "643",
+            "field": "additional_images",
+            "file": "catalog\/products\/11857.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11857.jpg"
+        },
+        {
+            "sku": "644",
+            "field": "additional_images",
+            "file": "catalog\/products\/11858.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11858.jpg"
+        },
+        {
+            "sku": "644",
+            "field": "additional_images",
+            "file": "catalog\/products\/11859.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11859.jpg"
+        },
+        {
+            "sku": "645",
+            "field": "additional_images",
+            "file": "catalog\/products\/11860.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11860.jpg"
+        },
+        {
+            "sku": "646",
+            "field": "additional_images",
+            "file": "catalog\/products\/11861.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11861.jpg"
+        },
+        {
+            "sku": "630",
+            "field": "additional_images",
+            "file": "catalog\/products\/11863.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11863.jpg"
+        },
+        {
+            "sku": "650",
+            "field": "image",
+            "file": "catalog\/products\/11746.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11746.jpg"
+        },
+        {
+            "sku": "650",
+            "field": "small_image",
+            "file": "catalog\/products\/11746.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11746.jpg"
+        },
+        {
+            "sku": "650",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11746.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11746.jpg"
+        },
+        {
+            "sku": "650",
+            "field": "additional_images",
+            "file": "catalog\/products\/11746.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11746.jpg"
+        },
+        {
+            "sku": "650",
+            "field": "additional_images",
+            "file": "catalog\/products\/11864.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11864.jpg"
+        },
+        {
+            "sku": "650",
+            "field": "additional_images",
+            "file": "catalog\/products\/11865.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11865.jpg"
+        },
+        {
+            "sku": "668",
+            "field": "image",
+            "file": "catalog\/products\/11749.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11749.jpg"
+        },
+        {
+            "sku": "668",
+            "field": "small_image",
+            "file": "catalog\/products\/11749.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11749.jpg"
+        },
+        {
+            "sku": "668",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11749.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11749.jpg"
+        },
+        {
+            "sku": "668",
+            "field": "additional_images",
+            "file": "catalog\/products\/11749.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11749.jpg"
+        },
+        {
+            "sku": "680",
+            "field": "image",
+            "file": "catalog\/products\/11760.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11760.jpg"
+        },
+        {
+            "sku": "680",
+            "field": "small_image",
+            "file": "catalog\/products\/11760.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11760.jpg"
+        },
+        {
+            "sku": "680",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11760.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11760.jpg"
+        },
+        {
+            "sku": "680",
+            "field": "additional_images",
+            "file": "catalog\/products\/11760.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11760.jpg"
+        },
+        {
+            "sku": "680",
+            "field": "additional_images",
+            "file": "catalog\/products\/11867.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11867.jpg"
+        },
+        {
+            "sku": "680",
+            "field": "additional_images",
+            "file": "catalog\/products\/11868.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11868.jpg"
+        },
+        {
+            "sku": "501-CV",
+            "field": "additional_images",
+            "file": "catalog\/products\/11869.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11869.jpg"
+        },
+        {
+            "sku": "614-CV",
+            "field": "image",
+            "file": "catalog\/products\/11745.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11745.jpg"
+        },
+        {
+            "sku": "614-CV",
+            "field": "small_image",
+            "file": "catalog\/products\/11745.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11745.jpg"
+        },
+        {
+            "sku": "614-CV",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11745.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11745.jpg"
+        },
+        {
+            "sku": "614-CV",
+            "field": "additional_images",
+            "file": "catalog\/products\/11745.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11745.jpg"
+        },
+        {
+            "sku": "584",
+            "field": "additional_images",
+            "file": "catalog\/products\/11870.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11870.jpg"
+        },
+        {
+            "sku": "559",
+            "field": "additional_images",
+            "file": "catalog\/products\/11878.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11878.jpg"
+        },
+        {
+            "sku": "538",
+            "field": "additional_images",
+            "file": "catalog\/products\/11879.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11879.jpg"
+        },
+        {
+            "sku": "585",
+            "field": "additional_images",
+            "file": "catalog\/products\/11880.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11880.jpg"
+        },
+        {
+            "sku": "2225",
+            "field": "additional_images",
+            "file": "catalog\/products\/11882.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11882.jpg"
+        },
+        {
+            "sku": "577",
+            "field": "additional_images",
+            "file": "catalog\/products\/11884.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11884.jpg"
+        },
+        {
+            "sku": "578",
+            "field": "additional_images",
+            "file": "catalog\/products\/11885.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11885.jpg"
+        },
+        {
+            "sku": "580",
+            "field": "additional_images",
+            "file": "catalog\/products\/11886.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11886.jpg"
+        },
+        {
+            "sku": "581",
+            "field": "additional_images",
+            "file": "catalog\/products\/11887.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11887.jpg"
+        },
+        {
+            "sku": "582",
+            "field": "additional_images",
+            "file": "catalog\/products\/11888.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11888.jpg"
+        },
+        {
+            "sku": "561",
+            "field": "additional_images",
+            "file": "catalog\/products\/11889.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11889.jpg"
+        },
+        {
+            "sku": "544",
+            "field": "image",
+            "file": "catalog\/products\/11966.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11966.jpg"
+        },
+        {
+            "sku": "544",
+            "field": "small_image",
+            "file": "catalog\/products\/11966.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11966.jpg"
+        },
+        {
+            "sku": "544",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11966.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11966.jpg"
+        },
+        {
+            "sku": "544",
+            "field": "additional_images",
+            "file": "catalog\/products\/11966.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11966.jpg"
+        },
+        {
+            "sku": "542",
+            "field": "additional_images",
+            "file": "catalog\/products\/11890.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11890.jpg"
+        },
+        {
+            "sku": "536",
+            "field": "additional_images",
+            "file": "catalog\/products\/11891.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11891.jpg"
+        },
+        {
+            "sku": "568",
+            "field": "additional_images",
+            "file": "catalog\/products\/11892.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11892.jpg"
+        },
+        {
+            "sku": "598",
+            "field": "additional_images",
+            "file": "catalog\/products\/11893.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11893.jpg"
+        },
+        {
+            "sku": "599",
+            "field": "additional_images",
+            "file": "catalog\/products\/11894.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11894.jpg"
+        },
+        {
+            "sku": "534",
+            "field": "additional_images",
+            "file": "catalog\/products\/11895.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11895.jpg"
+        },
+        {
+            "sku": "676",
+            "field": "image",
+            "file": "catalog\/products\/11756.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11756.jpg"
+        },
+        {
+            "sku": "676",
+            "field": "small_image",
+            "file": "catalog\/products\/11756.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11756.jpg"
+        },
+        {
+            "sku": "676",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11756.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11756.jpg"
+        },
+        {
+            "sku": "676",
+            "field": "additional_images",
+            "file": "catalog\/products\/11756.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11756.jpg"
+        },
+        {
+            "sku": "676",
+            "field": "additional_images",
+            "file": "catalog\/products\/11896.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11896.jpg"
+        },
+        {
+            "sku": "676",
+            "field": "additional_images",
+            "file": "catalog\/products\/11897.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11897.jpg"
+        },
+        {
+            "sku": "601",
+            "field": "image",
+            "file": "catalog\/products\/11741.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11741.jpg"
+        },
+        {
+            "sku": "601",
+            "field": "small_image",
+            "file": "catalog\/products\/11741.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11741.jpg"
+        },
+        {
+            "sku": "601",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11741.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11741.jpg"
+        },
+        {
+            "sku": "601",
+            "field": "additional_images",
+            "file": "catalog\/products\/11741.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11741.jpg"
+        },
+        {
+            "sku": "601",
+            "field": "additional_images",
+            "file": "catalog\/products\/11898.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11898.jpg"
+        },
+        {
+            "sku": "601",
+            "field": "additional_images",
+            "file": "catalog\/products\/11899.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11899.jpg"
+        },
+        {
+            "sku": "1515",
+            "field": "additional_images",
+            "file": "catalog\/products\/11900.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11900.jpg"
+        },
+        {
+            "sku": "1512",
+            "field": "additional_images",
+            "file": "catalog\/products\/11901.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11901.jpg"
+        },
+        {
+            "sku": "1514",
+            "field": "additional_images",
+            "file": "catalog\/products\/11902.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11902.jpg"
+        },
+        {
+            "sku": "1508",
+            "field": "additional_images",
+            "file": "catalog\/products\/11903.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11903.jpg"
+        },
+        {
+            "sku": "2236-CV",
+            "field": "additional_images",
+            "file": "catalog\/products\/11904.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11904.jpg"
+        },
+        {
+            "sku": "619-CR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11905.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11905.jpg"
+        },
+        {
+            "sku": "619-VM",
+            "field": "additional_images",
+            "file": "catalog\/products\/11906.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11906.jpg"
+        },
+        {
+            "sku": "617-VM",
+            "field": "additional_images",
+            "file": "catalog\/products\/11814.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11814.jpg"
+        },
+        {
+            "sku": "617-VM",
+            "field": "additional_images",
+            "file": "catalog\/products\/11815.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11815.jpg"
+        },
+        {
+            "sku": "621-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11940.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11940.jpg"
+        },
+        {
+            "sku": "622-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11907.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11907.jpg"
+        },
+        {
+            "sku": "621-VM",
+            "field": "additional_images",
+            "file": "catalog\/products\/11908.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11908.jpg"
+        },
+        {
+            "sku": "622-VM",
+            "field": "additional_images",
+            "file": "catalog\/products\/11909.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11909.jpg"
+        },
+        {
+            "sku": "621-AZ",
+            "field": "additional_images",
+            "file": "catalog\/products\/11910.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11910.jpg"
+        },
+        {
+            "sku": "622-AZ",
+            "field": "additional_images",
+            "file": "catalog\/products\/11911.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11911.jpg"
+        },
+        {
+            "sku": "621-RS",
+            "field": "additional_images",
+            "file": "catalog\/products\/11912.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11912.jpg"
+        },
+        {
+            "sku": "619-DR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11913.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11913.jpg"
+        },
+        {
+            "sku": "617-DR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11816.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11816.jpg"
+        },
+        {
+            "sku": "653",
+            "field": "additional_images",
+            "file": "catalog\/products\/11914.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11914.jpg"
+        },
+        {
+            "sku": "652",
+            "field": "additional_images",
+            "file": "catalog\/products\/11915.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11915.jpg"
+        },
+        {
+            "sku": "617-CR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11817.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11817.jpg"
+        },
+        {
+            "sku": "74",
+            "field": "additional_images",
+            "file": "catalog\/products\/11916.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11916.jpg"
+        },
+        {
+            "sku": "74",
+            "field": "additional_images",
+            "file": "catalog\/products\/11917.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11917.jpg"
+        },
+        {
+            "sku": "60",
+            "field": "additional_images",
+            "file": "catalog\/products\/11918.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11918.jpg"
+        },
+        {
+            "sku": "60",
+            "field": "additional_images",
+            "file": "catalog\/products\/11919.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11919.jpg"
+        },
+        {
+            "sku": "52",
+            "field": "additional_images",
+            "file": "catalog\/products\/11920.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11920.jpg"
+        },
+        {
+            "sku": "52",
+            "field": "additional_images",
+            "file": "catalog\/products\/11921.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11921.jpg"
+        },
+        {
+            "sku": "71",
+            "field": "additional_images",
+            "file": "catalog\/products\/11922.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11922.jpg"
+        },
+        {
+            "sku": "71",
+            "field": "additional_images",
+            "file": "catalog\/products\/11923.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11923.jpg"
+        },
+        {
+            "sku": "54",
+            "field": "additional_images",
+            "file": "catalog\/products\/11924.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11924.jpg"
+        },
+        {
+            "sku": "54",
+            "field": "additional_images",
+            "file": "catalog\/products\/11925.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11925.jpg"
+        },
+        {
+            "sku": "48",
+            "field": "additional_images",
+            "file": "catalog\/products\/11926.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11926.jpg"
+        },
+        {
+            "sku": "48",
+            "field": "additional_images",
+            "file": "catalog\/products\/11927.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11927.jpg"
+        },
+        {
+            "sku": "49",
+            "field": "additional_images",
+            "file": "catalog\/products\/11928.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11928.jpg"
+        },
+        {
+            "sku": "49",
+            "field": "additional_images",
+            "file": "catalog\/products\/11929.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11929.jpg"
+        },
+        {
+            "sku": "45",
+            "field": "image",
+            "file": "catalog\/products\/11806.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11806.jpg"
+        },
+        {
+            "sku": "45",
+            "field": "small_image",
+            "file": "catalog\/products\/11806.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11806.jpg"
+        },
+        {
+            "sku": "45",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11806.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11806.jpg"
+        },
+        {
+            "sku": "45",
+            "field": "additional_images",
+            "file": "catalog\/products\/11806.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11806.jpg"
+        },
+        {
+            "sku": "45",
+            "field": "additional_images",
+            "file": "catalog\/products\/11807.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11807.jpg"
+        },
+        {
+            "sku": "45",
+            "field": "additional_images",
+            "file": "catalog\/products\/11930.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11930.jpg"
+        },
+        {
+            "sku": "46",
+            "field": "image",
+            "file": "catalog\/products\/11808.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11808.jpg"
+        },
+        {
+            "sku": "46",
+            "field": "small_image",
+            "file": "catalog\/products\/11808.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11808.jpg"
+        },
+        {
+            "sku": "46",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11808.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11808.jpg"
+        },
+        {
+            "sku": "46",
+            "field": "additional_images",
+            "file": "catalog\/products\/11808.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11808.jpg"
+        },
+        {
+            "sku": "46",
+            "field": "additional_images",
+            "file": "catalog\/products\/11809.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11809.jpg"
+        },
+        {
+            "sku": "44",
+            "field": "image",
+            "file": "catalog\/products\/11804.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11804.jpg"
+        },
+        {
+            "sku": "44",
+            "field": "small_image",
+            "file": "catalog\/products\/11804.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11804.jpg"
+        },
+        {
+            "sku": "44",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11804.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11804.jpg"
+        },
+        {
+            "sku": "44",
+            "field": "additional_images",
+            "file": "catalog\/products\/11804.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11804.jpg"
+        },
+        {
+            "sku": "44",
+            "field": "additional_images",
+            "file": "catalog\/products\/11805.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11805.jpg"
+        },
+        {
+            "sku": "44",
+            "field": "additional_images",
+            "file": "catalog\/products\/11932.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11932.jpg"
+        },
+        {
+            "sku": "39",
+            "field": "image",
+            "file": "catalog\/products\/11801.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11801.jpg"
+        },
+        {
+            "sku": "39",
+            "field": "small_image",
+            "file": "catalog\/products\/11801.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11801.jpg"
+        },
+        {
+            "sku": "39",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11801.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11801.jpg"
+        },
+        {
+            "sku": "39",
+            "field": "additional_images",
+            "file": "catalog\/products\/11801.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11801.jpg"
+        },
+        {
+            "sku": "39",
+            "field": "additional_images",
+            "file": "catalog\/products\/11933.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11933.jpg"
+        },
+        {
+            "sku": "39",
+            "field": "additional_images",
+            "file": "catalog\/products\/11934.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11934.jpg"
+        },
+        {
+            "sku": "38",
+            "field": "image",
+            "file": "catalog\/products\/11800.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11800.jpg"
+        },
+        {
+            "sku": "38",
+            "field": "small_image",
+            "file": "catalog\/products\/11800.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11800.jpg"
+        },
+        {
+            "sku": "38",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11800.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11800.jpg"
+        },
+        {
+            "sku": "38",
+            "field": "additional_images",
+            "file": "catalog\/products\/11800.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11800.jpg"
+        },
+        {
+            "sku": "38",
+            "field": "additional_images",
+            "file": "catalog\/products\/11935.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11935.jpg"
+        },
+        {
+            "sku": "38",
+            "field": "additional_images",
+            "file": "catalog\/products\/11936.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11936.jpg"
+        },
+        {
+            "sku": "67",
+            "field": "additional_images",
+            "file": "catalog\/products\/11937.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11937.jpg"
+        },
+        {
+            "sku": "67",
+            "field": "additional_images",
+            "file": "catalog\/products\/11938.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11938.jpg"
+        },
+        {
+            "sku": "37",
+            "field": "image",
+            "file": "catalog\/products\/11798.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11798.jpg"
+        },
+        {
+            "sku": "37",
+            "field": "small_image",
+            "file": "catalog\/products\/11798.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11798.jpg"
+        },
+        {
+            "sku": "37",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11798.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11798.jpg"
+        },
+        {
+            "sku": "37",
+            "field": "additional_images",
+            "file": "catalog\/products\/11798.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11798.jpg"
+        },
+        {
+            "sku": "37",
+            "field": "additional_images",
+            "file": "catalog\/products\/11799.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11799.jpg"
+        },
+        {
+            "sku": "34",
+            "field": "image",
+            "file": "catalog\/products\/11793.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11793.jpg"
+        },
+        {
+            "sku": "34",
+            "field": "small_image",
+            "file": "catalog\/products\/11793.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11793.jpg"
+        },
+        {
+            "sku": "34",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11793.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11793.jpg"
+        },
+        {
+            "sku": "34",
+            "field": "additional_images",
+            "file": "catalog\/products\/11793.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11793.jpg"
+        },
+        {
+            "sku": "33",
+            "field": "image",
+            "file": "catalog\/products\/11791.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11791.jpg"
+        },
+        {
+            "sku": "33",
+            "field": "small_image",
+            "file": "catalog\/products\/11791.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11791.jpg"
+        },
+        {
+            "sku": "33",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11791.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11791.jpg"
+        },
+        {
+            "sku": "33",
+            "field": "additional_images",
+            "file": "catalog\/products\/11791.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11791.jpg"
+        },
+        {
+            "sku": "35",
+            "field": "image",
+            "file": "catalog\/products\/11796.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11796.jpg"
+        },
+        {
+            "sku": "35",
+            "field": "small_image",
+            "file": "catalog\/products\/11796.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11796.jpg"
+        },
+        {
+            "sku": "35",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11796.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11796.jpg"
+        },
+        {
+            "sku": "35",
+            "field": "additional_images",
+            "file": "catalog\/products\/11796.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11796.jpg"
+        },
+        {
+            "sku": "35",
+            "field": "additional_images",
+            "file": "catalog\/products\/11797.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11797.jpg"
+        },
+        {
+            "sku": "36",
+            "field": "additional_images",
+            "file": "catalog\/products\/11943.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11943.jpg"
+        },
+        {
+            "sku": "30",
+            "field": "image",
+            "file": "catalog\/products\/11789.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11789.jpg"
+        },
+        {
+            "sku": "30",
+            "field": "small_image",
+            "file": "catalog\/products\/11789.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11789.jpg"
+        },
+        {
+            "sku": "30",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11789.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11789.jpg"
+        },
+        {
+            "sku": "30",
+            "field": "additional_images",
+            "file": "catalog\/products\/11789.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11789.jpg"
+        },
+        {
+            "sku": "30",
+            "field": "additional_images",
+            "file": "catalog\/products\/11790.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11790.jpg"
+        },
+        {
+            "sku": "24",
+            "field": "image",
+            "file": "catalog\/products\/11945.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11945.jpg"
+        },
+        {
+            "sku": "24",
+            "field": "small_image",
+            "file": "catalog\/products\/11945.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11945.jpg"
+        },
+        {
+            "sku": "24",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11945.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11945.jpg"
+        },
+        {
+            "sku": "24",
+            "field": "additional_images",
+            "file": "catalog\/products\/11945.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11945.jpg"
+        },
+        {
+            "sku": "23",
+            "field": "image",
+            "file": "catalog\/products\/11782.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11782.jpg"
+        },
+        {
+            "sku": "23",
+            "field": "small_image",
+            "file": "catalog\/products\/11782.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11782.jpg"
+        },
+        {
+            "sku": "23",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11782.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11782.jpg"
+        },
+        {
+            "sku": "23",
+            "field": "additional_images",
+            "file": "catalog\/products\/11782.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11782.jpg"
+        },
+        {
+            "sku": "23",
+            "field": "additional_images",
+            "file": "catalog\/products\/11783.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11783.jpg"
+        },
+        {
+            "sku": "0047-PT",
+            "field": "image",
+            "file": "catalog\/products\/11810.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11810.jpg"
+        },
+        {
+            "sku": "0047-PT",
+            "field": "small_image",
+            "file": "catalog\/products\/11810.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11810.jpg"
+        },
+        {
+            "sku": "0047-PT",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11810.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11810.jpg"
+        },
+        {
+            "sku": "0047-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11810.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11810.jpg"
+        },
+        {
+            "sku": "0047-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11811.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11811.jpg"
+        },
+        {
+            "sku": "95",
+            "field": "additional_images",
+            "file": "catalog\/products\/11947.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11947.jpg"
+        },
+        {
+            "sku": "95",
+            "field": "additional_images",
+            "file": "catalog\/products\/11948.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11948.jpg"
+        },
+        {
+            "sku": "0098-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11949.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11949.jpg"
+        },
+        {
+            "sku": "0098-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11950.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11950.jpg"
+        },
+        {
+            "sku": "0096-PT",
+            "field": "image",
+            "file": "catalog\/products\/11951.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11951.jpg"
+        },
+        {
+            "sku": "0096-PT",
+            "field": "small_image",
+            "file": "catalog\/products\/11951.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11951.jpg"
+        },
+        {
+            "sku": "0096-PT",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11951.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11951.jpg"
+        },
+        {
+            "sku": "0096-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11951.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11951.jpg"
+        },
+        {
+            "sku": "0096-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11952.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11952.jpg"
+        },
+        {
+            "sku": "0096-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11953.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11953.jpg"
+        },
+        {
+            "sku": "81",
+            "field": "additional_images",
+            "file": "catalog\/products\/11954.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11954.jpg"
+        },
+        {
+            "sku": "81",
+            "field": "additional_images",
+            "file": "catalog\/products\/11955.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11955.jpg"
+        },
+        {
+            "sku": "87",
+            "field": "additional_images",
+            "file": "catalog\/products\/11956.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11956.jpg"
+        },
+        {
+            "sku": "87",
+            "field": "additional_images",
+            "file": "catalog\/products\/11957.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11957.jpg"
+        },
+        {
+            "sku": "0097-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11958.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11958.jpg"
+        },
+        {
+            "sku": "0097-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11959.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11959.jpg"
+        },
+        {
+            "sku": "100",
+            "field": "additional_images",
+            "file": "catalog\/products\/11960.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11960.jpg"
+        },
+        {
+            "sku": "100",
+            "field": "additional_images",
+            "file": "catalog\/products\/11961.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11961.jpg"
+        },
+        {
+            "sku": "99",
+            "field": "additional_images",
+            "file": "catalog\/products\/11962.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11962.jpg"
+        },
+        {
+            "sku": "99",
+            "field": "additional_images",
+            "file": "catalog\/products\/11963.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11963.jpg"
+        },
+        {
+            "sku": "102",
+            "field": "additional_images",
+            "file": "catalog\/products\/11964.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11964.jpg"
+        },
+        {
+            "sku": "102",
+            "field": "additional_images",
+            "file": "catalog\/products\/11965.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11965.jpg"
+        },
+        {
+            "sku": "2056",
+            "field": "additional_images",
+            "file": "catalog\/products\/2056-site-2.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/2056-site-2.jpg"
+        },
+        {
+            "sku": "2022",
+            "field": "additional_images",
+            "file": "catalog\/products\/2022-site-2.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/2022-site-2.jpg"
+        },
+        {
+            "sku": "2046",
+            "field": "additional_images",
+            "file": "catalog\/products\/2046-site-2.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/2046-site-2.jpg"
+        },
+        {
+            "sku": "2047",
+            "field": "additional_images",
+            "file": "catalog\/products\/2047-site-2.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/2047-site-2.jpg"
+        },
+        {
+            "sku": "2039",
+            "field": "additional_images",
+            "file": "catalog\/products\/2039-site-2.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/2039-site-2.jpg"
+        },
+        {
+            "sku": "1018-FC-DD",
+            "field": "image",
+            "file": "catalog\/products\/11883.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11883.jpg"
+        },
+        {
+            "sku": "1018-FC-DD",
+            "field": "small_image",
+            "file": "catalog\/products\/11883.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11883.jpg"
+        },
+        {
+            "sku": "1018-FC-DD",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11883.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11883.jpg"
+        },
+        {
+            "sku": "1018-FC-DD",
+            "field": "additional_images",
+            "file": "catalog\/products\/11883.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11883.jpg"
+        },
+        {
+            "sku": "1024-LA",
+            "field": "image",
+            "file": "catalog\/products\/11852.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11852.jpg"
+        },
+        {
+            "sku": "1024-LA",
+            "field": "small_image",
+            "file": "catalog\/products\/11852.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11852.jpg"
+        },
+        {
+            "sku": "1024-LA",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11852.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11852.jpg"
+        },
+        {
+            "sku": "1024-LA",
+            "field": "additional_images",
+            "file": "catalog\/products\/11852.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11852.jpg"
+        },
+        {
+            "sku": "4021-CRS",
+            "field": "image",
+            "file": "catalog\/products\/11733.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11733.jpg"
+        },
+        {
+            "sku": "4021-CRS",
+            "field": "small_image",
+            "file": "catalog\/products\/11733.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11733.jpg"
+        },
+        {
+            "sku": "4021-CRS",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11733.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11733.jpg"
+        },
+        {
+            "sku": "4021-CRS",
+            "field": "additional_images",
+            "file": "catalog\/products\/11733.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11733.jpg"
+        },
+        {
+            "sku": "3010",
+            "field": "image",
+            "file": "catalog\/products\/11765.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11765.jpg"
+        },
+        {
+            "sku": "3010",
+            "field": "small_image",
+            "file": "catalog\/products\/11765.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11765.jpg"
+        },
+        {
+            "sku": "3010",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11765.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11765.jpg"
+        },
+        {
+            "sku": "3010",
+            "field": "additional_images",
+            "file": "catalog\/products\/11765.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11765.jpg"
+        },
+        {
+            "sku": "3036",
+            "field": "additional_images",
+            "file": "catalog\/products\/3036-site-2.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/3036-site-2.jpg"
+        },
+        {
+            "sku": "40",
+            "field": "image",
+            "file": "catalog\/products\/11802.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11802.jpg"
+        },
+        {
+            "sku": "40",
+            "field": "small_image",
+            "file": "catalog\/products\/11802.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11802.jpg"
+        },
+        {
+            "sku": "40",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11802.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11802.jpg"
+        },
+        {
+            "sku": "40",
+            "field": "additional_images",
+            "file": "catalog\/products\/11802.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11802.jpg"
+        },
+        {
+            "sku": "41",
+            "field": "image",
+            "file": "catalog\/products\/11803.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11803.jpg"
+        },
+        {
+            "sku": "41",
+            "field": "small_image",
+            "file": "catalog\/products\/11803.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11803.jpg"
+        },
+        {
+            "sku": "41",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11803.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11803.jpg"
+        },
+        {
+            "sku": "41",
+            "field": "additional_images",
+            "file": "catalog\/products\/11803.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11803.jpg"
+        },
+        {
+            "sku": "2308",
+            "field": "image",
+            "file": "catalog\/products\/11848.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11848.jpg"
+        },
+        {
+            "sku": "2308",
+            "field": "small_image",
+            "file": "catalog\/products\/11848.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11848.jpg"
+        },
+        {
+            "sku": "2308",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11848.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11848.jpg"
+        },
+        {
+            "sku": "2308",
+            "field": "additional_images",
+            "file": "catalog\/products\/11848.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11848.jpg"
+        },
+        {
+            "sku": "2359",
+            "field": "image",
+            "file": "catalog\/products\/11850.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11850.jpg"
+        },
+        {
+            "sku": "2359",
+            "field": "small_image",
+            "file": "catalog\/products\/11850.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11850.jpg"
+        },
+        {
+            "sku": "2359",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11850.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11850.jpg"
+        },
+        {
+            "sku": "2359",
+            "field": "additional_images",
+            "file": "catalog\/products\/11850.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11850.jpg"
+        },
+        {
+            "sku": "2383",
+            "field": "image",
+            "file": "catalog\/products\/11853.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11853.jpg"
+        },
+        {
+            "sku": "2383",
+            "field": "small_image",
+            "file": "catalog\/products\/11853.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11853.jpg"
+        },
+        {
+            "sku": "2383",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11853.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11853.jpg"
+        },
+        {
+            "sku": "2383",
+            "field": "additional_images",
+            "file": "catalog\/products\/11853.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11853.jpg"
+        },
+        {
+            "sku": "2360-BR",
+            "field": "image",
+            "file": "catalog\/products\/11854.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11854.jpg"
+        },
+        {
+            "sku": "2360-BR",
+            "field": "small_image",
+            "file": "catalog\/products\/11854.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11854.jpg"
+        },
+        {
+            "sku": "2360-BR",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11854.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11854.jpg"
+        },
+        {
+            "sku": "2360-BR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11854.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11854.jpg"
+        },
+        {
+            "sku": "2374",
+            "field": "image",
+            "file": "catalog\/products\/11855.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11855.jpg"
+        },
+        {
+            "sku": "2374",
+            "field": "small_image",
+            "file": "catalog\/products\/11855.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11855.jpg"
+        },
+        {
+            "sku": "2374",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11855.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11855.jpg"
+        },
+        {
+            "sku": "2374",
+            "field": "additional_images",
+            "file": "catalog\/products\/11855.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11855.jpg"
+        },
+        {
+            "sku": "6007",
+            "field": "image",
+            "file": "catalog\/products\/11738.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11738.jpg"
+        },
+        {
+            "sku": "6007",
+            "field": "small_image",
+            "file": "catalog\/products\/11738.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11738.jpg"
+        },
+        {
+            "sku": "6007",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11738.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11738.jpg"
+        },
+        {
+            "sku": "6007",
+            "field": "additional_images",
+            "file": "catalog\/products\/11738.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11738.jpg"
+        },
+        {
+            "sku": "6008",
+            "field": "image",
+            "file": "catalog\/products\/11739.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11739.jpg"
+        },
+        {
+            "sku": "6008",
+            "field": "small_image",
+            "file": "catalog\/products\/11739.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11739.jpg"
+        },
+        {
+            "sku": "6008",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11739.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11739.jpg"
+        },
+        {
+            "sku": "6008",
+            "field": "additional_images",
+            "file": "catalog\/products\/11739.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11739.jpg"
+        },
+        {
+            "sku": "6009",
+            "field": "image",
+            "file": "catalog\/products\/11740.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11740.jpg"
+        },
+        {
+            "sku": "6009",
+            "field": "small_image",
+            "file": "catalog\/products\/11740.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11740.jpg"
+        },
+        {
+            "sku": "6009",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11740.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11740.jpg"
+        },
+        {
+            "sku": "6009",
+            "field": "additional_images",
+            "file": "catalog\/products\/11740.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11740.jpg"
+        },
+        {
+            "sku": "6010",
+            "field": "image",
+            "file": "catalog\/products\/11742.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11742.jpg"
+        },
+        {
+            "sku": "6010",
+            "field": "small_image",
+            "file": "catalog\/products\/11742.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11742.jpg"
+        },
+        {
+            "sku": "6010",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11742.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11742.jpg"
+        },
+        {
+            "sku": "6010",
+            "field": "additional_images",
+            "file": "catalog\/products\/11742.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11742.jpg"
+        },
+        {
+            "sku": "6011",
+            "field": "image",
+            "file": "catalog\/products\/11743.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11743.jpg"
+        },
+        {
+            "sku": "6011",
+            "field": "small_image",
+            "file": "catalog\/products\/11743.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11743.jpg"
+        },
+        {
+            "sku": "6011",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11743.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11743.jpg"
+        },
+        {
+            "sku": "6011",
+            "field": "additional_images",
+            "file": "catalog\/products\/11743.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11743.jpg"
+        },
+        {
+            "sku": "6012",
+            "field": "image",
+            "file": "catalog\/products\/11744.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11744.jpg"
+        },
+        {
+            "sku": "6012",
+            "field": "small_image",
+            "file": "catalog\/products\/11744.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11744.jpg"
+        },
+        {
+            "sku": "6012",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11744.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11744.jpg"
+        },
+        {
+            "sku": "6012",
+            "field": "additional_images",
+            "file": "catalog\/products\/11744.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11744.jpg"
+        },
+        {
+            "sku": "T410-BR",
+            "field": "image",
+            "file": "catalog\/products\/11862.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11862.jpg"
+        },
+        {
+            "sku": "T410-BR",
+            "field": "small_image",
+            "file": "catalog\/products\/11862.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11862.jpg"
+        },
+        {
+            "sku": "T410-BR",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11862.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11862.jpg"
+        },
+        {
+            "sku": "T410-BR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11862.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11862.jpg"
+        },
+        {
+            "sku": "290-PT",
+            "field": "image",
+            "file": "catalog\/products\/11784.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11784.jpg"
+        },
+        {
+            "sku": "290-PT",
+            "field": "small_image",
+            "file": "catalog\/products\/11784.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11784.jpg"
+        },
+        {
+            "sku": "290-PT",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11784.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11784.jpg"
+        },
+        {
+            "sku": "290-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11784.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11784.jpg"
+        },
+        {
+            "sku": "290-BR",
+            "field": "image",
+            "file": "catalog\/products\/11779.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11779.jpg"
+        },
+        {
+            "sku": "290-BR",
+            "field": "small_image",
+            "file": "catalog\/products\/11779.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11779.jpg"
+        },
+        {
+            "sku": "290-BR",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11779.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11779.jpg"
+        },
+        {
+            "sku": "290-BR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11779.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11779.jpg"
+        },
+        {
+            "sku": "290-TP-PT",
+            "field": "image",
+            "file": "catalog\/products\/11786.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11786.jpg"
+        },
+        {
+            "sku": "290-TP-PT",
+            "field": "small_image",
+            "file": "catalog\/products\/11786.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11786.jpg"
+        },
+        {
+            "sku": "290-TP-PT",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11786.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11786.jpg"
+        },
+        {
+            "sku": "290-TP-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11786.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11786.jpg"
+        },
+        {
+            "sku": "290-TP-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11787.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11787.jpg"
+        },
+        {
+            "sku": "290-TP-BR",
+            "field": "image",
+            "file": "catalog\/products\/11778.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11778.jpg"
+        },
+        {
+            "sku": "290-TP-BR",
+            "field": "small_image",
+            "file": "catalog\/products\/11778.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11778.jpg"
+        },
+        {
+            "sku": "290-TP-BR",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11778.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11778.jpg"
+        },
+        {
+            "sku": "290-TP-BR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11778.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11778.jpg"
+        },
+        {
+            "sku": "T290-AM",
+            "field": "image",
+            "file": "catalog\/products\/11866.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11866.jpg"
+        },
+        {
+            "sku": "T290-AM",
+            "field": "small_image",
+            "file": "catalog\/products\/11866.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11866.jpg"
+        },
+        {
+            "sku": "T290-AM",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11866.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11866.jpg"
+        },
+        {
+            "sku": "T290-AM",
+            "field": "additional_images",
+            "file": "catalog\/products\/11866.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11866.jpg"
+        },
+        {
+            "sku": "3512",
+            "field": "image",
+            "file": "catalog\/products\/11732.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11732.jpg"
+        },
+        {
+            "sku": "3512",
+            "field": "small_image",
+            "file": "catalog\/products\/11732.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11732.jpg"
+        },
+        {
+            "sku": "3512",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11732.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11732.jpg"
+        },
+        {
+            "sku": "3512",
+            "field": "additional_images",
+            "file": "catalog\/products\/11732.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11732.jpg"
+        },
+        {
+            "sku": "3096",
+            "field": "image",
+            "file": "catalog\/products\/11969.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11969.jpg"
+        },
+        {
+            "sku": "3096",
+            "field": "small_image",
+            "file": "catalog\/products\/11969.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11969.jpg"
+        },
+        {
+            "sku": "3096",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11969.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11969.jpg"
+        },
+        {
+            "sku": "3096",
+            "field": "additional_images",
+            "file": "catalog\/products\/11969.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11969.jpg"
+        },
+        {
+            "sku": "3097",
+            "field": "image",
+            "file": "catalog\/products\/11971.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11971.jpg"
+        },
+        {
+            "sku": "3097",
+            "field": "small_image",
+            "file": "catalog\/products\/11971.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11971.jpg"
+        },
+        {
+            "sku": "3097",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11971.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11971.jpg"
+        },
+        {
+            "sku": "3097",
+            "field": "additional_images",
+            "file": "catalog\/products\/11971.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11971.jpg"
+        },
+        {
+            "sku": "3098",
+            "field": "image",
+            "file": "catalog\/products\/11871.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11871.jpg"
+        },
+        {
+            "sku": "3098",
+            "field": "small_image",
+            "file": "catalog\/products\/11871.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11871.jpg"
+        },
+        {
+            "sku": "3098",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11871.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11871.jpg"
+        },
+        {
+            "sku": "3098",
+            "field": "additional_images",
+            "file": "catalog\/products\/11871.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11871.jpg"
+        },
+        {
+            "sku": "679",
+            "field": "image",
+            "file": "catalog\/products\/11759.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11759.jpg"
+        },
+        {
+            "sku": "679",
+            "field": "small_image",
+            "file": "catalog\/products\/11759.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11759.jpg"
+        },
+        {
+            "sku": "679",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11759.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11759.jpg"
+        },
+        {
+            "sku": "679",
+            "field": "additional_images",
+            "file": "catalog\/products\/11759.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11759.jpg"
+        },
+        {
+            "sku": "410-TP-VD",
+            "field": "image",
+            "file": "catalog\/products\/11736.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11736.jpg"
+        },
+        {
+            "sku": "410-TP-VD",
+            "field": "small_image",
+            "file": "catalog\/products\/11736.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11736.jpg"
+        },
+        {
+            "sku": "410-TP-VD",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11736.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11736.jpg"
+        },
+        {
+            "sku": "410-TP-VD",
+            "field": "additional_images",
+            "file": "catalog\/products\/11736.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11736.jpg"
+        },
+        {
+            "sku": "410-VD",
+            "field": "image",
+            "file": "catalog\/products\/11777.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11777.jpg"
+        },
+        {
+            "sku": "410-VD",
+            "field": "small_image",
+            "file": "catalog\/products\/11777.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11777.jpg"
+        },
+        {
+            "sku": "410-VD",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11777.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11777.jpg"
+        },
+        {
+            "sku": "410-VD",
+            "field": "additional_images",
+            "file": "catalog\/products\/11777.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11777.jpg"
+        },
+        {
+            "sku": "3094-CR",
+            "field": "image",
+            "file": "catalog\/products\/11872.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11872.jpg"
+        },
+        {
+            "sku": "3094-CR",
+            "field": "small_image",
+            "file": "catalog\/products\/11872.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11872.jpg"
+        },
+        {
+            "sku": "3094-CR",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11872.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11872.jpg"
+        },
+        {
+            "sku": "3094-CR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11872.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11872.jpg"
+        },
+        {
+            "sku": "3095-CR",
+            "field": "image",
+            "file": "catalog\/products\/11873.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11873.jpg"
+        },
+        {
+            "sku": "3095-CR",
+            "field": "small_image",
+            "file": "catalog\/products\/11873.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11873.jpg"
+        },
+        {
+            "sku": "3095-CR",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11873.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11873.jpg"
+        },
+        {
+            "sku": "3095-CR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11873.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11873.jpg"
+        },
+        {
+            "sku": "3098-CR",
+            "field": "image",
+            "file": "catalog\/products\/11874.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11874.jpg"
+        },
+        {
+            "sku": "3098-CR",
+            "field": "small_image",
+            "file": "catalog\/products\/11874.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11874.jpg"
+        },
+        {
+            "sku": "3098-CR",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11874.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11874.jpg"
+        },
+        {
+            "sku": "3098-CR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11874.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11874.jpg"
+        },
+        {
+            "sku": "683-CR",
+            "field": "image",
+            "file": "catalog\/products\/11875.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11875.jpg"
+        },
+        {
+            "sku": "683-CR",
+            "field": "small_image",
+            "file": "catalog\/products\/11875.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11875.jpg"
+        },
+        {
+            "sku": "683-CR",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11875.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11875.jpg"
+        },
+        {
+            "sku": "683-CR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11875.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11875.jpg"
+        },
+        {
+            "sku": "683-PT",
+            "field": "image",
+            "file": "catalog\/products\/11876.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11876.jpg"
+        },
+        {
+            "sku": "683-PT",
+            "field": "small_image",
+            "file": "catalog\/products\/11876.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11876.jpg"
+        },
+        {
+            "sku": "683-PT",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11876.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11876.jpg"
+        },
+        {
+            "sku": "683-PT",
+            "field": "additional_images",
+            "file": "catalog\/products\/11876.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11876.jpg"
+        },
+        {
+            "sku": "340-VH",
+            "field": "additional_images",
+            "file": "catalog\/products\/11819.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11819.jpg"
+        },
+        {
+            "sku": "3097-CR",
+            "field": "image",
+            "file": "catalog\/products\/11970.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11970.jpg"
+        },
+        {
+            "sku": "3097-CR",
+            "field": "small_image",
+            "file": "catalog\/products\/11970.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11970.jpg"
+        },
+        {
+            "sku": "3097-CR",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11970.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11970.jpg"
+        },
+        {
+            "sku": "3097-CR",
+            "field": "additional_images",
+            "file": "catalog\/products\/11970.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11970.jpg"
+        },
+        {
+            "sku": "3122",
+            "field": "image",
+            "file": "catalog\/products\/11877.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11877.jpg"
+        },
+        {
+            "sku": "3122",
+            "field": "small_image",
+            "file": "catalog\/products\/11877.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11877.jpg"
+        },
+        {
+            "sku": "3122",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11877.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11877.jpg"
+        },
+        {
+            "sku": "3122",
+            "field": "additional_images",
+            "file": "catalog\/products\/11877.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11877.jpg"
+        },
+        {
+            "sku": "410-BLACK",
+            "field": "image",
+            "file": "catalog\/products\/11735.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11735.jpg"
+        },
+        {
+            "sku": "410-BLACK",
+            "field": "small_image",
+            "file": "catalog\/products\/11735.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11735.jpg"
+        },
+        {
+            "sku": "410-BLACK",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11735.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11735.jpg"
+        },
+        {
+            "sku": "410-BLACK",
+            "field": "additional_images",
+            "file": "catalog\/products\/11735.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11735.jpg"
+        },
+        {
+            "sku": "410-TP-VH",
+            "field": "image",
+            "file": "catalog\/products\/11736.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11736.jpg"
+        },
+        {
+            "sku": "410-TP-VH",
+            "field": "small_image",
+            "file": "catalog\/products\/11736.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11736.jpg"
+        },
+        {
+            "sku": "410-TP-VH",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11736.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11736.jpg"
+        },
+        {
+            "sku": "410-TP-VH",
+            "field": "additional_images",
+            "file": "catalog\/products\/11736.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11736.jpg"
+        },
+        {
+            "sku": "410-VH",
+            "field": "image",
+            "file": "catalog\/products\/11737.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11737.jpg"
+        },
+        {
+            "sku": "410-VH",
+            "field": "small_image",
+            "file": "catalog\/products\/11737.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11737.jpg"
+        },
+        {
+            "sku": "410-VH",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11737.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11737.jpg"
+        },
+        {
+            "sku": "410-VH",
+            "field": "additional_images",
+            "file": "catalog\/products\/11737.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11737.jpg"
+        },
+        {
+            "sku": "684",
+            "field": "image",
+            "file": "catalog\/products\/11881.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11881.jpg"
+        },
+        {
+            "sku": "684",
+            "field": "small_image",
+            "file": "catalog\/products\/11881.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11881.jpg"
+        },
+        {
+            "sku": "684",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11881.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11881.jpg"
+        },
+        {
+            "sku": "684",
+            "field": "additional_images",
+            "file": "catalog\/products\/684-site-3.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/684-site-3.jpg"
+        },
+        {
+            "sku": "684",
+            "field": "additional_images",
+            "file": "catalog\/products\/684-site-2.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/684-site-2.jpg"
+        },
+        {
+            "sku": "684",
+            "field": "additional_images",
+            "file": "catalog\/products\/11881.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11881.jpg"
+        },
+        {
+            "sku": "669",
+            "field": "image",
+            "file": "catalog\/products\/11750.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11750.jpg"
+        },
+        {
+            "sku": "669",
+            "field": "small_image",
+            "file": "catalog\/products\/11750.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11750.jpg"
+        },
+        {
+            "sku": "669",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11750.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11750.jpg"
+        },
+        {
+            "sku": "669",
+            "field": "additional_images",
+            "file": "catalog\/products\/11750.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11750.jpg"
+        },
+        {
+            "sku": "2385",
+            "field": "image",
+            "file": "catalog\/products\/11812.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11812.jpg"
+        },
+        {
+            "sku": "2385",
+            "field": "small_image",
+            "file": "catalog\/products\/11812.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11812.jpg"
+        },
+        {
+            "sku": "2385",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11812.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11812.jpg"
+        },
+        {
+            "sku": "2385",
+            "field": "additional_images",
+            "file": "catalog\/products\/11812.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11812.jpg"
+        },
+        {
+            "sku": "2388",
+            "field": "image",
+            "file": "catalog\/products\/11973.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11973.jpg"
+        },
+        {
+            "sku": "2388",
+            "field": "small_image",
+            "file": "catalog\/products\/11973.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11973.jpg"
+        },
+        {
+            "sku": "2388",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11973.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11973.jpg"
+        },
+        {
+            "sku": "2388",
+            "field": "additional_images",
+            "file": "catalog\/products\/11973.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11973.jpg"
+        },
+        {
+            "sku": "2389",
+            "field": "image",
+            "file": "catalog\/products\/11968.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11968.jpg"
+        },
+        {
+            "sku": "2389",
+            "field": "small_image",
+            "file": "catalog\/products\/11968.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11968.jpg"
+        },
+        {
+            "sku": "2389",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11968.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11968.jpg"
+        },
+        {
+            "sku": "2389",
+            "field": "additional_images",
+            "file": "catalog\/products\/11968.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11968.jpg"
+        },
+        {
+            "sku": "3513",
+            "field": "image",
+            "file": "catalog\/products\/11972.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11972.jpg"
+        },
+        {
+            "sku": "3513",
+            "field": "small_image",
+            "file": "catalog\/products\/11972.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11972.jpg"
+        },
+        {
+            "sku": "3513",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11972.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11972.jpg"
+        },
+        {
+            "sku": "3513",
+            "field": "additional_images",
+            "file": "catalog\/products\/11972.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11972.jpg"
+        },
+        {
+            "sku": "1048-CRS-DD",
+            "field": "image",
+            "file": "catalog\/products\/11987.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11987.jpg"
+        },
+        {
+            "sku": "1048-CRS-DD",
+            "field": "small_image",
+            "file": "catalog\/products\/11987.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11987.jpg"
+        },
+        {
+            "sku": "1048-CRS-DD",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11987.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11987.jpg"
+        },
+        {
+            "sku": "1048-CRS-DD",
+            "field": "additional_images",
+            "file": "catalog\/products\/11987.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11987.jpg"
+        },
+        {
+            "sku": "1048-CRS-DD",
+            "field": "additional_images",
+            "file": "catalog\/products\/11988.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11988.jpg"
+        },
+        {
+            "sku": "1048-CRS-DD",
+            "field": "additional_images",
+            "file": "catalog\/products\/11989.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11989.jpg"
+        },
+        {
+            "sku": "1048-CRS-DE",
+            "field": "image",
+            "file": "catalog\/products\/11984.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11984.jpg"
+        },
+        {
+            "sku": "1048-CRS-DE",
+            "field": "small_image",
+            "file": "catalog\/products\/11984.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11984.jpg"
+        },
+        {
+            "sku": "1048-CRS-DE",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11984.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11984.jpg"
+        },
+        {
+            "sku": "1048-CRS-DE",
+            "field": "additional_images",
+            "file": "catalog\/products\/11984.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11984.jpg"
+        },
+        {
+            "sku": "1048-CRS-DE",
+            "field": "additional_images",
+            "file": "catalog\/products\/11985.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11985.jpg"
+        },
+        {
+            "sku": "1048-CRS-DE",
+            "field": "additional_images",
+            "file": "catalog\/products\/11986.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11986.jpg"
+        },
+        {
+            "sku": "1048-LA-DD",
+            "field": "image",
+            "file": "catalog\/products\/11981.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11981.jpg"
+        },
+        {
+            "sku": "1048-LA-DD",
+            "field": "small_image",
+            "file": "catalog\/products\/11981.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11981.jpg"
+        },
+        {
+            "sku": "1048-LA-DD",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11981.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11981.jpg"
+        },
+        {
+            "sku": "1048-LA-DD",
+            "field": "additional_images",
+            "file": "catalog\/products\/11981.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11981.jpg"
+        },
+        {
+            "sku": "1048-LA-DD",
+            "field": "additional_images",
+            "file": "catalog\/products\/11982.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11982.jpg"
+        },
+        {
+            "sku": "1048-LA-DD",
+            "field": "additional_images",
+            "file": "catalog\/products\/11983.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11983.jpg"
+        },
+        {
+            "sku": "1048-LA-DE",
+            "field": "image",
+            "file": "catalog\/products\/11978.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11978.jpg"
+        },
+        {
+            "sku": "1048-LA-DE",
+            "field": "small_image",
+            "file": "catalog\/products\/11978.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11978.jpg"
+        },
+        {
+            "sku": "1048-LA-DE",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11978.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11978.jpg"
+        },
+        {
+            "sku": "1048-LA-DE",
+            "field": "additional_images",
+            "file": "catalog\/products\/11978.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11978.jpg"
+        },
+        {
+            "sku": "1048-LA-DE",
+            "field": "additional_images",
+            "file": "catalog\/products\/11979.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11979.jpg"
+        },
+        {
+            "sku": "1048-LA-DE",
+            "field": "additional_images",
+            "file": "catalog\/products\/11980.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11980.jpg"
+        },
+        {
+            "sku": "4022-CRS",
+            "field": "image",
+            "file": "catalog\/products\/11976.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11976.jpg"
+        },
+        {
+            "sku": "4022-CRS",
+            "field": "small_image",
+            "file": "catalog\/products\/11976.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11976.jpg"
+        },
+        {
+            "sku": "4022-CRS",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11976.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11976.jpg"
+        },
+        {
+            "sku": "4022-CRS",
+            "field": "additional_images",
+            "file": "catalog\/products\/11976.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11976.jpg"
+        },
+        {
+            "sku": "4022-CRS",
+            "field": "additional_images",
+            "file": "catalog\/products\/11977.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11977.jpg"
+        },
+        {
+            "sku": "4022-LA",
+            "field": "image",
+            "file": "catalog\/products\/11974.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11974.jpg"
+        },
+        {
+            "sku": "4022-LA",
+            "field": "small_image",
+            "file": "catalog\/products\/11974.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11974.jpg"
+        },
+        {
+            "sku": "4022-LA",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11974.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11974.jpg"
+        },
+        {
+            "sku": "4022-LA",
+            "field": "additional_images",
+            "file": "catalog\/products\/11974.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11974.jpg"
+        },
+        {
+            "sku": "4022-LA",
+            "field": "additional_images",
+            "file": "catalog\/products\/11975.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11975.jpg"
+        },
+        {
+            "sku": "2",
+            "field": "image",
+            "file": "catalog\/products\/11999.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11999.jpg"
+        },
+        {
+            "sku": "2",
+            "field": "small_image",
+            "file": "catalog\/products\/11999.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11999.jpg"
+        },
+        {
+            "sku": "2",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11999.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11999.jpg"
+        },
+        {
+            "sku": "2",
+            "field": "additional_images",
+            "file": "catalog\/products\/11999.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11999.jpg"
+        },
+        {
+            "sku": "2",
+            "field": "additional_images",
+            "file": "catalog\/products\/12000.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/12000.jpg"
+        },
+        {
+            "sku": "86",
+            "field": "image",
+            "file": "catalog\/products\/11990.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11990.jpg"
+        },
+        {
+            "sku": "86",
+            "field": "small_image",
+            "file": "catalog\/products\/11990.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11990.jpg"
+        },
+        {
+            "sku": "86",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11990.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11990.jpg"
+        },
+        {
+            "sku": "86",
+            "field": "additional_images",
+            "file": "catalog\/products\/11990.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11990.jpg"
+        },
+        {
+            "sku": "86",
+            "field": "additional_images",
+            "file": "catalog\/products\/11991.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11991.jpg"
+        },
+        {
+            "sku": "86",
+            "field": "additional_images",
+            "file": "catalog\/products\/11992.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11992.jpg"
+        },
+        {
+            "sku": "1012",
+            "field": "image",
+            "file": "catalog\/products\/11996.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11996.jpg"
+        },
+        {
+            "sku": "1012",
+            "field": "small_image",
+            "file": "catalog\/products\/11996.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11996.jpg"
+        },
+        {
+            "sku": "1012",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11996.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11996.jpg"
+        },
+        {
+            "sku": "1012",
+            "field": "additional_images",
+            "file": "catalog\/products\/11996.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11996.jpg"
+        },
+        {
+            "sku": "1012",
+            "field": "additional_images",
+            "file": "catalog\/products\/11997.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11997.jpg"
+        },
+        {
+            "sku": "1012",
+            "field": "additional_images",
+            "file": "catalog\/products\/11998.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11998.jpg"
+        },
+        {
+            "sku": "686",
+            "field": "image",
+            "file": "catalog\/products\/11993.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11993.jpg"
+        },
+        {
+            "sku": "686",
+            "field": "small_image",
+            "file": "catalog\/products\/11993.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11993.jpg"
+        },
+        {
+            "sku": "686",
+            "field": "thumbnail",
+            "file": "catalog\/products\/11993.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11993.jpg"
+        },
+        {
+            "sku": "686",
+            "field": "additional_images",
+            "file": "catalog\/products\/11993.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11993.jpg"
+        },
+        {
+            "sku": "686",
+            "field": "additional_images",
+            "file": "catalog\/products\/11994.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11994.jpg"
+        },
+        {
+            "sku": "686",
+            "field": "additional_images",
+            "file": "catalog\/products\/11995.jpg",
+            "expected_path": "pub\/media\/import\/catalog\/products\/11995.jpg"
+        }
+    ],
+    "duplicate_additional_images": [],
+    "stats": {
+        "rows": 475,
+        "skus_changed": 190,
+        "url_keys_generated": 475,
+        "missing_images": 475,
+        "duplicates_in_additional": 0
+    },
+    "warnings": []
+}

@@ -1,0 +1,135 @@
+<!--
+/**
+ * Email template: B2B Registration Admin Notification
+ */
+-->
+<!--@subject [B2B] Novo Cadastro Empresarial Recebido @-->
+<!--@vars {
+"var customer_name":"Customer Name",
+"var customer_email":"Customer Email",
+"var razao_social":"Company Name",
+"var cnpj":"CNPJ",
+"var inscricao_estadual":"State Registration",
+"var phone":"Phone",
+"var store.getFrontendName()":"Store Name",
+"var admin_url":"Admin URL"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <h1 style="font-size: 24px; font-weight: 700; color: #1f2937; margin: 0 0 15px;">
+                📋 Novo Cadastro B2B Recebido
+            </h1>
+            <p style="font-size: 16px; color: #4b5563; margin: 0 0 20px;">
+                Uma nova empresa solicitou cadastro no programa B2B e aguarda aprovação.
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table style="width: 100%; background: #fef3c7; border: 1px solid #fcd34d; border-radius: 12px; padding: 20px; margin: 20px 0;">
+                <tr>
+                    <td style="text-align: center;">
+                        <span style="font-size: 16px; font-weight: 600; color: #92400e;">
+                            ⏰ Aguardando Aprovação
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table style="width: 100%; background: #f9fafb; border-radius: 8px; padding: 25px; margin: 20px 0;">
+                <tr>
+                    <td>
+                        <h3 style="font-size: 16px; color: #1f2937; margin: 0 0 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;">
+                            Dados da Empresa
+                        </h3>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6;">
+                                    <strong style="color: #6b7280;">Razão Social:</strong>
+                                </td>
+                                <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6; text-align: right;">
+                                    {{var razao_social}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6;">
+                                    <strong style="color: #6b7280;">CNPJ:</strong>
+                                </td>
+                                <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6; text-align: right;">
+                                    {{var cnpj}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6;">
+                                    <strong style="color: #6b7280;">Inscrição Estadual:</strong>
+                                </td>
+                                <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6; text-align: right;">
+                                    {{var inscricao_estadual}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6;">
+                                    <strong style="color: #6b7280;">Telefone:</strong>
+                                </td>
+                                <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6; text-align: right;">
+                                    {{var phone}}
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table style="width: 100%; background: #f9fafb; border-radius: 8px; padding: 25px;">
+                <tr>
+                    <td>
+                        <h3 style="font-size: 16px; color: #1f2937; margin: 0 0 20px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px;">
+                            Dados de Contato
+                        </h3>
+                        <table style="width: 100%;">
+                            <tr>
+                                <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6;">
+                                    <strong style="color: #6b7280;">Nome:</strong>
+                                </td>
+                                <td style="padding: 8px 0; border-bottom: 1px solid #f3f4f6; text-align: right;">
+                                    {{var customer_name}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0;">
+                                    <strong style="color: #6b7280;">E-mail:</strong>
+                                </td>
+                                <td style="padding: 8px 0; text-align: right;">
+                                    <a href="mailto:{{var customer_email}}" style="color: #2563eb;">{{var customer_email}}</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td style="padding: 30px 0; text-align: center;">
+            <p style="font-size: 14px; color: #6b7280; margin: 0 0 20px;">
+                Acesse o painel administrativo para aprovar ou rejeitar este cadastro.
+            </p>
+            <a href="{{var admin_url}}" 
+               style="display: inline-block; padding: 14px 30px; background: #2563eb; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                Gerenciar Clientes B2B
+            </a>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

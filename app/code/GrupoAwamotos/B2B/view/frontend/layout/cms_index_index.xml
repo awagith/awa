@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * GrupoAwamotos B2B - CMS Index (Homepage) Layout
+ * Adds B2B promotional banner on homepage
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- B2B Promotional Banner on Homepage -->
+        <referenceContainer name="content">
+            <block class="GrupoAwamotos\B2B\Block\PromoBlock"
+                   name="b2b.promo.banner"
+                   template="GrupoAwamotos_B2B::promo/banner.phtml"
+                   before="-"/>
+        </referenceContainer>
+    </body>
+</page>

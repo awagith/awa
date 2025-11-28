@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+	/**
+		* ducdevphp@gmail.com
+	*/
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+		<add id="Rokanthemes_Testimonials::testimonials_testimonials" title="Testimonials" module="Rokanthemes_Testimonials" sortOrder="65" parent="Rokanthemes_RokanBase::rokanbase" resource="Rokanthemes_Testimonials::testimonials_testimonials"/>
+        <add id="Rokanthemes_Testimonials::testimonials_manager" title="Manage Testimonials" module="Rokanthemes_Testimonials" sortOrder="20" parent="Rokanthemes_Testimonials::testimonials_testimonials" action="testimonials/testimonials" resource="Rokanthemes_Testimonials::testimonials_manager"/>
+        <add id="Rokanthemes_Testimonials::testimonials_setting" title="Testimonials Settings" module="Rokanthemes_Testimonials" sortOrder="30" parent="Rokanthemes_Testimonials::testimonials_testimonials" action="adminhtml/system_config/edit/section/testimonials_setting" resource="Rokanthemes_Testimonials::testimonials_setting"/>
+	</menu>
+</config>

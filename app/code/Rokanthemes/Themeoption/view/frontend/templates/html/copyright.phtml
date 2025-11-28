@@ -1,0 +1,9 @@
+<?php
+	$data = $block->getConfig();
+	$copyright = $data['general']['copyright'] ?? '';
+?>
+<?php if ($copyright !== ''): ?>
+<small class="copyright">
+	<span><?php echo $block->escapeHtml($copyright); ?></span>
+</small>
+<?php endif; ?>

@@ -1,0 +1,239 @@
+<?php
+/**
+ * B2B Registration Form Template
+ * @var \GrupoAwamotos\B2B\Block\Register\Form $block
+ */
+?>
+<div class="b2b-register-page">
+    <?php if ($block->isLoggedIn()): ?>
+        <div class="b2b-already-logged">
+            <div class="message info">
+                <span><?= $block->escapeHtml(__('Você já está logado. Acesse seu painel B2B para gerenciar sua conta.')) ?></span>
+            </div>
+            <a href="<?= $block->escapeUrl($block->getDashboardUrl()) ?>" class="action primary">
+                <?= $block->escapeHtml(__('Ir para Dashboard B2B')) ?>
+            </a>
+        </div>
+    <?php else: ?>
+        <div class="b2b-register-container">
+            <!-- Header -->
+            <div class="register-header">
+                <h1><?= $block->escapeHtml(__('Cadastro B2B')) ?></h1>
+                <p class="subtitle"><?= $block->escapeHtml(__('Crie sua conta empresarial e tenha acesso a preços especiais, crédito e cotações personalizadas.')) ?></p>
+            </div>
+
+            <!-- Benefits -->
+            <div class="b2b-benefits">
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                        </svg>
+                    </div>
+                    <div class="benefit-text">
+                        <strong><?= $block->escapeHtml(__('Descontos Exclusivos')) ?></strong>
+                        <span><?= $block->escapeHtml(__('Até 20% de desconto em todos os produtos')) ?></span>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                        </svg>
+                    </div>
+                    <div class="benefit-text">
+                        <strong><?= $block->escapeHtml(__('Crédito Empresarial')) ?></strong>
+                        <span><?= $block->escapeHtml(__('Limite de crédito para faturamento')) ?></span>
+                    </div>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                            <line x1="16" y1="13" x2="8" y2="13"></line>
+                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                        </svg>
+                    </div>
+                    <div class="benefit-text">
+                        <strong><?= $block->escapeHtml(__('Cotações Personalizadas')) ?></strong>
+                        <span><?= $block->escapeHtml(__('Solicite orçamentos sob medida')) ?></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form class="b2b-register-form" action="<?= $block->escapeUrl($block->getFormAction()) ?>" method="post" id="b2b-register-form" data-mage-init='{"validation":{}}'>
+                <?= $block->getBlockHtml('formkey') ?>
+                
+                <div class="form-section">
+                    <h3><?= $block->escapeHtml(__('Dados da Empresa')) ?></h3>
+                    
+                    <div class="field required">
+                        <label for="cnpj" class="label"><span><?= $block->escapeHtml(__('CNPJ')) ?></span></label>
+                        <div class="control">
+                            <input type="text" name="cnpj" id="cnpj" title="<?= $block->escapeHtmlAttr(__('CNPJ')) ?>" 
+                                   class="input-text" data-validate="{required:true}" 
+                                   placeholder="00.000.000/0000-00" maxlength="18"
+                                   data-mage-init='{"inputMask": {"mask": "00.000.000/0000-00"}}'>
+                            <div class="cnpj-status"></div>
+                        </div>
+                    </div>
+
+                    <div class="field required">
+                        <label for="razao_social" class="label"><span><?= $block->escapeHtml(__('Razão Social')) ?></span></label>
+                        <div class="control">
+                            <input type="text" name="razao_social" id="razao_social" title="<?= $block->escapeHtmlAttr(__('Razão Social')) ?>" 
+                                   class="input-text" data-validate="{required:true}" placeholder="Nome empresarial completo">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="inscricao_estadual" class="label"><span><?= $block->escapeHtml(__('Inscrição Estadual')) ?></span></label>
+                        <div class="control">
+                            <input type="text" name="inscricao_estadual" id="inscricao_estadual" 
+                                   title="<?= $block->escapeHtmlAttr(__('Inscrição Estadual')) ?>" 
+                                   class="input-text" placeholder="Opcional - deixe em branco se isento">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="phone" class="label"><span><?= $block->escapeHtml(__('Telefone Comercial')) ?></span></label>
+                        <div class="control">
+                            <input type="tel" name="phone" id="phone" title="<?= $block->escapeHtmlAttr(__('Telefone')) ?>" 
+                                   class="input-text" placeholder="(00) 00000-0000">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><?= $block->escapeHtml(__('Dados de Contato')) ?></h3>
+                    
+                    <div class="field-row">
+                        <div class="field required">
+                            <label for="firstname" class="label"><span><?= $block->escapeHtml(__('Nome')) ?></span></label>
+                            <div class="control">
+                                <input type="text" name="firstname" id="firstname" 
+                                       title="<?= $block->escapeHtmlAttr(__('Nome')) ?>" 
+                                       class="input-text" data-validate="{required:true}">
+                            </div>
+                        </div>
+
+                        <div class="field required">
+                            <label for="lastname" class="label"><span><?= $block->escapeHtml(__('Sobrenome')) ?></span></label>
+                            <div class="control">
+                                <input type="text" name="lastname" id="lastname" 
+                                       title="<?= $block->escapeHtmlAttr(__('Sobrenome')) ?>" 
+                                       class="input-text" data-validate="{required:true}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field required">
+                        <label for="email" class="label"><span><?= $block->escapeHtml(__('E-mail')) ?></span></label>
+                        <div class="control">
+                            <input type="email" name="email" id="email" 
+                                   title="<?= $block->escapeHtmlAttr(__('E-mail')) ?>" 
+                                   class="input-text" data-validate="{required:true, 'validate-email':true}"
+                                   placeholder="email@empresa.com.br">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3><?= $block->escapeHtml(__('Segurança')) ?></h3>
+                    
+                    <div class="field required">
+                        <label for="password" class="label"><span><?= $block->escapeHtml(__('Senha')) ?></span></label>
+                        <div class="control">
+                            <input type="password" name="password" id="password" 
+                                   title="<?= $block->escapeHtmlAttr(__('Senha')) ?>" 
+                                   class="input-text" data-validate="{required:true, 'validate-customer-password':true}"
+                                   autocomplete="new-password">
+                            <div class="password-strength-meter"></div>
+                        </div>
+                        <div class="note"><?= $block->escapeHtml(__('Mínimo 8 caracteres, com letras e números')) ?></div>
+                    </div>
+
+                    <div class="field required">
+                        <label for="password_confirmation" class="label"><span><?= $block->escapeHtml(__('Confirmar Senha')) ?></span></label>
+                        <div class="control">
+                            <input type="password" name="password_confirmation" id="password_confirmation" 
+                                   title="<?= $block->escapeHtmlAttr(__('Confirmar Senha')) ?>" 
+                                   class="input-text" data-validate="{required:true, equalTo:'#password'}"
+                                   autocomplete="new-password">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section terms-section">
+                    <div class="field choice required">
+                        <input type="checkbox" name="terms" id="terms" value="1" class="checkbox" data-validate="{required:true}">
+                        <label for="terms" class="label">
+                            <span><?= /* @noEscape */ __('Li e aceito os <a href="%1" target="_blank">Termos de Uso</a> e <a href="%2" target="_blank">Política de Privacidade</a>', $block->getUrl('terms'), $block->getUrl('privacy')) ?></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="actions-toolbar">
+                    <div class="primary">
+                        <button type="submit" class="action submit primary" title="<?= $block->escapeHtmlAttr(__('Criar Conta B2B')) ?>">
+                            <span><?= $block->escapeHtml(__('Criar Conta B2B')) ?></span>
+                        </button>
+                    </div>
+                    <div class="secondary">
+                        <span><?= $block->escapeHtml(__('Já tem uma conta?')) ?></span>
+                        <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>" class="action secondary">
+                            <?= $block->escapeHtml(__('Faça Login')) ?>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    <?php endif; ?>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "#b2b-register-form": {
+        "validation": {}
+    },
+    "#cnpj": {
+        "inputMask": {
+            "mask": "00.000.000/0000-00"
+        }
+    }
+}
+</script>
+
+<script>
+require(['jquery', 'domReady!'], function($) {
+    // CNPJ mask
+    $('#cnpj').on('input', function() {
+        var value = $(this).val().replace(/\D/g, '');
+        if (value.length <= 14) {
+            value = value.replace(/^(\d{2})(\d)/, '$1.$2');
+            value = value.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+            value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
+            value = value.replace(/(\d{4})(\d)/, '$1-$2');
+            $(this).val(value);
+        }
+    });
+
+    // Phone mask
+    $('#phone').on('input', function() {
+        var value = $(this).val().replace(/\D/g, '');
+        if (value.length <= 11) {
+            if (value.length > 2) {
+                value = '(' + value.substring(0, 2) + ') ' + value.substring(2);
+            }
+            if (value.length > 10) {
+                value = value.substring(0, 10) + '-' + value.substring(10);
+            }
+            $(this).val(value);
+        }
+    });
+});
+</script>

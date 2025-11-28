@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Frontend Events Configuration
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    
+    <!-- Observer para novos cadastros de cliente -->
+    <event name="customer_register_success">
+        <observer name="grupoawamotos_b2b_customer_register"
+                  instance="GrupoAwamotos\B2B\Observer\CustomerRegisterObserver"/>
+    </event>
+    
+    <!-- Observer para login do cliente -->
+    <event name="customer_login">
+        <observer name="grupoawamotos_b2b_customer_login"
+                  instance="GrupoAwamotos\B2B\Observer\CustomerLoginObserver"/>
+    </event>
+    
+</config>

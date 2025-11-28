@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content"> 		
+            <container name="catalog.product.view" htmlTag="div" htmlClass="product-view" before="-">
+				<container name="product.row" htmlTag="div" htmlClass="view-product" before="-">
+					<container name="product.view.row" htmlTag="div" htmlClass="row">
+						<container name="product.col.left" htmlTag="div" htmlClass="col-md-12 col-xs-12">
+							<container name="product.row.main.detail" htmlTag="div" htmlClass="main-detail">
+								<container name="product.row.child" htmlTag="div" htmlClass="row">
+									<container name="product.col.media" htmlTag="div" htmlClass="col-md-6 col-sm-6 col-xs-12" before="-" />
+									<container name="product.col.info" htmlTag="div" htmlClass="col-md-6 col-sm-6 col-xs-12">
+										<container name="product.info.main" htmlTag="div" htmlClass="detail-info detail-info-product-view product-info product-info-main">
+											<container name="box.inner1" htmlTag="div" htmlClass="box-inner1" before="-">
+											</container>
+											<container name="alert.urls" as="alert_urls" label="Alert Urls" after="product.price.tier"/>
+											<container name="box.addtocart.extrahint" htmlTag="div" htmlClass="attr-info" after="alert.urls">
+												<container name="product.info.extrahint" as="extrahint" label="Product View Extra Hint">
+													<container name="product.info.social" label="Product social links container" htmlTag="div" htmlClass="product-social-extra" after="product.info.overview">
+														<block class="Magento\Catalog\Block\Product\View" name="product.info.addto" as="addto" template="product/view/addto.phtml"/>
+														<block class="Magento\Catalog\Block\Product\View" name="product.info.mailto" template="product/view/mailto.phtml"/>
+													</container>
+												</container>
+											</container>
+										</container>
+									</container>
+								</container>
+							</container>
+						</container>
+					</container>
+				</container>
+			</container>
+			<block class="Magento\Catalog\Block\Product\ProductList\Related" name="product.relatedslider" template="Magento_Catalog::product/list/relateproduct.phtml">
+				<arguments>
+					<argument name="type" xsi:type="string">related</argument>
+				</arguments>
+			</block>
+			<block class="Magento\Catalog\Block\Product\ProductList\Upsell" name="product.upsellslider" template="Magento_Catalog::product/list/upsell.phtml">
+				<arguments>
+					<argument name="type" xsi:type="string">upsell</argument>
+				</arguments>
+			</block>
+        </referenceContainer>
+		<referenceBlock name="catalog.product.related" remove="true"/>
+		<referenceBlock name="product.info.upsell" remove="true"/>
+		<move element="product.info" destination="box.addtocart.extrahint" before="-"/>
+		<move element="page.main.title" destination="box.inner1" before="-"/>
+		<move element="product.info.price" destination="box.inner1" after="page.main.title"/>
+		<move element="product.info.overview" destination="box.inner1" after="product.price.tier"/>
+		<move element="product.info.stock.sku" destination="product.info.price" after="-"/>
+		
+		<move element="product.info.media" destination="product.col.media"/>
+    </body>
+</page>

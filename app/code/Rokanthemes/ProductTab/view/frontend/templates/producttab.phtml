@@ -1,0 +1,151 @@
+	<?php
+use Magento\Framework\App\Action\Action;
+	$enable = $block->getConfig('enabled');
+	if($enable < 1) return ;
+	$items = $block->getConfig('items');
+	$speed = $block->getConfig('speed');
+	$qty = $block->getConfig('qty');
+	$showCart = $block->getConfig('addtocart');
+	$showWishlist = $block->getConfig('wishlist');
+	$showCompare = $block->getConfig('compare');
+	$show_navigation = $block->getConfig('navigation');
+	$show_pagination = $block->getConfig('pagination');
+	$auto = $block->getConfig('auto');
+	$imageBlock =  $block->getLayout()->createBlock('Magento\Catalog\Block\Product\Image');
+	$image = 'new_products_content_widget_grid';
+	$type = 'widget-new-grid';
+	$templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
+	$rows = $block->getConfig('row');
+	?>
+<div class="list-tab-product common-tab-system-fixed">
+  <div class="box-title">
+    <div class="title-tab-product">
+      <h2>products</h2>
+      <ul class="tabs">
+        <?php
+        $tab_contents = $block->getTabContent() ;
+        foreach($tab_contents as $tab) {
+          ?>
+          <li rel="tab_<?php echo $tab['id'];?>" class="<?php echo $tab['class']; ?>"> <?php echo $tab['name'];?></li>
+          <?php
+        }
+        ?>
+      </ul>
+      <!-- <p class="des"><?php echo __('Lorem Ipsum is simply dummy text of the printing and typesetting industry.') ?></p> -->
+    </div>
+  </div>
+	<div class="tab_container">
+	   <?php
+		foreach($tab_contents as $tab) {
+		?>
+		 <div id="tab_<?php echo $tab['id'];?>" class="product-tab-slider tab_content <?php echo $tab['class']; ?>">
+		 	<div class="productTabContent">
+			<?php
+				$i=0;
+				$productItems =  $tab['productInfo'];
+				foreach($productItems as $_item) {
+						$productImage = $block->getImage($_item, $image);
+						$productImageThumb = $block->getImage($_item, 'category_page_grid-1');
+				?>
+					<?php if($i++%$rows==0) { ?> <div class="product-item"> <?php } ?>
+					<div class="item-product col-md-3">
+						<div class="content-item-product">
+							<div class="product-thumb">
+								<a href="<?php /* @escapeNotVerified */ echo $_item->getProductUrl() ?>" class="product-thumb-link">
+									<span class="first-thumb">
+										<?php echo $productImage->toHtml(); ?>
+									</span>
+									<span class="second-thumb">
+										<?php echo $productImageThumb->toHtml(); ?>
+									</span>
+								</a>
+								<div class="quickview-product">
+									<a  data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="javascript: void(0);" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>"><i class="fa fa-eye"></i></a>
+							    </div>
+								<?php if ( $_item->getFinalPrice() < $_item->getPrice() ): ?>
+									<span class="onsale">
+										<span class="sale-bg"></span>
+										<span class="sale-text"><?php echo __('Sale') ?></span>
+									</span>
+								<?php endif; ?>
+								<?php $todayDate = time(); 
+									$timeStartNew = strtotime($_item->getData('news_from_date'));
+									$timeEndNew = strtotime($_item->getData('news_to_date')); ?>
+								<?php if ( $timeEndNew >= $todayDate && $timeStartNew <= $todayDate): ?>
+									<span class="newlabel">
+										<span><?php echo __('New') ?></span>
+									</span>
+								<?php endif; ?>
+						    </div>
+						    <div class="product-info">
+								<h3 class="title-product">
+		 							<a title="<?php echo $_item->getName(); ?>" href="<?php /* @escapeNotVerified */ echo $_item->getProductUrl() ?>" class="product-item-link">
+										<?php echo $_item->getName(); ?>
+									</a>
+								</h3>
+								<div class="info-price">
+									<?php /* @escapeNotVerified */ echo $this->helper('Rokanthemes\Themeoption\Helper\Data')->getPriceDisplayCustom($block->getProductPrice($_item)) ?>
+								</div>
+						    </div>
+			              	<div class="product-info-cart">
+				                <?php if ($showWishlist || $showCompare || $showCart): ?>
+				                  <ul class="product-extra-link add-to-links">
+
+									<?php if ($showWishlist || $showCompare): ?>
+										<?php if ($this->helper('Magento\Wishlist\Helper\Data')->isAllow() && $showWishlist): ?>
+										<li>
+											<a href="#"
+											   data-post='<?php echo $block->getAddToWishlistParams($_item); ?>'
+											   class="wishlist-link action towishlist" data-action="add-to-wishlist"
+											   title="<?php echo __('Add to Wishlist') ?>">
+												<i class="fa fa-heart" aria-hidden="true"></i><?php echo __('Wishlist') ?>
+											</a>
+										</li>
+										<?php endif; ?>
+										<?php if ($block->getAddToCompareUrl() && $showCompare): ?>
+										<?php $compareHelper = $this->helper('Magento\Catalog\Helper\Product\Compare');?>
+											<li>
+												<a href="#" class="compare-link action tocompare"
+												   data-post='<?php echo $compareHelper->getPostDataParams($_item);?>'
+												   title="<?php echo __('Add to Compare') ?>">
+													<i class="fa fa-retweet" aria-hidden="true"></i><?php echo __('Compare') ?>
+												</a>
+											</li>
+				                        
+											<?php endif; ?>
+										<?php endif; ?>
+									</ul>
+	  							<?php endif; ?>
+  							</div>
+							
+						</div>
+
+					</div>
+					 <?php if($i%$rows==0 || $i == count($productItems)) { ?> </div> <?php }?>
+				<?php
+				}
+				?>
+			</div>
+		 </div>
+		<?php
+		}
+		?>
+	</div>
+</div>
+<script type="text/x-magento-init">
+{
+	"[data-role=tocart-form], .form.map.checkout": {
+		"catalogAddToCart": {}
+	}
+}
+</script>
+
+<script type="text/javascript">
+require(["jquery", 'mage/mage', "rokanthemes/owl"], function($){
+	'use strict';
+	$( document ).ready(function() {
+		$(".list-tab-product .tab_content").hide();
+		$(".list-tab-product .tab_content:first").show();	
+	});
+});
+</script>

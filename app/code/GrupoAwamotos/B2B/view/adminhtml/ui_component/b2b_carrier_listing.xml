@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * B2B Carrier Listing UI Component
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">b2b_carrier_listing.b2b_carrier_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <buttons>
+            <button name="seed">
+                <url path="b2b/carrier/seed"/>
+                <class>primary</class>
+                <label translate="true">Cadastrar Transportadoras Padrão</label>
+            </button>
+        </buttons>
+        <spinner>b2b_carrier_columns</spinner>
+        <deps>
+            <dep>b2b_carrier_listing.b2b_carrier_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="b2b_carrier_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">carrier_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>GrupoAwamotos_B2B::carrier</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="b2b_carrier_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>carrier_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filterSearch name="fulltext"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="b2b_carrier_columns">
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>carrier_id</indexField>
+            </settings>
+        </selectionsColumn>
+        <column name="carrier_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+        <column name="code">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Código</label>
+            </settings>
+        </column>
+        <column name="name">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Nome</label>
+            </settings>
+        </column>
+        <column name="delivery_time">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Prazo de Entrega</label>
+            </settings>
+        </column>
+        <column name="phone">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Telefone</label>
+            </settings>
+        </column>
+        <column name="is_active" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Ativo</label>
+            </settings>
+        </column>
+        <column name="sort_order">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Ordem</label>
+            </settings>
+        </column>
+    </columns>
+</listing>

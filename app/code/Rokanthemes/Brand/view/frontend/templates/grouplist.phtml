@@ -1,0 +1,19 @@
+<?php
+$collection = $this->getGroupList();
+?>
+<?php if ( $collection->count() ){ ?>
+<div class="block widget rokanthemes-widget brand-widget">
+	<div class="filter-options">
+		<div class="filter-options-title">
+			<?php echo __('Brand Group') ?>
+		</div>
+		<div class="block-content filter-options-content">
+			<ul>
+				<?php foreach ($collection as $_group) { ?>
+				<li class="item"><a href="<?php echo $_group->getUrl(); ?>" title="<?php echo $_group->getName(); ?>" ><?php echo $_group->getName(); ?></a></li>
+				<?php } ?>
+			</ul>
+		</div>
+	</div> 
+</div>
+<?php }

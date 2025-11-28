@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * UI Component for Customer Pending Listing
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">grupoawamotos_b2b_customer_pending_listing.grupoawamotos_b2b_customer_pending_listing_data_source</item>
+        </item>
+    </argument>
+    
+    <settings>
+        <spinner>grupoawamotos_b2b_customer_pending_columns</spinner>
+        <deps>
+            <dep>grupoawamotos_b2b_customer_pending_listing.grupoawamotos_b2b_customer_pending_listing_data_source</dep>
+        </deps>
+    </settings>
+    
+    <dataSource name="grupoawamotos_b2b_customer_pending_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>GrupoAwamotos_B2B::customer_approval</aclResource>
+        <dataProvider class="GrupoAwamotos\B2B\Ui\DataProvider\CustomerPendingDataProvider" name="grupoawamotos_b2b_customer_pending_listing_data_source">
+            <settings>
+                <requestFieldName>entity_id</requestFieldName>
+                <primaryFieldName>entity_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    
+    <columns name="grupoawamotos_b2b_customer_pending_columns">
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>entity_id</indexField>
+            </settings>
+        </selectionsColumn>
+        
+        <column name="entity_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>desc</sorting>
+            </settings>
+        </column>
+        
+        <column name="firstname">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Nome</label>
+            </settings>
+        </column>
+        
+        <column name="lastname">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Sobrenome</label>
+            </settings>
+        </column>
+        
+        <column name="email">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">E-mail</label>
+            </settings>
+        </column>
+        
+        <column name="b2b_cnpj">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">CNPJ</label>
+            </settings>
+        </column>
+        
+        <column name="b2b_razao_social">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Razão Social</label>
+            </settings>
+        </column>
+        
+        <column name="b2b_phone">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Telefone</label>
+            </settings>
+        </column>
+        
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <label translate="true">Cadastrado em</label>
+                <dataType>date</dataType>
+            </settings>
+        </column>
+        
+        <actionsColumn name="actions" class="GrupoAwamotos\B2B\Ui\Component\Listing\Column\CustomerActions">
+            <settings>
+                <indexField>entity_id</indexField>
+                <label translate="true">Ações</label>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

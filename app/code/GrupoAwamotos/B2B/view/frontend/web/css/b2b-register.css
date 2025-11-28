@@ -1,0 +1,337 @@
+/**
+ * B2B Registration Form Styles
+ */
+.b2b-register-page {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.b2b-already-logged {
+    text-align: center;
+    padding: 40px;
+}
+
+.b2b-already-logged .message {
+    margin-bottom: 20px;
+}
+
+/* Header */
+.register-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.register-header h1 {
+    font-size: 32px;
+    color: #1a1a2e;
+    margin: 0 0 10px;
+}
+
+.register-header .subtitle {
+    font-size: 16px;
+    color: #6b7280;
+    margin: 0;
+}
+
+/* Benefits */
+.b2b-benefits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 35px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    border-radius: 12px;
+}
+
+.benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.benefit-icon {
+    width: 40px;
+    height: 40px;
+    background: #2563eb;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.benefit-icon svg {
+    color: #fff;
+    width: 20px;
+    height: 20px;
+}
+
+.benefit-text strong {
+    display: block;
+    font-size: 14px;
+    color: #1f2937;
+    margin-bottom: 2px;
+}
+
+.benefit-text span {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* Form Container */
+.b2b-register-container {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+}
+
+/* Form Sections */
+.form-section {
+    margin-bottom: 30px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.form-section:last-of-type {
+    border-bottom: none;
+}
+
+.form-section h3 {
+    font-size: 18px;
+    color: #1f2937;
+    margin: 0 0 20px;
+    padding-left: 12px;
+    border-left: 3px solid #2563eb;
+}
+
+/* Field Row */
+.field-row {
+    display: flex;
+    gap: 20px;
+}
+
+.field-row .field {
+    flex: 1;
+}
+
+/* Fields */
+.field {
+    margin-bottom: 20px;
+}
+
+.field:last-child {
+    margin-bottom: 0;
+}
+
+.field.required > .label span:after {
+    content: ' *';
+    color: #dc2626;
+}
+
+.field .label {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.field .control {
+    position: relative;
+}
+
+.field .input-text,
+.field input[type="text"],
+.field input[type="email"],
+.field input[type="tel"],
+.field input[type="password"] {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.field .input-text:focus,
+.field input:focus {
+    border-color: #2563eb;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.field .input-text::placeholder {
+    color: #9ca3af;
+}
+
+.field .note {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 6px;
+}
+
+/* CNPJ Status */
+.cnpj-status {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.cnpj-status.valid::after {
+    content: '✓';
+    color: #10b981;
+    font-size: 18px;
+}
+
+.cnpj-status.invalid::after {
+    content: '✗';
+    color: #dc2626;
+    font-size: 18px;
+}
+
+/* Password Strength */
+.password-strength-meter {
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.password-strength-meter::after {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 0;
+    transition: all 0.3s ease;
+}
+
+/* Terms Section */
+.terms-section {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.terms-section .field.choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.terms-section .checkbox {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.terms-section .label {
+    margin: 0;
+    font-weight: normal;
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.terms-section .label a {
+    color: #2563eb;
+    text-decoration: none;
+}
+
+.terms-section .label a:hover {
+    text-decoration: underline;
+}
+
+/* Actions */
+.actions-toolbar {
+    margin-top: 30px;
+    padding-top: 25px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.actions-toolbar .primary {
+    margin-bottom: 15px;
+}
+
+.actions-toolbar .action.primary {
+    display: block;
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.actions-toolbar .action.primary:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.actions-toolbar .secondary {
+    text-align: center;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.actions-toolbar .action.secondary {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 5px;
+}
+
+.actions-toolbar .action.secondary:hover {
+    text-decoration: underline;
+}
+
+/* Validation Errors */
+.mage-error {
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 6px;
+}
+
+.field._error .input-text,
+.field._error input {
+    border-color: #dc2626;
+}
+
+/* Message */
+.message.info {
+    padding: 16px 20px;
+    background: #dbeafe;
+    border: 1px solid #93c5fd;
+    border-radius: 8px;
+    color: #1e40af;
+    font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .b2b-register-container {
+        padding: 25px 20px;
+    }
+    
+    .field-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .register-header h1 {
+        font-size: 26px;
+    }
+    
+    .b2b-benefits {
+        grid-template-columns: 1fr;
+    }
+}

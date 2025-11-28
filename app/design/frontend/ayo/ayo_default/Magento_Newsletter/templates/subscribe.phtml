@@ -1,0 +1,51 @@
+<?php
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+$uniquePrefix = uniqid('home-newsletter-');
+$formId = $uniquePrefix . '-form';
+$emailId = $uniquePrefix . '-email';
+$submitId = $uniquePrefix . '-submit';
+?>
+<div class="newsletter-footer">
+  <div class="newsletter-footer__header">
+    <label for="<?php echo $block->escapeHtmlAttr($emailId); ?>">
+      <?php echo $block->escapeHtml(__('newsletter')); ?>
+    </label>
+  </div>
+  <form
+    class="form- subscribe-"
+    id="<?php echo $block->escapeHtmlAttr($formId); ?>"
+    novalidate
+    action="<?php echo $block->escapeUrl($block->getFormActionUrl()); ?>"
+    method="post"
+    data-mage-init='{"validation": {"errorClass": "mage-error"}}'
+  >
+    <div class="field newsletter">
+      <div class="control">
+        <input
+          name="email"
+          type="email"
+          id="<?php echo $block->escapeHtmlAttr($emailId); ?>"
+          placeholder="<?php echo $block->escapeHtml(__('Your email address...')); ?>"
+          data-validate="{required:true, 'validate-email':true}"
+          aria-describedby="<?php echo $block->escapeHtmlAttr($submitId); ?>"
+        />
+      </div>
+      <div class="actions">
+        <button
+          class="action subscribe primary"
+          id="<?php echo $block->escapeHtmlAttr($submitId); ?>"
+          title="<?php echo $block->escapeHtml(__('Subscribe !')); ?>"
+          type="submit"
+        >
+          <?php echo $block->escapeHtml(__('Subscribe !')); ?>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

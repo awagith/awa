@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * GrupoAwamotos B2B Widget Configuration
+ */
+-->
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    
+    <widget id="b2b_promo_banner" class="GrupoAwamotos\B2B\Block\PromoBlock">
+        <label translate="true">B2B Promotional Banner</label>
+        <description translate="true">Displays B2B registration promotional banner with benefits</description>
+        <parameters>
+            <parameter name="template" xsi:type="select" visible="true" required="true">
+                <label translate="true">Template</label>
+                <options>
+                    <option name="default" value="GrupoAwamotos_B2B::promo/banner.phtml" selected="true">
+                        <label translate="true">Full Banner with Benefits</label>
+                    </option>
+                    <option name="compact" value="GrupoAwamotos_B2B::promo/banner-compact.phtml">
+                        <label translate="true">Compact Banner</label>
+                    </option>
+                </options>
+            </parameter>
+        </parameters>
+    </widget>
+    
+    <widget id="b2b_register_button" class="GrupoAwamotos\B2B\Block\Widget\RegisterButton">
+        <label translate="true">B2B Register Button</label>
+        <description translate="true">A call-to-action button for B2B registration</description>
+        <parameters>
+            <parameter name="button_text" xsi:type="text" visible="true">
+                <label translate="true">Button Text</label>
+                <value>Seja um Revendedor</value>
+            </parameter>
+            <parameter name="button_style" xsi:type="select" visible="true">
+                <label translate="true">Button Style</label>
+                <options>
+                    <option name="primary" value="primary" selected="true">
+                        <label translate="true">Primary (Orange)</label>
+                    </option>
+                    <option name="secondary" value="secondary">
+                        <label translate="true">Secondary (Blue)</label>
+                    </option>
+                </options>
+            </parameter>
+        </parameters>
+    </widget>
+    
+</widgets>

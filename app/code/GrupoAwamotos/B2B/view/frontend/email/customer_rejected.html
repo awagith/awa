@@ -1,0 +1,57 @@
+<!--@subject {{trans "Sobre Seu Cadastro B2B"}} @-->
+<!--@vars {
+"var customer_name":"Nome do Cliente",
+"var store_name":"Nome da Loja",
+"var reason":"Motivo",
+"var contact_url":"URL de Contato"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <p class="greeting">{{trans "Olá %customer_name," customer_name=$customer_name}}</p>
+            <p>
+                {{trans "Agradecemos seu interesse em fazer parte dos clientes B2B de %store_name." store_name=$store_name}}
+            </p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <p>
+                {{trans "Infelizmente, não foi possível aprovar sua solicitação de cadastro no momento."}}
+            </p>
+            {{if reason}}
+            <p style="background-color: #f5f5f5; padding: 15px; border-left: 4px solid #e74c3c; margin: 15px 0;">
+                <strong>{{trans "Motivo:"}}</strong><br/>
+                {{var reason}}
+            </p>
+            {{/if}}
+            <p>
+                {{trans "Isso pode ocorrer por diversos motivos, como documentação incompleta ou dados inconsistentes."}}
+            </p>
+        </td>
+    </tr>
+    <tr class="email-action">
+        <td style="text-align: center; padding: 20px;">
+            <a href="{{var contact_url}}" style="background-color: #1979c3; color: #fff; padding: 15px 35px; text-decoration: none; border-radius: 4px; display: inline-block; font-size: 16px;">
+                {{trans "Entrar em Contato"}}
+            </a>
+        </td>
+    </tr>
+    <tr class="email-outro">
+        <td>
+            <p>
+                {{trans "Se você acredita que houve um engano ou deseja fornecer informações adicionais, por favor entre em contato conosco."}}
+            </p>
+            <p>
+                {{trans "Atenciosamente,"}}
+                <br/>
+                {{trans "Equipe %store_name" store_name=$store_name}}
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

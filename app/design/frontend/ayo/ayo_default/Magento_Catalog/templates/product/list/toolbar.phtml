@@ -1,0 +1,42 @@
+<?php
+/**
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Product list toolbar
+ *
+ * @var $block \Magento\Catalog\Block\Product\ProductList\Toolbar
+ */
+use Magento\Catalog\Model\Product\ProductList\Toolbar;
+?>
+<?php if ($block->getCollection()->getSize()): ?>
+    <div class="toolbar toolbar-products" data-mage-init='<?php /* @escapeNotVerified */ echo $block->getWidgetOptionsJson(); ?>'>
+		<div class="center">
+		<?php if ($block->isExpanded()): ?>
+            <?php include ($block->getTemplateFile('Magento_Catalog::product/list/toolbar/viewmode.phtml')) ?>
+		<?php if ($block->isExpanded()): ?>
+            <?php include ($block->getTemplateFile('Magento_Catalog::product/list/toolbar/sorter.phtml')) ?>
+        <?php endif; ?>
+
+		
+        <?php include ($block->getTemplateFile('Magento_Catalog::product/list/toolbar/limiter.phtml')) ?>
+		
+		<?php echo $block->getPagerHtml() ?>
+		
+        <?php endif; ?>
+        <?php include ($block->getTemplateFile('Magento_Catalog::product/list/toolbar/amount.phtml')) ?>
+		</div>
+        <div class="grid-mode-show-type-products">
+			<a href="#" class="grid-mode-2" data-grid-mode="2">2</a>
+			<a href="#" class="grid-mode-3" data-grid-mode="3">3</a>
+			<a href="#" class="grid-mode-4 actived" data-grid-mode="4">4</a>
+			<a href="#" class="grid-mode-5" data-grid-mode="5">5</a>
+		</div>
+    </div>
+<?php endif ?>

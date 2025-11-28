@@ -1,0 +1,42 @@
+<!--@subject {{trans "Seu pedido %increment_id foi enviado" increment_id=$order.increment_id}} @-->
+{{template config_path="design/email/header_template"}}
+<table class="email-container" width="100%" cellpadding="0" cellspacing="0" border="0">
+    <tr class="email-intro">
+        <td>
+            <p class="greeting">{{trans "Olá %customer_name," customer_name=$order_data.customer_name}}</p>
+            <p>
+                {{trans "Ótima notícia! O pedido <strong>#%increment_id</strong> foi despachado." increment_id=$order.increment_id |raw}}
+                {{trans "Acompanhe abaixo os detalhes do envio."}}
+            </p>
+        </td>
+    </tr>
+    <tr class="email-summary">
+        <td>
+            <h1>{{trans 'Remessa <span class="no-link">#%shipment_id</span>' shipment_id=$shipment.increment_id |raw}}</h1>
+            {{if track_number}}
+            <p>{{trans 'Código de rastreamento: <a href="%track_url">%track_number</a>' track_url=$track_url track_number=$track_number |raw}}</p>
+            {{/if}}
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <table class="order-details" width="100%">
+                <tr>
+                    <td class="address-details" width="50%">
+                        <h3>{{trans "Endereço de entrega"}}</h3>
+                        <p>{{var formattedShippingAddress|raw}}</p>
+                    </td>
+                    <td class="method-info" width="50%">
+                        <h3>{{trans "Forma de envio"}}</h3>
+                        <p>{{var order.shipping_description}}</p>
+                    </td>
+                </tr>
+            </table>
+            {{layout handle="sales_email_order_shipment_items" order=$order shipment=$shipment area="frontend"}}
+            <p>
+                {{trans "Precisa alterar algo ou tem dúvidas? Responda este e-mail ou fale conosco pelos canais oficiais."}}
+            </p>
+        </td>
+    </tr>
+</table>
+{{template config_path="design/email/footer_template"}}

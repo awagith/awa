@@ -1,0 +1,12 @@
+<!--@subject {{trans "Confirmação de inscrição na newsletter"}} @-->
+<!--@vars {
+"var subscriber_data.confirmation_link":"Subscriber Confirmation URL"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p class="greeting">{{trans "Obrigado por se inscrever em nossa newsletter."}}</p>
+<p>{{trans "Para começar a receber os conteúdos, confirme sua inscrição clicando no link abaixo:"}}</p>
+<p><a href="{{var subscriber_data.confirmation_link}}">{{var subscriber_data.confirmation_link}}</a></p>
+
+{{template config_path="design/email/footer_template"}}
+

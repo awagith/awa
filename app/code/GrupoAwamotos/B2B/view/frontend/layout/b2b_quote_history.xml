@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Quote History Layout
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Minhas Cotações</title>
+    </head>
+    <update handle="customer_account"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="GrupoAwamotos\B2B\Block\Quote\History" 
+                   name="b2b.quote.history" 
+                   template="GrupoAwamotos_B2B::quote/history.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

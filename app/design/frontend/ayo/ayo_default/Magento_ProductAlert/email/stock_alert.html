@@ -1,0 +1,12 @@
+<!--@subject {{trans "Alerta de produto disponível novamente"}} @-->
+<!--@vars {
+"var alertGrid|raw":"Alert Data Grid",
+"var customerName":"Customer Name"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<p class="greeting">{{trans "%name," name=$customerName}}</p>
+{{var alertGrid|raw}}
+
+{{template config_path="design/email/footer_template"}}
+

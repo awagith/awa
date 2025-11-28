@@ -1,0 +1,26 @@
+<!--@subject {{trans "Bem-vindo à %store_name" store_name=$store.frontend_name}} @-->
+{{template config_path="design/email/header_template"}}
+<table class="email-container" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td>
+            <h1>{{trans "Conta criada com sucesso"}}</h1>
+            <p>{{trans "Olá %name," name=$customer.name}}</p>
+            <p>
+                {{trans "Sua conta em %store_name foi ativada." store_name=$store.frontend_name}}
+                {{trans "Agora você pode acompanhar pedidos, salvar endereços e aproveitar ofertas exclusivas."}}
+            </p>
+            <p>
+                {{trans "Para acessar, clique no botão abaixo:"}}
+            </p>
+            <p style="text-align:center;">
+                <a href="{{var this.getUrl($store,'customer/account/',[_nosid:1])}}" class="action primary" style="padding:12px 24px;background:#000;color:#fff;text-decoration:none;display:inline-block;">
+                    {{trans "Ir para minha conta"}}
+                </a>
+            </p>
+            <p>
+                {{trans "Se não reconhece este cadastro, responda este e-mail imediatamente para que possamos investigar."}}
+            </p>
+        </td>
+    </tr>
+</table>
+{{template config_path="design/email/footer_template"}}

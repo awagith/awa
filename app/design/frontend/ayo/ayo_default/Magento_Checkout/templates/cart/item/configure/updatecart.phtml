@@ -1,0 +1,97 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var $block \Magento\Catalog\Block\Product\View */
+?>
+<?php $_product = $block->getProduct(); ?>
+<?php $buttonTitle = __('Update Cart'); ?>
+<?php if ($_product->isSaleable()): ?>
+    <div class="box-tocarts update">
+        <fieldset class="fieldset">
+            <?php if ($block->shouldRenderQuantity()): ?>
+            <div class="attr-product">
+                <label class="label" for="qty"><span><?= /* @escapeNotVerified */ __('Qty') ?></span></label>
+               <div class="info-qty"> 
+                    <div class="control">
+                        <a class="qty-down" href="#"><i class="fa fa-minus"></i></a>
+                        <input type="number"
+                               name="qty"
+                               id="qty"
+                               value=""
+                               title="<?= /* @escapeNotVerified */ __('Qty') ?>"
+                               class="input-text qty"
+                               data-validate="<?= $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"/>
+                        <a class="qty-up" href="#"><i class="fa fa-plus"></i></a>       
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+            <div class="actions">
+                <button type="submit"
+                        title="<?= /* @escapeNotVerified */ $buttonTitle ?>"
+                        class="action primary tocart"
+                        id="product-updatecart-button">
+                    <span><?= /* @escapeNotVerified */ $buttonTitle ?></span>
+                </button>
+                <?= $block->getChildHtml('', true) ?>
+            </div>
+        </fieldset>
+    </div>
+    <script type="text/x-magento-init">
+        {
+            "#product_addtocart_form": {
+                "validation": {},
+                "addToCart": {
+                    "cartButtonId": "#product-updatecart-button",
+                    "cartForm": "#product_addtocart_form"
+                }
+            }
+        }
+    </script>
+    <script>
+        require([
+            'jquery',
+            'mage/mage',
+            'Magento_Catalog/product/view/validation',
+            'Magento_Catalog/js/catalog-add-to-cart'
+        ], function ($) {
+            'use strict';
+            $('.qty-up').on('click',function(event){
+                event.preventDefault();
+                var input_ = $(this).closest('.info-qty').find('#qty');
+                var qtyval = parseInt(input_.val(),10);
+                qtyval=qtyval+1;
+                input_.val(qtyval);
+            });
+            $('.qty-down').on('click',function(event){
+                event.preventDefault();
+                var input_ = $(this).closest('.info-qty').find('#qty');
+                var qtyval = parseInt(input_.val(),10);
+                qtyval=qtyval-1;
+                if(qtyval>1){
+                    input_.val(qtyval);
+                }else{
+                    qtyval=1;
+                    input_.val(qtyval);
+                }
+            });
+            $('#product_addtocart_form').mage('validation', {
+                radioCheckboxClosest: '.nested',
+                submitHandler: function (form) {
+                    var widget = $(form).catalogAddToCart({
+                        bindSubmit: false
+                    });
+
+                    widget.catalogAddToCart('submitForm', $(form));
+
+                    return false;
+                }
+            });
+        });
+    </script>
+<?php endif; ?>

@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Magento/Store/etc/config.xsd">
+	<default>
+		<themeoption>
+			<general>
+				<render_less>0</render_less>
+			</general>
+			<font>
+				<custom>1</custom>
+				<font_size>14px</font_size>
+				<font_family>google</font_family>
+				<google_font_family>Poppins</google_font_family>
+			</font>
+			<colors>
+				<custom>1</custom>
+				<text_color>888888</text_color>
+				<link_color>222222</link_color>
+				<link_hover_color>888888</link_hover_color>
+				<button_text_color>FFFFFF</button_text_color>
+				<button_bg_color>222222</button_bg_color>
+				<button_hover_text_color>FFFFFF</button_hover_text_color>
+				<button_hover_bg_color>888888</button_hover_bg_color>
+			</colors>
+			<newsletter>
+				<enable>1</enable>
+				<width>970</width>
+				<height>540</height>
+				<bg_color>FFFFFF</bg_color>
+			</newsletter>
+			<fake_order>
+				<enable_f_o>1</enable_f_o>
+				<seconds_displayed>5</seconds_displayed>
+				<messages>Someone purcharsed a</messages>
+			</fake_order>
+		</themeoption>
+	</default>
+</config>

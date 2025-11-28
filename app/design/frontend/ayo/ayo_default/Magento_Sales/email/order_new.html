@@ -1,0 +1,66 @@
+<!--@subject {{trans "Seu pedido %increment_id foi recebido" increment_id=$order.increment_id}} @-->
+{{template config_path="design/email/header_template"}}
+<table class="email-container" cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr class="email-intro">
+        <td>
+            <p class="greeting">{{trans "Olá %customer_name," customer_name=$order_data.customer_name}}</p>
+            <p>
+                {{trans "Recebemos o seu pedido em %store_name e ele já está em processamento." store_name=$store.frontend_name}}
+                {{trans "Assim que a remessa for despachada enviaremos o código de rastreamento por e-mail."}}
+            </p>
+            <p>
+                {{trans 'Você pode acompanhar tudo <a href="%account_url">acessando sua conta</a>.' account_url=$this.getUrl($store,'customer/account/',[_nosid:1]) |raw}}
+                {{trans 'Em caso de dúvidas fale conosco pelo e-mail <a href="mailto:%store_email">%store_email</a>' store_email=$store_email |raw}}
+                {{depend store_phone}}{{trans ' ou ligue/mande WhatsApp para <a href="tel:%store_phone">%store_phone</a>' store_phone=$store_phone |raw}}{{/depend}}.
+            </p>
+        </td>
+    </tr>
+    <tr class="email-summary">
+        <td>
+            <h1>{{trans 'Pedido <span class="no-link">#%increment_id</span>' increment_id=$order.increment_id |raw}}</h1>
+            <p>{{trans 'Realizado em <span class="no-link">%created_at</span>' created_at=$created_at_formatted |raw}}</p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            {{depend order_data.email_customer_note}}
+            <table class="message-info" width="100%">
+                <tr>
+                    <td>{{var order_data.email_customer_note|escape|nl2br}}</td>
+                </tr>
+            </table>
+            {{/depend}}
+            <table class="order-details" width="100%">
+                <tr>
+                    <td class="address-details" width="50%">
+                        <h3>{{trans "Dados de cobrança"}}</h3>
+                        <p>{{var formattedBillingAddress|raw}}</p>
+                    </td>
+                    {{depend order_data.is_not_virtual}}
+                    <td class="address-details" width="50%">
+                        <h3>{{trans "Dados de entrega"}}</h3>
+                        <p>{{var formattedShippingAddress|raw}}</p>
+                    </td>
+                    {{/depend}}
+                </tr>
+                <tr>
+                    <td class="method-info" width="50%">
+                        <h3>{{trans "Forma de pagamento"}}</h3>
+                        {{var payment_html|raw}}
+                    </td>
+                    {{depend order_data.is_not_virtual}}
+                    <td class="method-info" width="50%">
+                        <h3>{{trans "Forma de envio"}}</h3>
+                        <p>{{var order.shipping_description}}</p>
+                        {{if shipping_msg}}
+                        <p>{{var shipping_msg}}</p>
+                        {{/if}}
+                    </td>
+                    {{/depend}}
+                </tr>
+            </table>
+            {{layout handle="sales_email_order_items" order_id=$order_id area="frontend"}}
+        </td>
+    </tr>
+</table>
+{{template config_path="design/email/footer_template"}}

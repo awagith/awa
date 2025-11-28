@@ -1,0 +1,57 @@
+.store-item {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 50px;
+    padding-top: 50px;
+    &.first {
+        padding-top: 0;
+    }
+    &.last {
+        border-bottom: none;
+    }
+}
+.store-content {
+    h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: @maincolor;
+    }
+    .icons {
+        border: 1px solid @linkshover;
+        border-radius: 3px;
+        color: @links;
+        float: left;
+        font-size: 18px;
+        height: 44px;
+        line-height: 44px;
+        text-align: center;
+        vertical-align: middle;
+        width: 50px;
+    }
+    .right-info-store {
+        margin: 0;
+        padding-left: 70px;
+        vertical-align: middle;
+        display: block;
+    }
+    .store_info .store-email {
+        display: block;
+        font-size: 14px;
+        color: #333;
+    }
+    .store-contain { 
+        a {
+            color: #888;
+            display: block;
+            line-height: normal;
+        }
+    }
+    .store_info {
+        li {
+            padding-bottom: 30px;
+            margin: 0;
+            &:last-child {
+                padding-bottom: 0;
+            }
+        }
+    }
+}

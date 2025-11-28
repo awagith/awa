@@ -1,0 +1,16 @@
+<?php
+/**
+ * Copyright © 2013-2017 Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php $_product = $block->getProduct() ?>
+<?php if ($block->canEmailToFriend()): ?>
+    <a title="<?php /* @escapeNotVerified */ echo __('Email') ?>" href="<?php /* @escapeNotVerified */ echo $this->helper('Magento\Catalog\Helper\Product')->getEmailToFriendUrl($_product) ?>"
+       class="action email-link"><i class="fa fa-envelope"></i></a>
+<?php endif; ?>
+<a href="#" onclick="window.print();return false;" title="<?php /* @escapeNotVerified */ echo __('Print') ?>" class="action print-link"><i class="fa fa-print"></i></a>
+<a href="https://www.facebook.com/sharer.php?u=<?php echo $block->getProductUrl($_product) ?>" title="<?php /* @escapeNotVerified */ echo __('Share') ?>" onclick="return !window.open(this.href, 'Facebook', 'width=500,height=500')"><i class="fa fa-share"></i></a>

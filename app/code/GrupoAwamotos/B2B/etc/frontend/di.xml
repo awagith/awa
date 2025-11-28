@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Frontend DI Configuration
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    
+    <!-- Plugin para bloquear add to cart para não logados -->
+    <type name="Magento\Checkout\Controller\Cart\Add">
+        <plugin name="grupoawamotos_b2b_block_cart_add"
+                type="GrupoAwamotos\B2B\Plugin\BlockCartAddPlugin"
+                sortOrder="10"/>
+    </type>
+    
+    <!-- Plugin para bloquear checkout para clientes não aprovados -->
+    <type name="Magento\Checkout\Controller\Index\Index">
+        <plugin name="grupoawamotos_b2b_block_checkout"
+                type="GrupoAwamotos\B2B\Plugin\BlockCheckoutPlugin"
+                sortOrder="10"/>
+    </type>
+    
+</config>

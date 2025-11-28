@@ -1,0 +1,37 @@
+.loader {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    display: block;
+    top: 50%;
+    left: 50%;
+    background: #fff;
+    transform: translate(-50%, -50%);
+    z-index: 99999999;
+}
+.loader .sk-folding-cube {
+    position: absolute;
+    top: calc(50% - 20px);
+    left: calc(50% - 20px);
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    overflow: hidden;
+    animation: center 3.2s ease-in-out infinite;
+     border: 5px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 5px solid #30bbef;
+      width: 50px;
+      height: 50px;
+      -webkit-animation: spin 2s linear infinite;
+      animation: spin 2s linear infinite;
+}
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

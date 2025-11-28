@@ -1,0 +1,180 @@
+<?php
+/**
+ * Shopping List View Template
+ * @var \GrupoAwamotos\B2B\Block\Customer\ShoppingList\ViewBlock $block
+ * @var \GrupoAwamotos\B2B\ViewModel\ShoppingListViewModel $viewModel
+ */
+$viewModel = $block->getData('view_model');
+$list = $block->getCurrentList();
+
+if (!$list): ?>
+    <div class="message error">
+        <span><?= $block->escapeHtml(__('Lista não encontrada.')) ?></span>
+    </div>
+    <div class="actions-toolbar">
+        <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action back">
+            <span><?= $block->escapeHtml(__('Voltar')) ?></span>
+        </a>
+    </div>
+<?php return; endif;
+
+$items = $viewModel->getListItems((int)$list->getId());
+?>
+
+<div class="b2b-shopping-list-view">
+    <div class="block-title" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <div>
+            <strong style="font-size:1.5em;"><?= $block->escapeHtml($list->getName()) ?></strong>
+            <?php if ($list->getDescription()): ?>
+                <p class="description" style="margin:5px 0 0; color:#666;"><?= $block->escapeHtml($list->getDescription()) ?></p>
+            <?php endif; ?>
+        </div>
+        <div class="actions">
+            <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action back">
+                <span><?= $block->escapeHtml(__('← Voltar para Listas')) ?></span>
+            </a>
+        </div>
+    </div>
+
+    <?php if ($items->getSize() > 0): ?>
+        <div class="list-summary" style="background:#f5f5f5; padding:15px; margin-bottom:20px; border-radius:4px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <strong><?= $block->escapeHtml(__('Total de itens:')) ?></strong> 
+                    <?= (int)$items->getSize() ?>
+                </div>
+                <div>
+                    <strong><?= $block->escapeHtml(__('Total estimado:')) ?></strong> 
+                    <?= /* @noEscape */ $viewModel->getListTotal((int)$list->getId()) ?>
+                </div>
+                <div>
+                    <form action="<?= $block->escapeUrl($block->getAddToCartUrl()) ?>" method="post" style="display:inline;">
+                        <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                        <button type="submit" class="action primary tocart" title="<?= $block->escapeHtmlAttr(__('Adicionar Tudo ao Carrinho')) ?>">
+                            <span><?= $block->escapeHtml(__('Adicionar Tudo ao Carrinho')) ?></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-wrapper shopping-list-items">
+            <table class="data table table-shopping-list-items" id="shopping-list-items-table">
+                <thead>
+                    <tr>
+                        <th scope="col" class="col image"><?= $block->escapeHtml(__('Imagem')) ?></th>
+                        <th scope="col" class="col product"><?= $block->escapeHtml(__('Produto')) ?></th>
+                        <th scope="col" class="col sku"><?= $block->escapeHtml(__('SKU')) ?></th>
+                        <th scope="col" class="col price"><?= $block->escapeHtml(__('Preço')) ?></th>
+                        <th scope="col" class="col qty"><?= $block->escapeHtml(__('Qtd')) ?></th>
+                        <th scope="col" class="col subtotal"><?= $block->escapeHtml(__('Subtotal')) ?></th>
+                        <th scope="col" class="col actions"><?= $block->escapeHtml(__('Ações')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($items as $item): 
+                        $product = $item->getProduct();
+                        if (!$product) continue;
+                    ?>
+                        <tr>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Imagem')) ?>" class="col image">
+                                <a href="<?= $block->escapeUrl($block->getProductUrl($product)) ?>">
+                                    <img src="<?= $block->escapeUrl($viewModel->getProductImageUrl($product)) ?>" 
+                                         alt="<?= $block->escapeHtmlAttr($product->getName()) ?>"
+                                         width="75" height="75"
+                                         style="max-width:75px;">
+                                </a>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Produto')) ?>" class="col product">
+                                <a href="<?= $block->escapeUrl($block->getProductUrl($product)) ?>">
+                                    <?= $block->escapeHtml($product->getName()) ?>
+                                </a>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('SKU')) ?>" class="col sku">
+                                <?= $block->escapeHtml($item->getSku()) ?>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Preço')) ?>" class="col price">
+                                <?= /* @noEscape */ $viewModel->formatPrice((float)$product->getFinalPrice()) ?>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Qtd')) ?>" class="col qty">
+                                <?= (int)$item->getQty() ?>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Subtotal')) ?>" class="col subtotal">
+                                <?= /* @noEscape */ $viewModel->formatPrice($item->getLineTotal()) ?>
+                            </td>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Ações')) ?>" class="col actions">
+                                <form action="<?= $block->escapeUrl($block->getRemoveItemUrl((int)$item->getId())) ?>" 
+                                      method="post" 
+                                      style="display:inline;"
+                                      onsubmit="return confirm('<?= $block->escapeJs(__('Remover este item da lista?')) ?>');">
+                                    <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                                    <button type="submit" 
+                                            class="action delete" 
+                                            title="<?= $block->escapeHtmlAttr(__('Remover')) ?>">
+                                        <span><?= $block->escapeHtml(__('Remover')) ?></span>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+    <?php else: ?>
+        <div class="message info empty">
+            <span><?= $block->escapeHtml(__('Esta lista está vazia.')) ?></span>
+        </div>
+        <p><?= $block->escapeHtml(__('Adicione produtos à sua lista navegando pelo catálogo.')) ?></p>
+    <?php endif; ?>
+
+    <div class="actions-toolbar" style="margin-top:20px;">
+        <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action back">
+            <span><?= $block->escapeHtml(__('← Voltar para Listas')) ?></span>
+        </a>
+    </div>
+</div>
+
+<style>
+.b2b-shopping-list-view .table-shopping-list-items {
+    width: 100%;
+    border-collapse: collapse;
+}
+.b2b-shopping-list-view .table-shopping-list-items th,
+.b2b-shopping-list-view .table-shopping-list-items td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    vertical-align: middle;
+}
+.b2b-shopping-list-view .table-shopping-list-items th {
+    background: #f5f5f5;
+    font-weight: 600;
+}
+.b2b-shopping-list-view .col.image {
+    width: 90px;
+}
+.b2b-shopping-list-view .action.delete {
+    color: #e02b27;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+.b2b-shopping-list-view .action.delete:hover {
+    text-decoration: underline;
+}
+.b2b-shopping-list-view .message.empty {
+    padding: 20px;
+    background: #f5f5f5;
+    text-align: center;
+    border-radius: 4px;
+}
+.b2b-shopping-list-view .action.back {
+    color: #006bb4;
+    text-decoration: none;
+}
+.b2b-shopping-list-view .action.back:hover {
+    text-decoration: underline;
+}
+</style>

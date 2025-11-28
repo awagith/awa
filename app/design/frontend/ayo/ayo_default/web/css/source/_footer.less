@@ -1,0 +1,408 @@
+.cms-homepage_ayo_default .footer-container{
+    border-top: 1px solid #e1e1e1;
+}
+.cms-index-index{
+    .border-top-container{
+        display: none;
+    }
+}
+.border-top-container{
+    height: 1px;
+    background: #e1e1e1;
+}
+.page-footer{
+    .footer-container{
+        .footer-box  {
+            h2 {
+                font-size: 18px;
+                margin: 0 0 20px;
+                color: @secondaryColor;
+            }
+            li {
+                margin-bottom: 12px;
+                line-height: 20px;
+                a {
+                    color: @primarycolor;
+                    font-size: 14px;
+                    position: relative;
+                    &:hover {
+                        color: @linkshover;                 
+                    }
+                }
+                p {
+                    margin-bottom: 0;
+                }
+            }
+        }
+        .list-footer-box {
+            margin-top: 25px;
+        }
+        .footer-box-contact {
+            position: relative;
+            li {
+                padding-left: 30px;
+            }
+            .fa {
+                color: #585e6a;
+                font-size: 18px;
+                width: 25px;
+                position: absolute;
+                left: 0;
+                margin-top: 10px;
+            }
+        }
+        .social-footer-box {
+            border-bottom: 1px solid @bordercolor;
+            border-top: 1px solid @bordercolor;
+            margin-top: 20px;
+            padding: 35px 0;
+        }
+    }
+}
+
+
+.newsletter-footer {
+    text-align: center;
+    margin: 40px 0 45px;
+    position: relative;
+    &:before {
+        content: "";
+        background: #e1e1e1;
+        height: 1px;
+        width: 100%;
+        position: absolute;
+        top: 50%;
+        left: 0;
+        margin-top: -7px;
+    }
+    label {
+        display: none;  
+    }
+    > form {
+        display: inline-block;
+        position: relative;
+    }
+    .control{
+        float: left;
+    }
+    .actions{
+        float: left;
+        margin-left: -2px;
+    }
+    input[type="email"] {
+        border: 2px solid @bordercolor;
+        color: @inputtext;
+        font-family: @bdf;
+        font-weight: @regularfontweight;
+        margin-bottom: 15px;
+        font-size: 14px;
+        height: 50px;
+        padding-left: 30px;
+        width: 395px;
+        background: #fff;
+        border-radius: 30px 0 0 30px;
+        @media (max-width: 1500px){
+            width: 300px;
+        }
+        &::placeholder {
+            color: @inputtext;
+            font-family: @bdf;
+            font-size: 14px;
+            font-weight: @regularfontweight;
+        }
+    }
+    button.action i{
+        display: none;
+    }
+    button.action, 
+    button.action:hover {
+        background: @linkshover;
+        color: @lightcolor;
+        font-weight: @headingfontweight;
+        border: medium none;
+        height: 50px;
+        margin: 0px;
+        padding: 0 50px;
+        border-radius: 0 30px 30px 0;
+        text-transform: capitalize;
+        font-size: 14px;
+        font-weight: 500;
+    }
+}
+
+.social-footer {
+    margin-top: 40px;
+     ul {
+        display: inline-block;
+        font-size: 0;
+        margin: 0;
+        li {
+            display: inline-block;
+            font-size: 14px;
+            a {
+                margin-right: 10px;
+            }
+        }
+    }
+
+}
+.copyright  p {
+    color: @secondaryColor;
+    margin: 0;
+}
+.copyright a {
+    color: @linkshover;
+}
+.copyright a:hover {
+    color: @linkshover;
+}
+.payment-method {
+    text-align: right;
+}
+.footer-bottom {
+    padding: 28px 0 25px;
+    background: @bkgfooterbottom;
+    color: #71908c;
+    .copyright {
+        line-height: 33px;
+        margin: 0;
+    }
+}
+
+.payment-method .opcheckout-payment-methods li {
+    display: block;
+}
+.payment-method li {
+    display: inline-block;
+    margin-left: 2px;
+}
+.d-flex {
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+.rowFlex {
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: row;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -webkit-flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+}
+
+.footer-container .container >.rowFlex.rowFlexMargin {
+    padding-bottom: 45px;
+    position: relative;
+}
+.rowFlexMargin {
+    margin-left: -10px;
+    margin-right: -10px;
+    .velaBlock {
+        margin-bottom: 30px;
+        color: @secondaryColor;
+        .contacinfo-logo {
+            margin-bottom: 35px;
+            img {
+                display: block;
+                max-width: 100%;
+                height: auto;
+            }
+        }
+        .intro-footer{
+            line-height: 23px;
+        }
+         .velaFooterTitle {
+            color: @secondaryColor;
+            font-size: 14px;
+            font-weight: @headingfontweight;
+            text-transform: uppercase;
+            margin: 0 0 30px;
+            padding: 25px 0 0 0;
+        }
+        .velaFooterLinks {
+            margin: 0px;
+            padding: 0;
+            line-height: 18px;
+            li {
+                display: block;
+               padding: 7px 0;
+              a {
+                color: @links;
+                font-size: 14px;
+                font-weight: @regularfontweight;
+                display: block;
+                -webkit-transition: all 0.25s ease-in-out 0s;
+                -o-transition: all 0.25s ease-in-out 0s;
+                transition: all 0.25s ease-in-out 0s;
+                &:hover, &:focus {
+                    color: @linkshover;
+                    text-decoration: none;
+                    text-indent: 10px;
+                }
+              }
+            }
+        }
+    }
+    .vela-contactinfo .contacinfo-phone.contactinfo-item {
+        font-weight: @headingfontweight;
+        font-size: 24px;
+        color: #222;
+        margin: 20px 0 20px;
+        .image_hotline {
+            display: block;
+            max-width: 100%;
+            height: 60px;
+            width: 60px;
+            background-color: @linkshover;
+            -webkit-mask: url(images/hotline_icon.svg) no-repeat 100% 100%;
+            mask: url(images/hotline_icon.svg);
+        }
+        .wrap {
+            margin-left: 10px;
+        }
+        label {
+            color: #a7a7a7;
+            font-size: 14px;
+            font-weight: @regularfontweight;
+            margin: 10px 0;
+        }
+    }
+    .vela-contactinfo .contactinfo-item {
+        margin-bottom: 12px;
+
+        label {
+            display: block;
+            margin-right: 2px;
+            margin-bottom: 6px;
+        }
+    }
+}
+.velaNewsletterFooter {
+    justify-content: center;
+    text-align: center;
+}
+.velaNewsletterFooter .newsletterDescription {
+    line-height: 31px;
+    color: @links;
+    span {
+        color:@linkshover;
+        font-size: 14px;
+        font-weight: @headingfontweight;
+    }
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.velaNewsletterFooter .form-control {
+    background: transparent;
+    border: 0;
+   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 15px;
+    padding: 10px 0;
+    box-shadow: none;
+}
+.velaNewsletterFooter .btnNewsletter {
+    background-color: #303c4b;
+    color: @bkg;
+    border: 0;
+    font-size: 13px;
+    padding: 10px 40px;
+    line-height: 22px;
+    border-radius: 30px;
+    text-transform: uppercase;
+    font-weight: @headingfontweight;
+    &:hover {
+        background-color: @linkshover;
+    }
+}
+.velaFooterTitle {
+    color: @secondaryColor;
+    font-size: 14px;
+    font-weight: @headingfontweight;
+    text-transform: uppercase;
+    margin: 0 0 34px;
+    padding: 10px 0px;
+}
+
+.footer-container.footer {
+    padding: 60px 0 0;
+}
+.page_footer {
+    color: @secondaryColor;
+    overflow: hidden;
+    background: @bkgfooter;
+}
+/* style footer */
+.text_footer>div>ul>li>a {
+    color: #71737a;
+}
+.text_footer>div>ul>li:hover a{
+    color: @linkshover;
+}
+.footer-static-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #2f3034;
+    font-family: 'Poppins' ,sans-serif;
+    text-transform: uppercase;
+}
+.text_footer span:hover:before {
+    color: @linkshover;
+}
+.logo_footer {
+    float: right;
+}
+.footer_text {
+    line-height: 30px;
+    font-size: 14px;
+    font-weight: @regularfontweight;
+    color: #71737a;
+    font-family: 'Lato' ,sans-serif;
+}
+.creative { 
+    font-weight: bold;
+    color: #2f3034;
+ }
+ .text_footer div ul li:hover {
+    -webkit-transform: translate(1em,0);
+    -moz-transform: translate(1em,0);
+    -o-transform: translate(1em,0);
+    -ms-transform: translate(1em,0);
+    transform: translate(1em,0);
+}
+.text_footer div ul li {
+    padding-bottom: 15px;
+    font-size: 14px;
+    font-weight: @regularfontweight;
+    color: #71737a;
+    /* list-style: disc; */
+    font-family: 'Lato' ,sans-serif;
+    -webkit-transition: all 300ms ease;
+    -moz-transition: all 300ms ease;
+    -ms-transition: all 300ms ease;
+    -o-transition: all 300ms ease;
+     transition: all 300ms ease; 
+}
+.form-newletter {
+    position: relative;
+}
+.text_footer {
+    font-size: 14px;
+    font-weight: @regularfontweight;
+    color: #71737a;
+    list-style: disc;
+    font-family: 'Lato' ,sans-serif;
+    >div>div {
+        line-height: 26px;
+    }
+}
+.velaNewsletterFooter .velaFooterTitle {
+    padding: 20px 0 0 0;
+    font-size: 30px;
+    text-transform: capitalize;
+    letter-spacing: -1px;
+    margin: 0 0 25px;
+}

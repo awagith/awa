@@ -1,0 +1,176 @@
+<?php 
+	use Magento\Framework\App\Action\Action;
+	$templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
+	$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $StockState = $objectManager->get('\Magento\CatalogInventory\Api\StockStateInterface');
+    $StockState2 = $objectManager->get('\Magento\CatalogInventory\Api\StockConfigurationInterface');
+	$category_load = $block->getCategory();
+	$rows = 2;
+	$enabled= $block->getConfig('enabled');
+	$items = $block->getConfig('items');
+	$speed = $block->getConfig('speed');
+	$qty = $block->getConfig('qty');
+	$showCart = $block->getConfig('addtocart');
+	$showWishlist = $block->getConfig('wishlist');
+	$showCompare = $block->getConfig('compare');
+	$show_navigation = $block->getConfig('navigation');
+	$show_pagination = $block->getConfig('pagination');
+	$auto = $block->getConfig('auto');
+	if($enabled && $category_load && strtotime($block->getConfig('end_date')) >= strtotime($block->getCurrentTime())){
+		$image = 'category_image_primary_small';
+?>
+<?php if($this->getConfig('title')){?>
+	<div class="rokan-product-heading rokan-onsale-heading"><h2><?php echo $this->getConfig('title')?>  <span class="sup-title"><?php echo __('Of The Day') ?></span></h2></div>
+<?php }?>
+<div class="hot-deal-tab-slider hot-deal-tab-slider-customcss">
+	<div class="countdown_block">
+		<div class="title_countdown"><?php echo __('Hurry Up! Offer ends in:') ?></div>
+		<div class="super-deal-countdown" data-date="<?php echo $block->getConfig('end_date');?>"></div>
+	</div>
+	<div class="rows">
+		<div class="hot-deal-slide">
+			<?php 
+				$newItems =  $block->getProducts();
+				$i=0;
+				foreach($newItems as $_item) { 
+					$productImage = $block->getImage($_item, $image);
+				?>
+				<?php if($i++%$rows==0) { ?> <div class="product_row"> <?php } ?>
+					<div class="item-product product-item listview">
+						<div class="content-item-product">
+							<div class="product-thumb">
+								<a href="<?php /* @escapeNotVerified */ echo $_item->getProductUrl() ?>" class="product-thumb-link">
+									<?php $productImageThumb = $block->getImage($_item, 'category_image_second_small');?>
+									<span class="first-thumb">
+										<?php echo $productImage->toHtml(); ?>
+									</span>
+									<?php $productType = $_item->getTypeID();
+									if($productType == "simple"): ?>
+										<span class="second-thumb">
+											<?php echo $productImageThumb->toHtml(); ?>
+										</span>
+			                		<?php endif; ?>
+								</a>
+								<div class="hot-onsale">
+									<?php if ( $_item->getFinalPrice() < $_item->getPrice() ): ?>
+										
+											<span class="onsale">
+											<span class="sale-bg"></span>
+											<span class="sale-text"><?php echo $block->showLableSalePrice($_item); ?>
+											</span>
+											</span>
+									<?php endif; ?>
+									<?php $helper = $this->helper('Rokanthemes\RokanBase\Helper\Newlabel'); ?>
+										<?php if($helper->isProductNew($_item)): ?>
+										<div class="onsale new-lable">
+										    <?php echo __('New'); ?>
+										</div>
+									<?php endif; ?>
+								</div>						
+						    </div>
+						    <div class="product-info">
+								<h3 class="product-name">
+		 							<a title="<?php echo $_item->getName(); ?>" href="<?php /* @escapeNotVerified */ echo $_item->getProductUrl() ?>" class="product-item-link">
+										<?php echo $_item->getName(); ?>
+									</a>
+								</h3>
+								<div class="product-rating">
+									<?php if ($templateType): ?>
+										<?php echo $block->getReviewsSummaryHtml($_item, $templateType,true); ?>
+									<?php endif; ?>
+								</div>
+								<div class="sold-by">
+									<?php
+										$cats = $_item->getAttributeText('sold_by');
+										echo ' <span>'.__('Sold by:').'</span>' .$cats;
+									 ?>
+								</div>
+								<div class="info-price">
+									<?php /* @escapeNotVerified */ echo $this->helper('Rokanthemes\Themeoption\Helper\Data')->getPriceDisplayCustom($block->getProductPrice($_item)) ?>
+								</div>
+								<?php
+								if($_item->getTypeId() == 'simple' || $_item->getTypeId() == 'virtual'|| $_item->getTypeId() == 'downloadable'):
+									?>
+									<div class="product-sold">
+										<?php
+										$sale_qty = $this->helper('Rokanthemes\RokanBase\Helper\Data')->getSalableQuantityDataBySku($_item->getSku());
+										$numbersold = $block->getSoldProduct($_item->getId());
+										$total = $sale_qty + $numbersold;
+                                        $calculator = ($numbersold / $total) * 100;
+										?>
+										<div class="ruler-sold">
+											<div class="ruler-sold-count" style="width: <?php
+											echo $calculator; ?>%;">
+											</div>
+										</div>
+										<div class="count-sold">
+											Sold:
+											<?php
+											echo $numbersold.'/'.$total;
+											?>
+										</div>
+									</div>
+								<?php endif; ?>
+							</div>
+						</div>
+					</div>
+						<?php if($i%$rows==0 || $i == count($newItems)) { ?> </div> <?php }?>
+				<?php 
+				}
+				?>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+require(["jquery", 'mage/mage','rokanthemes/timecircles', "rokanthemes/owl"], function($){
+	'use strict';
+		$( document ).ready(function() {
+			$(".hot-deal-slide").owlCarousel({
+				lazyLoad:true,
+				items: 4,
+	         	itemsDesktop : [1366, 3],
+		        itemsDesktopSmall : [1199, 2],
+		        itemsTablet : [991, 2],
+		        itemsMobile : [680, 1],
+	        	navigation : true,
+	        	pagination: false,
+	         afterAction: function(el){
+		     this.$owlItems.removeClass('first-active')
+		     this.$owlItems .eq(this.currentItem).addClass('first-active')  
+		  }
+	    });
+
+			if($('.super-deal-countdown').length>0){
+				$(".super-deal-countdown").TimeCircles({
+					fg_width: 0.01,
+					bg_width: 1.2,
+					text_size: 0.07,
+					circle_bg_color: "#ffffff",
+					time: {
+						Days: {
+							show: true,
+							text: "<?php echo __('Days'); ?>",
+							color: "#f9bc02"
+						},
+						Hours: {
+							show: true,
+							text: "<?php echo __('Hours'); ?>",
+							color: "#f9bc02"
+						},
+						Minutes: {
+							show: true,
+							text: "<?php echo __('Mins'); ?>",
+							color: "#f9bc02"
+						},
+						Seconds: {
+							show: true,
+							text: "<?php echo __('Secs'); ?>",
+							color: "#f9bc02"
+						}
+					}
+				}); 
+			}
+		});
+    });
+</script>
+<?php } ?>

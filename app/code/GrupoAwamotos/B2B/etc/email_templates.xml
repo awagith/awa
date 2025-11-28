@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Email Templates Configuration
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    
+    <!-- Template: Notificar Admin sobre novo cliente -->
+    <template id="grupoawamotos_b2b_admin_new_customer"
+              label="B2B - Novo Cliente Aguardando Aprovação"
+              file="admin_new_customer.html"
+              type="html"
+              module="GrupoAwamotos_B2B"
+              area="adminhtml"/>
+    
+    <!-- Template: Cliente aprovado -->
+    <template id="grupoawamotos_b2b_customer_approved"
+              label="B2B - Sua Conta Foi Aprovada"
+              file="customer_approved.html"
+              type="html"
+              module="GrupoAwamotos_B2B"
+              area="frontend"/>
+    
+    <!-- Template: Cliente rejeitado -->
+    <template id="grupoawamotos_b2b_customer_rejected"
+              label="B2B - Cadastro Não Aprovado"
+              file="customer_rejected.html"
+              type="html"
+              module="GrupoAwamotos_B2B"
+              area="frontend"/>
+    
+    <!-- Template: Nova cotação recebida (para admin) -->
+    <template id="grupoawamotos_b2b_admin_new_quote"
+              label="B2B - Nova Solicitação de Cotação"
+              file="admin_new_quote.html"
+              type="html"
+              module="GrupoAwamotos_B2B"
+              area="adminhtml"/>
+    
+    <!-- Template: Cotação respondida (para cliente) -->
+    <template id="grupoawamotos_b2b_quote_replied"
+              label="B2B - Sua Cotação Foi Respondida"
+              file="quote_replied.html"
+              type="html"
+              module="GrupoAwamotos_B2B"
+              area="frontend"/>
+    
+    <!-- Template: Cotação respondida (aprovada) -->
+    <template id="grupoawamotos_b2b_quote_response"
+              label="B2B - Orçamento Enviado"
+              file="quote_response.html"
+              type="html"
+              module="GrupoAwamotos_B2B"
+              area="frontend"/>
+    
+    <!-- Template: Cotação rejeitada -->
+    <template id="grupoawamotos_b2b_quote_rejected"
+              label="B2B - Cotação Rejeitada"
+              file="quote_rejected.html"
+              type="html"
+              module="GrupoAwamotos_B2B"
+              area="frontend"/>
+    
+    <!-- Template: Confirmação de cadastro B2B -->
+    <template id="grupoawamotos_b2b_registration_confirmation"
+              label="B2B - Confirmação de Cadastro"
+              file="registration_confirmation.html"
+              type="html"
+              module="GrupoAwamotos_B2B"
+              area="frontend"/>
+    
+    <!-- Template: Notificar admin sobre novo cadastro B2B -->
+    <template id="grupoawamotos_b2b_registration_admin"
+              label="B2B - Novo Cadastro B2B Recebido"
+              file="registration_admin.html"
+              type="html"
+              module="GrupoAwamotos_B2B"
+              area="adminhtml"/>
+    
+</config>

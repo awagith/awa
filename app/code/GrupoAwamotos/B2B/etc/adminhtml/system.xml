@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * B2B System Configuration
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="grupoawamotos" translate="label" sortOrder="500">
+            <label>Grupo Awamotos</label>
+        </tab>
+        
+        <section id="grupoawamotos_b2b" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>B2B Settings</label>
+            <tab>grupoawamotos</tab>
+            <resource>GrupoAwamotos_B2B::config</resource>
+            
+            <!-- Configurações Gerais -->
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Configurações Gerais</label>
+                
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Habilitar Módulo B2B</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Ativa todas as funcionalidades B2B</comment>
+                </field>
+                
+                <field id="b2b_mode" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Modo B2B</label>
+                    <source_model>GrupoAwamotos\B2B\Model\Config\Source\B2BMode</source_model>
+                    <comment>Strict: apenas B2B. Mixed: B2B + B2C</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+            
+            <!-- Visibilidade de Preços -->
+            <group id="price_visibility" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Visibilidade de Preços</label>
+                
+                <field id="hide_price_guests" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ocultar Preços para Visitantes</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Exibe "Faça login para ver preços" ao invés do valor</comment>
+                </field>
+                
+                <field id="hide_add_to_cart_guests" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ocultar Botão Comprar para Visitantes</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Remove o botão "Adicionar ao Carrinho" para não logados</comment>
+                </field>
+                
+                <field id="login_message" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mensagem para Visitantes</label>
+                    <comment>Texto exibido no lugar do preço</comment>
+                </field>
+                
+                <field id="show_price_pending" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mostrar Preços para Clientes Pendentes</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Clientes aguardando aprovação podem ver preços?</comment>
+                </field>
+            </group>
+            
+            <!-- Aprovação de Clientes -->
+            <group id="customer_approval" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Aprovação de Clientes</label>
+                
+                <field id="require_approval" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Exigir Aprovação de Novos Clientes</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Novos cadastros ficam pendentes até aprovação manual</comment>
+                </field>
+                
+                <field id="auto_approve_groups" translate="label comment" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Grupos com Aprovação Automática</label>
+                    <source_model>Magento\Customer\Model\Config\Source\Group</source_model>
+                    <comment>Clientes destes grupos são aprovados automaticamente</comment>
+                    <depends>
+                        <field id="require_approval">1</field>
+                    </depends>
+                </field>
+                
+                <field id="pending_message" translate="label comment" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mensagem para Clientes Pendentes</label>
+                    <comment>Exibida ao cliente após cadastro</comment>
+                </field>
+                
+                <field id="send_approval_email" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enviar E-mail de Aprovação</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                
+                <field id="notify_admin_new_customer" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Notificar Admin sobre Novos Cadastros</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                
+                <field id="admin_email" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>E-mail do Administrador</label>
+                    <validate>validate-email</validate>
+                    <depends>
+                        <field id="notify_admin_new_customer">1</field>
+                    </depends>
+                </field>
+            </group>
+            
+            <!-- Quantidade Mínima -->
+            <group id="minimum_qty" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Quantidade Mínima</label>
+                
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Habilitar Quantidade Mínima</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                
+                <field id="global_min_qty" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Quantidade Mínima Global</label>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                    <comment>Quantidade mínima padrão para todos os produtos</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                
+                <field id="min_order_amount" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Valor Mínimo do Pedido (R$)</label>
+                    <validate>validate-number</validate>
+                    <comment>Deixe vazio para desabilitar</comment>
+                </field>
+                
+                <field id="min_order_message" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mensagem de Valor Mínimo</label>
+                    <comment>Use {{min_amount}} para o valor mínimo</comment>
+                </field>
+            </group>
+            
+            <!-- Sistema de Cotação -->
+            <group id="quote_request" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Sistema de Cotação (RFQ)</label>
+                
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Habilitar Solicitação de Cotação</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Permite clientes solicitarem orçamentos personalizados</comment>
+                </field>
+                
+                <field id="show_button" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Exibir Botão "Solicitar Cotação"</label>
+                    <source_model>GrupoAwamotos\B2B\Model\Config\Source\QuoteButtonPosition</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                
+                <field id="allow_guests" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Permitir Cotação para Visitantes</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                
+                <field id="expiry_days" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Validade da Cotação (dias)</label>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                
+                <field id="notify_customer" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Notificar Cliente sobre Atualizações</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+            
+            <!-- Grupos de Clientes -->
+            <group id="customer_groups" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Grupos de Clientes B2B</label>
+                
+                <field id="wholesale_group" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Grupo Atacado</label>
+                    <source_model>Magento\Customer\Model\Config\Source\Group</source_model>
+                    <comment>Grupo para clientes atacadistas</comment>
+                </field>
+                
+                <field id="wholesale_discount" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Desconto Atacado (%)</label>
+                    <validate>validate-number</validate>
+                    <comment>Desconto padrão para o grupo atacado</comment>
+                </field>
+                
+                <field id="vip_group" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Grupo VIP</label>
+                    <source_model>Magento\Customer\Model\Config\Source\Group</source_model>
+                    <comment>Grupo para clientes VIP com benefícios especiais</comment>
+                </field>
+                
+                <field id="vip_discount" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Desconto VIP (%)</label>
+                    <validate>validate-number</validate>
+                </field>
+                
+                <field id="default_b2b_group" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Grupo Padrão para Novos B2B</label>
+                    <source_model>Magento\Customer\Model\Config\Source\Group</source_model>
+                    <comment>Grupo atribuído automaticamente após aprovação</comment>
+                </field>
+            </group>
+            
+        </section>
+    </system>
+</config>

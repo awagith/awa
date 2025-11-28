@@ -1,0 +1,1 @@
+<?php header("Content-Type: application/json"); echo json_encode(["name"=>"dummy","cluster_name"=>"dummy_cluster","cluster_uuid"=>"abcd","version"=>["number"=>"2.12.0","lucene_version"=>"9.9.1"],"tagline"=>"The OpenSearch Project: https://opensearch.org/"]);

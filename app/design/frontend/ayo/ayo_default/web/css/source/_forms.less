@@ -1,0 +1,554 @@
+/**
+ * Estilos de formulários melhorados - Brasil
+ * Máscaras, validação visual, labels flutuantes
+ */
+
+/* ==========================================================================
+   VARIÁVEIS
+   ========================================================================== */
+@form-primary-color: #b73337;
+@form-success-color: #28a745;
+@form-error-color: #e02b27;
+@form-warning-color: #ffc107;
+@form-border-color: #ccc;
+@form-focus-color: @form-primary-color;
+@form-label-color: #666;
+@form-text-color: #333;
+
+/* ==========================================================================
+   CAMPOS DE FORMULÁRIO BASE
+   ========================================================================== */
+.field {
+    position: relative;
+    margin-bottom: 20px;
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"],
+    input[type="number"],
+    input[type="url"],
+    textarea,
+    select {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid @form-border-color;
+        border-radius: 4px;
+        font-size: 14px;
+        color: @form-text-color;
+        background-color: #fff;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+        &:focus {
+            border-color: @form-focus-color;
+            box-shadow: 0 0 0 3px fade(@form-focus-color, 15%);
+            outline: none;
+        }
+
+        &::placeholder {
+            color: #999;
+            opacity: 1;
+        }
+
+        &:disabled,
+        &[readonly] {
+            background-color: #f5f5f5;
+            cursor: not-allowed;
+        }
+    }
+
+    textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 35px;
+    }
+
+    label.label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        color: @form-label-color;
+
+        &:after {
+            content: ' *';
+            color: @form-error-color;
+        }
+    }
+
+    &:not(.required) label.label:after {
+        display: none;
+    }
+}
+
+/* ==========================================================================
+   LABELS FLUTUANTES
+   ========================================================================== */
+.floating-label-ready {
+    label.label {
+        position: absolute;
+        top: 50%;
+        left: 15px;
+        transform: translateY(-50%);
+        margin-bottom: 0;
+        padding: 0 4px;
+        background: #fff;
+        font-weight: 400;
+        color: #999;
+        pointer-events: none;
+        transition: all 0.2s ease;
+        z-index: 1;
+    }
+
+    &.has-value label.label,
+    &.is-focused label.label {
+        top: 0;
+        font-size: 12px;
+        font-weight: 600;
+        color: @form-label-color;
+    }
+
+    &.is-focused label.label {
+        color: @form-focus-color;
+    }
+
+    // Ajuste para textarea
+    &.field-textarea label.label {
+        top: 20px;
+    }
+}
+
+/* ==========================================================================
+   VALIDAÇÃO VISUAL
+   ========================================================================== */
+.field {
+    // Campo válido
+    &.validation-passed {
+        input, textarea, select {
+            border-color: @form-success-color;
+
+            &:focus {
+                box-shadow: 0 0 0 3px fade(@form-success-color, 15%);
+            }
+        }
+
+        &:after {
+            content: '✓';
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: @form-success-color;
+            font-size: 16px;
+            font-weight: bold;
+        }
+    }
+
+    // Campo inválido
+    &.validation-failed,
+    &._error {
+        input, textarea, select {
+            border-color: @form-error-color;
+
+            &:focus {
+                box-shadow: 0 0 0 3px fade(@form-error-color, 15%);
+            }
+        }
+    }
+
+    // Mensagem de erro
+    .mage-error,
+    .field-error {
+        display: block;
+        margin-top: 5px;
+        padding: 8px 12px;
+        background: fade(@form-error-color, 10%);
+        border-left: 3px solid @form-error-color;
+        border-radius: 0 4px 4px 0;
+        font-size: 12px;
+        color: @form-error-color;
+    }
+}
+
+// Animação de shake para erros
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+.field.shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* ==========================================================================
+   FORÇA DE SENHA
+   ========================================================================== */
+.password-strength-meter {
+    margin-top: 8px;
+
+    .meter-bar {
+        height: 4px;
+        border-radius: 2px;
+        background: #e0e0e0;
+        transition: width 0.3s ease, background-color 0.3s ease;
+
+        &.weak {
+            background: @form-error-color;
+        }
+
+        &.medium {
+            background: @form-warning-color;
+        }
+
+        &.strong {
+            background: #8bc34a;
+        }
+
+        &.very-strong {
+            background: @form-success-color;
+        }
+    }
+
+    .meter-text {
+        display: block;
+        margin-top: 4px;
+        font-size: 11px;
+        color: @form-label-color;
+    }
+}
+
+/* ==========================================================================
+   CONTADOR DE CARACTERES
+   ========================================================================== */
+.char-counter {
+    text-align: right;
+    font-size: 11px;
+    color: #999;
+    margin-top: 4px;
+
+    &.warning {
+        color: @form-warning-color;
+    }
+
+    .current {
+        font-weight: 600;
+    }
+}
+
+/* ==========================================================================
+   MÁSCARAS - INDICADORES VISUAIS
+   ========================================================================== */
+input[data-mask],
+.mask-cpf,
+.mask-cnpj,
+.mask-telefone,
+.mask-cep {
+    font-family: 'Roboto Mono', 'Consolas', monospace;
+    letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   BUSCA CEP - LOADING
+   ========================================================================== */
+.field-postcode,
+.field-cep {
+    position: relative;
+
+    &.loading:after {
+        content: '';
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        width: 16px;
+        height: 16px;
+        margin-top: -8px;
+        border: 2px solid @form-border-color;
+        border-top-color: @form-primary-color;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   ACESSIBILIDADE - NAVEGAÇÃO POR TECLADO
+   ========================================================================== */
+.keyboard-navigation {
+    input:focus,
+    textarea:focus,
+    select:focus,
+    button:focus,
+    a:focus {
+        outline: 2px solid @form-focus-color;
+        outline-offset: 2px;
+    }
+}
+
+/* ==========================================================================
+   BOTÕES
+   ========================================================================== */
+button.action,
+.action.primary,
+.action.submit {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 150px;
+    padding: 12px 24px;
+    background: @form-primary-color;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+
+    &:hover {
+        background: darken(@form-primary-color, 10%);
+    }
+
+    &:active {
+        transform: scale(0.98);
+    }
+
+    &:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+    }
+
+    // Loading state
+    &.loading {
+        position: relative;
+        color: transparent;
+
+        &:after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+    }
+}
+
+button.action.secondary,
+.action.secondary {
+    background: transparent;
+    border: 2px solid @form-primary-color;
+    color: @form-primary-color;
+
+    &:hover {
+        background: @form-primary-color;
+        color: #fff;
+    }
+}
+
+/* ==========================================================================
+   CHECKBOX E RADIO CUSTOMIZADOS
+   ========================================================================== */
+.field.choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+
+    input[type="checkbox"],
+    input[type="radio"] {
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        border: 2px solid @form-border-color;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        position: relative;
+
+        &:checked {
+            background: @form-primary-color;
+            border-color: @form-primary-color;
+
+            &:after {
+                content: '✓';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                color: #fff;
+                font-size: 12px;
+                font-weight: bold;
+            }
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 3px fade(@form-primary-color, 20%);
+        }
+    }
+
+    input[type="radio"] {
+        border-radius: 50%;
+
+        &:checked:after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+        }
+    }
+
+    label {
+        font-weight: 400;
+        cursor: pointer;
+        line-height: 1.4;
+    }
+}
+
+/* ==========================================================================
+   FORMULÁRIO DE CONTATO
+   ========================================================================== */
+.form.contact {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+    .legend {
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid @form-primary-color;
+        font-size: 24px;
+        font-weight: 600;
+        color: @form-text-color;
+    }
+
+    .fieldset {
+        margin: 0;
+        padding: 0;
+        border: none;
+    }
+}
+
+/* ==========================================================================
+   FORMULÁRIO DE LOGIN/REGISTRO
+   ========================================================================== */
+.form-login,
+.form-create-account {
+    .fieldset {
+        margin-bottom: 20px;
+    }
+
+    .actions-toolbar {
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+
+        .primary {
+            width: 100%;
+
+            button {
+                width: 100%;
+            }
+        }
+
+        .secondary {
+            margin-top: 15px;
+            text-align: center;
+
+            a {
+                color: @form-primary-color;
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+    }
+}
+
+/* ==========================================================================
+   FORMULÁRIO DE CHECKOUT
+   ========================================================================== */
+.checkout-index-index {
+    .field {
+        margin-bottom: 15px;
+
+        input, select {
+            height: 45px;
+        }
+    }
+
+    .street {
+        .field {
+            margin-bottom: 10px;
+        }
+    }
+}
+
+/* ==========================================================================
+   FORMULÁRIO B2B
+   ========================================================================== */
+.b2b-registration-form {
+    .company-fields {
+        padding: 20px;
+        background: #f9f9f9;
+        border-radius: 8px;
+        margin-bottom: 20px;
+
+        .legend {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: @form-primary-color;
+        }
+    }
+
+    .field-cnpj,
+    .field-razao-social,
+    .field-inscricao-estadual {
+        input {
+            background-color: #fffef5;
+        }
+    }
+}
+
+/* ==========================================================================
+   RESPONSIVO
+   ========================================================================== */
+@media (max-width: 768px) {
+    .field {
+        input, textarea, select {
+            padding: 14px 12px;
+            font-size: 16px; // Previne zoom no iOS
+        }
+    }
+
+    button.action,
+    .action.primary {
+        width: 100%;
+        padding: 14px 20px;
+    }
+
+    .form.contact {
+        padding: 20px 15px;
+    }
+}

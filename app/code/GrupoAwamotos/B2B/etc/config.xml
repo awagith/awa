@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Default Config Values for B2B Module
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <grupoawamotos_b2b>
+            <general>
+                <enabled>1</enabled>
+                <b2b_mode>mixed</b2b_mode>
+            </general>
+            <price_visibility>
+                <hide_price_guests>1</hide_price_guests>
+                <hide_add_to_cart_guests>1</hide_add_to_cart_guests>
+                <login_message><![CDATA[<a href="{{login_url}}">Faça login</a> para ver os preços]]></login_message>
+                <show_price_pending>0</show_price_pending>
+            </price_visibility>
+            <customer_approval>
+                <require_approval>1</require_approval>
+                <pending_message><![CDATA[Obrigado pelo seu cadastro! Sua conta está sendo analisada e você receberá um e-mail assim que for aprovada.]]></pending_message>
+                <send_approval_email>1</send_approval_email>
+                <notify_admin_new_customer>1</notify_admin_new_customer>
+                <admin_email>b2b.awamotos@gmail.com</admin_email>
+            </customer_approval>
+            <minimum_qty>
+                <enabled>1</enabled>
+                <global_min_qty>1</global_min_qty>
+                <min_order_amount>100</min_order_amount>
+                <min_order_message><![CDATA[O valor mínimo do pedido é R$ {{min_amount}}]]></min_order_message>
+            </minimum_qty>
+            <quote_request>
+                <enabled>1</enabled>
+                <show_button>both</show_button>
+                <allow_guests>0</allow_guests>
+                <expiry_days>7</expiry_days>
+                <notify_customer>1</notify_customer>
+            </quote_request>
+            <customer_groups>
+                <wholesale_group>2</wholesale_group>
+                <wholesale_discount>15</wholesale_discount>
+                <vip_group>3</vip_group>
+                <vip_discount>20</vip_discount>
+                <default_b2b_group>2</default_b2b_group>
+            </customer_groups>
+        </grupoawamotos_b2b>
+    </default>
+</config>

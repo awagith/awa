@@ -1,0 +1,19 @@
+<?php /** @var $block \Magento\Framework\View\Element\Template */ ?>
+<div class="fitment-results">
+    <h2><?= __('Resultados da Busca por Moto') ?></h2>
+    <?php $collection = $block->getData('fitment_collection'); ?>
+    <?php if(!$collection || !$collection->getSize()): ?>
+        <p><?= __('Nenhum produto encontrado com os critérios informados.') ?></p>
+    <?php else: ?>
+        <ul class="products-grid">
+            <?php foreach($collection as $product): ?>
+                <li class="item">
+                    <a href="<?= $block->getUrl('catalog/product/view', ['id'=>$product->getId()]) ?>">
+                        <span class="name"><?= $block->escapeHtml($product->getName()) ?></span>
+                    </a>
+                    <span class="price"><?= $block->escapeHtml($product->getFinalPrice()) ?></span>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+</div>

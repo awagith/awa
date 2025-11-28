@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * GrupoAwamotos B2B - Theme Integration
+ * Adds B2B links to header and customer account navigation
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="GrupoAwamotos_B2B::css/b2b-header.css"/>
+    </head>
+    <body>
+        <!-- B2B Links in Header top.links -->
+        <referenceBlock name="top.links">
+            <!-- B2B Register Link (for guests only) -->
+            <block class="GrupoAwamotos\B2B\Block\Link\Register" name="b2b-register-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Cadastro B2B</argument>
+                    <argument name="path" xsi:type="string">b2b/register</argument>
+                    <argument name="sortOrder" xsi:type="number">50</argument>
+                </arguments>
+            </block>
+            
+            <!-- B2B Dashboard Link (for logged-in B2B customers) -->
+            <block class="GrupoAwamotos\B2B\Block\Link\Dashboard" name="b2b-dashboard-link-header">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Painel B2B</argument>
+                    <argument name="path" xsi:type="string">b2b/account/dashboard</argument>
+                    <argument name="sortOrder" xsi:type="number">45</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+        
+        <!-- B2B Dashboard in customer account navigation (for B2B customers only) -->
+        <referenceBlock name="customer_account_navigation">
+            <block class="GrupoAwamotos\B2B\Block\Link\Dashboard"
+                   name="customer-account-navigation-b2b-dashboard-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Painel B2B</argument>
+                    <argument name="path" xsi:type="string">b2b/account/dashboard</argument>
+                    <argument name="sortOrder" xsi:type="number">5</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

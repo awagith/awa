@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Fix para compatibilidade do MagePal Gmail SMTP App com Symfony Mailer
+ * Corrige o erro: "The reply-to header must be an instance of MailboxListHeader"
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Module/etc/module.xsd">
+    <module name="GrupoAwamotos_SmtpFix" setup_version="1.0.0">
+        <sequence>
+            <module name="MagePal_GmailSmtpApp"/>
+        </sequence>
+    </module>
+</config>
