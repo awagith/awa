@@ -1,0 +1,93 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="checkout.root">
+            <arguments>
+                <argument name="jsLayout" xsi:type="array">
+                    <item name="components" xsi:type="array">
+                        <item name="checkout" xsi:type="array">
+                            <item name="children" xsi:type="array">
+                                <item name="steps" xsi:type="array">
+                                    <item name="children" xsi:type="array">
+                                        <item name="shipping-step" xsi:type="array">
+                                            <item name="children" xsi:type="array">
+                                                <item name="shippingAddress" xsi:type="array">
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="shipping-address-fieldset" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+                                                                <!-- Tipo de Pessoa -->
+                                                                <item name="person_type" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/select</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="customScope" xsi:type="string">shippingAddress.custom_attributes</item>
+                                                                        <item name="template" xsi:type="string">ui/form/field</item>
+                                                                        <item name="elementTmpl" xsi:type="string">ui/form/element/select</item>
+                                                                    </item>
+                                                                    <item name="dataScope" xsi:type="string">shippingAddress.custom_attributes.person_type</item>
+                                                                    <item name="label" xsi:type="string" translate="true">Tipo de Pessoa</item>
+                                                                    <item name="provider" xsi:type="string">checkoutProvider</item>
+                                                                    <item name="visible" xsi:type="boolean">true</item>
+                                                                    <item name="sortOrder" xsi:type="string">50</item>
+                                                                    <item name="options" xsi:type="array">
+                                                                        <item name="0" xsi:type="array">
+                                                                            <item name="value" xsi:type="string">pf</item>
+                                                                            <item name="label" xsi:type="string" translate="true">Pessoa Física</item>
+                                                                        </item>
+                                                                        <item name="1" xsi:type="array">
+                                                                            <item name="value" xsi:type="string">pj</item>
+                                                                            <item name="label" xsi:type="string" translate="true">Pessoa Jurídica</item>
+                                                                        </item>
+                                                                    </item>
+                                                                </item>
+                                                                <!-- CPF -->
+                                                                <item name="cpf" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="customScope" xsi:type="string">shippingAddress.custom_attributes</item>
+                                                                        <item name="template" xsi:type="string">ui/form/field</item>
+                                                                        <item name="elementTmpl" xsi:type="string">ui/form/element/input</item>
+                                                                    </item>
+                                                                    <item name="dataScope" xsi:type="string">shippingAddress.custom_attributes.cpf</item>
+                                                                    <item name="label" xsi:type="string" translate="true">CPF</item>
+                                                                    <item name="provider" xsi:type="string">checkoutProvider</item>
+                                                                    <item name="visible" xsi:type="boolean">true</item>
+                                                                    <item name="validation" xsi:type="array">
+                                                                        <item name="validate-cpf" xsi:type="boolean">true</item>
+                                                                    </item>
+                                                                    <item name="sortOrder" xsi:type="string">51</item>
+                                                                    <item name="placeholder" xsi:type="string">000.000.000-00</item>
+                                                                </item>
+                                                                <!-- CNPJ -->
+                                                                <item name="cnpj" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/abstract</item>
+                                                                    <item name="config" xsi:type="array">
+                                                                        <item name="customScope" xsi:type="string">shippingAddress.custom_attributes</item>
+                                                                        <item name="template" xsi:type="string">ui/form/field</item>
+                                                                        <item name="elementTmpl" xsi:type="string">ui/form/element/input</item>
+                                                                    </item>
+                                                                    <item name="dataScope" xsi:type="string">shippingAddress.custom_attributes.cnpj</item>
+                                                                    <item name="label" xsi:type="string" translate="true">CNPJ</item>
+                                                                    <item name="provider" xsi:type="string">checkoutProvider</item>
+                                                                    <item name="visible" xsi:type="boolean">false</item>
+                                                                    <item name="validation" xsi:type="array">
+                                                                        <item name="validate-cnpj" xsi:type="boolean">true</item>
+                                                                    </item>
+                                                                    <item name="sortOrder" xsi:type="string">52</item>
+                                                                    <item name="placeholder" xsi:type="string">00.000.000/0000-00</item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

@@ -1,0 +1,99 @@
+<?php
+/**
+ * Campos brasileiros para formulário de cadastro de cliente
+ * @var \Magento\Framework\View\Element\Template $block
+ */
+?>
+<fieldset class="fieldset brazil-customer-fields" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Campos obrigatórios')) ?>">
+    <legend class="legend"><span><?= $block->escapeHtml(__('Dados Fiscais')) ?></span></legend>
+    
+    <div class="field person-type required">
+        <label class="label" for="person_type"><span><?= $block->escapeHtml(__('Tipo de Pessoa')) ?></span></label>
+        <div class="control">
+            <select name="person_type" id="person_type" title="<?= $block->escapeHtmlAttr(__('Tipo de Pessoa')) ?>" class="input-text" data-validate="{required:true}">
+                <option value="pf" selected><?= $block->escapeHtml(__('Pessoa Física')) ?></option>
+                <option value="pj"><?= $block->escapeHtml(__('Pessoa Jurídica')) ?></option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Campos Pessoa Física -->
+    <div class="person-fisica-fields">
+        <div class="field cpf required">
+            <label class="label" for="cpf"><span><?= $block->escapeHtml(__('CPF')) ?></span></label>
+            <div class="control">
+                <input type="text" name="cpf" id="cpf" 
+                       title="<?= $block->escapeHtmlAttr(__('CPF')) ?>" 
+                       class="input-text cpf-mask" 
+                       placeholder="000.000.000-00"
+                       data-validate="{required:true, 'validate-cpf':true}"
+                       maxlength="14"/>
+            </div>
+        </div>
+
+        <div class="field rg">
+            <label class="label" for="rg"><span><?= $block->escapeHtml(__('RG')) ?></span></label>
+            <div class="control">
+                <input type="text" name="rg" id="rg" 
+                       title="<?= $block->escapeHtmlAttr(__('RG')) ?>" 
+                       class="input-text"
+                       placeholder="00.000.000-0"/>
+            </div>
+        </div>
+    </div>
+
+    <!-- Campos Pessoa Jurídica -->
+    <div class="person-juridica-fields" style="display: none;">
+        <div class="field cnpj required">
+            <label class="label" for="cnpj"><span><?= $block->escapeHtml(__('CNPJ')) ?></span></label>
+            <div class="control">
+                <input type="text" name="cnpj" id="cnpj" 
+                       title="<?= $block->escapeHtmlAttr(__('CNPJ')) ?>" 
+                       class="input-text cnpj-mask" 
+                       placeholder="00.000.000/0000-00"
+                       data-validate="{'validate-cnpj':true}"
+                       maxlength="18"/>
+            </div>
+        </div>
+
+        <div class="field ie">
+            <label class="label" for="ie"><span><?= $block->escapeHtml(__('Inscrição Estadual')) ?></span></label>
+            <div class="control">
+                <input type="text" name="ie" id="ie" 
+                       title="<?= $block->escapeHtmlAttr(__('Inscrição Estadual')) ?>" 
+                       class="input-text"
+                       placeholder="Inscrição Estadual ou ISENTO"/>
+                <div class="field-tooltip toggle">
+                    <span class="note"><?= $block->escapeHtml(__('Caso seja isento, digite "ISENTO"')) ?></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="field company-name required">
+            <label class="label" for="company_name"><span><?= $block->escapeHtml(__('Razão Social')) ?></span></label>
+            <div class="control">
+                <input type="text" name="company_name" id="company_name" 
+                       title="<?= $block->escapeHtmlAttr(__('Razão Social')) ?>" 
+                       class="input-text"
+                       data-validate="{required:true}"/>
+            </div>
+        </div>
+
+        <div class="field trade-name">
+            <label class="label" for="trade_name"><span><?= $block->escapeHtml(__('Nome Fantasia')) ?></span></label>
+            <div class="control">
+                <input type="text" name="trade_name" id="trade_name" 
+                       title="<?= $block->escapeHtmlAttr(__('Nome Fantasia')) ?>" 
+                       class="input-text"/>
+            </div>
+        </div>
+    </div>
+</fieldset>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "GrupoAwamotos_BrazilCustomer/js/brazil-customer-fields": {}
+    }
+}
+</script>

@@ -23,7 +23,8 @@
         "magento/composer-root-update-plugin": "^2.0.4",
         "magento/product-community-edition": "2.4.8-p3",
         "magepal/magento2-gmailsmtpapp": "^3.0",
-        "rafaelstz/traducao_magento2_pt_br": "dev-master"
+        "rafaelstz/traducao_magento2_pt_br": "dev-master",
+        "swissup/module-search-mysql-legacy": "^1.1"
     },
     "autoload": {
         "exclude-from-classmap": [
