@@ -1,0 +1,109 @@
+// Garante que o cabeçalho do tema permaneça visível e posicionado na parte superior
+#header,
+.header-container,
+.header-control,
+.header-wrapper-sticky {
+	display: block;
+	visibility: visible;
+	opacity: 1;
+    position: relative;
+    z-index: 1002; // acima de sliders/overlays do tema
+}
+
+// Forçar visibilidade do sticky header mesmo em resoluções menores (override do _responsive_themes.less)
+@media (max-width: 991px) {
+    .header-wrapper-sticky.enable-sticky {
+        display: block;
+        position: relative; // Evita comportamento fixo quebrado em mobile se necessário
+        height: auto;
+    }
+}
+
+// Garantir visibilidade e contraste do cabeçalho
+.header-container {
+	background: #fff;
+	box-shadow: 0 1px 2px rgba(0,0,0,.06);
+}
+
+// Evitar que o slider sobreponha o cabeçalho
+.wrapper_slider {
+	position: relative;
+	z-index: 1;
+}
+
+.header-control.header-nav {
+	position: relative;
+	top: auto;
+	left: auto;
+    z-index: 1002;
+}
+
+// Acessibilidade: foco visível em elementos interativos
+a:focus-visible,
+button:focus-visible,
+.action:focus-visible,
+.quickview-link:focus-visible,
+.wishlist-link:focus-visible,
+.compare-link:focus-visible,
+.navigation a:focus-visible {
+    outline: 2px solid #0a84ff;
+    outline-offset: 2px;
+}
+
+// Skip links: escondidos visualmente, visíveis no foco
+.skip-link {
+	position: absolute;
+	left: -9999px;
+	top: auto;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+}
+.skip-link:focus {
+	position: static;
+	width: auto;
+	height: auto;
+	padding: 8px 12px;
+	background: #0a84ff;
+	color: #fff;
+	z-index: 10000;
+}
+
+// Paleta aprovada: links e botões
+// Links padrão e estados de hover
+a,
+.navigation a,
+.breadcrumbs a {
+	color: #b73337;
+}
+a:hover,
+.navigation a:hover,
+.breadcrumbs a:hover {
+	color: #8e2629;
+}
+
+// Botões principais
+.action.primary,
+button.primary,
+button.action.primary,
+button,
+input[type="submit"],
+.btn,
+.button,
+.actions .primary .action {
+	color: #ffffff;
+	background-color: #b73337;
+	border-color: #b73337;
+}
+.action.primary:hover,
+button.primary:hover,
+button.action.primary:hover,
+button:hover,
+input[type="submit"]:hover,
+.btn:hover,
+.button:hover,
+.actions .primary .action:hover {
+	color: #ffffff;
+	background-color: #8e2629;
+	border-color: #8e2629;
+}
