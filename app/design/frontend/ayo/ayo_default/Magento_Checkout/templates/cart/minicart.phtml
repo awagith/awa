@@ -49,15 +49,15 @@
             <?php echo $block->getChildHtml('minicart.addons'); ?>
         </div>
     <?php endif ?>
-    <script>
-        <?php
-            $json = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
-        ?>
-        window.checkout = <?php /* @escapeNotVerified */ echo $json->serialize($block->getConfig()); ?>;
-    </script>
+    <?php
+        $json = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
+    ?>
     <script type="text/x-magento-init">
     {
         "[data-block='minicart']": {
+            "Magento_Checkout/js/minicart_config": {
+                "checkoutConfig": <?php /* @escapeNotVerified */ echo $json->serialize($block->getConfig()); ?>
+            },
             "Magento_Ui/js/core/app": <?php /* @escapeNotVerified */ echo $block->getJsLayout();?>
         },
         "*": {

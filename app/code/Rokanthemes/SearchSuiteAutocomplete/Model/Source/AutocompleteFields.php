@@ -14,9 +14,11 @@ class AutocompleteFields
      */
     public function toOptionArray()
     {
-        return [
+        $this->options = [
             ['value' => self::SUGGEST, 'label' => __('Suggested')],
             ['value' => self::PRODUCT, 'label' => __('Products')],
         ];
+
+        return $this->options;
     }
 }

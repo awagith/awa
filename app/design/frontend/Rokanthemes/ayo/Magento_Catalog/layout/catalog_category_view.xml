@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Layout para páginas de categoria
+ * Adiciona Category Schema.org markup
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <!-- Category Schema.org Markup -->
+        <referenceContainer name="head.additional">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="schema.category"
+                   template="Magento_Theme::html/schema/category.phtml"
+                   cacheable="false"/>
+        </referenceContainer>
+    </head>
+</page>

@@ -7,24 +7,14 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <!-- Fix Broken Reference: Create sidebar.additional as it is missing in 1column layout -->
-        <referenceContainer name="page.wrapper">
-            <container name="sidebar.additional" htmlTag="div" htmlClass="sidebar-additional-dummy" />
+        <!-- Skip Links para Acessibilidade -->
+        <referenceContainer name="after.body.start">
+            <block class="Magento\Framework\View\Element\Template" name="skip.links" template="Magento_Theme::html/skip-links.phtml" before="-"/>
+            <block class="Rokanthemes\Themeoption\Block\Loaderpage" name="loaderpage" template="Rokanthemes_Themeoption::html/beforebodyloader.phtml"/>
         </referenceContainer>
-
-        <!-- Remove blocks that try to add themselves to sidebar.additional -->
-        <referenceBlock name="sale.reorder.sidebar" remove="true"/>
-        <referenceBlock name="paypal.partner.right.logo" remove="true"/>
-        <referenceBlock name="bml.right.logo" remove="true"/>
-        <referenceBlock name="sidebar.container.paylater" remove="true"/>
-
-		<referenceContainer name="after.body.start">
-			<block class="Rokanthemes\Themeoption\Block\Loaderpage" name="loaderpage" template="Rokanthemes_Themeoption::html/beforebodyloader.phtml"/>
-            <!-- B2B Header Link - Injected for theme integration -->
-            <block class="Magento\Framework\View\Element\Template"
-                   name="b2b.header.link.theme"
-                   template="GrupoAwamotos_B2B::header-link.phtml"
-                   after="loaderpage"/>
-		</referenceContainer>
+        <!-- VLibras Widget - Acessibilidade em Libras (Governo Federal) -->
+        <referenceContainer name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template" name="vlibras.widget" template="Magento_Theme::html/vlibras.phtml" ifconfig="grupoawamotos_vlibras/general/enabled"/>
+        </referenceContainer>
     </body>
 </page>

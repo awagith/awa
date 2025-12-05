@@ -14,14 +14,31 @@
 	$rows = $block->getSlideRow();
 	$title = $block->getTitle(); 
 	$identify = trim($block->getIdentify()); 
+	$identifyForId = preg_replace('/[^A-Za-z0-9_-]/', '', $identify);
+	if ($identifyForId === '') {
+		$identifyForId = 'categorytab_' . uniqid();
+	}
+	$containerId = 'category-tab-' . $identifyForId;
 	$categoryIds = $block->getCategoryIds();
 	$categoryIds = explode(',', $categoryIds);
 
 	$productsOnRow = 2 ;
 	if(!$productsOnRow) $productsOnRow = 4;
+
+	$items = (int)$items ?: 6;
+	$owlOptions = [
+		'lazyLoad' => true,
+		'items' => $items,
+		'itemsDesktop' => [1366, 4],
+		'itemsDesktopSmall' => [991, 3],
+		'itemsTablet' => [767, 2],
+		'itemsMobile' => [479, 1],
+		'navigation' => (bool)$show_navigation,
+		'pagination' => (bool)$show_pagination
+	];
 ?>
 
-<div class="categorytab-container cat_1">
+<div class="categorytab-container cat_1" id="<?php echo $containerId; ?>">
 	<div class="rokan-product-heading rokan-featured-heading clearfix">
 		<?php echo $title ? '<h2 class="pull-left">'.$title.' <span class="sup-title">'. __('Product') .'</span></h2>' : ''; ?>
 		<div class="vc_tta-tabs-container pull-right">
@@ -103,7 +120,7 @@
 												</li>
 												<?php endif; ?>
 												<li class="quickview-product">
-													<a class="quickview-link" data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="javascript: void(0);" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>">
+													<a class="quickview-link" data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="#" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>">
 													</a>
 												</li>
 												<?php if ($block->getAddToCompareUrl() && $showCompare): ?>
@@ -196,42 +213,15 @@
 	}
 }
 </script>
-<script type="text/javascript">
-require([
-	'jquery',
-	'mage/mage',
-	'rokanthemes/owl'
-], function ($) {
-	'use strict';
-
-	jQuery(".tab_content_<?php echo $identify; ?>").hide();
-	jQuery(".tab_content_<?php echo $identify; ?>:first").show(); 
-
-	jQuery("ul.tabs<?php echo '-'.$identify;?> li").click(function() {
-		jQuery("ul.tabs<?php echo '-'.$identify;?> li").removeClass("active");
-		jQuery(this).addClass("active");
-		jQuery(".tab_content_<?php echo $identify; ?>").hide();
-		var activeTab = $(this).attr("rel"); 
-		jQuery("#"+activeTab).show(); 
-	});
-	$( document ).ready(function() {	
-	 $(".cat_home").owlCarousel({
-		 lazyLoad:true,
-	 	items : 6,
-        itemsDesktop : [1366, 4],
-        itemsDesktopSmall : [991, 3],
-        itemsTablet : [767, 2],
-        itemsMobile : [479, 1],
-	    navigation : true,
-	    pagination : false,
-	     afterAction: function(el){
-	     this.$owlItems.removeClass('first-active')
-	     this.$owlItems .eq(this.currentItem).addClass('first-active')  
-	    }
-	});
-	});
-	
-});
- 
-
-</script> 
+<script type="text/x-magento-init">
+{
+	"#<?php echo $containerId; ?>": {
+		"js/category-tab": {
+			"tabsSelector": "ul.tabs-<?php echo $identify; ?>",
+			"contentSelector": ".tab_content_<?php echo $identify; ?>",
+			"carouselSelector": ".cat_home",
+			"owl": <?php echo json_encode($owlOptions, JSON_UNESCAPED_SLASHES); ?>
+		}
+	}
+}
+</script>

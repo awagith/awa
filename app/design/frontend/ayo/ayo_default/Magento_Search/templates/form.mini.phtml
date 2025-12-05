@@ -11,7 +11,7 @@
 /** @var $helper \Magento\Search\Helper\Data */
 $helper = $this->helper('Magento\Search\Helper\Data');
 ?>
-<div class="block block-search" role="search" aria-label="<?php echo $block->escapeHtmlAttr(__('Busca no site')); ?>">
+<div class="block block-search">
     <div class="block-content">
         <form class="form minisearch search-content" id="search_mini_form" action="<?php /* @escapeNotVerified */ echo $helper->getResultUrl() ?>" method="get">
             <div class="field search">
@@ -23,7 +23,7 @@ $helper = $this->helper('Magento\Search\Helper\Data');
                                 "formSelector":"#search_mini_form",
                                 "url":"<?php /* @escapeNotVerified */ echo $block->getUrl('search/ajax/suggest'); ?>",
                                 "destinationSelector":"#search_autocomplete"}
-                           }' type="text" name="<?php /* @escapeNotVerified */ echo $helper->getQueryParamName() ?>" value="<?php /* @escapeNotVerified */ echo $helper->getEscapedQueryText() ?>" placeholder="<?php /* @escapeNotVerified */ echo __('Search entire store here...'); ?>" class="input-text" maxlength="<?php /* @escapeNotVerified */ echo $helper->getMaxQueryLength();?>" role="combobox" aria-haspopup="false" aria-autocomplete="both"  aria-expanded="false" autocomplete="off" aria-label="<?php echo $block->escapeHtmlAttr(__('Buscar produtos')); ?>" />
+                           }' type="text" name="<?php /* @escapeNotVerified */ echo $helper->getQueryParamName() ?>" value="<?php /* @escapeNotVerified */ echo $helper->getEscapedQueryText() ?>" placeholder="<?php /* @escapeNotVerified */ echo __('Search entire store here...'); ?>" class="input-text" maxlength="<?php /* @escapeNotVerified */ echo $helper->getMaxQueryLength();?>" role="combobox" aria-haspopup="false" aria-autocomplete="both"  aria-expanded="false" autocomplete="off" />
                     <div id="search_autocomplete" class="search-autocomplete"></div>
                     <?php echo $block->getChildHtml() ?>
                 </div>

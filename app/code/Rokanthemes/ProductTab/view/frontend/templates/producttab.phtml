@@ -60,7 +60,7 @@ use Magento\Framework\App\Action\Action;
 									</span>
 								</a>
 								<div class="quickview-product">
-									<a  data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="javascript: void(0);" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>"><i class="fa fa-eye"></i></a>
+									<a  data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="#" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>"><i class="fa fa-eye"></i></a>
 							    </div>
 								<?php if ( $_item->getFinalPrice() < $_item->getPrice() ): ?>
 									<span class="onsale">

@@ -1,19 +1,13 @@
+# Grupo Awamotos - Magento 2.4.8
 User-agent: *
-# Bloqueios básicos de áreas privadas e páginas sem valor para SEO
 Disallow: /admin/
-Disallow: /customer/
 Disallow: /checkout/
+Disallow: /customer/
 Disallow: /catalogsearch/
-Disallow: /search/
 Disallow: /wishlist/
-Disallow: /sendfriend/
-Disallow: /review/
+Disallow: /pub/static/
+Disallow: /var/
 
-# Permitir o restante
-Allow: /
-
-# Sitemap padrão (ajustar para domínio final se necessário)
-Sitemap: /sitemap.xml
-
-# Observação: Magento também pode gerir robots via Admin.
-# Este arquivo físico prevalece sobre as configurações dinâmicas.
+# Sitemaps
+Sitemap: https://srv1113343.hstgr.cloud/sitemap.xml
+Sitemap: https://srv1113343.hstgr.cloud/media_sitemap.xml

@@ -1,0 +1,21 @@
+<?php
+/**
+ * Skip Links para Acessibilidade
+ * Permite navegação por teclado para usuários de screen readers
+ * WCAG 2.1 AA Compliance
+ */
+?>
+<nav aria-label="<?= $escaper->escapeHtmlAttr(__('Links de acesso rápido')) ?>" class="skip-links-container">
+    <a href="#maincontent" class="skip-link" tabindex="0">
+        <?= $escaper->escapeHtml(__('Ir para o conteúdo principal')) ?>
+    </a>
+    <a href="#navigation" class="skip-link" tabindex="0">
+        <?= $escaper->escapeHtml(__('Ir para navegação')) ?>
+    </a>
+    <a href="#search_mini_form" class="skip-link" tabindex="0">
+        <?= $escaper->escapeHtml(__('Ir para busca')) ?>
+    </a>
+    <a href="#footer" class="skip-link" tabindex="0">
+        <?= $escaper->escapeHtml(__('Ir para rodapé')) ?>
+    </a>
+</nav>

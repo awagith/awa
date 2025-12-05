@@ -6,8 +6,8 @@
             <h1>{{trans "Falta pouco!"}}</h1>
             <p>{{trans "Recebemos o pedido para incluir o e-mail <strong>%subscriber_email</strong> em nossa newsletter." subscriber_email=$subscriber.email |raw}}</p>
             <p>{{trans "Clique no botão abaixo para confirmar a inscrição e receber conteúdos exclusivos."}}</p>
-            <p style="text-align:center;">
-                <a href="{{var subscriber.getConfirmationLink()}}" class="action primary" style="padding:12px 24px;background:#000;color:#fff;text-decoration:none;display:inline-block;">
+            <p class="email-align-center">
+                <a href="{{var subscriber.getConfirmationLink()}}" class="action primary email-button email-button--dark">
                     {{trans "Confirmar inscrição"}}
                 </a>
             </p>

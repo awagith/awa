@@ -89,8 +89,8 @@ class Post extends \Magento\Framework\Model\AbstractModel
         \Magento\Framework\UrlInterface $url,
         \Rokanthemes\Blog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
         \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
-        ?\Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
-        ?\Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
+        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         $this->_url = $url;

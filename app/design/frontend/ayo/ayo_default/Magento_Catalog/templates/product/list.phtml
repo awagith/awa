@@ -63,13 +63,7 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
             <?php /** @var $_product \Magento\Catalog\Model\Product */ ?>
             <?php foreach ($_productCollection as $_product): ?>
                 <div class="item-product" data-container="product-grid">
-                    <?php
-                    $productImage = $block->getImage($_product, $image);
-                    if ($pos != null) {
-                        $position = ' style="left:' . $productImage->getWidth() . 'px;'
-                            . 'top:' . $productImage->getHeight() . 'px;"';
-                    }
-                    ?>
+					<?php $productImage = $block->getImage($_product, $image); ?>
                 	<div class="product-thumb">
                 		<a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>" class="product-thumb-link">
 							<?php $productImageThumb = $block->getImage($_product, 'category_page_grid-1');?>
@@ -104,21 +98,19 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 									<li><a href="#"
 									   data-post='<?php echo $block->getAddToWishlistParams($_product); ?>'
 									   class="wishlist-link action towishlist" data-action="add-to-wishlist"
-									   title="<?php echo __('Add to Wishlist') ?>"
-									   aria-label="<?php echo $block->escapeHtmlAttr(__('Add to Wishlist')); ?>: <?php echo $block->escapeHtmlAttr($_product->getName()); ?>">
-                                        
+									   title="<?php echo __('Add to Wishlist') ?>">
+										
 									</a></li>
 								<?php endif; ?>
 								<li class="quickview-product">
-									<a class="quickview-link" data-role="quickview-button" data-id="<?php echo $_product->getId(); ?>" href="javascript: void(0);" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_product->getId()) ?>" title="<?php echo __('Quick view');?>" aria-label="<?php echo $block->escapeHtmlAttr(__('Quick view')); ?>: <?php echo $block->escapeHtmlAttr($_product->getName()); ?>"></a>
+									<a class="quickview-link" data-role="quickview-button" data-id="<?php echo $_product->getId(); ?>" href="#" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_product->getId()) ?>" title="<?php echo __('Quick view');?>"></a>
 								</li>
 								<?php if ($block->getAddToCompareUrl()): ?>
 									<?php $compareHelper = $this->helper('Magento\Catalog\Helper\Product\Compare');?>
 									<li><a href="#" class="compare-link action tocompare"
 									   data-post='<?php echo $compareHelper->getPostDataParams($_product);?>'
-									   title="<?php echo __('Add to Compare') ?>"
-									   aria-label="<?php echo $block->escapeHtmlAttr(__('Add to Compare')); ?>: <?php echo $block->escapeHtmlAttr($_product->getName()); ?>">
-                                    
+									   title="<?php echo __('Add to Compare') ?>">
+									
 									</a></li>
 								<?php endif; ?>
 							</ul>
@@ -262,18 +254,16 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 										<a href="#"
 										   data-post='<?php echo $block->getAddToWishlistParams($_product); ?>'
 										   class="wishlist-link action towishlist" data-action="add-to-wishlist"
-										   title="<?php echo __('Add to Wishlist') ?>"
-										   aria-label="<?php echo $block->escapeHtmlAttr(__('Add to Wishlist')); ?>: <?php echo $block->escapeHtmlAttr($_product->getName()); ?>">
-                                            
+										   title="<?php echo __('Add to Wishlist') ?>">
+											
 										</a>
 									<?php endif; ?>
 									<?php if ($block->getAddToCompareUrl()): ?>
 										<?php $compareHelper = $this->helper('Magento\Catalog\Helper\Product\Compare');?>
 										<a href="#" class="compare-link action tocompare"
 										   data-post='<?php echo $compareHelper->getPostDataParams($_product);?>'
-										   title="<?php echo __('Add to Compare') ?>"
-										   aria-label="<?php echo $block->escapeHtmlAttr(__('Add to Compare')); ?>: <?php echo $block->escapeHtmlAttr($_product->getName()); ?>">
-                                        
+										   title="<?php echo __('Add to Compare') ?>">
+										
 										</a>
 									<?php endif; ?>
 								</div>

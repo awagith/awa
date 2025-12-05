@@ -72,32 +72,10 @@
 <?php echo $block->getChildHtml('checkout.cart.order.actions') ?>
 <?php echo $block->getChildHtml('shopping.cart.table.after'); ?>
 
-<script>
-    require([
-        'jquery',
-        'mage/mage'
-    ], function ($) {
-        'use strict';       
-        $(".qty-down-fixed-onclick-page-cart").click(function() {
-            var number_click = parseInt($(this).closest('div.qty').find('.input-text.qty').attr('data-qty'));
-            var val_input = $(this).closest('div.qty').find('.input-text.qty').val();
-            val_input = parseInt(val_input);
-            if(val_input <= number_click){
-                val_input = number_click;
-            }
-            else{
-                val_input = val_input - number_click;
-            }
-            $(this).closest('div.qty').find('.input-text.qty').val(val_input);
-            return false;
-        });
-        $(".qty-up-fixed-onclick-page-cart").click(function() {
-            var number_click_2 = parseInt($(this).closest('div.qty').find('.input-text.qty').attr('data-qty'));
-            var val_input = $(this).closest('div.qty').find('.input-text.qty').val();
-            val_input = parseInt(val_input);
-            val_input = val_input + number_click_2;
-            $(this).closest('div.qty').find('.input-text.qty').val(val_input);
-            return false;
-        });
-    });
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Magento_Checkout/js/cart_qty": {}
+        }
+    }
 </script>

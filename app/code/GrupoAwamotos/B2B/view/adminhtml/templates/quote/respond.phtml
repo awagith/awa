@@ -115,7 +115,9 @@ $items = $block->getItems();
     </div>
 </div>
 
-<?php if (in_array($quote->getStatus(), ['pending', 'processing'])): ?>
+<?php if (in_array($quote->getStatus(), ['pending', 'processing'])):
+    $rejectConfirm = __('Tem certeza que deseja rejeitar esta cotação?');
+?>
 <div class="admin__page-section">
     <div class="admin__page-section-title">
         <span class="title"><?= $block->escapeHtml(__('Responder Cotação')) ?></span>
@@ -182,10 +184,11 @@ $items = $block->getItems();
                 </button>
                 
                 <button type="submit" 
-                        name="action" 
-                        value="reject" 
-                        class="action-default scalable"
-                        onclick="return confirm('<?= $block->escapeJs(__('Tem certeza que deseja rejeitar esta cotação?')) ?>');">
+                    name="action" 
+                    value="reject" 
+                    class="action-default scalable"
+                    data-action="reject-quote"
+                    data-confirm-message="<?= $block->escapeHtmlAttr($rejectConfirm) ?>">
                     <span><?= $block->escapeHtml(__('Rejeitar Cotação')) ?></span>
                 </button>
                 
@@ -197,11 +200,9 @@ $items = $block->getItems();
     </div>
 </div>
 <?php else: ?>
-<div class="admin__page-section">
-    <div class="admin__page-section-content">
-        <div class="message message-notice">
-            <?= $block->escapeHtml(__('Esta cotação já foi respondida e não pode ser alterada.')) ?>
-        </div>
+                "#quote_respond_form": {
+                    "GrupoAwamotos_B2B/js/quote-respond": {}
+                }
         
         <?php if ($quote->getQuotedTotal()): ?>
         <p><strong><?= $block->escapeHtml(__('Valor cotado:')) ?></strong> <?= $block->formatPrice($quote->getQuotedTotal()) ?></p>

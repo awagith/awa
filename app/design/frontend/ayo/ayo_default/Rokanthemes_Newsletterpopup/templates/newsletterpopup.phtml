@@ -48,59 +48,14 @@ $textmss = 'Enter your email and <span class="text-primary">25% off</span> off y
 	$timeout = 1;
 ?>
 
-<script>
-require(["jquery"], function($){
-		function setCookie(name,value,days)
-		{
-		  if (days) {
-				var date = new Date();
-				date.setTime(date.getTime()+(days*24*60*60*1000));
-				var expires = "; expires="+date.toGMTString();
-			  }
-			  else var expires = "";
-			  document.cookie = name+"="+value+expires+"; path=/";
-		}
-
-		function getCookie(name)
-		{
-			  var nameEQ = name + "=";
-			  var ca = document.cookie.split(';');
-			  for(var i=0;i < ca.length;i++) {
-				var c = ca[i];
-				while (c.charAt(0)==' ') c = c.substring(1,c.length);
-				if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
-			  }
-			  return null;
-		}
-			
-		// setCookie("shownewsletter",'1',1);
-		// alert(getCookie("shownewsletter"));
-
-		if(getCookie("shownewsletter") != 1){
-			var pPopup = $('#newsletter_pop_up').bPopup({
-				position: ['auto', <?php if($top != '') echo $top; else echo '120'; ?>],
-				speed: <?php if($speed != '') echo $speed; else echo '450' ?>,
-				transition: 'slideDown',
-				onClose: function() { setCookie("shownewsletter",'1',<?php if($timeout!='') echo $timeout;else echo '1' ?>); 
-				}
-			});
-			$('.newletter_popup_close').on('click', function(){
-				pPopup.close();
-			}); 
-		}
-			
-		$( "#newsletter_pop_up form" ).submit(function( event ) {
-				setCookie("shownewsletter",'1',1);
-		});
-		
-		$('#newsletter_popup_dont_show_again').on('change', function(){
-			if(getCookie("shownewsletter") != 1){   
-				setCookie("shownewsletter",'1',1)
-			}else{
-				setCookie("shownewsletter",'0',1)
-			}
-		}); 
-			
-
- });	 
+<script type="text/x-magento-init">
+    {
+        "#newsletter_pop_up": {
+            "Rokanthemes_Newsletterpopup/js/newsletter": {
+                "top": <?php echo $top; ?>,
+                "speed": <?php echo $speed; ?>,
+                "timeout": <?php echo $timeout; ?>
+            }
+        }
+    }
 </script>

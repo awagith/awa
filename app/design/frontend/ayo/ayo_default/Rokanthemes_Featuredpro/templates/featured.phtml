@@ -59,97 +59,18 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 									}
 								}
 								?>
-								<?php
-								$productImage = $block->getImage($_product, $image);
-								if ($pos != null) {
-									$position = ' style="left:' . $productImage->getWidth() . 'px;'
-										. 'top:' . $productImage->getHeight() . 'px;"';
-								}
-								?>
+								<?php $productImage = $block->getImage($_product, $image); ?>
 								<?php // Product Image ?>
 								<div class="product-thumb">
 											<a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>" class="product-thumb-link">
 												<?php $productImageThumb = $block->getImage($_product, 'category_image_second_small');?>
 												<span class="first-thumb">
-													<?php
-														// Construir srcset responsivo usando helper de imagem Magento
-														$imageHelper = $this->helper('Magento\\Catalog\\Helper\\Image');
-														$sizesMap = [480, 768, 992, 1200];
-														$srcsetParts = [];
-														foreach ($sizesMap as $w) {
-															try {
-																$urlVariant = $imageHelper->init($_product, 'category_page_grid')->resize($w)->getUrl();
-																$srcsetParts[] = $urlVariant . ' ' . $w . 'w';
-															} catch (Exception $e) { /* silencioso */ }
-														}
-														$srcsetAttr = implode(', ', $srcsetParts);
-														// Tentar construir srcset WEBP (assume convenção de nomes paralelos .webp)
-														$srcsetWebpParts = [];
-														foreach ($srcsetParts as $part) {
-															$srcAndSize = explode(' ', $part);
-															if (!empty($srcAndSize[0])) {
-																$srcWebp = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $srcAndSize[0]);
-																$srcsetWebpParts[] = $srcWebp . ' ' . (isset($srcAndSize[1]) ? $srcAndSize[1] : '');
-															}
-														}
-														$srcsetWebp = implode(', ', $srcsetWebpParts);
-														$sizesAttr = '(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 992px) 33vw, 25vw';
-														$htmlImg = $productImage->toHtml();
-														if ($htmlImg) {
-															// Extrair src atual para fallback
-															preg_match('/src=\"([^\"]+)\"/i', $htmlImg, $m);
-															$currentSrc = isset($m[1]) ? $m[1] : '';
-															// Construir <picture> com fonte WEBP e fallback IMG
-															$picture = '<picture>';
-															if (!empty($srcsetWebp)) {
-																$picture .= '<source type="image/webp" srcset="' . $srcsetWebp . '" sizes="' . $sizesAttr . '">';
-															}
-															$fallbackImg = '<img src="' . $currentSrc . '" srcset="' . $srcsetAttr . '" sizes="' . $sizesAttr . '" loading="lazy" decoding="async">';
-															$picture .= $fallbackImg . '</picture>';
-															$htmlImg = $picture;
-														}
-														echo $htmlImg;
-													?>
+													<?php echo $productImage->toHtml(); ?>
 												</span>
 												<?php $productType = $_product->getTypeID();
 												if($productType == "simple"): ?>
 													<span class="second-thumb">
-														<?php
-															$imageHelper2 = $this->helper('Magento\\Catalog\\Helper\\Image');
-															$sizesMap2 = [480, 768, 992, 1200];
-															$srcsetParts2 = [];
-															foreach ($sizesMap2 as $w2) {
-																try {
-																	$urlVariant2 = $imageHelper2->init($_product, 'category_image_second_small')->resize($w2)->getUrl();
-																	$srcsetParts2[] = $urlVariant2 . ' ' . $w2 . 'w';
-																} catch (Exception $e) { /* silencioso */ }
-															}
-															$srcsetAttr2 = implode(', ', $srcsetParts2);
-															// Tentar construir srcset WEBP para thumb
-															$srcsetWebpParts2 = [];
-															foreach ($srcsetParts2 as $part2) {
-																$srcAndSize2 = explode(' ', $part2);
-																if (!empty($srcAndSize2[0])) {
-																	$srcWebp2 = preg_replace('/\.(jpg|jpeg|png)$/i', '.webp', $srcAndSize2[0]);
-																	$srcsetWebpParts2[] = $srcWebp2 . ' ' . (isset($srcAndSize2[1]) ? $srcAndSize2[1] : '');
-																}
-															}
-															$srcsetAttrWebp2 = implode(', ', $srcsetWebpParts2);
-															$sizesAttr2 = '(max-width: 480px) 100vw, (max-width: 768px) 50vw, (max-width: 992px) 33vw, 25vw';
-															$htmlThumb = $productImageThumb->toHtml();
-															if ($htmlThumb) {
-																preg_match('/src=\"([^\"]+)\"/i', $htmlThumb, $m2);
-																$currentSrc2 = isset($m2[1]) ? $m2[1] : '';
-																$picture2 = '<picture>';
-																if (!empty($srcsetAttrWebp2)) {
-																	$picture2 .= '<source type="image/webp" srcset="' . $srcsetAttrWebp2 . '" sizes="' . $sizesAttr2 . '">';
-																}
-																$fallbackImg2 = '<img src="' . $currentSrc2 . '" srcset="' . $srcsetAttr2 . '" sizes="' . $sizesAttr2 . '" loading="lazy" decoding="async">';
-																$picture2 .= $fallbackImg2 . '</picture>';
-																$htmlThumb = $picture2;
-															}
-															echo $htmlThumb;
-														?>
+														<?php echo $productImageThumb->toHtml(); ?>
 													</span>
 						                		<?php endif; ?>
 											</a>
@@ -177,20 +98,18 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 														<a href="#"
 														   data-post='<?php echo $block->getAddToWishlistParams($_product); ?>'
 														   class="wishlist-link action towishlist" data-action="add-to-wishlist"
-														   title="<?php echo __('Add to Wishlist') ?>"
-														   aria-label="<?php echo $block->escapeHtmlAttr(__('Add to Wishlist')); ?>: <?php echo $block->escapeHtmlAttr($_product->getName()); ?>">
+														   title="<?php echo __('Add to Wishlist') ?>">
 														</a>
 													</li>
 													<li class="quickview-product">
-														<a class="quickview-link" data-role="quickview-button" data-id="<?php echo $_product->getId(); ?>" href="javascript: void(0);" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_product->getId()) ?>" title="<?php echo __('Quick view');?>" aria-label="<?php echo $block->escapeHtmlAttr(__('Quick view')); ?>: <?php echo $block->escapeHtmlAttr($_product->getName()); ?>">
+														<a class="quickview-link" data-role="quickview-button" data-id="<?php echo $_product->getId(); ?>" href="#" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_product->getId()) ?>" title="<?php echo __('Quick view');?>">
 														</a>
 													</li>
 													<?php $compareHelper = $this->helper('Magento\Catalog\Helper\Product\Compare');?>
 														<li>
 															<a href="#" class="compare-link action tocompare"
 															   data-post='<?php echo $compareHelper->getPostDataParams($_product);?>'
-															   title="<?php echo __('Add to Compare') ?>"
-															   aria-label="<?php echo $block->escapeHtmlAttr(__('Add to Compare')); ?>: <?php echo $block->escapeHtmlAttr($_product->getName()); ?>">
+															   title="<?php echo __('Add to Compare') ?>">
 															</a>
 														</li>
 												</ul>										
@@ -237,22 +156,12 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 													<?php echo $block->getReviewsSummaryHtml($_product, $templateType,true); ?>
 												<?php endif; ?>
 											</div>
-											<?php
-												$soldByText = '';
-												$attribute = $_product->getResource()->getAttribute('sold_by');
-												if ($attribute) {
-													$soldByText = $attribute->getFrontend()->getValue($_product);
-												}
-												if (is_array($soldByText)) {
-													$soldByText = implode(', ', $soldByText);
-												}
-											?>
-											<?php if (!empty($soldByText)): ?>
 											<div class="sold-by">
-												<span><?php echo $block->escapeHtml(__('Sold by:')); ?></span>
-												<?php echo $block->escapeHtml($soldByText); ?>
-											</div>
-											<?php endif; ?>
+													<?php
+														$cats = $_product->getAttributeText('sold_by');
+														echo ' <span>'.__('Sold by:').'</span>' .$cats;
+													 ?>
+												</div>
 											<div class="info-price">
 												<?php /* @escapeNotVerified */ echo $this->helper('Rokanthemes\Themeoption\Helper\Data')->getPriceDisplayCustom($block->getProductPrice($_product)) ?>
 											</div>
@@ -274,32 +183,13 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 			}
 			</script>
 		<?php endif; ?>
-			<script>
-				require([
-					'jquery',
-					'mage/mage',
-					'rokanthemes/owl'
-				], function ($) {
-					'use strict';
-
-					jQuery(".rokan-featuredproduct .owl").owlCarousel({
-						lazyLoad:true,
-						autoPlay : false,
-						items : 4,
-						itemsDesktop : [1199,4],
-						itemsDesktopSmall : [980,3],
-						itemsTablet: [768,2],
-						itemsMobile : [479,1],
-						slideSpeed : 500,
-						paginationSpeed : 500,
-						rewindSpeed : 500,
-						navigation : true,
-						stopOnHover : true,
-						pagination :false,
-						scrollPerPage:true,
-					});
-				});
-			</script>
+			<script type="text/x-magento-init">
+                {
+                    ".rokan-featuredproduct": {
+                        "Rokanthemes_Featuredpro/js/featured": {}
+                    }
+                }
+            </script>
 	<?php endif; ?>
 	</div>
  

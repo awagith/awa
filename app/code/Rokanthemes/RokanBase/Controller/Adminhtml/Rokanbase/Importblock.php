@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright ï¿½ 2016 Magento. All rights reserved.
+ * Copyright © 2016 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
 namespace Rokanthemes\RokanBase\Controller\Adminhtml\Rokanbase;
@@ -20,16 +20,6 @@ class Importblock extends \Magento\Backend\App\Action
      */
     protected $config;
 	protected $_helperModule;
-
-    /**
-     * @var string
-     */
-    protected $_importPath;
-
-    /**
-     * @var \Magento\Framework\Xml\Parser
-     */
-    protected $_parser;
 
     /**
      * @param \Magento\Backend\App\Action\Context $context

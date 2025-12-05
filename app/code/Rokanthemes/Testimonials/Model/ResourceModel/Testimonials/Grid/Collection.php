@@ -24,7 +24,7 @@ class Collection extends TestimonialsCollection implements SearchResultInterface
         $resourceModel,
         $model = 'Magento\Framework\View\Element\UiComponent\DataProvider\Document',
         $connection = null,
-        ?\Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null
+        \Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null
     ) {
         parent::__construct($entityFactory, $logger, $fetchStrategy, $eventManager,$storeManager,$connection, $resource);
         $this->_eventPrefix = $eventPrefix;
@@ -57,7 +57,7 @@ class Collection extends TestimonialsCollection implements SearchResultInterface
     }
 
   
-    public function setSearchCriteria(?\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria = null)
+    public function setSearchCriteria(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria = null)
     {
         return $this;
     }
@@ -75,7 +75,7 @@ class Collection extends TestimonialsCollection implements SearchResultInterface
     }
 
    
-    public function setItems(?array $items = null)
+    public function setItems(array $items = null)
     {
         return $this;
     }

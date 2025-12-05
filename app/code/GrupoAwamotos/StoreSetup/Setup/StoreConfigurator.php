@@ -317,6 +317,16 @@ class StoreConfigurator
                 'identifier' => 'home1_product_thumb',
                 'title' => 'Home 1 - Produtos com imagem',
                 'content' => $this->homeProductThumbContent()
+            ],
+            [
+                'identifier' => 'trust_badges_homepage',
+                'title' => 'Home - Trust Badges (Selo de Confiança)',
+                'content' => $this->trustBadgesHomepageContent()
+            ],
+            [
+                'identifier' => 'home_testimonials',
+                'title' => 'Home - Depoimentos de Clientes',
+                'content' => $this->homeTestimonialsContent()
             ]
         ];
     }
@@ -334,6 +344,15 @@ class StoreConfigurator
     private function getThemeConfigurations(): array
     {
         return [
+            // Header layout & visibility (added for idempotence of Ayo header preset)
+            ['path' => 'themeoption/header/header_type', 'value' => '5'],
+            ['path' => 'themeoption/header/show_hotline', 'value' => '1'],
+            ['path' => 'themeoption/header/show_search', 'value' => '1'],
+            ['path' => 'themeoption/header/search_enable', 'value' => '1'],
+            ['path' => 'themeoption/header/show_account', 'value' => '1'],
+            ['path' => 'themeoption/header/show_minicart', 'value' => '1'],
+            ['path' => 'themeoption/header/show_wishlist', 'value' => '1'],
+            ['path' => 'themeoption/header/show_compare', 'value' => '0'],
             ['path' => 'themeoption/general/layout', 'value' => 'full_width'],
             ['path' => 'themeoption/header/sticky_enable', 'value' => '1'],
             ['path' => 'themeoption/header/sticky_select_bg_color', 'value' => 'custom'],
@@ -342,10 +361,15 @@ class StoreConfigurator
             ['path' => 'themeoption/fake_order/enable_f_o', 'value' => '0'],
             ['path' => 'themeoption/newsletter/enable', 'value' => '1'],
             ['path' => 'themeoption/newsletter/content', 'value' => $this->newsletterPopupContent()],
-            ['path' => 'themeoption/newsletter/width', 'value' => '520'],
-            ['path' => 'themeoption/newsletter/height', 'value' => '420'],
+            ['path' => 'themeoption/newsletter/width', 'value' => '580'],
+            ['path' => 'themeoption/newsletter/height', 'value' => '520'],
             ['path' => 'themeoption/newsletter/bg_color', 'value' => '#ffffff'],
-            ['path' => 'themeoption/newsletter/bg_custom_style', 'value' => 'text-align:center;padding:30px 20px;'],
+            ['path' => 'themeoption/newsletter/bg_custom_style', 'value' => 'padding:0;'],
+            ['path' => 'rokanthemes_themeoption/newsletter_popup/enable', 'value' => '1'],
+            ['path' => 'rokanthemes_themeoption/newsletter_popup/delay', 'value' => '30000'], // 30 segundos
+            ['path' => 'rokanthemes_themeoption/newsletter_popup/cookie_lifetime', 'value' => '30'], // 30 dias
+            ['path' => 'rokanthemes_themeoption/newsletter_popup/width', 'value' => '580'],
+            ['path' => 'rokanthemes_themeoption/newsletter_popup/height', 'value' => '520'],
             ['path' => 'producttab/new_status/enabled', 'value' => '1'],
             ['path' => 'producttab/new_status/items', 'value' => '5'],
             ['path' => 'producttab/new_status/row', 'value' => '1'],
@@ -437,12 +461,43 @@ HTML;
     {
         return <<<HTML
 <div class="hoteline_header">
+    <div class="site-secure-badge">
+        <i class="fa fa-lock" aria-hidden="true"></i>
+        <span>Compra Segura</span>
+    </div>
     <div class="image_hotline"></div>
     <div class="wrap">
         <label>Central 24h:</label>
         <span>(11) 4002-8922</span>
     </div>
 </div>
+<style>
+.site-secure-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #28a745;
+    color: #ffffff;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-right: 15px;
+}
+.site-secure-badge i {
+    font-size: 14px;
+}
+@media (max-width: 768px) {
+    .site-secure-badge {
+        font-size: 11px;
+        padding: 4px 8px;
+        margin-right: 10px;
+    }
+    .site-secure-badge span {
+        display: none;
+    }
+}
+</style>
 HTML;
     }
 
@@ -616,10 +671,92 @@ HTML;
     {
         return <<<HTML
 <div class="ayo-newsletter-popup">
-    <h3>Receba novidades e ofertas</h3>
-    <p>Assine e fique por dentro dos lançamentos e promoções.</p>
+    <div class="newsletter-popup-badge">
+        <i class="fa fa-gift"></i>
+    </div>
+    <h3 class="newsletter-popup-title">GANHE 10% OFF</h3>
+    <p class="newsletter-popup-subtitle">Na sua primeira compra!</p>
+    <p class="newsletter-popup-description">Cadastre seu e-mail e receba um cupom exclusivo + novidades sobre equipamentos e acessórios para motos.</p>
     {{block class="Magento\\Newsletter\\Block\\Subscribe" template="subscribe.phtml"}}
+    <p class="newsletter-popup-privacy">
+        <small>Seus dados estão seguros. Não compartilhamos com terceiros.</small>
+    </p>
 </div>
+<style>
+.ayo-newsletter-popup {
+    position: relative;
+    text-align: center;
+    padding: 40px 30px;
+}
+.newsletter-popup-badge {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #b73337 0%, #8b2629 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 20px rgba(183, 51, 55, 0.3);
+}
+.newsletter-popup-badge i {
+    font-size: 40px;
+    color: #ffffff;
+}
+.newsletter-popup-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: #b73337;
+    margin: 0 0 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.newsletter-popup-subtitle {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 15px;
+}
+.newsletter-popup-description {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.6;
+    margin: 0 0 25px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.newsletter-popup-privacy {
+    margin-top: 15px;
+    color: #999;
+}
+.newsletter-popup-privacy small {
+    font-size: 11px;
+}
+.ayo-newsletter-popup .block.newsletter .field.newsletter {
+    margin: 0 auto;
+    max-width: 400px;
+}
+.ayo-newsletter-popup .block.newsletter .actions {
+    margin-top: 15px;
+}
+.ayo-newsletter-popup .block.newsletter button {
+    background: #b73337;
+    border-color: #b73337;
+    padding: 12px 40px;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+.ayo-newsletter-popup .block.newsletter button:hover {
+    background: #8b2629;
+    border-color: #8b2629;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(183, 51, 55, 0.3);
+}
+</style>
 HTML;
     }
 
@@ -893,6 +1030,10 @@ HTML;
         {{block class="Magento\Cms\Block\Block" block_id="top_slideshow_home1"}}
     </section>
 
+    <section class="ayo-home5-section ayo-home5-section--trust-badges">
+        {{block class="Magento\Cms\Block\Block" block_id="trust_badges_homepage"}}
+    </section>
+
     <section class="ayo-home5-section container ayo-home5-section--fitment">
         <header class="ayo-home5-heading">
             <span class="ayo-home5-label">Encontre a peça certa</span>
@@ -956,6 +1097,10 @@ HTML;
             <span class="ayo-home5-divider"></span>
         </header>
         {{block class="Magento\Cms\Block\Block" block_id="home_new_products"}}
+    </section>
+
+    <section class="ayo-home5-section ayo-home5-section--testimonials">
+        {{block class="Magento\Cms\Block\Block" block_id="home_testimonials"}}
     </section>
 
     <section class="ayo-home5-section container">
@@ -1282,6 +1427,216 @@ HTML;
         <li><a class="fixed-top" href="#top" title="Topo"><span>Topo</span></a></li>
     </ul>
 </div>
+HTML;
+    }
+
+    private function homeTestimonialsContent(): string
+    {
+        return <<<HTML
+<div class="testimonials-wrapper">
+    <div class="testimonials-header">
+        <h2>O Que Nossos Clientes Dizem</h2>
+        <p>Mais de 10.000 motociclistas confiam em nossos produtos</p>
+    </div>
+    {{widget type="Rokanthemes\Testimonials\Block\Testimonials" 
+        template="rokanthemes/testimonials/slider.phtml"
+        identify="home_testimonials"
+        title="O Que Nossos Clientes Dizem"
+        qty="10"}}
+</div>
+<style>
+.testimonials-wrapper {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 60px 0;
+    margin: 40px 0;
+}
+.testimonials-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 0 15px;
+}
+.testimonials-header h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 10px;
+}
+.testimonials-header p {
+    font-size: 16px;
+    color: #666;
+}
+.testimonials-wrapper .item-testimonial {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 30px;
+    margin: 0 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.testimonials-wrapper .item-testimonial:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+.testimonials-wrapper .testimonial-rating {
+    color: #ffc107;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+.testimonials-wrapper .testimonial-content {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 20px;
+    font-style: italic;
+}
+.testimonials-wrapper .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.testimonials-wrapper .testimonial-author-image {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #b73337;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 600;
+}
+.testimonials-wrapper .testimonial-author-info strong {
+    display: block;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 2px;
+}
+.testimonials-wrapper .testimonial-author-info span {
+    font-size: 13px;
+    color: #888;
+}
+@media (max-width: 768px) {
+    .testimonials-header h2 {
+        font-size: 24px;
+    }
+    .testimonials-wrapper .item-testimonial {
+        margin: 0 10px;
+        padding: 20px;
+    }
+}
+</style>
+HTML;
+    }
+
+    private function trustBadgesHomepageContent(): string
+    {
+        return <<<HTML
+<div class="trust-badges-wrapper">
+    <div class="trust-badges-container">
+        <div class="trust-badge">
+            <div class="trust-badge__icon">
+                <i class="fa fa-shield" aria-hidden="true"></i>
+            </div>
+            <div class="trust-badge__content">
+                <strong>Compra Segura SSL</strong>
+                <span>Seus dados protegidos</span>
+            </div>
+        </div>
+        <div class="trust-badge">
+            <div class="trust-badge__icon">
+                <i class="fa fa-credit-card" aria-hidden="true"></i>
+            </div>
+            <div class="trust-badge__content">
+                <strong>Pagamento Protegido</strong>
+                <span>PIX, Boleto e Cartão</span>
+            </div>
+        </div>
+        <div class="trust-badge">
+            <div class="trust-badge__icon">
+                <i class="fa fa-truck" aria-hidden="true"></i>
+            </div>
+            <div class="trust-badge__content">
+                <strong>Frete Grátis</strong>
+                <span>Acima de R\$ 199</span>
+            </div>
+        </div>
+        <div class="trust-badge">
+            <div class="trust-badge__icon">
+                <i class="fa fa-exchange" aria-hidden="true"></i>
+            </div>
+            <div class="trust-badge__content">
+                <strong>Troca Facilitada</strong>
+                <span>Em até 7 dias</span>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+.trust-badges-wrapper {
+    background: #f8f8f8;
+    padding: 30px 0;
+    margin: 40px 0;
+}
+.trust-badges-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+.trust-badge {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.trust-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+.trust-badge__icon {
+    flex-shrink: 0;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #b73337;
+    border-radius: 50%;
+    color: #ffffff;
+}
+.trust-badge__icon i {
+    font-size: 24px;
+}
+.trust-badge__content {
+    display: flex;
+    flex-direction: column;
+}
+.trust-badge__content strong {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 4px;
+}
+.trust-badge__content span {
+    font-size: 13px;
+    color: #666;
+}
+@media (max-width: 768px) {
+    .trust-badges-container {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    .trust-badge {
+        padding: 15px;
+    }
+}
+</style>
 HTML;
     }
 

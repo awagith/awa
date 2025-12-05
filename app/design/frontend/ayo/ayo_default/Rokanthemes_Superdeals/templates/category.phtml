@@ -77,7 +77,7 @@
 											</a>
 										</li>
 										<li class="quickview-product">
-											<a  class="quickview-link" data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="javascript: void(0);" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>">
+											<a  class="quickview-link" data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="#" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>">
 											</a>
 										</li>
 										<li class="compare-product">
@@ -142,15 +142,15 @@
                                 ?>
                                 <div class="product-sold">
                                     <?php
-                                    $numbertotal = $StockState->getStockQty($_item->getId());
-                                    $sale_qty = $this->helper('Rokanthemes\RokanBase\Helper\Data')->getSalableQuantityDataBySku($_item->getSku());
-                                    $numbersold = $block->getSoldProduct($_item->getId());
-                                    $total = $sale_qty + $numbersold;
-                                    $calculator = ($numbersold / $total) * 100;
+									$numbertotal = $StockState->getStockQty($_item->getId());
+									$sale_qty = $this->helper('Rokanthemes\RokanBase\Helper\Data')->getSalableQuantityDataBySku($_item->getSku());
+									$numbersold = $block->getSoldProduct($_item->getId());
+									$total = $sale_qty + $numbersold;
+									$calculator = $total > 0 ? ($numbersold / $total) * 100 : 0;
+									$calculator = min(100, $calculator);
                                     ?>
-                                    <div class="ruler-sold">
-                                        <div class="ruler-sold-count" style="width: <?php
-                                        echo $calculator; ?>%;">
+									<div class="ruler-sold" data-progress="<?php echo $calculator; ?>">
+										<div class="ruler-sold-count">
                                         </div>
                                     </div>
                                     <div class="count-sold">
@@ -171,56 +171,32 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
-require(["jquery", 'mage/mage','rokanthemes/timecircles', "rokanthemes/owl"], function($){
-	'use strict';
-		$( document ).ready(function() {
-			$(".hot-deal-slide").owlCarousel({
-				lazyLoad:true,
-				items: 6,
-	         	itemsDesktop : [1366, 5],
-		        itemsDesktopSmall : [1199,4],
-		        itemsTablet : [991, 3],
-		        itemsMobile : [680, 2],
-	        	navigation : true,
-	        	pagination: false,
-	         afterAction: function(el){
-		     this.$owlItems.removeClass('first-active')
-		     this.$owlItems .eq(this.currentItem).addClass('first-active')  
-		  }
-	    });
-
-			if($('.super-deal-countdown').length>0){
-				$(".super-deal-countdown").TimeCircles({
-					fg_width: 0.01,
-					bg_width: 1.2,
-					text_size: 0.07,
-					circle_bg_color: "#ffffff",
-					time: {
-						Days: {
-							show: true,
-							text: "<?php echo __('Days'); ?>",
-							color: "#f9bc02"
-						},
-						Hours: {
-							show: true,
-							text: "<?php echo __('Hours'); ?>",
-							color: "#f9bc02"
-						},
-						Minutes: {
-							show: true,
-							text: "<?php echo __('Mins'); ?>",
-							color: "#f9bc02"
-						},
-						Seconds: {
-							show: true,
-							text: "<?php echo __('Secs'); ?>",
-							color: "#f9bc02"
-						}
-					}
-				}); 
-			}
-		});
-    });
+<?php
+    $json = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
+    $superDealsInitConfig = [
+        'slideSelector' => '.hot-deal-slide',
+		'countdownSelector' => '.super-deal-countdown',
+		'progressSelector' => '.ruler-sold',
+        'countdownLabels' => [
+            'days' => (string)__('Days'),
+            'hours' => (string)__('Hours'),
+            'minutes' => (string)__('Mins'),
+            'seconds' => (string)__('Secs')
+        ],
+        'countdownColors' => [
+            'background' => '#ffffff',
+            'days' => '#f9bc02',
+            'hours' => '#f9bc02',
+            'minutes' => '#f9bc02',
+            'seconds' => '#f9bc02'
+        ]
+    ];
+?>
+<script type="text/x-magento-init">
+{
+    ".hot-deal-tab-slider": {
+        "Rokanthemes_Superdeals/js/category": <?php /* @escapeNotVerified */ echo $json->serialize($superDealsInitConfig); ?>
+    }
+}
 </script>
 <?php } ?>

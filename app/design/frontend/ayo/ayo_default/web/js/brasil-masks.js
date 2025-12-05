@@ -254,13 +254,16 @@ define([
         });
 
         // Validação em tempo real
+        var cpfErrorTemplate = '<div class="field-error field-error-inline">CPF inválido</div>',
+            cnpjErrorTemplate = '<div class="field-error field-error-inline">CNPJ inválido</div>';
+
         $(document).on('blur', '.mask-cpf, [data-mask="cpf"], input[name*="cpf" i]', function () {
             var $input = $(this);
             var value = $input.val();
             if (value && !validators.cpf(value)) {
                 $input.addClass('mage-error');
                 if (!$input.next('.field-error').length) {
-                    $input.after('<div class="field-error" style="color:#e02b27;font-size:12px;margin-top:4px;">CPF inválido</div>');
+                    $input.after(cpfErrorTemplate);
                 }
             } else {
                 $input.removeClass('mage-error');
@@ -274,7 +277,7 @@ define([
             if (value && !validators.cnpj(value)) {
                 $input.addClass('mage-error');
                 if (!$input.next('.field-error').length) {
-                    $input.after('<div class="field-error" style="color:#e02b27;font-size:12px;margin-top:4px;">CNPJ inválido</div>');
+                    $input.after(cnpjErrorTemplate);
                 }
             } else {
                 $input.removeClass('mage-error');

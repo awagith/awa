@@ -27,7 +27,7 @@
 
 ?>
 
-<div class="categorytab-container">
+<div class="categorytab-container" data-mage-init='{"Rokanthemes_Categorytab/js/categorytab": {"identify": "<?php echo $identify; ?>"}}'>
 	<div class="rokan-product-heading rokan-featured-heading clearfix">
 		<?php echo $title ? '<h2 class="pull-left">'.$title.' <span class="sup-title">'. __('This Month') .'</span></h2>' : ''; ?>
 		
@@ -121,7 +121,7 @@
 													</li>
 													<?php endif; ?>
 													<li class="quickview-product">
-														<a class="quickview-link" data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="javascript: void(0);" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>">
+														<a class="quickview-link" data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="#" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>">
 														</a>
 													</li>
 													<?php if ($block->getAddToCompareUrl() && $showCompare): ?>
@@ -181,17 +181,25 @@
 			   										<?php echo $block->getReviewsSummaryHtml($_item, $templateType,true); ?>
 			   									<?php endif; ?>
 											</div>
-											<div class="sold-by">
-												<?php
-													$attr = $_item->getResource()->getAttribute('sold_by');
-													if ($attr && $attr->usesSource()) {
-														$cats = $attr->getSource()->getOptionText($_item->getData('sold_by'));
-														if ($cats) {
-															echo ' <span>'.__('Sold by:').'</span>' .$cats;
+											<?php
+												$soldByLabel = '';
+												$soldByAttribute = $_item->getResource()->getAttribute('sold_by');
+												if ($soldByAttribute) {
+													$soldByValue = $_item->getData('sold_by');
+													if ($soldByValue !== null && $soldByValue !== '') {
+														$source = $soldByAttribute->usesSource() ? $soldByAttribute->getSource() : null;
+														if ($source) {
+															$soldByLabel = $source->getOptionText($soldByValue);
+															if (is_array($soldByLabel)) {
+																$soldByLabel = implode(', ', array_filter($soldByLabel));
+															}
 														}
 													}
-												 ?>
-											</div>
+												}
+												if ($soldByLabel) {
+													echo '<div class="sold-by"><span>' . __('Sold by:') . '</span>' . $this->escapeHtml($soldByLabel) . '</div>';
+												}
+											?>
 											<div class="info-price">
 												<?php /* @escapeNotVerified */ echo $this->helper('Rokanthemes\Themeoption\Helper\Data')->getPriceDisplayCustom($block->getProductPrice($_item)) ?>
 											</div>
@@ -215,42 +223,4 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
-require([
-	'jquery',
-	'mage/mage',
-	'rokanthemes/owl'
-], function ($) {
-	'use strict';
-
-	jQuery(".tab_content_<?php echo $identify; ?>").hide();
-	jQuery(".tab_content_<?php echo $identify; ?>:first").show(); 
-
-	jQuery("ul.tabs<?php echo '-'.$identify;?> li").click(function() {
-		jQuery("ul.tabs<?php echo '-'.$identify;?> li").removeClass("active");
-		jQuery(this).addClass("active");
-		jQuery(".tab_content_<?php echo $identify; ?>").hide();
-		var activeTab = $(this).attr("rel"); 
-		jQuery("#"+activeTab).show(); 
-	});
-	$( document ).ready(function() {	
-	 $(".cat_home2").owlCarousel({
-		 lazyLoad:true,
-	 	items : 6,
-        itemsDesktop : [1366, 4],
-        itemsDesktopSmall : [1199,3],
-        itemsTablet : [991, 3],
-        itemsMobile : [680, 2],
-	    navigation : true,
-	    pagination : false,
-	     afterAction: function(el){
-	     this.$owlItems.removeClass('first-active')
-	     this.$owlItems .eq(this.currentItem).addClass('first-active')  
-	    }
-	});
-	});
-	
-});
  
-
-</script> 

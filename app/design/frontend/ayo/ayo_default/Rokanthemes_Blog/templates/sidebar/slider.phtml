@@ -28,18 +28,9 @@ use \Magento\Framework\Stdlib\StringUtils;
 	$tablet = $this->getConfig('tablet');
 	$mobile = $this->getConfig('mobile');
 	$pagination = $this->getConfig('pagination');
-	$show_next_back = $this->getConfig('show_next_back');
-	$show_navigation_control = $this->getConfig('show_navigation_control');
+	$showNextBack = (bool)$this->getConfig('show_next_back');
+	$showNavigationControl = (bool)$this->getConfig('show_navigation_control');
 	$title = $this->getConfig('title');
-	if($show_next_back)
-		$show_next_back = 'true';
-	else
-		$show_next_back = 'false';
-	$show_navigation_control = $this->getConfig('show_navigation_control');
-	if($show_navigation_control)
-		$show_navigation_control = 'true';
-	else
-		$show_navigation_control = 'false';
 	$_postCollection = $block->getPostCollection();
 ?>
 <?php if ($_postCollection->count() && $enable) { ?>
@@ -98,32 +89,27 @@ use \Magento\Framework\Stdlib\StringUtils;
 			</div>
 		</div>
 </section>
-
-<script type="text/javascript">
-	require([
-		'jquery',
-		'mage/mage',
-		'rokanthemes/owl'
-	], function ($) {
-		'use strict';
-
-		jQuery(".block-recent-posts .owl").owlCarousel({
-			lazyLoad:true,
-			items : <?php echo $default; ?>,
-			margin: 30,
-			itemsDesktop : [1199,<?php echo $desktop; ?>],
-			itemsDesktopSmall : [991,<?php echo $desktop_small; ?>],
-			itemsTablet: [768,<?php echo $tablet; ?>],
-			itemsMobile : [480,<?php echo $mobile; ?>],
-			slideSpeed : <?php echo $pagination; ?>,
-			paginationSpeed : <?php echo $pagination; ?>,
-			rewindSpeed : <?php echo $pagination; ?>,
-			addClassActive: true,
-			navigation : <?php echo $show_next_back; ?>,
-			stopOnHover : true,
-			pagination : <?php echo $show_navigation_control; ?>,
-			scrollPerPage:true,
-		});
-	});
+<?php
+	$json = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
+	$sliderConfig = [
+		'items' => (int)$default,
+		'margin' => 30,
+		'itemsDesktop' => [1199, (int)$desktop],
+		'itemsDesktopSmall' => [991, (int)$desktop_small],
+		'itemsTablet' => [768, (int)$tablet],
+		'itemsMobile' => [480, (int)$mobile],
+		'slideSpeed' => (int)$pagination,
+		'paginationSpeed' => (int)$pagination,
+		'rewindSpeed' => (int)$pagination,
+		'navigation' => $showNextBack,
+		'pagination' => $showNavigationControl
+	];
+?>
+<script type="text/x-magento-init">
+	{
+		".block-recent-posts": {
+			"Rokanthemes_Blog/js/sidebar-slider": <?php /* @escapeNotVerified */ echo $json->serialize($sliderConfig); ?>
+		}
+	}
 </script>
 <?php } ?>

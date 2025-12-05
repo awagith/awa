@@ -141,9 +141,9 @@
 				image    : '<img class="fancybox-image" src="{href}" alt="" />',
 				iframe   : '<iframe id="fancybox-frame{rnd}" name="fancybox-frame{rnd}" class="fancybox-iframe" frameborder="0" vspace="0" hspace="0" webkitAllowFullScreen mozallowfullscreen allowFullScreen' + (IE ? ' allowtransparency="true"' : '') + '></iframe>',
 				error    : '<p class="fancybox-error">The requested content cannot be loaded.<br/>Please try again later.</p>',
-				closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="javascript:;"></a>',
-				next     : '<a title="Next" class="fancybox-nav fancybox-next" href="javascript:;"><span></span></a>',
-				prev     : '<a title="Previous" class="fancybox-nav fancybox-prev" href="javascript:;"><span></span></a>'
+				closeBtn : '<a title="Close" class="fancybox-item fancybox-close" href="#"></a>',
+				next     : '<a title="Next" class="fancybox-nav fancybox-next" href="#"><span></span></a>',
+				prev     : '<a title="Previous" class="fancybox-nav fancybox-prev" href="#"><span></span></a>'
 			},
 
 			// Properties for each animation type
@@ -1450,11 +1450,17 @@
 			// Create navigation arrows
 			if (current.arrows && F.group.length > 1) {
 				if (current.loop || current.index > 0) {
-					$(current.tpl.prev).appendTo(F.outer).bind('click.fb', F.prev);
+					$(current.tpl.prev).appendTo(F.outer).bind('click.fb', function(e) {
+						e.preventDefault();
+						F.prev();
+					});
 				}
 
 				if (current.loop || current.index < F.group.length - 1) {
-					$(current.tpl.next).appendTo(F.outer).bind('click.fb', F.next);
+					$(current.tpl.next).appendTo(F.outer).bind('click.fb', function(e) {
+						e.preventDefault();
+						F.next();
+					});
 				}
 			}
 

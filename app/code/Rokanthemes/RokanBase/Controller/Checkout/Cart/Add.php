@@ -141,11 +141,11 @@ class Add extends \Magento\Checkout\Controller\Cart\Add
 		$message = __('You added <a href="'. $product->getProductUrl() .'">%1</a> to your shopping cart.',
                         $product->getName()
                     );
-		$html = '<div class="popup_avaiable">'.$message.'<br>
+        $html = '<div class="popup_avaiable">'.$message.'<br>
 					<div class="action_button">
 						<ul>
 							<li>
-								<button title="'. __('Continue Shopping') . '" class="button btn-continue" onclick="jQuery.fancybox.close();">'. __('Continue Shopping') . '</button>
+                            <button title="'. __('Continue Shopping') . '" class="button btn-continue" data-action="close-fancybox">'. __('Continue Shopping') . '</button>
 							</li>
 							<li>
 								<a title="Checkout" class="button btn-viewcart" href="'. $this->_url->getUrl('checkout/cart') .'"><span>'. __('View Cart & Checkout'). '</span></a>

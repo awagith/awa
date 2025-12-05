@@ -48,7 +48,7 @@ class Add extends \Magento\Catalog\Controller\Product\Compare\Add
         \Magento\Framework\Json\Helper\Data $jsonHelper,
         \Magento\Framework\Registry $registry,
         LayoutFactory $layoutFactory,
-        ?AddToCompareAvailability $compareAvailability = null
+        AddToCompareAvailability $compareAvailability = null
     ) {
         parent::__construct(
             $context,

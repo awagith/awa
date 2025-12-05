@@ -1,0 +1,137 @@
+<?php
+/**
+ * Sticky Add to Cart Mobile
+ * Template para botão flutuante "Adicionar ao Carrinho" em mobile
+ * 
+ * @var \Magento\Catalog\Block\Product\View $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+$_product = $block->getProduct();
+?>
+
+<div class="sticky-atc-mobile" data-role="sticky-addtocart">
+    <div class="sticky-atc-content">
+        <div class="sticky-product-info">
+            <span class="sticky-product-name"><?= $escaper->escapeHtml($_product->getName()) ?></span>
+            <span class="sticky-product-price">
+                <?= /* @noEscape */ $block->getProduct()->getTypeInstance()->setStoreFilter($block->getProduct()->getStoreId(), $block->getProduct())->getFinalPrice() !== null 
+                    ? $block->getLayout()->createBlock(\Magento\Framework\Pricing\Render::class)->render('final_price', $_product, [
+                        'display_minimal_price' => true,
+                        'use_link_for_as_low_as' => true,
+                        'zone' => \Magento\Framework\Pricing\Render::ZONE_ITEM_LIST
+                    ])
+                    : ''
+                ?>
+            </span>
+        </div>
+        
+        <button type="button" 
+                class="action primary sticky-add-btn"
+                data-role="sticky-add-to-cart"
+                title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>">
+            <i class="fa fa-shopping-cart"></i>
+            <span><?= $escaper->escapeHtml(__('Add to Cart')) ?></span>
+        </button>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "[data-role='sticky-addtocart']": {
+        "stickyAddToCart": {
+            "offsetTop": 300,
+            "mainButtonSelector": "button.action.tocart"
+        }
+    }
+}
+</script>
+
+<style>
+.sticky-atc-mobile {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+    z-index: 999;
+    padding: 12px 15px;
+    transition: transform 0.3s ease-in-out;
+    transform: translateY(100%);
+}
+
+.sticky-atc-mobile.active {
+    transform: translateY(0);
+}
+
+.sticky-atc-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 100%;
+}
+
+.sticky-product-info {
+    flex: 1;
+    margin-right: 10px;
+    overflow: hidden;
+}
+
+.sticky-product-name {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 3px;
+}
+
+.sticky-product-price {
+    display: block;
+    font-size: 16px;
+    font-weight: bold;
+    color: #b73337;
+}
+
+.sticky-add-btn {
+    flex-shrink: 0;
+    background: #b73337;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sticky-add-btn:hover,
+.sticky-add-btn:active {
+    background: #9a2b2f;
+}
+
+.sticky-add-btn i {
+    font-size: 16px;
+}
+
+/* Mostrar apenas em mobile */
+@media (max-width: 767px) {
+    .sticky-atc-mobile {
+        display: block;
+    }
+}
+
+/* Esconder em desktop */
+@media (min-width: 768px) {
+    .sticky-atc-mobile {
+        display: none !important;
+    }
+}
+</style>

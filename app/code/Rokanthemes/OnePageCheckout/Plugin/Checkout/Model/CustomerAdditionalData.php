@@ -51,7 +51,7 @@ class CustomerAdditionalData
         \Closure $proceed,
         $cartId,
         \Magento\Quote\Api\Data\PaymentInterface $paymentMethod,
-        ?\Magento\Quote\Api\Data\AddressInterface $billingAddress = null
+        \Magento\Quote\Api\Data\AddressInterface $billingAddress = null
     ) {
         if ($paymentMethod->getExtensionAttributes() !== null
             && $this->configHelper->getModuleStatus()
@@ -75,7 +75,7 @@ class CustomerAdditionalData
         \Magento\Checkout\Api\PaymentInformationManagementInterface $subject,
         $cartId,
         \Magento\Quote\Api\Data\PaymentInterface $paymentMethod,
-        ?\Magento\Quote\Api\Data\AddressInterface $billingAddress = null
+        \Magento\Quote\Api\Data\AddressInterface $billingAddress = null
     ) {
         if ($paymentMethod->getExtensionAttributes() !== null
             && $this->configHelper->getModuleStatus()

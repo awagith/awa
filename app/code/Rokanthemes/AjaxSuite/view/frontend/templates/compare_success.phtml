@@ -14,6 +14,6 @@ $_product = $block->getProduct();
         echo $success ?></div>
 </div>
 <div class="ajaxsuite-buttons">
-    <button type="button" id="ajaxcompare" class="action primary" onclick="window.location = '<?= $block->getUrl('catalog/product_compare')?>'"><span><?= __('View Compare List') ?></span></button>
+    <button type="button" id="ajaxcompare" class="action primary" data-action="ajaxsuite-navigate" data-url="<?= $block->escapeUrl($block->getUrl('catalog/product_compare'))?>"><span><?= __('View Compare List') ?></span></button>
 </div>
 

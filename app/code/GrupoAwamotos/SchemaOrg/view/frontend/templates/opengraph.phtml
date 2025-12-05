@@ -1,0 +1,67 @@
+<?php
+/**
+ * Open Graph Meta Tags
+ * @var $block \Magento\Framework\View\Element\Template
+ */
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+$registry = $objectManager->get(\Magento\Framework\Registry::class);
+$pageConfig = $objectManager->get(\Magento\Framework\View\Page\Config::class);
+
+$baseUrl = rtrim($storeManager->getStore()->getBaseUrl(), '/');
+$storeName = $storeManager->getStore()->getName();
+$currentUrl = $baseUrl . $_SERVER['REQUEST_URI'];
+
+// Detectar tipo de página
+$product = $registry->registry('current_product');
+$category = $registry->registry('current_category');
+
+// Título e descrição
+$title = $pageConfig->getTitle()->get();
+$description = $pageConfig->getDescription() ?: "Peças automotivas de qualidade - Grupo Awamotos";
+
+// Imagem
+$imageSrc = $baseUrl . '/pub/static/frontend/ayo/ayo_default/pt_BR/images/logo.png'; // default
+if ($product && $product->getId()) {
+    $imageHelper = $objectManager->get(\Magento\Catalog\Helper\Image::class);
+    $imageSrc = $imageHelper->init($product, 'product_base_image')->getUrl();
+    $title = $product->getName();
+    $description = strip_tags($product->getShortDescription() ?: $product->getDescription());
+    $description = mb_substr($description, 0, 200);
+} elseif ($category && $category->getId()) {
+    if ($category->getImageUrl()) {
+        $imageSrc = $category->getImageUrl();
+    }
+    $title = $category->getName();
+    $description = strip_tags($category->getDescription() ?: "Categorias de peças automotivas");
+    $description = mb_substr($description, 0, 200);
+}
+?>
+<!-- Open Graph Protocol -->
+<meta property="og:type" content="<?= $product ? 'product' : 'website' ?>" />
+<meta property="og:title" content="<?= $escaper->escapeHtmlAttr($title) ?>" />
+<meta property="og:description" content="<?= $escaper->escapeHtmlAttr($description) ?>" />
+<meta property="og:url" content="<?= $escaper->escapeUrl($currentUrl) ?>" />
+<meta property="og:image" content="<?= $escaper->escapeUrl($imageSrc) ?>" />
+<meta property="og:image:width" content="800" />
+<meta property="og:image:height" content="600" />
+<meta property="og:site_name" content="<?= $escaper->escapeHtmlAttr($storeName) ?>" />
+<meta property="og:locale" content="pt_BR" />
+
+<?php if ($product && $product->getId()): ?>
+<!-- Open Graph Product -->
+<meta property="product:price:amount" content="<?= number_format($product->getFinalPrice(), 2, '.', '') ?>" />
+<meta property="product:price:currency" content="BRL" />
+<?php if ($product->isAvailable()): ?>
+<meta property="product:availability" content="in stock" />
+<?php endif; ?>
+<?php endif; ?>
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="<?= $escaper->escapeHtmlAttr($title) ?>" />
+<meta name="twitter:description" content="<?= $escaper->escapeHtmlAttr($description) ?>" />
+<meta name="twitter:image" content="<?= $escaper->escapeUrl($imageSrc) ?>" />
+
+<!-- WhatsApp (usa Open Graph) -->
+<meta property="og:image:alt" content="<?= $escaper->escapeHtmlAttr($title) ?>" />

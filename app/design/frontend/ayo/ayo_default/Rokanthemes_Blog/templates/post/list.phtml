@@ -33,11 +33,21 @@ $_postCollection = $block->getPostCollection();
 
     <?php echo $block->getToolbarHtml() ?>
 
-    <script type="text/javascript">var addthis_config = {"data_track_clickback":false};</script>
-    <script type="text/javascript" async src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4def63cd3cf37569"></script>
-    <script type="text/javascript">
-        var addthis_config = {
-            ui_language: "en"
+    <?php
+        $json = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
+        $addThisConfig = [
+            'scriptUrl' => 'https://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4def63cd3cf37569',
+            'settings' => [
+                'data_track_clickback' => false,
+                'ui_language' => 'en'
+            ]
+        ];
+    ?>
+    <script type="text/x-magento-init">
+        {
+            "body": {
+                "Rokanthemes_Blog/js/addthis-loader": <?php /* @escapeNotVerified */ echo $json->serialize($addThisConfig); ?>
+            }
         }
     </script>
 <?php endif; ?>

@@ -23,11 +23,6 @@ class ProductFields
     const URL = 'url';
 
     /**
-     * @var array
-     */
-    private $options = [];
-
-    /**
      *
      * @return array
      */

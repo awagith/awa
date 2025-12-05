@@ -104,7 +104,7 @@
 												<?php endif; ?>
 											</li>
 											<li class="quickview-product">
-												<a class="quickview-link data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="javascript: void(0);" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>"></a>
+												<a class="quickview-link data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="#" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>"></a>
 											</li>
 											<li>
 												<?php if ($block->getAddToCompareUrl()): ?>
@@ -169,28 +169,10 @@
     </div> 
 </section>
 <?php endif;?>
-<script type="text/javascript">
-	require([
-		'jquery',
-		'mage/mage',
-		'rokanthemes/owl'
-	], function ($) {
-		'use strict';
-
-		$( document ).ready(function() {	
-			$("#upsell_product_slider").owlCarousel({
-				lazyLoad:true,
-				items : 6,
-				itemsDesktop : [1366, 5],
-		        itemsDesktopSmall : [1199,4],
-		        itemsTablet : [991, 3],
-		        itemsMobile : [680, 2],
-			    navigation : true,
-			     afterAction: function(el){
-			     this.$owlItems.removeClass('first-active')
-			     this.$owlItems .eq(this.currentItem).addClass('first-active')  
-			    }
-			});
-		});
-	});
+<script type="text/x-magento-init">
+    {
+        "#upsell_product_slider": {
+            "Magento_Catalog/js/upsell": {}
+        }
+    }
 </script>

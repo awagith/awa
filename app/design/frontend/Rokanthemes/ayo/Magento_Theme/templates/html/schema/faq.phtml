@@ -1,0 +1,72 @@
+<?php
+/**
+ * FAQ Schema.org Markup
+ * Para páginas de FAQ e suporte
+ * 
+ * @var $block \Magento\Framework\View\Element\Template
+ */
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get(\Magento\Store\Model\StoreManagerInterface::class);
+
+$store = $storeManager->getStore();
+$baseUrl = $store->getBaseUrl();
+
+// FAQ items - idealmente seria carregado de CMS ou banco de dados
+$faqItems = [
+    [
+        "question" => "Como faço para escolher o tamanho correto do capacete?",
+        "answer" => "Meça a circunferência da sua cabeça com uma fita métrica na altura da testa, logo acima das orelhas. Compare com a tabela de tamanhos do fabricante. Em caso de dúvida entre dois tamanhos, opte pelo menor, pois o capacete deve ficar firme na cabeça."
+    ],
+    [
+        "question" => "Qual é o prazo de entrega dos produtos?",
+        "answer" => "Para a região metropolitana de São Paulo: 1-2 dias úteis. Para outras regiões do Brasil: 3-7 dias úteis. Produtos em estoque são enviados no mesmo dia para compras até 14h. Frete grátis para compras acima de R$ 199,00."
+    ],
+    [
+        "question" => "Vocês fazem instalação dos produtos?",
+        "answer" => "Sim! Oferecemos instalação gratuita para baús, suportes e alguns acessórios em nossa loja física. Para instalação domiciliar, consultamos parceiros técnicos especializados. Entre em contato via WhatsApp para agendamento."
+    ],
+    [
+        "question" => "Como funciona a troca e garantia dos produtos?",
+        "answer" => "Oferecemos 7 dias para trocas de produtos sem uso e em embalagem original. Garantia de fabricante varia por produto: capacetes (1 ano), baús (2 anos), eletrônicos (1 ano). Defeitos de fabricação são trocados imediatamente."
+    ],
+    [
+        "question" => "Vocês atendem todo o Brasil?",
+        "answer" => "Sim, enviamos para todo território nacional via Correios e transportadoras. Algumas regiões remotas podem ter prazo estendido. Consulte o CEP no carrinho para ver opções de frete disponíveis."
+    ],
+    [
+        "question" => "Como posso pagar minha compra?",
+        "answer" => "Aceitamos cartão de crédito (até 12x), cartão de débito, PIX (5% desconto), boleto bancário e PayPal. Pagamentos via PIX são aprovados na hora. Cartões têm análise automática de crédito."
+    ],
+    [
+        "question" => "Os produtos são originais?",
+        "answer" => "Todos nossos produtos são 100% originais e novos. Somos revendedores autorizados das principais marcas: Shark, Givi, X11, Texx, Helt, EBF e outras. Fornecemos nota fiscal e certificado de garantia."
+    ],
+    [
+        "question" => "Como saber se o produto está em estoque?",
+        "answer" => "A disponibilidade é atualizada em tempo real no site. Se o produto mostrar 'Em estoque' e permitir adicionar ao carrinho, está disponível para envio imediato. Para grandes quantidades, consulte disponibilidade via WhatsApp."
+    ]
+];
+
+$faqSchema = [
+    "@context" => "https://schema.org",
+    "@type" => "FAQPage",
+    "mainEntity" => []
+];
+
+foreach ($faqItems as $faq) {
+    $faqSchema["mainEntity"][] = [
+        "@type" => "Question",
+        "name" => $faq["question"],
+        "acceptedAnswer" => [
+            "@type" => "Answer",
+            "text" => $faq["answer"]
+        ]
+    ];
+}
+?>
+
+<!-- FAQ Schema.org JSON-LD -->
+<script type="application/ld+json">
+<?= /* @noEscape */ json_encode($faqSchema, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>
+</script>

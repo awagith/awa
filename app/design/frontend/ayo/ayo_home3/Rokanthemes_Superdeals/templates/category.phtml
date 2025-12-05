@@ -16,13 +16,61 @@
 	$show_navigation = $block->getConfig('navigation');
 	$show_pagination = $block->getConfig('pagination');
 	$auto = $block->getConfig('auto');
+	$categoryId = $category_load ? (int)$category_load->getId() : null;
+	$containerSuffix = $categoryId ? 'category-' . $categoryId : 'superdeals-' . uniqid();
+	$containerId = preg_replace('/[^A-Za-z0-9_-]/', '', 'super-deals-' . $containerSuffix);
+	if ($containerId === '') {
+		$containerId = 'super-deals-' . uniqid();
+	}
+	$items = (int)$items ?: 4;
+	$owlOptions = [
+		'lazyLoad' => true,
+		'items' => $items,
+		'itemsDesktop' => [1366, 3],
+		'itemsDesktopSmall' => [1199, 2],
+		'itemsTablet' => [991, 2],
+		'itemsMobile' => [680, 1],
+		'navigation' => (bool)$show_navigation,
+		'pagination' => (bool)$show_pagination
+	];
+	if ($auto) {
+		$owlOptions['autoPlay'] = true;
+	}
+	$timerOptions = [
+		'fg_width' => 0.01,
+		'bg_width' => 1.2,
+		'text_size' => 0.07,
+		'circle_bg_color' => '#ffffff',
+		'time' => [
+			'Days' => [
+				'show' => true,
+				'text' => (string)__('Days'),
+				'color' => '#f9bc02'
+			],
+			'Hours' => [
+				'show' => true,
+				'text' => (string)__('Hours'),
+				'color' => '#f9bc02'
+			],
+			'Minutes' => [
+				'show' => true,
+				'text' => (string)__('Mins'),
+				'color' => '#f9bc02'
+			],
+			'Seconds' => [
+				'show' => true,
+				'text' => (string)__('Secs'),
+				'color' => '#f9bc02'
+			]
+		]
+	];
 	if($enabled && $category_load && strtotime($block->getConfig('end_date')) >= strtotime($block->getCurrentTime())){
 		$image = 'category_image_primary_small';
 ?>
 <?php if($this->getConfig('title')){?>
 	<div class="rokan-product-heading rokan-onsale-heading"><h2><?php echo $this->getConfig('title')?>  <span class="sup-title"><?php echo __('Of The Day') ?></span></h2></div>
 <?php }?>
-<div class="hot-deal-tab-slider hot-deal-tab-slider-customcss">
+<div class="hot-deal-tab-slider hot-deal-tab-slider-customcss" id="<?php echo $containerId; ?>">
 	<div class="countdown_block">
 		<div class="title_countdown"><?php echo __('Hurry Up! Offer ends in:') ?></div>
 		<div class="super-deal-countdown" data-date="<?php echo $block->getConfig('end_date');?>"></div>
@@ -121,56 +169,16 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
-require(["jquery", 'mage/mage','rokanthemes/timecircles', "rokanthemes/owl"], function($){
-	'use strict';
-		$( document ).ready(function() {
-			$(".hot-deal-slide").owlCarousel({
-				lazyLoad:true,
-				items: 4,
-	         	itemsDesktop : [1366, 3],
-		        itemsDesktopSmall : [1199, 2],
-		        itemsTablet : [991, 2],
-		        itemsMobile : [680, 1],
-	        	navigation : true,
-	        	pagination: false,
-	         afterAction: function(el){
-		     this.$owlItems.removeClass('first-active')
-		     this.$owlItems .eq(this.currentItem).addClass('first-active')  
-		  }
-	    });
-
-			if($('.super-deal-countdown').length>0){
-				$(".super-deal-countdown").TimeCircles({
-					fg_width: 0.01,
-					bg_width: 1.2,
-					text_size: 0.07,
-					circle_bg_color: "#ffffff",
-					time: {
-						Days: {
-							show: true,
-							text: "<?php echo __('Days'); ?>",
-							color: "#f9bc02"
-						},
-						Hours: {
-							show: true,
-							text: "<?php echo __('Hours'); ?>",
-							color: "#f9bc02"
-						},
-						Minutes: {
-							show: true,
-							text: "<?php echo __('Mins'); ?>",
-							color: "#f9bc02"
-						},
-						Seconds: {
-							show: true,
-							text: "<?php echo __('Secs'); ?>",
-							color: "#f9bc02"
-						}
-					}
-				}); 
-			}
-		});
-    });
+<script type="text/x-magento-init">
+{
+	"#<?php echo $containerId; ?>": {
+		"js/superdeals": {
+			"carouselSelector": ".hot-deal-slide",
+			"countdownSelector": ".super-deal-countdown",
+			"owl": <?php echo json_encode($owlOptions, JSON_UNESCAPED_SLASHES); ?>,
+			"timer": <?php echo json_encode($timerOptions, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>
+		}
+	}
+}
 </script>
 <?php } ?>

@@ -12,21 +12,14 @@
 		</div>
 	</div>
 </div>
-<script type="text/javascript">
-require([
-		'jquery'
-	], function ($) {
-		'use strict';
-		$(window).on('load', function () { 
-			$('#loading-fixed').delay(500).fadeOut('slow');
-		});
-		$( document ).ready(function() {
-			var myVarloader = setInterval(function(){ setLoaderTime() }, 1000);
-			function setLoaderTime() {
-				$('#loading-fixed').delay(500).fadeOut('slow');
-				clearInterval(myVarloader);
-			}
-		});
-});
-</script>
+		<script type="text/x-magento-init">
+		{
+		    "#loading-fixed": {
+		        "Rokanthemes_Themeoption/js/beforebodyloader": {
+		            "delay": 500,
+		            "fallbackTimeout": 1000
+		        }
+		    }
+		}
+		</script>
 <?php } ?>

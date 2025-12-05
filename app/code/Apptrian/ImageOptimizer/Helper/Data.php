@@ -371,7 +371,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         // Optimize batch of files
         foreach ($files as $id => $item) {
             $encodedPath = $item['f'];
-            $decodedPath = mb_convert_encoding($encodedPath, 'ISO-8859-1', 'UTF-8');
+            $decodedPath = utf8_decode($encodedPath);
             $filePath    = realpath($decodedPath);
             
             // If image exists, optimize else remove it from database
@@ -392,7 +392,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         // (mtime) takes a split second to update
         foreach ($toUpdate as $i => $f) {
             $encodedPath = $f['f'];
-            $decodedPath = mb_convert_encoding($encodedPath, 'ISO-8859-1', 'UTF-8');
+            $decodedPath = utf8_decode($encodedPath);
             $filePath    = realpath($decodedPath);
             
             if (file_exists($filePath)) {
@@ -425,7 +425,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
         // Check index for files that need to be updated and/or removed
         foreach ($this->index as $id => $item) {
             $encodedPath = $item['f'];
-            $decodedPath = mb_convert_encoding($encodedPath, 'ISO-8859-1', 'UTF-8');
+            $decodedPath = utf8_decode($encodedPath);
             $filePath    = realpath($decodedPath);
             
             if (file_exists($filePath)) {
@@ -481,7 +481,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
                     continue;
                 }
 
-                $encodedPath = mb_convert_encoding($filePath, 'UTF-8', 'ISO-8859-1');
+                $encodedPath = utf8_encode($filePath);
                 $id          = hash('md5', $encodedPath);
 
                 // Add only if file is not already in the index

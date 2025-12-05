@@ -17,14 +17,21 @@
 </div>
 <div class="block_notification">
 	<div class="container">
-		<marquee direction="" onmouseover="this.stop();" onmouseout="this.start();">
+		<marquee direction="" data-role="notification-marquee">
 		<?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('notification_home9')->toHtml(); ?>
 		</marquee>
 	</div>
 </div>
+<script type="text/x-magento-init">
+{
+	".block_notification [data-role=\"notification-marquee\"]": {
+		"js/notification-marquee": {}
+	}
+}
+</script>
 <div class="hot-deal">
 	<?php echo $block->getLayout()->createBlock('Rokanthemes\Superdeals\Block\ProductByCat')->setTemplate('Rokanthemes_Superdeals::deal-banner.phtml')->toHtml();?>
-</div>		
+</div>
 <div class="cat_home16">
 	<div class="container">
 		<?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('category1_home16')->toHtml(); ?>

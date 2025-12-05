@@ -27,6 +27,7 @@
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
+                <item name="grupoawamotos_b2b_customer_listing_data_source" xsi:type="string">Magento\Customer\Model\ResourceModel\Grid\Collection</item>
                 <item name="b2b_carrier_listing_data_source" xsi:type="string">GrupoAwamotos\B2B\Model\ResourceModel\Carrier\Grid\Collection</item>
             </argument>
         </arguments>

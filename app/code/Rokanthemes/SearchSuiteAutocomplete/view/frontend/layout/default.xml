@@ -4,8 +4,8 @@
     <body>
     	<referenceBlock name="top.search" remove="true"/>
 		<referenceContainer name="header-wrapper">
-			<block class="Rokanthemes\SearchSuiteAutocomplete\Block\Autocomplete" name="rokanthemes-search-autocomplete-wrapper" as="topSearch" template="Rokanthemes_SearchSuiteAutocomplete::autocomplete.phtml"/>
+			<block class="Rokanthemes\SearchSuiteAutocomplete\Block\Autocomplete" name="rokanthemes-search-autocomplete-wrapper" template="Rokanthemes_SearchSuiteAutocomplete::autocomplete.phtml"/>
 		</referenceContainer>
-		<move element="rokanthemes-search-autocomplete-wrapper" destination="toki_header_custom" />
+		<move element="rokanthemes-search-autocomplete-wrapper" destination="toki_header" />
     </body>
 </page>

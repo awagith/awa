@@ -30,11 +30,18 @@
 </div>
 		<div class="block_notification">
 			<div class="container">
-				<marquee direction="" onmouseover="this.stop();" onmouseout="this.start();">
+				<marquee direction="" data-role="notification-marquee">
 				<?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('notification_home9')->toHtml(); ?>
 				</marquee>
 			</div>
 		</div>
+<script type="text/x-magento-init">
+{
+	".block_notification [data-role=\"notification-marquee\"]": {
+		"js/notification-marquee": {}
+	}
+}
+</script>
 <div class="top-home-content">
 	<div class="container">
 			<?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('category2_home9')->toHtml(); ?>

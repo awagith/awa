@@ -109,21 +109,14 @@ class Producttab extends \Magento\Catalog\Block\Product\AbstractProduct
             'product_id=entity_id',
             'category_id=' . (int)$category->getId()
         );
-        $products
+		$products
             ->addAttributeToSelect($this->catalogConfig->getProductAttributes())
             ->addMinimalPrice()
             ->addFinalPrice()
             ->addTaxPercents()
             ->addUrlRewrite($category->getId())
             ->setVisibility($this->productVisibility->getVisibleInCatalogIds());
-
-        $featuredAttribute = $products->getResource()->getAttribute('featured');
-        if ($featuredAttribute && $featuredAttribute->getAttributeId()) {
-            $products->addAttributeToFilter('featured', 1);
-        } else {
-            // Attribute missing, short-circuit to an empty collection to avoid SQL errors.
-            $products->addAttributeToFilter('entity_id', ['in' => [0]]);
-        }
+		$products->addAttributeToFilter('featured', 1);
         $products->setPageSize($this->getConfig('qty'))->setCurPage(1);
 		$this->_eventManager->dispatch(
             'catalog_block_product_list_collection',

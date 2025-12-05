@@ -1,0 +1,279 @@
+<?php
+/**
+ * Newsletter Popup Exit-Intent
+ * Template para popup de newsletter com oferta de desconto
+ * 
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+
+<div id="newsletter-popup" class="newsletter-popup-modal" data-role="newsletter-popup">
+    <div class="popup-overlay" data-action="close-popup"></div>
+    
+    <div class="popup-content">
+        <button class="close-btn" data-action="close-popup" title="<?= $escaper->escapeHtmlAttr(__('Close')) ?>">
+            <i class="fa fa-times"></i>
+        </button>
+        
+        <div class="popup-inner">
+            <div class="popup-header">
+                <i class="fa fa-envelope-open"></i>
+                <h2><?= $escaper->escapeHtml(__('Ganhe 10% OFF')) ?></h2>
+                <p class="subtitle"><?= $escaper->escapeHtml(__('na sua primeira compra!')) ?></p>
+            </div>
+            
+            <div class="popup-body">
+                <p class="description">
+                    <?= $escaper->escapeHtml(__('Cadastre-se agora e receba um cupom exclusivo de 10% de desconto para usar na sua primeira compra.')) ?>
+                </p>
+                
+                <form class="newsletter-form" 
+                      data-mage-init='{"validation":{}}' 
+                      action="<?= $escaper->escapeUrl($block->getUrl('newsletter/subscriber/new')) ?>" 
+                      method="post"
+                      id="newsletter-popup-form">
+                    
+                    <input type="hidden" name="form_key" value="<?= $escaper->escapeHtmlAttr($block->getFormKey()) ?>">
+                    
+                    <div class="field newsletter">
+                        <div class="control">
+                            <input name="email" 
+                                   type="email" 
+                                   id="newsletter-popup-email"
+                                   placeholder="<?= $escaper->escapeHtmlAttr(__('Digite seu e-mail')) ?>"
+                                   data-validate="{required:true, 'validate-email':true}"
+                                   inputmode="email"
+                                   autocomplete="email">
+                        </div>
+                    </div>
+                    
+                    <div class="actions">
+                        <button type="submit" 
+                                class="action subscribe primary"
+                                title="<?= $escaper->escapeHtmlAttr(__('Subscribe')) ?>">
+                            <span><?= $escaper->escapeHtml(__('GANHAR DESCONTO')) ?></span>
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="popup-footer">
+                    <p class="privacy-note">
+                        <i class="fa fa-lock"></i>
+                        <?= $escaper->escapeHtml(__('Seus dados estão seguros. Não enviamos spam.')) ?>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.newsletter-popup-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.newsletter-popup-modal.active {
+    display: block;
+}
+
+.newsletter-popup-modal .popup-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(3px);
+    cursor: pointer;
+}
+
+.newsletter-popup-modal .popup-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: slideUp 0.3s ease-out;
+}
+
+.newsletter-popup-modal .close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    color: #999;
+    cursor: pointer;
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s, transform 0.2s;
+}
+
+.newsletter-popup-modal .close-btn:hover {
+    color: #b73337;
+    transform: rotate(90deg);
+}
+
+.newsletter-popup-modal .popup-inner {
+    padding: 40px 30px 30px;
+}
+
+.newsletter-popup-modal .popup-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.newsletter-popup-modal .popup-header i.fa-envelope-open {
+    font-size: 48px;
+    color: #b73337;
+    margin-bottom: 15px;
+}
+
+.newsletter-popup-modal .popup-header h2 {
+    font-size: 32px;
+    font-weight: bold;
+    color: #b73337;
+    margin: 0 0 5px;
+    line-height: 1.2;
+}
+
+.newsletter-popup-modal .popup-header .subtitle {
+    font-size: 18px;
+    color: #666;
+    margin: 0;
+}
+
+.newsletter-popup-modal .popup-body .description {
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+.newsletter-popup-modal .newsletter-form .field {
+    margin-bottom: 15px;
+}
+
+.newsletter-popup-modal .newsletter-form input[type="email"] {
+    width: 100%;
+    padding: 15px 20px;
+    border: 2px solid #e5e5e5;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.newsletter-popup-modal .newsletter-form input[type="email"]:focus {
+    border-color: #b73337;
+    outline: none;
+}
+
+.newsletter-popup-modal .newsletter-form .action.subscribe {
+    width: 100%;
+    padding: 15px 20px;
+    background: #b73337;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.1s;
+}
+
+.newsletter-popup-modal .newsletter-form .action.subscribe:hover {
+    background: #9a2b2f;
+}
+
+.newsletter-popup-modal .newsletter-form .action.subscribe:active {
+    transform: scale(0.98);
+}
+
+.newsletter-popup-modal .popup-footer {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.newsletter-popup-modal .privacy-note {
+    font-size: 12px;
+    color: #999;
+    margin: 0;
+}
+
+.newsletter-popup-modal .privacy-note i {
+    margin-right: 5px;
+    color: #b73337;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -45%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .newsletter-popup-modal .popup-content {
+        width: 95%;
+        max-width: none;
+    }
+    
+    .newsletter-popup-modal .popup-inner {
+        padding: 30px 20px 20px;
+    }
+    
+    .newsletter-popup-modal .popup-header h2 {
+        font-size: 26px;
+    }
+    
+    .newsletter-popup-modal .popup-header .subtitle {
+        font-size: 16px;
+    }
+}
+</style>
+
+<script type="text/x-magento-init">
+{
+    "[data-role='newsletter-popup']": {
+        "newsletterPopup": {
+            "cookieName": "newsletter_popup_shown",
+            "cookieLifetime": 30,
+            "triggerDelay": 30000,
+            "exitIntentEnabled": true,
+            "exitIntentThreshold": 50
+        }
+    }
+}
+</script>

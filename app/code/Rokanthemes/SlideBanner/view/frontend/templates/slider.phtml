@@ -57,17 +57,15 @@ if($banners = $block->getBannerCollection()):
 				} ?>}
 		);
 		jQuery(".slider_<?php echo $sliderId; ?> .owl").owlCarousel(
-			{
-				lazyLoad:true,
-				<?php foreach($slider->getSliderSetting() as $key=>$value)
+			{<?php foreach($slider->getSliderSetting() as $key=>$value)
 				{
+					lazyLoad:true,
 					if(in_array($key, array('autoPlay', 'navigation', 'stopOnHover', 'pagination', 'scrollPerPage'))){
 						$value == 0 ? $value = 'false': '';
 						$value == 1 ? $value = 'true': '';
 					}
 					echo $key . ':' . $value . ',';
 				} ?>}
-		}
 		);
 	});
 </script>

@@ -158,7 +158,7 @@ define([
 			
 			var qWindow = document.createElement('div');
 			$(qWindow).attr('id', 'quick-window');
-			$(qWindow).html('<div id="quickview-header"><a href="javascript:void(0)" id="quickview-close">close</a></div><div class="quick-view-content" id="quickview-content"></div>');
+			$(qWindow).html('<div id="quickview-header"><button type="button" id="quickview-close" class="quickview-close">close</button></div><div class="quick-view-content" id="quickview-content"></div>');
 			$('body').append(qWindow);
 			$('#quickview-close').on('click', this.hideWindow.bind(this));
 		}

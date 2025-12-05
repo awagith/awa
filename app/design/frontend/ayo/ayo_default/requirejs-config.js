@@ -3,11 +3,14 @@ var config = {
         'js/lazy-product-images',
         'js/header-a11y',
         'js/brasil-masks',
-        'js/form-enhancements'
+        'js/form-enhancements',
+        'js/footer-custom',
+        'js/custom/microinteractions'
     ],
     paths: {
         'brasilMasks': 'js/brasil-masks',
-        'formEnhancements': 'js/form-enhancements'
+        'formEnhancements': 'js/form-enhancements',
+        'microinteractions': 'js/custom/microinteractions'
     },
     shim: {
         'js/brasil-masks': {
@@ -15,6 +18,9 @@ var config = {
         },
         'js/form-enhancements': {
             deps: ['jquery', 'mage/translate']
+        },
+        'js/custom/microinteractions': {
+            deps: ['jquery']
         }
     }
 };

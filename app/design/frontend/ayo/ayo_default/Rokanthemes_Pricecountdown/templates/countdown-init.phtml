@@ -1,0 +1,179 @@
+<?php
+/**
+ * Template de inicialização do Price Countdown
+ * Grupo Awamotos - Sistema de countdown para produtos em promoção
+ */
+?>
+<script type="text/javascript">
+require(['jquery', 'domReady!'], function($) {
+    
+    // Aguardar o DOM estar completamente carregado
+    $(document).ready(function() {
+        
+        // Verificar se existe algum produto com countdown ativo
+        var hasCountdownProducts = $('[data-countdown-date]').length > 0;
+        
+        if (hasCountdownProducts) {
+            console.log('🕒 Price Countdown: Produtos com promoção detectados');
+            
+            // Inicializar sistema de countdown
+            if (typeof PriceCountdown !== 'undefined') {
+                new PriceCountdown();
+                console.log('✅ Price Countdown: Sistema iniciado com sucesso');
+            } else {
+                // Fallback: carregar script se não estiver disponível
+                $.getScript('<?php echo $this->getViewFileUrl('rokanthemes/price-countdown.js'); ?>')
+                    .done(function() {
+                        new PriceCountdown();
+                        console.log('✅ Price Countdown: Script carregado e sistema iniciado');
+                    })
+                    .fail(function() {
+                        console.error('❌ Price Countdown: Falha ao carregar script');
+                    });
+            }
+        }
+        
+        // Integração com produtos que possuem special_price
+        $('.product-item').each(function() {
+            var $product = $(this);
+            var specialPrice = $product.find('.special-price');
+            var productId = $product.data('product-id');
+            
+            if (specialPrice.length && productId) {
+                // Verificar se produto tem data de expiração da promoção
+                checkProductCountdown(productId, $product);
+            }
+        });
+        
+        function checkProductCountdown(productId, $container) {
+            // AJAX para verificar dados do produto
+            $.ajax({
+                url: '<?php echo $this->getUrl('rest/V1/products'); ?>/' + productId,
+                type: 'GET',
+                dataType: 'json',
+                success: function(product) {
+                    if (product.custom_attributes) {
+                        var specialToDate = getCustomAttribute(product.custom_attributes, 'special_to_date');
+                        var showCountdown = getCustomAttribute(product.custom_attributes, 'show_price_countdown');
+                        
+                        if (specialToDate && showCountdown == '1') {
+                            addCountdownToProduct($container, specialToDate, productId);
+                        }
+                    }
+                },
+                error: function() {
+                    console.log('Price Countdown: Não foi possível verificar dados do produto ' + productId);
+                }
+            });
+        }
+        
+        function getCustomAttribute(attributes, code) {
+            for (var i = 0; i < attributes.length; i++) {
+                if (attributes[i].attribute_code === code) {
+                    return attributes[i].value;
+                }
+            }
+            return null;
+        }
+        
+        function addCountdownToProduct($container, endDate, productId) {
+            // Verificar se já não existe countdown
+            if ($container.find('.price-countdown-widget').length === 0) {
+                // Criar container para o countdown
+                var $countdownContainer = $('<div></div>')
+                    .attr('data-countdown-date', endDate)
+                    .attr('data-product-id', productId);
+                
+                // Inserir após o preço
+                var $priceContainer = $container.find('.product-price, .price');
+                if ($priceContainer.length) {
+                    $countdownContainer.insertAfter($priceContainer);
+                } else {
+                    $countdownContainer.appendTo($container);
+                }
+                
+                // Reinicializar countdown para este produto
+                if (typeof PriceCountdown !== 'undefined') {
+                    var countdown = new PriceCountdown();
+                    countdown.createCountdownHTML($countdownContainer[0], endDate, productId);
+                }
+            }
+        }
+    });
+    
+    // Observador de mudanças no DOM para produtos carregados via AJAX
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.addedNodes.length) {
+                $(mutation.addedNodes).find('.product-item').each(function() {
+                    var productId = $(this).data('product-id');
+                    if (productId) {
+                        checkProductCountdown(productId, $(this));
+                    }
+                });
+            }
+        });
+    });
+    
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true
+    });
+});
+</script>
+
+<?php
+// Adicionar estilos inline se necessário
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+$baseUrl = $storeManager->getStore()->getBaseUrl();
+?>
+
+<style>
+/* Estilos específicos para integração com tema AYO */
+.product-item .price-countdown-widget {
+    margin-top: 10px;
+    font-size: 12px;
+}
+
+.product-listing .price-countdown-widget {
+    max-width: 280px;
+    margin: 10px auto;
+}
+
+/* Ajustes para páginas de categoria */
+.products-grid .price-countdown-widget {
+    margin: 8px 0;
+}
+
+.products-list .price-countdown-widget {
+    margin: 15px 0;
+    max-width: none;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .price-countdown-widget {
+        font-size: 11px;
+    }
+    
+    .price-countdown-widget .time-number {
+        font-size: 14px !important;
+    }
+}
+</style>
+
+<!-- Debug info (remover em produção) -->
+<?php if ($this->getRequest()->getParam('debug_countdown')): ?>
+<div style="position: fixed; top: 10px; right: 10px; background: #fff; padding: 10px; border: 1px solid #ccc; z-index: 9999;">
+    <strong>Price Countdown Debug:</strong><br>
+    Timestamp: <?php echo date('Y-m-d H:i:s'); ?><br>
+    Products with countdown: <span id="countdown-debug-count">0</span><br>
+    <button onclick="location.reload()">Reload</button>
+</div>
+<script>
+$(document).ready(function() {
+    $('#countdown-debug-count').text($('[data-countdown-date]').length);
+});
+</script>
+<?php endif; ?>

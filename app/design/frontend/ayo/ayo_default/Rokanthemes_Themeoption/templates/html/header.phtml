@@ -1,10 +1,4 @@
 <div id="header" class="header-container" role="banner">
-	<a class="skip-link" href="#maincontent" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
-		<?php echo __('Pular para o conteúdo'); ?>
-	</a>
-	<a class="skip-link" href="#search" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">
-		<?php echo __('Pular para a busca'); ?>
-	</a>
 	<div class="header-content">
 		<div class="top-header">
 			<div class="container">
@@ -35,15 +29,13 @@
 					            <div class="col-md-2 col-sm-2 col-xs-12">
 									<?php echo $this->getChildHtml("logo"); ?>
 								</div>
-								<div class="col-md-10 col-sm-10 col-xs-12 top-search">
+					            <div class="col-md-10 col-sm-10 col-xs-12 top-search">
 						            <div class="mini-cart-wrapper shadowcart">
 							              <div class="mini-carts">
 							                <?php echo $this->getChildHtml("minicart");?>
 							              </div>
-									</div>
-										<div role="search" aria-label="<?php echo $block->escapeHtmlAttr(__('Busca no site')); ?>">
-											<?php echo $this->getChildHtml("topSearch");?>
-										</div>
+						             </div>
+					                <?php echo $this->getChildHtml("topSearch");?>
 					                <?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('hotline_header')->toHtml(); ?>
 					            </div>	
 					        </div>	
@@ -51,20 +43,20 @@
 			        </div>    
 		    	</div>
 		    </div>
-		    <div class="header-control header-nav cms_home_1">
+		    <div class="header-control header-nav cms_home_1" role="navigation">
 		    	<div class="container">
 		    		<div class="row">
-						<span data-action="toggle-nav" class="action nav-toggle" role="button" aria-label="<?php echo $block->escapeHtmlAttr(__('Abrir navegação')); ?>" aria-controls="site-navigation" tabindex="0"><span><?php /* @escapeNotVerified */ echo __('Toggle Nav') ?></span></span>
+						<span data-action="toggle-nav" class="action nav-toggle"><span><?php /* @escapeNotVerified */ echo __('Toggle Nav') ?></span></span>
 						<div class="col-lg-2 col-md-3 col-sm-2 col-xs-6 menu_left_home1">
 							<?php echo $this->getChildHtml("menu.vertical")?>
 							<?php echo $this->getChildHtml("navigation-sections")?>
 							<?php echo $this->getChildHtml("top.navigation.sections")?>
 						</div>
 						<div class="col-lg-7 col-md-7 col-sm-10 menu_primary hidden-xs">
-							<div class="header-wrapper-sticky<?php echo (!$this->helper('Rokanthemes\Themeoption\Helper\Themeconfig')->isEnableStickyHeader()) ? '' : ' enable-sticky'; ?>">
+							<div class="header-wrapper-sticky<?php echo (!$this->helper('Rokanthemes\Themeoption\Helper\Themeconfig')->isEnableStickyHeader()) ? '' : ' enabled-header-sticky'; ?>">
 								<div class="container-header-sticky">
-																		<div class="logo-sticky"><a href="<?php echo $block->getUrl('');?>" title="<?php echo __('Logo');?>"><img src="<?php echo ($this->helper('Rokanthemes\Themeoption\Helper\Themeconfig')->getStickyLogoHeader() != '') ? $this->helper('Rokanthemes\Themeoption\Helper\Themeconfig')->getStickyLogoHeader() : $this->getViewFileUrl("images/logo_sticky.png");?>" alt="<?php echo __('Logo');?>"/></a></div>
-																		<div class="top-menu top-menu-sticky" role="navigation" aria-label="<?php echo $block->escapeHtmlAttr(__('Navegação principal')); ?>">
+									<div class="logo-sticky"><a href="<?php echo $block->getUrl('');?>" title="<?php echo __('Logo');?>"><img src="<?php echo ($this->helper('Rokanthemes\Themeoption\Helper\Themeconfig')->getStickyLogoHeader() != '') ? $this->helper('Rokanthemes\Themeoption\Helper\Themeconfig')->getStickyLogoHeader() : $this->getViewFileUrl("images/logo_sticky.png");?>" alt="<?php echo __('Logo');?>"/></a></div>
+									<div class="top-menu top-menu-sticky">
 									  <?php echo $this->getChildHtml("custom.topnav"); ?>
 									</div>
 								</div>

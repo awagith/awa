@@ -1,0 +1,11 @@
+<?php
+/**
+ * @var \GrupoAwamotos\SchemaOrg\Block\Breadcrumbs $block
+ */
+$breadcrumbsSchema = $block->getBreadcrumbsSchema();
+?>
+<?php if ($breadcrumbsSchema): ?>
+<script type="application/ld+json">
+<?= /* @noEscape */ $breadcrumbsSchema ?>
+</script>
+<?php endif; ?>

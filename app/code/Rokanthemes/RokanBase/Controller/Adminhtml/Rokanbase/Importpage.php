@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * Copyright ï¿½ 2016 Magento. All rights reserved.
+ * Copyright © 2016 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
 namespace Rokanthemes\RokanBase\Controller\Adminhtml\Rokanbase;
@@ -19,22 +19,7 @@ class Importpage extends \Magento\Backend\App\Action
     /**
      * @var \Magento\PageCache\Model\Config
      */
-    protected $config;
-
-    /**
-     * @var \Rokanthemes\RokanBase\Helper\Data
-     */
     protected $_helperModule;
-
-    /**
-     * @var string
-     */
-    protected $_importPath;
-
-    /**
-     * @var \Magento\Framework\Xml\Parser
-     */
-    protected $_parser;
 
     /**
      * @param \Magento\Backend\App\Action\Context $context

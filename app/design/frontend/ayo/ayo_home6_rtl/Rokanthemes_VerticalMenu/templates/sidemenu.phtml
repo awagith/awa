@@ -12,74 +12,41 @@
  */
 ?>
 <?php
-    $_helper = $this->helper('Rokanthemes\VerticalMenu\Helper\Data');
-    $_config = $_helper->getConfig('verticalmenu');
-    $columnsLimit = 0;
-    if($_config['general']['enable']) {
+	$_helper = $this->helper('Rokanthemes\VerticalMenu\Helper\Data');
+	$_config = $_helper->getConfig('verticalmenu');
+	$columnsLimit = 0;
+	if($_config['general']['enable']) {
 ?>
-<?php $_menu = $block->getVerticalMenuHtml(); ?>
+<?php $_menu = $block->getVerticalMenuHtml();
+	$limitShow = (int)$block->getConfig('limit_show');
+	if ($limitShow <= 0) {
+		$limitShow = 11;
+	}
+?>
 
 <nav class="navigation verticalmenu side-verticalmenu">
 	<h2 class="title-category-dropdown"><span><?php echo __('Shop By Department'); ?></span></h2>
     <ul class="togge-menu list-category-dropdown" style="display:none;">
         <?php echo $_menu; ?>
         <li class="expand-category-link">
-        	<a href="javascript:void(0);"><?php echo __('All Categories') ?></a>
+        	<a href="#"><?php echo __('All Categories') ?></a>
         </li>
         		<?php echo $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('vertical_background_images')->toHtml();?>
 	</ul>
 
 </nav>
 
-<script type="text/javascript">
-    require([
-        'jquery',
-        'rokanthemes/verticalmenu'
-    ], function ($) {
-        $(".verticalmenu").VerticalMenu();
-		$('.cms-index-index .navigation.verticalmenu .togge-menu').show();
-		$('.title-category-dropdown').click(function(event){
-			$('.navigation.verticalmenu .togge-menu').slideToggle('slow');
-			$(this).toggleClass('active');
-		});
-		$(document).ready(function(){
-			var lenghtLi = $('body .navigation.verticalmenu .ui-menu-item.level0').length;
-			var limitItemShow = 11;
-			if(lenghtLi > limitItemShow)
-			{
-				$('.navigation.verticalmenu .ui-menu-item.level0').each(function( index ) {
-					if(index >= (limitItemShow - 1))
-					{
-						$(this).addClass('orther-link');
-						$(this).hide();
-					}
-				});
-				$('.navigation.verticalmenu .expand-category-link').show();
-				$('.navigation.verticalmenu .expand-category-link').on( "click", function() {
-					$(this).toggleClass('expanding');
-					$('.navigation.verticalmenu .ui-menu-item.level0.orther-link').slideToggle('slow');
-				});
-			}
-			else{
-				$('.navigation.verticalmenu .expand-category-link').hide();
-			}
-	      	responsiveMenu();
-	      	$(window).resize(responsiveMenu);
-	    });
-	    function responsiveMenu()
-	    {
-	    	$(".verticalmenu").VerticalMenu();
-			
-	      if ($(window).width() <= 1399)
-	      {
-	        $('.cms-index-index .navigation.verticalmenu .togge-menu').hide();
-	      }
-	      else if ($(window).width() >= 1399)
-	      {
-	        $('.cms-index-index .navigation.verticalmenu .togge-menu').show();
-	      }
-	    }
-    });
+<script type="text/x-magento-init">
+{
+	".navigation.verticalmenu": {
+		"Rokanthemes_VerticalMenu/js/sidemenu": {
+			"limitItemShow": <?php echo $limitShow; ?>,
+			"autoShowHome": true,
+			"responsiveBreakpoint": 1399,
+			"toggleBodyClass": false
+		}
+	}
+}
 </script>
 <?php
     }

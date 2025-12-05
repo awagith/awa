@@ -6,44 +6,25 @@
 
 // @codingStandardsIgnoreFile
 
-$uniquePrefix = uniqid('home-newsletter-');
-$formId = $uniquePrefix . '-form';
-$emailId = $uniquePrefix . '-email';
-$submitId = $uniquePrefix . '-submit';
 ?>
 <div class="newsletter-footer">
-  <div class="newsletter-footer__header">
-    <label for="<?php echo $block->escapeHtmlAttr($emailId); ?>">
-      <?php echo $block->escapeHtml(__('newsletter')); ?>
-    </label>
-  </div>
-  <form
-    class="form- subscribe-"
-    id="<?php echo $block->escapeHtmlAttr($formId); ?>"
+  	<label><?php /* @escapeNotVerified */ echo __('Newsletter') ?></label>
+    <form class="form- subscribe-"
     novalidate
-    action="<?php echo $block->escapeUrl($block->getFormActionUrl()); ?>"
+    action="<?php /* @escapeNotVerified */ echo $block->getFormActionUrl() ?>"
     method="post"
     data-mage-init='{"validation": {"errorClass": "mage-error"}}'
-  >
+    id="newsletter-validate-detail">
     <div class="field newsletter">
       <div class="control">
-        <input
-          name="email"
-          type="email"
-          id="<?php echo $block->escapeHtmlAttr($emailId); ?>"
-          placeholder="<?php echo $block->escapeHtml(__('Your email address...')); ?>"
-          data-validate="{required:true, 'validate-email':true}"
-          aria-describedby="<?php echo $block->escapeHtmlAttr($submitId); ?>"
-        />
+        <input name="email" type="email" id="newsletter"
+        placeholder="<?php /* @escapeNotVerified */ echo __('Seu endereço de e-mail...') ?>"
+        data-validate="{required:true, 'validate-email':true}"/>
+
       </div>
       <div class="actions">
-        <button
-          class="action subscribe primary"
-          id="<?php echo $block->escapeHtmlAttr($submitId); ?>"
-          title="<?php echo $block->escapeHtml(__('Subscribe !')); ?>"
-          type="submit"
-        >
-          <?php echo $block->escapeHtml(__('Subscribe !')); ?>
+        <button class="action subscribe primary" title="<?php /* @escapeNotVerified */ echo __('Inscrever-se') ?>" type="submit">
+          <?php echo __('Inscrever-se'); ?>
         </button>
       </div>
     </div>

@@ -104,24 +104,16 @@ class Featured extends \Magento\Catalog\Block\Product\AbstractProduct {
     }
 	public function getProducts()
     {
-	    $storeId    = $this->storeManager->getStore()->getId();
+    	$storeId    = $this->storeManager->getStore()->getId();
 		$products = $this->productCollectionFactory->create()->setStoreId($storeId);
 		$products
 			->addAttributeToSelect($this->catalogConfig->getProductAttributes())
+			->addAttributeToFilter('featured', 1)
             ->addMinimalPrice()
             ->addFinalPrice()
             ->addTaxPercents()
             ->addUrlRewrite()
             ->setVisibility($this->productVisibility->getVisibleInCatalogIds());
-
-		$featuredAttribute = $products->getResource()->getAttribute('featured');
-		if ($featuredAttribute && $featuredAttribute->getAttributeId()) {
-			$products->addAttributeToFilter('featured', 1);
-		} else {
-			// Attribute missing, return empty collection without triggering SQL errors.
-			$products->addAttributeToFilter('entity_id', ['in' => [0]]);
-		}
-
         $products->setPageSize($this->getConfig('qty'))->setCurPage(1);
 		$this->_eventManager->dispatch(
             'catalog_block_product_list_collection',

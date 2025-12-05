@@ -58,7 +58,7 @@ echo ""
 
 test_feature "Megamenu" "custom.*menu\|megamenu"
 test_feature "Vertical Menu" "vertical.*menu\|sidebar.*menu"
-test_feature "Breadcrumbs Schema.org" "BreadcrumbList"
+test_feature "Breadcrumbs Schema.org" '@type.*BreadcrumbList' "${SITE_URL}/guidao-bros-nxr-125-150-mod-03-08-cinza.html"
 test_feature "Filtros Ajax" "layered.*ajax\|filter.*ajax"
 test_feature "Busca Autocomplete" "search.*autocomplete\|suggest"
 
@@ -82,7 +82,7 @@ echo ""
 
 test_feature "Schema.org Organization" '@type.*Organization'
 test_feature "Schema.org LocalBusiness" '@type.*LocalBusiness'
-test_feature "Product Schema" '@type.*Product' "${SITE_URL}/catalog/product"
+test_feature "Product Schema" '@type.*Product' "${SITE_URL}/guidao-bros-nxr-125-150-mod-03-08-cinza.html"
 test_feature "Blog Ativo" "blog\|article"
 test_feature "Sitemap XML" '<urlset' "${SITE_URL}/sitemap.xml"
 test_feature "Robots.txt" "Sitemap:" "${SITE_URL}/robots.txt"

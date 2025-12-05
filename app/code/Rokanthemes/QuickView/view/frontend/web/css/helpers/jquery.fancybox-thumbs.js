@@ -54,11 +54,18 @@
 			list = '';
 
 			for (var n = 0; n < obj.group.length; n++) {
-				list += '<li><a style="width:' + thumbWidth + 'px;height:' + thumbHeight + 'px;" href="javascript:jQuery.fancybox.jumpto(' + n + ');"></a></li>';
+				list += '<li><a style="width:' + thumbWidth + 'px;height:' + thumbHeight + 'px;" href="#" data-fancybox-thumb-index="' + n + '"></a></li>';
 			}
 
 			this.wrap = $('<div id="fancybox-thumbs"></div>').addClass(opts.position).appendTo('body');
 			this.list = $('<ul>' + list + '</ul>').appendTo(this.wrap);
+			this.list.on('click', 'a', function(event) {
+				event.preventDefault();
+				var targetIndex = parseInt($(this).attr('data-fancybox-thumb-index'), 10);
+				if (!isNaN(targetIndex)) {
+					F.jumpto(targetIndex);
+				}
+			});
 
 			//Load each thumbnail
 			$.each(obj.group, function (i) {

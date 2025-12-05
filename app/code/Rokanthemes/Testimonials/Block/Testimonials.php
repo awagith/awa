@@ -35,7 +35,13 @@ class Testimonials extends \Magento\Framework\View\Element\Template implements \
             ->addActiveFilter()
             ->addStoreFilter($this->storeManager->getStore()->getId())
             ->setOrder('position', 'DESC');
-		$brand->setPageSize($this->getConfigSlider('qty'))->setCurPage(1);
+		
+		// Usar qty do getConfigSlider ou do parâmetro do widget ou padrão 20
+		$qty = $this->getConfigSlider('qty');
+		if (!$qty) {
+			$qty = $this->getData('qty') ?: 20;
+		}
+		$brand->setPageSize($qty)->setCurPage(1);
 		return $brand;
     }
 	public function getLinkAllAction()

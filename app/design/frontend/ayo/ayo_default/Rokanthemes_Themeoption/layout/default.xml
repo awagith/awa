@@ -1,12 +1,14 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
-
+    
 	<head>
+		<!-- Scripts de diagnóstico e otimização -->
+		<script src="media/rokanthemes/js-diagnostic.js" src_type="url" defer="defer"/>
 	</head>
 
     <body>
-		<referenceContainer name="header.container">
-            <block class="Rokanthemes\Themeoption\Block\Themeoption" name="toki_header_custom" template="html/header.phtml" before="-">
+		<referenceContainer name="page.wrapper">
+            <block class="Rokanthemes\Themeoption\Block\Themeoption" name="toki_header" template="html/header.phtml" before="-">
 				<block class="Magento\Cms\Block\Block" name="top-contact">
 					<arguments>
 						<argument name="block_id" xsi:type="string">top-contact</argument>
@@ -17,7 +19,6 @@
 						<argument name="block_id" xsi:type="string">top-left-static</argument>
 					</arguments>
 				</block>
-                <block class="Magento\Framework\View\Element\Template" name="top.search" as="topSearch" template="Magento_Search::form.mini.phtml" />
 				<block class="Magento\Framework\View\Element\Template" name="top.navigation.sections" template="Magento_Theme::html/sections.phtml">
 					<arguments>
 						<argument name="group_name" xsi:type="string">navigation-sections</argument>
@@ -25,21 +26,17 @@
 					</arguments>
 					<block class="Rokanthemes\VerticalMenu\Block\Verticalmenu" name="menu.vertical" template="Rokanthemes_VerticalMenu::sidemenu.phtml" group="navigation-sections" ttl="3600" before="-"/>
 				</block>
-                <!-- Garante que o template de cabeçalho encontre o menu principal via getChildHtml('custom.topnav') -->
-                <block class="Magento\Theme\Block\Html\Topmenu" name="custom.topnav" as="custom.topnav" template="Magento_Theme::html/topmenu.phtml" ttl="3600" before="-"/>
             </block>
-		</referenceContainer>
-		<!-- Ensure custom header renders within visible top container -->
-		<move element="store_language" destination="toki_header_custom"/>
-		<move element="currency" destination="toki_header_custom"/>
-		<move element="header" destination="toki_header_custom"/>
-		<move element="header.links" destination="toki_header_custom" />
-		<move element="logo" destination="toki_header_custom"/>
-		<move element="minicart" destination="toki_header_custom"/>
-		<move element="top.search" destination="toki_header_custom" />
-		<move element="top.links" destination="toki_header_custom" />
-		<move element="slideshow.top" destination="toki_header_custom" />
-		<move element="custom.topnav" destination="toki_header_custom" />
+        </referenceContainer>
+		<move element="store_language" destination="toki_header"/>
+		<move element="currency" destination="toki_header"/>
+		<move element="header" destination="toki_header"/>
+		<move element="header.links" destination="toki_header" />
+		<move element="logo" destination="toki_header"/>
+		<move element="minicart" destination="toki_header"/>
+		<move element="top.links" destination="toki_header" />
+		<move element="slideshow.top" destination="toki_header" />
+		<move element="custom.topnav" destination="toki_header" />
 		<referenceBlock name="my-account-link">
 			<action method="setTemplate">
 				<argument name="template" xsi:type="string">Rokanthemes_Themeoption::customer/account/link.phtml</argument>
@@ -58,10 +55,9 @@
 				<argument name="template" xsi:type="string">Rokanthemes_Themeoption::html/header/logo.phtml</argument>
 			</action>
 		</referenceBlock>
-		<!-- Evita remover contêineres padrão do cabeçalho para manter estrutura completa -->
-		<!-- <referenceContainer name="header.container" remove="true"/> -->
-        <!-- <referenceContainer name="header.panel" remove="true"/> -->
-        <!-- <referenceContainer name="header-wrapper" remove="true"/> -->
+		<referenceContainer name="header.container" remove="true"/>
+        <referenceContainer name="header.panel" remove="true"/>
+        <referenceContainer name="header-wrapper" remove="true"/>
 		<referenceContainer name="navigation.sections" remove="true"/>
 		<referenceContainer name="footer-container">
             <block class="Rokanthemes\Themeoption\Block\Themeoption" name="toki_footer" template="html/footer.phtml">

@@ -19,7 +19,6 @@ define([
     return Component.extend({
         defaults: {
             cookieMessages: [],
-            cookieMessagesObservable: [],
             messages: [],
             allowedTags: ['div', 'span', 'b', 'strong', 'i', 'em', 'u', 'a']
         },
@@ -28,12 +27,9 @@ define([
          * Extends Component object by storage observable messages.
          */
         initialize: function () {
-            this._super().observe([
-                'cookieMessagesObservable'
-            ]);
+            this._super();
 
             this.cookieMessages = _.unique($.cookieStorage.get('mage-messages'), 'text');
-            this.cookieMessagesObservable(this.cookieMessages);
             this.messages = customerData.get('messages').extend({
                 disposableCustomerData: 'messages'
             });

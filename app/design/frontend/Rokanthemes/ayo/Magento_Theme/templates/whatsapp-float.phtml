@@ -1,0 +1,156 @@
+<?php
+/**
+ * WhatsApp Float Button Template
+ * 
+ * Botão flutuante para contato via WhatsApp
+ * Configurável via admin em: Stores > Configuration > GrupoAwamotos > WhatsApp
+ */
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$scopeConfig = $objectManager->get(\Magento\Framework\App\Config\ScopeConfigInterface::class);
+
+// Buscar configurações (fallback para valores padrão)
+$enabled = $scopeConfig->getValue('grupoawamotos_whatsapp/general/enable', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? '1';
+$phone = $scopeConfig->getValue('grupoawamotos_whatsapp/general/phone', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? '5511999999999';
+$message = $scopeConfig->getValue('grupoawamotos_whatsapp/general/message', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? 'Olá, vim do site!';
+$buttonText = $scopeConfig->getValue('grupoawamotos_whatsapp/general/button_text', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) ?? 'Dúvidas?';
+
+if ($enabled !== '1') {
+    return;
+}
+
+$whatsappUrl = 'https://wa.me/' . preg_replace('/[^0-9]/', '', $phone) . '?text=' . urlencode($message);
+?>
+
+<a href="<?= $block->escapeUrl($whatsappUrl) ?>" 
+   class="whatsapp-float" 
+   target="_blank"
+   rel="noopener noreferrer"
+   title="<?= $block->escapeHtml(__('Fale conosco no WhatsApp')) ?>"
+   aria-label="<?= $block->escapeHtml(__('Abrir conversa no WhatsApp')) ?>">
+    <i class="fa fa-whatsapp" aria-hidden="true"></i>
+    <span class="whatsapp-float__text"><?= $block->escapeHtml(__($buttonText)) ?></span>
+</a>
+
+<style>
+.whatsapp-float {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    text-decoration: none;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.whatsapp-float i {
+    font-size: 32px;
+    color: #ffffff;
+    transition: transform 0.3s ease;
+}
+
+.whatsapp-float__text {
+    position: absolute;
+    right: 70px;
+    white-space: nowrap;
+    background: #25d366;
+    color: #ffffff;
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+}
+
+.whatsapp-float:hover {
+    width: 60px;
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+}
+
+.whatsapp-float:hover i {
+    transform: scale(1.1) rotate(10deg);
+}
+
+.whatsapp-float:hover .whatsapp-float__text {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.whatsapp-float:active {
+    transform: scale(1.05);
+}
+
+/* Animação de pulso */
+@keyframes whatsapp-pulse {
+    0%, 100% {
+        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+    }
+    50% {
+        box-shadow: 0 4px 20px rgba(37, 211, 102, 0.8), 0 0 0 10px rgba(37, 211, 102, 0.2);
+    }
+}
+
+.whatsapp-float {
+    animation: whatsapp-pulse 2s infinite;
+}
+
+.whatsapp-float:hover {
+    animation: none;
+}
+
+/* Mobile responsivo */
+@media (max-width: 768px) {
+    .whatsapp-float {
+        width: 56px;
+        height: 56px;
+        bottom: 15px;
+        right: 15px;
+    }
+    
+    .whatsapp-float i {
+        font-size: 28px;
+    }
+    
+    .whatsapp-float__text {
+        display: none; /* Ocultar texto em mobile */
+    }
+    
+    .whatsapp-float:hover {
+        width: 56px;
+    }
+}
+
+/* Evitar conflito com outros elementos fixos */
+@media (max-width: 480px) {
+    .whatsapp-float {
+        bottom: 80px; /* Evitar sobrepor bottom navigation se existir */
+    }
+}
+
+/* Acessibilidade: melhorar foco para teclado */
+.whatsapp-float:focus {
+    outline: 3px solid #25d366;
+    outline-offset: 4px;
+}
+
+/* Dark mode support (se o tema suportar) */
+@media (prefers-color-scheme: dark) {
+    .whatsapp-float {
+        box-shadow: 0 4px 12px rgba(37, 211, 102, 0.6);
+    }
+}
+</style>

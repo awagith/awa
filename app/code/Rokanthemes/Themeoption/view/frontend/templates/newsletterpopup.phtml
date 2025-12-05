@@ -10,7 +10,7 @@
 	}
 ?>
 <div id="newsletter_pop_up" class="newsletterpopup">
-	<a href="javascript: void(0);" class="btn-close newletter_popup_close"><span></span></a>
+	<a href="#" class="btn-close newletter_popup_close"><span></span></a>
 	<div class="row">
 		<div class="content-popup">
 			<div class="content">
@@ -28,22 +28,22 @@
 				<div class="field newsletter">
 					<div class="control">
 						<input name="email" type="email" id="newsletter-popup"
-									placeholder="<?php /* @escapeNotVerified */ echo __('Enter Your Email Address Here...') ?>"
+									placeholder="<?php /* @escapeNotVerified */ echo __('Digite seu e-mail aqui...') ?>"
 									data-validate="{required:true, 'validate-email':true}"/>
 					</div>
 				</div>
 				<div class="actions">
-					<button class="action subscribe primary" title="<?php /* @escapeNotVerified */ echo __('Subscribe') ?>" type="submit">
-						<span><?php echo __('Subscribe & Get our promotion now !'); ?></span>
+					<button class="action subscribe primary" title="<?php /* @escapeNotVerified */ echo __('Inscrever-se') ?>" type="submit">
+						<span><?php echo __('Inscreva-se e aproveite nossa promoção!'); ?></span>
 					</button>
 				</div>
 				<div class="discription">
-					<h4><a href="#"><?php  echo __('No Thank ! I am not interested in this promotion') ?></a> </h4>
-					<div class="newsletterDescription"><?php  echo __('Entering your email also subscribe you to the latest Netro shop news and offers.') ?></div>
+					<h4><a href="#"><?php  echo __('Não, obrigado! Não tenho interesse') ?></a> </h4>
+					<div class="newsletterDescription"><?php  echo __('Ao inserir seu e-mail, você também se inscreve para receber novidades e ofertas.') ?></div>
 				</div>
 				<div class="subscribe-bottom">
 					<input type="checkbox" id="newsletter_popup_dont_show_again">
-					<label for="newsletter_popup_dont_show_again"><?php echo __("Do not shop this popup again")?></label>
+					<label for="newsletter_popup_dont_show_again"><?php echo __("Não mostrar este popup novamente")?></label>
 				</div>
 			</form>	
 		</div>

@@ -1,0 +1,106 @@
+<?php
+/**
+ * VLibras Widget - Acessibilidade em Libras
+ * 
+ * Widget oficial do governo brasileiro para tradução de conteúdo
+ * em português para Língua Brasileira de Sinais (Libras)
+ * 
+ * @see https://vlibras.gov.br
+ * @license LGPLv3
+ * 
+ * Implementação otimizada com:
+ * - Lazy loading (carrega após interação do usuário)
+ * - Posicionamento ajustado para não conflitar com outros elementos
+ * - Fallback para navegadores sem suporte
+ */
+?>
+<!-- VLibras - Acessibilidade em Libras (Governo Federal) -->
+<style>
+    /* Ajustes de posicionamento do VLibras */
+    [vw].enabled {
+        z-index: 9999 !important;
+    }
+    [vw].enabled .active {
+        z-index: 9999 !important;
+    }
+    /* Posiciona acima de outros widgets flutuantes */
+    div[vw-access-button] {
+        bottom: 80px !important;
+        right: 10px !important;
+    }
+    /* Mobile: ajuste para não sobrepor navegação */
+    @media (max-width: 768px) {
+        div[vw-access-button] {
+            bottom: 100px !important;
+            right: 5px !important;
+        }
+    }
+    /* Animação suave de entrada */
+    [vw].enabled {
+        animation: vlibras-fade-in 0.5s ease-out;
+    }
+    @keyframes vlibras-fade-in {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div vw class="enabled">
+    <div vw-access-button class="active" title="Acessibilidade em Libras"></div>
+    <div vw-plugin-wrapper>
+        <div class="vw-plugin-top-wrapper"></div>
+    </div>
+</div>
+
+<script nonce="<?= $block->getCspNonce(); ?>">
+(function() {
+    'use strict';
+    
+    // Lazy loading do VLibras - carrega após a página estar pronta
+    function loadVLibras() {
+        if (window.VLibras) return; // Já carregado
+        
+        var script = document.createElement('script');
+        script.src = 'https://vlibras.gov.br/app/vlibras-plugin.js';
+        script.async = true;
+        script.onload = function() {
+            if (window.VLibras && window.VLibras.Widget) {
+                new window.VLibras.Widget('https://vlibras.gov.br/app');
+                console.log('[VLibras] Widget de acessibilidade em Libras carregado.');
+            }
+        };
+        script.onerror = function() {
+            console.warn('[VLibras] Não foi possível carregar o widget. Verifique sua conexão.');
+        };
+        document.head.appendChild(script);
+    }
+    
+    // Carrega após DOMContentLoaded ou interação do usuário (o que vier primeiro)
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            // Aguarda 2 segundos após o DOM para não impactar o carregamento inicial
+            setTimeout(loadVLibras, 2000);
+        });
+    } else {
+        // Página já carregada, aguarda um pouco
+        setTimeout(loadVLibras, 1000);
+    }
+    
+    // Também carrega se houver interação antes do timeout
+    var interactionEvents = ['scroll', 'mousemove', 'touchstart', 'keydown'];
+    var loaded = false;
+    
+    function onInteraction() {
+        if (loaded) return;
+        loaded = true;
+        loadVLibras();
+        interactionEvents.forEach(function(event) {
+            window.removeEventListener(event, onInteraction);
+        });
+    }
+    
+    interactionEvents.forEach(function(event) {
+        window.addEventListener(event, onInteraction, { once: true, passive: true });
+    });
+})();
+</script>

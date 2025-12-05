@@ -29,7 +29,7 @@ $storeId = (int)$store->getId();
 /** @var ScopeConfigInterface $scopeConfig */
 $scopeConfig = $objectManager->get(ScopeConfigInterface::class);
 
-$defaultRecipient = getenv('MAGENTO_TEST_EMAIL') ?: 'grupoawamotos@gmail.com';
+$defaultRecipient = getenv('MAGENTO_TEST_EMAIL') ?: 'j@jessestain.com.br';
 $recipient = $argv[1] ?? $defaultRecipient;
 
 $senderName = $scopeConfig->getValue('trans_email/ident_general/name', ScopeInterface::SCOPE_STORE, $storeId);

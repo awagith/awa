@@ -1,0 +1,12 @@
+<?php
+/**
+ * Product Schema.org Template
+ * @var \GrupoAwamotos\SchemaOrg\Block\ProductSchema $block
+ */
+$schemaJson = $block->getSchemaJson();
+?>
+<?php if ($schemaJson): ?>
+<script type="application/ld+json">
+<?= /* @noEscape */ $schemaJson ?>
+</script>
+<?php endif; ?>

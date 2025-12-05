@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Layout para adicionar Schema.org e Open Graph em todas as páginas
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <!-- Open Graph Meta Tags -->
+        <block class="Magento\Framework\View\Element\Template"
+               name="grupoawamotos.opengraph"
+               template="GrupoAwamotos_SchemaOrg::opengraph.phtml"
+               cacheable="false"/>
+    </head>
+    <body>
+        <referenceContainer name="after.body.start">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="grupoawamotos.schema.organization"
+                   template="GrupoAwamotos_SchemaOrg::organization.phtml"
+                   cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>

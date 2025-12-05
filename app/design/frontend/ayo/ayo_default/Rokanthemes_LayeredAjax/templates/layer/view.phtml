@@ -17,7 +17,7 @@
                     <?php  $wrapOptions = true; endif; ?>
                     <div class="filter-options-item">
                         <div class="filter-options-title"><?php /* @escapeNotVerified */ echo __($filter->getName()) ?></div>
-                        <div class="filter-options-content" style="display: block;"><?php /* @escapeNotVerified */ echo $block->getChildBlock('renderer')->render($filter); ?></div>
+						<div class="filter-options-content filter-expanded"><?php /* @escapeNotVerified */ echo $block->getChildBlock('renderer')->render($filter); ?></div>
                     </div>
                     <?php
 						if($this->helper('Rokanthemes\LayeredAjax\Helper\Data')->isOpenAllTab()){
