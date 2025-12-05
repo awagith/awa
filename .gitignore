@@ -47,3 +47,8 @@ node_modules/
 *.sql
 *.gz
 *.zip
+
+# Diretórios temporários
+pub/media/import/
+qwen-code/
+opensearch/
