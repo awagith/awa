@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Social Proof Badges na página de produto -->
+        <referenceContainer name="product.info.main">
+            <block class="Magento\Catalog\Block\Product\View" 
+                   name="product.info.social.proof" 
+                   template="GrupoAwamotos_SocialProof::product/social-proof.phtml"
+                   after="product.info.price"/>
+        </referenceContainer>
+    </body>
+</page>

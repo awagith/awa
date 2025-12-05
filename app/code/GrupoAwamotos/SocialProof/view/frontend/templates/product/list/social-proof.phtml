@@ -1,0 +1,99 @@
+<?php
+/**
+ * Social Proof Badges - Listagem de Produtos
+ * Versão compacta para grid/list de produtos
+ * 
+ * @var \Magento\Catalog\Block\Product\AbstractProduct $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+
+$_product = $block->getProduct();
+$viewsToday = (int)$_product->getData('views_today');
+$isBestSeller = (bool)$_product->getData('is_best_seller');
+
+// Verificar estoque
+$stockItem = $_product->getExtensionAttributes()->getStockItem();
+$qty = $stockItem ? (int)$stockItem->getQty() : 0;
+$isLowStock = ($qty > 0 && $qty < 10);
+
+// Mostrar apenas se tiver algum badge
+if (!$viewsToday && !$isLowStock && !$isBestSeller) {
+    return;
+}
+?>
+
+<div class="social-proof-list">
+    
+    <?php if ($isBestSeller): ?>
+    <span class="badge badge-bestseller">
+        <i class="fa fa-star"></i> <?= $escaper->escapeHtml(__('Mais Vendido')) ?>
+    </span>
+    <?php endif; ?>
+    
+    <?php if ($isLowStock): ?>
+    <span class="badge badge-low-stock">
+        <i class="fa fa-fire"></i> <?= $escaper->escapeHtml(__('Últimas %1!', $qty)) ?>
+    </span>
+    <?php endif; ?>
+    
+    <?php if ($viewsToday > 20): ?>
+    <span class="badge badge-popular">
+        <i class="fa fa-eye"></i> <?= $escaper->escapeHtml(__('%1 visualizações', $viewsToday)) ?>
+    </span>
+    <?php endif; ?>
+    
+</div>
+
+<style>
+.social-proof-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 10px 0;
+}
+
+.social-proof-list .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+.badge-bestseller {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    color: #000;
+    box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
+}
+
+.badge-low-stock {
+    background: linear-gradient(135deg, #ff4444 0%, #ff6666 100%);
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(255, 68, 68, 0.3);
+    animation: pulse-badge 2s infinite;
+}
+
+.badge-popular {
+    background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
+}
+
+@keyframes pulse-badge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .social-proof-list .badge {
+        font-size: 10px;
+        padding: 3px 8px;
+    }
+}
+</style>
