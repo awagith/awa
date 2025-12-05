@@ -3094,6 +3094,526 @@ p, li, td, th {
 	border-radius: 4px;
 }
 
+// ==========================================================================
+// TRANSIÇÕES GLOBAIS - MICROINTERAÇÕES UI
+// ==========================================================================
+// Implementado em: 05/12/2025
+// Sistema completo de transições para uma UX fluida
+
+// ========== TRANSIÇÕES PARA LINKS ==========
+
+a {
+	transition: color 0.2s @ease-standard;
+}
+
+.page-header a,
+.nav-toggle,
+.navigation a {
+	transition: color 0.25s @ease-standard, background-color 0.25s @ease-standard;
+}
+
+.page-footer a {
+	transition: color 0.2s @ease-standard, opacity 0.2s @ease-standard;
+	
+	&:hover {
+		opacity: 0.85;
+	}
+}
+
+// ========== TRANSIÇÕES PARA BOTÕES ==========
+
+.action,
+button,
+.btn,
+[type="submit"],
+[type="button"] {
+	transition: background-color 0.25s @ease-standard, 
+				color 0.25s @ease-standard, 
+				border-color 0.25s @ease-standard,
+				box-shadow 0.25s @ease-standard,
+				transform 0.15s @ease-accelerate;
+}
+
+.action.primary,
+.action.tocart {
+	transition: background-color 0.3s @ease-standard, 
+				color 0.3s @ease-standard,
+				transform 0.2s @ease-bounce,
+				box-shadow 0.3s @ease-decelerate;
+}
+
+.action.secondary {
+	transition: background-color 0.2s @ease-standard, 
+				border-color 0.2s @ease-standard,
+				color 0.2s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA FORMULÁRIOS ==========
+
+input,
+textarea,
+select,
+.input-text {
+	transition: border-color 0.2s @ease-standard, 
+				box-shadow 0.2s @ease-standard,
+				background-color 0.2s @ease-standard;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+.input-text:focus {
+	transition: border-color 0.15s @ease-accelerate, 
+				box-shadow 0.2s @ease-decelerate;
+}
+
+.field .label {
+	transition: color 0.2s @ease-standard, transform 0.2s @ease-standard;
+}
+
+.field-error {
+	transition: opacity 0.3s @ease-standard, transform 0.3s @ease-bounce;
+}
+
+// ========== TRANSIÇÕES PARA CARDS DE PRODUTO ==========
+
+.product-item,
+.product-item-info {
+	transition: transform 0.3s @ease-decelerate, box-shadow 0.3s @ease-decelerate;
+}
+
+.product-item-photo {
+	transition: transform 0.4s @ease-decelerate;
+}
+
+.product-image-photo {
+	transition: transform 0.5s @ease-decelerate, opacity 0.3s @ease-standard;
+}
+
+.product-item-name a {
+	transition: color 0.2s @ease-standard;
+}
+
+.product-item .price {
+	transition: color 0.2s @ease-standard, transform 0.2s @ease-bounce;
+}
+
+.product-item .old-price {
+	transition: opacity 0.2s @ease-standard;
+}
+
+.product-item .special-price {
+	transition: transform 0.3s @ease-bounce;
+}
+
+// ========== LAZY LOADING STYLES ==========
+
+// Estado inicial de imagens com lazy loading
+img.lazy,
+img[data-src],
+img.loading {
+	opacity: 0;
+	transition: opacity 0.4s @ease-decelerate;
+	background: @gray-light;
+}
+
+// Imagem carregada
+img.lazy-loaded,
+img.loaded {
+	opacity: 1;
+	background: transparent;
+}
+
+// Animação de shimmer durante carregamento
+img.loading {
+	position: relative;
+	overflow: hidden;
+	
+	&::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -100%;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(
+			90deg,
+			transparent 0%,
+			rgba(255, 255, 255, 0.4) 50%,
+			transparent 100%
+		);
+		animation: shimmer 1.5s infinite;
+	}
+}
+
+// Erro no carregamento
+img.lazy-error {
+	opacity: 0.5;
+	background: @gray-light url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2371737a"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>') center center no-repeat;
+	background-size: 40px 40px;
+}
+
+// Placeholder de produto
+.product-image-placeholder {
+	background: @gray-light;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 200px;
+	
+	&::after {
+		content: '';
+		width: 48px;
+		height: 48px;
+		border: 3px solid @gray-medium;
+		border-top-color: @primary-red;
+		border-radius: 50%;
+		animation: spin 1s linear infinite;
+	}
+}
+
+// Background lazy loading
+[data-bg] {
+	background-color: @gray-light;
+	transition: background-image 0.4s @ease-decelerate;
+}
+
+[data-bg].bg-loaded {
+	background-color: transparent;
+}
+
+// Iframe lazy loading
+iframe[data-src] {
+	opacity: 0;
+	transition: opacity 0.4s @ease-decelerate;
+}
+
+iframe.iframe-loaded {
+	opacity: 1;
+}
+
+// ========== TRANSIÇÕES PARA AÇÕES DO PRODUTO ==========
+
+.product-item-actions {
+	transition: opacity 0.3s @ease-standard, transform 0.3s @ease-decelerate;
+}
+
+.towishlist,
+.tocompare,
+.quickview-link {
+	transition: background-color 0.2s @ease-standard, 
+				color 0.2s @ease-standard,
+				transform 0.15s @ease-accelerate,
+				opacity 0.2s @ease-standard;
+}
+
+.product-reviews-summary {
+	transition: opacity 0.2s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA NAVEGAÇÃO ==========
+
+.navigation {
+	transition: background-color 0.3s @ease-standard;
+}
+
+.navigation li {
+	transition: background-color 0.2s @ease-standard;
+}
+
+.navigation .level0 > .level-top {
+	transition: color 0.2s @ease-standard, 
+				background-color 0.2s @ease-standard,
+				padding 0.2s @ease-standard;
+}
+
+.navigation .submenu {
+	transition: opacity 0.3s @ease-decelerate, 
+				visibility 0.3s @ease-standard,
+				transform 0.3s @ease-decelerate;
+}
+
+.navigation .level0 .submenu {
+	transition: opacity 0.25s @ease-standard 0.1s, 
+				transform 0.3s @ease-decelerate;
+}
+
+// ========== TRANSIÇÕES PARA MINICART ==========
+
+.minicart-wrapper {
+	transition: background-color 0.2s @ease-standard;
+}
+
+.minicart-items .product-item {
+	transition: background-color 0.2s @ease-standard, transform 0.2s @ease-standard;
+}
+
+.counter.qty {
+	transition: transform 0.3s @ease-bounce, background-color 0.2s @ease-standard;
+}
+
+.block-minicart {
+	transition: opacity 0.3s @ease-decelerate, 
+				transform 0.3s @ease-decelerate,
+				visibility 0.3s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA SIDEBAR/FILTROS ==========
+
+.sidebar .block {
+	transition: background-color 0.2s @ease-standard;
+}
+
+.filter-options-item {
+	transition: background-color 0.2s @ease-standard;
+}
+
+.filter-options-title {
+	transition: color 0.2s @ease-standard, background-color 0.2s @ease-standard;
+}
+
+.filter-options-content {
+	transition: max-height 0.4s @ease-decelerate, opacity 0.3s @ease-standard;
+}
+
+.filter-current .item {
+	transition: background-color 0.2s @ease-standard, opacity 0.2s @ease-standard;
+}
+
+.swatch-option {
+	transition: border-color 0.15s @ease-standard, 
+				transform 0.15s @ease-accelerate,
+				box-shadow 0.15s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA BREADCRUMBS ==========
+
+.breadcrumbs a {
+	transition: color 0.2s @ease-standard;
+}
+
+.breadcrumbs li::after {
+	transition: opacity 0.2s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA TABS ==========
+
+.data.item.title {
+	transition: background-color 0.2s @ease-standard, border-color 0.2s @ease-standard;
+}
+
+.data.item.title a {
+	transition: color 0.2s @ease-standard;
+}
+
+.data.item.content {
+	transition: opacity 0.3s @ease-decelerate, max-height 0.4s @ease-decelerate;
+}
+
+// ========== TRANSIÇÕES PARA ACCORDION ==========
+
+.accordion-title,
+[data-role="collapsible"] {
+	transition: background-color 0.2s @ease-standard, color 0.2s @ease-standard;
+}
+
+.accordion-content,
+[data-role="content"] {
+	transition: max-height 0.4s @ease-decelerate, 
+				opacity 0.3s @ease-standard,
+				padding 0.3s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA MODAIS ==========
+
+.modal-popup,
+.modal-slide {
+	transition: opacity 0.3s @ease-decelerate, visibility 0.3s @ease-standard;
+}
+
+.modal-inner-wrap {
+	transition: transform 0.4s @ease-decelerate;
+}
+
+.modal-popup .modal-inner-wrap {
+	transition: transform 0.4s @ease-bounce, opacity 0.3s @ease-decelerate;
+}
+
+.modals-overlay {
+	transition: opacity 0.3s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA MENSAGENS ==========
+
+.message {
+	transition: opacity 0.3s @ease-standard, 
+				transform 0.3s @ease-decelerate,
+				max-height 0.4s @ease-decelerate;
+}
+
+.messages .message {
+	transition: opacity 0.4s @ease-decelerate 0.1s, transform 0.4s @ease-bounce;
+}
+
+// ========== TRANSIÇÕES PARA PAGINAÇÃO ==========
+
+.pages .item {
+	transition: background-color 0.2s @ease-standard, transform 0.15s @ease-accelerate;
+}
+
+.pages .item a {
+	transition: color 0.2s @ease-standard, border-color 0.2s @ease-standard;
+}
+
+.pages .action {
+	transition: background-color 0.2s @ease-standard, 
+				color 0.2s @ease-standard,
+				opacity 0.2s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA SORTER ==========
+
+.sorter {
+	transition: opacity 0.2s @ease-standard;
+}
+
+.sorter-action {
+	transition: color 0.2s @ease-standard, transform 0.2s @ease-accelerate;
+}
+
+.sorter-options {
+	transition: border-color 0.2s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA LIMITER ==========
+
+.limiter {
+	transition: opacity 0.2s @ease-standard;
+}
+
+.limiter-options {
+	transition: border-color 0.2s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA TOOLTIP ==========
+
+.tooltip,
+[data-tooltip] {
+	transition: opacity 0.2s @ease-decelerate, 
+				visibility 0.2s @ease-standard,
+				transform 0.2s @ease-decelerate;
+}
+
+// ========== TRANSIÇÕES PARA DROPDOWN ==========
+
+.dropdown,
+.ui-menu {
+	transition: opacity 0.25s @ease-decelerate, 
+				visibility 0.25s @ease-standard,
+				transform 0.25s @ease-decelerate;
+}
+
+// ========== TRANSIÇÕES PARA SLIDER/CAROUSEL ==========
+
+.owl-carousel .owl-item {
+	transition: transform 0.4s @ease-decelerate;
+}
+
+.owl-nav button {
+	transition: background-color 0.2s @ease-standard, 
+				color 0.2s @ease-standard,
+				opacity 0.2s @ease-standard;
+}
+
+.owl-dots .owl-dot {
+	transition: background-color 0.2s @ease-standard, transform 0.2s @ease-bounce;
+}
+
+.slick-slide {
+	transition: transform 0.4s @ease-decelerate, opacity 0.4s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA BADGES/LABELS ==========
+
+.product-label,
+.sticker,
+.badge {
+	transition: transform 0.2s @ease-bounce, opacity 0.2s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA CHECKOUT ==========
+
+.checkout-shipping-method .table-checkout-shipping-method tbody tr {
+	transition: background-color 0.2s @ease-standard;
+}
+
+.opc-progress-bar-item {
+	transition: opacity 0.3s @ease-standard;
+}
+
+.opc-progress-bar-item._active span {
+	transition: color 0.3s @ease-standard;
+}
+
+.checkout-payment-method .payment-method {
+	transition: background-color 0.2s @ease-standard, border-color 0.2s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA TABELAS ==========
+
+table tr {
+	transition: background-color 0.15s @ease-standard;
+}
+
+table td,
+table th {
+	transition: background-color 0.15s @ease-standard, color 0.15s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA IMAGENS ==========
+
+img {
+	transition: opacity 0.3s @ease-standard;
+}
+
+.fotorama__stage__frame img {
+	transition: transform 0.4s @ease-decelerate;
+}
+
+.fotorama__thumb {
+	transition: opacity 0.2s @ease-standard, border-color 0.2s @ease-standard;
+}
+
+// ========== TRANSIÇÕES PARA ICONS ==========
+
+.icon,
+[class*="icon-"],
+.fa,
+.fas,
+.far,
+.fal,
+.fab {
+	transition: color 0.2s @ease-standard, transform 0.2s @ease-accelerate;
+}
+
+// ========== TRANSIÇÕES PARA SEARCH ==========
+
+.block-search {
+	transition: width 0.3s @ease-decelerate;
+}
+
+.block-search input {
+	transition: width 0.3s @ease-decelerate, 
+				border-color 0.2s @ease-standard,
+				box-shadow 0.2s @ease-standard;
+}
+
+.search-autocomplete {
+	transition: opacity 0.2s @ease-decelerate, 
+				visibility 0.2s @ease-standard,
+				transform 0.2s @ease-decelerate;
+}
+
 // ========== PRINT STYLES ==========
 
 @media print {

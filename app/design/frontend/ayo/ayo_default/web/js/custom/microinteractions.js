@@ -323,33 +323,144 @@ define([
             });
         }
 
-        // ========== IMAGE LAZY LOADING ==========
+        // ========== IMAGE LAZY LOADING AVANÇADO ==========
         
         function initLazyLoading() {
-            if ('loading' in HTMLImageElement.prototype) {
-                // Browser suporta lazy loading nativo
-                const images = document.querySelectorAll('img[data-src]');
-                images.forEach(img => {
-                    img.src = img.dataset.src;
-                    img.loading = 'lazy';
-                });
-            } else {
-                // Fallback com Intersection Observer
-                const lazyImages = document.querySelectorAll('img[data-src]');
-                
-                const imageObserver = new IntersectionObserver((entries) => {
-                    entries.forEach(entry => {
-                        if (entry.isIntersecting) {
-                            const img = entry.target;
-                            img.src = img.dataset.src;
-                            img.classList.add('loaded');
-                            imageObserver.unobserve(img);
-                        }
-                    });
-                }, { rootMargin: '50px 0px' });
+            // Configurações
+            const lazyConfig = {
+                rootMargin: '100px 0px', // Carregar 100px antes de aparecer
+                threshold: 0.01,
+                placeholderColor: '#f5f5f5'
+            };
 
-                lazyImages.forEach(img => imageObserver.observe(img));
+            // Selecionar todas as imagens para lazy loading
+            const lazyImages = document.querySelectorAll(
+                'img[data-src], img.lazy, .product-image-photo, .product-item-photo img'
+            );
+
+            if (!lazyImages.length) return;
+
+            // Criar Intersection Observer
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        loadImage(img);
+                        observer.unobserve(img);
+                    }
+                });
+            }, {
+                rootMargin: lazyConfig.rootMargin,
+                threshold: lazyConfig.threshold
+            });
+
+            // Função para carregar imagem
+            function loadImage(img) {
+                // Pegar src do data-src ou data-original
+                const src = img.dataset.src || img.dataset.original;
+                
+                if (src) {
+                    // Criar imagem temporária para preload
+                    const tempImage = new Image();
+                    
+                    tempImage.onload = function() {
+                        img.src = src;
+                        img.classList.add('lazy-loaded');
+                        img.classList.remove('lazy', 'loading');
+                        
+                        // Trigger evento customizado
+                        img.dispatchEvent(new CustomEvent('lazyloaded', { bubbles: true }));
+                    };
+                    
+                    tempImage.onerror = function() {
+                        img.classList.add('lazy-error');
+                        console.warn('Lazy load error:', src);
+                    };
+                    
+                    // Adicionar classe de loading
+                    img.classList.add('loading');
+                    
+                    // Iniciar carregamento
+                    tempImage.src = src;
+                } else if (!img.dataset.lazyProcessed) {
+                    // Imagem sem data-src, marcar como processada
+                    img.dataset.lazyProcessed = 'true';
+                    img.classList.add('lazy-loaded');
+                }
             }
+
+            // Aplicar a todas as imagens
+            lazyImages.forEach(img => {
+                // Verificar se já tem src válido
+                if (img.src && !img.src.includes('placeholder') && !img.dataset.src) {
+                    img.classList.add('lazy-loaded');
+                    return;
+                }
+                
+                // Adicionar loading="lazy" nativo como fallback
+                if ('loading' in HTMLImageElement.prototype) {
+                    img.loading = 'lazy';
+                }
+                
+                // Observar imagem
+                imageObserver.observe(img);
+            });
+
+            // Background Images Lazy Loading
+            initLazyBackgrounds();
+            
+            // Iframes Lazy Loading (para vídeos embedados)
+            initLazyIframes();
+        }
+
+        // Lazy loading para background images
+        function initLazyBackgrounds() {
+            const lazyBackgrounds = document.querySelectorAll('[data-bg]');
+            
+            if (!lazyBackgrounds.length) return;
+
+            const bgObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const bg = el.dataset.bg;
+                        
+                        if (bg) {
+                            el.style.backgroundImage = `url(${bg})`;
+                            el.classList.add('bg-loaded');
+                        }
+                        
+                        observer.unobserve(el);
+                    }
+                });
+            }, { rootMargin: '100px 0px' });
+
+            lazyBackgrounds.forEach(el => bgObserver.observe(el));
+        }
+
+        // Lazy loading para iframes (YouTube, Vimeo, etc.)
+        function initLazyIframes() {
+            const lazyIframes = document.querySelectorAll('iframe[data-src]');
+            
+            if (!lazyIframes.length) return;
+
+            const iframeObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const iframe = entry.target;
+                        const src = iframe.dataset.src;
+                        
+                        if (src) {
+                            iframe.src = src;
+                            iframe.classList.add('iframe-loaded');
+                        }
+                        
+                        observer.unobserve(iframe);
+                    }
+                });
+            }, { rootMargin: '200px 0px' });
+
+            lazyIframes.forEach(iframe => iframeObserver.observe(iframe));
         }
 
         // ========== TOOLTIPS ==========

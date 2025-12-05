@@ -1,3 +1,104 @@
-*{
-	box-sizing: border-box;
+/**
+ * Critical CSS - AYO Grupo Awamotos
+ * CSS essencial para renderização above-the-fold
+ * 
+ * Este arquivo contém apenas os estilos necessários para:
+ * - Header/Navegação
+ * - Primeiro viewport (acima do fold)
+ * - Fontes e cores base
+ * 
+ * Gerado em: 05/12/2025
+ */
+
+/* Reset básico para performance */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; line-height: 1.15; }
+body { margin: 0; font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; line-height: 1.5; color: #000; background: #fff; }
+
+/* Variáveis CSS críticas */
+:root {
+    --primary-red: #b73337;
+    --primary-light: #f7e8e9;
+    --gray-dark: #71737a;
+    --gray-medium: #e1e1e1;
+    --gray-light: #f5f5f5;
+    --white: #fff;
+    --black: #000;
+}
+
+/* Container principal */
+.page-wrapper { position: relative; min-height: 100vh; }
+.page-main { max-width: 1440px; margin: 0 auto; padding: 0 15px; }
+
+/* Header crítico */
+.page-header { position: relative; z-index: 1002; background: var(--white); }
+.header-container { background: var(--white); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+.panel.wrapper { background: var(--primary-red); color: var(--white); font-size: 12px; padding: 5px 0; }
+
+/* Logo */
+.logo { display: inline-block; max-width: 200px; }
+.logo img { width: 100%; height: auto; display: block; }
+
+/* Navegação principal */
+.nav-toggle { display: none; width: 44px; height: 44px; background: none; border: none; cursor: pointer; }
+.navigation { background: var(--white); }
+.navigation > ul { display: flex; list-style: none; margin: 0; padding: 0; }
+.navigation > ul > li { position: relative; }
+.navigation > ul > li > a { display: block; padding: 15px 20px; color: var(--black); text-decoration: none; font-weight: 600; }
+
+/* Search */
+.block-search { position: relative; }
+.block-search input { width: 100%; padding: 10px 40px 10px 15px; border: 1px solid var(--gray-medium); border-radius: 4px; }
+
+/* Minicart */
+.minicart-wrapper { position: relative; }
+.counter.qty { position: absolute; top: -5px; right: -5px; min-width: 18px; height: 18px; background: var(--primary-red); color: var(--white); border-radius: 50%; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+
+/* Hero/Slider crítico */
+.wrapper_slider { position: relative; }
+.main_slider_wrapper { position: relative; overflow: hidden; }
+.main_slider_wrapper img { width: 100%; height: auto; display: block; }
+
+/* Breadcrumbs */
+.breadcrumbs { padding: 10px 0; font-size: 12px; color: var(--gray-dark); }
+.breadcrumbs a { color: var(--gray-dark); text-decoration: none; }
+.breadcrumbs a:hover { color: var(--primary-red); }
+
+/* Page Title */
+.page-title { font-size: 28px; font-weight: 600; margin: 0 0 20px; color: var(--black); }
+
+/* Product grid first row */
+.products-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.product-item { background: var(--white); border-radius: 16px; overflow: hidden; }
+.product-item-info { padding: 15px; }
+.product-item-photo { border-radius: 12px; overflow: hidden; }
+.product-item-photo img { width: 100%; height: auto; display: block; }
+
+/* Loading states */
+.loading-mask { position: fixed; inset: 0; background: var(--white); z-index: 9999; display: flex; align-items: center; justify-content: center; }
+.loader { width: 40px; height: 40px; border: 3px solid var(--gray-medium); border-top-color: var(--primary-red); border-radius: 50%; animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Skip links (acessibilidade) */
+.skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+.skip-link:focus { position: fixed; top: 0; left: 0; width: auto; height: auto; padding: 10px 20px; background: var(--primary-red); color: var(--white); z-index: 10000; }
+
+/* Mobile first viewport */
+@media (max-width: 767px) {
+    .nav-toggle { display: flex; align-items: center; justify-content: center; }
+    .navigation { display: none; }
+    .navigation.active { display: block; position: absolute; top: 100%; left: 0; right: 0; background: var(--white); box-shadow: 0 4px 12px rgba(0,0,0,.1); }
+    .navigation > ul { flex-direction: column; }
+    .navigation > ul > li > a { padding: 12px 15px; border-bottom: 1px solid var(--gray-light); }
+    .products-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .page-title { font-size: 22px; }
+}
+
+@media (max-width: 479px) {
+    .products-grid { grid-template-columns: 1fr; }
+}
+
+/* Prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
