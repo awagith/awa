@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <!-- Sync Log Table -->
+    <table name="grupoawamotos_erp_sync_log" resource="default" engine="innodb"
+           comment="ERP Integration Sync Log">
+        <column xsi:type="int" name="log_id" unsigned="true" nullable="false"
+                identity="true" comment="Log ID"/>
+        <column xsi:type="varchar" name="entity_type" nullable="false" length="32"
+                comment="Entity Type (product, customer, order, stock, price)"/>
+        <column xsi:type="varchar" name="direction" nullable="false" length="16"
+                default="import" comment="Direction (import/export)"/>
+        <column xsi:type="varchar" name="erp_code" nullable="true" length="50"
+                comment="ERP Code"/>
+        <column xsi:type="int" name="magento_id" unsigned="true" nullable="true"
+                comment="Magento Entity ID"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="16"
+                default="pending" comment="Status (success/error/pending)"/>
+        <column xsi:type="text" name="message" nullable="true"
+                comment="Log Message"/>
+        <column xsi:type="int" name="records_processed" unsigned="true" nullable="true"
+                comment="Records Processed"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false"
+                default="CURRENT_TIMESTAMP" comment="Created At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="log_id"/>
+        </constraint>
+        <index referenceId="IDX_ERP_SYNC_LOG_ENTITY_TYPE" indexType="btree">
+            <column name="entity_type"/>
+        </index>
+        <index referenceId="IDX_ERP_SYNC_LOG_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+        <index referenceId="IDX_ERP_SYNC_LOG_CREATED" indexType="btree">
+            <column name="created_at"/>
+        </index>
+    </table>
+
+    <!-- Entity Mapping Table -->
+    <table name="grupoawamotos_erp_entity_map" resource="default" engine="innodb"
+           comment="ERP Entity Mapping (ERP Code -> Magento ID)">
+        <column xsi:type="int" name="map_id" unsigned="true" nullable="false"
+                identity="true" comment="Map ID"/>
+        <column xsi:type="varchar" name="entity_type" nullable="false" length="32"
+                comment="Entity Type (product/customer)"/>
+        <column xsi:type="varchar" name="erp_code" nullable="false" length="50"
+                comment="ERP Code (CODIGO)"/>
+        <column xsi:type="int" name="magento_entity_id" unsigned="true" nullable="false"
+                comment="Magento Entity ID"/>
+        <column xsi:type="timestamp" name="last_sync_at" nullable="true"
+                comment="Last Sync DateTime"/>
+        <column xsi:type="varchar" name="sync_hash" nullable="true" length="64"
+                comment="Data Hash for Change Detection"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="map_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="UNQ_ERP_ENTITY_MAP_TYPE_CODE">
+            <column name="entity_type"/>
+            <column name="erp_code"/>
+        </constraint>
+        <index referenceId="IDX_ERP_ENTITY_MAP_MAGENTO_ID" indexType="btree">
+            <column name="magento_entity_id"/>
+        </index>
+    </table>
+</schema>

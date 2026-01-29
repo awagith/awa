@@ -1,0 +1,128 @@
+<?php
+/** @var \GrupoAwamotos\ERPIntegration\Block\Adminhtml\System\Config\TestConnection $block */
+?>
+<div id="erp_connection_info" style="margin-bottom: 15px;">
+    <span style="display: inline-block; padding: 4px 8px; background: #e3f2fd; border-radius: 4px; font-size: 12px; color: #1565c0;">
+        <strong>Drivers Disponiveis:</strong>
+        <span id="erp_available_drivers">Carregando...</span>
+    </span>
+</div>
+
+<div id="erp_test_connection_result" style="display:none; margin-top:10px; padding:15px; border-radius:6px;"></div>
+
+<?= $block->getButtonHtml() ?>
+
+<script type="text/javascript">
+    require(['jquery', 'Magento_Ui/js/modal/alert'], function($, alert) {
+        // Check available drivers on page load
+        var pdoDrivers = '<?= implode(", ", \PDO::getAvailableDrivers()) ?>';
+        var sqlDrivers = [];
+        if (pdoDrivers.indexOf('sqlsrv') !== -1) sqlDrivers.push('sqlsrv');
+        if (pdoDrivers.indexOf('dblib') !== -1) sqlDrivers.push('dblib');
+        if (pdoDrivers.indexOf('odbc') !== -1) sqlDrivers.push('odbc');
+
+        if (sqlDrivers.length > 0) {
+            $('#erp_available_drivers').html(sqlDrivers.join(', ')).css('color', '#2e7d32');
+        } else {
+            $('#erp_available_drivers').html('Nenhum driver SQL Server instalado').css('color', '#c62828');
+        }
+
+        $('#erp_test_connection_btn').on('click', function() {
+            var $btn = $(this);
+            var $result = $('#erp_test_connection_result');
+            $btn.prop('disabled', true).text('<?= __('Testando conexao...') ?>');
+            $result.hide();
+
+            $.ajax({
+                url: '<?= $block->escapeUrl($block->getAjaxUrl()) ?>',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    form_key: window.FORM_KEY
+                },
+                success: function(response) {
+                    $btn.prop('disabled', false).text('<?= __('Testar Conexao') ?>');
+
+                    if (response.success) {
+                        var html = '<div style="margin-bottom: 10px;">' +
+                            '<span style="font-size: 18px; color: #2e7d32;">&#10004;</span> ' +
+                            '<strong style="font-size: 14px;">Conexao estabelecida com sucesso!</strong>' +
+                            '</div>';
+
+                        html += '<table style="font-size: 12px; border-collapse: collapse; width: 100%;">';
+                        html += '<tr><td style="padding: 4px 10px 4px 0; color: #666;">Driver:</td><td style="padding: 4px 0;"><strong>' + (response.driver_used || 'N/A') + '</strong></td></tr>';
+                        html += '<tr><td style="padding: 4px 10px 4px 0; color: #666;">Servidor:</td><td style="padding: 4px 0;">' + (response.server_name || 'N/A') + '</td></tr>';
+                        html += '<tr><td style="padding: 4px 10px 4px 0; color: #666;">Versao:</td><td style="padding: 4px 0;">' + (response.version || 'N/A') + '</td></tr>';
+                        html += '<tr><td style="padding: 4px 10px 4px 0; color: #666;">Banco:</td><td style="padding: 4px 0;"><strong>' + (response.database || 'N/A') + '</strong></td></tr>';
+                        html += '<tr><td style="padding: 4px 10px 4px 0; color: #666;">Tabelas:</td><td style="padding: 4px 0;">' + (response.table_count || 0) + ' tabelas</td></tr>';
+                        html += '<tr><td style="padding: 4px 10px 4px 0; color: #666;">Hora Servidor:</td><td style="padding: 4px 0;">' + (response.server_time || 'N/A') + '</td></tr>';
+                        html += '<tr><td style="padding: 4px 10px 4px 0; color: #666;">Conexao:</td><td style="padding: 4px 0; font-family: monospace; font-size: 11px;">' + (response.connection_string || 'N/A') + '</td></tr>';
+                        html += '</table>';
+
+                        if (response.sample_tables && response.sample_tables.length > 0) {
+                            html += '<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #c8e6c9;">';
+                            html += '<small style="color: #666;">Primeiras tabelas: ' + response.sample_tables.slice(0, 5).join(', ') + '</small>';
+                            html += '</div>';
+                        }
+
+                        $result.css({
+                            'background': '#e8f5e9',
+                            'color': '#1b5e20',
+                            'border': '1px solid #a5d6a7'
+                        }).html(html).show();
+
+                    } else {
+                        var html = '<div style="margin-bottom: 10px;">' +
+                            '<span style="font-size: 18px; color: #c62828;">&#10008;</span> ' +
+                            '<strong style="font-size: 14px;">Falha na conexao</strong>' +
+                            '</div>';
+
+                        html += '<div style="padding: 10px; background: rgba(255,255,255,0.5); border-radius: 4px; margin-bottom: 10px;">';
+                        html += '<code style="font-size: 11px; word-break: break-all;">' + (response.message || 'Erro desconhecido') + '</code>';
+                        html += '</div>';
+
+                        if (response.available_drivers && response.available_drivers.length > 0) {
+                            html += '<div style="margin-bottom: 8px;"><small><strong>Drivers disponiveis:</strong> ' + response.available_drivers.join(', ') + '</small></div>';
+                        }
+
+                        if (response.troubleshooting && response.troubleshooting.length > 0) {
+                            html += '<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ef9a9a;">';
+                            html += '<strong style="font-size: 12px;">Dicas de solucao:</strong><ul style="margin: 5px 0 0 0; padding-left: 20px; font-size: 11px;">';
+                            response.troubleshooting.forEach(function(tip) {
+                                html += '<li style="margin: 3px 0;">' + tip + '</li>';
+                            });
+                            html += '</ul></div>';
+                        }
+
+                        if (response.installation_tips) {
+                            html += '<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ef9a9a;">';
+                            html += '<strong style="font-size: 12px;">Instalar drivers (Ubuntu/Debian):</strong>';
+                            html += '<pre style="font-size: 10px; background: #fff3e0; padding: 5px; margin-top: 5px; border-radius: 3px;">';
+                            html += 'sudo apt-get install php-sqlsrv  # Microsoft Driver\n';
+                            html += 'sudo apt-get install php-sybase   # FreeTDS\n';
+                            html += 'sudo apt-get install php-odbc     # ODBC</pre>';
+                            html += '</div>';
+                        }
+
+                        $result.css({
+                            'background': '#ffebee',
+                            'color': '#b71c1c',
+                            'border': '1px solid #ef9a9a'
+                        }).html(html).show();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $btn.prop('disabled', false).text('<?= __('Testar Conexao') ?>');
+                    $result.css({
+                        'background': '#fff3e0',
+                        'color': '#e65100',
+                        'border': '1px solid #ffcc80'
+                    }).html(
+                        '<strong>Erro de comunicacao com o servidor Magento.</strong><br>' +
+                        '<small>Status: ' + status + ' | Erro: ' + error + '</small>'
+                    ).show();
+                }
+            });
+        });
+    });
+</script>

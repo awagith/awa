@@ -1,0 +1,111 @@
+<?php
+/** @var \GrupoAwamotos\ERPIntegration\Block\Adminhtml\SyncLog $block */
+$logs = $block->getLogs();
+?>
+<div class="erp-sync-log-container">
+    <div style="margin-bottom: 20px;">
+        <button id="btn-sync-products" class="action-default scalable" type="button">
+            <span><?= __('Sync Produtos') ?></span>
+        </button>
+        <button id="btn-sync-stock" class="action-default scalable" type="button">
+            <span><?= __('Sync Estoque') ?></span>
+        </button>
+        <button id="btn-sync-customers" class="action-default scalable" type="button">
+            <span><?= __('Sync Clientes') ?></span>
+        </button>
+        <span id="sync-status" style="margin-left: 15px; font-style: italic;"></span>
+    </div>
+
+    <table class="data-grid" style="width: 100%;">
+        <thead>
+            <tr>
+                <th class="data-grid-th"><?= __('ID') ?></th>
+                <th class="data-grid-th"><?= __('Tipo') ?></th>
+                <th class="data-grid-th"><?= __('Direcao') ?></th>
+                <th class="data-grid-th"><?= __('Status') ?></th>
+                <th class="data-grid-th"><?= __('Codigo ERP') ?></th>
+                <th class="data-grid-th"><?= __('ID Magento') ?></th>
+                <th class="data-grid-th"><?= __('Registros') ?></th>
+                <th class="data-grid-th"><?= __('Mensagem') ?></th>
+                <th class="data-grid-th"><?= __('Data') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($logs as $log): ?>
+            <tr>
+                <td><?= (int) $log->getLogId() ?></td>
+                <td><strong><?= $block->escapeHtml($log->getEntityType()) ?></strong></td>
+                <td><?= $block->escapeHtml($log->getDirection()) ?></td>
+                <td>
+                    <?php
+                    $status = $log->getStatus();
+                    $color = match($status) {
+                        'success' => '#2e7d32',
+                        'error' => '#c62828',
+                        default => '#f57f17'
+                    };
+                    ?>
+                    <span style="color: <?= $color ?>; font-weight: bold;">
+                        <?= $block->escapeHtml($status) ?>
+                    </span>
+                </td>
+                <td><?= $block->escapeHtml($log->getErpCode()) ?></td>
+                <td><?= $log->getMagentoId() ? (int) $log->getMagentoId() : '-' ?></td>
+                <td><?= $log->getRecordsProcessed() !== null ? (int) $log->getRecordsProcessed() : '-' ?></td>
+                <td style="max-width: 400px; overflow: hidden; text-overflow: ellipsis;">
+                    <?= $block->escapeHtml($log->getMessage()) ?>
+                </td>
+                <td><?= $block->escapeHtml($log->getCreatedAt()) ?></td>
+            </tr>
+            <?php endforeach; ?>
+            <?php if ($logs->getSize() === 0): ?>
+            <tr>
+                <td colspan="9" style="text-align: center; padding: 20px;">
+                    <?= __('Nenhum log de sincronizacao encontrado.') ?>
+                </td>
+            </tr>
+            <?php endif; ?>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/javascript">
+require(['jquery'], function($) {
+    function runSync(url, btn) {
+        var $btn = $(btn);
+        var $status = $('#sync-status');
+        $btn.prop('disabled', true);
+        $status.text('Sincronizando...');
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            dataType: 'json',
+            data: { form_key: window.FORM_KEY },
+            success: function(response) {
+                $btn.prop('disabled', false);
+                if (response.success) {
+                    $status.css('color', '#2e7d32').text('Sync concluido! Recarregando...');
+                    setTimeout(function() { location.reload(); }, 1500);
+                } else {
+                    $status.css('color', '#c62828').text('Erro: ' + response.message);
+                }
+            },
+            error: function() {
+                $btn.prop('disabled', false);
+                $status.css('color', '#c62828').text('Erro de comunicacao.');
+            }
+        });
+    }
+
+    $('#btn-sync-products').on('click', function() {
+        runSync('<?= $block->escapeUrl($block->getSyncProductsUrl()) ?>', this);
+    });
+    $('#btn-sync-stock').on('click', function() {
+        runSync('<?= $block->escapeUrl($block->getSyncStockUrl()) ?>', this);
+    });
+    $('#btn-sync-customers').on('click', function() {
+        runSync('<?= $block->escapeUrl($block->getSyncCustomersUrl()) ?>', this);
+    });
+});
+</script>

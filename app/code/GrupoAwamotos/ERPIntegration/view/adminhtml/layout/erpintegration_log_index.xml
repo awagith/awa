@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>ERP Sync Logs</title>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="GrupoAwamotos\ERPIntegration\Block\Adminhtml\SyncLog"
+                   name="erp_sync_log_grid"
+                   template="GrupoAwamotos_ERPIntegration::sync_log.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

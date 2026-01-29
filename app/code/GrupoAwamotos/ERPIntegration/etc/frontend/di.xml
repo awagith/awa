@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- Stock real-time plugin -->
+    <type name="Magento\CatalogInventory\Api\StockRegistryInterface">
+        <plugin name="grupoawamotos_erp_stock_realtime"
+                type="GrupoAwamotos\ERPIntegration\Plugin\StockPlugin"
+                sortOrder="100"/>
+    </type>
+</config>

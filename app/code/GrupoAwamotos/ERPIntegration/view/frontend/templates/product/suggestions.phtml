@@ -1,0 +1,42 @@
+<?php
+/**
+ * Product suggestions based on ERP order history
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \GrupoAwamotos\ERPIntegration\Model\OrderHistory $orderHistory
+ */
+$suggestions = $block->getData('suggestions') ?? [];
+
+if (empty($suggestions)) {
+    return;
+}
+?>
+<div class="erp-suggestions-container">
+    <div class="block-title">
+        <strong><?= __('Produtos que voce costuma comprar') ?></strong>
+    </div>
+    <div class="erp-suggestions-list">
+        <?php foreach ($suggestions as $item): ?>
+            <div class="erp-suggestion-item">
+                <div class="product-name">
+                    <a href="<?= $block->escapeUrl($block->getUrl('catalogsearch/result', ['q' => $item['sku']])) ?>">
+                        <?= $block->escapeHtml($item['name']) ?>
+                    </a>
+                </div>
+                <div class="product-info">
+                    <span class="sku"><?= $block->escapeHtml($item['sku']) ?></span>
+                    <?php if (!empty($item['total_orders'])): ?>
+                        <span class="order-count">
+                            <?= __('%1 pedidos anteriores', (int) $item['total_orders']) ?>
+                        </span>
+                    <?php endif; ?>
+                    <?php if (!empty($item['avg_price']) && (float) $item['avg_price'] > 0): ?>
+                        <span class="avg-price">
+                            <?= __('Preco medio: R$ %1', number_format((float) $item['avg_price'], 2, ',', '.')) ?>
+                        </span>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>

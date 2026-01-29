@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="GrupoAwamotos_ERPIntegration::erp"
+             title="ERP Integration"
+             module="GrupoAwamotos_ERPIntegration"
+             parent="Magento_Backend::system"
+             sortOrder="100"
+             resource="GrupoAwamotos_ERPIntegration::erp"/>
+        <add id="GrupoAwamotos_ERPIntegration::sync_log"
+             title="Logs de Sincronizacao"
+             module="GrupoAwamotos_ERPIntegration"
+             parent="GrupoAwamotos_ERPIntegration::erp"
+             sortOrder="10"
+             action="erpintegration/log/index"
+             resource="GrupoAwamotos_ERPIntegration::log"/>
+    </menu>
+</config>

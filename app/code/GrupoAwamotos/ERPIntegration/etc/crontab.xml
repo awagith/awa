@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="grupoawamotos_erp_sync_products"
+             instance="GrupoAwamotos\ERPIntegration\Cron\SyncProducts"
+             method="execute">
+            <schedule>0 */6 * * *</schedule>
+        </job>
+        <job name="grupoawamotos_erp_sync_stock"
+             instance="GrupoAwamotos\ERPIntegration\Cron\SyncStock"
+             method="execute">
+            <schedule>*/30 * * * *</schedule>
+        </job>
+        <job name="grupoawamotos_erp_sync_customers"
+             instance="GrupoAwamotos\ERPIntegration\Cron\SyncCustomers"
+             method="execute">
+            <schedule>0 2 * * *</schedule>
+        </job>
+        <job name="grupoawamotos_erp_sync_prices"
+             instance="GrupoAwamotos\ERPIntegration\Cron\SyncPrices"
+             method="execute">
+            <schedule>0 */4 * * *</schedule>
+        </job>
+    </group>
+</config>
