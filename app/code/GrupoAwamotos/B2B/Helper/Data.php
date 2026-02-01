@@ -133,6 +133,20 @@ class Data extends AbstractHelper
     }
 
     /**
+     * Get config value
+     *
+     * @param string $path
+     * @return mixed
+     */
+    public function getConfigValue(string $path)
+    {
+        return $this->scopeConfig->getValue(
+            'grupoawamotos_b2b/' . $path,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
      * Check if current customer is B2B
      *
      * @return bool
@@ -237,5 +251,23 @@ class Data extends AbstractHelper
     public function isB2BGroup(int $groupId): bool
     {
         return in_array($groupId, $this->b2bGroups);
+    }
+
+    /**
+     * Get group ID by code
+     *
+     * @param string $code
+     * @return int|null
+     */
+    public function getGroupIdByCode(string $code): ?int
+    {
+        $mapping = [
+            'b2b_atacado' => self::GROUP_B2B_ATACADO,
+            'b2b_vip' => self::GROUP_B2B_VIP,
+            'b2b_revendedor' => self::GROUP_B2B_REVENDEDOR,
+            'b2b_pendente' => self::GROUP_B2B_PENDENTE,
+        ];
+
+        return $mapping[$code] ?? null;
     }
 }

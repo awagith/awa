@@ -125,6 +125,28 @@
         </arguments>
     </type>
     
+    <!-- ERP Integration Service -->
+    <type name="GrupoAwamotos\B2B\Model\ErpIntegration">
+        <arguments>
+            <argument name="customerSync" xsi:type="object">GrupoAwamotos\ERPIntegration\Model\CustomerSync</argument>
+            <argument name="erpHelper" xsi:type="object">GrupoAwamotos\ERPIntegration\Helper\Data</argument>
+        </arguments>
+    </type>
+
+    <!-- ERP Registration Check Observer -->
+    <type name="GrupoAwamotos\B2B\Observer\ErpRegistrationCheckObserver">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+
+    <!-- ERP Approval Sync Observer -->
+    <type name="GrupoAwamotos\B2B\Observer\ErpApprovalSyncObserver">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
+
     <!-- CLI Commands -->
     <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
@@ -133,5 +155,23 @@
             </argument>
         </arguments>
     </type>
+    
+    <!-- Data Provider Collections para Grid B2B (precisa estar no global, não adminhtml) -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="grupoawamotos_b2b_customer_listing_data_source" xsi:type="string">Magento\Customer\Model\ResourceModel\Grid\Collection</item>
+                <item name="b2b_carrier_listing_data_source" xsi:type="string">GrupoAwamotos\B2B\Model\ResourceModel\Carrier\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    
+    <virtualType name="GrupoAwamotos\B2B\Model\ResourceModel\Carrier\Grid\Collection" 
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">grupoawamotos_b2b_carrier</argument>
+            <argument name="resourceModel" xsi:type="string">GrupoAwamotos\B2B\Model\ResourceModel\Carrier</argument>
+        </arguments>
+    </virtualType>
     
 </config>

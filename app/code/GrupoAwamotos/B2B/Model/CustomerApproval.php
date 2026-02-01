@@ -12,6 +12,7 @@ use GrupoAwamotos\B2B\Model\Customer\Attribute\Source\ApprovalStatus;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Event\ManagerInterface as EventManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Mail\Template\TransportBuilder;
@@ -56,6 +57,11 @@ class CustomerApproval implements CustomerApprovalInterface
      */
     private $logger;
 
+    /**
+     * @var EventManager
+     */
+    private $eventManager;
+
     public function __construct(
         CustomerRepositoryInterface $customerRepository,
         Config $config,
@@ -63,7 +69,8 @@ class CustomerApproval implements CustomerApprovalInterface
         TransportBuilder $transportBuilder,
         StoreManagerInterface $storeManager,
         DateTime $dateTime,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        EventManager $eventManager
     ) {
         $this->customerRepository = $customerRepository;
         $this->config = $config;
@@ -72,6 +79,7 @@ class CustomerApproval implements CustomerApprovalInterface
         $this->storeManager = $storeManager;
         $this->dateTime = $dateTime;
         $this->logger = $logger;
+        $this->eventManager = $eventManager;
     }
 
     /**
@@ -112,16 +120,25 @@ class CustomerApproval implements CustomerApprovalInterface
             }
             
             $this->customerRepository->save($customer);
-            
+
             $this->logAction($customerId, 'approved', $oldStatus, ApprovalStatus::STATUS_APPROVED, $adminUserId, $comment);
-            
+
+            // Dispatch event for ERP integration
+            $this->eventManager->dispatch('grupoawamotos_b2b_customer_approved', [
+                'customer_id' => $customerId,
+                'customer' => $customer,
+                'new_group_id' => $customer->getGroupId(),
+                'old_status' => $oldStatus,
+                'admin_user_id' => $adminUserId,
+            ]);
+
             // Enviar email de aprovação
             if ($this->config->sendApprovalEmail()) {
                 $this->sendApprovalEmail($customerId);
             }
-            
+
             $this->logger->info(sprintf('B2B: Cliente #%d aprovado', $customerId));
-            
+
             return true;
         } catch (\Exception $e) {
             $this->logger->error('B2B approveCustomer error: ' . $e->getMessage());

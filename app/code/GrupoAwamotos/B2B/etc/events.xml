@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * B2B Module Events Configuration
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+
+    <!-- Observer para verificar ERP após registro B2B -->
+    <event name="customer_register_success">
+        <observer name="grupoawamotos_b2b_erp_registration_check"
+                  instance="GrupoAwamotos\B2B\Observer\ErpRegistrationCheckObserver"/>
+    </event>
+
+    <!-- Observer para sincronizar com ERP após aprovação -->
+    <event name="grupoawamotos_b2b_customer_approved">
+        <observer name="grupoawamotos_b2b_erp_approval_sync"
+                  instance="GrupoAwamotos\B2B\Observer\ErpApprovalSyncObserver"/>
+    </event>
+
+</config>
