@@ -217,7 +217,7 @@ class OrderSync implements OrderSyncInterface
             foreach ($pendingOrders as $orderData) {
                 try {
                     $erpOrderId = (int) $orderData['erp_code'];
-                    $magentoOrderId = (int) $orderData['magento_id'];
+                    $magentoOrderId = (int) $orderData['magento_entity_id'];
 
                     $syncResult = $this->updateOrderStatus($magentoOrderId);
 
@@ -573,12 +573,12 @@ class OrderSync implements OrderSyncInterface
     {
         try {
             // Busca mapeamentos de pedidos que não estão completos/cancelados no Magento
-            $sql = "SELECT em.erp_code, em.magento_id
+            $sql = "SELECT em.erp_code, em.magento_entity_id
                     FROM grupoawamotos_erp_entity_map em
-                    INNER JOIN sales_order so ON so.entity_id = em.magento_id
+                    INNER JOIN sales_order so ON so.entity_id = em.magento_entity_id
                     WHERE em.entity_type = 'order'
                       AND so.state NOT IN ('complete', 'canceled', 'closed')
-                    ORDER BY em.updated_at ASC
+                    ORDER BY em.last_sync_at ASC
                     LIMIT 100";
 
             return $this->syncLogResource->getConnection()->fetchAll($sql);

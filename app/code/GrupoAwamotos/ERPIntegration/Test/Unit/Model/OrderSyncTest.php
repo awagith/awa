@@ -298,8 +298,8 @@ class OrderSyncTest extends TestCase
         $mockConnection = $this->createMock(\Magento\Framework\DB\Adapter\AdapterInterface::class);
         $mockConnection->method('fetchAll')
             ->willReturn([
-                ['erp_code' => 100, 'magento_id' => 1],
-                ['erp_code' => 101, 'magento_id' => 2],
+                ['erp_code' => 100, 'magento_entity_id' => 1],
+                ['erp_code' => 101, 'magento_entity_id' => 2],
             ]);
         $this->syncLogResource->method('getConnection')->willReturn($mockConnection);
 
