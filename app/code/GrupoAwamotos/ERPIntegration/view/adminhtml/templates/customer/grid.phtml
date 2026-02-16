@@ -1,0 +1,210 @@
+<?php
+/**
+ * ERP Customer Grid Template
+ *
+ * @var \GrupoAwamotos\ERPIntegration\Block\Adminhtml\Customer\Grid $block
+ */
+
+$customers = $block->getCustomers();
+$totalCount = $block->getTotalCount();
+$currentPage = $block->getCurrentPage();
+$totalPages = $block->getTotalPages();
+$sortBy = $block->getSortBy();
+$sortOrder = $block->getSortOrder();
+$typeFilter = $block->getTypeFilter();
+$stats = $block->getStats();
+?>
+
+<div class="erp-admin-container">
+    <div class="erp-admin-header">
+        <h1>Clientes ERP - Histórico de Compras</h1>
+        <p class="erp-subtitle">
+            <?php if ($typeFilter === 'cliente'): ?>
+                Mostrando <?= number_format($totalCount, 0, '', '.') ?> clientes
+            <?php elseif ($typeFilter === 'fornecedor'): ?>
+                Mostrando <?= number_format($totalCount, 0, '', '.') ?> fornecedores
+            <?php else: ?>
+                Total de <?= number_format($totalCount, 0, '', '.') ?> registros no ERP
+            <?php endif; ?>
+        </p>
+    </div>
+
+    <?php if (!$block->isEnabled()): ?>
+    <div class="message message-warning">
+        <span>A integração ERP está desabilitada. Ative em Stores > Configuration > Grupo Awamotos > ERP Integration.</span>
+    </div>
+    <?php else: ?>
+
+    <!-- Quick Stats -->
+    <?php if (!empty($stats)): ?>
+    <div class="erp-quick-stats">
+        <a href="<?= $block->escapeUrl($block->getFilterUrl(null)) ?>"
+           class="erp-quick-stat <?= !$typeFilter ? 'active' : '' ?>">
+            <span class="stat-value"><?= number_format((int)($stats['total'] ?? 0), 0, '', '.') ?></span>
+            <span class="stat-label">Todos</span>
+        </a>
+        <a href="<?= $block->escapeUrl($block->getFilterUrl('cliente')) ?>"
+           class="erp-quick-stat erp-quick-stat-success <?= $typeFilter === 'cliente' ? 'active' : '' ?>">
+            <span class="stat-value"><?= number_format((int)($stats['clientes'] ?? 0), 0, '', '.') ?></span>
+            <span class="stat-label">Clientes</span>
+        </a>
+        <a href="<?= $block->escapeUrl($block->getFilterUrl('fornecedor')) ?>"
+           class="erp-quick-stat erp-quick-stat-warning <?= $typeFilter === 'fornecedor' ? 'active' : '' ?>">
+            <span class="stat-value"><?= number_format((int)($stats['fornecedores'] ?? 0), 0, '', '.') ?></span>
+            <span class="stat-label">Fornecedores</span>
+        </a>
+    </div>
+    <?php endif; ?>
+
+    <!-- Search and Filters -->
+    <div class="erp-filters">
+        <form method="get" action="<?= $block->escapeUrl($block->getUrl('*/*/*')) ?>" class="erp-search-form">
+            <input type="text"
+                   name="search"
+                   placeholder="Buscar por nome, CNPJ ou código..."
+                   value="<?= $block->escapeHtml($block->getSearchTerm()) ?>"
+                   class="admin__control-text erp-search-input"/>
+            <?php if ($typeFilter): ?>
+            <input type="hidden" name="type" value="<?= $block->escapeHtml($typeFilter) ?>"/>
+            <?php endif; ?>
+            <button type="submit" class="action-default scalable primary">
+                <span>Buscar</span>
+            </button>
+            <?php if ($block->getSearchTerm() || $typeFilter): ?>
+            <a href="<?= $block->escapeUrl($block->getUrl('*/*/*')) ?>" class="action-default">
+                <span>Limpar Filtros</span>
+            </a>
+            <?php endif; ?>
+        </form>
+    </div>
+
+    <!-- Customer Grid -->
+    <div class="erp-grid-wrapper">
+        <table class="data-grid erp-customer-grid">
+            <thead>
+                <tr>
+                    <th class="data-grid-th <?= $sortBy === 'codigo' ? '_sorted _' . strtolower($sortOrder) : '' ?>">
+                        <a href="<?= $block->escapeUrl($block->getSortUrl('codigo')) ?>">Código</a>
+                    </th>
+                    <th class="data-grid-th <?= $sortBy === 'razao' ? '_sorted _' . strtolower($sortOrder) : '' ?>">
+                        <a href="<?= $block->escapeUrl($block->getSortUrl('razao')) ?>">Razão Social</a>
+                    </th>
+                    <th class="data-grid-th">CNPJ/CPF</th>
+                    <th class="data-grid-th <?= $sortBy === 'cidade' ? '_sorted _' . strtolower($sortOrder) : '' ?>">
+                        <a href="<?= $block->escapeUrl($block->getSortUrl('cidade')) ?>">Cidade/UF</a>
+                    </th>
+                    <th class="data-grid-th">Tipo</th>
+                    <th class="data-grid-th _right <?= $sortBy === 'total_pedidos' ? '_sorted _' . strtolower($sortOrder) : '' ?>">
+                        <a href="<?= $block->escapeUrl($block->getSortUrl('total_pedidos')) ?>">Pedidos</a>
+                    </th>
+                    <th class="data-grid-th _right <?= $sortBy === 'valor_total' ? '_sorted _' . strtolower($sortOrder) : '' ?>">
+                        <a href="<?= $block->escapeUrl($block->getSortUrl('valor_total')) ?>">Valor Total</a>
+                    </th>
+                    <th class="data-grid-th <?= $sortBy === 'ultima_compra' ? '_sorted _' . strtolower($sortOrder) : '' ?>">
+                        <a href="<?= $block->escapeUrl($block->getSortUrl('ultima_compra')) ?>">Última Compra</a>
+                    </th>
+                    <th class="data-grid-th">Magento</th>
+                    <th class="data-grid-th">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($customers)): ?>
+                <tr>
+                    <td colspan="10" class="empty-text">
+                        <?php if ($block->getSearchTerm()): ?>
+                        Nenhum cliente encontrado para "<?= $block->escapeHtml($block->getSearchTerm()) ?>".
+                        <?php else: ?>
+                        Nenhum cliente encontrado no ERP.
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <?php else: ?>
+                <?php foreach ($customers as $customer): ?>
+                <tr>
+                    <td><strong>#<?= (int)$customer['codigo'] ?></strong></td>
+                    <td>
+                        <div class="erp-customer-name">
+                            <?= $block->escapeHtml($customer['razao']) ?>
+                            <?php if (!empty($customer['fantasia']) && $customer['fantasia'] !== $customer['razao']): ?>
+                            <small><?= $block->escapeHtml($customer['fantasia']) ?></small>
+                            <?php endif; ?>
+                        </div>
+                    </td>
+                    <td><code><?= $block->escapeHtml($customer['cnpj']) ?></code></td>
+                    <td><?= $block->escapeHtml($customer['cidade'] . '/' . $customer['uf']) ?></td>
+                    <td>
+                        <?php if ($customer['is_cliente'] === 'S'): ?>
+                        <span class="erp-badge erp-badge-success">Cliente</span>
+                        <?php else: ?>
+                        <span class="erp-badge erp-badge-warning">Fornecedor</span>
+                        <?php endif; ?>
+                    </td>
+                    <td class="_right">
+                        <span class="erp-badge erp-badge-info">
+                            <?= number_format((int)$customer['total_pedidos'], 0, '', '.') ?>
+                        </span>
+                    </td>
+                    <td class="_right">
+                        <strong><?= $block->formatPrice((float)$customer['valor_total']) ?></strong>
+                    </td>
+                    <td><?= $block->formatErpDate($customer['ultima_compra']) ?></td>
+                    <td>
+                        <?php $magentoCustomer = $block->getMagentoCustomer($customer['cnpj']); ?>
+                        <?php if ($magentoCustomer): ?>
+                        <a href="<?= $block->escapeUrl($block->getMagentoCustomerUrl((int)$magentoCustomer['id'])) ?>"
+                           class="erp-magento-link"
+                           title="<?= $block->escapeHtml($magentoCustomer['email']) ?>">
+                            <span class="erp-badge erp-badge-success">Vinculado</span>
+                        </a>
+                        <?php else: ?>
+                        <span class="erp-badge erp-badge-muted">-</span>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <a href="<?= $block->escapeUrl($block->getViewUrl((int)$customer['codigo'])) ?>"
+                           class="action-default scalable"
+                           title="Ver Detalhes">
+                            <span>Ver</span>
+                        </a>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <?php if ($totalPages > 1): ?>
+    <div class="erp-pagination">
+        <div class="erp-pagination-info">
+            Página <?= (int)$currentPage ?> de <?= (int)$totalPages ?>
+            (<?= number_format($totalCount, 0, '', '.') ?> clientes)
+        </div>
+        <div class="erp-pagination-links">
+            <?php if ($currentPage > 1): ?>
+            <a href="<?= $block->escapeUrl($block->getPageUrl(1)) ?>" class="action-default">Primeira</a>
+            <a href="<?= $block->escapeUrl($block->getPageUrl($currentPage - 1)) ?>" class="action-default">Anterior</a>
+            <?php endif; ?>
+
+            <?php
+            $startPage = max(1, $currentPage - 2);
+            $endPage = min($totalPages, $currentPage + 2);
+            for ($p = $startPage; $p <= $endPage; $p++):
+            ?>
+            <a href="<?= $block->escapeUrl($block->getPageUrl($p)) ?>"
+               class="action-default <?= $p === $currentPage ? 'primary' : '' ?>">
+                <?= (int)$p ?>
+            </a>
+            <?php endfor; ?>
+
+            <?php if ($currentPage < $totalPages): ?>
+            <a href="<?= $block->escapeUrl($block->getPageUrl($currentPage + 1)) ?>" class="action-default">Próxima</a>
+            <a href="<?= $block->escapeUrl($block->getPageUrl($totalPages)) ?>" class="action-default">Última</a>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <?php endif; ?>
+</div>

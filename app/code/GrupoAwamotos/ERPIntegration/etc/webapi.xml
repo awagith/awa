@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * REST API Routes Configuration
+ *
+ * Provides API endpoints for:
+ * - Suggested Cart
+ * - RFM Analysis
+ * - Sales Forecast
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+
+    <!-- ==================== SUGGESTED CART API ==================== -->
+
+    <!-- GET /V1/erp/suggestions/cart - Get suggested cart for current customer -->
+    <route url="/V1/erp/suggestions/cart" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\SuggestedCartInterface" method="getSuggestedCart"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+    </route>
+
+    <!-- GET /V1/erp/suggestions/cart/:customerId - Get suggested cart for specific customer (admin) -->
+    <route url="/V1/erp/suggestions/cart/:customerId" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\SuggestedCartInterface" method="getSuggestedCartForCustomer"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::suggestions"/>
+        </resources>
+    </route>
+
+    <!-- GET /V1/erp/suggestions/reorder - Get reorder suggestions -->
+    <route url="/V1/erp/suggestions/reorder" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\SuggestedCartInterface" method="getReorderSuggestions"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="limit" force="false">10</parameter>
+        </data>
+    </route>
+
+    <!-- GET /V1/erp/suggestions/crosssell - Get cross-sell suggestions -->
+    <route url="/V1/erp/suggestions/crosssell" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\SuggestedCartInterface" method="getCrossSellSuggestions"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+        <data>
+            <parameter name="limit" force="false">8</parameter>
+        </data>
+    </route>
+
+    <!-- ==================== RFM ANALYSIS API ==================== -->
+
+    <!-- GET /V1/erp/rfm/me - Get RFM for current customer -->
+    <route url="/V1/erp/rfm/me" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\RfmAnalysisInterface" method="getCurrentCustomerRfm"/>
+        <resources>
+            <resource ref="self"/>
+        </resources>
+    </route>
+
+    <!-- GET /V1/erp/rfm/customer/:customerId - Get RFM for specific customer (admin) -->
+    <route url="/V1/erp/rfm/customer/:customerId" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\RfmAnalysisInterface" method="getCustomerRfm"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::rfm"/>
+        </resources>
+    </route>
+
+    <!-- GET /V1/erp/rfm/segments - Get segment statistics (admin) -->
+    <route url="/V1/erp/rfm/segments" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\RfmAnalysisInterface" method="getSegmentStats"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::rfm"/>
+        </resources>
+    </route>
+
+    <!-- GET /V1/erp/rfm/at-risk - Get at-risk customers (admin) -->
+    <route url="/V1/erp/rfm/at-risk" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\RfmAnalysisInterface" method="getAtRiskCustomers"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::rfm"/>
+        </resources>
+        <data>
+            <parameter name="limit" force="false">50</parameter>
+        </data>
+    </route>
+
+    <!-- ==================== FORECAST API ==================== -->
+
+    <!-- GET /V1/erp/forecast/current-month - Get current month projection (admin) -->
+    <route url="/V1/erp/forecast/current-month" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\ForecastInterface" method="getCurrentMonthProjection"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::forecast"/>
+        </resources>
+    </route>
+
+    <!-- GET /V1/erp/forecast/next-month - Get next month projection (admin) -->
+    <route url="/V1/erp/forecast/next-month" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\ForecastInterface" method="getNextMonthProjection"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::forecast"/>
+        </resources>
+    </route>
+
+    <!-- GET /V1/erp/forecast/daily-chart - Get daily sales chart data (admin) -->
+    <route url="/V1/erp/forecast/daily-chart" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\ForecastInterface" method="getDailySalesChart"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::forecast"/>
+        </resources>
+        <data>
+            <parameter name="daysBack" force="false">30</parameter>
+            <parameter name="daysForward" force="false">7</parameter>
+        </data>
+    </route>
+
+    <!-- GET /V1/erp/forecast/monthly-comparison - Get monthly comparison (admin) -->
+    <route url="/V1/erp/forecast/monthly-comparison" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\ForecastInterface" method="getMonthlyComparison"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::forecast"/>
+        </resources>
+        <data>
+            <parameter name="monthsBack" force="false">12</parameter>
+        </data>
+    </route>
+
+    <!-- ==================== IMAGE UPLOAD API ==================== -->
+
+    <!-- POST /V1/erp/images/upload - Upload image for a product -->
+    <route url="/V1/erp/images/upload" method="POST">
+        <service class="GrupoAwamotos\ERPIntegration\Api\ImageUploadInterface" method="upload"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::image_sync"/>
+        </resources>
+    </route>
+
+    <!-- POST /V1/erp/images/upload-batch - Upload images for multiple products -->
+    <route url="/V1/erp/images/upload-batch" method="POST">
+        <service class="GrupoAwamotos\ERPIntegration\Api\ImageUploadInterface" method="uploadBatch"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::image_sync"/>
+        </resources>
+    </route>
+
+    <!-- GET /V1/erp/images/pending - List products missing images -->
+    <route url="/V1/erp/images/pending" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\ImageUploadInterface" method="getPendingProducts"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::image_sync"/>
+        </resources>
+        <data>
+            <parameter name="limit" force="false">100</parameter>
+        </data>
+    </route>
+
+</routes>

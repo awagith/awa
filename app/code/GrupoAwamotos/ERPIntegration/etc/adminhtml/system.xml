@@ -19,9 +19,20 @@
                     <label>Habilitar Integracao</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="host" translate="label" type="text" sortOrder="20"
+                <field id="use_env" translate="label comment" type="select" sortOrder="15"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Usar Variaveis de Ambiente</label>
+                    <comment><![CDATA[<strong>Recomendado para producao!</strong> Busca credenciais de: ENV vars (ERP_SQL_*) > app/etc/env.php > config admin.
+                    <br>Variaveis: ERP_SQL_HOST, ERP_SQL_PORT, ERP_SQL_DATABASE, ERP_SQL_USERNAME, ERP_SQL_PASSWORD]]></comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="host" translate="label comment" type="text" sortOrder="20"
                        showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Host / IP do Servidor</label>
+                    <comment>Sobrescrito por ERP_SQL_HOST se "Usar Variaveis de Ambiente" estiver ativo</comment>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
@@ -90,6 +101,16 @@
                         <field id="enabled">1</field>
                     </depends>
                 </field>
+                <field id="circuit_breaker_info" translate="label comment" type="note" sortOrder="75"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Circuit Breaker</label>
+                    <comment><![CDATA[<strong>Protecao automatica:</strong> Apos 5 falhas consecutivas de conexao, o sistema bloqueia novas tentativas por 60 segundos.
+                    <br>Isso evita sobrecarga quando o ERP esta indisponivel.
+                    <br>Para resetar manualmente: <code>bin/magento cache:clean</code>]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
             </group>
 
             <!-- Product Sync -->
@@ -117,6 +138,39 @@
                        showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Somente Comercializaveis</label>
                     <comment>Importar apenas materiais com CKCOMERCIALIZA = S</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- Category Sync -->
+            <group id="sync_categories" translate="label" sortOrder="25"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Sincronizacao de Categorias</label>
+                <depends>
+                    <field id="grupoawamotos_erp/connection/enabled">1</field>
+                </depends>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Habilitar Sync de Categorias</label>
+                    <comment>Importa arvore de categorias da tabela MT_GRUPOCOMERCIAL do ERP</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="root_category_name" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Nome da Categoria Raiz ERP</label>
+                    <comment>Nome da categoria raiz criada no Magento (padrao: Catalogo ERP)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="include_in_menu" translate="label comment" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Incluir no Menu de Navegacao</label>
+                    <comment>Se as categorias importadas devem aparecer no menu principal</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="enabled">1</field>
@@ -160,6 +214,40 @@
                     <comment>Tempo de cache da consulta de estoque (padrao: 300 = 5 min)</comment>
                     <depends>
                         <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="negative_cache_ttl" translate="label comment" type="text" sortOrder="45"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Cache Negativo TTL (segundos)</label>
+                    <comment>Tempo de cache para SKUs nao encontrados no ERP (padrao: 60 = 1 min). Evita consultas repetidas.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="multi_branch" translate="label comment" type="select" sortOrder="50"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Habilitar Multi-Filial</label>
+                    <comment>Agrega estoque de multiplas filiais do ERP</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="filiais" translate="label comment" type="text" sortOrder="55"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Filiais para Agregacao</label>
+                    <comment>Lista de codigos de filiais separados por virgula (ex: 1,2,3). Deixe vazio para usar a filial padrao.</comment>
+                    <depends>
+                        <field id="multi_branch">1</field>
+                    </depends>
+                </field>
+                <field id="aggregation_mode" translate="label comment" type="select" sortOrder="60"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Modo de Agregacao</label>
+                    <comment>Como agregar o estoque de multiplas filiais</comment>
+                    <source_model>GrupoAwamotos\ERPIntegration\Model\Config\Source\AggregationMode</source_model>
+                    <depends>
+                        <field id="multi_branch">1</field>
                     </depends>
                 </field>
             </group>
@@ -209,6 +297,17 @@
                         <field id="enabled">1</field>
                     </depends>
                 </field>
+                <field id="use_queue" translate="label comment" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Usar Fila de Mensagens (Recomendado)</label>
+                    <comment><![CDATA[<strong>Recomendado!</strong> Processa pedidos de forma assincrona via Message Queue com retry automatico.
+                    <br>Isso evita que o checkout fique lento se o ERP estiver indisponivel.
+                    <br>Execute: <code>bin/magento queue:consumers:start erp.order.sync.consumer</code>]]></comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="send_on_place">1</field>
+                    </depends>
+                </field>
             </group>
 
             <!-- Price Sync -->
@@ -232,6 +331,106 @@
                         <field id="enabled">1</field>
                     </depends>
                 </field>
+                <field id="default_price_list" translate="label comment" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Lista de Preco Padrao (FATORPRECO)</label>
+                    <comment><![CDATA[Codigo da lista de precos no ERP (tabela VE_FATORPRECO) usada como preco base no Magento.
+                    <br>Padrao: <strong>24 (NACIONAL)</strong> — 3.341 itens, a maior cobertura.
+                    <br>Use o comando <code>bin/magento erp:sync:prices --list</code> para ver todas as listas disponiveis.]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- Image Sync -->
+            <group id="sync_images" translate="label" sortOrder="65"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Sincronizacao de Imagens</label>
+                <comment><![CDATA[Configuracoes para importar imagens de produtos do ERP.]]></comment>
+                <depends>
+                    <field id="grupoawamotos_erp/connection/enabled">1</field>
+                </depends>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Habilitar Sync de Imagens</label>
+                    <comment>Importa imagens de produtos do ERP para o Magento</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="source" translate="label comment" type="select" sortOrder="20"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Fonte das Imagens</label>
+                    <comment>De onde buscar as imagens dos produtos</comment>
+                    <source_model>GrupoAwamotos\ERPIntegration\Model\Config\Source\ImageSource</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="base_path" translate="label comment" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Caminho Base (pasta local/rede)</label>
+                    <comment><![CDATA[Caminho absoluto para pasta de imagens. Ex: /var/erp/imagens ou \\servidor\imagens<br>
+                    As imagens devem estar nomeadas com o SKU: SKU.jpg, SKU_1.jpg, etc.]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="base_url" translate="label comment" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>URL Base (imagens remotas)</label>
+                    <comment><![CDATA[URL com placeholder {sku} para buscar imagens. Ex: https://erp.empresa.com/imagens/{sku}.jpg]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="replace_existing" translate="label comment" type="select" sortOrder="50"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Substituir Imagens Existentes</label>
+                    <comment>Se desabilitado, apenas adiciona imagens que nao existem no produto</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="frequency" translate="label comment" type="select" sortOrder="60"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Frequencia de Sync</label>
+                    <source_model>GrupoAwamotos\ERPIntegration\Model\Config\Source\SyncFrequency</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <!-- Orphan Cleanup -->
+                <field id="clean_orphans_enabled" translate="label comment" type="select" sortOrder="70"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Habilitar Limpeza de Orfas</label>
+                    <comment><![CDATA[Remove imagens que existem no Magento mas nao no ERP.<br>
+                    <strong>ATENCAO:</strong> Use com cuidado. Recomendamos testar primeiro com Modo Simulacao.]]></comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="clean_orphans_dry_run" translate="label comment" type="select" sortOrder="80"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Modo Simulacao (Dry Run)</label>
+                    <comment>Se habilitado, apenas lista imagens que seriam removidas sem deletar</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="clean_orphans_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="clean_orphans_keep_manual" translate="label comment" type="select" sortOrder="90"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Manter Imagens Manuais</label>
+                    <comment>Nao remove imagens que foram adicionadas manualmente (nao sincronizadas do ERP)</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="clean_orphans_enabled">1</field>
+                    </depends>
+                </field>
             </group>
 
             <!-- Suggestions -->
@@ -251,6 +450,358 @@
                 <field id="max_suggestions" translate="label" type="text" sortOrder="20"
                        showInDefault="1" showInWebsite="0" showInStore="0">
                     <label>Maximo de Sugestoes</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="cart_enabled" translate="label comment" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Habilitar Carrinho Sugerido</label>
+                    <comment>Monta um carrinho completo com produtos sugeridos para o cliente</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="cart_min_products" translate="label" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Minimo de Produtos no Carrinho</label>
+                    <comment>Numero minimo de produtos para exibir o carrinho sugerido</comment>
+                    <depends>
+                        <field id="cart_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="cart_max_products" translate="label" type="text" sortOrder="50"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Maximo de Produtos no Carrinho</label>
+                    <comment>Numero maximo de produtos sugeridos por secao</comment>
+                    <depends>
+                        <field id="cart_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="free_shipping_threshold" translate="label comment" type="text" sortOrder="60"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Valor Minimo para Frete Gratis</label>
+                    <comment>Valor em R$ para frete gratis (padrao: 1500)</comment>
+                    <depends>
+                        <field id="cart_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="cache_ttl" translate="label comment" type="text" sortOrder="70"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Cache TTL (segundos)</label>
+                    <comment>Tempo de cache das sugestoes (padrao: 1800 = 30 min)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="show_in_sidebar" translate="label comment" type="select" sortOrder="80"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Exibir na Sidebar do Carrinho</label>
+                    <comment>Exibe widget compacto de sugestoes na sidebar do carrinho (alem do widget principal)</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="cart_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- RFM Analysis -->
+            <group id="rfm" translate="label" sortOrder="80"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Analise RFM (Segmentacao de Clientes)</label>
+                <comment><![CDATA[<strong>RFM</strong> = Recencia, Frequencia, Valor Monetario. Segmenta clientes para acoes direcionadas.]]></comment>
+                <depends>
+                    <field id="grupoawamotos_erp/connection/enabled">1</field>
+                </depends>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Habilitar Analise RFM</label>
+                    <comment>Calcula scores RFM e segmenta clientes automaticamente</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="analysis_period" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Periodo de Analise (meses)</label>
+                    <comment>Quantos meses de historico considerar (padrao: 24)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="cache_ttl" translate="label comment" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Cache TTL (segundos)</label>
+                    <comment>Tempo de cache da analise RFM (padrao: 86400 = 24h)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="alert_at_risk" translate="label comment" type="select" sortOrder="40"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Alertar Clientes em Risco</label>
+                    <comment>Envia email quando clientes valiosos estao em risco de churn</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="alert_email" translate="label" type="text" sortOrder="50"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Email para Alertas</label>
+                    <validate>validate-email</validate>
+                    <depends>
+                        <field id="alert_at_risk">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- Coupon Generation -->
+            <group id="coupon" translate="label" sortOrder="85"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Cupons de Re-engajamento</label>
+                <comment><![CDATA[Geracao automatica de cupons para clientes inativos baseado no segmento RFM.]]></comment>
+                <depends>
+                    <field id="grupoawamotos_erp/connection/enabled">1</field>
+                </depends>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Habilitar Geracao de Cupons</label>
+                    <comment>Gera cupons personalizados para clientes em risco</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="auto_send" translate="label comment" type="select" sortOrder="15"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Envio Automatico</label>
+                    <comment>Envia cupom automaticamente por email junto com alerta de re-engajamento</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="valid_days" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Validade (dias)</label>
+                    <comment>Dias de validade do cupom (padrao: 30)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="default_discount" translate="label comment" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Desconto Padrao (%)</label>
+                    <comment>Percentual de desconto padrao (padrao: 10)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="min_order_amount" translate="label comment" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Valor Minimo do Pedido (R$)</label>
+                    <comment>Deixe vazio para nao exigir valor minimo</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="discount_cant_lose" translate="label comment" type="text" sortOrder="50"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Desconto - Can't Lose (%)</label>
+                    <comment>Clientes valiosos em risco critico (sugerido: 20)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="discount_at_risk" translate="label comment" type="text" sortOrder="60"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Desconto - At Risk (%)</label>
+                    <comment>Clientes em risco de churn (sugerido: 15)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="discount_lost" translate="label comment" type="text" sortOrder="70"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Desconto - Lost (%)</label>
+                    <comment>Clientes perdidos - ultima tentativa (sugerido: 25)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- WhatsApp Z-API -->
+            <group id="whatsapp" translate="label" sortOrder="88"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>WhatsApp (Z-API)</label>
+                <comment><![CDATA[<strong>Integracao Z-API</strong> para envio de mensagens WhatsApp.
+                <br>Acesse <a href="https://z-api.io" target="_blank">z-api.io</a> para criar sua conta.
+                <br><strong>Credenciais por ENV (recomendado):</strong> ZAPI_INSTANCE_ID, ZAPI_TOKEN, ZAPI_CLIENT_TOKEN]]></comment>
+                <depends>
+                    <field id="grupoawamotos_erp/connection/enabled">1</field>
+                </depends>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Habilitar WhatsApp</label>
+                    <comment>Ativa envio de mensagens via Z-API WhatsApp</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="zapi_instance_id" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Instance ID</label>
+                    <comment><![CDATA[ID da instancia Z-API. Encontre em: Painel Z-API > Sua Instancia.
+                    <br>Ou use ENV: <code>ZAPI_INSTANCE_ID</code>]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="zapi_token" translate="label comment" type="obscure" sortOrder="25"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Token</label>
+                    <comment><![CDATA[Token de seguranca da instancia Z-API.
+                    <br>Ou use ENV: <code>ZAPI_TOKEN</code>]]></comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="zapi_client_token" translate="label comment" type="obscure" sortOrder="26"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Client Token (Opcional)</label>
+                    <comment><![CDATA[Token de seguranca adicional (Security > Client Token).
+                    <br>Ou use ENV: <code>ZAPI_CLIENT_TOKEN</code>]]></comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="admin_phone" translate="label comment" type="text" sortOrder="27"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Telefone Admin (Teste)</label>
+                    <comment>Numero para receber mensagens de teste (com DDD, ex: 11999999999)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="test_connection" translate="label" type="button" sortOrder="28"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Testar Conexao</label>
+                    <frontend_model>GrupoAwamotos\ERPIntegration\Block\Adminhtml\System\Config\TestWhatsApp</frontend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="connection_status" translate="label comment" type="note" sortOrder="29"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Status</label>
+                    <comment><![CDATA[Use o comando CLI para verificar status: <code>bin/magento erp:whatsapp:status</code>]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="order_status_enabled" translate="label comment" type="select" sortOrder="40"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Notificar Mudanca de Status</label>
+                    <comment>Envia WhatsApp quando status do pedido muda</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="new_order_enabled" translate="label comment" type="select" sortOrder="45"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Notificar Novo Pedido</label>
+                    <comment>Envia confirmacao quando pedido e realizado</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="payment_enabled" translate="label comment" type="select" sortOrder="50"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Notificar Pagamento</label>
+                    <comment>Envia confirmacao quando pagamento e aprovado</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="shipping_enabled" translate="label comment" type="select" sortOrder="55"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Notificar Envio</label>
+                    <comment>Envia codigo de rastreio quando pedido e enviado</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="reengagement_enabled" translate="label comment" type="select" sortOrder="60"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enviar Re-engajamento</label>
+                    <comment>Envia cupom para clientes inativos (baseado em RFM)</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- Sales Forecast -->
+            <group id="forecast" translate="label" sortOrder="90"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Projecao de Vendas</label>
+                <comment><![CDATA[Configuracoes para previsao de vendas e fechamento de mes.]]></comment>
+                <depends>
+                    <field id="grupoawamotos_erp/connection/enabled">1</field>
+                </depends>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Habilitar Projecoes</label>
+                    <comment>Calcula projecoes de vendas e fechamento de mes</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="method" translate="label comment" type="select" sortOrder="20"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Metodo de Projecao</label>
+                    <source_model>GrupoAwamotos\ERPIntegration\Model\Config\Source\ForecastMethod</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="confidence_level" translate="label comment" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Nivel de Confianca (%)</label>
+                    <comment>Intervalo de confianca para projecoes (padrao: 85)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="monthly_target" translate="label comment" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Meta Mensal (R$)</label>
+                    <comment>Meta de vendas do mes atual. Deixe vazio para usar mes anterior como referencia.</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="alert_enabled" translate="label comment" type="select" sortOrder="50"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Alertar se Abaixo da Meta</label>
+                    <comment>Notifica quando projecao esta abaixo da meta</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>

@@ -1,0 +1,77 @@
+{
+    "grupoawamotos_erp_sync_log": {
+        "column": {
+            "log_id": true,
+            "entity_type": true,
+            "direction": true,
+            "erp_code": true,
+            "magento_id": true,
+            "status": true,
+            "message": true,
+            "records_processed": true,
+            "created_at": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_ERP_SYNC_LOG_ENTITY_TYPE": true,
+            "GRUPOAWAMOTOS_ERP_SYNC_LOG_STATUS": true,
+            "GRUPOAWAMOTOS_ERP_SYNC_LOG_CREATED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "grupoawamotos_erp_entity_map": {
+        "column": {
+            "map_id": true,
+            "entity_type": true,
+            "erp_code": true,
+            "magento_entity_id": true,
+            "last_sync_at": true,
+            "sync_hash": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_ERP_ENTITY_MAP_MAGENTO_ENTITY_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GRUPOAWAMOTOS_ERP_ENTITY_MAP_ENTITY_TYPE_ERP_CODE": true
+        }
+    },
+    "grupoawamotos_erp_goals": {
+        "column": {
+            "goal_id": true,
+            "year_month": true,
+            "target": true,
+            "seller_id": true,
+            "region": true,
+            "category_id": true,
+            "notes": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_ERP_GOALS_YEAR_MONTH": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GRUPOAWAMOTOS_ERP_GOALS_YEAR_MONTH_SELLER_ID_REGION_CATEGORY_ID": true
+        }
+    },
+    "grupoawamotos_erp_image_hash": {
+        "column": {
+            "id": true,
+            "sku": true,
+            "image_index": true,
+            "erp_hash": true,
+            "magento_file": true,
+            "synced_at": true
+        },
+        "index": {
+            "IDX_ERP_IMG_HASH_SKU": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "UNQ_ERP_IMG_HASH_SKU_IDX": true
+        }
+    }
+}

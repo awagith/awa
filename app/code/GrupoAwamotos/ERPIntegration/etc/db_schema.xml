@@ -65,4 +65,67 @@
             <column name="magento_entity_id"/>
         </index>
     </table>
+
+    <!-- Sales Goals Table -->
+    <table name="grupoawamotos_erp_goals" resource="default" engine="innodb"
+           comment="ERP Sales Goals/Targets">
+        <column xsi:type="int" name="goal_id" unsigned="true" nullable="false"
+                identity="true" comment="Goal ID"/>
+        <column xsi:type="varchar" name="year_month" nullable="false" length="7"
+                comment="Year-Month (YYYY-MM)"/>
+        <column xsi:type="decimal" name="target" scale="2" precision="15" unsigned="true"
+                nullable="false" default="0" comment="Target Value"/>
+        <column xsi:type="varchar" name="seller_id" nullable="true" length="20"
+                comment="Seller ID (optional filter)"/>
+        <column xsi:type="varchar" name="region" nullable="true" length="2"
+                comment="Region/State (optional filter)"/>
+        <column xsi:type="varchar" name="category_id" nullable="true" length="20"
+                comment="Category ID (optional filter)"/>
+        <column xsi:type="text" name="notes" nullable="true"
+                comment="Notes/Comments"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false"
+                default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false"
+                default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="goal_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="UNQ_ERP_GOALS_YEAR_MONTH">
+            <column name="year_month"/>
+            <column name="seller_id"/>
+            <column name="region"/>
+            <column name="category_id"/>
+        </constraint>
+        <index referenceId="IDX_ERP_GOALS_YEAR_MONTH" indexType="btree">
+            <column name="year_month"/>
+        </index>
+    </table>
+    <!-- Image Sync Hash Tracking Table -->
+    <table name="grupoawamotos_erp_image_hash" resource="default" engine="innodb"
+           comment="ERP Image Sync Hash Tracking">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false"
+                identity="true" comment="Record ID"/>
+        <column xsi:type="varchar" name="sku" nullable="false" length="64"
+                comment="Product SKU"/>
+        <column xsi:type="smallint" name="image_index" unsigned="true" nullable="false"
+                default="0" comment="Image Index within product"/>
+        <column xsi:type="varchar" name="erp_hash" nullable="false" length="32"
+                comment="MD5 hash of ERP image content"/>
+        <column xsi:type="varchar" name="magento_file" nullable="true" length="255"
+                comment="Magento media gallery file path"/>
+        <column xsi:type="timestamp" name="synced_at" nullable="false"
+                default="CURRENT_TIMESTAMP" comment="Last Sync DateTime"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="UNQ_ERP_IMG_HASH_SKU_IDX">
+            <column name="sku"/>
+            <column name="image_index"/>
+        </constraint>
+        <index referenceId="IDX_ERP_IMG_HASH_SKU" indexType="btree">
+            <column name="sku"/>
+        </index>
+    </table>
 </schema>

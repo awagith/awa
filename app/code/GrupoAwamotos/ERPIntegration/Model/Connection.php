@@ -14,6 +14,11 @@ use Psr\Log\LoggerInterface;
  * - sqlsrv: Microsoft PHP Driver for SQL Server (recommended)
  * - dblib: FreeTDS driver (Linux)
  * - odbc: ODBC Driver
+ *
+ * Features:
+ * - Circuit Breaker pattern for resilience
+ * - Retry logic with exponential backoff
+ * - Multiple driver support with auto-detection
  */
 class Connection implements ConnectionInterface
 {
@@ -21,17 +26,52 @@ class Connection implements ConnectionInterface
     private const DRIVER_DBLIB = 'dblib';
     private const DRIVER_ODBC = 'odbc';
 
+    /**
+     * Maximum number of connection retry attempts
+     */
+    private const MAX_RETRIES = 3;
+
+    /**
+     * Base delay in milliseconds for exponential backoff
+     */
+    private const BASE_DELAY_MS = 100;
+
+    /**
+     * Maximum delay in milliseconds
+     */
+    private const MAX_DELAY_MS = 5000;
+
+    /**
+     * Transient error codes that should be retried
+     */
+    private const TRANSIENT_ERROR_CODES = [
+        -2,      // Timeout
+        -1,      // Connection problem
+        10053,   // Connection aborted
+        10054,   // Connection reset
+        10060,   // Connection timed out
+        10061,   // Connection refused
+        233,     // Named pipe not ready
+        64,      // Host is down
+        121,     // Semaphore timeout
+        258,     // Wait operation timed out
+    ];
+
     private Helper $helper;
     private LoggerInterface $logger;
+    private CircuitBreaker $circuitBreaker;
     private ?\PDO $connection = null;
     private array $availableDrivers = [];
+    private int $connectionAttempts = 0;
 
     public function __construct(
         Helper $helper,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        CircuitBreaker $circuitBreaker
     ) {
         $this->helper = $helper;
         $this->logger = $logger;
+        $this->circuitBreaker = $circuitBreaker;
         $this->detectAvailableDrivers();
     }
 
@@ -70,12 +110,30 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Get connection using the best available driver
+     * Get connection using the best available driver with retry logic and circuit breaker
      */
     public function getConnection(): \PDO
     {
+        // Check circuit breaker first
+        if (!$this->circuitBreaker->isAvailable()) {
+            $stats = $this->circuitBreaker->getStats();
+            throw new CircuitBreakerOpenException(
+                sprintf(
+                    'ERP connection circuit breaker is open. Retry in %d seconds. State: %s',
+                    $stats['time_until_half_open'],
+                    $stats['state']
+                )
+            );
+        }
+
         if ($this->connection !== null) {
-            return $this->connection;
+            // Verify connection is still alive
+            if ($this->isConnectionAlive()) {
+                return $this->connection;
+            }
+            // Connection is dead, reset and reconnect
+            $this->connection = null;
+            $this->logger->info('[ERP] Connection was lost, reconnecting...');
         }
 
         if (!$this->hasAvailableDriver()) {
@@ -96,27 +154,182 @@ class Connection implements ConnectionInterface
         $driversToTry = $this->getDriversToTry($preferredDriver);
 
         $lastException = null;
+
         foreach ($driversToTry as $driver) {
+            // Try each driver with retry logic
             try {
-                $this->connection = $this->connectWithDriver(
-                    $driver, $host, $port, $database, $username, $password
-                );
-                $this->logger->info(sprintf(
-                    '[ERP] Connected to SQL Server using %s driver: %s:%d/%s',
-                    $driver, $host, $port, $database
-                ));
-                return $this->connection;
+                $connection = $this->connectWithRetry($driver, $host, $port, $database, $username, $password);
+
+                if ($connection !== null) {
+                    $this->connection = $connection;
+                    $this->circuitBreaker->recordSuccess();
+                    $this->logger->info(sprintf(
+                        '[ERP] Connected to SQL Server using %s driver: %s:%d/%s (attempts: %d)',
+                        $driver, $host, $port, $database, $this->connectionAttempts
+                    ));
+                    return $this->connection;
+                }
             } catch (\PDOException $e) {
                 $lastException = $e;
-                $this->logger->warning(sprintf(
-                    '[ERP] Failed to connect with %s driver: %s',
-                    $driver, $e->getMessage()
-                ));
             }
         }
 
-        $this->logger->error('[ERP] All connection attempts failed');
-        throw $lastException ?? new \RuntimeException('Connection failed with all available drivers');
+        // Record failure in circuit breaker
+        $this->circuitBreaker->recordFailure($lastException);
+
+        $this->logger->error('[ERP] All connection attempts failed', [
+            'drivers_tried' => $driversToTry,
+            'total_attempts' => $this->connectionAttempts,
+            'circuit_breaker_state' => $this->circuitBreaker->getState(),
+        ]);
+
+        throw $lastException ?? new \RuntimeException('Connection failed with all available drivers after retries');
+    }
+
+    /**
+     * Get circuit breaker instance for external access
+     */
+    public function getCircuitBreaker(): CircuitBreaker
+    {
+        return $this->circuitBreaker;
+    }
+
+    /**
+     * Check if circuit breaker is open
+     */
+    public function isCircuitOpen(): bool
+    {
+        return $this->circuitBreaker->getState() === CircuitBreakerState::OPEN;
+    }
+
+    /**
+     * Get circuit breaker statistics
+     */
+    public function getCircuitBreakerStats(): array
+    {
+        return $this->circuitBreaker->getStats();
+    }
+
+    /**
+     * Reset circuit breaker to closed state
+     */
+    public function resetCircuitBreaker(): void
+    {
+        $this->circuitBreaker->reset();
+    }
+
+    /**
+     * Check if connection is still alive
+     */
+    private function isConnectionAlive(): bool
+    {
+        if ($this->connection === null) {
+            return false;
+        }
+
+        try {
+            $this->connection->query('SELECT 1');
+            return true;
+        } catch (\PDOException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Connect with retry logic and exponential backoff
+     */
+    private function connectWithRetry(
+        string $driver,
+        string $host,
+        int $port,
+        string $database,
+        string $username,
+        string $password
+    ): ?\PDO {
+        $lastException = null;
+
+        for ($attempt = 1; $attempt <= self::MAX_RETRIES; $attempt++) {
+            $this->connectionAttempts++;
+
+            try {
+                return $this->connectWithDriver($driver, $host, $port, $database, $username, $password);
+            } catch (\PDOException $e) {
+                $lastException = $e;
+
+                // Check if error is transient and should be retried
+                if (!$this->isTransientError($e) || $attempt === self::MAX_RETRIES) {
+                    $this->logger->warning(sprintf(
+                        '[ERP] Failed to connect with %s driver (attempt %d/%d): %s',
+                        $driver, $attempt, self::MAX_RETRIES, $e->getMessage()
+                    ));
+                    break;
+                }
+
+                // Calculate delay with exponential backoff + jitter
+                $delay = $this->calculateBackoffDelay($attempt);
+
+                $this->logger->info(sprintf(
+                    '[ERP] Connection attempt %d/%d failed with transient error, retrying in %dms: %s',
+                    $attempt, self::MAX_RETRIES, $delay, $e->getMessage()
+                ));
+
+                // Wait before retry
+                usleep($delay * 1000);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Check if the exception represents a transient error that should be retried
+     */
+    private function isTransientError(\PDOException $e): bool
+    {
+        $code = (int) $e->getCode();
+        $message = strtolower($e->getMessage());
+
+        // Check error code
+        if (in_array($code, self::TRANSIENT_ERROR_CODES, true)) {
+            return true;
+        }
+
+        // Check message for transient error patterns
+        $transientPatterns = [
+            'timeout',
+            'connection',
+            'timed out',
+            'communication link',
+            'server is not available',
+            'network-related',
+            'temporarily unavailable',
+            'deadlock',
+            'lock request time out',
+        ];
+
+        foreach ($transientPatterns as $pattern) {
+            if (strpos($message, $pattern) !== false) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Calculate backoff delay with exponential increase and jitter
+     */
+    private function calculateBackoffDelay(int $attempt): int
+    {
+        // Exponential backoff: base_delay * 2^(attempt-1)
+        $delay = self::BASE_DELAY_MS * (2 ** ($attempt - 1));
+
+        // Add jitter (±25% randomization)
+        $jitter = (int) ($delay * 0.25);
+        $delay += random_int(-$jitter, $jitter);
+
+        // Cap at maximum delay
+        return min($delay, self::MAX_DELAY_MS);
     }
 
     /**
@@ -266,7 +479,28 @@ class Connection implements ConnectionInterface
                     'php-sybase' => 'Driver FreeTDS (dblib)',
                     'php-odbc' => 'Driver ODBC'
                 ],
-                'installation_tips' => $this->getInstallationTips()
+                'installation_tips' => $this->getInstallationTips(),
+                'circuit_breaker' => $this->circuitBreaker->getStats()
+            ];
+        }
+
+        // Check circuit breaker state
+        if (!$this->circuitBreaker->isAvailable()) {
+            $stats = $this->circuitBreaker->getStats();
+            return [
+                'success' => false,
+                'message' => sprintf(
+                    'Circuit breaker está aberto. Tentativas bloqueadas por %d segundos.',
+                    $stats['time_until_half_open']
+                ),
+                'available_drivers' => $this->availableDrivers,
+                'circuit_breaker' => $stats,
+                'troubleshooting' => [
+                    'O circuit breaker foi ativado após múltiplas falhas de conexão.',
+                    sprintf('Aguarde %d segundos para nova tentativa.', $stats['time_until_half_open']),
+                    'Verifique se o servidor SQL Server está acessível.',
+                    'Use o comando para resetar: bin/magento erp:circuit-breaker:reset'
+                ]
             ];
         }
 
@@ -297,7 +531,8 @@ class Connection implements ConnectionInterface
                 'server_time' => $row['server_time'] ?? 'Unknown',
                 'table_count' => (int) ($tableCount['cnt'] ?? 0),
                 'sample_tables' => $tables,
-                'connection_string' => $this->getMaskedConnectionString()
+                'connection_string' => $this->getMaskedConnectionString(),
+                'circuit_breaker' => $this->circuitBreaker->getStats()
             ];
         } catch (\Exception $e) {
             return [
@@ -305,7 +540,8 @@ class Connection implements ConnectionInterface
                 'message' => 'Falha na conexão: ' . $e->getMessage(),
                 'available_drivers' => $this->availableDrivers,
                 'error_code' => $e->getCode(),
-                'troubleshooting' => $this->getTroubleshootingTips($e)
+                'troubleshooting' => $this->getTroubleshootingTips($e),
+                'circuit_breaker' => $this->circuitBreaker->getStats()
             ];
         }
     }
@@ -413,48 +649,96 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * Execute SELECT query
+     * Execute SELECT query with retry logic
      */
     public function query(string $sql, array $params = []): array
     {
-        $pdo = $this->getConnection();
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return $this->executeWithRetry(function () use ($sql, $params) {
+            $pdo = $this->getConnection();
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }, 'query');
     }
 
     /**
-     * Execute INSERT/UPDATE/DELETE
+     * Execute INSERT/UPDATE/DELETE with retry logic
      */
     public function execute(string $sql, array $params = []): int
     {
-        $pdo = $this->getConnection();
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->rowCount();
+        return $this->executeWithRetry(function () use ($sql, $params) {
+            $pdo = $this->getConnection();
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->rowCount();
+        }, 'execute');
     }
 
     /**
-     * Fetch single row
+     * Fetch single row with retry logic
      */
     public function fetchOne(string $sql, array $params = []): ?array
     {
-        $pdo = $this->getConnection();
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
-        return $row ?: null;
+        return $this->executeWithRetry(function () use ($sql, $params) {
+            $pdo = $this->getConnection();
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+            $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+            return $row ?: null;
+        }, 'fetchOne');
     }
 
     /**
-     * Fetch single column value
+     * Fetch single column value with retry logic
      */
     public function fetchColumn(string $sql, array $params = [], int $column = 0)
     {
-        $pdo = $this->getConnection();
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute($params);
-        return $stmt->fetchColumn($column);
+        return $this->executeWithRetry(function () use ($sql, $params, $column) {
+            $pdo = $this->getConnection();
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchColumn($column);
+        }, 'fetchColumn');
+    }
+
+    /**
+     * Execute a callable with retry logic for transient errors
+     *
+     * @param callable $operation The database operation to execute
+     * @param string $operationType Type of operation for logging
+     * @return mixed Result of the operation
+     * @throws \PDOException If all retries fail
+     */
+    private function executeWithRetry(callable $operation, string $operationType)
+    {
+        $lastException = null;
+
+        for ($attempt = 1; $attempt <= self::MAX_RETRIES; $attempt++) {
+            try {
+                return $operation();
+            } catch (\PDOException $e) {
+                $lastException = $e;
+
+                // If not a transient error or last attempt, don't retry
+                if (!$this->isTransientError($e) || $attempt === self::MAX_RETRIES) {
+                    throw $e;
+                }
+
+                // Reset connection on transient error
+                $this->connection = null;
+
+                $delay = $this->calculateBackoffDelay($attempt);
+
+                $this->logger->warning(sprintf(
+                    '[ERP] %s failed (attempt %d/%d), retrying in %dms: %s',
+                    $operationType, $attempt, self::MAX_RETRIES, $delay, $e->getMessage()
+                ));
+
+                usleep($delay * 1000);
+            }
+        }
+
+        throw $lastException;
     }
 
     /**

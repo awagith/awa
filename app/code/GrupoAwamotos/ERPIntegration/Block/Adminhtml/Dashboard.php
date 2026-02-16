@@ -1,0 +1,571 @@
+<?php
+declare(strict_types=1);
+
+namespace GrupoAwamotos\ERPIntegration\Block\Adminhtml;
+
+use Magento\Backend\Block\Template;
+use Magento\Backend\Block\Template\Context;
+use GrupoAwamotos\ERPIntegration\Api\ConnectionInterface;
+use GrupoAwamotos\ERPIntegration\Helper\Data as Helper;
+use GrupoAwamotos\ERPIntegration\Model\Rfm\Calculator as RfmCalculator;
+use GrupoAwamotos\ERPIntegration\Model\Forecast\SalesProjection;
+use GrupoAwamotos\ERPIntegration\Model\CircuitBreaker;
+use GrupoAwamotos\ERPIntegration\Model\ResourceModel\SyncLog;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
+
+/**
+ * Admin Block - ERP Dashboard
+ *
+ * Enhanced dashboard with RFM analysis, sales projections, sync status, and ApexCharts
+ */
+class Dashboard extends Template
+{
+    protected $_template = 'GrupoAwamotos_ERPIntegration::dashboard.phtml';
+
+    private ConnectionInterface $connection;
+    private Helper $helper;
+    private CustomerCollectionFactory $customerCollectionFactory;
+    private RfmCalculator $rfmCalculator;
+    private SalesProjection $salesProjection;
+    private CircuitBreaker $circuitBreaker;
+    private SyncLog $syncLogResource;
+    private ?array $stats = null;
+    private ?array $connectionStatus = null;
+
+    public function __construct(
+        Context $context,
+        ConnectionInterface $connection,
+        Helper $helper,
+        CustomerCollectionFactory $customerCollectionFactory,
+        RfmCalculator $rfmCalculator,
+        SalesProjection $salesProjection,
+        CircuitBreaker $circuitBreaker,
+        SyncLog $syncLogResource,
+        array $data = []
+    ) {
+        parent::__construct($context, $data);
+        $this->connection = $connection;
+        $this->helper = $helper;
+        $this->customerCollectionFactory = $customerCollectionFactory;
+        $this->rfmCalculator = $rfmCalculator;
+        $this->salesProjection = $salesProjection;
+        $this->circuitBreaker = $circuitBreaker;
+        $this->syncLogResource = $syncLogResource;
+    }
+
+    /**
+     * Check if ERP is enabled
+     */
+    public function isEnabled(): bool
+    {
+        return $this->helper->isEnabled();
+    }
+
+    /**
+     * Get ERP statistics
+     */
+    public function getStats(): array
+    {
+        if ($this->stats !== null) {
+            return $this->stats;
+        }
+
+        if (!$this->isEnabled()) {
+            return [];
+        }
+
+        try {
+            // Get customer stats
+            $customerStats = $this->connection->fetchOne("
+                SELECT
+                    COUNT(*) as total_fornecedores,
+                    SUM(CASE WHEN CKCLIENTE = 'S' THEN 1 ELSE 0 END) as total_clientes,
+                    SUM(CASE WHEN CKCLIENTE <> 'S' OR CKCLIENTE IS NULL THEN 1 ELSE 0 END) as total_fornecedores_only
+                FROM FN_FORNECEDORES
+            ");
+
+            // Get order stats
+            $orderStats = $this->connection->fetchOne("
+                SELECT
+                    COUNT(DISTINCT p.CODIGO) as total_pedidos,
+                    COUNT(DISTINCT p.CLIENTE) as clientes_com_pedidos,
+                    SUM(i.VLRTOTAL) as valor_total,
+                    AVG(i.VLRTOTAL) as ticket_medio
+                FROM VE_PEDIDO p
+                INNER JOIN VE_PEDIDOITENS i ON p.CODIGO = i.PEDIDO
+                WHERE p.STATUS NOT IN ('C', 'X')
+            ");
+
+            // Get order stats for last 30 days
+            $recentStats = $this->connection->fetchOne("
+                SELECT
+                    COUNT(DISTINCT p.CODIGO) as pedidos_30_dias,
+                    SUM(i.VLRTOTAL) as valor_30_dias,
+                    COUNT(DISTINCT p.CLIENTE) as clientes_ativos
+                FROM VE_PEDIDO p
+                INNER JOIN VE_PEDIDOITENS i ON p.CODIGO = i.PEDIDO
+                WHERE p.STATUS NOT IN ('C', 'X')
+                AND p.DTPEDIDO >= DATEADD(day, -30, GETDATE())
+            ");
+
+            // Get top customers
+            $topCustomers = $this->connection->query("
+                SELECT TOP 10
+                    f.CODIGO,
+                    f.RAZAO,
+                    f.FANTASIA,
+                    f.CGC,
+                    f.CIDADE,
+                    f.UF,
+                    COUNT(DISTINCT p.CODIGO) as total_pedidos,
+                    SUM(i.VLRTOTAL) as valor_total
+                FROM FN_FORNECEDORES f
+                INNER JOIN VE_PEDIDO p ON f.CODIGO = p.CLIENTE
+                INNER JOIN VE_PEDIDOITENS i ON p.CODIGO = i.PEDIDO
+                WHERE p.STATUS NOT IN ('C', 'X')
+                AND f.CKCLIENTE = 'S'
+                GROUP BY f.CODIGO, f.RAZAO, f.FANTASIA, f.CGC, f.CIDADE, f.UF
+                ORDER BY SUM(i.VLRTOTAL) DESC
+            ");
+
+            // Get top products
+            $topProducts = $this->connection->query("
+                SELECT TOP 10
+                    i.MATERIAL as sku,
+                    i.DESCRICAO as nome,
+                    COUNT(DISTINCT i.PEDIDO) as total_pedidos,
+                    SUM(i.QTDE) as quantidade_total,
+                    SUM(i.VLRTOTAL) as valor_total
+                FROM VE_PEDIDOITENS i
+                INNER JOIN VE_PEDIDO p ON i.PEDIDO = p.CODIGO
+                WHERE p.STATUS NOT IN ('C', 'X')
+                GROUP BY i.MATERIAL, i.DESCRICAO
+                ORDER BY SUM(i.QTDE) DESC
+            ");
+
+            // Get Magento customer count
+            $magentoCustomers = $this->customerCollectionFactory->create()->getSize();
+
+            $this->stats = [
+                'customers' => [
+                    'total_erp' => (int)($customerStats['total_fornecedores'] ?? 0),
+                    'clientes' => (int)($customerStats['total_clientes'] ?? 0),
+                    'fornecedores' => (int)($customerStats['total_fornecedores_only'] ?? 0),
+                    'magento' => $magentoCustomers,
+                    'com_pedidos' => (int)($orderStats['clientes_com_pedidos'] ?? 0),
+                ],
+                'orders' => [
+                    'total' => (int)($orderStats['total_pedidos'] ?? 0),
+                    'valor_total' => (float)($orderStats['valor_total'] ?? 0),
+                    'ticket_medio' => (float)($orderStats['ticket_medio'] ?? 0),
+                ],
+                'recent' => [
+                    'pedidos' => (int)($recentStats['pedidos_30_dias'] ?? 0),
+                    'valor' => (float)($recentStats['valor_30_dias'] ?? 0),
+                    'clientes_ativos' => (int)($recentStats['clientes_ativos'] ?? 0),
+                ],
+                'top_customers' => $topCustomers,
+                'top_products' => $topProducts,
+            ];
+
+            return $this->stats;
+        } catch (\Exception $e) {
+            return ['error' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * Format price
+     */
+    public function formatPrice(float $price): string
+    {
+        return 'R$ ' . number_format($price, 2, ',', '.');
+    }
+
+    /**
+     * Format number
+     */
+    public function formatNumber(int $number): string
+    {
+        return number_format($number, 0, '', '.');
+    }
+
+    /**
+     * Get customer view URL
+     */
+    public function getCustomerViewUrl(int $customerCode): string
+    {
+        return $this->getUrl('erpintegration/customer/view', ['id' => $customerCode]);
+    }
+
+    /**
+     * Get customers list URL
+     */
+    public function getCustomersUrl(): string
+    {
+        return $this->getUrl('erpintegration/customer/index');
+    }
+
+    /**
+     * Get RFM segment statistics
+     */
+    public function getRfmSegmentStats(): array
+    {
+        try {
+            return $this->rfmCalculator->getSegmentStats();
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get at-risk customers
+     */
+    public function getAtRiskCustomers(int $limit = 10): array
+    {
+        try {
+            return $this->rfmCalculator->getAtRiskCustomers($limit);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get top customers (Champions)
+     */
+    public function getTopCustomers(int $limit = 10): array
+    {
+        try {
+            return $this->rfmCalculator->getTopCustomers($limit);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get current month sales projection
+     */
+    public function getSalesProjection(): array
+    {
+        try {
+            return $this->salesProjection->getCurrentMonthProjection();
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get next month projection
+     */
+    public function getNextMonthProjection(): array
+    {
+        try {
+            return $this->salesProjection->getNextMonthProjection();
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Get daily sales chart data (JSON)
+     */
+    public function getDailySalesChartJson(): string
+    {
+        try {
+            $data = $this->salesProjection->getDailySalesChart(30, 7);
+            return json_encode($data);
+        } catch (\Exception $e) {
+            return '[]';
+        }
+    }
+
+    /**
+     * Get monthly sales chart data (JSON)
+     */
+    public function getMonthlySalesChartJson(): string
+    {
+        try {
+            $data = $this->salesProjection->getLast12MonthsSales();
+            return json_encode($data);
+        } catch (\Exception $e) {
+            return '[]';
+        }
+    }
+
+    /**
+     * Get RFM chart data (JSON)
+     */
+    public function getRfmChartJson(): string
+    {
+        try {
+            $stats = $this->rfmCalculator->getSegmentStats();
+            $chartData = [];
+
+            foreach ($stats as $key => $segment) {
+                if ($segment['count'] > 0) {
+                    $chartData[] = [
+                        'segment' => $segment['label'],
+                        'count' => $segment['count'],
+                        'revenue' => $segment['revenue'],
+                        'color' => $segment['color'],
+                    ];
+                }
+            }
+
+            return json_encode($chartData);
+        } catch (\Exception $e) {
+            return '[]';
+        }
+    }
+
+    /**
+     * Get alert class based on level
+     */
+    public function getAlertClass(string $level): string
+    {
+        return match($level) {
+            'success' => 'message-success',
+            'warning' => 'message-warning',
+            'danger' => 'message-error',
+            'critical' => 'message-error',
+            default => 'message-notice',
+        };
+    }
+
+    /**
+     * Format percentage with sign
+     */
+    public function formatPercentage(float $value): string
+    {
+        $sign = $value >= 0 ? '+' : '';
+        return $sign . number_format($value, 1, ',', '.') . '%';
+    }
+
+    /**
+     * Get connection status and test result
+     */
+    public function getConnectionStatus(): array
+    {
+        if ($this->connectionStatus !== null) {
+            return $this->connectionStatus;
+        }
+
+        $status = [
+            'connected' => false,
+            'message' => 'Não testado',
+            'latency' => null,
+            'driver' => null,
+            'server_version' => null,
+        ];
+
+        try {
+            $startTime = microtime(true);
+            $testResult = $this->connection->testConnection();
+            $latency = round((microtime(true) - $startTime) * 1000, 2);
+
+            if ($testResult['success'] ?? false) {
+                $status = [
+                    'connected' => true,
+                    'message' => 'Conectado',
+                    'latency' => $latency,
+                    'driver' => $testResult['driver'] ?? 'unknown',
+                    'server_version' => $testResult['server_version'] ?? null,
+                    'database' => $testResult['database'] ?? null,
+                ];
+            } else {
+                $status['message'] = $testResult['error'] ?? 'Falha na conexão';
+            }
+        } catch (\Exception $e) {
+            $status['message'] = $e->getMessage();
+        }
+
+        $this->connectionStatus = $status;
+        return $status;
+    }
+
+    /**
+     * Get circuit breaker status
+     */
+    public function getCircuitBreakerStatus(): array
+    {
+        return $this->circuitBreaker->getStats();
+    }
+
+    /**
+     * Get circuit breaker state label
+     */
+    public function getCircuitBreakerStateLabel(string $state): string
+    {
+        return match($state) {
+            'CLOSED' => 'Normal',
+            'OPEN' => 'Bloqueado',
+            'HALF_OPEN' => 'Testando',
+            default => $state,
+        };
+    }
+
+    /**
+     * Get circuit breaker state class
+     */
+    public function getCircuitBreakerStateClass(string $state): string
+    {
+        return match($state) {
+            'CLOSED' => 'success',
+            'OPEN' => 'danger',
+            'HALF_OPEN' => 'warning',
+            default => 'info',
+        };
+    }
+
+    /**
+     * Get last sync status for each entity type
+     */
+    public function getLastSyncStatus(): array
+    {
+        $entityTypes = ['product', 'stock', 'customer', 'order', 'price'];
+        $result = [];
+
+        foreach ($entityTypes as $type) {
+            $logs = $this->syncLogResource->getRecentLogs(1, $type);
+            $stats = $this->syncLogResource->getSyncStats($type, 1); // Last 24 hours
+
+            $lastLog = $logs[0] ?? null;
+            $successCount = 0;
+            $errorCount = 0;
+            $totalRecords = 0;
+
+            foreach ($stats as $stat) {
+                if ($stat['status'] === 'success') {
+                    $successCount = (int)$stat['total'];
+                    $totalRecords = (int)($stat['total_records'] ?? 0);
+                } elseif ($stat['status'] === 'error') {
+                    $errorCount = (int)$stat['total'];
+                }
+            }
+
+            $result[$type] = [
+                'label' => $this->getEntityTypeLabel($type),
+                'icon' => $this->getEntityTypeIcon($type),
+                'last_sync' => $lastLog ? $lastLog['created_at'] : null,
+                'last_status' => $lastLog ? $lastLog['status'] : null,
+                'last_message' => $lastLog ? $lastLog['message'] : null,
+                'last_records' => $lastLog ? (int)($lastLog['records_processed'] ?? 0) : 0,
+                'success_24h' => $successCount,
+                'error_24h' => $errorCount,
+                'records_24h' => $totalRecords,
+                'enabled' => $this->isSyncEnabled($type),
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Check if sync is enabled for entity type
+     */
+    private function isSyncEnabled(string $entityType): bool
+    {
+        return match($entityType) {
+            'product' => $this->helper->isProductSyncEnabled(),
+            'stock' => $this->helper->isStockSyncEnabled(),
+            'customer' => $this->helper->isCustomerSyncEnabled(),
+            'order' => $this->helper->isOrderSyncEnabled(),
+            'price' => $this->helper->isPriceSyncEnabled(),
+            default => false,
+        };
+    }
+
+    /**
+     * Get entity type label
+     */
+    private function getEntityTypeLabel(string $type): string
+    {
+        return match($type) {
+            'product' => 'Produtos',
+            'stock' => 'Estoque',
+            'customer' => 'Clientes',
+            'order' => 'Pedidos',
+            'price' => 'Preços',
+            default => ucfirst($type),
+        };
+    }
+
+    /**
+     * Get entity type icon
+     */
+    private function getEntityTypeIcon(string $type): string
+    {
+        return match($type) {
+            'product' => '📦',
+            'stock' => '📊',
+            'customer' => '👥',
+            'order' => '🛒',
+            'price' => '💰',
+            default => '📄',
+        };
+    }
+
+    /**
+     * Get recent errors
+     */
+    public function getRecentErrors(int $limit = 5): array
+    {
+        $connection = $this->syncLogResource->getConnection();
+        $select = $connection->select()
+            ->from($this->syncLogResource->getMainTable())
+            ->where('status = ?', 'error')
+            ->order('created_at DESC')
+            ->limit($limit);
+
+        return $connection->fetchAll($select);
+    }
+
+    /**
+     * Format relative time
+     */
+    public function formatRelativeTime(?string $datetime): string
+    {
+        if (!$datetime) {
+            return 'Nunca';
+        }
+
+        $timestamp = strtotime($datetime);
+        $diff = time() - $timestamp;
+
+        if ($diff < 60) {
+            return 'Agora';
+        } elseif ($diff < 3600) {
+            $mins = floor($diff / 60);
+            return $mins . ' min atrás';
+        } elseif ($diff < 86400) {
+            $hours = floor($diff / 3600);
+            return $hours . 'h atrás';
+        } else {
+            $days = floor($diff / 86400);
+            return $days . 'd atrás';
+        }
+    }
+
+    /**
+     * Get sync URLs for AJAX actions
+     */
+    public function getSyncUrls(): array
+    {
+        return [
+            'product' => $this->getUrl('erpintegration/sync/products'),
+            'stock' => $this->getUrl('erpintegration/sync/stock'),
+            'customer' => $this->getUrl('erpintegration/sync/customers'),
+            'test_connection' => $this->getUrl('erpintegration/sync/testConnection'),
+            'reset_circuit' => $this->getUrl('erpintegration/sync/resetCircuit'),
+            'status' => $this->getUrl('erpintegration/dashboard/status'),
+        ];
+    }
+
+    /**
+     * Get sync URLs JSON
+     */
+    public function getSyncUrlsJson(): string
+    {
+        return json_encode($this->getSyncUrls());
+    }
+}

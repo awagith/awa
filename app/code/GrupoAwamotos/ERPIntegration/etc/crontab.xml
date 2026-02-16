@@ -2,6 +2,12 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
     <group id="default">
+        <!-- Category sync: runs 15 min before product sync to ensure tree is current -->
+        <job name="grupoawamotos_erp_sync_categories"
+             instance="GrupoAwamotos\ERPIntegration\Cron\SyncCategories"
+             method="execute">
+            <schedule>45 5,11,17,23 * * *</schedule>
+        </job>
         <job name="grupoawamotos_erp_sync_products"
              instance="GrupoAwamotos\ERPIntegration\Cron\SyncProducts"
              method="execute">
@@ -21,6 +27,74 @@
              instance="GrupoAwamotos\ERPIntegration\Cron\SyncPrices"
              method="execute">
             <schedule>0 */4 * * *</schedule>
+        </job>
+        <job name="grupoawamotos_erp_sync_order_statuses"
+             instance="GrupoAwamotos\ERPIntegration\Cron\SyncOrderStatuses"
+             method="execute">
+            <!-- Run every 15 minutes to sync order statuses from ERP -->
+            <schedule>*/15 * * * *</schedule>
+        </job>
+        <job name="grupoawamotos_erp_sync_images"
+             instance="GrupoAwamotos\ERPIntegration\Cron\SyncImages"
+             method="execute">
+            <!-- Run every hour - incremental sync is fast (skips unchanged images via hash) -->
+            <schedule>0 * * * *</schedule>
+        </job>
+
+        <!-- Smart Suggestions Crons -->
+        <job name="grupoawamotos_erp_update_rfm"
+             instance="GrupoAwamotos\ERPIntegration\Cron\UpdateRfmAnalysis"
+             method="execute">
+            <!-- Run daily at 6:00 AM -->
+            <schedule>0 6 * * *</schedule>
+        </job>
+        <job name="grupoawamotos_erp_update_forecasts"
+             instance="GrupoAwamotos\ERPIntegration\Cron\UpdateForecasts"
+             method="execute">
+            <!-- Run daily at 23:00 -->
+            <schedule>0 23 * * *</schedule>
+        </job>
+
+        <!-- Alert Crons -->
+        <job name="grupoawamotos_erp_send_alerts"
+             instance="GrupoAwamotos\ERPIntegration\Cron\SendAlerts"
+             method="execute">
+            <!-- Run daily at 9:00 AM -->
+            <schedule>0 9 * * *</schedule>
+        </job>
+        <job name="grupoawamotos_erp_weekly_report"
+             instance="GrupoAwamotos\ERPIntegration\Cron\SendWeeklyReport"
+             method="execute">
+            <!-- Run every Monday at 8:00 AM -->
+            <schedule>0 8 * * 1</schedule>
+        </job>
+        <job name="grupoawamotos_erp_reengagement_coupons"
+             instance="GrupoAwamotos\ERPIntegration\Cron\SendReengagementCoupons"
+             method="execute">
+            <!-- Run every Tuesday at 10:00 AM -->
+            <schedule>0 10 * * 2</schedule>
+        </job>
+        <job name="grupoawamotos_erp_whatsapp_reengagement"
+             instance="GrupoAwamotos\ERPIntegration\Cron\SendWhatsAppReengagement"
+             method="execute">
+            <!-- Run every Wednesday at 10:00 AM (after email campaign) -->
+            <schedule>0 10 * * 3</schedule>
+        </job>
+
+        <!-- Maintenance Crons -->
+        <job name="grupoawamotos_erp_clean_sync_logs"
+             instance="GrupoAwamotos\ERPIntegration\Cron\CleanSyncLogs"
+             method="execute">
+            <!-- Run every Sunday at 3:00 AM -->
+            <schedule>0 3 * * 0</schedule>
+        </job>
+
+        <!-- Queue Processing Crons -->
+        <job name="grupoawamotos_erp_process_order_queue"
+             instance="GrupoAwamotos\ERPIntegration\Cron\ProcessOrderQueue"
+             method="execute">
+            <!-- Run every minute to process pending orders in queue -->
+            <schedule>* * * * *</schedule>
         </job>
     </group>
 </config>

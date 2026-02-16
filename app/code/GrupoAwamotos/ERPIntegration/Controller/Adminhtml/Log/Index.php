@@ -5,9 +5,10 @@ namespace GrupoAwamotos\ERPIntegration\Controller\Adminhtml\Log;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
-class Index extends Action
+class Index extends Action implements HttpGetActionInterface
 {
     public const ADMIN_RESOURCE = 'GrupoAwamotos_ERPIntegration::log';
 

@@ -15,11 +15,34 @@
                 type="GrupoAwamotos\ERPIntegration\Model\OrderSync"/>
     <preference for="GrupoAwamotos\ERPIntegration\Api\PriceSyncInterface"
                 type="GrupoAwamotos\ERPIntegration\Model\PriceSync"/>
+    <preference for="GrupoAwamotos\ERPIntegration\Api\ImageSyncInterface"
+                type="GrupoAwamotos\ERPIntegration\Model\ImageSync"/>
+    <preference for="GrupoAwamotos\ERPIntegration\Api\ImageUploadInterface"
+                type="GrupoAwamotos\ERPIntegration\Model\ImageUpload"/>
+    <preference for="GrupoAwamotos\ERPIntegration\Api\CategorySyncInterface"
+                type="GrupoAwamotos\ERPIntegration\Model\CategorySync"/>
 
-    <!-- Connection as shared (singleton) -->
+    <!-- Smart Suggestions API Interfaces -->
+    <preference for="GrupoAwamotos\ERPIntegration\Api\SuggestedCartInterface"
+                type="GrupoAwamotos\ERPIntegration\Model\Api\SuggestedCartManagement"/>
+    <preference for="GrupoAwamotos\ERPIntegration\Api\RfmAnalysisInterface"
+                type="GrupoAwamotos\ERPIntegration\Model\Api\RfmAnalysisManagement"/>
+    <preference for="GrupoAwamotos\ERPIntegration\Api\ForecastInterface"
+                type="GrupoAwamotos\ERPIntegration\Model\Api\ForecastManagement"/>
+
+    <!-- Circuit Breaker (singleton) -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\CircuitBreaker">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+            <argument name="serviceName" xsi:type="string">erp_connection</argument>
+        </arguments>
+    </type>
+
+    <!-- Connection as shared (singleton) with Circuit Breaker -->
     <type name="GrupoAwamotos\ERPIntegration\Model\Connection">
         <arguments>
             <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+            <argument name="circuitBreaker" xsi:type="object">GrupoAwamotos\ERPIntegration\Model\CircuitBreaker</argument>
         </arguments>
     </type>
 
@@ -38,4 +61,258 @@
             </argument>
         </arguments>
     </virtualType>
+
+    <!-- RFM Calculator -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\Rfm\Calculator">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Sales Projection -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\Forecast\SalesProjection">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Goals Manager -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\Goals\Manager">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Suggested Cart -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\Cart\SuggestedCart">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Opportunity Classifier -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\Opportunity\Classifier">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Product Suggestion -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\ProductSuggestion">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Validators -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\Validator\ProductValidator">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\ERPIntegration\Model\Validator\CustomerValidator">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\ERPIntegration\Model\Validator\StockValidator">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Product Sync -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\ProductSync">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+            <argument name="productValidator" xsi:type="object">GrupoAwamotos\ERPIntegration\Model\Validator\ProductValidator</argument>
+        </arguments>
+    </type>
+
+    <!-- Customer Sync -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\CustomerSync">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+            <argument name="customerValidator" xsi:type="object">GrupoAwamotos\ERPIntegration\Model\Validator\CustomerValidator</argument>
+        </arguments>
+    </type>
+
+    <!-- Stock Sync -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\StockSync">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+            <argument name="stockValidator" xsi:type="object">GrupoAwamotos\ERPIntegration\Model\Validator\StockValidator</argument>
+        </arguments>
+    </type>
+
+    <!-- Order Sync -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\OrderSync">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Order Sync Message Interface Preference -->
+    <preference for="GrupoAwamotos\ERPIntegration\Api\Data\OrderSyncMessageInterface"
+                type="GrupoAwamotos\ERPIntegration\Model\Queue\OrderSyncMessage"/>
+
+    <!-- Order Sync Queue Publisher -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\Queue\OrderSyncPublisher">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Order Sync Queue Consumer -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\Queue\OrderSyncConsumer">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+            <argument name="circuitBreaker" xsi:type="object">GrupoAwamotos\ERPIntegration\Model\CircuitBreaker</argument>
+        </arguments>
+    </type>
+
+    <!-- Order Place Observer -->
+    <type name="GrupoAwamotos\ERPIntegration\Observer\OrderPlaceAfter">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Cron Jobs -->
+    <type name="GrupoAwamotos\ERPIntegration\Cron\UpdateRfmAnalysis">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\ERPIntegration\Cron\UpdateForecasts">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\ERPIntegration\Cron\SendAlerts">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\ERPIntegration\Cron\SendWeeklyReport">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Email Alert Sender -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\Alert\EmailSender">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Coupon Generator -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\Coupon\Generator">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Re-engagement Coupons Cron -->
+    <type name="GrupoAwamotos\ERPIntegration\Cron\SendReengagementCoupons">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- WhatsApp Client (Legacy Meta API) -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\WhatsApp\Client">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- WhatsApp Z-API Client -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\WhatsApp\ZApiClient">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- WhatsApp Re-engagement Cron -->
+    <type name="GrupoAwamotos\ERPIntegration\Cron\SendWhatsAppReengagement">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Category Sync -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\CategorySync">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\ERPIntegration\Cron\SyncCategories">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Order Status Sync Cron -->
+    <type name="GrupoAwamotos\ERPIntegration\Cron\SyncOrderStatuses">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Image Sync -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\ImageSync">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\ERPIntegration\Cron\SyncImages">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Order Status Observers (Z-API WhatsApp) -->
+    <type name="GrupoAwamotos\ERPIntegration\Observer\OrderStatusChange">
+        <arguments>
+            <argument name="zapiClient" xsi:type="object">GrupoAwamotos\ERPIntegration\Model\WhatsApp\ZApiClient</argument>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\ERPIntegration\Observer\ShipmentSaveAfter">
+        <arguments>
+            <argument name="zapiClient" xsi:type="object">GrupoAwamotos\ERPIntegration\Model\WhatsApp\ZApiClient</argument>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Process Order Queue Cron -->
+    <type name="GrupoAwamotos\ERPIntegration\Cron\ProcessOrderQueue">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- CLI Commands -->
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="erp_test_connection" xsi:type="object">GrupoAwamotos\ERPIntegration\Console\Command\TestConnectionCommand</item>
+                <item name="erp_sync_products" xsi:type="object">GrupoAwamotos\ERPIntegration\Console\Command\SyncProductsCommand</item>
+                <item name="erp_sync_stock" xsi:type="object">GrupoAwamotos\ERPIntegration\Console\Command\SyncStockCommand</item>
+                <item name="erp_sync_customers" xsi:type="object">GrupoAwamotos\ERPIntegration\Console\Command\SyncCustomersCommand</item>
+                <item name="erp_sync_prices" xsi:type="object">GrupoAwamotos\ERPIntegration\Console\Command\SyncPricesCommand</item>
+                <item name="erp_sync_logs" xsi:type="object">GrupoAwamotos\ERPIntegration\Console\Command\SyncLogsCommand</item>
+                <item name="erp_sync_images" xsi:type="object">GrupoAwamotos\ERPIntegration\Console\Command\SyncImagesCommand</item>
+                <item name="erp_circuit_breaker" xsi:type="object">GrupoAwamotos\ERPIntegration\Console\Command\CircuitBreakerCommand</item>
+                <item name="erp_status" xsi:type="object">GrupoAwamotos\ERPIntegration\Console\Command\ErpStatusCommand</item>
+                <item name="erp_logs_clean" xsi:type="object">GrupoAwamotos\ERPIntegration\Console\Command\CleanLogsCommand</item>
+                <item name="erp_diagnose" xsi:type="object">GrupoAwamotos\ERPIntegration\Console\Command\DiagnoseCommand</item>
+                <item name="erp_sync_orders" xsi:type="object">GrupoAwamotos\ERPIntegration\Console\Command\SyncOrdersCommand</item>
+                <item name="erp_sync_categories" xsi:type="object">GrupoAwamotos\ERPIntegration\Console\Command\SyncCategoriesCommand</item>
+                <item name="erp_whatsapp_status" xsi:type="object">GrupoAwamotos\ERPIntegration\Console\Command\WhatsAppStatusCommand</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

@@ -52,7 +52,8 @@
 				<argument name="template" xsi:type="string">Rokanthemes_Themeoption::html/header/logo.phtml</argument>
 			</action>
 		</referenceBlock>
-		<referenceContainer name="header.container" remove="true"/>
+		<!-- Removido para restaurar cabeçalho na home -->
+		<!-- <referenceContainer name="header.container" remove="true"/> -->
         <referenceContainer name="header.panel" remove="true"/>
         <referenceContainer name="header-wrapper" remove="true"/>
 		<referenceContainer name="navigation.sections" remove="true"/>

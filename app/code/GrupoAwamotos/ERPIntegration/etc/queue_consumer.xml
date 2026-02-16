@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+  ERP Integration - Queue Consumer Configuration
+  Defines consumers for processing messages from queues
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/consumer.xsd">
+
+    <!-- Consumer for order sync messages -->
+    <consumer name="erp.order.sync.consumer"
+              queue="erp.order.sync.queue"
+              connection="db"
+              handler="GrupoAwamotos\ERPIntegration\Model\Queue\OrderSyncConsumer::process"
+              maxMessages="100"
+              consumerInstance="Magento\Framework\MessageQueue\Consumer"/>
+
+    <!-- Consumer for retry messages (with longer processing time) -->
+    <consumer name="erp.order.sync.retry.consumer"
+              queue="erp.order.sync.retry.queue"
+              connection="db"
+              handler="GrupoAwamotos\ERPIntegration\Model\Queue\OrderSyncConsumer::processRetry"
+              maxMessages="50"
+              consumerInstance="Magento\Framework\MessageQueue\Consumer"/>
+
+</config>

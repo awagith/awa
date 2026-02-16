@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Email Templates Configuration
+ *
+ * Defines email templates for:
+ * - At-Risk Customer Alerts (to admin)
+ * - Customer Re-engagement (to customer)
+ * - Weekly RFM Report (to admin)
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+
+    <!-- Alert to Admin: At-Risk Customers -->
+    <template id="erp_alert_at_risk_admin"
+              label="ERP - At-Risk Customers Alert (Admin)"
+              file="erp/alert_at_risk_admin.html"
+              type="html"
+              module="GrupoAwamotos_ERPIntegration"
+              area="adminhtml"/>
+
+    <!-- Alert to Customer: Re-engagement -->
+    <template id="erp_alert_reengagement_customer"
+              label="ERP - Re-engagement Email (Customer)"
+              file="erp/alert_reengagement_customer.html"
+              type="html"
+              module="GrupoAwamotos_ERPIntegration"
+              area="frontend"/>
+
+    <!-- Weekly RFM Report to Admin -->
+    <template id="erp_report_rfm_weekly"
+              label="ERP - Weekly RFM Report (Admin)"
+              file="erp/report_rfm_weekly.html"
+              type="html"
+              module="GrupoAwamotos_ERPIntegration"
+              area="adminhtml"/>
+
+    <!-- Sales Forecast Alert -->
+    <template id="erp_alert_forecast"
+              label="ERP - Sales Forecast Alert (Admin)"
+              file="erp/alert_forecast.html"
+              type="html"
+              module="GrupoAwamotos_ERPIntegration"
+              area="adminhtml"/>
+
+</config>

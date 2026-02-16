@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Layout for Cart Page - Add ERP Suggestions Widget
+ *
+ * This adds a compact suggestions widget to the cart page,
+ * showing personalized product recommendations based on ERP purchase history.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Add suggestions widget after cart form -->
+        <referenceContainer name="checkout.cart.container">
+            <block class="GrupoAwamotos\ERPIntegration\Block\Customer\Suggestions"
+                   name="erp.cart.suggestions"
+                   template="GrupoAwamotos_ERPIntegration::customer/suggestions-cart.phtml"
+                   after="checkout.cart.form"
+                   ifconfig="grupoawamotos_erp/suggestions/cart_enabled"/>
+        </referenceContainer>
+
+        <!-- Alternative: Add to cart sidebar if 2-columns layout -->
+        <referenceContainer name="cart.summary">
+            <block class="GrupoAwamotos\ERPIntegration\Block\Customer\Suggestions"
+                   name="erp.cart.suggestions.sidebar"
+                   template="GrupoAwamotos_ERPIntegration::customer/suggestions-sidebar.phtml"
+                   before="-"
+                   ifconfig="grupoawamotos_erp/suggestions/show_in_sidebar"/>
+        </referenceContainer>
+    </body>
+</page>

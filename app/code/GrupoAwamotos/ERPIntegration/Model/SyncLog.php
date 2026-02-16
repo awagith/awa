@@ -14,8 +14,13 @@ class SyncLog extends AbstractModel
         $this->_init(ResourceModel\SyncLog::class);
     }
 
-    public static function log(
-        \Magento\Framework\ObjectManagerInterface $om,
+    /**
+     * Create and persist a sync log entry.
+     *
+     * Prefer injecting SyncLogFactory via DI and calling this method
+     * on the created instance instead of using static helpers.
+     */
+    public function createEntry(
         string $entityType,
         string $direction,
         string $status,
@@ -23,10 +28,8 @@ class SyncLog extends AbstractModel
         ?string $erpCode = null,
         ?int $magentoId = null,
         ?int $recordsProcessed = null
-    ): void {
-        /** @var self $log */
-        $log = $om->create(self::class);
-        $log->setData([
+    ): self {
+        $this->setData([
             'entity_type' => $entityType,
             'direction' => $direction,
             'status' => $status,
@@ -35,6 +38,7 @@ class SyncLog extends AbstractModel
             'magento_id' => $magentoId,
             'records_processed' => $recordsProcessed,
         ]);
-        $log->save();
+        $this->save();
+        return $this;
     }
 }

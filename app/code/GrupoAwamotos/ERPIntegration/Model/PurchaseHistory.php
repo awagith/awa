@@ -265,6 +265,146 @@ class PurchaseHistory
     }
 
     /**
+     * Get monthly purchase trend for charts (last N months)
+     *
+     * @return array [{month: '2026-01', order_count: 5, revenue: 12500.00, product_count: 18}, ...]
+     */
+    public function getMonthlyTrend(int $customerCode, int $months = 12): array
+    {
+        $safeMonths = max(1, min(60, $months));
+        try {
+            return $this->connection->query("
+                SELECT
+                    FORMAT(p.DTPEDIDO, 'yyyy-MM') AS month,
+                    COUNT(DISTINCT p.CODIGO) AS order_count,
+                    COALESCE(SUM(i.VLRTOTAL), 0) AS revenue,
+                    COUNT(DISTINCT i.MATERIAL) AS product_count
+                FROM VE_PEDIDO p
+                INNER JOIN VE_PEDIDOITENS i ON p.CODIGO = i.PEDIDO
+                WHERE p.CLIENTE = ?
+                  AND p.STATUS NOT IN ('C', 'X')
+                  AND p.DTPEDIDO >= DATEADD(MONTH, -{$safeMonths}, GETDATE())
+                GROUP BY FORMAT(p.DTPEDIDO, 'yyyy-MM')
+                ORDER BY FORMAT(p.DTPEDIDO, 'yyyy-MM') ASC
+            ", [$customerCode]);
+        } catch (\Exception $e) {
+            $this->logger->error('[ERP] Error getting monthly trend: ' . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get filtered purchase history for a customer
+     *
+     * @param int $customerCode ERP customer code
+     * @param array $filters Filters: period_days, min_freq, max_freq, min_price, max_price, sort_by, sort_dir, limit, offset
+     * @return array {items: array, total_count: int}
+     */
+    public function getFilteredHistory(int $customerCode, array $filters = []): array
+    {
+        $periodDays = (int)($filters['period_days'] ?? 0);
+        $minFreq = (int)($filters['min_freq'] ?? 0);
+        $maxFreq = (int)($filters['max_freq'] ?? 0);
+        $minPrice = (float)($filters['min_price'] ?? 0);
+        $maxPrice = (float)($filters['max_price'] ?? 0);
+        $sortBy = $filters['sort_by'] ?? 'days_since_last';
+        $sortDir = strtoupper($filters['sort_dir'] ?? 'ASC') === 'DESC' ? 'DESC' : 'ASC';
+        $limit = min(max((int)($filters['limit'] ?? 20), 1), 100);
+        $offset = max((int)($filters['offset'] ?? 0), 0);
+
+        // Whitelist sort columns
+        $sortColumns = [
+            'days_since_last' => 'DATEDIFF(DAY, MAX(p.DTPEDIDO), GETDATE())',
+            'total_qty' => 'SUM(i.QTDE)',
+            'avg_price' => 'AVG(i.VLRUNITARIO)',
+            'order_count' => 'COUNT(DISTINCT i.PEDIDO)',
+            'name' => 'MAX(i.DESCRICAO)',
+        ];
+        $orderByExpr = $sortColumns[$sortBy] ?? $sortColumns['days_since_last'];
+
+        // Build dynamic WHERE and HAVING
+        $params = [$customerCode];
+        $whereClauses = [];
+        $havingClauses = [];
+
+        if ($periodDays > 0) {
+            $whereClauses[] = 'p.DTPEDIDO >= DATEADD(day, -?, GETDATE())';
+            $params[] = $periodDays;
+        }
+
+        if ($minFreq > 0) {
+            $havingClauses[] = 'COUNT(DISTINCT i.PEDIDO) >= ?';
+            $params[] = $minFreq;
+        }
+        if ($maxFreq > 0) {
+            $havingClauses[] = 'COUNT(DISTINCT i.PEDIDO) <= ?';
+            $params[] = $maxFreq;
+        }
+        if ($minPrice > 0) {
+            $havingClauses[] = 'AVG(i.VLRUNITARIO) >= ?';
+            $params[] = $minPrice;
+        }
+        if ($maxPrice > 0) {
+            $havingClauses[] = 'AVG(i.VLRUNITARIO) <= ?';
+            $params[] = $maxPrice;
+        }
+
+        $whereExtra = !empty($whereClauses) ? ' AND ' . implode(' AND ', $whereClauses) : '';
+        $havingClause = !empty($havingClauses) ? ' HAVING ' . implode(' AND ', $havingClauses) : '';
+
+        try {
+            // Count query
+            $countSql = "
+                SELECT COUNT(*) as total FROM (
+                    SELECT i.MATERIAL
+                    FROM VE_PEDIDOITENS i
+                    INNER JOIN VE_PEDIDO p ON i.PEDIDO = p.CODIGO
+                    WHERE p.CLIENTE = ?
+                    AND p.STATUS NOT IN ('C', 'X')
+                    {$whereExtra}
+                    GROUP BY i.MATERIAL
+                    {$havingClause}
+                ) sub
+            ";
+            $countResult = $this->connection->fetchOne($countSql, $params);
+            $totalCount = (int)($countResult['total'] ?? 0);
+
+            // Data query with pagination (OFFSET/FETCH NEXT inlined as integers for dblib compatibility)
+            $safeOffset = (int)$offset;
+            $safeLimit = (int)$limit;
+            $dataSql = "
+                SELECT
+                    i.MATERIAL as sku,
+                    MAX(i.DESCRICAO) as name,
+                    COUNT(DISTINCT i.PEDIDO) as order_count,
+                    SUM(i.QTDE) as total_qty,
+                    AVG(i.VLRUNITARIO) as avg_price,
+                    MAX(i.VLRUNITARIO) as max_price,
+                    MAX(p.DTPEDIDO) as last_order_date,
+                    DATEDIFF(DAY, MAX(p.DTPEDIDO), GETDATE()) as days_since_last
+                FROM VE_PEDIDOITENS i
+                INNER JOIN VE_PEDIDO p ON i.PEDIDO = p.CODIGO
+                WHERE p.CLIENTE = ?
+                AND p.STATUS NOT IN ('C', 'X')
+                {$whereExtra}
+                GROUP BY i.MATERIAL
+                {$havingClause}
+                ORDER BY {$orderByExpr} {$sortDir}
+                OFFSET {$safeOffset} ROWS FETCH NEXT {$safeLimit} ROWS ONLY
+            ";
+            $items = $this->connection->query($dataSql, $params);
+
+            return [
+                'items' => $items,
+                'total_count' => $totalCount,
+            ];
+        } catch (\Exception $e) {
+            $this->logger->error('[ERP] Error getting filtered history: ' . $e->getMessage());
+            return ['items' => [], 'total_count' => 0];
+        }
+    }
+
+    /**
      * Clear cache for a customer
      */
     public function clearCustomerCache(int $customerCode): void

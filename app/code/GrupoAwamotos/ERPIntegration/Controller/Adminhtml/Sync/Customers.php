@@ -5,10 +5,11 @@ namespace GrupoAwamotos\ERPIntegration\Controller\Adminhtml\Sync;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
 use GrupoAwamotos\ERPIntegration\Api\CustomerSyncInterface;
 
-class Customers extends Action
+class Customers extends Action implements HttpPostActionInterface
 {
     public const ADMIN_RESOURCE = 'GrupoAwamotos_ERPIntegration::sync';
 

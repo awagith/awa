@@ -80,4 +80,72 @@ class SyncLog extends AbstractDb
         $result = $connection->fetchOne($select);
         return $result ?: null;
     }
+
+    /**
+     * Get sync hash for entity to detect changes
+     */
+    public function getEntityMapHash(string $entityType, string $erpCode): ?string
+    {
+        $connection = $this->getConnection();
+        $select = $connection->select()
+            ->from('grupoawamotos_erp_entity_map', 'sync_hash')
+            ->where('entity_type = ?', $entityType)
+            ->where('erp_code = ?', $erpCode);
+
+        $result = $connection->fetchOne($select);
+        return $result ?: null;
+    }
+
+    /**
+     * Get recent sync logs
+     */
+    public function getRecentLogs(int $limit = 100, ?string $entityType = null): array
+    {
+        $connection = $this->getConnection();
+        $select = $connection->select()
+            ->from($this->getMainTable())
+            ->order('created_at DESC')
+            ->limit($limit);
+
+        if ($entityType) {
+            $select->where('entity_type = ?', $entityType);
+        }
+
+        return $connection->fetchAll($select);
+    }
+
+    /**
+     * Get sync statistics for a time period
+     */
+    public function getSyncStats(string $entityType, int $days = 7): array
+    {
+        $connection = $this->getConnection();
+        $fromDate = (new \DateTime())->modify("-{$days} days")->format('Y-m-d H:i:s');
+
+        $select = $connection->select()
+            ->from($this->getMainTable(), [
+                'status',
+                'total' => 'COUNT(*)',
+                'total_records' => 'SUM(records_processed)',
+            ])
+            ->where('entity_type = ?', $entityType)
+            ->where('created_at >= ?', $fromDate)
+            ->group('status');
+
+        return $connection->fetchAll($select);
+    }
+
+    /**
+     * Clean old logs
+     */
+    public function cleanOldLogs(int $daysToKeep = 30): int
+    {
+        $connection = $this->getConnection();
+        $cutoffDate = (new \DateTime())->modify("-{$daysToKeep} days")->format('Y-m-d H:i:s');
+
+        return $connection->delete(
+            $this->getMainTable(),
+            ['created_at < ?' => $cutoffDate]
+        );
+    }
 }

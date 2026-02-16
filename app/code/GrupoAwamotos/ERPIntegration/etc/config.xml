@@ -5,10 +5,16 @@
         <grupoawamotos_erp>
             <connection>
                 <enabled>0</enabled>
-                <host>201.33.193.193</host>
+                <use_env>0</use_env>
+                <!-- Credenciais devem ser configuradas via:
+                     1. Variaveis de ambiente (ERP_SQL_*) - RECOMENDADO
+                     2. app/etc/env.php (erp/host, erp/database, etc)
+                     3. Admin config (menos seguro)
+                -->
+                <host></host>
                 <port>1433</port>
-                <database>INDUSTRIAL</database>
-                <username>consulta</username>
+                <database></database>
+                <username></username>
                 <driver>auto</driver>
                 <timeout>30</timeout>
                 <trust_certificate>1</trust_certificate>
@@ -18,11 +24,20 @@
                 <frequency>360</frequency>
                 <filter_comercializa>1</filter_comercializa>
             </sync_products>
+            <sync_categories>
+                <enabled>1</enabled>
+                <root_category_name>Catalogo ERP</root_category_name>
+                <include_in_menu>0</include_in_menu>
+            </sync_categories>
             <sync_stock>
                 <enabled>1</enabled>
                 <realtime>1</realtime>
                 <filial>1</filial>
                 <cache_ttl>300</cache_ttl>
+                <negative_cache_ttl>60</negative_cache_ttl>
+                <multi_branch>0</multi_branch>
+                <filiais></filiais>
+                <aggregation_mode>sum</aggregation_mode>
             </sync_stock>
             <sync_customers>
                 <enabled>1</enabled>
@@ -31,15 +46,71 @@
             <sync_orders>
                 <enabled>1</enabled>
                 <send_on_place>1</send_on_place>
+                <use_queue>1</use_queue>
             </sync_orders>
             <sync_prices>
                 <enabled>1</enabled>
                 <frequency>240</frequency>
+                <default_price_list>24</default_price_list>
             </sync_prices>
+            <sync_images>
+                <enabled>1</enabled>
+                <source>auto</source>
+                <base_path></base_path>
+                <base_url></base_url>
+                <replace_existing>0</replace_existing>
+                <frequency>720</frequency>
+                <!-- Orphan cleanup settings -->
+                <clean_orphans_enabled>0</clean_orphans_enabled>
+                <clean_orphans_dry_run>1</clean_orphans_dry_run>
+                <clean_orphans_keep_manual>1</clean_orphans_keep_manual>
+            </sync_images>
             <suggestions>
                 <enabled>1</enabled>
                 <max_suggestions>10</max_suggestions>
+                <cart_enabled>1</cart_enabled>
+                <cart_min_products>3</cart_min_products>
+                <cart_max_products>15</cart_max_products>
+                <free_shipping_threshold>1500</free_shipping_threshold>
+                <cache_ttl>1800</cache_ttl>
+                <show_in_sidebar>0</show_in_sidebar>
             </suggestions>
+            <whatsapp>
+                <enabled>0</enabled>
+                <!-- Z-API credentials (use ENV vars in production: ZAPI_INSTANCE_ID, ZAPI_TOKEN) -->
+                <zapi_instance_id></zapi_instance_id>
+                <zapi_token></zapi_token>
+                <zapi_client_token></zapi_client_token>
+                <admin_phone></admin_phone>
+                <order_status_enabled>1</order_status_enabled>
+                <new_order_enabled>1</new_order_enabled>
+                <payment_enabled>1</payment_enabled>
+                <shipping_enabled>1</shipping_enabled>
+                <reengagement_enabled>0</reengagement_enabled>
+            </whatsapp>
+            <rfm>
+                <enabled>1</enabled>
+                <analysis_period>24</analysis_period>
+                <cache_ttl>86400</cache_ttl>
+                <alert_at_risk>0</alert_at_risk>
+            </rfm>
+            <coupon>
+                <enabled>0</enabled>
+                <auto_send>0</auto_send>
+                <valid_days>30</valid_days>
+                <default_discount>10</default_discount>
+                <min_order_amount></min_order_amount>
+                <discount_cant_lose>20</discount_cant_lose>
+                <discount_at_risk>15</discount_at_risk>
+                <discount_lost>25</discount_lost>
+            </coupon>
+            <forecast>
+                <enabled>1</enabled>
+                <method>hybrid</method>
+                <confidence_level>85</confidence_level>
+                <monthly_target></monthly_target>
+                <alert_enabled>0</alert_enabled>
+            </forecast>
         </grupoawamotos_erp>
     </default>
 </config>

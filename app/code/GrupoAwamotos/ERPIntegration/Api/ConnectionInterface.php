@@ -39,6 +39,21 @@ interface ConnectionInterface
     public function fetchColumn(string $sql, array $params = [], int $column = 0);
 
     /**
+     * Begin database transaction
+     */
+    public function beginTransaction(): bool;
+
+    /**
+     * Commit current transaction
+     */
+    public function commit(): bool;
+
+    /**
+     * Rollback current transaction
+     */
+    public function rollback(): bool;
+
+    /**
      * Disconnect from database
      */
     public function disconnect(): void;

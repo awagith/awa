@@ -36,8 +36,7 @@ class OrderHistory
         $maxSuggestions = $this->helper->getMaxSuggestions();
 
         try {
-            $sql = "SELECT TOP (:limit)
-                        pi.MATERIAL AS sku,
+            $sql = "SELECT pi.MATERIAL AS sku,
                         m.DESCRICAO AS name,
                         SUM(pi.QTDE) AS total_qty,
                         COUNT(DISTINCT p.CODIGO) AS total_orders,
@@ -50,7 +49,8 @@ class OrderHistory
                       AND p.STATUS NOT IN ('C', 'X')
                       AND m.CCKATIVO = 'S'
                     GROUP BY pi.MATERIAL, m.DESCRICAO
-                    ORDER BY total_orders DESC, last_order_date DESC";
+                    ORDER BY total_orders DESC, last_order_date DESC
+                    OFFSET 0 ROWS FETCH NEXT :limit ROWS ONLY";
 
             return $this->connection->query($sql, [
                 ':limit' => $maxSuggestions,
@@ -69,8 +69,7 @@ class OrderHistory
         }
 
         try {
-            $sql = "SELECT TOP (:limit)
-                        pi.MATERIAL AS sku,
+            $sql = "SELECT pi.MATERIAL AS sku,
                         m.DESCRICAO AS name,
                         pi.QTDE AS last_qty,
                         pi.VLRUNITARIO AS last_price,
@@ -80,12 +79,14 @@ class OrderHistory
                     JOIN VE_PEDIDO p ON p.CODIGO = pi.PEDIDO
                     JOIN MT_MATERIAL m ON m.CODIGO = pi.MATERIAL
                     WHERE p.CODIGO = (
-                        SELECT TOP 1 CODIGO FROM VE_PEDIDO
+                        SELECT CODIGO FROM VE_PEDIDO
                         WHERE CLIENTE = :cliente AND STATUS NOT IN ('C', 'X')
                         ORDER BY DTPEDIDO DESC
+                        OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY
                     )
                     AND m.CCKATIVO = 'S'
-                    ORDER BY pi.VLRTOTAL DESC";
+                    ORDER BY pi.VLRTOTAL DESC
+                    OFFSET 0 ROWS FETCH NEXT :limit ROWS ONLY";
 
             return $this->connection->query($sql, [
                 ':limit' => $this->helper->getMaxSuggestions(),

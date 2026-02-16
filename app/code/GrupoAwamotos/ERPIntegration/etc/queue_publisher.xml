@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+  ERP Integration - Queue Publisher Configuration
+  Defines publishers for sending messages to queues
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/publisher.xsd">
+
+    <!-- Publisher for order sync messages -->
+    <publisher topic="erp.order.sync">
+        <connection name="db" exchange="erp.exchange"/>
+    </publisher>
+
+    <!-- Publisher for retry messages -->
+    <publisher topic="erp.order.sync.retry">
+        <connection name="db" exchange="erp.exchange"/>
+    </publisher>
+
+</config>

@@ -7,19 +7,33 @@ use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\App\DeploymentConfig;
 
 class Data extends AbstractHelper
 {
     private const XML_PREFIX = 'grupoawamotos_erp/';
 
+    /**
+     * Environment variable names for secure credential storage
+     */
+    private const ENV_HOST = 'ERP_SQL_HOST';
+    private const ENV_PORT = 'ERP_SQL_PORT';
+    private const ENV_DATABASE = 'ERP_SQL_DATABASE';
+    private const ENV_USERNAME = 'ERP_SQL_USERNAME';
+    private const ENV_PASSWORD = 'ERP_SQL_PASSWORD';
+    private const ENV_WHATSAPP_TOKEN = 'ERP_WHATSAPP_TOKEN';
+
     private EncryptorInterface $encryptor;
+    private DeploymentConfig $deploymentConfig;
 
     public function __construct(
         Context $context,
-        EncryptorInterface $encryptor
+        EncryptorInterface $encryptor,
+        DeploymentConfig $deploymentConfig
     ) {
         parent::__construct($context);
         $this->encryptor = $encryptor;
+        $this->deploymentConfig = $deploymentConfig;
     }
 
     public function isEnabled(): bool
@@ -30,8 +44,33 @@ class Data extends AbstractHelper
         );
     }
 
+    /**
+     * Check if environment variables should be used for credentials
+     */
+    public function useEnvCredentials(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'connection/use_env',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
     public function getHost(): string
     {
+        // Priority: ENV -> env.php -> admin config
+        if ($this->useEnvCredentials()) {
+            $envHost = $this->getEnvValue(self::ENV_HOST);
+            if ($envHost) {
+                return $envHost;
+            }
+        }
+
+        // Check env.php (deployment config)
+        $deployHost = $this->getDeploymentConfigValue('erp/host');
+        if ($deployHost) {
+            return $deployHost;
+        }
+
         return (string) $this->scopeConfig->getValue(
             self::XML_PREFIX . 'connection/host',
             ScopeInterface::SCOPE_STORE
@@ -40,6 +79,18 @@ class Data extends AbstractHelper
 
     public function getPort(): int
     {
+        if ($this->useEnvCredentials()) {
+            $envPort = $this->getEnvValue(self::ENV_PORT);
+            if ($envPort) {
+                return (int) $envPort;
+            }
+        }
+
+        $deployPort = $this->getDeploymentConfigValue('erp/port');
+        if ($deployPort) {
+            return (int) $deployPort;
+        }
+
         return (int) ($this->scopeConfig->getValue(
             self::XML_PREFIX . 'connection/port',
             ScopeInterface::SCOPE_STORE
@@ -48,6 +99,18 @@ class Data extends AbstractHelper
 
     public function getDatabase(): string
     {
+        if ($this->useEnvCredentials()) {
+            $envDb = $this->getEnvValue(self::ENV_DATABASE);
+            if ($envDb) {
+                return $envDb;
+            }
+        }
+
+        $deployDb = $this->getDeploymentConfigValue('erp/database');
+        if ($deployDb) {
+            return $deployDb;
+        }
+
         return (string) $this->scopeConfig->getValue(
             self::XML_PREFIX . 'connection/database',
             ScopeInterface::SCOPE_STORE
@@ -56,6 +119,18 @@ class Data extends AbstractHelper
 
     public function getUsername(): string
     {
+        if ($this->useEnvCredentials()) {
+            $envUser = $this->getEnvValue(self::ENV_USERNAME);
+            if ($envUser) {
+                return $envUser;
+            }
+        }
+
+        $deployUser = $this->getDeploymentConfigValue('erp/username');
+        if ($deployUser) {
+            return $deployUser;
+        }
+
         return (string) $this->scopeConfig->getValue(
             self::XML_PREFIX . 'connection/username',
             ScopeInterface::SCOPE_STORE
@@ -64,11 +139,61 @@ class Data extends AbstractHelper
 
     public function getPassword(): string
     {
+        if ($this->useEnvCredentials()) {
+            $envPass = $this->getEnvValue(self::ENV_PASSWORD);
+            if ($envPass) {
+                return $envPass;
+            }
+        }
+
+        $deployPass = $this->getDeploymentConfigValue('erp/password');
+        if ($deployPass) {
+            return $deployPass;
+        }
+
         $value = (string) $this->scopeConfig->getValue(
             self::XML_PREFIX . 'connection/password',
             ScopeInterface::SCOPE_STORE
         );
         return $value ? $this->encryptor->decrypt($value) : '';
+    }
+
+    /**
+     * Get value from environment variable
+     */
+    private function getEnvValue(string $name): ?string
+    {
+        $value = getenv($name);
+        return ($value !== false && $value !== '') ? $value : null;
+    }
+
+    /**
+     * Get value from deployment config (app/etc/env.php)
+     */
+    private function getDeploymentConfigValue(string $path): ?string
+    {
+        try {
+            $value = $this->deploymentConfig->get($path);
+            return $value ? (string) $value : null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get credential source for diagnostics
+     */
+    public function getCredentialSource(): string
+    {
+        if ($this->useEnvCredentials() && $this->getEnvValue(self::ENV_HOST)) {
+            return 'environment';
+        }
+
+        if ($this->getDeploymentConfigValue('erp/host')) {
+            return 'env.php';
+        }
+
+        return 'admin_config';
     }
 
     public function getDriver(): string
@@ -143,6 +268,53 @@ class Data extends AbstractHelper
         ) ?: 1);
     }
 
+    /**
+     * Get list of branches for stock aggregation
+     * Returns array of branch codes, or single branch if multi-branch is disabled
+     */
+    public function getStockFiliais(): array
+    {
+        if (!$this->isMultiBranchEnabled()) {
+            return [$this->getStockFilial()];
+        }
+
+        $filiais = $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'sync_stock/filiais',
+            ScopeInterface::SCOPE_STORE
+        );
+
+        if (empty($filiais)) {
+            return [$this->getStockFilial()];
+        }
+
+        // Parse comma-separated list
+        $list = array_map('intval', array_filter(explode(',', $filiais)));
+
+        return !empty($list) ? $list : [$this->getStockFilial()];
+    }
+
+    /**
+     * Check if multi-branch stock aggregation is enabled
+     */
+    public function isMultiBranchEnabled(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'sync_stock/multi_branch',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get stock aggregation mode (sum, min, max, avg)
+     */
+    public function getStockAggregationMode(): string
+    {
+        return (string) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'sync_stock/aggregation_mode',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 'sum');
+    }
+
     public function getStockCacheTtl(): int
     {
         return (int) ($this->scopeConfig->getValue(
@@ -175,10 +347,73 @@ class Data extends AbstractHelper
         );
     }
 
+    /**
+     * Check if order sync should use message queue (async mode)
+     * Default: true for better resilience
+     */
+    public function isOrderQueueEnabled(): bool
+    {
+        // Default to true if not set (async mode is more resilient)
+        $value = $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'sync_orders/use_queue',
+            ScopeInterface::SCOPE_STORE
+        );
+
+        // If not configured, default to true
+        return $value === null ? true : (bool) $value;
+    }
+
+    /**
+     * Get negative cache TTL in seconds (for SKUs not found in ERP)
+     */
+    public function getNegativeCacheTtl(): int
+    {
+        return (int) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'sync_stock/negative_cache_ttl',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 60);
+    }
+
     public function isPriceSyncEnabled(): bool
     {
         return $this->isEnabled() && $this->scopeConfig->isSetFlag(
             self::XML_PREFIX . 'sync_prices/enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get default price list code (FATORPRECO) for base Magento prices
+     * Default: 24 (NACIONAL)
+     */
+    public function getDefaultPriceList(): int
+    {
+        return (int) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'sync_prices/default_price_list',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 24);
+    }
+
+    public function isCategorySyncEnabled(): bool
+    {
+        return $this->isEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'sync_categories/enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getCategoryRootName(): string
+    {
+        return (string) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'sync_categories/root_category_name',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 'Catalogo ERP');
+    }
+
+    public function getCategoryIncludeInMenu(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'sync_categories/include_in_menu',
             ScopeInterface::SCOPE_STORE
         );
     }
@@ -197,5 +432,516 @@ class Data extends AbstractHelper
             self::XML_PREFIX . 'suggestions/max_suggestions',
             ScopeInterface::SCOPE_STORE
         ) ?: 10);
+    }
+
+    // ========== RFM Configuration ==========
+
+    public function isRfmEnabled(): bool
+    {
+        return $this->isEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'rfm/enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getRfmAnalysisPeriod(): int
+    {
+        return (int) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'rfm/analysis_period',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 24);
+    }
+
+    public function getRfmCacheTtl(): int
+    {
+        return (int) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'rfm/cache_ttl',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 86400);
+    }
+
+    public function isAtRiskAlertEnabled(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'rfm/alert_at_risk',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getAtRiskAlertEmail(): string
+    {
+        return (string) $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'rfm/alert_email',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    // ========== Forecast Configuration ==========
+
+    public function isForecastEnabled(): bool
+    {
+        return $this->isEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'forecast/enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getForecastMethod(): string
+    {
+        return (string) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'forecast/method',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 'hybrid');
+    }
+
+    public function getForecastConfidenceLevel(): int
+    {
+        return (int) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'forecast/confidence_level',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 85);
+    }
+
+    public function getMonthlyTarget(): float
+    {
+        return (float) $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'forecast/monthly_target',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function isForecastAlertEnabled(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'forecast/alert_enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function isAlertAtRiskEnabled(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'rfm/alert_at_risk',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    // ========== Suggested Cart Configuration ==========
+
+    public function isSuggestedCartEnabled(): bool
+    {
+        return $this->isSuggestionsEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'suggestions/cart_enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getSuggestedCartMinProducts(): int
+    {
+        return (int) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'suggestions/cart_min_products',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 3);
+    }
+
+    public function getSuggestedCartMaxProducts(): int
+    {
+        return (int) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'suggestions/cart_max_products',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 15);
+    }
+
+    public function getFreeShippingThreshold(): float
+    {
+        return (float) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'suggestions/free_shipping_threshold',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 1500);
+    }
+
+    public function getSuggestionsCacheTtl(): int
+    {
+        return (int) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'suggestions/cache_ttl',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 1800);
+    }
+
+    // ========== Coupon Configuration ==========
+
+    public function isCouponGenerationEnabled(): bool
+    {
+        return $this->isEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'coupon/enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getCouponValidDays(): int
+    {
+        return (int) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'coupon/valid_days',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 30);
+    }
+
+    public function getCouponMinOrderAmount(): float
+    {
+        return (float) $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'coupon/min_order_amount',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getCouponDiscountForSegment(string $segment): int
+    {
+        $discounts = $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'coupon/segment_discounts',
+            ScopeInterface::SCOPE_STORE
+        );
+
+        if (is_string($discounts)) {
+            $discounts = json_decode($discounts, true);
+        }
+
+        return (int) ($discounts[$segment] ?? 0);
+    }
+
+    public function getDefaultCouponDiscount(): int
+    {
+        return (int) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'coupon/default_discount',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 10);
+    }
+
+    public function isCouponAutoSendEnabled(): bool
+    {
+        return $this->isCouponGenerationEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'coupon/auto_send',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    // ========== WhatsApp Configuration (Z-API) ==========
+
+    public function isWhatsAppEnabled(): bool
+    {
+        return $this->isEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'whatsapp/enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get Z-API Instance ID
+     */
+    public function getZApiInstanceId(): string
+    {
+        // Priority: ENV -> deployment config (env.php) -> admin config
+        $envValue = $this->getEnvValue('ZAPI_INSTANCE_ID');
+        if ($envValue) {
+            return $envValue;
+        }
+
+        // Check deployment config (env.php)
+        $deployValue = $this->getDeploymentConfigValue('system/default/grupoawamotos_erp/whatsapp/zapi_instance_id');
+        if ($deployValue) {
+            return $deployValue;
+        }
+
+        return (string) $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'whatsapp/zapi_instance_id',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get Z-API Token
+     */
+    public function getZApiToken(): string
+    {
+        // Priority: ENV -> deployment config (env.php) -> admin config (encrypted)
+        $envValue = $this->getEnvValue('ZAPI_TOKEN');
+        if ($envValue) {
+            return $envValue;
+        }
+
+        // Check deployment config (env.php) - not encrypted
+        $deployToken = $this->getDeploymentConfigValue('system/default/grupoawamotos_erp/whatsapp/zapi_token');
+        if ($deployToken) {
+            return $deployToken;
+        }
+
+        // Admin config is encrypted
+        $value = (string) $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'whatsapp/zapi_token',
+            ScopeInterface::SCOPE_STORE
+        );
+        return $value ? $this->encryptor->decrypt($value) : '';
+    }
+
+    /**
+     * Get Z-API Client Token (optional security token)
+     */
+    public function getZApiClientToken(): string
+    {
+        // Priority: ENV -> deployment config (env.php) -> admin config (encrypted)
+        $envValue = $this->getEnvValue('ZAPI_CLIENT_TOKEN');
+        if ($envValue) {
+            return $envValue;
+        }
+
+        // Check deployment config (env.php) - not encrypted
+        $deployToken = $this->getDeploymentConfigValue('system/default/grupoawamotos_erp/whatsapp/zapi_client_token');
+        if ($deployToken) {
+            return $deployToken;
+        }
+
+        // Admin config is encrypted
+        $value = (string) $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'whatsapp/zapi_client_token',
+            ScopeInterface::SCOPE_STORE
+        );
+        return $value ? $this->encryptor->decrypt($value) : '';
+    }
+
+    /**
+     * Get admin phone number for test messages
+     */
+    public function getWhatsAppAdminPhone(): string
+    {
+        return (string) $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'whatsapp/admin_phone',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Legacy method - kept for backwards compatibility
+     * @deprecated Use getZApiInstanceId() instead
+     */
+    public function getWhatsAppPhoneNumberId(): string
+    {
+        return $this->getZApiInstanceId();
+    }
+
+    /**
+     * Legacy method - kept for backwards compatibility
+     * @deprecated Use getZApiToken() instead
+     */
+    public function getWhatsAppAccessToken(): string
+    {
+        return $this->getZApiToken();
+    }
+
+    public function getWhatsAppBusinessId(): string
+    {
+        return (string) $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'whatsapp/business_id',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getWhatsAppReengagementTemplate(): string
+    {
+        return (string) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'whatsapp/template_reengagement',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 'reengagement_coupon');
+    }
+
+    public function getWhatsAppSuggestionTemplate(): string
+    {
+        return (string) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'whatsapp/template_suggestion',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 'product_suggestion');
+    }
+
+    public function getWhatsAppOrderStatusTemplate(): string
+    {
+        return (string) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'whatsapp/template_order_status',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 'order_status_update');
+    }
+
+    public function isWhatsAppReengagementEnabled(): bool
+    {
+        return $this->isWhatsAppEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'whatsapp/reengagement_enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function isWhatsAppOrderStatusEnabled(): bool
+    {
+        return $this->isWhatsAppEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'whatsapp/order_status_enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Check if should notify on new orders
+     */
+    public function isWhatsAppNewOrderEnabled(): bool
+    {
+        return $this->isWhatsAppEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'whatsapp/new_order_enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Check if should notify on payment confirmation
+     */
+    public function isWhatsAppPaymentEnabled(): bool
+    {
+        return $this->isWhatsAppEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'whatsapp/payment_enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Check if should notify on shipping
+     */
+    public function isWhatsAppShippingEnabled(): bool
+    {
+        return $this->isWhatsAppEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'whatsapp/shipping_enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    // ========== Store Information ==========
+
+    /**
+     * Get store name
+     */
+    public function getStoreName(): string
+    {
+        return (string) ($this->scopeConfig->getValue(
+            'general/store_information/name',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 'Loja');
+    }
+
+    /**
+     * Get store base URL
+     */
+    public function getStoreUrl(): string
+    {
+        return (string) $this->scopeConfig->getValue(
+            'web/secure/base_url',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    // ========== Image Sync Configuration ==========
+
+    /**
+     * Check if image sync is enabled
+     */
+    public function isImageSyncEnabled(): bool
+    {
+        return $this->isEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'sync_images/enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get image source type (table, folder, url, auto)
+     */
+    public function getImageSource(): string
+    {
+        return (string) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'sync_images/source',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 'auto');
+    }
+
+    /**
+     * Get base path for local/network images
+     */
+    public function getImageBasePath(): string
+    {
+        return (string) $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'sync_images/base_path',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get base URL for remote images (with {sku} placeholder)
+     */
+    public function getImageBaseUrl(): string
+    {
+        return (string) $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'sync_images/base_url',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Check if should replace existing images
+     */
+    public function shouldReplaceImages(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'sync_images/replace_existing',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get image sync frequency in minutes
+     */
+    public function getImageSyncFrequency(): int
+    {
+        return (int) ($this->scopeConfig->getValue(
+            self::XML_PREFIX . 'sync_images/frequency',
+            ScopeInterface::SCOPE_STORE
+        ) ?: 720);
+    }
+
+    // ==================== Orphan Image Cleanup ====================
+
+    /**
+     * Check if orphan image cleanup is enabled
+     */
+    public function isOrphanCleanupEnabled(): bool
+    {
+        return $this->isImageSyncEnabled()
+            && $this->scopeConfig->isSetFlag(
+                self::XML_PREFIX . 'sync_images/clean_orphans_enabled',
+                ScopeInterface::SCOPE_STORE
+            );
+    }
+
+    /**
+     * Check if orphan cleanup is in dry-run mode
+     */
+    public function isOrphanCleanupDryRun(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'sync_images/clean_orphans_dry_run',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Check if should keep manually uploaded images
+     */
+    public function shouldKeepManualImages(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'sync_images/clean_orphans_keep_manual',
+            ScopeInterface::SCOPE_STORE
+        );
     }
 }

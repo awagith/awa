@@ -1,0 +1,60 @@
+<!--
+/**
+ * ERP Integration - At-Risk Customers Alert Email (Admin)
+ */
+-->
+<!--@subject {{trans "Alerta: Clientes em Risco Detectados"}} @-->
+<!--@vars
+{"var customer_count":"Quantidade de Clientes em Risco","var customers":"Lista de Clientes","var store.getFrontendName()":"Nome da Loja"}
+@-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <p class="greeting">{{trans "Alerta de Clientes em Risco"}}</p>
+            <p>
+                {{trans "Foram identificados <strong>%customer_count</strong> clientes no segmento 'Em Risco' que necessitam de atenção imediata." customer_count=$customer_count}}
+            </p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <table class="order-details" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                    <th style="text-align:left; padding:10px; background:#f5f5f5; border-bottom:1px solid #ddd;">{{trans "Cliente"}}</th>
+                    <th style="text-align:left; padding:10px; background:#f5f5f5; border-bottom:1px solid #ddd;">{{trans "CNPJ"}}</th>
+                    <th style="text-align:right; padding:10px; background:#f5f5f5; border-bottom:1px solid #ddd;">{{trans "Dias sem Comprar"}}</th>
+                    <th style="text-align:right; padding:10px; background:#f5f5f5; border-bottom:1px solid #ddd;">{{trans "Valor Total"}}</th>
+                    <th style="text-align:center; padding:10px; background:#f5f5f5; border-bottom:1px solid #ddd;">{{trans "Score RFM"}}</th>
+                </tr>
+                {{var customers}}
+            </table>
+        </td>
+    </tr>
+    <tr class="email-action">
+        <td>
+            <p style="margin-top:20px;">
+                <strong>{{trans "Ações Recomendadas:"}}</strong>
+            </p>
+            <ul style="margin:10px 0; padding-left:20px;">
+                <li>{{trans "Entre em contato pessoalmente com os clientes listados"}}</li>
+                <li>{{trans "Considere oferecer descontos ou condições especiais"}}</li>
+                <li>{{trans "Verifique se houve algum problema com pedidos anteriores"}}</li>
+                <li>{{trans "Agende visitas comerciais se aplicável"}}</li>
+            </ul>
+        </td>
+    </tr>
+    <tr class="email-footer">
+        <td>
+            <p style="margin-top:20px; font-size:12px; color:#666;">
+                {{trans "Este alerta foi gerado automaticamente pelo módulo de Integração ERP."}}
+                <br/>
+                {{trans "Data: %date" date=$generated_at}}
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

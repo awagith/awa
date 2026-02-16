@@ -425,8 +425,7 @@ class OrderSync implements OrderSyncInterface
     public function getOrderHistory(int $erpClientCode, int $limit = 50): array
     {
         try {
-            $sql = "SELECT TOP (:limit)
-                        p.CODIGO AS pedido_id,
+            $sql = "SELECT p.CODIGO AS pedido_id,
                         p.DTPEDIDO AS data_pedido,
                         p.VLRTOTAL AS valor_total,
                         p.STATUS AS status,
@@ -435,7 +434,8 @@ class OrderSync implements OrderSyncInterface
                         (SELECT COUNT(*) FROM VE_PEDIDOITENS pi WHERE pi.PEDIDO = p.CODIGO) AS total_itens
                     FROM VE_PEDIDO p
                     WHERE p.CLIENTE = :cliente
-                    ORDER BY p.DTPEDIDO DESC";
+                    ORDER BY p.DTPEDIDO DESC
+                    OFFSET 0 ROWS FETCH NEXT :limit ROWS ONLY";
 
             return $this->connection->query($sql, [
                 ':limit' => $limit,
@@ -493,6 +493,8 @@ class OrderSync implements OrderSyncInterface
         $filial = $this->helper->getStockFilial();
         $shipping = $order->getShippingAddress();
 
+        // Usar INSERT simples + SCOPE_IDENTITY() para compatibilidade com todos os drivers
+        // (OUTPUT INSERTED não funciona com dblib/FreeTDS)
         $orderSql = "INSERT INTO VE_PEDIDO (
                         FILIAL, DTPEDIDO, CLIENTE, VENDEDOR, STATUS,
                         VLRBRUTO, VLRDESCONTO, VLRTOTAL, VLRFRETE,
@@ -500,7 +502,6 @@ class OrderSync implements OrderSyncInterface
                         ENTENDERECO, ENTBAIRRO, ENTCIDADE, ENTCEP, ENTUF,
                         USERNAME1, USERDATE1
                      )
-                     OUTPUT INSERTED.CODIGO AS new_id
                      VALUES (
                         :filial, GETDATE(), :cliente, :vendedor, 'A',
                         :vlrbruto, :vlrdesconto, :vlrtotal, :vlrfrete,
@@ -526,9 +527,14 @@ class OrderSync implements OrderSyncInterface
             ':entuf' => $shipping ? ($shipping->getRegionCode() ?? '') : '',
         ];
 
-        $newOrder = $this->connection->fetchOne($orderSql, $params);
+        // Executa o INSERT
+        $this->connection->execute($orderSql, $params);
 
-        return $newOrder ? (int) ($newOrder['new_id'] ?? 0) : 0;
+        // Obtém o ID inserido usando SCOPE_IDENTITY() - compatível com todos os drivers
+        $identitySql = "SELECT SCOPE_IDENTITY() AS new_id";
+        $result = $this->connection->fetchOne($identitySql, []);
+
+        return $result ? (int) ($result['new_id'] ?? $result['NEW_ID'] ?? 0) : 0;
     }
 
     private function extractBairro($shipping): string

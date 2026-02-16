@@ -1,0 +1,805 @@
+<?php
+/**
+ * ERP Customer View Template
+ *
+ * @var \GrupoAwamotos\ERPIntegration\Block\Adminhtml\Customer\View $block
+ */
+
+$customer = $block->getCustomerInfo();
+$summary = $block->getPurchaseSummary();
+$orders = $block->getLastOrders(20);
+$products = $block->getMostPurchasedProducts(20);
+$suggestions = $block->getSuggestions(10);
+$frequency = $block->getPurchaseFrequency();
+$rfmData = $block->getRfmData();
+$oppSummary = $block->getOpportunitySummary();
+$trendData = $block->getMonthlyTrend(12);
+
+// Prepare chart data in PHP (safe for JSON encoding)
+$oppChartTypes = [];
+$oppChartCounts = [];
+$oppChartColors = [];
+$oppChartLabels = [];
+foreach ($oppSummary as $type => $count) {
+    if ((int)$count > 0) {
+        $oppChartTypes[] = $type;
+        $oppChartCounts[] = (int)$count;
+        $oppChartColors[] = $block->getOpportunityTypeBadgeColor($type);
+        $oppChartLabels[] = $block->getOpportunityTypeLabel($type);
+    }
+}
+?>
+
+<div class="erp-admin-container erp-customer-view">
+    <!-- Back Button -->
+    <div class="page-actions">
+        <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action-default scalable back">
+            <span>Voltar para Lista</span>
+        </a>
+    </div>
+
+    <?php if (!$customer): ?>
+    <div class="message message-error">
+        <span>Cliente não encontrado no ERP.</span>
+    </div>
+    <?php else: ?>
+
+    <!-- Customer Header -->
+    <div class="erp-customer-header">
+        <div class="erp-customer-info-main">
+            <h1><?= $block->escapeHtml($customer['RAZAO']) ?></h1>
+            <?php if (!empty($customer['FANTASIA']) && $customer['FANTASIA'] !== $customer['RAZAO']): ?>
+            <p class="erp-fantasia"><?= $block->escapeHtml($customer['FANTASIA']) ?></p>
+            <?php endif; ?>
+            <div class="erp-customer-meta">
+                <span class="erp-meta-item"><strong>Código:</strong> #<?= (int)$customer['CODIGO'] ?></span>
+                <span class="erp-meta-item"><strong>CNPJ:</strong> <?= $block->escapeHtml($customer['CGC']) ?></span>
+                <span class="erp-meta-item"><strong>Cidade:</strong> <?= $block->escapeHtml($customer['CIDADE'] . '/' . $customer['UF']) ?></span>
+            </div>
+            <?php if ($rfmData): ?>
+            <div class="erp-rfm-badge-container">
+                <span class="erp-rfm-badge" style="background-color: <?= $block->escapeHtmlAttr($rfmData['segment_color'] ?? '#9E9E9E') ?>">
+                    <?= $block->escapeHtml($rfmData['segment_label'] ?? $rfmData['segment'] ?? '') ?>
+                </span>
+                <span class="erp-rfm-details">
+                    RFM: <?= (int)($rfmData['r_score'] ?? 0) ?>-<?= (int)($rfmData['f_score'] ?? 0) ?>-<?= (int)($rfmData['m_score'] ?? 0) ?>
+                    | Recência: <?= (int)($rfmData['recency'] ?? 0) ?> dias
+                </span>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="erp-summary-cards">
+        <div class="erp-card erp-card-primary">
+            <div class="erp-card-value"><?= number_format($summary['total_pedidos'] ?? 0, 0, '', '.') ?></div>
+            <div class="erp-card-label">Total de Pedidos</div>
+        </div>
+        <div class="erp-card erp-card-success">
+            <div class="erp-card-value"><?= $block->formatPrice((float)($summary['valor_total'] ?? 0)) ?></div>
+            <div class="erp-card-label">Valor Total</div>
+        </div>
+        <div class="erp-card erp-card-info">
+            <div class="erp-card-value"><?= number_format($summary['produtos_diferentes'] ?? 0, 0, '', '.') ?></div>
+            <div class="erp-card-label">Produtos Diferentes</div>
+        </div>
+        <div class="erp-card erp-card-warning">
+            <div class="erp-card-value"><?= $block->formatErpDate($summary['ultima_compra'] ?? null) ?></div>
+            <div class="erp-card-label">Última Compra</div>
+        </div>
+        <?php if (!empty($frequency['avg_days_between_orders'])): ?>
+        <div class="erp-card">
+            <div class="erp-card-value"><?= (int)$frequency['avg_days_between_orders'] ?> dias</div>
+            <div class="erp-card-label">Média entre Pedidos</div>
+        </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Monthly Trend Chart -->
+    <?php if (!empty($trendData)): ?>
+    <div class="erp-chart-section">
+        <h3>Tendência de Compras (12 meses)</h3>
+        <div id="erp-trend-chart"></div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Opportunity Summary Cards + Donut Chart -->
+    <?php if (!empty($oppSummary)): ?>
+    <div class="erp-opportunity-summary">
+        <h3>Oportunidades de Venda</h3>
+        <div class="erp-opp-summary-layout">
+            <div class="erp-opp-summary-grid">
+                <?php foreach ($oppSummary as $type => $count): ?>
+                    <?php if ((int)$count > 0): ?>
+                    <div class="erp-opp-summary-item erp-opp-clickable"
+                         data-opp-type="<?= $block->escapeHtmlAttr($type) ?>"
+                         style="border-left-color: <?= $block->escapeHtmlAttr($block->getOpportunityTypeBadgeColor($type)) ?>; cursor: pointer;"
+                         title="Clique para filtrar">
+                        <div class="erp-opp-count"><?= (int)$count ?></div>
+                        <div class="erp-opp-label"><?= $block->escapeHtml($block->getOpportunityTypeLabel($type)) ?></div>
+                    </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+            <?php if (!empty($oppChartCounts)): ?>
+            <div class="erp-opp-donut-wrapper">
+                <div id="erp-opp-donut-chart"></div>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Content Tabs -->
+    <div class="erp-tabs">
+        <div class="erp-tab-nav">
+            <button class="erp-tab-btn active" data-tab="orders">Últimos Pedidos</button>
+            <button class="erp-tab-btn" data-tab="products">Produtos Mais Comprados</button>
+            <button class="erp-tab-btn" data-tab="suggestions">Sugestões</button>
+            <button class="erp-tab-btn" data-tab="opportunities">Classificador de Oportunidades</button>
+            <button class="erp-tab-btn" data-tab="history">Histórico Filtrado</button>
+        </div>
+
+        <!-- Orders Tab -->
+        <div class="erp-tab-content active" id="tab-orders">
+            <h3>Últimos 20 Pedidos</h3>
+            <?php if (empty($orders)): ?>
+            <p class="erp-empty">Nenhum pedido encontrado.</p>
+            <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th>Pedido</th>
+                        <th>Data</th>
+                        <th>Status</th>
+                        <th class="_right">Itens</th>
+                        <th class="_right">Valor Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($orders as $order): ?>
+                    <tr>
+                        <td><strong>#<?= $block->escapeHtml($order['pedido_id']) ?></strong></td>
+                        <td><?= $block->formatErpDate($order['data_pedido'] ?? null) ?></td>
+                        <td>
+                            <span class="erp-status erp-status-<?= $block->escapeHtmlAttr($block->getStatusClass($order['status'] ?? '')) ?>">
+                                <?= $block->escapeHtml($block->getStatusLabel($order['status'] ?? '')) ?>
+                            </span>
+                        </td>
+                        <td class="_right"><?= (int)($order['qtd_itens'] ?? 0) ?></td>
+                        <td class="_right"><strong><?= $block->formatPrice((float)($order['valor_total'] ?? 0)) ?></strong></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php endif; ?>
+        </div>
+
+        <!-- Products Tab -->
+        <div class="erp-tab-content" id="tab-products">
+            <h3>Produtos Mais Comprados</h3>
+            <?php if (!empty($products)): ?>
+            <div id="erp-products-bar-chart"></div>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th>SKU</th>
+                        <th>Produto</th>
+                        <th class="_right">Pedidos</th>
+                        <th class="_right">Quantidade Total</th>
+                        <th class="_right">Preço Médio</th>
+                        <th>Última Compra</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($products as $product): ?>
+                    <tr>
+                        <td><code><?= $block->escapeHtml($product['codigo_material']) ?></code></td>
+                        <td><?= $block->escapeHtml($product['descricao']) ?></td>
+                        <td class="_right">
+                            <span class="erp-badge erp-badge-info"><?= (int)($product['vezes_comprado'] ?? 0) ?></span>
+                        </td>
+                        <td class="_right"><?= number_format((float)($product['quantidade_total'] ?? 0), 0, '', '.') ?></td>
+                        <td class="_right"><?= $block->formatPrice((float)($product['preco_medio'] ?? 0)) ?></td>
+                        <td><?= $block->formatErpDate($product['ultima_compra'] ?? null) ?></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php else: ?>
+            <p class="erp-empty">Nenhum produto encontrado.</p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Suggestions Tab -->
+        <div class="erp-tab-content" id="tab-suggestions">
+            <h3>Sugestões de Produtos</h3>
+            <p class="erp-help">Produtos comprados por outros clientes com perfil similar que este cliente ainda não comprou.</p>
+            <?php if (empty($suggestions)): ?>
+            <p class="erp-empty">Nenhuma sugestão disponível.</p>
+            <?php else: ?>
+            <table class="data-grid">
+                <thead>
+                    <tr>
+                        <th>SKU</th>
+                        <th>Produto</th>
+                        <th class="_right">Clientes que Compraram</th>
+                        <th>Disponível no Magento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($suggestions as $suggestion): ?>
+                    <tr>
+                        <td><code><?= $block->escapeHtml($suggestion['codigo_material']) ?></code></td>
+                        <td><?= $block->escapeHtml($suggestion['descricao']) ?></td>
+                        <td class="_right">
+                            <span class="erp-badge erp-badge-success"><?= (int)($suggestion['clientes_compraram'] ?? 0) ?></span>
+                        </td>
+                        <td>
+                            <?php if (!empty($suggestion['available_in_store'])): ?>
+                            <span class="erp-status erp-status-success">Sim</span>
+                            <?php else: ?>
+                            <span class="erp-status erp-status-error">Não</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php endif; ?>
+        </div>
+
+        <!-- Opportunities Tab (AJAX) -->
+        <div class="erp-tab-content" id="tab-opportunities">
+            <h3>Classificador de Oportunidades</h3>
+            <p class="erp-help">Produtos classificados por padrão de compra para prospecção comercial.</p>
+
+            <div class="erp-admin-filters">
+                <div class="erp-admin-filter-row">
+                    <label for="opp-type-filter">Tipo:</label>
+                    <select id="opp-type-filter" class="admin__control-select">
+                        <option value="all">Todas as Oportunidades</option>
+                        <option value="monthly">Oportunidade Mensal</option>
+                        <option value="quarterly_not_bought">Trimestral (não comprou)</option>
+                        <option value="quarterly_bought">Trimestral (já comprou)</option>
+                        <option value="expansion_monthly">Expansão Mensal (30 dias)</option>
+                        <option value="expansion_quarterly">Expansão Trimestral (31-90 dias)</option>
+                        <option value="irregular">Irregular</option>
+                        <option value="churn">Churn (121+ dias)</option>
+                        <option value="cross_sell">Cross-sell</option>
+                    </select>
+
+                    <label for="opp-sort-filter">Ordenar:</label>
+                    <select id="opp-sort-filter" class="admin__control-select">
+                        <option value="days_since_last">Dias desde última compra</option>
+                        <option value="total_qty">Quantidade total</option>
+                        <option value="avg_price">Preço médio</option>
+                        <option value="order_count">Número de pedidos</option>
+                        <option value="name">Nome do produto</option>
+                    </select>
+
+                    <label for="opp-dir-filter">Direção:</label>
+                    <select id="opp-dir-filter" class="admin__control-select">
+                        <option value="ASC">Crescente</option>
+                        <option value="DESC">Decrescente</option>
+                    </select>
+
+                    <button id="opp-filter-btn" type="button" class="action-default scalable primary">
+                        <span>Filtrar</span>
+                    </button>
+                    <button id="opp-export-btn" type="button" class="action-default scalable" title="Exportar resultados como CSV">
+                        <span>Exportar CSV</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="opp-loading" class="erp-admin-loading" style="display:none;">Carregando oportunidades...</div>
+            <div id="opp-results"></div>
+            <div id="opp-pagination" class="erp-admin-pagination"></div>
+        </div>
+
+        <!-- Filtered History Tab (AJAX) -->
+        <div class="erp-tab-content" id="tab-history">
+            <h3>Histórico de Compras Filtrado</h3>
+            <p class="erp-help">Consulte itens comprados por período com filtros avançados.</p>
+
+            <div class="erp-admin-filters">
+                <div class="erp-admin-filter-row">
+                    <label for="history-period-filter">Período:</label>
+                    <select id="history-period-filter" class="admin__control-select">
+                        <option value="all">Todo histórico</option>
+                        <option value="year">Último ano</option>
+                        <option value="semester">Último semestre</option>
+                        <option value="quarter">Último trimestre</option>
+                        <option value="month" selected>Último mês</option>
+                    </select>
+
+                    <label for="history-sort-filter">Ordenar:</label>
+                    <select id="history-sort-filter" class="admin__control-select">
+                        <option value="date_desc" selected>Data (mais recente)</option>
+                        <option value="date_asc">Data (mais antigo)</option>
+                        <option value="price_desc">Preço (maior)</option>
+                        <option value="price_asc">Preço (menor)</option>
+                        <option value="qty_desc">Quantidade (maior)</option>
+                    </select>
+
+                    <button id="history-filter-btn" type="button" class="action-default scalable primary">
+                        <span>Filtrar</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="history-loading" class="erp-admin-loading" style="display:none;">Carregando histórico...</div>
+            <div id="history-results"></div>
+            <div id="history-pagination" class="erp-admin-pagination"></div>
+        </div>
+    </div>
+
+    <?php endif; ?>
+</div>
+
+<script>
+require(['jquery', 'apexcharts'], function($, ApexCharts) {
+    'use strict';
+
+    var customerCode = <?= (int)$block->getCustomerCode() ?>;
+    var oppUrl = '<?= $block->escapeJs($block->getUrl('erpintegration/customer/opportunitydata')) ?>';
+    var historyUrl = '<?= $block->escapeJs($block->getUrl('erpintegration/customer/filteredhistorydata')) ?>';
+
+    var oppBadgeColors = {
+        'monthly': '#2196F3',
+        'quarterly_not_bought': '#FF9800',
+        'quarterly_bought': '#4CAF50',
+        'expansion_monthly': '#9C27B0',
+        'expansion_quarterly': '#673AB7',
+        'irregular': '#607D8B',
+        'churn': '#F44336',
+        'cross_sell': '#00BCD4'
+    };
+
+    var oppLabels = {
+        'monthly': 'Mensal',
+        'quarterly_not_bought': 'Trim. Não Comprou',
+        'quarterly_bought': 'Trim. Comprou',
+        'expansion_monthly': 'Expansão Mensal',
+        'expansion_quarterly': 'Expansão Trim.',
+        'irregular': 'Irregular',
+        'churn': 'Churn',
+        'cross_sell': 'Cross-sell'
+    };
+
+    function esc(str) {
+        return $('<div>').text(str || '').html();
+    }
+
+    function formatPrice(val) {
+        return 'R$ ' + parseFloat(val || 0).toFixed(2).replace('.', ',').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    }
+
+    // ========== ApexCharts ==========
+
+    // Monthly Trend Chart (Area)
+    <?php if (!empty($trendData)): ?>
+    (function() {
+        var trend = <?= json_encode($trendData) ?>;
+        if (trend.length > 0) {
+            new ApexCharts(document.querySelector('#erp-trend-chart'), {
+                chart: {
+                    type: 'area',
+                    height: 280,
+                    toolbar: { show: false },
+                    fontFamily: 'inherit'
+                },
+                series: [
+                    { name: 'Receita (R$)', data: trend.map(function(t) { return parseFloat(t.revenue || 0); }) },
+                    { name: 'Pedidos', data: trend.map(function(t) { return parseInt(t.order_count || 0); }) }
+                ],
+                xaxis: {
+                    categories: trend.map(function(t) { return t.month; }),
+                    labels: { style: { fontSize: '11px' } }
+                },
+                colors: ['#b73337', '#2196F3'],
+                stroke: { curve: 'smooth', width: 2 },
+                fill: {
+                    type: 'gradient',
+                    gradient: { opacityFrom: 0.35, opacityTo: 0.05 }
+                },
+                yaxis: [
+                    {
+                        title: { text: 'Receita (R$)', style: { fontSize: '12px' } },
+                        labels: { formatter: function(v) { return 'R$ ' + (v/1000).toFixed(0) + 'k'; } }
+                    },
+                    {
+                        opposite: true,
+                        title: { text: 'Pedidos', style: { fontSize: '12px' } },
+                        labels: { formatter: function(v) { return Math.round(v); } }
+                    }
+                ],
+                tooltip: {
+                    shared: true,
+                    y: {
+                        formatter: function(val, opts) {
+                            if (opts.seriesIndex === 0) return formatPrice(val);
+                            return Math.round(val) + ' pedidos';
+                        }
+                    }
+                },
+                dataLabels: { enabled: false },
+                grid: { borderColor: '#f1f1f1' }
+            }).render();
+        }
+    })();
+    <?php endif; ?>
+
+    // Opportunity Donut Chart
+    <?php if (!empty($oppChartCounts)): ?>
+    (function() {
+        var donutData = <?= json_encode($oppChartCounts) ?>;
+        var donutLabels = <?= json_encode($oppChartLabels) ?>;
+        var donutColors = <?= json_encode($oppChartColors) ?>;
+        var donutTypes = <?= json_encode($oppChartTypes) ?>;
+
+        if (donutData.length > 0) {
+            new ApexCharts(document.querySelector('#erp-opp-donut-chart'), {
+                chart: {
+                    type: 'donut',
+                    height: 300,
+                    events: {
+                        dataPointSelection: function(event, chartContext, config) {
+                            var type = donutTypes[config.dataPointIndex];
+                            if (type) {
+                                // Navigate to opportunities tab and filter
+                                $('.erp-tab-btn[data-tab="opportunities"]').click();
+                                $('#opp-type-filter').val(type);
+                                oppPage = 1;
+                                loadOpportunities();
+                            }
+                        }
+                    }
+                },
+                series: donutData,
+                labels: donutLabels,
+                colors: donutColors,
+                legend: {
+                    position: 'bottom',
+                    fontSize: '12px'
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '55%',
+                            labels: {
+                                show: true,
+                                total: {
+                                    show: true,
+                                    label: 'Total',
+                                    fontSize: '14px',
+                                    fontWeight: 700
+                                }
+                            }
+                        }
+                    }
+                },
+                dataLabels: {
+                    enabled: true,
+                    formatter: function(val) { return Math.round(val) + '%'; },
+                    style: { fontSize: '11px' }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(val) { return val + ' produtos'; }
+                    }
+                }
+            }).render();
+        }
+    })();
+    <?php endif; ?>
+
+    // Products Bar Chart — render on tab open (hidden containers can't size correctly)
+    <?php if (!empty($products)): ?>
+    var productsChartRendered = false;
+    function renderProductsChart() {
+        if (productsChartRendered) return;
+        productsChartRendered = true;
+        var top10 = <?= json_encode(array_slice($products, 0, 10)) ?>;
+        var el = document.querySelector('#erp-products-bar-chart');
+        if (top10.length > 0 && el) {
+            new ApexCharts(el, {
+                chart: {
+                    type: 'bar',
+                    height: 350,
+                    toolbar: { show: false },
+                    fontFamily: 'inherit'
+                },
+                series: [{
+                    name: 'Quantidade Total',
+                    data: top10.map(function(p) { return parseFloat(p.quantidade_total || 0); })
+                }],
+                xaxis: {
+                    categories: top10.map(function(p) {
+                        var d = p.descricao || '';
+                        return d.length > 30 ? d.substring(0, 28) + '...' : d;
+                    }),
+                    labels: { style: { fontSize: '11px' } }
+                },
+                colors: ['#b73337'],
+                plotOptions: {
+                    bar: { borderRadius: 4, horizontal: true }
+                },
+                dataLabels: {
+                    enabled: true,
+                    style: { fontSize: '11px' }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(val, opts) {
+                            var p = top10[opts.dataPointIndex];
+                            return val + ' un. | ' + formatPrice(p ? p.preco_medio : 0) + ' médio';
+                        }
+                    }
+                },
+                grid: { borderColor: '#f1f1f1' }
+            }).render();
+        }
+    }
+    <?php endif; ?>
+
+    // ========== Tab Navigation ==========
+    $('.erp-tab-btn').on('click', function() {
+        var tabId = $(this).data('tab');
+        $('.erp-tab-btn').removeClass('active');
+        $(this).addClass('active');
+        $('.erp-tab-content').removeClass('active');
+        $('#tab-' + tabId).addClass('active');
+
+        // Render deferred charts when their tab becomes visible
+        <?php if (!empty($products)): ?>
+        if (tabId === 'products') {
+            setTimeout(renderProductsChart, 50);
+        }
+        <?php endif; ?>
+    });
+
+    // ========== Clickable Opportunity Summary Cards ==========
+    $('.erp-opp-clickable').on('click', function() {
+        var type = $(this).data('opp-type');
+        if (type) {
+            $('.erp-tab-btn[data-tab="opportunities"]').click();
+            $('#opp-type-filter').val(type);
+            oppPage = 1;
+            oppLoaded = true;
+            loadOpportunities();
+        }
+    });
+
+    // ========== Opportunity Loader ==========
+    var oppPage = 1;
+    var oppLoaded = false;
+
+    function loadOpportunities() {
+        var params = {
+            id: customerCode,
+            opportunity_type: $('#opp-type-filter').val(),
+            sort_by: $('#opp-sort-filter').val(),
+            sort_dir: $('#opp-dir-filter').val(),
+            page: oppPage,
+            limit: 20
+        };
+
+        $('#opp-loading').show();
+        $('#opp-results, #opp-pagination').empty();
+
+        $.ajax({
+            url: oppUrl,
+            data: params,
+            dataType: 'json',
+            method: 'GET'
+        }).done(function(resp) {
+            if (!resp.success || !resp.items || resp.items.length === 0) {
+                $('#opp-results').html('<p class="erp-empty">' + esc(resp.message || 'Nenhuma oportunidade encontrada.') + '</p>');
+                return;
+            }
+
+            var html = '<table class="data-grid"><thead><tr>';
+            html += '<th>SKU</th><th>Produto</th><th>Tipo</th>';
+            html += '<th class="_right">Pedidos</th><th class="_right">Qtd Total</th>';
+            html += '<th class="_right">Dias</th><th class="_right">Preço Médio</th>';
+            html += '<th>Magento</th></tr></thead><tbody>';
+
+            $.each(resp.items, function(i, item) {
+                var type = item.opportunity_type || '';
+                var color = oppBadgeColors[type] || '#9E9E9E';
+                var label = oppLabels[type] || type;
+                var inStore = item.available_in_store || (item.magento && item.magento.in_stock);
+
+                html += '<tr>';
+                html += '<td><code>' + esc(item.sku || item.codigo_material) + '</code></td>';
+                html += '<td>' + esc(item.name || item.descricao) + '</td>';
+                html += '<td><span class="erp-opp-badge" style="background:' + color + '">' + esc(label) + '</span></td>';
+                html += '<td class="_right">' + (item.order_count || 0) + '</td>';
+                html += '<td class="_right">' + (item.total_qty || 0) + '</td>';
+                html += '<td class="_right">' + (item.days_since_last || '-') + '</td>';
+                html += '<td class="_right">' + formatPrice(item.avg_price) + '</td>';
+                html += '<td>';
+                if (inStore) {
+                    html += '<span class="erp-badge erp-badge-success">Sim</span>';
+                } else {
+                    html += '<span class="erp-badge erp-badge-muted">Não</span>';
+                }
+                html += '</td></tr>';
+            });
+            html += '</tbody></table>';
+            html += '<div class="erp-admin-results-count">' + resp.total_count + ' produtos encontrados</div>';
+
+            $('#opp-results').html(html);
+            renderPagination('#opp-pagination', resp.page, resp.total_pages, resp.total_count, function(p) {
+                oppPage = p;
+                loadOpportunities();
+            });
+        }).fail(function() {
+            $('#opp-results').html('<p class="message message-error">Erro de conexão ao carregar oportunidades.</p>');
+        }).always(function() {
+            $('#opp-loading').hide();
+        });
+    }
+
+    $('#opp-filter-btn').on('click', function() {
+        oppPage = 1;
+        loadOpportunities();
+    });
+
+    $('.erp-tab-btn[data-tab="opportunities"]').on('click', function() {
+        if (!oppLoaded) {
+            oppLoaded = true;
+            loadOpportunities();
+        }
+    });
+
+    // ========== CSV Export ==========
+    $('#opp-export-btn').on('click', function() {
+        var $btn = $(this);
+        $btn.prop('disabled', true).find('span').text('Exportando...');
+
+        var params = {
+            id: customerCode,
+            opportunity_type: $('#opp-type-filter').val(),
+            sort_by: $('#opp-sort-filter').val(),
+            sort_dir: $('#opp-dir-filter').val(),
+            limit: 1000,
+            page: 1
+        };
+
+        $.getJSON(oppUrl, params, function(resp) {
+            if (!resp.items || resp.items.length === 0) {
+                alert('Nenhum dado para exportar.');
+                return;
+            }
+            var csv = '\uFEFF'; // BOM for Excel UTF-8
+            csv += 'SKU;Produto;Tipo;Pedidos;Qtd Total;Dias Desde Ultima;Preco Medio\n';
+            resp.items.forEach(function(item) {
+                var name = (item.name || item.descricao || '').replace(/"/g, '""');
+                var typeLabel = oppLabels[item.opportunity_type] || item.opportunity_type || '';
+                csv += '"' + (item.sku || '') + '";"' + name + '";"' + typeLabel + '";'
+                    + (item.order_count || 0) + ';'
+                    + (item.total_qty || 0) + ';'
+                    + (item.days_since_last || 0) + ';'
+                    + parseFloat(item.avg_price || 0).toFixed(2).replace('.', ',') + '\n';
+            });
+            var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'oportunidades_cliente_' + customerCode + '.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }).fail(function() {
+            alert('Erro ao exportar dados.');
+        }).always(function() {
+            $btn.prop('disabled', false).find('span').text('Exportar CSV');
+        });
+    });
+
+    // ========== History Loader ==========
+    var historyPage = 1;
+    var historyLoaded = false;
+
+    function loadHistory() {
+        var params = {
+            id: customerCode,
+            period: $('#history-period-filter').val(),
+            sort_by: $('#history-sort-filter').val(),
+            page: historyPage,
+            limit: 20
+        };
+
+        $('#history-loading').show();
+        $('#history-results, #history-pagination').empty();
+
+        $.ajax({
+            url: historyUrl,
+            data: params,
+            dataType: 'json',
+            method: 'GET'
+        }).done(function(resp) {
+            if (!resp.success || !resp.items || resp.items.length === 0) {
+                $('#history-results').html('<p class="erp-empty">' + esc(resp.message || 'Nenhum item encontrado no período.') + '</p>');
+                return;
+            }
+
+            var html = '<table class="data-grid"><thead><tr>';
+            html += '<th>SKU</th><th>Produto</th>';
+            html += '<th class="_right">Pedidos</th><th class="_right">Qtd Total</th>';
+            html += '<th class="_right">Preço Médio</th><th>Última Compra</th>';
+            html += '<th>Magento</th></tr></thead><tbody>';
+
+            $.each(resp.items, function(i, item) {
+                var sku = item.codigo_material || item.sku || '';
+                var name = (item.magento && item.magento.name) ? item.magento.name : (item.descricao || item.name || sku);
+                var inStore = item.available_in_store || (item.magento && item.magento.in_stock);
+
+                html += '<tr>';
+                html += '<td><code>' + esc(sku) + '</code></td>';
+                html += '<td>' + esc(name) + '</td>';
+                html += '<td class="_right">' + (item.vezes_comprado || item.order_count || 0) + '</td>';
+                html += '<td class="_right">' + (item.quantidade_total || item.total_qty || 0) + '</td>';
+                html += '<td class="_right">' + formatPrice(item.preco_medio || item.avg_price) + '</td>';
+                html += '<td>' + esc(item.ultima_compra || item.last_order_date || '-') + '</td>';
+                html += '<td>';
+                if (inStore) {
+                    html += '<span class="erp-badge erp-badge-success">Sim</span>';
+                } else {
+                    html += '<span class="erp-badge erp-badge-muted">Não</span>';
+                }
+                html += '</td></tr>';
+            });
+            html += '</tbody></table>';
+            html += '<div class="erp-admin-results-count">' + resp.total_count + ' produtos encontrados</div>';
+
+            $('#history-results').html(html);
+            renderPagination('#history-pagination', resp.page, resp.total_pages, resp.total_count, function(p) {
+                historyPage = p;
+                loadHistory();
+            });
+        }).fail(function() {
+            $('#history-results').html('<p class="message message-error">Erro de conexão ao carregar histórico.</p>');
+        }).always(function() {
+            $('#history-loading').hide();
+        });
+    }
+
+    $('#history-filter-btn').on('click', function() {
+        historyPage = 1;
+        loadHistory();
+    });
+
+    $('.erp-tab-btn[data-tab="history"]').on('click', function() {
+        if (!historyLoaded) {
+            historyLoaded = true;
+            loadHistory();
+        }
+    });
+
+    // ========== Pagination Helper ==========
+    function renderPagination(selector, currentPage, totalPages, totalCount, callback) {
+        if (totalPages <= 1) {
+            $(selector).empty();
+            return;
+        }
+
+        var html = '<span class="erp-pag-info">Página ' + currentPage + ' de ' + totalPages + '</span>';
+
+        if (currentPage > 1) {
+            html += '<button class="action-default scalable erp-pag-prev" type="button">Anterior</button>';
+        }
+        if (currentPage < totalPages) {
+            html += '<button class="action-default scalable primary erp-pag-next" type="button">Próxima</button>';
+        }
+
+        var $el = $(selector).html(html);
+
+        $el.find('.erp-pag-prev').on('click', function() { callback(currentPage - 1); });
+        $el.find('.erp-pag-next').on('click', function() { callback(currentPage + 1); });
+    }
+});
+</script>

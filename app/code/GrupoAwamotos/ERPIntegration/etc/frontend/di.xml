@@ -8,4 +8,11 @@
                 type="GrupoAwamotos\ERPIntegration\Plugin\StockPlugin"
                 sortOrder="100"/>
     </type>
+
+    <!-- PreloadCustomerPrices: Session Proxy para evitar instanciacao prematura -->
+    <type name="GrupoAwamotos\ERPIntegration\Observer\PreloadCustomerPrices">
+        <arguments>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
+        </arguments>
+    </type>
 </config>

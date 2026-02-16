@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="GrupoAwamotos_ERPIntegration::css/admin-erp.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="GrupoAwamotos\ERPIntegration\Block\Adminhtml\Goals"
+                   name="erp.goals"
+                   template="GrupoAwamotos_ERPIntegration::goals.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

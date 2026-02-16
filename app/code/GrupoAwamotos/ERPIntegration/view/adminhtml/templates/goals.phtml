@@ -1,0 +1,1171 @@
+<?php
+/**
+ * Goals Dashboard Template
+ *
+ * @var \GrupoAwamotos\ERPIntegration\Block\Adminhtml\Goals $block
+ */
+
+$currentMonth = $block->getCurrentMonthData();
+$nextMonth = $block->getNextMonthProjection();
+$monthlyGoals = $block->getMonthlyGoals(6, 6);
+$filters = $block->getAvailableFilters();
+$quarterly = $block->getQuarterlyData();
+$yearly = $block->getYearlySummary();
+?>
+
+<div class="goals-dashboard">
+    <?php if (!$block->isEnabled()): ?>
+    <div class="message message-warning">
+        <span>A integração ERP está desabilitada. Ative em Stores > Configuration > ERP Integration.</span>
+    </div>
+    <?php else: ?>
+
+    <!-- Header -->
+    <div class="goals-header">
+        <div class="goals-header-content">
+            <h1>Metas de Faturamento</h1>
+            <p>Acompanhe e gerencie suas metas de vendas</p>
+        </div>
+        <div class="goals-header-actions">
+            <button type="button" class="action-secondary" id="btn-refresh">
+                <span>Atualizar</span>
+            </button>
+            <button type="button" class="action-primary" id="btn-new-goal">
+                <span>Definir Meta</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Filters Panel -->
+    <div class="goals-filters">
+        <div class="filter-row">
+            <div class="filter-group">
+                <label>Período</label>
+                <div class="filter-date-range">
+                    <input type="month" id="filter-period-start" value="<?= date('Y-m', strtotime('-6 months')) ?>">
+                    <span>até</span>
+                    <input type="month" id="filter-period-end" value="<?= date('Y-m', strtotime('+6 months')) ?>">
+                </div>
+            </div>
+            <div class="filter-group">
+                <label>Região</label>
+                <select id="filter-region">
+                    <option value="">Todas</option>
+                    <?php foreach ($filters['regions'] as $region): ?>
+                    <option value="<?= $block->escapeHtmlAttr($region['code']) ?>">
+                        <?= $block->escapeHtml($region['name']) ?>
+                    </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Vendedor</label>
+                <select id="filter-seller">
+                    <option value="">Todos</option>
+                    <?php foreach ($filters['sellers'] as $seller): ?>
+                    <option value="<?= $block->escapeHtmlAttr($seller['CODIGO']) ?>">
+                        <?= $block->escapeHtml($seller['NOME']) ?>
+                    </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            <div class="filter-group filter-actions">
+                <button type="button" class="action-secondary" id="btn-apply-filters">
+                    Aplicar Filtros
+                </button>
+                <button type="button" class="action-tertiary" id="btn-clear-filters">
+                    Limpar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Current Month Highlight -->
+    <?php if (!empty($currentMonth) && !isset($currentMonth['error'])): ?>
+    <div class="goals-current-month">
+        <div class="current-month-header">
+            <h2><?= $block->getMonthName((int)date('n')) ?> <?= date('Y') ?></h2>
+            <span class="current-month-badge <?= $block->escapeHtmlAttr($currentMonth['alert_level'] ?? 'none') ?>">
+                <?= ($currentMonth['will_hit_target'] ?? false) ? 'No caminho' : 'Atenção' ?>
+            </span>
+        </div>
+        <div class="current-month-grid">
+            <div class="current-month-card main">
+                <div class="cm-progress-ring" data-progress="<?= (float)($currentMonth['progress_percentage'] ?? 0) ?>">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="progress-bg" cx="50" cy="50" r="45"/>
+                        <circle class="progress-bar" cx="50" cy="50" r="45"
+                                stroke-dasharray="283"
+                                stroke-dashoffset="<?= 283 - (283 * min(100, $currentMonth['progress_percentage'] ?? 0) / 100) ?>"/>
+                    </svg>
+                    <div class="progress-text">
+                        <span class="progress-value"><?= number_format($currentMonth['progress_percentage'] ?? 0, 0) ?>%</span>
+                        <span class="progress-label">da meta</span>
+                    </div>
+                </div>
+                <div class="cm-values">
+                    <div class="cm-value-item">
+                        <span class="cm-label">Realizado</span>
+                        <span class="cm-value"><?= $block->formatPrice($currentMonth['actual_sales'] ?? 0) ?></span>
+                    </div>
+                    <div class="cm-value-item">
+                        <span class="cm-label">Meta</span>
+                        <span class="cm-value"><?= $block->formatPrice($currentMonth['target'] ?? 0) ?></span>
+                    </div>
+                </div>
+            </div>
+            <div class="current-month-card">
+                <div class="cm-icon">📈</div>
+                <div class="cm-info">
+                    <span class="cm-label">Projeção de Fechamento</span>
+                    <span class="cm-value large"><?= $block->formatPrice($currentMonth['projected_total'] ?? 0) ?></span>
+                    <span class="cm-detail">
+                        <?= $block->formatPrice($currentMonth['pessimistic'] ?? 0) ?> -
+                        <?= $block->formatPrice($currentMonth['optimistic'] ?? 0) ?>
+                    </span>
+                </div>
+            </div>
+            <div class="current-month-card">
+                <div class="cm-icon">🎯</div>
+                <div class="cm-info">
+                    <span class="cm-label">Falta para Meta</span>
+                    <span class="cm-value large <?= ($currentMonth['target_gap'] ?? 0) > 0 ? 'negative' : 'positive' ?>">
+                        <?= $block->formatPrice(abs($currentMonth['target_gap'] ?? 0)) ?>
+                    </span>
+                    <span class="cm-detail">
+                        <?= $block->formatPrice($currentMonth['target_daily_needed'] ?? 0) ?>/dia
+                        (<?= (int)($currentMonth['days_remaining'] ?? 0) ?> dias restantes)
+                    </span>
+                </div>
+            </div>
+            <div class="current-month-card">
+                <div class="cm-icon">📊</div>
+                <div class="cm-info">
+                    <span class="cm-label">Comparativos</span>
+                    <div class="cm-comparisons">
+                        <div class="cm-compare <?= ($currentMonth['vs_last_month'] ?? 0) >= 0 ? 'positive' : 'negative' ?>">
+                            <span>vs Mês Anterior</span>
+                            <strong><?= $block->formatPercentage($currentMonth['vs_last_month'] ?? 0) ?></strong>
+                        </div>
+                        <div class="cm-compare <?= ($currentMonth['vs_last_year'] ?? 0) >= 0 ? 'positive' : 'negative' ?>">
+                            <span>vs Ano Anterior</span>
+                            <strong><?= $block->formatPercentage($currentMonth['vs_last_year'] ?? 0) ?></strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Charts Row -->
+    <div class="goals-charts-row">
+        <!-- Main Goals Chart -->
+        <div class="goals-chart-card large">
+            <div class="chart-header">
+                <h3>Meta vs Realizado por Mês</h3>
+                <div class="chart-legend">
+                    <span class="legend-item"><span class="legend-color target"></span>Meta</span>
+                    <span class="legend-item"><span class="legend-color actual"></span>Realizado</span>
+                    <span class="legend-item"><span class="legend-color projection"></span>Projeção</span>
+                </div>
+            </div>
+            <div id="chart-goals-monthly" class="chart-container"></div>
+        </div>
+
+        <!-- Progress Gauge -->
+        <div class="goals-chart-card">
+            <div class="chart-header">
+                <h3>Progresso Acumulado</h3>
+            </div>
+            <div id="chart-progress-gauge" class="chart-container"></div>
+        </div>
+    </div>
+
+    <!-- Goals Table -->
+    <div class="goals-table-section">
+        <div class="table-header">
+            <h3>Detalhamento Mensal</h3>
+            <div class="table-actions">
+                <button type="button" class="action-secondary btn-export" data-format="csv">
+                    Exportar CSV
+                </button>
+                <button type="button" class="action-secondary btn-export" data-format="pdf">
+                    Exportar PDF
+                </button>
+            </div>
+        </div>
+        <div class="goals-table-wrapper">
+            <table class="data-grid goals-table" id="goals-table">
+                <thead>
+                    <tr>
+                        <th class="col-month">Mês</th>
+                        <th class="col-target">Meta</th>
+                        <th class="col-actual">Realizado</th>
+                        <th class="col-projection">Projeção</th>
+                        <th class="col-progress">Progresso</th>
+                        <th class="col-gap">Gap</th>
+                        <th class="col-status">Status</th>
+                        <th class="col-actions">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($monthlyGoals as $goal): ?>
+                    <tr class="<?= $goal['is_current'] ? 'current-row' : '' ?> <?= $goal['is_future'] ? 'future-row' : '' ?>">
+                        <td class="col-month">
+                            <strong><?= $block->escapeHtml($goal['month_name']) ?></strong>
+                            <span class="month-year"><?= (int)$goal['year'] ?></span>
+                            <?php if ($goal['is_current']): ?>
+                            <span class="badge badge-current">Atual</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="col-target">
+                            <span class="value"><?= $block->formatPrice($goal['target']) ?></span>
+                            <?php if ($goal['is_custom_target']): ?>
+                            <span class="badge badge-custom">Personalizada</span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="col-actual">
+                            <?php if ($goal['is_future']): ?>
+                            <span class="value muted">-</span>
+                            <?php else: ?>
+                            <span class="value"><?= $block->formatPrice($goal['actual']) ?></span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="col-projection">
+                            <?php if ($goal['is_past']): ?>
+                            <span class="value muted">-</span>
+                            <?php else: ?>
+                            <span class="value"><?= $block->formatPrice($goal['projection']) ?></span>
+                            <?php endif; ?>
+                        </td>
+                        <td class="col-progress">
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill <?= $block->escapeHtmlAttr($block->getProgressClass($goal['progress'])) ?>"
+                                         style="width: <?= min(100, $goal['progress']) ?>%"></div>
+                                </div>
+                                <span class="progress-value"><?= number_format($goal['progress'], 1) ?>%</span>
+                            </div>
+                        </td>
+                        <td class="col-gap">
+                            <span class="value <?= $goal['gap'] > 0 ? 'negative' : 'positive' ?>">
+                                <?= $goal['gap'] > 0 ? '-' : '+' ?><?= $block->formatPrice(abs($goal['gap'])) ?>
+                            </span>
+                        </td>
+                        <td class="col-status">
+                            <span class="status-badge status-<?= $block->escapeHtmlAttr($goal['status']) ?>">
+                                <?= $block->escapeHtml($this->getStatusLabel($goal['status'])) ?>
+                            </span>
+                        </td>
+                        <td class="col-actions">
+                            <button type="button" class="action-edit btn-edit-goal"
+                                    data-year-month="<?= $block->escapeHtmlAttr($goal['year_month']) ?>"
+                                    data-target="<?= (float)$goal['target'] ?>"
+                                    data-notes="<?= $block->escapeHtmlAttr($goal['notes']) ?>">
+                                Editar
+                            </button>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Additional Charts Row -->
+    <div class="goals-charts-row">
+        <!-- Quarterly Chart -->
+        <div class="goals-chart-card">
+            <div class="chart-header">
+                <h3>Desempenho Trimestral</h3>
+            </div>
+            <div id="chart-quarterly" class="chart-container"></div>
+        </div>
+
+        <!-- Yearly Comparison -->
+        <div class="goals-chart-card">
+            <div class="chart-header">
+                <h3>Comparativo Anual</h3>
+            </div>
+            <div id="chart-yearly" class="chart-container"></div>
+        </div>
+
+        <!-- Regional Breakdown -->
+        <div class="goals-chart-card">
+            <div class="chart-header">
+                <h3>Vendas por Região</h3>
+            </div>
+            <div id="chart-regional" class="chart-container"></div>
+        </div>
+    </div>
+
+    <!-- Edit Goal Modal -->
+    <div class="modal-overlay" id="goal-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Definir Meta</h3>
+                <button type="button" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="modal-year-month">Período</label>
+                    <input type="month" id="modal-year-month" class="admin__control-text">
+                </div>
+                <div class="form-group">
+                    <label for="modal-target">Meta (R$)</label>
+                    <input type="number" id="modal-target" class="admin__control-text" step="0.01" min="0">
+                </div>
+                <div class="form-group">
+                    <label for="modal-notes">Observações</label>
+                    <textarea id="modal-notes" class="admin__control-textarea" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="action-secondary modal-cancel">Cancelar</button>
+                <button type="button" class="action-primary" id="btn-save-goal">Salvar Meta</button>
+            </div>
+        </div>
+    </div>
+
+    <?php endif; ?>
+</div>
+
+<?php
+// Helper function for status labels
+function getStatusLabel($status) {
+    $labels = [
+        'achieved' => 'Atingida',
+        'missed' => 'Não atingida',
+        'on_track' => 'No caminho',
+        'attention' => 'Atenção',
+        'critical' => 'Crítico',
+    ];
+    return $labels[$status] ?? ucfirst($status);
+}
+?>
+
+<!-- ApexCharts -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+<script>
+require(['jquery'], function($) {
+    'use strict';
+
+    var goalsData = <?= /* @noEscape */ $block->getGoalsChartJson() ?>;
+    var quarterlyData = <?= /* @noEscape */ $block->getQuarterlyChartJson() ?>;
+    var yearlyData = <?= /* @noEscape */ $block->getYearlyChartJson() ?>;
+
+    var saveUrl = '<?= $block->escapeUrl($block->getSaveUrl()) ?>';
+    var dataUrl = '<?= $block->escapeUrl($block->getDataUrl()) ?>';
+
+    // Format currency
+    function formatCurrency(value) {
+        return 'R$ ' + value.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    }
+
+    function formatShort(value) {
+        if (value >= 1000000) return 'R$ ' + (value/1000000).toFixed(1) + 'M';
+        if (value >= 1000) return 'R$ ' + (value/1000).toFixed(0) + 'K';
+        return 'R$ ' + value.toFixed(0);
+    }
+
+    // Main Goals Chart
+    if (goalsData.length > 0 && document.querySelector("#chart-goals-monthly")) {
+        var categories = goalsData.map(function(g) { return g.short_name + '/' + g.year; });
+        var targets = goalsData.map(function(g) { return g.target; });
+        var actuals = goalsData.map(function(g) { return g.is_future ? null : g.actual; });
+        var projections = goalsData.map(function(g) { return g.is_past ? null : g.projection; });
+
+        var goalsChart = new ApexCharts(document.querySelector("#chart-goals-monthly"), {
+            chart: {
+                type: 'bar',
+                height: 400,
+                toolbar: { show: true },
+                animations: { enabled: true }
+            },
+            series: [
+                { name: 'Meta', type: 'line', data: targets },
+                { name: 'Realizado', type: 'bar', data: actuals },
+                { name: 'Projeção', type: 'bar', data: projections }
+            ],
+            xaxis: { categories: categories },
+            yaxis: {
+                labels: { formatter: formatShort }
+            },
+            stroke: { width: [3, 0, 0], curve: 'smooth', dashArray: [5, 0, 0] },
+            colors: ['#FF4560', '#00E396', '#FEB019'],
+            plotOptions: {
+                bar: { columnWidth: '60%', borderRadius: 4 }
+            },
+            dataLabels: { enabled: false },
+            tooltip: {
+                shared: true,
+                y: { formatter: formatCurrency }
+            },
+            legend: { position: 'top' },
+            annotations: {
+                xaxis: [{
+                    x: '<?= $block->getShortMonthName((int)date('n')) ?>/<?= date('Y') ?>',
+                    borderColor: '#775DD0',
+                    label: {
+                        text: 'Mês Atual',
+                        style: { color: '#fff', background: '#775DD0' }
+                    }
+                }]
+            }
+        });
+        goalsChart.render();
+    }
+
+    // Progress Gauge
+    if (document.querySelector("#chart-progress-gauge")) {
+        var currentProgress = <?= (float)($currentMonth['progress_percentage'] ?? 0) ?>;
+        var progressChart = new ApexCharts(document.querySelector("#chart-progress-gauge"), {
+            chart: { type: 'radialBar', height: 350 },
+            series: [Math.min(100, currentProgress)],
+            plotOptions: {
+                radialBar: {
+                    startAngle: -135,
+                    endAngle: 135,
+                    hollow: { size: '65%' },
+                    track: { background: '#e7e7e7' },
+                    dataLabels: {
+                        name: { fontSize: '14px', offsetY: 80 },
+                        value: {
+                            fontSize: '30px',
+                            offsetY: 0,
+                            formatter: function(val) { return val.toFixed(1) + '%'; }
+                        }
+                    }
+                }
+            },
+            colors: [currentProgress >= 100 ? '#00E396' : currentProgress >= 80 ? '#FEB019' : '#FF4560'],
+            labels: ['Progresso da Meta'],
+            stroke: { lineCap: 'round' }
+        });
+        progressChart.render();
+    }
+
+    // Quarterly Chart
+    if (quarterlyData.length > 0 && document.querySelector("#chart-quarterly")) {
+        var quarterlyChart = new ApexCharts(document.querySelector("#chart-quarterly"), {
+            chart: { type: 'bar', height: 300, stacked: false },
+            series: [
+                { name: 'Meta', data: quarterlyData.map(function(q) { return q.target; }) },
+                { name: 'Realizado', data: quarterlyData.map(function(q) { return q.actual; }) }
+            ],
+            xaxis: { categories: quarterlyData.map(function(q) { return q.label; }) },
+            yaxis: { labels: { formatter: formatShort } },
+            colors: ['#008FFB', '#00E396'],
+            plotOptions: { bar: { columnWidth: '50%', borderRadius: 4 } },
+            dataLabels: { enabled: false },
+            tooltip: { y: { formatter: formatCurrency } }
+        });
+        quarterlyChart.render();
+    }
+
+    // Yearly Chart
+    if (yearlyData.length > 0 && document.querySelector("#chart-yearly")) {
+        var yearlyChart = new ApexCharts(document.querySelector("#chart-yearly"), {
+            chart: { type: 'bar', height: 300 },
+            series: [
+                { name: 'Meta', data: yearlyData.map(function(y) { return y.target; }) },
+                { name: 'Realizado', data: yearlyData.map(function(y) { return y.actual; }) }
+            ],
+            xaxis: { categories: yearlyData.map(function(y) { return y.year.toString(); }) },
+            yaxis: { labels: { formatter: formatShort } },
+            colors: ['#775DD0', '#00D9E9'],
+            plotOptions: { bar: { horizontal: true, borderRadius: 4 } },
+            dataLabels: { enabled: false },
+            tooltip: { y: { formatter: formatCurrency } }
+        });
+        yearlyChart.render();
+    }
+
+    // Regional Chart (placeholder - will be loaded via AJAX)
+    if (document.querySelector("#chart-regional")) {
+        var regionalChart = new ApexCharts(document.querySelector("#chart-regional"), {
+            chart: { type: 'donut', height: 300 },
+            series: [30, 25, 20, 15, 10],
+            labels: ['SP', 'MG', 'RJ', 'PR', 'Outros'],
+            colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0'],
+            legend: { position: 'bottom' },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '60%',
+                        labels: { show: true, total: { show: true, label: 'Total' } }
+                    }
+                }
+            }
+        });
+        regionalChart.render();
+    }
+
+    // Modal handling
+    var $modal = $('#goal-modal');
+
+    $('#btn-new-goal').on('click', function() {
+        $('#modal-year-month').val('<?= date('Y-m') ?>');
+        $('#modal-target').val('');
+        $('#modal-notes').val('');
+        $modal.fadeIn(200);
+    });
+
+    $('.btn-edit-goal').on('click', function() {
+        var $btn = $(this);
+        $('#modal-year-month').val($btn.data('year-month'));
+        $('#modal-target').val($btn.data('target'));
+        $('#modal-notes').val($btn.data('notes'));
+        $modal.fadeIn(200);
+    });
+
+    $('.modal-close, .modal-cancel').on('click', function() {
+        $modal.fadeOut(200);
+    });
+
+    $('#btn-save-goal').on('click', function() {
+        var data = {
+            year_month: $('#modal-year-month').val(),
+            target: $('#modal-target').val(),
+            notes: $('#modal-notes').val()
+        };
+
+        $.ajax({
+            url: saveUrl,
+            type: 'POST',
+            data: data,
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert(response.message);
+                }
+            },
+            error: function() {
+                alert('Erro ao salvar meta');
+            }
+        });
+    });
+
+    // Filter handling
+    $('#btn-apply-filters').on('click', function() {
+        loadFilteredData();
+    });
+
+    $('#btn-clear-filters').on('click', function() {
+        $('#filter-period-start').val('<?= date('Y-m', strtotime('-6 months')) ?>');
+        $('#filter-period-end').val('<?= date('Y-m', strtotime('+6 months')) ?>');
+        $('#filter-region').val('');
+        $('#filter-seller').val('');
+        loadFilteredData();
+    });
+
+    function loadFilteredData() {
+        var filters = {
+            period_start: $('#filter-period-start').val(),
+            period_end: $('#filter-period-end').val(),
+            region: $('#filter-region').val(),
+            seller: $('#filter-seller').val()
+        };
+
+        $.ajax({
+            url: dataUrl,
+            type: 'GET',
+            data: filters,
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    updateCharts(response.data);
+                }
+            }
+        });
+    }
+
+    function updateCharts(data) {
+        // Update regional chart with actual data
+        if (data.by_region && data.by_region.length > 0) {
+            var regions = data.by_region.slice(0, 5);
+            var values = regions.map(function(r) { return r.value; });
+            var labels = regions.map(function(r) { return r.region; });
+
+            ApexCharts.exec('chart-regional', 'updateOptions', {
+                series: values,
+                labels: labels
+            });
+        }
+    }
+
+    // Refresh button
+    $('#btn-refresh').on('click', function() {
+        location.reload();
+    });
+
+    // Export buttons
+    $('.btn-export').on('click', function() {
+        var format = $(this).data('format');
+        alert('Exportação ' + format.toUpperCase() + ' será implementada em breve!');
+    });
+});
+</script>
+
+<style>
+.goals-dashboard {
+    padding: 20px;
+    background: #f5f7fa;
+    min-height: 100vh;
+}
+
+/* Header */
+.goals-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.goals-header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 5px;
+    color: #1a1a2e;
+}
+
+.goals-header p {
+    color: #666;
+    margin: 0;
+}
+
+.goals-header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Filters */
+.goals-filters {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filter-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.filter-group input,
+.filter-group select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 150px;
+}
+
+.filter-date-range {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-actions {
+    flex-direction: row;
+    gap: 10px;
+}
+
+/* Current Month */
+.goals-current-month {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+    color: white;
+}
+
+.current-month-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.current-month-header h2 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.current-month-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.current-month-badge.success { background: #00E396; color: #fff; }
+.current-month-badge.warning { background: #FEB019; color: #1a1a2e; }
+.current-month-badge.danger { background: #FF4560; color: #fff; }
+
+.current-month-grid {
+    display: grid;
+    grid-template-columns: 1.2fr repeat(3, 1fr);
+    gap: 20px;
+}
+
+.current-month-card {
+    background: rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.current-month-card.main {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.cm-progress-ring {
+    position: relative;
+    width: 120px;
+    height: 120px;
+}
+
+.cm-progress-ring svg {
+    transform: rotate(-90deg);
+    width: 100%;
+    height: 100%;
+}
+
+.cm-progress-ring .progress-bg {
+    fill: none;
+    stroke: rgba(255,255,255,0.2);
+    stroke-width: 8;
+}
+
+.cm-progress-ring .progress-bar {
+    fill: none;
+    stroke: #00E396;
+    stroke-width: 8;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.5s ease;
+}
+
+.cm-progress-ring .progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.cm-progress-ring .progress-value {
+    display: block;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.cm-progress-ring .progress-label {
+    font-size: 11px;
+    opacity: 0.8;
+}
+
+.cm-values {
+    display: flex;
+    gap: 30px;
+    margin-top: 15px;
+}
+
+.cm-value-item {
+    text-align: center;
+}
+
+.cm-label {
+    display: block;
+    font-size: 11px;
+    opacity: 0.7;
+    margin-bottom: 5px;
+}
+
+.cm-value {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.cm-value.large {
+    font-size: 22px;
+}
+
+.cm-value.positive { color: #00E396; }
+.cm-value.negative { color: #FF4560; }
+
+.cm-icon {
+    font-size: 36px;
+    opacity: 0.8;
+}
+
+.cm-info {
+    flex: 1;
+}
+
+.cm-detail {
+    display: block;
+    font-size: 12px;
+    opacity: 0.7;
+    margin-top: 5px;
+}
+
+.cm-comparisons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.cm-compare {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.cm-compare.positive strong { color: #00E396; }
+.cm-compare.negative strong { color: #FF4560; }
+
+/* Charts */
+.goals-charts-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
+}
+
+.goals-chart-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    overflow: hidden;
+}
+
+.goals-chart-card.large {
+    grid-column: span 2;
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.chart-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a2e;
+}
+
+.chart-legend {
+    display: flex;
+    gap: 15px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+.legend-color.target { background: #FF4560; }
+.legend-color.actual { background: #00E396; }
+.legend-color.projection { background: #FEB019; }
+
+.chart-container {
+    padding: 15px;
+    min-height: 300px;
+}
+
+/* Table */
+.goals-table-section {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 25px;
+    overflow: hidden;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.table-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.table-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.goals-table-wrapper {
+    overflow-x: auto;
+}
+
+.goals-table {
+    width: 100%;
+    margin: 0;
+}
+
+.goals-table th {
+    background: #f9f9f9;
+    font-size: 11px;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #666;
+    padding: 12px 15px;
+    text-align: left;
+}
+
+.goals-table td {
+    padding: 15px;
+    vertical-align: middle;
+    border-bottom: 1px solid #eee;
+}
+
+.goals-table .current-row {
+    background: #f0f9ff;
+}
+
+.goals-table .future-row {
+    background: #fafafa;
+}
+
+.goals-table .col-month strong {
+    display: block;
+    font-size: 14px;
+}
+
+.goals-table .month-year {
+    font-size: 12px;
+    color: #999;
+}
+
+.goals-table .value {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.goals-table .value.muted {
+    color: #ccc;
+}
+
+.goals-table .value.positive { color: #00E396; }
+.goals-table .value.negative { color: #FF4560; }
+
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 5px;
+}
+
+.badge-current { background: #e3f2fd; color: #1976d2; }
+.badge-custom { background: #fff3e0; color: #e65100; }
+
+/* Progress bar in table */
+.progress-bar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.progress-bar-bg {
+    flex: 1;
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    min-width: 100px;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.progress-bar-fill.success { background: #00E396; }
+.progress-bar-fill.warning { background: #FEB019; }
+.progress-bar-fill.info { background: #00D9E9; }
+.progress-bar-fill.danger { background: #FF4560; }
+
+.progress-value {
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 50px;
+}
+
+/* Status badges */
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.status-achieved { background: #e8f5e9; color: #2e7d32; }
+.status-missed { background: #ffebee; color: #c62828; }
+.status-on_track { background: #e3f2fd; color: #1565c0; }
+.status-attention { background: #fff8e1; color: #f57f17; }
+.status-critical { background: #fce4ec; color: #c2185b; }
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background: #fff;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #999;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .goals-chart-card.large {
+        grid-column: span 1;
+    }
+
+    .current-month-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .goals-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .filter-row {
+        flex-direction: column;
+    }
+
+    .filter-group {
+        width: 100%;
+    }
+
+    .current-month-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .goals-charts-row {
+        grid-template-columns: 1fr;
+    }
+}
+</style>

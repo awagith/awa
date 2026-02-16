@@ -5,4 +5,15 @@
         <observer name="grupoawamotos_erp_order_place_after"
                   instance="GrupoAwamotos\ERPIntegration\Observer\OrderPlaceAfter"/>
     </event>
+
+    <!-- WhatsApp Order Status Notifications -->
+    <event name="sales_order_save_after">
+        <observer name="grupoawamotos_erp_order_status_change"
+                  instance="GrupoAwamotos\ERPIntegration\Observer\OrderStatusChange"/>
+    </event>
+
+    <event name="sales_order_shipment_save_after">
+        <observer name="grupoawamotos_erp_shipment_save_after"
+                  instance="GrupoAwamotos\ERPIntegration\Observer\ShipmentSaveAfter"/>
+    </event>
 </config>

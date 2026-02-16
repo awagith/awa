@@ -134,8 +134,8 @@ class OrderSyncTest extends TestCase
         $this->connection->method('fetchOne')
             ->willReturn(['new_id' => 12345]);
 
-        // Item insert
-        $this->connection->expects($this->once())->method('execute');
+        // Header insert + item insert
+        $this->connection->expects($this->exactly(2))->method('execute');
 
         // Transaction should be committed
         $this->connection->expects($this->once())->method('commit');
@@ -223,8 +223,8 @@ class OrderSyncTest extends TestCase
         $this->connection->method('fetchOne')
             ->willReturn(['new_id' => 12345]);
 
-        // Only one item should be inserted (parent only)
-        $this->connection->expects($this->once())->method('execute');
+        // Header insert + one valid parent item insert
+        $this->connection->expects($this->exactly(2))->method('execute');
 
         $this->connection->method('beginTransaction')->willReturn(true);
         $this->connection->method('commit')->willReturn(true);

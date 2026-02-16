@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+  ERP Integration - Message Queue Communication Topics
+  Defines topics for asynchronous order sync to ERP
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Communication/etc/communication.xsd">
+
+    <!-- Topic for order sync to ERP -->
+    <topic name="erp.order.sync"
+           request="GrupoAwamotos\ERPIntegration\Api\Data\OrderSyncMessageInterface"/>
+
+    <!-- Topic for order sync retry (failed orders) -->
+    <topic name="erp.order.sync.retry"
+           request="GrupoAwamotos\ERPIntegration\Api\Data\OrderSyncMessageInterface"/>
+
+</config>

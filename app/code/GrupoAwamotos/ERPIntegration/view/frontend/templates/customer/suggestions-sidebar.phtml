@@ -1,0 +1,158 @@
+<?php
+/**
+ * Minimal Suggestions Widget for Cart Sidebar
+ *
+ * @var \GrupoAwamotos\ERPIntegration\Block\Customer\Suggestions $block
+ */
+
+if (!$block->isEnabled() || !$block->isLoggedIn()) {
+    return;
+}
+
+$customerCode = $block->getErpCustomerCode();
+if (!$customerCode) {
+    return;
+}
+
+$suggestedCart = $block->getSuggestedCart();
+
+if (empty($suggestedCart['sections']) || isset($suggestedCart['error'])) {
+    return;
+}
+
+// Get just reorder items (most relevant)
+$reorderItems = $suggestedCart['sections']['reorder']['items'] ?? [];
+$items = array_slice($reorderItems, 0, 3);
+
+if (empty($items)) {
+    return;
+}
+?>
+
+<div class="erp-sidebar-suggestions" id="erp-sidebar-suggestions">
+    <div class="erp-sidebar-title">
+        <span>🔄</span> Hora de Repor
+    </div>
+    <ul class="erp-sidebar-list">
+        <?php foreach ($items as $item): ?>
+        <li class="erp-sidebar-item">
+            <a href="<?= $block->escapeUrl($item['url'] ?? '#') ?>" class="erp-sidebar-link">
+                <?= $block->escapeHtml(mb_strimwidth($item['name'], 0, 35, '...')) ?>
+            </a>
+            <button type="button"
+                    class="erp-sidebar-add"
+                    data-sku="<?= $block->escapeHtmlAttr($item['sku']) ?>"
+                    data-qty="<?= (int)$item['suggested_quantity'] ?>"
+                    title="Adicionar">+</button>
+        </li>
+        <?php endforeach; ?>
+    </ul>
+    <a href="<?= $block->escapeUrl($block->getUrl('erpintegration/customer/suggestedcart')) ?>" class="erp-sidebar-more">
+        Ver todas as sugestões →
+    </a>
+</div>
+
+<script>
+require(['jquery'], function($) {
+    $('#erp-sidebar-suggestions').on('click', '.erp-sidebar-add', function() {
+        var $btn = $(this);
+        $btn.prop('disabled', true).text('...');
+
+        $.post('<?= $block->escapeJs($block->getUrl('erpintegration/cart/addBySku')) ?>', {
+            sku: $btn.data('sku'),
+            qty: $btn.data('qty') || 1,
+            form_key: $.mage.cookies.get('form_key')
+        }).done(function(res) {
+            if (res.success) {
+                $btn.text('✓').addClass('added');
+                setTimeout(function() { location.reload(); }, 1000);
+            } else {
+                $btn.prop('disabled', false).text('+');
+            }
+        }).fail(function() {
+            $btn.prop('disabled', false).text('+');
+        });
+    });
+});
+</script>
+
+<style>
+.erp-sidebar-suggestions {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.erp-sidebar-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #b73337;
+}
+
+.erp-sidebar-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 10px;
+}
+
+.erp-sidebar-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.erp-sidebar-item:last-child {
+    border-bottom: none;
+}
+
+.erp-sidebar-link {
+    font-size: 12px;
+    color: #333;
+    text-decoration: none;
+    flex: 1;
+    margin-right: 10px;
+}
+
+.erp-sidebar-link:hover {
+    color: #b73337;
+}
+
+.erp-sidebar-add {
+    width: 24px;
+    height: 24px;
+    border: none;
+    border-radius: 50%;
+    background: #b73337;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.erp-sidebar-add:hover {
+    background: #8b2529;
+}
+
+.erp-sidebar-add.added {
+    background: #2e7d32;
+}
+
+.erp-sidebar-more {
+    display: block;
+    font-size: 12px;
+    color: #b73337;
+    text-decoration: none;
+    text-align: center;
+}
+
+.erp-sidebar-more:hover {
+    text-decoration: underline;
+}
+</style>

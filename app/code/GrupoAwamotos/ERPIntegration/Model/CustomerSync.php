@@ -7,6 +7,7 @@ use GrupoAwamotos\ERPIntegration\Api\CustomerSyncInterface;
 use GrupoAwamotos\ERPIntegration\Api\ConnectionInterface;
 use GrupoAwamotos\ERPIntegration\Helper\Data as Helper;
 use GrupoAwamotos\ERPIntegration\Model\ResourceModel\SyncLog as SyncLogResource;
+use GrupoAwamotos\ERPIntegration\Model\Validator\CustomerValidator;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
@@ -18,6 +19,7 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Math\Random;
 use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\App\State as AppState;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -36,9 +38,11 @@ class CustomerSync implements CustomerSyncInterface
     private RegionFactory $regionModelFactory;
     private StoreManagerInterface $storeManager;
     private SyncLogResource $syncLogResource;
+    private CustomerValidator $customerValidator;
     private LoggerInterface $logger;
     private Random $random;
     private EncryptorInterface $encryptor;
+    private AppState $appState;
 
     private array $regionCache = [];
     private array $erpMappingCache = [];
@@ -54,9 +58,11 @@ class CustomerSync implements CustomerSyncInterface
         RegionFactory $regionModelFactory,
         StoreManagerInterface $storeManager,
         SyncLogResource $syncLogResource,
+        CustomerValidator $customerValidator,
         LoggerInterface $logger,
         Random $random,
-        EncryptorInterface $encryptor
+        EncryptorInterface $encryptor,
+        AppState $appState
     ) {
         $this->connection = $connection;
         $this->helper = $helper;
@@ -68,9 +74,11 @@ class CustomerSync implements CustomerSyncInterface
         $this->regionModelFactory = $regionModelFactory;
         $this->storeManager = $storeManager;
         $this->syncLogResource = $syncLogResource;
+        $this->customerValidator = $customerValidator;
         $this->logger = $logger;
         $this->random = $random;
         $this->encryptor = $encryptor;
+        $this->appState = $appState;
     }
 
     public function getErpCustomerByTaxvat(string $taxvat): ?array
@@ -80,11 +88,13 @@ class CustomerSync implements CustomerSyncInterface
         try {
             $sql = "SELECT f.CODIGO, f.RAZAO, f.FANTASIA, f.CGC, f.CPF,
                            f.ENDERECO, f.NUMERO, f.BAIRRO, f.CIDADE, f.CEP, f.UF,
-                           f.COMPLEMENTO, f.CONDPAGTO, f.FATORPRECO, f.CKPESSOA,
-                           f.INSCEST, f.INSCMUN, f.DATACADASTRO,
-                           c.EMAIL, c.FONE1, c.FONECEL, c.WHATSAPP, c.NOME AS CONTATO_NOME
+                           f.CONDPAGTO, f.FATORPRECO, f.CKPESSOA, f.TRANSPPREF,
+                           REPLACE(REPLACE(REPLACE(tp.CGC, '.', ''), '/', ''), '-', '') AS TRANSPPREF_CNPJ,
+                           tp.RAZAO AS TRANSPPREF_NOME,
+                           c.EMAIL, c.FONE1, c.FONECEL, c.NOME AS CONTATO_NOME
                     FROM FN_FORNECEDORES f
                     LEFT JOIN FN_CONTATO c ON c.FORNECEDOR = f.CODIGO AND c.PRINCIPAL = 'S'
+                    LEFT JOIN FN_FORNECEDORES tp ON tp.CODIGO = f.TRANSPPREF AND tp.CKTRANSPORTADOR = 'S'
                     WHERE f.CKCLIENTE = 'S'
                       AND (REPLACE(REPLACE(REPLACE(f.CGC, '.', ''), '/', ''), '-', '') = :taxvat
                            OR REPLACE(REPLACE(f.CPF, '.', ''), '-', '') = :taxvat2)";
@@ -104,11 +114,13 @@ class CustomerSync implements CustomerSyncInterface
         try {
             $sql = "SELECT f.CODIGO, f.RAZAO, f.FANTASIA, f.CGC, f.CPF,
                            f.ENDERECO, f.NUMERO, f.BAIRRO, f.CIDADE, f.CEP, f.UF,
-                           f.COMPLEMENTO, f.CONDPAGTO, f.FATORPRECO, f.CKPESSOA,
-                           f.INSCEST, f.INSCMUN, f.DATACADASTRO,
-                           c.EMAIL, c.FONE1, c.FONECEL, c.WHATSAPP, c.NOME AS CONTATO_NOME
+                           f.CONDPAGTO, f.FATORPRECO, f.CKPESSOA, f.TRANSPPREF,
+                           REPLACE(REPLACE(REPLACE(tp.CGC, '.', ''), '/', ''), '-', '') AS TRANSPPREF_CNPJ,
+                           tp.RAZAO AS TRANSPPREF_NOME,
+                           c.EMAIL, c.FONE1, c.FONECEL, c.NOME AS CONTATO_NOME
                     FROM FN_FORNECEDORES f
                     LEFT JOIN FN_CONTATO c ON c.FORNECEDOR = f.CODIGO AND c.PRINCIPAL = 'S'
+                    LEFT JOIN FN_FORNECEDORES tp ON tp.CODIGO = f.TRANSPPREF AND tp.CKTRANSPORTADOR = 'S'
                     WHERE f.CODIGO = :code AND f.CKCLIENTE = 'S'";
 
             return $this->connection->fetchOne($sql, [':code' => $code]);
@@ -120,11 +132,18 @@ class CustomerSync implements CustomerSyncInterface
 
     public function syncAll(): array
     {
-        $result = ['created' => 0, 'updated' => 0, 'errors' => 0, 'skipped' => 0];
+        $result = ['created' => 0, 'updated' => 0, 'errors' => 0, 'skipped' => 0, 'validation_failed' => 0];
 
         if (!$this->helper->isCustomerSyncEnabled()) {
             $this->logger->info('[ERP] Customer sync is disabled');
             return $result;
+        }
+
+        // Set area code for CLI execution
+        try {
+            $this->appState->setAreaCode(\Magento\Framework\App\Area::AREA_ADMINHTML);
+        } catch (\Magento\Framework\Exception\LocalizedException $e) {
+            // Area code already set, ignore
         }
 
         try {
@@ -137,6 +156,26 @@ class CustomerSync implements CustomerSyncInterface
 
                 foreach ($customers as $row) {
                     try {
+                        // Validate customer data before sync
+                        $validationResult = $this->customerValidator->validate($row);
+
+                        if (!$validationResult->isValid()) {
+                            $result['validation_failed']++;
+                            $this->logger->warning('[ERP] Customer validation failed', [
+                                'code' => $row['CODIGO'] ?? '?',
+                                'errors' => $validationResult->getErrors(),
+                            ]);
+                            continue;
+                        }
+
+                        // Log warnings if any
+                        if ($validationResult->hasWarnings()) {
+                            $this->logger->info('[ERP] Customer validation warnings', [
+                                'code' => $row['CODIGO'] ?? '?',
+                                'warnings' => $validationResult->getWarnings(),
+                            ]);
+                        }
+
                         $syncResult = $this->processSingleCustomer($row);
 
                         switch ($syncResult) {
@@ -207,7 +246,7 @@ class CustomerSync implements CustomerSyncInterface
         }
 
         try {
-            $websiteId = $this->storeManager->getDefaultStoreView()->getWebsiteId();
+            $websiteId = (int) $this->storeManager->getDefaultStoreView()->getWebsiteId();
 
             // Tenta encontrar cliente existente
             $existingCustomer = $this->findExistingCustomer($email, $erpCode, $websiteId);
@@ -366,9 +405,40 @@ class CustomerSync implements CustomerSyncInterface
         }
     }
 
-    // ==================== Private Methods ====================
+    /**
+     * Get customer by CNPJ/CPF
+     */
+    public function getErpCustomerByCnpj(string $cnpj): ?array
+    {
+        return $this->getErpCustomerByTaxvat($cnpj);
+    }
 
-    private function getErpCustomerCount(): int
+    /**
+     * Sync single customer by ERP code
+     */
+    public function syncByCode(string $code): bool
+    {
+        $erpData = $this->getErpCustomerByCode((int)$code);
+
+        if (!$erpData) {
+            $this->logger->warning("[ERP] Customer not found with code: {$code}");
+            return false;
+        }
+
+        $customer = $this->createOrUpdateCustomer($erpData);
+
+        if ($customer) {
+            $this->syncCustomerAddresses((int)$customer->getId(), (int)$code);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Get ERP customer count (public)
+     */
+    public function getErpCustomerCount(): int
     {
         $sql = "SELECT COUNT(*) as total
                 FROM FN_FORNECEDORES f
@@ -377,26 +447,39 @@ class CustomerSync implements CustomerSyncInterface
                   AND c.EMAIL IS NOT NULL AND c.EMAIL <> ''
                   AND c.EMAIL LIKE '%@%.%'";
 
-        $result = $this->connection->fetchOne($sql);
-        return (int)($result['total'] ?? 0);
+        $result = $this->connection->fetchOne($sql, []);
+        return (int)($result['total'] ?? $result['TOTAL'] ?? 0);
     }
+
+    /**
+     * Get ERP customers with pagination (public)
+     */
+    public function getErpCustomers(int $limit, int $offset): array
+    {
+        return $this->getErpCustomersBatch($offset, $limit);
+    }
+
+    // ==================== Private Methods ====================
 
     private function getErpCustomersBatch(int $offset, int $limit): array
     {
+        // Note: OFFSET/FETCH requires integer literals in SQL Server, not parameters
         $sql = "SELECT f.CODIGO, f.RAZAO, f.FANTASIA, f.CGC, f.CPF,
                        f.ENDERECO, f.NUMERO, f.BAIRRO, f.CIDADE, f.CEP, f.UF,
-                       f.COMPLEMENTO, f.CKPESSOA, f.INSCEST, f.INSCMUN,
-                       f.CONDPAGTO, f.FATORPRECO, f.DATACADASTRO,
-                       c.EMAIL, c.FONE1, c.FONECEL, c.WHATSAPP, c.NOME AS CONTATO_NOME
+                       f.CKPESSOA, f.CONDPAGTO, f.FATORPRECO, f.TRANSPPREF,
+                       REPLACE(REPLACE(REPLACE(tp.CGC, '.', ''), '/', ''), '-', '') AS TRANSPPREF_CNPJ,
+                       tp.RAZAO AS TRANSPPREF_NOME,
+                       c.EMAIL, c.FONE1, c.FONECEL, c.NOME AS CONTATO_NOME
                 FROM FN_FORNECEDORES f
                 LEFT JOIN FN_CONTATO c ON c.FORNECEDOR = f.CODIGO AND c.PRINCIPAL = 'S'
+                LEFT JOIN FN_FORNECEDORES tp ON tp.CODIGO = f.TRANSPPREF AND tp.CKTRANSPORTADOR = 'S'
                 WHERE f.CKCLIENTE = 'S' AND f.ATCLIENTE = 'S'
                   AND c.EMAIL IS NOT NULL AND c.EMAIL <> ''
                   AND c.EMAIL LIKE '%@%.%'
                 ORDER BY f.CODIGO
-                OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY";
+                OFFSET {$offset} ROWS FETCH NEXT {$limit} ROWS ONLY";
 
-        return $this->connection->query($sql, [':offset' => $offset, ':limit' => $limit]);
+        return $this->connection->query($sql, []);
     }
 
     private function processSingleCustomer(array $row): string
@@ -483,9 +566,17 @@ class CustomerSync implements CustomerSyncInterface
             $customer->setCustomAttribute('inscricao_estadual', $erpData['INSCEST']);
         }
 
-        if (!empty($erpData['FONECEL']) || !empty($erpData['WHATSAPP'])) {
-            $phone = $erpData['WHATSAPP'] ?: $erpData['FONECEL'];
+        $whatsapp = $erpData['WHATSAPP'] ?? '';
+        $fonecel = $erpData['FONECEL'] ?? '';
+        if (!empty($fonecel) || !empty($whatsapp)) {
+            $phone = $whatsapp ?: $fonecel;
             $customer->setCustomAttribute('celular', $this->formatPhone($phone));
+        }
+
+        // Transportadora preferencial do ERP
+        $carrierCode = $this->resolveCarrierCode($erpData);
+        if ($carrierCode) {
+            $customer->setCustomAttribute('b2b_carrier_code', $carrierCode);
         }
 
         // Salva cliente
@@ -531,6 +622,16 @@ class CustomerSync implements CustomerSyncInterface
             $existingIE = $customer->getCustomAttribute('inscricao_estadual');
             if (!$existingIE || $existingIE->getValue() !== $erpData['INSCEST']) {
                 $customer->setCustomAttribute('inscricao_estadual', $erpData['INSCEST']);
+                $updated = true;
+            }
+        }
+
+        // Atualiza transportadora preferencial do ERP
+        $carrierCode = $this->resolveCarrierCode($erpData);
+        if ($carrierCode) {
+            $existingCarrier = $customer->getCustomAttribute('b2b_carrier_code');
+            if (!$existingCarrier || $existingCarrier->getValue() !== $carrierCode) {
+                $customer->setCustomAttribute('b2b_carrier_code', $carrierCode);
                 $updated = true;
             }
         }
@@ -601,6 +702,19 @@ class CustomerSync implements CustomerSyncInterface
         $this->createPrimaryAddress($customerId, $addressData);
     }
 
+    /**
+     * Resolve ERP TRANSPPREF to Magento carrier code (CNPJ_xxxx format)
+     */
+    private function resolveCarrierCode(array $erpData): ?string
+    {
+        $cnpj = trim($erpData['TRANSPPREF_CNPJ'] ?? '');
+        if ($cnpj === '' || $cnpj === '0') {
+            return null;
+        }
+
+        return 'CNPJ_' . $cnpj;
+    }
+
     private function getErpAddresses(int $erpCode): array
     {
         // Busca endereços de entrega do ERP
@@ -623,19 +737,45 @@ class CustomerSync implements CustomerSyncInterface
     {
         $isPJ = ($erpData['CKPESSOA'] ?? 'F') === 'J';
 
+        // Coleta nome fantasia, razão social e nome do contato
+        $fantasia = trim($erpData['FANTASIA'] ?? '');
+        $razao = trim($erpData['RAZAO'] ?? '');
+        $contato = trim($erpData['CONTATO_NOME'] ?? '');
+
         if ($isPJ) {
-            // Pessoa Jurídica: usa FANTASIA ou RAZAO
-            $name = trim($erpData['FANTASIA'] ?? '') ?: trim($erpData['RAZAO'] ?? 'Cliente');
+            $name = $fantasia ?: $razao ?: 'Cliente';
         } else {
-            // Pessoa Física: usa nome do contato ou RAZAO
-            $name = trim($erpData['CONTATO_NOME'] ?? '') ?: trim($erpData['RAZAO'] ?? 'Cliente');
+            $name = $contato ?: $razao ?: 'Cliente';
         }
 
-        $parts = explode(' ', $name, 2);
+        // Remove caracteres de controle
+        $name = preg_replace('/[\x00-\x1F\x7F]/u', '', $name);
+
+        $parts = preg_split('/\s+/', $name, 2);
+
+        $firstname = trim($parts[0] ?? '');
+        $lastname = isset($parts[1]) ? trim($parts[1]) : '';
+
+        // Se só tem uma palavra, tenta a razão social como fallback para o sobrenome
+        if ($lastname === '' && $isPJ) {
+            $fallback = ($name === $fantasia && $razao !== '' && $razao !== $fantasia) ? $razao : '';
+            if ($fallback !== '') {
+                $fallbackParts = preg_split('/\s+/', $fallback, 2);
+                $lastname = trim($fallbackParts[1] ?? $fallbackParts[0] ?? '');
+            }
+        }
+
+        // Garante que firstname/lastname não estejam vazios (Magento obriga ambos)
+        if ($firstname === '') {
+            $firstname = 'Cliente';
+        }
+        if ($lastname === '') {
+            $lastname = $isPJ ? 'LTDA' : 'Cliente';
+        }
 
         return [
-            'firstname' => $parts[0] ?: 'Cliente',
-            'lastname' => $parts[1] ?? 'ERP',
+            'firstname' => mb_substr($firstname, 0, 255),
+            'lastname' => mb_substr($lastname, 0, 255),
         ];
     }
 
@@ -660,13 +800,18 @@ class CustomerSync implements CustomerSyncInterface
     {
         $clean = preg_replace('/[^0-9]/', '', $phone);
 
+        // Remove prefixo internacional 55
+        if (strlen($clean) >= 12 && str_starts_with($clean, '55')) {
+            $clean = substr($clean, 2);
+        }
+
         if (strlen($clean) === 11) {
             return sprintf('(%s) %s-%s', substr($clean, 0, 2), substr($clean, 2, 5), substr($clean, 7));
         } elseif (strlen($clean) === 10) {
             return sprintf('(%s) %s-%s', substr($clean, 0, 2), substr($clean, 2, 4), substr($clean, 6));
         }
 
-        return $phone;
+        return $clean ?: $phone;
     }
 
     private function formatCep(string $cep): string

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+  ERP Integration - Queue Topology
+  Defines exchanges and queues for MySQL broker
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/topology.xsd">
+
+    <!-- Exchange for ERP order sync -->
+    <exchange name="erp.exchange" type="topic" connection="db">
+        <!-- Main queue for order sync -->
+        <binding id="erpOrderSyncBinding"
+                 topic="erp.order.sync"
+                 destinationType="queue"
+                 destination="erp.order.sync.queue"/>
+
+        <!-- Retry queue for failed orders -->
+        <binding id="erpOrderSyncRetryBinding"
+                 topic="erp.order.sync.retry"
+                 destinationType="queue"
+                 destination="erp.order.sync.retry.queue"/>
+    </exchange>
+
+</config>
