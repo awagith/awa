@@ -1,0 +1,972 @@
+/* ===========================================
+   AWA MOTOS - CONSISTENCY HOME5 LAYER
+   Tema: AYO/Rokanthemes (Home5)
+
+   EXTRAÍDO de awa-consistency.css para:
+   - reduzir tamanho e complexidade do arquivo principal
+   - concentrar ajustes específicos da homepage Home5
+=========================================== */
+
+/* ===========================================
+   HOME5 — ALINHAMENTO E ACABAMENTO FINAL
+   Consolidado com :is(...) para reduzir duplicidade.
+=========================================== */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .block_cat > .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: flex-start;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .block_cat > .row > [class*="col-"] {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .leftBlock .vc_tta-tabs-container,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .rightBlock .tab_container {
+    width: 100%;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .leftBlock .tabs {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--awa-space-2);
+    margin: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .leftBlock .tabs > li {
+    float: none;
+    width: 100%;
+    margin: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container [class^="tab_content_"],
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container [class*=" tab_content_"],
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .item-product {
+    height: 100%;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product > .container,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .block_notification > .container {
+    width: 100%;
+    max-width: var(--awa-container);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+}
+
+/* Home5: evitar desalinhamento por containers aninhados (módulos Rokanthemes já incluem .container) */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .categorytab-container > .container,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .list-tab-product,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .hot-deal {
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* CategoryTab real (grid.phtml): tabs + conteúdo com largura estável */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container > .container > ul.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--awa-space-2);
+    margin: 0 0 var(--awa-space-4);
+    padding: 0;
+    list-style: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container > .container > ul.tabs > li {
+    float: none;
+    margin: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container > .container .tab_container,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container > .container .owl-container,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container > .container .category_tab_slider,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container > .container .category_tab_slider .product_row {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* CategoryTab thumbnail (catthumbnail.phtml): grade estável para colunas 5/7 + subcolunas */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--awa-space-4);
+    margin: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row > .col-md-5,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row > .col-sm-5 {
+    grid-column: span 5;
+    width: auto;
+    max-width: 100%;
+    float: none;
+    padding: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row > .col-md-7,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row > .col-sm-7 {
+    grid-column: span 7;
+    width: auto;
+    max-width: 100%;
+    float: none;
+    padding: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row > .col-md-7 > .row,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row > .col-sm-7 > .row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--awa-space-4);
+    margin: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row > .col-md-7 > .row > [class*="col-"],
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row > .col-sm-7 > .row > [class*="col-"] {
+    width: auto;
+    max-width: 100%;
+    float: none;
+    padding: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .popcat-box {
+    height: 100%;
+}
+
+/* ProductTab/SuperDeals: row legada não deve contrair bloco de carrossel */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product > .row,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-tab-slider > .row {
+    display: block;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product > .row > .tab_container,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-slide {
+    width: 100%;
+    min-width: 0;
+}
+
+/* ProductTab (producttab.phtml): wrapper de aba precisa de contenção explícita */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product .tab_container {
+    width: 100%;
+    min-width: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product .product-tab-slider.tab_content {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product .product-tab-slider.tab_content.active {
+    display: block;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product .product-tab-slider.tab_content .productTabContent {
+    width: 100%;
+    min-width: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product .product-tab-slider.tab_content .product_row {
+    min-width: 0;
+}
+
+/* ProductTab Home5: neutralizar listview legado (thumb 30% + info 70%) que estica cards */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product.listview {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product.listview .product-thumb,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product.listview .product-info {
+    float: none;
+    width: 100%;
+    max-width: 100%;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product.listview .product-info {
+    margin-top: 0;
+    padding-left: 0;
+}
+
+/* ProductTab fallback sem Owl: evita card único gigante */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product .product-tab-slider.tab_content .productTabContent:not(.owl-carousel) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--awa-space-4);
+    width: 100%;
+    min-width: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product .product-tab-slider.tab_content .productTabContent:not(.owl-carousel) .product_row {
+    display: contents;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product .product-tab-slider.tab_content .productTabContent:not(.owl-carousel) .item-product-parent {
+    min-width: 0;
+    width: auto;
+    float: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-slide .product_row {
+    height: 100%;
+}
+
+/* Itens/células dos carrosséis com altura consistente para alinhar cards */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .category_tab_slider .item,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .category_tab_slider .item-inner,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .item-product {
+    height: 100%;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content + .top-home-content {
+    margin-top: var(--awa-page-section-gap);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold {
+    display: grid;
+    gap: var(--awa-space-4);
+    width: 100%;
+    max-width: var(--awa-container);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+    align-items: start;
+}
+
+/* Above-the-fold: evitar overflow e alinhar módulos lado a lado no desktop */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold > * {
+    min-width: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold .awa-mobile-quick-nav {
+    grid-column: 1 / -1;
+
+    /* Full-bleed dentro do container acima-da-dobra: mantém sticky/linha visual alinhada com a viewport */
+    margin-left: -20px;
+    margin-right: -20px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold .awa-hero-cta-strip {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+}
+
+@media (width >= 992px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold {
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold .banner-slider {
+        grid-column: 1;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold .awa-hero-cta-strip {
+        grid-column: 2;
+    }
+}
+
+/* Trust + offers: banner e hot deal alinhados em colunas no desktop */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers > .container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--awa-space-5);
+    align-items: start;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers > .container > * {
+    min-width: 0;
+}
+
+/* Benefícios/serviços sempre full-width antes das colunas */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .velaServices {
+    grid-column: 1 / -1;
+    margin: 0;
+}
+
+/* Neste bloco usamos gap do grid; evitar somar margens/paddings legados */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .banner_mid_1,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal {
+    margin-top: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal {
+    padding: 0;
+}
+
+@media (width >= 992px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers > .container {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Above-the-fold: busca + categorias com maior destaque na Home */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .block-search {
+    border: 2px solid rgb(183 51 55 / 22%);
+    border-radius: calc(var(--awa-control-radius) + 2px);
+    box-shadow: 0 10px 24px rgb(0 0 0 / 7%);
+    background: #fff;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .block-search:focus-within {
+    border-color: var(--awa-red);
+    box-shadow: 0 0 0 3px rgb(183 51 55 / 16%), 0 10px 24px rgb(0 0 0 / 8%);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 {
+    border-radius: var(--awa-control-radius);
+    box-shadow: var(--awa-shadow-sm);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .menu-vertical-title,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .verticalmenu-title {
+    background: var(--awa-red);
+    color: var(--awa-text-on-primary);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .verticalmenu,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .verticalmenu-content {
+    border: 1px solid var(--awa-gray-200);
+    border-top: 0;
+    background: #fff;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip {
+    max-width: var(--awa-container);
+    width: calc(100% - 40px);
+    margin: 0 auto;
+    padding: var(--awa-space-3) var(--awa-space-4);
+    border: 1px solid var(--awa-gray-200);
+    border-radius: var(--awa-control-radius);
+    background: linear-gradient(135deg, rgb(183 51 55 / 6%), rgb(183 51 55 / 2%));
+    display: grid;
+    justify-items: center;
+    gap: var(--awa-space-2);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip .action {
+    min-height: 42px;
+    padding-left: var(--awa-space-4);
+    padding-right: var(--awa-space-4);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip .awa-hero-cta-note {
+    margin: 0;
+    font-size: var(--awa-text-sm);
+    color: var(--awa-gray-700);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip .awa-hero-cta-helper {
+    margin: 0;
+    font-size: var(--awa-text-sm);
+    color: var(--awa-gray-700);
+    text-align: center;
+    max-width: 72ch;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip .awa-hero-cta-link {
+    color: var(--awa-red-dark);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip .awa-hero-cta-link:hover {
+    color: var(--awa-red);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--intent-grids .ayo-home5-launches {
+    margin-top: var(--awa-space-5);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--intent-grids .awa-intent-heading {
+    margin: 0 0 var(--awa-space-3);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--intent-grids .awa-intent-heading h2 {
+    margin: 0;
+    font-size: clamp(1.25rem, 1rem + .8vw, 1.7rem);
+    line-height: 1.2;
+    color: var(--awa-text-primary, #222);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .banner_mid_1,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .hot-deal,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .the_blog {
+    margin-top: var(--awa-space-5);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--b2b-promo {
+    margin-top: var(--awa-space-6);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--b2b-promo .b2b-promo-banner {
+    margin-top: 0;
+    margin-bottom: 0;
+    border-radius: calc(var(--awa-control-radius) + 2px);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--intent-grids > .container > .categorytab-container,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--intent-grids > .container > .ayo-home5-launches {
+    margin-bottom: var(--awa-space-6);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--intent-grids > .container > :last-child {
+    margin-bottom: 0;
+}
+
+/* Intent grids: prevenir overflow e desalinhamento por wrappers/larguras implícitas */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--intent-grids > .container > * {
+    min-width: 0;
+}
+
+/* Lançamentos: alguns widgets/blocos trazem .container interno — evitar “container duplo” */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--intent-grids > .container > .ayo-home5-launches > .container {
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product > .container {
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Home5 ultra-fino: densidade e ritmo visual da seção ProductTab */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product {
+    padding-top: clamp(40px, 5vw, 56px);
+    padding-bottom: clamp(56px, 7vw, 88px);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .rokan-product-heading h2,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .rokan-product-heading h2 span {
+    font-size: clamp(24px, 2vw + 14px, 26px);
+    line-height: 1.2;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product {
+    padding: 16px;
+    border-radius: 6px;
+    gap: 12px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgb(0 0 0 / 7%);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product .title-product,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product .product-name {
+    margin: 0 0 8px;
+    line-height: 1.35;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product .title-product a,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product .product-item-link {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.7em;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product .info-price,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product .price-box {
+    margin-top: 2px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product .product-info-cart {
+    margin-top: 16px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .vc_tta-tabs-container {
+    margin-bottom: 20px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .vc_tta-tabs-container .tabs li {
+    margin: 0 10px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .vc_tta-tabs-container .tabs li a {
+    font-size: 16px;
+    line-height: 34px;
+    padding-bottom: 8px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .row > [class*="col-"] {
+    min-width: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .block_notification .awa-ticker-wrap {
+    display: flex;
+    align-items: center;
+    min-height: 36px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .rowFlex {
+    align-items: stretch;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > [class*="col-"],
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .rowFlex > [class*="col-"] {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .categorytab-container + .categorytab-container {
+    margin-top: var(--awa-space-5);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .hot-deal .hot-deal-tab-slider {
+    height: 100%;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .hot-deal,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product {
+    min-width: 0;
+    overflow-x: clip;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .banner_mid_1 + .hot-deal {
+    margin-top: var(--awa-space-5);
+}
+
+@media (width >= 1200px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content + .top-home-content {
+        margin-top: var(--awa-page-section-gap-lg);
+    }
+}
+
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .block_cat > .row {
+        row-gap: var(--awa-space-4);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product .product-tab-slider.tab_content .productTabContent:not(.owl-carousel) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .leftBlock .tabs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .block_notification > .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold .awa-mobile-quick-nav {
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container > .container > ul.tabs {
+        gap: var(--awa-space-1);
+        margin-bottom: var(--awa-space-3);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row {
+        grid-template-columns: 1fr;
+        gap: var(--awa-space-3);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row > .col-md-5,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row > .col-sm-5,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row > .col-md-7,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row > .col-sm-7 {
+        grid-column: auto;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row > .col-md-7 > .row,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .title-catthum + .row > .col-sm-7 > .row {
+        grid-template-columns: 1fr;
+        gap: var(--awa-space-3);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip {
+        width: calc(100% - 30px);
+        padding: var(--awa-space-3);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .banner_mid_1,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .hot-deal,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .the_blog,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .categorytab-container + .categorytab-container {
+        margin-top: var(--awa-space-4);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--b2b-promo {
+        margin-top: var(--awa-space-5);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--intent-grids > .container > .categorytab-container,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--intent-grids > .container > .ayo-home5-launches {
+        margin-bottom: var(--awa-space-5);
+    }
+}
+
+@media (width <= 768px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .block_notification .awa-ticker-wrap {
+        min-height: 32px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip {
+        justify-items: stretch;
+        gap: var(--awa-space-2);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip .action {
+        width: 100%;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-mobile-quick-nav .quick-nav-wrapper {
+        display: flex;
+        gap: var(--awa-space-2);
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        padding-bottom: var(--awa-space-1);
+        scroll-snap-type: x mandatory;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-mobile-quick-nav .quick-nav-item {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .the_blog .block-title,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .tab_product .box-title,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .hot-deal .rokan-product-heading h2 {
+        margin-bottom: var(--awa-space-4);
+        line-height: 1.25;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product {
+        padding-top: 36px;
+        padding-bottom: 52px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product {
+        padding: 14px;
+        gap: 10px;
+    }
+}
+
+@media (width <= 680px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product .product-tab-slider.tab_content .productTabContent:not(.owl-carousel) {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .leftBlock .tabs {
+        grid-template-columns: 1fr;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container > .container > ul.tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: var(--awa-space-1);
+        scrollbar-width: thin;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container > .container > ul.tabs > li {
+        flex: 0 0 auto;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content + .top-home-content {
+        margin-top: var(--awa-space-5);
+    }
+}
+
+@media (width <= 480px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .banner_mid_1 + .hot-deal {
+        margin-top: var(--awa-space-3);
+    }
+}
+
+@media (width <= 390px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .block_notification > .container {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold .awa-mobile-quick-nav {
+        margin-left: -12px;
+        margin-right: -12px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container > .container > ul.tabs {
+        margin-bottom: var(--awa-space-2);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip {
+        width: calc(100% - 24px);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content + .top-home-content {
+        margin-top: var(--awa-space-4);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .hot-deal,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .the_blog {
+        margin-top: var(--awa-space-3);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .the_blog .block-title,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .tab_product .box-title,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .hot-deal .rokan-product-heading h2 {
+        font-size: clamp(18px, 5.2vw, 22px);
+        margin-bottom: var(--awa-space-3);
+    }
+}
+
+@media (width <= 375px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .block_notification .awa-ticker-wrap {
+        min-height: 30px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .banner_mid_1 + .hot-deal {
+        margin-top: var(--awa-space-2);
+    }
+}
+
+@media (width <= 320px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .block_notification > .container {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold .awa-mobile-quick-nav {
+        margin-left: -10px;
+        margin-right: -10px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content + .top-home-content {
+        margin-top: var(--awa-space-3);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .the_blog .block-title,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .tab_product .box-title,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .hot-deal .rokan-product-heading h2 {
+        font-size: clamp(17px, 6vw, 20px);
+        line-height: 1.2;
+        margin-bottom: var(--awa-space-2);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .block_notification .awa-ticker-wrap {
+        min-height: 28px;
+    }
+}
+
+/* ===========================================
+   AF-02: esconder seções que renderizam apenas
+   headings sem conteúdo (ex.: "Lançamentos",
+   "Chegou na loja").
+   :has() — suportado em Chrome 105+, Safari 15.4+,
+   Firefox 121+.
+=========================================== */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper
+    :is(.home-new-product, .list-tab-product, .onsale_product, .home-bestseller):not(:has(.item-product, .product-item, .owl-item)) {
+    display: none;
+}
+
+/* ===========================================
+   AF-03: rowFlex.flexJustifyCenter — força coluna
+   única para evitar desalinhamento mobile
+=========================================== */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .rowFlex.flexJustifyCenter {
+    grid-template-columns: 1fr;
+}
+
+/* ===========================================
+   AF-01: product names — line-clamp global
+   para TODOS os cards da homepage (hot-deal,
+   categorytab, onsale, bestseller, carrosséis).
+   tab_product já tem regra própria (L477).
+=========================================== */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .item-product .product-name a,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .item-product .product-item-link,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .product-item .product-item-link {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    min-height: 2.8em;
+    line-height: 1.4;
+}
+
+/* ===========================================
+   AF-04: velaServices benefits strip
+   Float-based → CSS Grid com alturas iguais.
+   5 items no desktop, colapsa para 3→2→1.
+=========================================== */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: var(--awa-space-4);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row > [class*="col-"],
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex > [class*="col-"] {
+    width: auto;
+    max-width: 100%;
+    float: none;
+    padding: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .boxService {
+    height: 100%;
+    text-align: center;
+}
+
+/* ===========================================
+   AF-06: hot-deal item-product — flex column
+   para empurrar botões ao fundo do card.
+=========================================== */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .item-product {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .item-product .product-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .item-product .product-info .product-info-cart,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .item-product .product-info .actions-primary {
+    margin-top: auto;
+}
+
+/* AF-08: justify-content: flex-start merged na regra original (L14) */
+
+/* ===========================================
+   AF-07: ayo-home5 CMS wrapper — seções do
+   Canal B (trust-badges, FAQ). Grid responsivo.
+=========================================== */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper {
+    max-width: var(--awa-container);
+    margin-inline: auto;
+    padding-inline: 20px;
+    box-sizing: border-box;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper .ayo-home5-section {
+    margin-bottom: var(--awa-space-6);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper .ayo-home5-section:last-child {
+    margin-bottom: 0;
+}
+
+/* ===========================================
+   AF-09: FAQ section — largura máxima para
+   legibilidade confortável do texto.
+=========================================== */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .home-faq-section,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper [class*="faq"] .block-content {
+    max-width: 800px;
+    margin-inline: auto;
+}
+
+/* ===========================================
+   AF-RESPONSIVE: overrides para novos fixes
+=========================================== */
+
+/* ≤991px — velaServices 3 colunas (esconde 4º e 5º) */
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: var(--awa-space-3);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row > [class*="col-"]:nth-child(n+4),
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex > [class*="col-"]:nth-child(n+4) {
+        display: none;
+    }
+}
+
+/* ≤767px — velaServices 2 colunas, product name 3 linhas */
+@media (width <= 767px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row > [class*="col-"]:nth-child(n+4),
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex > [class*="col-"]:nth-child(n+4) {
+        display: none;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .item-product .product-name a,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .item-product .product-item-link,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .product-item .product-item-link {
+        -webkit-line-clamp: 3;
+        min-height: 4.2em;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper {
+        padding-inline: 15px;
+    }
+}
+
+/* ≤480px — velaServices 1 coluna, espaçamentos compactos */
+@media (width <= 480px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex {
+        grid-template-columns: 1fr;
+        gap: var(--awa-space-2);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row > [class*="col-"]:nth-child(n+4),
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex > [class*="col-"]:nth-child(n+4) {
+        display: block;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper {
+        padding-inline: 12px;
+    }
+}
