@@ -287,6 +287,11 @@
     align-items: start;
 }
 
+/* Ajuste fino do ritmo visual: reduz o vão entre hero e serviços/ofertas */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold + .top-home-content--trust-and-offers {
+    margin-top: var(--awa-space-4);
+}
+
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers > .container > * {
     min-width: 0;
 }
@@ -295,6 +300,10 @@
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .velaServices {
     grid-column: 1 / -1;
     margin: 0;
+
+    /* evita placeholder de contain-intrinsic-size (400px) em seção crítica */
+    content-visibility: visible;
+    contain-intrinsic-size: auto 0;
 }
 
 /* Neste bloco usamos gap do grid; evitar somar margens/paddings legados */
@@ -310,6 +319,12 @@
 @media (width >= 992px) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers > .container {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold + .top-home-content--trust-and-offers {
+        margin-top: var(--awa-space-3);
     }
 }
 
