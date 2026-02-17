@@ -5,6 +5,11 @@
 /app/etc/config.php
 auth.json
 
+# Arquivos de ambiente (NUNCA comite segredos)
+.env
+.env.*
+!.env.example
+
 # Cache e arquivos temporários
 /var/*
 !/var/.htaccess
@@ -26,6 +31,7 @@ auth.json
 
 # Logs
 *.log
+nohup.out
 
 # IDE
 .idea/
@@ -36,6 +42,8 @@ auth.json
 
 # OS
 .DS_Store
+__MACOSX/
+**/__MACOSX/
 Thumbs.db
 
 # Node modules (se usar frontend build)
@@ -47,10 +55,32 @@ node_modules/
 *.sql
 *.gz
 *.zip
+_backups/
+
+# Scripts utilitários e documentos locais
+scripts/
+docs/
+relatorios/
+analise_visual/
+biblioteca/
+_csv/
 
 # Diretórios temporários
 pub/media/import/
 qwen-code/
 opensearch/
-opensearch/
-qwen-code/
+dummy-opensearch/
+
+# Configs de ferramentas AI
+.agent/
+.anima/
+.claude/
+.codacy/
+.kombai/
+.trae/
+
+# Ignore vscode AI rules
+.github/instructions/codacy.instructions.md
+
+# MCP config with secrets
+.vscode/mcp.json
