@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="t d">
+  <title id="t">Coleção Performance</title>
+  <desc id="d">Banner lateral de promoções da coleção performance.</desc>
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2f2f2f"/>
+      <stop offset="100%" stop-color="#b73337"/>
+    </linearGradient>
+  </defs>
+  <rect width="720" height="420" fill="url(#g1)"/>
+  <circle cx="620" cy="80" r="110" fill="rgba(255,255,255,.12)"/>
+  <text x="56" y="170" font-family="Arial, Helvetica, sans-serif" font-size="26" fill="#ffffff" opacity="0.85">Coleção exclusiva</text>
+  <text x="56" y="220" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="700" fill="#ffffff">Performance</text>
+  <text x="56" y="270" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="#ffffff">Ver coleção</text>
+</svg>

@@ -19,7 +19,7 @@ use Magento\Framework\App\Action\Action;
 	?>
 <div class="list-tab-product common-tab-system-fixed">
 	<div class="rokan-product-heading clearfix">
-    	<h2><?php echo __('Top Features') ?><span class="sup-title"> <?php echo __('Products 2020') ?></span></h2>
+    	<h2><?php echo __('Os Principais') ?><span class="sup-title"> <?php echo __('Produtos 2025') ?></span></h2>
     </div>
 	<div class="clearfix">
         <div class="vc_tta-tabs-container">
@@ -150,9 +150,45 @@ use Magento\Framework\App\Action\Action;
 {
 	"[data-role=tocart-form], .form.map.checkout": {
 		"catalogAddToCart": {}
-	},
-    ".list-tab-product": {
-        "Rokanthemes_ProductTab/js/producttab": {}
-    }
+	}
 }
+</script>
+<script>
+	require([
+		'jquery',
+		'mage/mage',
+		'rokanthemes/owl'
+	], function ($) {
+		'use strict';
+
+		jQuery(".productTabContent").owlCarousel({
+			lazyLoad:true,
+			autoPlay : false,
+			items : 3,
+			itemsDesktop : [1366,3],
+			itemsDesktopSmall : [1199,2],
+			itemsTablet: [991,2],
+			itemsMobile : [680,1],
+			slideSpeed : 500,
+			paginationSpeed : 500,
+			rewindSpeed : 500,
+			navigation : true,
+			stopOnHover : true,
+			pagination : true,
+			scrollPerPage:true,
+			afterAction: function(el){
+		     this.$owlItems.removeClass('first-active')
+		     this.$owlItems .eq(this.currentItem).addClass('first-active')  
+		    }
+		});
+	});
+</script>
+<script type="text/javascript">
+require(["jquery", 'mage/mage', "rokanthemes/owl"], function($){
+	'use strict';
+	$( document ).ready(function() {
+		$(".list-tab-product .tab_content").hide();
+		$(".list-tab-product .tab_content:first").show();	
+	});
+});
 </script>

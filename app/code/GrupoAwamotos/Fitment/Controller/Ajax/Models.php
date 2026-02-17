@@ -1,12 +1,15 @@
 <?php
+declare(strict_types=1);
+
 namespace GrupoAwamotos\Fitment\Controller\Ajax;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 
-class Models extends Action
+class Models extends Action implements HttpGetActionInterface
 {
     protected CollectionFactory $productCollectionFactory;
     protected JsonFactory $resultJsonFactory;

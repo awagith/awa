@@ -1,199 +1,148 @@
 <?php
 /**
  * Shopping List Index Template
+ *
  * @var \GrupoAwamotos\B2B\Block\Customer\ShoppingList\ListBlock $block
  * @var \GrupoAwamotos\B2B\ViewModel\ShoppingListViewModel $viewModel
  */
 $viewModel = $block->getData('view_model');
 $lists = $viewModel->getCustomerLists();
 ?>
-
-<div class="b2b-shopping-lists">
+<div class="b2b-shoppinglist-index">
     <div class="block-title">
         <strong><?= $block->escapeHtml(__('Minhas Listas de Compras')) ?></strong>
     </div>
-    
-    <div class="actions-toolbar mb-4">
-        <button type="button" 
-            class="action primary" 
-            data-toggle="modal" 
-            data-target="#create-list-modal"
-            data-action="open-modal">
-            <span><?= $block->escapeHtml(__('Nova Lista')) ?></span>
+
+    <div class="shoppinglist-actions-top">
+        <button type="button" id="btn-create-list" class="action primary" title="<?= $block->escapeHtmlAttr(__('Nova Lista')) ?>">
+            <span><?= $block->escapeHtml(__('Criar Nova Lista')) ?></span>
         </button>
     </div>
 
-    <?php if ($lists->getSize() > 0): ?>
-        <div class="table-wrapper shopping-lists-table">
-            <table class="data table table-shopping-lists" id="shopping-lists-table">
-                <thead>
-                    <tr>
-                        <th scope="col" class="col name"><?= $block->escapeHtml(__('Nome da Lista')) ?></th>
-                        <th scope="col" class="col items"><?= $block->escapeHtml(__('Itens')) ?></th>
-                        <th scope="col" class="col total"><?= $block->escapeHtml(__('Total Estimado')) ?></th>
-                        <th scope="col" class="col date"><?= $block->escapeHtml(__('Atualizado em')) ?></th>
-                        <th scope="col" class="col actions"><?= $block->escapeHtml(__('Ações')) ?></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($lists as $list): ?>
-                        <tr>
-                            <td data-th="<?= $block->escapeHtmlAttr(__('Nome da Lista')) ?>" class="col name">
-                                <a href="<?= $block->escapeUrl($block->getViewUrl((int)$list->getId())) ?>">
-                                    <?= $block->escapeHtml($list->getName()) ?>
-                                </a>
-                                <?php if ($list->getDescription()): ?>
-                                    <br><small class="text-muted"><?= $block->escapeHtml($list->getDescription()) ?></small>
-                                <?php endif; ?>
-                            </td>
-                            <td data-th="<?= $block->escapeHtmlAttr(__('Itens')) ?>" class="col items">
-                                <?= (int)$viewModel->getItemsCount((int)$list->getId()) ?>
-                            </td>
-                            <td data-th="<?= $block->escapeHtmlAttr(__('Total Estimado')) ?>" class="col total">
-                                <?= /* @noEscape */ $viewModel->getListTotal((int)$list->getId()) ?>
-                            </td>
-                            <td data-th="<?= $block->escapeHtmlAttr(__('Atualizado em')) ?>" class="col date">
-                                <?= $block->escapeHtml(date('d/m/Y H:i', strtotime($list->getUpdatedAt()))) ?>
-                            </td>
-                            <td data-th="<?= $block->escapeHtmlAttr(__('Ações')) ?>" class="col actions">
-                                <div class="actions">
-                                    <a href="<?= $block->escapeUrl($block->getViewUrl((int)$list->getId())) ?>" 
-                                       class="action view" 
-                                       title="<?= $block->escapeHtmlAttr(__('Ver Lista')) ?>">
-                                        <span><?= $block->escapeHtml(__('Ver')) ?></span>
-                                    </a>
-                                    <form action="<?= $block->escapeUrl($block->getAddToCartUrl((int)$list->getId())) ?>" 
-                                          method="post" 
-                                          style="display:inline;">
-                                        <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
-                                        <button type="submit" 
-                                                class="action tocart" 
-                                                title="<?= $block->escapeHtmlAttr(__('Adicionar ao Carrinho')) ?>">
-                                            <span><?= $block->escapeHtml(__('Comprar')) ?></span>
-                                        </button>
-                                    </form>
-                                    <form action="<?= $block->escapeUrl($block->getDeleteUrl((int)$list->getId())) ?>" 
-                                        method="post" 
-                                        style="display:inline;"
-                                        data-confirm="<?= $block->escapeHtmlAttr(__('Tem certeza que deseja excluir esta lista?')) ?>">
-                                        <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
-                                        <button type="submit" 
-                                                class="action delete" 
-                                                title="<?= $block->escapeHtmlAttr(__('Excluir Lista')) ?>">
-                                            <span><?= $block->escapeHtml(__('Excluir')) ?></span>
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    <?php else: ?>
-        <div class="message info empty">
-            <span><?= $block->escapeHtml(__('Você ainda não tem listas de compras.')) ?></span>
-        </div>
-    <?php endif; ?>
-</div>
-
-<!-- Modal Criar Lista -->
-<div id="create-list-modal" class="modal" data-role="shoppinglist-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999;">
-    <div class="modal-content" style="background:#fff; max-width:500px; margin:10% auto; padding:20px; border-radius:5px;">
-        <div class="modal-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h3 style="margin:0;"><?= $block->escapeHtml(__('Criar Nova Lista')) ?></h3>
-            <button type="button" data-action="close-modal" style="background:none; border:none; font-size:24px; cursor:pointer;">&times;</button>
-        </div>
-        <form action="<?= $block->escapeUrl($block->getCreateUrl()) ?>" method="post">
-            <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
-            <div class="field required" style="margin-bottom:15px;">
+    <!-- Create List Form (hidden by default) -->
+    <div class="shoppinglist-create-form" id="create-list-form" style="display:none;">
+        <form action="<?= $block->escapeUrl($block->getCreateUrl()) ?>" method="post"
+              data-mage-init='{"validation":{}}'>
+            <?= $block->getBlockHtml('formkey') ?>
+            <div class="field required">
                 <label for="list-name" class="label">
                     <span><?= $block->escapeHtml(__('Nome da Lista')) ?></span>
                 </label>
                 <div class="control">
-                    <input type="text" 
-                           id="list-name" 
-                           name="name" 
-                           class="input-text" 
-                           required 
-                           style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;"
-                           placeholder="<?= $block->escapeHtmlAttr(__('Ex: Peças para Manutenção')) ?>">
+                    <input type="text" id="list-name" name="name" required
+                           data-validate="{required:true}"
+                           placeholder="<?= $block->escapeHtmlAttr(__('Ex: Peças para revisão')) ?>" />
                 </div>
             </div>
-            <div class="field" style="margin-bottom:20px;">
+            <div class="field">
                 <label for="list-description" class="label">
                     <span><?= $block->escapeHtml(__('Descrição (opcional)')) ?></span>
                 </label>
                 <div class="control">
-                    <textarea id="list-description" 
-                              name="description" 
-                              class="input-text" 
-                              rows="3"
-                              style="width:100%; padding:10px; border:1px solid #ccc; border-radius:4px;"
+                    <textarea id="list-description" name="description" rows="2"
                               placeholder="<?= $block->escapeHtmlAttr(__('Descrição da lista...')) ?>"></textarea>
                 </div>
             </div>
-            <div class="actions-toolbar">
-                <button type="submit" class="action primary" style="padding:10px 20px;">
-                    <span><?= $block->escapeHtml(__('Criar Lista')) ?></span>
+            <div class="actions">
+                <button type="submit" class="action primary">
+                    <span><?= $block->escapeHtml(__('Criar')) ?></span>
                 </button>
-                <button type="button" 
-                    class="action secondary" 
-                    data-action="close-modal"
-                    style="padding:10px 20px; margin-left:10px;">
+                <button type="button" class="action secondary" id="btn-cancel-create">
                     <span><?= $block->escapeHtml(__('Cancelar')) ?></span>
                 </button>
             </div>
         </form>
     </div>
+
+    <?php if ($lists->getSize() === 0): ?>
+        <div class="message info empty">
+            <span><?= $block->escapeHtml(__('Você ainda não possui listas de compras. Crie sua primeira lista para organizar seus pedidos recorrentes.')) ?></span>
+        </div>
+    <?php else: ?>
+        <div class="shoppinglist-grid">
+            <?php foreach ($lists as $list): ?>
+                <?php $itemCount = $viewModel->getItemsCount((int) $list->getId()); ?>
+                <div class="shoppinglist-card">
+                    <div class="card-header">
+                        <h3 class="list-name">
+                            <a href="<?= $block->escapeUrl($block->getViewUrl((int) $list->getId())) ?>">
+                                <?= $block->escapeHtml($list->getName()) ?>
+                            </a>
+                        </h3>
+                        <?php if ($list->getData('is_default')): ?>
+                            <span class="default-badge"><?= $block->escapeHtml(__('Padrão')) ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <?php if ($list->getData('description')): ?>
+                        <p class="list-description"><?= $block->escapeHtml($list->getData('description')) ?></p>
+                    <?php endif; ?>
+                    <div class="card-meta">
+                        <span class="item-count"><?= (int) $itemCount ?> <?= $block->escapeHtml(__('itens')) ?></span>
+                        <span class="list-total"><?= /* @noEscape */ $viewModel->getListTotal((int) $list->getId()) ?></span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="<?= $block->escapeUrl($block->getViewUrl((int) $list->getId())) ?>" class="action view">
+                            <span><?= $block->escapeHtml(__('Ver Itens')) ?></span>
+                        </a>
+                        <a href="<?= $block->escapeUrl($block->getAddToCartUrl((int) $list->getId())) ?>" class="action primary add-to-cart">
+                            <span><?= $block->escapeHtml(__('Adicionar ao Carrinho')) ?></span>
+                        </a>
+                        <a href="<?= $block->escapeUrl($block->getDeleteUrl((int) $list->getId())) ?>"
+                           class="action delete"
+                           data-confirm="<?= $block->escapeHtmlAttr(__('Tem certeza que deseja excluir esta lista?')) ?>"
+                           onclick="return confirm(this.dataset.confirm);">
+                            <span><?= $block->escapeHtml(__('Excluir')) ?></span>
+                        </a>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
 </div>
 
 <style>
-.b2b-shopping-lists .table-shopping-lists {
-    width: 100%;
-    border-collapse: collapse;
-}
-.b2b-shopping-lists .table-shopping-lists th,
-.b2b-shopping-lists .table-shopping-lists td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-.b2b-shopping-lists .table-shopping-lists th {
-    background: #f5f5f5;
-    font-weight: 600;
-}
-.b2b-shopping-lists .actions a,
-.b2b-shopping-lists .actions button {
-    margin-right: 10px;
-    color: #006bb4;
-    text-decoration: none;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-}
-.b2b-shopping-lists .actions a:hover,
-.b2b-shopping-lists .actions button:hover {
-    text-decoration: underline;
-}
-.b2b-shopping-lists .actions .delete {
-    color: #e02b27;
-}
-.b2b-shopping-lists .message.empty {
-    padding: 20px;
-    background: #f5f5f5;
-    text-align: center;
-    border-radius: 4px;
-}
+    .b2b-shoppinglist-index .block-title { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e0e0e0; }
+    .b2b-shoppinglist-index .block-title strong { font-size: 1.4rem; }
+    .shoppinglist-actions-top { margin-bottom: 20px; }
+    .shoppinglist-create-form { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+    .shoppinglist-create-form .field { margin-bottom: 12px; }
+    .shoppinglist-create-form .label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 4px; }
+    .shoppinglist-create-form input[type="text"],
+    .shoppinglist-create-form textarea { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }
+    .shoppinglist-create-form .actions { display: flex; gap: 10px; margin-top: 12px; }
+    .shoppinglist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+    .shoppinglist-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; transition: box-shadow 0.2s; }
+    .shoppinglist-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .card-header .list-name { margin: 0; font-size: 16px; }
+    .card-header .list-name a { color: #1f2937; text-decoration: none; }
+    .card-header .list-name a:hover { color: #0066FF; }
+    .default-badge { background: #dbeafe; color: #1d4ed8; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
+    .list-description { color: #6b7280; font-size: 13px; margin: 0 0 12px; line-height: 1.4; }
+    .card-meta { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-top: 1px solid #f3f4f6; border-bottom: 1px solid #f3f4f6; margin-bottom: 12px; }
+    .card-meta .item-count { font-size: 13px; color: #6b7280; }
+    .card-meta .list-total { font-size: 15px; font-weight: 600; color: #059669; }
+    .card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .card-actions .action { padding: 6px 14px; border-radius: 6px; font-size: 13px; text-decoration: none; cursor: pointer; border: 1px solid #d1d5db; color: #374151; background: #fff; }
+    .card-actions .action:hover { background: #f3f4f6; }
+    .card-actions .action.primary { background: #0066FF; color: #fff; border-color: #0066FF; }
+    .card-actions .action.primary:hover { background: #0052CC; }
+    .card-actions .action.delete { color: #b91c1c; border-color: #fecaca; }
+    .card-actions .action.delete:hover { background: #fef2f2; }
+    @media (max-width: 768px) { .shoppinglist-grid { grid-template-columns: 1fr; } }
 </style>
 
-<script type="text/x-magento-init">
-{
-    ".b2b-shopping-lists": {
-        "GrupoAwamotos_B2B/js/shoppinglist-modal": {
-            "modalSelector": "#create-list-modal"
-        }
-    }
-}
+<script>
+require(['jquery'], function($) {
+    'use strict';
+    $('#btn-create-list').on('click', function() {
+        $('#create-list-form').slideDown(200);
+        $(this).hide();
+        $('#list-name').focus();
+    });
+    $('#btn-cancel-create').on('click', function() {
+        $('#create-list-form').slideUp(200);
+        $('#btn-create-list').show();
+    });
+});
 </script>

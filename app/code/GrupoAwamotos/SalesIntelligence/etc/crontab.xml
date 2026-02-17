@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <!-- Cache warming: every 6 hours at minute 30 -->
+        <job name="salesintelligence_warm_cache"
+             instance="GrupoAwamotos\SalesIntelligence\Cron\WarmCache"
+             method="execute">
+            <schedule>30 */6 * * *</schedule>
+        </job>
+
+        <!-- Daily alerts: every day at 8:30 AM -->
+        <job name="salesintelligence_send_alerts"
+             instance="GrupoAwamotos\SalesIntelligence\Cron\SendAlerts"
+             method="execute">
+            <schedule>30 8 * * *</schedule>
+        </job>
+
+        <!-- Weekly report: every Monday at 7:30 AM -->
+        <job name="salesintelligence_weekly_report"
+             instance="GrupoAwamotos\SalesIntelligence\Cron\SendWeeklyReport"
+             method="execute">
+            <schedule>30 7 * * 1</schedule>
+        </job>
+    </group>
+</config>

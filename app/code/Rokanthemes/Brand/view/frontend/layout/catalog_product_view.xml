@@ -24,7 +24,7 @@
 	<body>
 		<referenceContainer name="content">
 			<referenceContainer name="product.info.main">
-				<block class="Rokanthemes\Brand\Block\Product\View" name="product.info.brand" after="product-add-form" template="Rokanthemes_Brand::product/view/logo.phtml" ifconfig="rokanthemesbrand/product_view_page/enable_brand_info"/>
+				<block class="Rokanthemes\Brand\Block\Product\View" name="product.info.brand" after="product.info.price" template="Rokanthemes_Brand::product/view/logo.phtml" ifconfig="rokanthemesbrand/product_view_page/enable_brand_info"/>
 			</referenceContainer>
 		</referenceContainer>
 	</body>

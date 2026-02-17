@@ -15,6 +15,6 @@
 				<block class="Magento\Framework\View\Element\Template" name="top_home" template="Magento_Cms::top-home.phtml"/>
 			</container>
         </referenceContainer>
-		<move element="content.top.home" destination="page.top" after="-"/>
+		<move element="content-top-home" destination="page.top" after="-"/>
     </body>
 </page>

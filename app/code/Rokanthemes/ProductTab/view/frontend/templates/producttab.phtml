@@ -6,8 +6,8 @@ use Magento\Framework\App\Action\Action;
 	$speed = $block->getConfig('speed');
 	$qty = $block->getConfig('qty');
 	$showCart = $block->getConfig('addtocart');
-	$showWishlist = $block->getConfig('wishlist');
-	$showCompare = $block->getConfig('compare');
+	$showWishlist = false; // B2B
+	$showCompare = false; // B2B
 	$show_navigation = $block->getConfig('navigation');
 	$show_pagination = $block->getConfig('pagination');
 	$auto = $block->getConfig('auto');
@@ -39,7 +39,7 @@ use Magento\Framework\App\Action\Action;
 		foreach($tab_contents as $tab) {
 		?>
 		 <div id="tab_<?php echo $tab['id'];?>" class="product-tab-slider tab_content <?php echo $tab['class']; ?>">
-		 	<div class="productTabContent">
+		 	<div class="productTabContent owl-carousel">
 			<?php
 				$i=0;
 				$productItems =  $tab['productInfo'];
@@ -60,7 +60,7 @@ use Magento\Framework\App\Action\Action;
 									</span>
 								</a>
 								<div class="quickview-product">
-									<a  data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="#" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>"><i class="fa fa-eye"></i></a>
+									<a  data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="javascript: void(0);" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>"><i class="fa fa-eye"></i></a>
 							    </div>
 								<?php if ( $_item->getFinalPrice() < $_item->getPrice() ): ?>
 									<span class="onsale">
@@ -141,11 +141,57 @@ use Magento\Framework\App\Action\Action;
 </script>
 
 <script type="text/javascript">
-require(["jquery", 'mage/mage', "rokanthemes/owl"], function($){
+require(["jquery", "rokanthemes/owl"], function($){
 	'use strict';
-	$( document ).ready(function() {
-		$(".list-tab-product .tab_content").hide();
-		$(".list-tab-product .tab_content:first").show();	
+
+	function initProductTabCarousel($scope) {
+		$scope.find('.productTabContent').each(function() {
+			var $carousel = $(this);
+
+			if (typeof $carousel.owlCarousel !== 'function') {
+				return;
+			}
+
+			if ($carousel.data('owlCarousel') || $carousel.hasClass('owl-loaded')) {
+				return;
+			}
+
+			$carousel.owlCarousel({
+				lazyLoad: true,
+				items: <?php if($items) { echo (int)$items; } else { echo 5; }?>,
+				autoPlay: <?php if($auto) echo 'true'; else echo 'false'; ?>,
+				slideSpeed: <?php if($speed) echo (int)$speed; else echo '500'; ?>,
+				navigation: <?php if($show_navigation) echo 'true'; else echo 'false'; ?>,
+				stopOnHover: true,
+				pagination: <?php if($show_pagination) echo 'true'; else echo 'false'; ?>,
+				itemsDesktop: [1200, 3],
+				itemsDesktopSmall: [1000, 2],
+				itemsTablet: [680, 2],
+				itemsMobile: [460, 1]
+			});
+		});
+	}
+
+	$(function() {
+		var $root = $('.list-tab-product');
+
+		$root.find('.tab_content').hide();
+		$root.find('.tab_content:first').show();
+
+		initProductTabCarousel($root);
+
+		$root.find('ul.tabs li').on('click', function() {
+			var $tab = $(this);
+			var activeTab = $tab.attr('rel');
+
+			$root.find('ul.tabs li').removeClass('active');
+			$tab.addClass('active');
+
+			$root.find('.tab_content').hide().removeClass('animate1');
+			$root.find('#' + activeTab).addClass('animate1').fadeIn();
+
+			initProductTabCarousel($root);
+		});
 	});
 });
 </script>

@@ -1,23 +1,39 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Layout para adicionar Schema.org e Open Graph em todas as páginas
+ * Layout para adicionar Schema.org e Open Graph em todas as páginas.
+ *
+ * IMPORTANTE: cacheable="false" foi REMOVIDO.
+ * Antes, ambos os blocos tinham cacheable="false" o que desabilitava
+ * o Full Page Cache (FPC) em TODAS as páginas do site.
+ * O opengraph.phtml agora usa ViewModel (via DI) ao invés de ObjectManager,
+ * tornando-o seguro para cache.
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <!-- Open Graph Meta Tags -->
-        <block class="Magento\Framework\View\Element\Template"
-               name="grupoawamotos.opengraph"
-               template="GrupoAwamotos_SchemaOrg::opengraph.phtml"
-               cacheable="false"/>
-    </head>
     <body>
+        <!-- Open Graph Meta Tags — FPC-safe via ViewModel -->
+        <referenceContainer name="head.additional">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="grupoawamotos.opengraph"
+                   template="GrupoAwamotos_SchemaOrg::opengraph.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">GrupoAwamotos\SchemaOrg\ViewModel\OpenGraph</argument>
+                    <argument name="og_viewmodel" xsi:type="object">GrupoAwamotos\SchemaOrg\ViewModel\OpenGraph</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <!-- Schema.org Organization (não-homepage; homepage usa awa-seo-head.phtml @graph) -->
         <referenceContainer name="after.body.start">
             <block class="Magento\Framework\View\Element\Template"
                    name="grupoawamotos.schema.organization"
-                   template="GrupoAwamotos_SchemaOrg::organization.phtml"
-                   cacheable="false"/>
+                   template="GrupoAwamotos_SchemaOrg::organization.phtml">
+                <arguments>
+                    <argument name="view_model" xsi:type="object">GrupoAwamotos\SchemaOrg\ViewModel\OpenGraph</argument>
+                    <argument name="og_viewmodel" xsi:type="object">GrupoAwamotos\SchemaOrg\ViewModel\OpenGraph</argument>
+                </arguments>
+            </block>
         </referenceContainer>
     </body>
 </page>

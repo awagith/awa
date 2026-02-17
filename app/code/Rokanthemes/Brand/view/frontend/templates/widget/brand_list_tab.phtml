@@ -124,22 +124,7 @@ $blockId = strtotime('now');
 																<?php endif; ?>
 															<?php endif; ?>
 														</div>
-														<div data-role="add-to-links" class="actions-secondary">
-															<?php if ($addToBlock = $block->getChildBlock('addto')) :?>
-																<?= $addToBlock->setProduct($_product)->getChildHtml() ?>
-															<?php endif; ?>
-															<?php if ($this->helper('Magento\Wishlist\Helper\Data')->isAllow()): ?>
-																<a href="#"
-																   class="action towishlist"
-																   title=""
-																   aria-label="<?php echo $block->escapeHtml(__('Add to Wish List')); ?>"
-																   data-post='<?php /* @escapeNotVerified */ echo $block->getAddToWishlistParams($_product); ?>'
-																   data-action="add-to-wishlist"
-																   role="button">
-																	<?php echo $block->escapeHtml(__('Wish List')); ?>
-																</a>
-															<?php endif; ?>
-														</div>
+															<?php /* B2B: wishlist/compare desativados */ ?>
 													</div>
 												</div>
 											</div>

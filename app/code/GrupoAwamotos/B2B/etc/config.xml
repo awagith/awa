@@ -10,13 +10,15 @@
         <grupoawamotos_b2b>
             <general>
                 <enabled>1</enabled>
-                <b2b_mode>mixed</b2b_mode>
+                <b2b_mode>strict</b2b_mode>
             </general>
             <price_visibility>
                 <hide_price_guests>1</hide_price_guests>
                 <hide_add_to_cart_guests>1</hide_add_to_cart_guests>
                 <login_message><![CDATA[<a href="{{login_url}}">Faça login</a> para ver os preços]]></login_message>
                 <show_price_pending>0</show_price_pending>
+                <hide_price_no_erp>1</hide_price_no_erp>
+                <pending_erp_message><![CDATA[Sua tabela de preços está sendo definida. Consulte o departamento de vendas.]]></pending_erp_message>
             </price_visibility>
             <customer_approval>
                 <require_approval>1</require_approval>
@@ -45,6 +47,44 @@
                 <vip_discount>20</vip_discount>
                 <default_b2b_group>2</default_b2b_group>
             </customer_groups>
+            <credit>
+                <enabled>1</enabled>
+                <default_limit>0</default_limit>
+                <auto_debit>1</auto_debit>
+                <allow_partial>0</allow_partial>
+                <payment_title>Crédito B2B (Faturamento)</payment_title>
+            </credit>
+            <order_approval>
+                <enabled>1</enabled>
+                <threshold_manager>2000</threshold_manager>
+                <threshold_finance>10000</threshold_finance>
+                <threshold_director>50000</threshold_director>
+                <notify_approver>1</notify_approver>
+                <auto_cancel_days>7</auto_cancel_days>
+            </order_approval>
+            <cnpj_lookup>
+                <enabled>1</enabled>
+                <api_url>https://receitaws.com.br/v1/cnpj/</api_url>
+                <timeout>10</timeout>
+                <require_active_status>1</require_active_status>
+                <allow_local_fallback>1</allow_local_fallback>
+                <cache_enabled>1</cache_enabled>
+                <cache_ttl>86400</cache_ttl>
+                <rate_limit_enabled>1</rate_limit_enabled>
+                <rate_limit_max_requests>20</rate_limit_max_requests>
+                <rate_limit_window_seconds>60</rate_limit_window_seconds>
+            </cnpj_lookup>
         </grupoawamotos_b2b>
+        <payment>
+            <b2b_credit>
+                <active>1</active>
+                <model>GrupoAwamotos\B2B\Model\Payment\CreditPayment</model>
+                <title>Crédito B2B (Faturamento)</title>
+                <order_status>processing</order_status>
+                <payment_action>authorize_capture</payment_action>
+                <allowspecific>0</allowspecific>
+                <sort_order>100</sort_order>
+            </b2b_credit>
+        </payment>
     </default>
 </config>

@@ -15,9 +15,9 @@
 
 <?php $_post = $block->getPost() ?>
 <?php if ($_categoriesCount = $_post->getCategoriesCount()) { ?>
-	<label><?php echo __('Categories') ?>: </label>
+	<label><?php echo $block->escapeHtml(__('Categories')) ?>: </label>
 	<?php $n = 0; foreach($_post->getParentCategories() as $ct) { $n++; ?>
-		<a title="<?php echo $block->escapeHtml($ct->getTitle()) ?>" href="<?php echo $ct->getCategoryUrl() ?>"><?php echo $block->escapeHtml($ct->getTitle()) ?></a>
+		<a title="<?php echo $block->escapeHtml($ct->getTitle()) ?>" href="<?php echo $block->escapeUrl($ct->getCategoryUrl()) ?>"><?php echo $block->escapeHtml($ct->getTitle()) ?></a>
 		<?php if ($n != $_categoriesCount) { ?>, <?php } ?>
 	<?php } ?>
 <?php } ?>

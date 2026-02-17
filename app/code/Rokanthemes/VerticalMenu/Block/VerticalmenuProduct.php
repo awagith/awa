@@ -157,8 +157,6 @@ class VerticalmenuProduct extends \Magento\Framework\View\Element\Template
         $categories = $this->getStoreCategories(true,false,true);
         
         $this->_verticalmenuConfig = $this->_helper->getConfig('verticalmenu');
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-		$helper = $objectManager->get('Rokanthemes\VerticalMenu\Helper\Data');
         $max_level = 2;
         foreach($categories as $category) {
             if (!$category->getIsActive()) {
@@ -172,7 +170,7 @@ class VerticalmenuProduct extends \Magento\Framework\View\Element\Template
             if(!$vc_menu_hide_item) {
                 $children = $this->getActiveChildCategories($category);
                 $vc_menu_cat_label = $cat_model->getData('vc_menu_cat_label');
-                $vc_menu_icon_img = $helper->getVerticalIconimageUrl($cat_model);
+                $vc_menu_icon_img = $this->_helper->getVerticalIconimageUrl($cat_model);
                 $vc_menu_font_icon = $cat_model->getData('vc_menu_font_icon');
                 $vc_menu_cat_columns = $cat_model->getData('vc_menu_cat_columns');
                 $vc_menu_float_type = $cat_model->getData('vc_menu_float_type');

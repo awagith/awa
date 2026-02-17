@@ -1,0 +1,122 @@
+<?php
+/**
+ * AWA Motos — Newsletter Popup Override
+ * Substitui "Luckyshop" por "AWA Motos" e traduz textos para PT-BR.
+ * Mantém a estrutura HTML e JS do Ayo original para não quebrar estilos.
+ *
+ * @see Rokanthemes_Newsletterpopup::templates/newsletterpopup.phtml (parent)
+ */
+
+// @codingStandardsIgnoreFile
+
+$textmss = __('Cadastre seu e-mail e ganhe <span class="text-primary">10% OFF</span> na primeira compra!');
+?>
+<div id="newsletter_pop_up_simple" class="newsletterpopup">
+    <div class="btn-close newletter_popup_close_simple"></div>
+    <div class="newletter-poup">
+        <div class="title"><h3><?php echo $block->escapeHtml(__('AWA Motos')); ?></h3></div>
+        <div class="content">
+            <form class="form subscribe"
+                novalidate
+                action="<?php /* @noEscape */ echo $block->getFormActionUrl() ?>"
+                method="post"
+                data-mage-init='{"validation": {"errorClass": "mage-error"}}'
+                id="newsletterpopup-validate-detail">
+                <?= $block->getBlockHtml('formkey') ?>
+                <div class="field newsletter">
+                    <div class="des-newletter">
+                        <?php /* @noEscape */ echo $textmss; ?>
+                    </div>
+                    <div class="control">
+                        <input name="email" type="email" id="newsletterpopup"
+                            placeholder="<?php echo $block->escapeHtmlAttr(__('Digite seu melhor e-mail')) ?>"
+                            data-validate="{required:true, 'validate-email':true}"
+                            autocomplete="email" />
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="action subscribe primary"
+                        title="<?php echo $block->escapeHtmlAttr(__('Inscrever-se')) ?>"
+                        type="submit">
+                        <span><?php echo $block->escapeHtml(__('Inscrever-se')) ?></span>
+                    </button>
+                </div>
+                <div class="subscribe-bottom">
+                    <input type="checkbox" id="newsletter_popup_dont_show_again_simple">
+                    <label for="newsletter_popup_dont_show_again_simple"><?php echo $block->escapeHtml(__("Não mostrar novamente")) ?></label>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<?php
+// Popup behavior settings — can be changed in admin via
+// Rokanthemes > Theme Settings > Newsletter Popup
+$top     = 120;
+$speed   = 500;
+$timeout = 1;   // days until cookie expires (show again)
+?>
+
+<script>
+require(["jquery"], function($){
+    var pPopup;
+
+    function setCookie(name, value, days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toGMTString();
+        }
+        document.cookie = name + "=" + value + expires + "; path=/";
+    }
+
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(";");
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i].trim();
+            if (c.indexOf(nameEQ) === 0) {
+                return c.substring(nameEQ.length, c.length);
+            }
+        }
+        return null;
+    }
+
+    if (getCookie("shownewsletter") != 1) {
+        if (typeof $.fn.bPopup === 'function') {
+            pPopup = $("#newsletter_pop_up_simple").bPopup({
+                position: ["auto", <?php echo (int)$top; ?>],
+                speed: <?php echo (int)$speed; ?>,
+                transition: "slideDown",
+                onClose: function() {
+                    setCookie("shownewsletter", "1", <?php echo (int)$timeout; ?>);
+                }
+            });
+        } else {
+            pPopup = {
+                close: function () {
+                    $("#newsletter_pop_up_simple").hide();
+                }
+            };
+            $("#newsletter_pop_up_simple").show();
+        }
+
+        $(".newletter_popup_close_simple").on("click", function() {
+            pPopup.close();
+        });
+    }
+
+    $("#newsletter_pop_up_simple form").submit(function() {
+        setCookie("shownewsletter", "1", 1);
+    });
+
+    $("#newsletter_popup_dont_show_again_simple").on("change", function() {
+        if (getCookie("shownewsletter") != 1) {
+            setCookie("shownewsletter", "1", 1);
+        } else {
+            setCookie("shownewsletter", "0", 1);
+        }
+    });
+});
+</script>

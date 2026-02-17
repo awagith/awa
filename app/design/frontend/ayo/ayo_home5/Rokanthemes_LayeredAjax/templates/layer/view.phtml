@@ -5,19 +5,24 @@
 				<div class="widget">
 					<?php echo $block->getChildHtml('state') ?>
 					<div class="block-actions filter-actions">
-						<a href="<?php /* @escapeNotVerified */ echo $block->getClearUrl() ?>" class="action clear filter-clear"><span><?php /* @escapeNotVerified */ echo __('Clear All') ?></span></a>
+						<a href="<?php echo $block->escapeUrl($block->getClearUrl()) ?>" class="action clear filter-clear"><span><?php echo $block->escapeHtml(__('Clear All')) ?></span></a>
 					</div>
 				</div>
             <?php endif; ?>
-            <?php $wrapOptions = false; $activeKey = 0; $activeArray = []; ?>
+            <?php
+                $wrapOptions = false;
+                $activeKey = 0;
+                $activeArray = [];
+                $categoryProductCount = (int) $block->getLayer()->getProductCollection()->getSize();
+            ?>
             <?php foreach ($block->getFilters() as $key => $filter): ?>
                 <?php if ($filter->getItemsCount()): ?>
                     <?php if (!$wrapOptions): ?>
                        <div class="filter-options widget widget-filter" id="narrow-by-list">
                     <?php  $wrapOptions = true; endif; ?>
                     <div class="filter-options-item">
-                        <div class="filter-options-title"><?php /* @escapeNotVerified */ echo __($filter->getName()) ?></div>
-                        <div class="filter-options-content" style="display: none;"><?php /* @escapeNotVerified */ echo $block->getChildBlock('renderer')->render($filter); ?></div>
+                        <div class="filter-options-title"><?php echo $block->escapeHtml(__($filter->getName())) ?></div>
+                        <div class="filter-options-content" style="display: none;"><?php /* @noEscape */ echo $block->getChildBlock('renderer')->render($filter); ?></div>
                     </div>
                     <?php
 						if($this->helper('Rokanthemes\LayeredAjax\Helper\Data')->isOpenAllTab()){
@@ -32,9 +37,11 @@
                 <div class="banner_left_sidebar">
                     <?php echo $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('banner_left2_home1')->toHtml();?>
                 </div>
-                <div class="top_rate">
-					<?php echo $block->getLayout()->createBlock('Rokanthemes\Toprate\Block\Toprate')->setTemplate('Rokanthemes_Toprate::toprate.phtml')->toHtml();?> 
-				</div>
+                <?php if ($categoryProductCount > 0): ?>
+                    <div class="top_rate">
+						<?php echo $block->getLayout()->createBlock('Rokanthemes\Toprate\Block\Toprate')->setTemplate('Rokanthemes_Toprate::toprate.phtml')->toHtml();?> 
+					</div>
+                <?php endif; ?>
 				<script type="text/x-magento-init">
 					{
 						"#narrow-by-list": {
@@ -51,7 +58,7 @@
             <?php endif; ?>
         </div>
 		<div id="layered_ajax_overlay" class="layered_ajax_overlay">
-			<div><img src="<?php /* @escapeNotVerified */ echo $block->getViewFileUrl('images/loader-1.gif'); ?>" alt="<?php echo __('Loading') ?>"></div>
+			<div><img src="<?php echo $block->escapeUrl($block->getViewFileUrl('images/loader-1.gif')); ?>" alt="<?php echo $block->escapeHtmlAttr(__('Loading')) ?>"></div>
 		</div>
     </div>
 <?php endif; ?>

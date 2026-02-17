@@ -33,7 +33,7 @@
     </button>
     <if args="getCartParam('summary_count')">
         <div class="items-total">
-            <span class="title_mycart" translate="'My Cart'"></span><span> ( </span>
+            <span class="title_mycart">My Cart</span><span> ( </span>
             <span class="count" if="maxItemsToDisplay < getCartLineItemsCount()" text="maxItemsToDisplay"></span>
             <translate args="'of'" if="maxItemsToDisplay < getCartLineItemsCount()"></translate>
             <span class="count" text="getCartParam('summary_count')"></span>

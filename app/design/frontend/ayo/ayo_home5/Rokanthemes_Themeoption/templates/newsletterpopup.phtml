@@ -1,0 +1,204 @@
+<?php
+/**
+ * AWA Motos — Newsletter Popup (ayo_home5) v2
+ *
+ * Design premium: 2-colunas desktop (imagem hero + conteúdo),
+ * trust indicators, estado de sucesso pós-envio,
+ * contador de urgência, e animações refinadas.
+ *
+ * Config: Rokanthemes > Theme Settings > Newsletter Popup
+ * CSS:    awa-home5-sections.css (seção 105)
+ */
+
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var \Rokanthemes\Themeoption\Block\Newsletterpopup $block */
+?>
+<?php if ((int)$block->getConfig('enable') > 0): ?>
+<?php
+    $imagelogoUrl = '';
+    /* Use $block->getBaseUrl() (Template::getBaseUrl) + 'media/' instead of ObjectManager */
+    $mediaBaseUrl = rtrim($block->getBaseUrl(), '/') . '/media/';
+
+    if ($block->getConfig('lg_image')) {
+        $folderName = \Rokanthemes\Themeoption\Model\Config\Newsletterlogo::UPLOAD_DIR;
+        $imagelogoUrl = $mediaBaseUrl . $folderName . '/' . $block->getConfig('lg_image');
+    }
+
+    $bgImageUrl = '';
+    if ($block->getConfig('bg_image')) {
+        $bgFolder = \Rokanthemes\Themeoption\Model\Config\Newsletterbackground::UPLOAD_DIR;
+        $bgImageUrl = $mediaBaseUrl . $bgFolder . '/' . $block->getConfig('bg_image');
+    }
+
+    $popupWidth  = (int)$block->getConfig('width') ?: 680;
+    $popupHeight = (int)$block->getConfig('height') ?: 520;
+    $popupDelay  = (int)$block->getConfig('delay') ?: 3000;
+    $cookieDays  = (int)$block->getConfig('cookie_lifetime') ?: 30;
+    $speed       = 450;
+?>
+<div id="newsletter_pop_up" class="newsletterpopup" style="display:none">
+    <div class="nl-popup-card" style="max-width:<?= $popupWidth ?>px;">
+
+        <!-- Botão fechar -->
+        <button type="button" class="newletter_popup_close"
+                aria-label="<?= $escaper->escapeHtmlAttr(__('Fechar')) ?>">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+
+        <div class="nl-popup-layout">
+            <!-- Coluna esquerda: imagem hero -->
+            <div class="nl-popup-hero"<?php if ($bgImageUrl): ?> style="background-image:url('<?= $escaper->escapeUrl($bgImageUrl) ?>')"<?php endif; ?>>
+                <div class="nl-popup-hero-overlay">
+                    <div class="nl-popup-hero-content">
+                        <?php if ($imagelogoUrl): ?>
+                        <img src="<?= $escaper->escapeUrl($imagelogoUrl) ?>"
+                             alt="<?= $escaper->escapeHtmlAttr(__('AWA Motos')) ?>"
+                             class="nl-popup-hero-logo" loading="lazy" width="100">
+                        <?php endif; ?>
+                        <div class="nl-popup-hero-discount">10%</div>
+                        <div class="nl-popup-hero-off"><?= $escaper->escapeHtml(__('OFF')) ?></div>
+                        <div class="nl-popup-hero-caption"><?= $escaper->escapeHtml(__('NA PRIMEIRA')) ?></div>
+                        <div class="nl-popup-hero-caption"><?= $escaper->escapeHtml(__('COMPRA')) ?></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna direita: conteúdo + form -->
+            <div class="nl-popup-content">
+                <!-- Badge -->
+                <div class="nl-popup-badge">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <?= $escaper->escapeHtml(__('Oferta exclusiva')) ?>
+                </div>
+
+                <!-- Título e texto -->
+                <h3 class="nl-popup-title">
+                    <?= $escaper->escapeHtml(__('GANHE')) ?>
+                    <span class="nl-popup-title-highlight">10% OFF</span>
+                </h3>
+                <p class="nl-popup-subtitle">
+                    <?= $escaper->escapeHtml(__('Na sua primeira compra!')) ?>
+                </p>
+                <p class="nl-popup-desc">
+                    <?= $escaper->escapeHtml(__('Cadastre seu e-mail e receba um cupom exclusivo + novidades sobre motos.')) ?>
+                </p>
+
+                <!-- Contador de urgência -->
+                <div class="nl-popup-urgency">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                    <span><?= $escaper->escapeHtml(__('Oferta por tempo limitado')) ?></span>
+                </div>
+
+                <!-- Formulário -->
+                <form class="form subscribe nl-popup-form"
+                      novalidate
+                      action="<?= $escaper->escapeUrl($block->getFormActionUrl()) ?>"
+                      method="post"
+                      data-mage-init='{"validation": {"errorClass": "mage-error"}}'
+                      id="newsletter-validate-popup">
+
+                    <?= $block->getBlockHtml('formkey') ?>
+                    <div class="field newsletter">
+                        <div class="control">
+                            <input name="email"
+                                   type="email"
+                                   id="newsletter-popup"
+                                   autocomplete="email"
+                                   placeholder="<?= $escaper->escapeHtmlAttr(__('Seu melhor e-mail')) ?>"
+                                   data-validate="{required:true, 'validate-email':true}"
+                                   aria-label="<?= $escaper->escapeHtmlAttr(__('E-mail')) ?>"/>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button class="action subscribe primary"
+                                title="<?= $escaper->escapeHtmlAttr(__('Inscrever-se')) ?>"
+                                type="submit">
+                            <span><?= $escaper->escapeHtml(__('Quero meu cupom!')) ?></span>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="nl-btn-arrow" aria-hidden="true">
+                                <path d="M5 12h14m-7-7l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Estado de sucesso (oculto inicialmente) -->
+                <div class="nl-popup-success" style="display:none">
+                    <div class="nl-popup-success-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                            <path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h4 class="nl-popup-success-title"><?= $escaper->escapeHtml(__('Pronto!')) ?></h4>
+                    <p class="nl-popup-success-text"><?= $escaper->escapeHtml(__('Verifique seu e-mail para receber o cupom de 10% OFF.')) ?></p>
+                </div>
+
+                <!-- Trust indicators -->
+                <div class="nl-popup-trust">
+                    <div class="nl-popup-trust-item">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        <span><?= $escaper->escapeHtml(__('Dados seguros')) ?></span>
+                    </div>
+                    <div class="nl-popup-trust-item">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <path d="M22 4L12 14.01l-3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <span><?= $escaper->escapeHtml(__('Sem spam')) ?></span>
+                    </div>
+                    <div class="nl-popup-trust-item">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <rect x="3" y="11" width="18" height="11" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <path d="M7 11V7a5 5 0 0110 0v4" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                        <span><?= $escaper->escapeHtml(__('Cancele quando quiser')) ?></span>
+                    </div>
+                </div>
+
+                <!-- Checkbox + dismiss -->
+                <div class="nl-popup-footer">
+                    <div class="subscribe-bottom">
+                        <input type="checkbox" id="newsletter_popup_dont_show_again">
+                        <label for="newsletter_popup_dont_show_again">
+                            <?= $escaper->escapeHtml(__('Não mostrar novamente')) ?>
+                        </label>
+                    </div>
+                    <a href="#" class="newletter_popup_close_text">
+                        <?= $escaper->escapeHtml(__('Não, obrigado')) ?>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "#newsletter_pop_up": {
+        "js/newsletter-popup-init": {
+            "cookieName": "shownewsletter",
+            "cookieDays": <?= (int)$cookieDays ?>,
+            "popupDelay": <?= (int)$popupDelay ?>,
+            "popupHeight": <?= (int)$popupHeight ?>,
+            "popupSpeed": <?= (int)$speed ?>,
+            "closeDelay": 4000,
+            "closeAnimation": 300,
+            "focusDelay": 500,
+            "homeOnly": <?= ((int)$block->getConfig('enable') === 1) ? 'true' : 'false'; ?>,
+            "sendingText": "<?= $block->escapeJsQuote(__('Enviando...')) ?>"
+        }
+    }
+}
+</script>
+<?php endif; ?>

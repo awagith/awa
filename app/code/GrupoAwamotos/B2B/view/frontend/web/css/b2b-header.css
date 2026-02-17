@@ -1,8 +1,8 @@
-/* B2B Header Link Styles */
+/* B2B Header Link Styles - AWA Motos */
 .header-container .b2b-register-link,
 .top-links .b2b-register-link,
 .header.links .b2b-register-link {
-    background: linear-gradient(90deg, #f39c12, #e67e22);
+    background: linear-gradient(135deg, #b73337, #8e2629);
     color: #fff !important;
     padding: 6px 14px;
     border-radius: 4px;
@@ -18,16 +18,16 @@
 .header-container .b2b-register-link:hover,
 .top-links .b2b-register-link:hover,
 .header.links .b2b-register-link:hover {
-    background: linear-gradient(90deg, #e67e22, #d35400);
+    background: linear-gradient(135deg, #8e2629, #6d1d1f);
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(243, 156, 18, 0.4);
+    box-shadow: 0 2px 8px rgba(183, 51, 55, 0.4);
     text-decoration: none;
 }
 
 /* B2B Account Navigation */
 .account-nav .nav-item.b2b-dashboard-link a,
 .customer-account-navigation .b2b-dashboard-link a {
-    background: linear-gradient(90deg, #1a1a2e, #16213e);
+    background: linear-gradient(135deg, #b73337, #8e2629);
     color: #fff !important;
     border-radius: 4px;
     font-weight: 500;
@@ -35,7 +35,7 @@
 
 .account-nav .nav-item.b2b-dashboard-link a:hover,
 .customer-account-navigation .b2b-dashboard-link a:hover {
-    background: linear-gradient(90deg, #16213e, #0f3460);
+    background: linear-gradient(135deg, #8e2629, #6d1d1f);
 }
 
 /* B2B Badge for special highlighting */

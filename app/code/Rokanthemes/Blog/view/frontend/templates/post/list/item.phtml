@@ -25,7 +25,7 @@
 		</div>
 		<div class="zoom-image-thumb">
 			<a href="<?php echo $_post->getPostUrl() ?>">
-				<img alt="<?php echo $_postName; ?>" src="<?php echo $this->getMediaFolder().$_post->getThumbnailimage() ?>"/>
+				<img alt="<?php echo $_postName; ?>" src="<?php echo $this->getMediaFolder().$_post->getThumbnailimage() ?>" loading="lazy"/>
 			</a>
 		</div>		
 	</div>

@@ -1,0 +1,37 @@
+<?php
+/**
+ * Authentication popup rendered with runtime config initializer.
+ *
+ * @var \Magento\Customer\Block\Account\AuthenticationPopup $block
+ * @var Magento\Customer\ViewModel\Customer\StoreConfig $viewModel
+ */
+$viewModel = $block->getViewModel();
+?>
+<div id="authenticationPopup" data-bind="scope:'authenticationPopup', style: {display: 'none'}">
+    <?php // phpcs:ignore Magento2.Legacy.PhtmlTemplate ?>
+    <script type="text/x-magento-init">
+        {
+            "*": {
+                "GrupoAwamotos_Theme/js/runtime/authentication-popup-config-init": <?= /* @noEscape */ $block->getSerializedConfig() ?>
+            }
+        }
+    </script>
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <?php // phpcs:ignore Magento2.Legacy.PhtmlTemplate ?>
+    <script type="text/x-magento-init">
+        {
+            "#authenticationPopup": {
+                "Magento_Ui/js/core/app": <?= /* @noEscape */ $block->getJsLayout() ?>
+            },
+            "*": {
+                "Magento_Ui/js/block-loader": "<?= $block->escapeJs($block->escapeUrl($block->getViewFileUrl(
+                    'images/loader-1.gif'
+                ))) ?>"
+                <?php if ($viewModel->isGlobalScopeEnabled()): ?>
+                ,
+                "Magento_Customer/js/customer-global-session-loader": {}
+                <?php endif; ?>
+            }
+        }
+    </script>
+</div>

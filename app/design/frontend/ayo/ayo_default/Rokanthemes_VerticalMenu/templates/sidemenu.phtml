@@ -6,7 +6,8 @@
 ?>
 <?php
 /**
- * Top menu for store
+ * Vertical Menu — side‑menu template
+ * Matches Ayo demo Home 5 structure
  *
  * @see \Rokanthemes\VerticalMenu\Block\Verticalmenu
  */
@@ -15,30 +16,88 @@
     $_helper = $this->helper('Rokanthemes\VerticalMenu\Helper\Data');
     $_config = $_helper->getConfig('verticalmenu');
     $columnsLimit = 0;
-    if($_config['general']['enable']) {
+    if ($_config['general']['enable']) {
+        $limitShow = isset($_config['general']['limit_show']) ? (int)$_config['general']['limit_show'] : 0;
 ?>
 <?php $_menu = $block->getVerticalMenuHtml(); ?>
 
-<nav class="navigation verticalmenu side-verticalmenu">
-	<h2 class="title-category-dropdown"><span><?php echo __('Comprar por Categoria'); ?></span></h2>
-    <ul class="togge-menu list-category-dropdown menu-hidden">
+<nav class="navigation verticalmenu side-verticalmenu" aria-label="<?= $escaper->escapeHtmlAttr(__('Product Categories')) ?>">
+    <h2 class="title-category-dropdown">
+        <span><?= $escaper->escapeHtml(__('Categories')) ?></span>
+    </h2>
+    <ul class="togge-menu list-category-dropdown" style="display:none;" data-limit-show="<?= (int)$limitShow ?>">
         <?php echo $_menu; ?>
+        <?php
+            $_bgImages = $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('vertical_background_images')->toHtml();
+            $_bgImages = trim($_bgImages);
+        ?>
+        <?php if (!empty($_bgImages)): ?>
+        <li class="vertical-bg-img"><?= /** @noEscape */ $_bgImages ?></li>
+        <?php endif; ?>
+        <?php if ($limitShow > 0): ?>
         <li class="expand-category-link">
-        	<a href="#"><?php echo __('Todas as Categorias') ?></a>
+            <a href="javascript:void(0);"><?= $escaper->escapeHtml(__('All Categories')) ?></a>
         </li>
-        		<?php echo $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('vertical_background_images')->toHtml();?>
-	</ul>
-
+        <?php endif; ?>
+    </ul>
 </nav>
 
-<script type="text/x-magento-init">
-    {
-        ".navigation.verticalmenu": {
-            "Rokanthemes_VerticalMenu/js/sidemenu": {
-                "limitItemShow": <?php echo $block->getConfig('limit_show'); ?>
+<script type="text/javascript">
+    require([
+        'jquery',
+        'rokanthemes/verticalmenu'
+    ], function ($) {
+        $(".verticalmenu").VerticalMenu();
+        var $nav = $('body .navigation.verticalmenu');
+        var $toggeMenu = $nav.find('.togge-menu');
+
+        // Demo behavior: collapsed by default.
+        $toggeMenu.hide();
+
+        $('.title-category-dropdown').on('click', function () {
+            var isOpening = !$(this).hasClass('active');
+            if (isOpening) {
+                $toggeMenu.addClass('menu-open').stop(true, true).fadeIn(250);
+            } else {
+                $toggeMenu.stop(true, true).fadeOut(200, function () {
+                    $toggeMenu.removeClass('menu-open');
+                });
             }
-        }
-    }
+            $(this).toggleClass('active');
+            $('body').toggleClass('background_shadow_show');
+        });
+
+        $(document).ready(function () {
+            var $items = $nav.find('.ui-menu-item.level0');
+            var limitItemShow = parseInt($toggeMenu.attr('data-limit-show'), 10) || <?= (int)$limitShow ?>;
+
+            if (limitItemShow > 0) {
+                limitItemShow += 1;
+            }
+
+            if (limitItemShow > 0 && $items.length > limitItemShow) {
+                $items.each(function (index) {
+                    if (index >= (limitItemShow - 1)) {
+                        $(this).addClass('orther-link').hide();
+                    }
+                });
+                $nav.find('.expand-category-link').show();
+                $nav.find('.expand-category-link').on('click', function () {
+                    $(this).toggleClass('expanding');
+                    $nav.find('.ui-menu-item.level0.orther-link').fadeToggle(200);
+                });
+            } else {
+                $nav.find('.expand-category-link').hide();
+            }
+
+            $('.shadow_bkg_show').on('click', function () {
+                $toggeMenu.removeClass('menu-open');
+                $toggeMenu.stop(true, true).fadeOut(200);
+                $('.title-category-dropdown').removeClass('active');
+                $('body').removeClass('background_shadow_show');
+            });
+        });
+    });
 </script>
 <?php
     }

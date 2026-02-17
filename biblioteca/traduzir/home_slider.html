@@ -1,4 +1,14 @@
 <!-- title: Home - Slider Principal | identifier: home_slider -->
-<div class="banner-slider">
-    {{block class="Rokanthemes\SlideBanner\Block\Slider" slider_id="homepageslider" template="slider.phtml"}}
+<div class="banner-slider banner-slider--home5">
+    <a href="{{store url='eletronicos'}}" class="banner-hero-link" title="Eletrônicos em Destaque">
+            <img
+                class="lazy banner-hero-img"
+                src='data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA='
+                data-src="{{view url='images/home/banner-hero.svg'}}"
+                alt="Eletrônicos em Destaque"
+            />
+            <noscript>
+                <img class="banner-hero-img" src="{{view url='images/home/banner-hero.svg'}}" alt="Eletrônicos em Destaque" />
+            </noscript>
+    </a>
 </div>

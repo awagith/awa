@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- DemandForecast: ERP connection + stock data -->
+    <type name="GrupoAwamotos\SalesIntelligence\Model\DemandForecast">
+        <arguments>
+            <argument name="connection" xsi:type="object">GrupoAwamotos\ERPIntegration\Api\ConnectionInterface</argument>
+            <argument name="stockSync" xsi:type="object">GrupoAwamotos\ERPIntegration\Model\StockSync</argument>
+        </arguments>
+    </type>
+
+    <!-- RevenuePipeline: B2B quote request data -->
+    <type name="GrupoAwamotos\SalesIntelligence\Model\RevenuePipeline">
+        <arguments>
+            <argument name="quoteRequestRepository" xsi:type="object">GrupoAwamotos\B2B\Api\QuoteRequestRepositoryInterface</argument>
+        </arguments>
+    </type>
+
+    <!-- GrowthAnalyzer: ERP connection + RFM segmentation -->
+    <type name="GrupoAwamotos\SalesIntelligence\Model\GrowthAnalyzer">
+        <arguments>
+            <argument name="connection" xsi:type="object">GrupoAwamotos\ERPIntegration\Api\ConnectionInterface</argument>
+            <argument name="rfmCalculator" xsi:type="object">GrupoAwamotos\ERPIntegration\Model\Rfm\Calculator</argument>
+        </arguments>
+    </type>
+
+    <!-- RecommendationEngine: aggregates all intelligence models -->
+    <type name="GrupoAwamotos\SalesIntelligence\Model\RecommendationEngine">
+        <arguments>
+            <argument name="demandForecast" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\DemandForecast</argument>
+            <argument name="revenuePipeline" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\RevenuePipeline</argument>
+            <argument name="growthAnalyzer" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\GrowthAnalyzer</argument>
+            <argument name="rfmCalculator" xsi:type="object">GrupoAwamotos\ERPIntegration\Model\Rfm\Calculator</argument>
+        </arguments>
+    </type>
+
+    <!-- AlertEngine: evaluates critical conditions -->
+    <type name="GrupoAwamotos\SalesIntelligence\Model\AlertEngine">
+        <arguments>
+            <argument name="demandForecast" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\DemandForecast</argument>
+            <argument name="revenuePipeline" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\RevenuePipeline</argument>
+            <argument name="growthAnalyzer" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\GrowthAnalyzer</argument>
+        </arguments>
+    </type>
+
+    <!-- EmailSender: alert and report emails -->
+    <type name="GrupoAwamotos\SalesIntelligence\Model\EmailSender">
+        <arguments>
+            <argument name="alertEngine" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\AlertEngine</argument>
+            <argument name="recommendationEngine" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\RecommendationEngine</argument>
+        </arguments>
+    </type>
+
+    <!-- Dashboard block: all intelligence + existing forecast models -->
+    <type name="GrupoAwamotos\SalesIntelligence\Block\Adminhtml\Dashboard">
+        <arguments>
+            <argument name="demandForecast" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\DemandForecast</argument>
+            <argument name="revenuePipeline" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\RevenuePipeline</argument>
+            <argument name="growthAnalyzer" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\GrowthAnalyzer</argument>
+            <argument name="recommendationEngine" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\RecommendationEngine</argument>
+            <argument name="salesProjection" xsi:type="object">GrupoAwamotos\ERPIntegration\Model\Forecast\SalesProjection</argument>
+            <argument name="rfmCalculator" xsi:type="object">GrupoAwamotos\ERPIntegration\Model\Rfm\Calculator</argument>
+        </arguments>
+    </type>
+
+    <!-- Cron: WarmCache -->
+    <type name="GrupoAwamotos\SalesIntelligence\Cron\WarmCache">
+        <arguments>
+            <argument name="demandForecast" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\DemandForecast</argument>
+            <argument name="revenuePipeline" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\RevenuePipeline</argument>
+            <argument name="growthAnalyzer" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\GrowthAnalyzer</argument>
+            <argument name="recommendationEngine" xsi:type="object">GrupoAwamotos\SalesIntelligence\Model\RecommendationEngine</argument>
+        </arguments>
+    </type>
+
+</config>

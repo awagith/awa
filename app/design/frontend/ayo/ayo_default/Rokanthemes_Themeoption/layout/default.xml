@@ -1,10 +1,5 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
-    
-	<head>
-		<!-- Scripts de diagnóstico e otimização -->
-		<script src="media/rokanthemes/js-diagnostic.js" src_type="url" defer="defer"/>
-	</head>
 
     <body>
 		<referenceContainer name="page.wrapper">
@@ -19,6 +14,12 @@
 						<argument name="block_id" xsi:type="string">top-left-static</argument>
 					</arguments>
 				</block>
+				<block class="Magento\Cms\Block\Block" name="hotline_header">
+					<arguments>
+						<argument name="block_id" xsi:type="string">hotline_header</argument>
+					</arguments>
+				</block>
+                <block class="Magento\Framework\View\Element\Template" name="top.search" as="topSearch" template="Magento_Search::form.mini.phtml" />
 				<block class="Magento\Framework\View\Element\Template" name="top.navigation.sections" template="Magento_Theme::html/sections.phtml">
 					<arguments>
 						<argument name="group_name" xsi:type="string">navigation-sections</argument>
@@ -34,6 +35,7 @@
 		<move element="header.links" destination="toki_header" />
 		<move element="logo" destination="toki_header"/>
 		<move element="minicart" destination="toki_header"/>
+		<move element="top.search" destination="toki_header" />
 		<move element="top.links" destination="toki_header" />
 		<move element="slideshow.top" destination="toki_header" />
 		<move element="custom.topnav" destination="toki_header" />
@@ -86,6 +88,7 @@
 						<argument name="block_id" xsi:type="string">footer_payment</argument>
 					</arguments>
 				</block>
+				<block class="Rokanthemes\Themeoption\Block\Customcss" name="toki_copyright" as="copyright" template="html/copyright.phtml"/>
             </block>
         </referenceContainer>
 		<move element="footer_links" destination="toki_footer" />

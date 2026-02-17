@@ -21,10 +21,10 @@
 											</container>
 											<container name="alert.urls" as="alert_urls" label="Alert Urls" after="product.price.tier"/>
 											<container name="box.addtocart.extrahint" htmlTag="div" htmlClass="attr-info" after="alert.urls">
-												<container name="product.info.extrahint" as="extrahint" label="Product View Extra Hint">
-													<container name="product.info.social" label="Product social links container" htmlTag="div" htmlClass="product-social-extra" after="product.info.overview">
-														<block class="Magento\Catalog\Block\Product\View" name="product.info.addto" as="addto" template="product/view/addto.phtml"/>
-														<block class="Magento\Catalog\Block\Product\View" name="product.info.mailto" template="product/view/mailto.phtml"/>
+												<container name="awa.product.info.extrahint" as="awa_extrahint" label="AWA Product View Extra Hint">
+													<container name="awa.product.info.social" label="AWA Product social links container" htmlTag="div" htmlClass="product-social-extra" after="-">
+														<block class="Magento\Catalog\Block\Product\View" name="awa.product.info.addto" as="addto" template="product/view/addto.phtml"/>
+														<block class="Magento\Catalog\Block\Product\View" name="awa.product.info.mailto" template="product/view/mailto.phtml"/>
 													</container>
 												</container>
 											</container>
@@ -52,9 +52,9 @@
 		<move element="product.info" destination="box.addtocart.extrahint" before="-"/>
 		<move element="page.main.title" destination="box.inner1" before="-"/>
 		<move element="product.info.price" destination="box.inner1" after="page.main.title"/>
-		<move element="product.info.overview" destination="box.inner1" after="product.price.tier"/>
+		<move element="product.info.overview" destination="box.inner1" after="product.info.price"/>
 		<move element="product.info.stock.sku" destination="product.info.price" after="-"/>
-		
-		<move element="product.info.media" destination="product.col.media"/>
+		<move element="product.info.brand" destination="box.inner1" after="product.info.overview"/>
+		<move element="product.info.media" destination="product.col.media" before="-"/>
     </body>
 </page>

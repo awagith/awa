@@ -75,12 +75,16 @@
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "repositories": [
-        {
+    "repositories": {
+        "msp": {
+            "type": "vcs",
+            "url": "https://github.com/magespecialist/m2-MSP_AdminRestriction.git"
+        },
+        "0": {
             "type": "composer",
             "url": "https://repo.magento.com/"
         }
-    ],
+    },
     "extra": {
         "magento-force": "override"
     }

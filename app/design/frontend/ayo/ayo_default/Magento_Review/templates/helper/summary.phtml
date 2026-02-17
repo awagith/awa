@@ -10,19 +10,13 @@
 <?php $url = $block->getReviewsUrl() . '#reviews'; ?>
 <?php $urlForm = $block->getReviewsUrl() . '#review-form'; ?>
 <?php if ($block->getReviewsCount()): ?>
-<?php
-$rating = $block->getRatingSummary();
-$normalizedRating = $rating ? (int)round($rating / 5) * 5 : 0;
-$normalizedRating = max(0, min(100, $normalizedRating));
-?>
+<?php $rating = $block->getRatingSummary(); ?>
 <div class="product-reviews-summary<?php echo !$rating ? ' no-rating' : ''?>" itemscope itemtype="http://schema.org/AggregateRating">
     <?php if ($rating):?>
     <div class="rating-summary">
          <span class="label"><span><?php /* @escapeNotVerified */ echo __('Rating') ?>:</span></span>
          <div class="rating-result" title="<?php /* @escapeNotVerified */ echo $rating; ?>%">
-             <span class="rating-fill rating-value-<?php /* @escapeNotVerified */ echo $normalizedRating; ?>">
-                 <span><span><?php /* @escapeNotVerified */ echo $rating; ?></span>% of <span>100</span></span>
-             </span>
+             <span style="width:<?php /* @escapeNotVerified */ echo $rating; ?>%"><span><span><?php /* @escapeNotVerified */ echo $rating; ?></span>% of <span>100</span></span></span>
          </div>
      </div>
     <?php endif;?>

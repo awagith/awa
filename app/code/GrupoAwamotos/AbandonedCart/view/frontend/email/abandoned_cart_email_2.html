@@ -1,0 +1,119 @@
+<!--@subject {{trans "Seus produtos estão esperando por você - Ganhe 10% OFF!"}} @-->
+<!--@vars {
+"var customer_name":"Nome do Cliente",
+"var cart_value":"Valor do Carrinho",
+"var items_count":"Quantidade de Itens",
+"var cart_url":"URL do Carrinho",
+"var coupon_code":"Código do Cupom",
+"var coupon_discount":"Desconto do Cupom",
+"var store.getFrontendName()":"Nome da Loja"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<table style="width: 100%; margin-bottom: 20px;">
+    <tr>
+        <td style="padding: 25px; background: linear-gradient(135deg, #b73337 0%, #8b2629 100%); border-radius: 8px; text-align: center;">
+            <h1 style="color: #ffffff; margin: 0 0 10px 0; font-size: 28px;">
+                🎁 PRESENTE ESPECIAL PARA VOCÊ!
+            </h1>
+            <p style="margin: 0; color: #ffffff; font-size: 18px; opacity: 0.9;">
+                Ganhe <strong>{{var coupon_discount}}</strong> de desconto no seu carrinho
+            </p>
+        </td>
+    </tr>
+</table>
+
+<table style="width: 100%; margin-bottom: 20px;">
+    <tr>
+        <td style="padding: 15px; background-color: #f8f8f8; border-radius: 8px;">
+            <p style="margin: 0 0 10px 0; font-size: 16px; color: #333;">
+                Olá <strong>{{var customer_name}}</strong>!
+            </p>
+            <p style="margin: 0; font-size: 15px; color: #666;">
+                Sabemos que a vida é corrida, por isso queremos facilitar sua compra.
+                Use o cupom abaixo e economize na sua próxima compra!
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{depend coupon_code}}
+<table style="width: 100%; margin-bottom: 20px;">
+    <tr>
+        <td style="padding: 20px; background-color: #e8f5e9; border-radius: 8px; text-align: center; border: 2px dashed #4caf50;">
+            <p style="margin: 0 0 10px 0; font-size: 14px; color: #2e7d32; text-transform: uppercase; letter-spacing: 1px;">
+                Seu Cupom de Desconto
+            </p>
+            <p style="margin: 0; font-size: 32px; font-weight: bold; color: #1b5e20; letter-spacing: 3px; font-family: monospace;">
+                {{var coupon_code}}
+            </p>
+            <p style="margin: 10px 0 0 0; font-size: 12px; color: #666;">
+                Válido por 7 dias | Uso único
+            </p>
+        </td>
+    </tr>
+</table>
+{{/depend}}
+
+<table style="width: 100%; margin-bottom: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+    <tr>
+        <td style="padding: 15px; background-color: #fff;">
+            <h2 style="color: #333; margin: 0 0 15px 0; font-size: 18px;">
+                🛒 Itens no seu carrinho
+            </h2>
+            <table style="width: 100%; margin-top: 15px; border-top: 1px solid #e0e0e0; padding-top: 15px;">
+                <tr>
+                    <td style="font-size: 16px; color: #333;">
+                        <strong>{{var items_count}} item(s)</strong>
+                    </td>
+                    <td style="text-align: right;">
+                        <span style="font-size: 14px; color: #999; text-decoration: line-through;">
+                            {{var cart_value}}
+                        </span>
+                        <br>
+                        <span style="font-size: 20px; font-weight: bold; color: #4caf50;">
+                            COM {{var coupon_discount}} OFF!
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table style="width: 100%; margin-bottom: 20px;">
+    <tr>
+        <td style="text-align: center; padding: 20px;">
+            <a href="{{var cart_url}}"
+               style="display: inline-block; padding: 18px 50px; background-color: #4caf50; color: #ffffff; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 5px; text-transform: uppercase; box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);">
+                Usar Meu Cupom →
+            </a>
+        </td>
+    </tr>
+</table>
+
+<table style="width: 100%; margin-bottom: 20px;">
+    <tr>
+        <td style="padding: 15px; background-color: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+            <p style="margin: 0; color: #856404; font-size: 14px;">
+                ⏰ <strong>Oferta por tempo limitado!</strong>
+                O cupom expira em 7 dias. Aproveite agora!
+            </p>
+        </td>
+    </tr>
+</table>
+
+<table style="width: 100%;">
+    <tr>
+        <td style="padding: 15px; text-align: center; color: #666; font-size: 13px;">
+            <p style="margin: 0 0 10px 0;">
+                Dúvidas? Estamos aqui para ajudar!
+            </p>
+            <p style="margin: 0;">
+                <strong>{{var store.getFrontendName()}}</strong>
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

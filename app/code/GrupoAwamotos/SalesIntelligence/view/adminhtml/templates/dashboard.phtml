@@ -1,0 +1,550 @@
+<?php
+/**
+ * Sales Intelligence Dashboard Template
+ *
+ * @var \GrupoAwamotos\SalesIntelligence\Block\Adminhtml\Dashboard $block
+ */
+$healthScore = $block->getHealthScore();
+$kpis = $block->getKpis();
+$growth = $block->getGrowth();
+$pipeline = $block->getPipeline();
+$categories = $block->getCategoryGrowth();
+$products = array_slice($block->getProductForecast(), 0, 20);
+$recommendations = $block->getRecommendations();
+$chartJson = $block->getSalesChartJson();
+?>
+
+<div class="si-dashboard">
+
+    <!-- A. Health Score Header -->
+    <div class="si-section si-health-header">
+        <div class="si-health-score-container">
+            <div class="si-health-circle" style="border-color: <?= $block->escapeHtmlAttr($healthScore['color']) ?>">
+                <span class="si-health-number" style="color: <?= $block->escapeHtmlAttr($healthScore['color']) ?>">
+                    <?= (int) $healthScore['total'] ?>
+                </span>
+                <span class="si-health-label"><?= $block->escapeHtml($healthScore['label']) ?></span>
+            </div>
+            <div class="si-health-title">
+                <h2><?= $block->escapeHtml(__('Health Score do Negocio')) ?></h2>
+                <p><?= $block->escapeHtml(__('Indice composto baseado em vendas, clientes, pipeline, estoque e metas')) ?></p>
+            </div>
+        </div>
+        <?php if (!empty($healthScore['breakdown'])): ?>
+        <div class="si-health-breakdown">
+            <?php foreach ($healthScore['breakdown'] as $item): ?>
+                <div class="si-health-bar-item">
+                    <div class="si-health-bar-label">
+                        <span><?= $block->escapeHtml($item['name']) ?></span>
+                        <span><?= (int) $item['score'] ?>/<?= (int) $item['max'] ?></span>
+                    </div>
+                    <div class="si-health-bar-track">
+                        <div class="si-health-bar-fill"
+                             style="width: <?= $item['max'] > 0 ? round(($item['score'] / $item['max']) * 100) : 0 ?>%;
+                                    background-color: <?= $block->escapeHtmlAttr($item['color']) ?>">
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- B. KPI Cards -->
+    <div class="si-kpi-grid">
+        <?php foreach ($kpis as $kpi): ?>
+            <div class="si-kpi-card">
+                <div class="si-kpi-title"><?= $block->escapeHtml($kpi['title']) ?></div>
+                <div class="si-kpi-value">
+                    <?= $block->escapeHtml($kpi['value']) ?>
+                    <?php if ($kpi['trend'] === 'up'): ?>
+                        <span class="si-trend-up" title="Em alta">&#9650;</span>
+                    <?php elseif ($kpi['trend'] === 'down'): ?>
+                        <span class="si-trend-down" title="Em queda">&#9660;</span>
+                    <?php endif; ?>
+                </div>
+                <div class="si-kpi-subtitle"><?= $block->escapeHtml($kpi['subtitle']) ?></div>
+                <?php if ($kpi['progress'] !== null): ?>
+                    <div class="si-progress-bar">
+                        <div class="si-progress-fill"
+                             style="width: <?= min(100, (float) $kpi['progress']) ?>%;
+                                    background: <?= $kpi['progress'] >= 70 ? '#059669' : ($kpi['progress'] >= 40 ? '#d97706' : '#dc2626') ?>">
+                        </div>
+                    </div>
+                    <div class="si-kpi-progress-label"><?= round($kpi['progress'], 1) ?>% da meta</div>
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- C. Sales Chart -->
+    <div class="si-section">
+        <h3><?= $block->escapeHtml(__('Receita Mensal — Real vs Projecao vs Meta')) ?></h3>
+        <div class="si-chart-container">
+            <canvas id="si-sales-chart" height="300"></canvas>
+        </div>
+    </div>
+
+    <!-- D. Demand Forecast — Top 20 Products -->
+    <div class="si-section">
+        <h3><?= $block->escapeHtml(__('Previsao de Demanda — Top 20 Produtos')) ?></h3>
+        <?php if (!empty($products)): ?>
+        <div class="si-table-wrapper">
+            <table class="si-table">
+                <thead>
+                    <tr>
+                        <th>SKU</th>
+                        <th>Produto</th>
+                        <th class="si-right">Vendas 30d</th>
+                        <th class="si-right">Forecast 30d</th>
+                        <th class="si-center">Tendencia</th>
+                        <th class="si-right">Estoque</th>
+                        <th class="si-right">Dias Estoque</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($products as $p): ?>
+                        <tr class="<?= ($p['stockout_risk'] ?? false) ? 'si-row-warning' : '' ?>">
+                            <td class="si-sku"><?= $block->escapeHtml($p['sku']) ?></td>
+                            <td><?= $block->escapeHtml(mb_substr($p['name'] ?? '', 0, 50)) ?></td>
+                            <td class="si-right">
+                                <?= $block->formatNumber((float) ($p['sales_last_30d_qty'] ?? 0)) ?>
+                                <span class="si-small">un</span>
+                            </td>
+                            <td class="si-right">
+                                <?= $block->formatNumber((float) ($p['forecast_30d_qty'] ?? 0)) ?>
+                                <span class="si-small">un</span>
+                            </td>
+                            <td class="si-center">
+                                <?php if (($p['trend'] ?? '') === 'up'): ?>
+                                    <span class="si-badge si-badge-up">&#9650; +<?= round($p['trend_pct'] ?? 0, 0) ?>%</span>
+                                <?php elseif (($p['trend'] ?? '') === 'down'): ?>
+                                    <span class="si-badge si-badge-down">&#9660; <?= round($p['trend_pct'] ?? 0, 0) ?>%</span>
+                                <?php else: ?>
+                                    <span class="si-badge si-badge-stable">&#8594; <?= round($p['trend_pct'] ?? 0, 0) ?>%</span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="si-right"><?= $block->formatNumber((float) ($p['current_stock'] ?? 0)) ?></td>
+                            <td class="si-right <?= (($p['days_of_stock'] ?? 0) < 15 && ($p['days_of_stock'] ?? 0) > 0) ? 'si-danger' : '' ?>">
+                                <?= (int) ($p['days_of_stock'] ?? 0) > 998 ? '999+' : (int) ($p['days_of_stock'] ?? 0) ?>
+                                <span class="si-small">dias</span>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php else: ?>
+            <p class="si-empty"><?= $block->escapeHtml(__('Sem dados de vendas disponiveis no ERP.')) ?></p>
+        <?php endif; ?>
+    </div>
+
+    <!-- E. Category Growth -->
+    <div class="si-section">
+        <h3><?= $block->escapeHtml(__('Crescimento por Categoria')) ?></h3>
+        <?php if (!empty($categories)): ?>
+        <div class="si-table-wrapper">
+            <table class="si-table">
+                <thead>
+                    <tr>
+                        <th>Categoria</th>
+                        <th class="si-right">Receita (30d)</th>
+                        <th class="si-right">Receita Anterior</th>
+                        <th class="si-center">Variacao</th>
+                        <th class="si-right">Produtos</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach (array_slice($categories, 0, 15) as $cat): ?>
+                        <tr>
+                            <td><?= $block->escapeHtml($cat['category'] ?? '-') ?></td>
+                            <td class="si-right"><?= $block->formatPrice((float) ($cat['revenue_current'] ?? 0)) ?></td>
+                            <td class="si-right"><?= $block->formatPrice((float) ($cat['revenue_previous'] ?? 0)) ?></td>
+                            <td class="si-center">
+                                <?php $gPct = $cat['growth_pct'] ?? 0; ?>
+                                <?php if ($gPct > 10): ?>
+                                    <span class="si-badge si-badge-up">+<?= round($gPct, 0) ?>%</span>
+                                <?php elseif ($gPct < -10): ?>
+                                    <span class="si-badge si-badge-down"><?= round($gPct, 0) ?>%</span>
+                                <?php else: ?>
+                                    <span class="si-badge si-badge-stable"><?= round($gPct, 0) ?>%</span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="si-right"><?= (int) ($cat['product_count'] ?? 0) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+        <?php else: ?>
+            <p class="si-empty"><?= $block->escapeHtml(__('Sem dados de categoria disponiveis.')) ?></p>
+        <?php endif; ?>
+    </div>
+
+    <!-- F. Revenue Waterfall -->
+    <div class="si-section">
+        <h3><?= $block->escapeHtml(__('Decomposicao de Crescimento (30 dias)')) ?></h3>
+        <div class="si-waterfall-grid">
+            <div class="si-waterfall-card si-waterfall-positive">
+                <div class="si-waterfall-label">Novos Clientes</div>
+                <div class="si-waterfall-value">
+                    +<?= $block->formatPrice((float) ($growth['new_customer_revenue'] ?? 0)) ?>
+                </div>
+                <div class="si-waterfall-detail">
+                    <?= (int) ($growth['new_customer_count'] ?? 0) ?> clientes
+                </div>
+            </div>
+            <div class="si-waterfall-arrow">+</div>
+            <div class="si-waterfall-card <?= ($growth['returning_growth'] ?? 0) >= 0 ? 'si-waterfall-positive' : 'si-waterfall-negative' ?>">
+                <div class="si-waterfall-label">Recorrentes</div>
+                <div class="si-waterfall-value">
+                    <?= ($growth['returning_growth'] ?? 0) >= 0 ? '+' : '' ?><?= $block->formatPrice((float) ($growth['returning_growth'] ?? 0)) ?>
+                </div>
+                <div class="si-waterfall-detail">Crescimento/Queda</div>
+            </div>
+            <div class="si-waterfall-arrow">-</div>
+            <div class="si-waterfall-card si-waterfall-negative">
+                <div class="si-waterfall-label">Churn</div>
+                <div class="si-waterfall-value">
+                    -<?= $block->formatPrice(abs((float) ($growth['churn_loss'] ?? 0))) ?>
+                </div>
+                <div class="si-waterfall-detail">
+                    <?= (int) ($growth['churned_customer_count'] ?? 0) ?> clientes em risco
+                </div>
+            </div>
+            <div class="si-waterfall-arrow">=</div>
+            <div class="si-waterfall-card <?= ($growth['net_change'] ?? 0) >= 0 ? 'si-waterfall-result-positive' : 'si-waterfall-result-negative' ?>">
+                <div class="si-waterfall-label">Variacao Liquida</div>
+                <div class="si-waterfall-value">
+                    <?= ($growth['net_change'] ?? 0) >= 0 ? '+' : '' ?><?= $block->formatPrice((float) ($growth['net_change'] ?? 0)) ?>
+                </div>
+                <div class="si-waterfall-detail">
+                    <?= round($growth['net_change_pct'] ?? 0, 1) ?>% vs periodo anterior
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- G. Quote Pipeline -->
+    <div class="si-section">
+        <h3><?= $block->escapeHtml(__('Pipeline de Cotacoes (30 dias)')) ?></h3>
+        <div class="si-pipeline-grid">
+            <div class="si-pipeline-card">
+                <div class="si-pipeline-number"><?= (int) ($pipeline['total_quotes'] ?? 0) ?></div>
+                <div class="si-pipeline-label">Total</div>
+            </div>
+            <div class="si-pipeline-card">
+                <div class="si-pipeline-number"><?= (int) ($pipeline['pending_quotes'] ?? 0) ?></div>
+                <div class="si-pipeline-label">Pendentes</div>
+            </div>
+            <div class="si-pipeline-card">
+                <div class="si-pipeline-number"><?= (int) ($pipeline['quoted_quotes'] ?? 0) ?></div>
+                <div class="si-pipeline-label">Respondidas</div>
+            </div>
+            <div class="si-pipeline-card si-pipeline-accent">
+                <div class="si-pipeline-number"><?= (int) ($pipeline['accepted_quotes'] ?? 0) ?></div>
+                <div class="si-pipeline-label">Aceitas</div>
+            </div>
+            <div class="si-pipeline-card">
+                <div class="si-pipeline-number"><?= (int) ($pipeline['rejected_quotes'] ?? 0) ?></div>
+                <div class="si-pipeline-label">Rejeitadas</div>
+            </div>
+            <div class="si-pipeline-card">
+                <div class="si-pipeline-number"><?= (int) ($pipeline['expired_quotes'] ?? 0) ?></div>
+                <div class="si-pipeline-label">Expiradas</div>
+            </div>
+        </div>
+        <div class="si-pipeline-metrics">
+            <div class="si-metric">
+                <span class="si-metric-label">Valor Pipeline:</span>
+                <span class="si-metric-value"><?= $block->formatPrice((float) ($pipeline['pipeline_value'] ?? 0)) ?></span>
+            </div>
+            <div class="si-metric">
+                <span class="si-metric-label">Conversao:</span>
+                <span class="si-metric-value"><?= round($pipeline['conversion_rate'] ?? 0, 1) ?>%</span>
+            </div>
+            <div class="si-metric">
+                <span class="si-metric-label">Tempo Medio Resposta:</span>
+                <span class="si-metric-value"><?= round($pipeline['avg_response_time_days'] ?? 0, 1) ?> dias</span>
+            </div>
+            <div class="si-metric">
+                <span class="si-metric-label">Ticket Medio:</span>
+                <span class="si-metric-value"><?= $block->formatPrice((float) ($pipeline['avg_deal_value'] ?? 0)) ?></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- H. Top 10 Recommendations -->
+    <div class="si-section">
+        <h3><?= $block->escapeHtml(__('Recomendacoes Acionaveis')) ?></h3>
+        <?php if (!empty($recommendations)): ?>
+        <div class="si-recommendations">
+            <?php foreach ($recommendations as $i => $rec): ?>
+                <?php
+                $typeColors = [
+                    'stock' => '#d97706',
+                    'customer' => '#2563eb',
+                    'sales' => '#059669',
+                    'operational' => '#6b7280',
+                ];
+                $typeLabels = [
+                    'stock' => 'Estoque',
+                    'customer' => 'Clientes',
+                    'sales' => 'Vendas',
+                    'operational' => 'Operacional',
+                ];
+                $color = $typeColors[$rec['type'] ?? 'operational'] ?? '#6b7280';
+                $typeLabel = $typeLabels[$rec['type'] ?? 'operational'] ?? 'Geral';
+                ?>
+                <div class="si-rec-card" style="border-left: 4px solid <?= $block->escapeHtmlAttr($color) ?>">
+                    <div class="si-rec-header">
+                        <span class="si-rec-badge" style="background: <?= $block->escapeHtmlAttr($color) ?>">
+                            <?= $block->escapeHtml($typeLabel) ?>
+                        </span>
+                        <span class="si-rec-priority">
+                            <?= str_repeat('!', (int) ($rec['priority'] ?? 1)) ?>
+                        </span>
+                    </div>
+                    <div class="si-rec-title"><?= $block->escapeHtml($rec['title'] ?? '') ?></div>
+                    <div class="si-rec-description"><?= $block->escapeHtml($rec['description'] ?? '') ?></div>
+                    <div class="si-rec-footer">
+                        <?php if (($rec['impact_value'] ?? 0) > 0): ?>
+                            <span class="si-rec-impact">
+                                Impacto: <?= $block->formatPrice((float) $rec['impact_value']) ?>
+                            </span>
+                        <?php endif; ?>
+                        <span class="si-rec-action"><?= $block->escapeHtml($rec['action'] ?? '') ?></span>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+        <?php else: ?>
+            <p class="si-empty"><?= $block->escapeHtml(__('Nenhuma recomendacao disponivel no momento.')) ?></p>
+        <?php endif; ?>
+    </div>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        var chartData = <?= /* @noEscape */ $chartJson ?>;
+        var ctx = document.getElementById('si-sales-chart');
+        if (!ctx || !chartData.labels || !chartData.labels.length) return;
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: chartData.labels,
+                datasets: [
+                    {
+                        label: 'Receita Real',
+                        data: chartData.revenues,
+                        backgroundColor: 'rgba(5, 150, 105, 0.7)',
+                        borderColor: '#059669',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        order: 2
+                    },
+                    {
+                        label: 'Projecao',
+                        data: chartData.projection,
+                        type: 'line',
+                        borderColor: '#2563eb',
+                        borderWidth: 2,
+                        borderDash: [6, 3],
+                        pointRadius: 4,
+                        pointBackgroundColor: '#2563eb',
+                        fill: false,
+                        spanGaps: true,
+                        order: 1
+                    },
+                    {
+                        label: 'Meta',
+                        data: chartData.target,
+                        type: 'line',
+                        borderColor: '#dc2626',
+                        borderWidth: 1.5,
+                        borderDash: [4, 4],
+                        pointRadius: 0,
+                        fill: false,
+                        order: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { intersect: false, mode: 'index' },
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(ctx) {
+                                var val = ctx.parsed.y;
+                                if (val === null) return '';
+                                return ctx.dataset.label + ': R$ ' + val.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(val) {
+                                return 'R$ ' + (val/1000).toLocaleString('pt-BR') + 'k';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    } catch (e) {
+        console.warn('Sales chart init error:', e);
+    }
+});
+</script>
+
+<style>
+    /* === Dashboard Layout === */
+    .si-dashboard { max-width: 1400px; margin: 0 auto; padding: 20px 0; }
+    .si-section {
+        background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;
+        padding: 24px; margin-bottom: 20px;
+    }
+    .si-section h3 {
+        font-size: 16px; font-weight: 600; color: #111827;
+        margin: 0 0 16px 0; padding-bottom: 12px; border-bottom: 1px solid #f3f4f6;
+    }
+    .si-empty { color: #9ca3af; font-style: italic; padding: 20px 0; text-align: center; }
+
+    /* === Health Score === */
+    .si-health-header { display: flex; gap: 40px; align-items: center; flex-wrap: wrap; }
+    .si-health-score-container { display: flex; align-items: center; gap: 20px; flex-shrink: 0; }
+    .si-health-circle {
+        width: 100px; height: 100px; border-radius: 50%; border: 4px solid;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        flex-shrink: 0;
+    }
+    .si-health-number { font-size: 32px; font-weight: 700; line-height: 1; }
+    .si-health-label { font-size: 11px; font-weight: 500; color: #6b7280; text-transform: uppercase; }
+    .si-health-title h2 { font-size: 18px; margin: 0 0 4px 0; color: #111827; }
+    .si-health-title p { font-size: 13px; color: #6b7280; margin: 0; }
+    .si-health-breakdown { flex: 1; min-width: 300px; }
+    .si-health-bar-item { margin-bottom: 8px; }
+    .si-health-bar-label { display: flex; justify-content: space-between; font-size: 12px; color: #374151; margin-bottom: 3px; }
+    .si-health-bar-track { height: 8px; background: #f3f4f6; border-radius: 4px; overflow: hidden; }
+    .si-health-bar-fill { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+
+    /* === KPI Cards === */
+    .si-kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+    .si-kpi-card {
+        background: #fff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px;
+    }
+    .si-kpi-title { font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .si-kpi-value { font-size: 24px; font-weight: 700; color: #111827; margin-bottom: 4px; }
+    .si-kpi-subtitle { font-size: 12px; color: #9ca3af; }
+    .si-kpi-progress-label { font-size: 11px; color: #6b7280; margin-top: 4px; }
+    .si-trend-up { color: #059669; font-size: 14px; }
+    .si-trend-down { color: #dc2626; font-size: 14px; }
+    .si-progress-bar { height: 6px; background: #f3f4f6; border-radius: 3px; margin-top: 10px; overflow: hidden; }
+    .si-progress-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+
+    /* === Chart === */
+    .si-chart-container { height: 300px; position: relative; }
+
+    /* === Tables === */
+    .si-table-wrapper { overflow-x: auto; }
+    .si-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .si-table th {
+        text-align: left; font-weight: 600; color: #374151; padding: 10px 12px;
+        border-bottom: 2px solid #e5e7eb; font-size: 12px; text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+    .si-table td { padding: 10px 12px; border-bottom: 1px solid #f3f4f6; color: #111827; }
+    .si-table tbody tr:hover { background: #f9fafb; }
+    .si-right { text-align: right !important; }
+    .si-center { text-align: center !important; }
+    .si-sku { font-family: monospace; font-size: 12px; color: #6b7280; }
+    .si-small { font-size: 10px; color: #9ca3af; }
+    .si-row-warning { background: #fefce8 !important; }
+    .si-row-warning:hover { background: #fef9c3 !important; }
+    .si-danger { color: #dc2626 !important; font-weight: 600; }
+
+    /* === Badges === */
+    .si-badge {
+        display: inline-block; padding: 2px 8px; border-radius: 10px;
+        font-size: 11px; font-weight: 600; white-space: nowrap;
+    }
+    .si-badge-up { background: #d1fae5; color: #065f46; }
+    .si-badge-down { background: #fee2e2; color: #991b1b; }
+    .si-badge-stable { background: #f3f4f6; color: #4b5563; }
+
+    /* === Waterfall === */
+    .si-waterfall-grid {
+        display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center;
+    }
+    .si-waterfall-card {
+        flex: 1; min-width: 150px; max-width: 220px; padding: 16px; border-radius: 8px;
+        text-align: center;
+    }
+    .si-waterfall-positive { background: #d1fae5; border: 1px solid #a7f3d0; }
+    .si-waterfall-negative { background: #fee2e2; border: 1px solid #fecaca; }
+    .si-waterfall-result-positive { background: #dbeafe; border: 2px solid #93c5fd; }
+    .si-waterfall-result-negative { background: #fef3c7; border: 2px solid #fcd34d; }
+    .si-waterfall-label { font-size: 12px; color: #374151; font-weight: 500; margin-bottom: 6px; }
+    .si-waterfall-value { font-size: 18px; font-weight: 700; color: #111827; }
+    .si-waterfall-detail { font-size: 11px; color: #6b7280; margin-top: 4px; }
+    .si-waterfall-arrow { font-size: 20px; font-weight: 700; color: #9ca3af; flex-shrink: 0; }
+
+    /* === Pipeline === */
+    .si-pipeline-grid {
+        display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 16px;
+    }
+    .si-pipeline-card {
+        text-align: center; padding: 16px 8px; background: #f9fafb; border-radius: 8px;
+        border: 1px solid #e5e7eb;
+    }
+    .si-pipeline-accent { background: #d1fae5; border-color: #a7f3d0; }
+    .si-pipeline-number { font-size: 28px; font-weight: 700; color: #111827; }
+    .si-pipeline-label { font-size: 11px; color: #6b7280; text-transform: uppercase; margin-top: 4px; }
+    .si-pipeline-metrics { display: flex; flex-wrap: wrap; gap: 20px; padding-top: 12px; border-top: 1px solid #f3f4f6; }
+    .si-metric { display: flex; gap: 6px; align-items: baseline; }
+    .si-metric-label { font-size: 13px; color: #6b7280; }
+    .si-metric-value { font-size: 14px; font-weight: 600; color: #111827; }
+
+    /* === Recommendations === */
+    .si-recommendations { display: grid; gap: 12px; }
+    .si-rec-card {
+        padding: 16px 16px 16px 20px; background: #fff; border: 1px solid #e5e7eb;
+        border-radius: 6px;
+    }
+    .si-rec-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .si-rec-badge {
+        display: inline-block; padding: 2px 8px; border-radius: 10px;
+        font-size: 10px; font-weight: 600; color: #fff; text-transform: uppercase;
+    }
+    .si-rec-priority { font-size: 12px; color: #dc2626; font-weight: 700; }
+    .si-rec-title { font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 4px; }
+    .si-rec-description { font-size: 13px; color: #4b5563; line-height: 1.4; }
+    .si-rec-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; border-top: 1px solid #f3f4f6; }
+    .si-rec-impact { font-size: 12px; font-weight: 600; color: #059669; }
+    .si-rec-action { font-size: 12px; color: #6b7280; font-style: italic; }
+
+    /* === Responsive === */
+    @media (max-width: 1024px) {
+        .si-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        .si-pipeline-grid { grid-template-columns: repeat(3, 1fr); }
+        .si-health-header { flex-direction: column; }
+    }
+    @media (max-width: 768px) {
+        .si-kpi-grid { grid-template-columns: 1fr; }
+        .si-pipeline-grid { grid-template-columns: repeat(2, 1fr); }
+        .si-waterfall-grid { flex-direction: column; align-items: stretch; }
+        .si-waterfall-card { max-width: none; }
+        .si-waterfall-arrow { text-align: center; }
+    }
+</style>

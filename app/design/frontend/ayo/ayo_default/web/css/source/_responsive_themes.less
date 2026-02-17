@@ -3,7 +3,7 @@
 		width: 300px;
 	}
 	.block-search{
-		width: 67%;
+		width: calc(~"100% - 70px");
 	}
 	.box_language{
 		float: right;
@@ -357,6 +357,9 @@
 		.title-category-dropdown{
 			font-size: 0;
 		}
+		.side-verticalmenu > ul {
+			width: 220px;
+		}
 	}
 	.menu_left_home1 .togge-menu.list-category-dropdown{
 		width: 220px;
@@ -372,7 +375,7 @@
 		width: 70%;
 	}
 	.block-search{
-		width: 89%;
+		width: 95%;
 		margin-right: 0;
 	}
 	.navigation li.level0{
@@ -477,7 +480,7 @@
 	    position: absolute;
 	    top: 15px;
 	    right: 4px;
-	    z-index: 999999;
+	    z-index: 50000;
 	    a {
 	    	position: relative;
    		    right: 15px;
@@ -631,8 +634,45 @@
 		clear: both;
 		overflow: hidden;
 	}
+	.cms-index-index .cat .block_cat > .leftBlock{
+		width: 25%;
+		max-width: 25%;
+		flex: 0 0 25%;
+	}
+	.cms-index-index .cat .block_cat > .leftBlock + .rightBlock,
+	.cms-index-index .cat .block_cat > .leftBlock + .centerBlock{
+		width: 75%;
+		max-width: 75%;
+		flex: 0 0 75%;
+	}
 }
-@media (max-width: 991px) {
+@media (min-width: 1200px){
+	.cms-index-index .cat .block_cat > .leftBlock{
+		width: 16.66666667%;
+		max-width: 16.66666667%;
+		flex: 0 0 16.66666667%;
+	}
+	.cms-index-index .cat .block_cat > .leftBlock + .rightBlock,
+	.cms-index-index .cat .block_cat > .leftBlock + .centerBlock{
+		width: 83.33333333%;
+		max-width: 83.33333333%;
+		flex: 0 0 83.33333333%;
+	}
+}
+@media (min-width: 768px) and (max-width: 991px) {
+	.cms-index-index .cat .block_cat > .leftBlock{
+		width: 41.66666667%;
+		max-width: 41.66666667%;
+		flex: 0 0 41.66666667%;
+	}
+	.cms-index-index .cat .block_cat > .leftBlock + .rightBlock,
+	.cms-index-index .cat .block_cat > .leftBlock + .centerBlock{
+		width: 58.33333333%;
+		max-width: 58.33333333%;
+		flex: 0 0 58.33333333%;
+	}
+}
+@media (max-width: 767px) {
 	.rokanthemes-onepagecheckout #opc-sidebar .discount-code #discount-form {
 		width: 100%;
 	}
@@ -658,11 +698,14 @@
 		display: none;
 	}
 	.block-search {
-	    width: 85%;
+	    width: 95%;
 	}
-	.block_cat .leftBlock,
-	.block_cat .rightBlock{
+	.cms-index-index .block_cat .leftBlock,
+	.cms-index-index .block_cat .rightBlock,
+	.cms-index-index .block_cat .centerBlock{
 		width: 100%;
+		max-width: 100%;
+		flex: 0 0 100%;
 	}
 	.hot-deal .countdown_block{
 		position: static;
@@ -797,8 +840,9 @@
 	.list-service .box-icon {margin-bottom: 30px;}
 	.footer-box {margin-bottom: 20px;}
 	.page-footer .footer-container .footer-box-contact .fa {margin-top: 5px;}
-	.verticalmenu.navigation.side-verticalmenu .our_categories{
-		padding:19px 10px
+	.verticalmenu.navigation.side-verticalmenu h2.title-category-dropdown{
+		padding: 14px 15px;
+		font-size: 14px;
 	}
 	.verticalmenu.navigation.side-verticalmenu > ul li.level0{
 		padding: 0 10px;
@@ -1021,6 +1065,9 @@
 	.velaFooterMenu .velaContent{
 		display: none;
 	}
+	html.no-js .velaFooterMenu .velaContent{
+		display: block;
+	}
 	.rowFlexMargin .velaBlock .velaFooterTitle,
 	.rowFlexMargin .velaBlock{
 		margin: 0;
@@ -1031,6 +1078,26 @@
 	.velaFooterTitle{
 		position: relative;
 	}
+	.velaFooterMenu .velaFooterTitle{
+		background: transparent;
+		border: 0;
+		-webkit-appearance: none;
+		appearance: none;
+		font: inherit;
+		color: inherit;
+		text-transform: inherit;
+		width: 100%;
+		text-align: left;
+		cursor: pointer;
+		padding-right: 22px;
+		padding-top: 12px;
+		padding-bottom: 12px;
+		line-height: inherit;
+		&:focus{
+			outline: 2px solid @linkshover;
+			outline-offset: 2px;
+		}
+	}
 	.velaFooterMenu .velaFooterTitle:before{
 	    content: "+";
 	    width: 15px;
@@ -1038,7 +1105,8 @@
 	    line-height: 15px;
 	    position: absolute;
 	    text-align: center;
-	    bottom: 0;
+	    top: 50%;
+	    transform: translateY(-50%);
 	    right: 0;
 	    color: #222;
 	}
@@ -1052,7 +1120,7 @@
 		width: 100%;
 	}
 	.block-search{
-		width: 85%;
+		width: 100%;
 		margin: 15px 0 0;
 	}
 	.block-search .block-content button.action{
@@ -1325,12 +1393,7 @@
 	    font-size: 14px;
     	font-weight: 400;
 	}
-	.nav-open .verticalmenu.navigation.side-verticalmenu{display: block; width: 100%; position: relative;}
-	.verticalmenu.navigation.side-verticalmenu>ul {display: block !important;}
-	.verticalmenu.navigation.side-verticalmenu>ul li.level0:hover .level0.submenu {left: 0 !important;}
-	.verticalmenu.navigation.side-verticalmenu>ul li.level0 .level0.submenu {left: 0 !important;}
-	.verticalmenu.navigation.side-verticalmenu>ul li.level0>a {padding: 10px;}
-	.verticalmenu.navigation.side-verticalmenu>ul li.level0>a.ui-state-active::after {-ms-transform: rotate(90deg); -webkit-transform: rotate(90deg);transform: rotate(90deg);}
+	/* Vertical menu mobile responsive moved to _vertical_menu.less to avoid CSS merger leak */
 	.navigation{ max-width: 100%;}
 	.navigation .level0 > .level-top{
 		    display: block;
@@ -1349,6 +1412,9 @@
 		color: @linkshover;
 	}
 	.menu_left_home1 .togge-menu.list-category-dropdown{
+		width: 100%;
+	}
+	.menu_left_home1 .side-verticalmenu > ul {
 		width: 100%;
 	}
 	.nav-open .title-category-dropdown{

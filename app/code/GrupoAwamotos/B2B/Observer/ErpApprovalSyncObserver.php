@@ -65,12 +65,13 @@ class ErpApprovalSyncObserver implements ObserverInterface
             $erpCode = $this->erpIntegration->getErpCodeForCustomer((int) $customerId);
 
             if ($erpCode) {
+                $erpCodeStr = (string) $erpCode;
                 $this->logger->info(sprintf(
                     'ErpApprovalSyncObserver: Customer already linked to ERP code %s',
-                    $erpCode
+                    $erpCodeStr
                 ));
                 // Update existing ERP customer
-                $this->updateErpCustomer($customer, $erpCode, $newGroupId);
+                $this->updateErpCustomer($customer, $erpCodeStr, $newGroupId);
             } else {
                 // Create new customer in ERP
                 $this->logger->info('ErpApprovalSyncObserver: Creating new customer in ERP');
@@ -163,7 +164,7 @@ class ErpApprovalSyncObserver implements ObserverInterface
             }
 
             // Get credit limit from ERP
-            $creditLimit = $this->erpIntegration->getCreditLimitFromErp($erpCode);
+            $creditLimit = $this->erpIntegration->getCreditLimitFromErp((string) $erpCode);
 
             if ($creditLimit !== null && $creditLimit > 0) {
                 // Save credit limit to customer attribute

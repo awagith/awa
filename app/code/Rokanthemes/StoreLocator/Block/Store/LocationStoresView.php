@@ -149,14 +149,14 @@ class LocationStoresView extends \Magento\Framework\View\Element\Template
 							<img src="'.$mediaUrl.'{{image_store}}" />
 						</div>
 						<div class="info">
-							<p>City: {{city}}</p>
-							<p>Zip: {{zip}}</p>
-							<p>Country: {{country}}</p>
-							<p>Address: {{address}}</p>
+							<p>Cidade: {{city}}</p>
+							<p>CEP: {{zip}}</p>
+							<p>País: {{country}}</p>
+							<p>Endereço: {{address}}</p>
 						</div>
 					</div>	
 					<div>
-						Description: {{des}} 
+						Descrição: {{des}} 
 					</div>
 					';
 

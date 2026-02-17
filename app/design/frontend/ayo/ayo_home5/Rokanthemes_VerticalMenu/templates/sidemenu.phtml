@@ -1,0 +1,57 @@
+<?php
+/**
+ * Copyright © 2016 TuanHatay. All rights reserved.
+ */
+
+?>
+<?php
+/**
+ * Vertical Menu — side‑menu template
+ * Matches Ayo demo Home 5 structure
+ *
+ * @see \Rokanthemes\VerticalMenu\Block\Verticalmenu
+ */
+?>
+<?php
+    $_helper = $this->helper('Rokanthemes\VerticalMenu\Helper\Data');
+    $_config = $_helper->getConfig('verticalmenu');
+    $columnsLimit = 0;
+    if ($_config['general']['enable']) {
+        $limitShow = isset($_config['general']['limit_show']) ? (int)$_config['general']['limit_show'] : 0;
+?>
+<?php $_menu = $block->getVerticalMenuHtml(); ?>
+
+<nav class="navigation verticalmenu side-verticalmenu" aria-label="<?= $escaper->escapeHtmlAttr(__('Product Categories')) ?>">
+    <h2 class="title-category-dropdown">
+        <span><?= $escaper->escapeHtml(__('Categories')) ?></span>
+    </h2>
+    <ul class="togge-menu list-category-dropdown" style="display:none;" data-limit-show="<?= (int)$limitShow ?>">
+        <?php echo $_menu; ?>
+        <?php
+            $_bgImages = $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('vertical_background_images')->toHtml();
+            $_bgImages = trim($_bgImages);
+        ?>
+        <?php if (!empty($_bgImages)): ?>
+        <li class="vertical-bg-img"><?= /** @noEscape */ $_bgImages ?></li>
+        <?php endif; ?>
+        <?php if ($limitShow > 0): ?>
+        <li class="expand-category-link">
+            <a href="javascript:void(0);"><?= $escaper->escapeHtml(__('All Categories')) ?></a>
+        </li>
+        <?php endif; ?>
+    </ul>
+</nav>
+
+<script type="text/x-magento-init">
+{
+    ".navigation.verticalmenu.side-verticalmenu": {
+        "js/vertical-menu-init": {
+            "limitShow": <?= (int)$limitShow ?>,
+            "overlaySelector": ".shadow_bkg_show"
+        }
+    }
+}
+</script>
+<?php
+    }
+?>

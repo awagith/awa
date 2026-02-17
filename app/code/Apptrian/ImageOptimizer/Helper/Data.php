@@ -481,7 +481,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
                     continue;
                 }
 
-                $encodedPath = utf8_encode($filePath);
+                $encodedPath = mb_convert_encoding($filePath, 'UTF-8', 'ISO-8859-1');
                 $id          = hash('md5', $encodedPath);
 
                 // Add only if file is not already in the index

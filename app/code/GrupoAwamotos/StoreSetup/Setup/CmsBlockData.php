@@ -1,48 +1,60 @@
+<?php
 
+declare(strict_types=1);
+
+namespace GrupoAwamotos\StoreSetup\Setup;
+
+final class CmsBlockData
+{
     /**
-     * Schema.org Homepage Block
+     * Conteúdo Schema.org para a homepage.
+     *
+     * Observação importante: usamos aspas simples dentro das diretivas ({{store ...}}/{{media ...}}/{{config ...}})
+     * para não quebrar strings JSON que usam aspas duplas.
      */
-    public static function schemaOrgHomepageContent()
+    public static function schemaOrgHomepageContent(): string
     {
-        return '
+        return <<<HTML
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Grupo Awamotos",
-  "url": "https://srv1113343.hstgr.cloud/",
-  "logo": "https://srv1113343.hstgr.cloud/media/logo/default/logo.png",
-  "description": "Especialistas em peças e acessórios para motocicletas. Capacetes, baús, luvas, escapamentos e muito mais.",
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "telephone": "+55-11-99999-9999",
-    "contactType": "Customer Service",
-    "areaServed": "BR"
-  },
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "São Paulo",
-    "addressRegion": "SP",
-    "addressCountry": "BR"
-  },
-  "sameAs": [
-    "https://facebook.com/grupoawamotos",
-    "https://instagram.com/grupoawamotos"
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Como confirmo se a peça serve na minha moto?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use a busca por aplicação e confira a descrição do produto. Se ficar em dúvida, chame no WhatsApp para confirmar compatibilidade: https://wa.me/5516997367588"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Onde vejo prazo e valor do frete?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "O prazo e o valor são calculados no carrinho/checkout, conforme CEP e itens do pedido."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Como funcionam trocas e devoluções?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Trocas e devoluções seguem a política da loja. Veja detalhes na página de Ajuda/Atendimento."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Quero comprar para revenda (B2B). Como faço?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Faça seu cadastro B2B e, se preferir, envie uma solicitação de cotação."
+      }
+    }
   ]
 }
 </script>
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Grupo Awamotos",
-  "url": "https://srv1113343.hstgr.cloud/",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://srv1113343.hstgr.cloud/catalogsearch/result/?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-}
-</script>';
+HTML;
     }
+}

@@ -4,23 +4,22 @@
  * See COPYING.txt for license details.
  */
 
-// @codingStandardsIgnoreFile
-
 /**
  * @var \Magento\Theme\Block\Html\Header\Logo $block
+ * @var \Magento\Framework\Escaper $escaper
  */
 ?>
-<?php $storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt();?>
+<?php $storeName = $block->getThemeName() ?: $block->getLogoAlt(); ?>
 <div class="logo">
-<?php if (!$block->isHomePage()):?>
-    <a href="<?php echo $block->getUrl(''); ?>" title="<?php /* @escapeNotVerified */ echo $storeName ?>">
+<?php if (!$block->isHomePage()): ?>
+    <a href="<?= $escaper->escapeUrl($block->getUrl('')) ?>" title="<?= $escaper->escapeHtmlAttr($storeName) ?>">
 <?php endif ?>
-	<img src="<?php /* @escapeNotVerified */ echo $block->getLogoSrc() ?>"
-		 alt="<?php /* @escapeNotVerified */ echo $block->getLogoAlt() ?>"
-		 <?php echo $block->getLogoWidth() ? 'width="' . $block->getLogoWidth() . '"' : '' ?>
-		 <?php echo $block->getLogoHeight() ? 'height="' . $block->getLogoHeight() . '"' : '' ?>
-	/>
-<?php if (!$block->isHomePage()):?>
+        <img src="<?= $escaper->escapeUrl($block->getLogoSrc()) ?>"
+             alt="<?= $escaper->escapeHtmlAttr($block->getLogoAlt()) ?>"
+             <?php if ($block->getLogoWidth()): ?>width="<?= $escaper->escapeHtmlAttr($block->getLogoWidth()) ?>"<?php endif ?>
+             <?php if ($block->getLogoHeight()): ?>height="<?= $escaper->escapeHtmlAttr($block->getLogoHeight()) ?>"<?php endif ?>
+             loading="eager"
+        />
+<?php if (!$block->isHomePage()): ?>
     </a>
-<?php endif?>
-</div>
+<?php endif ?>

@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin to block checkout for non-approved customers
+ * Plugin to block checkout for non-approved customers and enforce minimum order amount
  */
 declare(strict_types=1);
 
@@ -9,6 +9,8 @@ namespace GrupoAwamotos\B2B\Plugin;
 use GrupoAwamotos\B2B\Api\PriceVisibilityInterface;
 use GrupoAwamotos\B2B\Helper\Config;
 use Magento\Checkout\Controller\Index\Index;
+use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface;
 
@@ -34,20 +36,34 @@ class BlockCheckoutPlugin
      */
     private $messageManager;
 
+    /**
+     * @var CustomerSession
+     */
+    private $customerSession;
+
+    /**
+     * @var CheckoutSession
+     */
+    private $checkoutSession;
+
     public function __construct(
         PriceVisibilityInterface $priceVisibility,
         Config $config,
         RedirectFactory $redirectFactory,
-        ManagerInterface $messageManager
+        ManagerInterface $messageManager,
+        CustomerSession $customerSession,
+        CheckoutSession $checkoutSession
     ) {
         $this->priceVisibility = $priceVisibility;
         $this->config = $config;
         $this->redirectFactory = $redirectFactory;
         $this->messageManager = $messageManager;
+        $this->customerSession = $customerSession;
+        $this->checkoutSession = $checkoutSession;
     }
 
     /**
-     * Around execute - block checkout if not approved
+     * Around execute - block checkout if not approved or below minimum order amount
      *
      * @param Index $subject
      * @param callable $proceed
@@ -58,36 +74,52 @@ class BlockCheckoutPlugin
         if (!$this->config->isEnabled()) {
             return $proceed();
         }
-        
-        // Verificar se cliente está aprovado
-        if (!$this->priceVisibility->isCustomerApproved()) {
+
+        // No modo mixed, visitantes podem fazer checkout normalmente
+        if (!$this->customerSession->isLoggedIn() && !$this->config->isStrictB2B()) {
+            return $proceed();
+        }
+
+        // Verificar se cliente está aprovado (logado ou strict mode)
+        if (!$this->priceVisibility->canAddToCart()) {
             $redirect = $this->redirectFactory->create();
-            
-            $status = $this->priceVisibility->getCustomerApprovalStatus();
-            
-            if ($status === null) {
-                // Visitante - não logado
+
+            if (!$this->customerSession->isLoggedIn()) {
+                // Visitante em modo strict - deve fazer login
                 $this->messageManager->addNoticeMessage(
                     __('Faça login para finalizar sua compra.')
                 );
                 return $redirect->setPath('customer/account/login');
             }
-            
+
             // Cliente logado mas não aprovado
             $this->messageManager->addWarningMessage(
                 __('Sua conta está pendente de aprovação. Você não pode finalizar compras até que sua conta seja aprovada.')
             );
             return $redirect->setPath('checkout/cart');
         }
-        
+
         // Verificar valor mínimo do pedido
         if ($this->config->isMinQtyEnabled()) {
             $minAmount = $this->config->getMinOrderAmount();
             if ($minAmount > 0) {
-                // Implementar verificação de valor mínimo aqui se necessário
+                try {
+                    $quote = $this->checkoutSession->getQuote();
+                    $subtotal = (float) $quote->getBaseSubtotal();
+
+                    if ($subtotal < $minAmount) {
+                        $this->messageManager->addWarningMessage(
+                            __($this->config->getMinOrderMessage())
+                        );
+                        $redirect = $this->redirectFactory->create();
+                        return $redirect->setPath('checkout/cart');
+                    }
+                } catch (\Exception $e) {
+                    // If we can't check the quote, allow checkout to proceed
+                }
             }
         }
-        
+
         return $proceed();
     }
 }

@@ -2,6 +2,8 @@
 /**
  * Breadcrumbs Schema.org Block
  */
+declare(strict_types=1);
+
 namespace GrupoAwamotos\SchemaOrg\Block;
 
 use Magento\Framework\View\Element\Template;

@@ -179,7 +179,6 @@ class Add extends \Magento\Checkout\Controller\Cart\Add
             return $this->jsonResponse($results);
         } catch (\Exception $e) {
             $results['error'] = __('We can\'t add this item to your shopping cart right now.');
-            print_r($e->getMessage());die;
             $this->_objectManager->get(\Psr\Log\LoggerInterface::class)->critical($e);
         }
         return $this->jsonResponse($results);

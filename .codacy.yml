@@ -1,0 +1,22 @@
+---
+# Codacy configuration for AWA Motos (Magento 2 / Ayo Theme)
+# The JS files are browser scripts — document, window, console etc. are valid globals.
+engines:
+  eslint:
+    enabled: true
+    exclude_paths:
+      - "pub/**"
+      - "var/**"
+      - "generated/**"
+      - "vendor/**"
+      - "lib/**"
+
+exclude_paths:
+  - "pub/**"
+  - "var/**"
+  - "generated/**"
+  - "vendor/**"
+  - "lib/**"
+  - "setup/**"
+  - "dev/**"
+  - "node_modules/**"

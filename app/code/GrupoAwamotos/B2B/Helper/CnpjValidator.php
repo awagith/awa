@@ -6,27 +6,50 @@ declare(strict_types=1);
 
 namespace GrupoAwamotos\B2B\Helper;
 
+use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\HTTP\Client\Curl;
+use Magento\Framework\Serialize\Serializer\Json;
+use Magento\Store\Model\ScopeInterface;
 
 class CnpjValidator extends AbstractHelper
 {
-    /**
-     * @var Curl
-     */
-    private $curl;
+    private const CONFIG_PATH_LOOKUP_ENABLED = 'grupoawamotos_b2b/cnpj_lookup/enabled';
+    private const CONFIG_PATH_LOOKUP_API_URL = 'grupoawamotos_b2b/cnpj_lookup/api_url';
+    private const CONFIG_PATH_LOOKUP_TIMEOUT = 'grupoawamotos_b2b/cnpj_lookup/timeout';
+    private const CONFIG_PATH_LOOKUP_REQUIRE_ACTIVE = 'grupoawamotos_b2b/cnpj_lookup/require_active_status';
+    private const CONFIG_PATH_LOOKUP_ALLOW_FALLBACK = 'grupoawamotos_b2b/cnpj_lookup/allow_local_fallback';
+    private const CONFIG_PATH_LOOKUP_CACHE_ENABLED = 'grupoawamotos_b2b/cnpj_lookup/cache_enabled';
+    private const CONFIG_PATH_LOOKUP_CACHE_TTL = 'grupoawamotos_b2b/cnpj_lookup/cache_ttl';
+    private const CONFIG_PATH_LOOKUP_RATE_LIMIT_ENABLED = 'grupoawamotos_b2b/cnpj_lookup/rate_limit_enabled';
+    private const CONFIG_PATH_LOOKUP_RATE_LIMIT_MAX = 'grupoawamotos_b2b/cnpj_lookup/rate_limit_max_requests';
+    private const CONFIG_PATH_LOOKUP_RATE_LIMIT_WINDOW = 'grupoawamotos_b2b/cnpj_lookup/rate_limit_window_seconds';
 
-    /**
-     * URL da API ReceitaWS
-     */
-    const API_URL = 'https://receitaws.com.br/v1/cnpj/';
+    private const DEFAULT_API_URL = 'https://receitaws.com.br/v1/cnpj/';
+    private const FALLBACK_API_URL = 'https://brasilapi.com.br/api/cnpj/v1/';
+    private const DEFAULT_TIMEOUT = 10;
+    private const DEFAULT_CACHE_TTL = 86400;
+    private const NEGATIVE_CACHE_TTL = 3600;
+    private const DEFAULT_RATE_LIMIT_MAX = 20;
+    private const DEFAULT_RATE_LIMIT_WINDOW = 60;
+
+    private const CACHE_KEY_PREFIX = 'grupoawamotos_b2b_cnpj_lookup_';
+    private const CACHE_TAG = 'GRUPOAWAMOTOS_B2B_CNPJ_LOOKUP';
+
+    private Curl $curl;
+    private CacheInterface $cache;
+    private Json $json;
 
     public function __construct(
         Context $context,
-        Curl $curl
+        Curl $curl,
+        CacheInterface $cache,
+        Json $json
     ) {
         $this->curl = $curl;
+        $this->cache = $cache;
+        $this->json = $json;
         parent::__construct($context);
     }
 
@@ -38,8 +61,7 @@ class CnpjValidator extends AbstractHelper
      */
     public function validateLocal(string $cnpj): bool
     {
-        // Remove caracteres não numéricos
-        $cnpj = preg_replace('/[^0-9]/', '', $cnpj);
+        $cnpj = $this->clean($cnpj);
         
         // Verifica se tem 14 dígitos
         if (strlen($cnpj) !== 14) {
@@ -86,40 +108,89 @@ class CnpjValidator extends AbstractHelper
      * @param string $cnpj
      * @return array|null Dados da empresa ou null se inválido
      */
-    public function validateApi(string $cnpj): ?array
+    public function validateApi(string $cnpj, bool $forceRefresh = false): ?array
     {
         // Primeiro valida localmente
         if (!$this->validateLocal($cnpj)) {
             return null;
         }
         
-        $cnpjClean = preg_replace('/[^0-9]/', '', $cnpj);
+        $cnpjClean = $this->clean($cnpj);
+
+        if (!$this->isLookupEnabled()) {
+            $this->audit('lookup_disabled', $cnpjClean);
+
+            return $this->buildLocalFallbackPayload(
+                'Consulta externa desabilitada. CNPJ validado localmente.'
+            );
+        }
+
+        if ($forceRefresh) {
+            $this->audit('force_refresh', $cnpjClean);
+        }
+
+        if (!$forceRefresh) {
+            $cachedPayload = $this->loadFromCache($cnpjClean);
+            if ($cachedPayload !== null) {
+                $this->audit('cache_hit', $cnpjClean);
+                return $cachedPayload;
+            }
+        }
         
         try {
-            $this->curl->setOption(CURLOPT_TIMEOUT, 10);
+            $this->curl->setOption(CURLOPT_TIMEOUT, $this->getLookupTimeout());
             $this->curl->setOption(CURLOPT_SSL_VERIFYPEER, true);
-            $this->curl->addHeader('Accept', 'application/json');
+            $this->curl->setHeaders([
+                'Accept' => 'application/json'
+            ]);
             
-            $this->curl->get(self::API_URL . $cnpjClean);
+            $endpoint = rtrim($this->getLookupApiUrl(), '/') . '/' . $cnpjClean;
+            $this->curl->get($endpoint);
             
-            $response = $this->curl->getBody();
+            $response = (string) $this->curl->getBody();
             $data = json_decode($response, true);
             
-            if (!$data || isset($data['status']) && $data['status'] === 'ERROR') {
+            if (!is_array($data) || (isset($data['status']) && strtoupper((string) $data['status']) === 'ERROR')) {
+                $this->audit('api_not_found_or_error', $cnpjClean);
                 return null;
             }
             
-            // Verifica se a empresa está ativa
-            if (isset($data['situacao']) && strtoupper($data['situacao']) !== 'ATIVA') {
-                return [
-                    'valid' => false,
-                    'message' => __('CNPJ com situação: %1', $data['situacao']),
-                    'data' => $data
-                ];
+            if ($this->isRequireActiveStatusEnabled()
+                && isset($data['situacao'])
+                && strtoupper((string) $data['situacao']) !== 'ATIVA'
+            ) {
+                // Cross-verify with BrasilAPI before rejecting
+                $fallbackSituacao = $this->crossVerifyWithFallbackApi($cnpjClean);
+
+                if ($fallbackSituacao !== null && strtoupper($fallbackSituacao) === 'ATIVA') {
+                    $this->audit('api_status_mismatch_resolved', $cnpjClean, [
+                        'primary_situacao' => (string) $data['situacao'],
+                        'fallback_situacao' => $fallbackSituacao
+                    ]);
+                    // Primary API had stale data — override situacao and continue
+                    $data['situacao'] = $fallbackSituacao;
+                } else {
+                    $invalidPayload = [
+                        'valid' => false,
+                        'message' => (string) __('CNPJ com situação: %1', $data['situacao']),
+                        'source' => 'api',
+                        'data' => $data
+                    ];
+
+                    // Negative results use shorter TTL so stale data expires sooner
+                    $this->saveToCache($cnpjClean, $invalidPayload, self::NEGATIVE_CACHE_TTL);
+                    $this->audit('api_invalid_status', $cnpjClean, [
+                        'situacao' => (string) $data['situacao'],
+                        'fallback_situacao' => $fallbackSituacao ?? 'unavailable'
+                    ]);
+
+                    return $invalidPayload;
+                }
             }
             
-            return [
+            $payload = [
                 'valid' => true,
+                'source' => 'api',
                 'razao_social' => $data['nome'] ?? '',
                 'nome_fantasia' => $data['fantasia'] ?? '',
                 'cnpj' => $data['cnpj'] ?? $cnpj,
@@ -139,16 +210,36 @@ class CnpjValidator extends AbstractHelper
                 'email' => $data['email'] ?? '',
                 'data' => $data
             ];
+
+            $this->saveToCache($cnpjClean, $payload);
+            $this->audit('api_success', $cnpjClean);
+
+            return $payload;
             
-        } catch (\Exception $e) {
-            $this->_logger->error('Erro ao validar CNPJ via API: ' . $e->getMessage());
-            
-            // Se API falhar, retorna validação local
-            return [
-                'valid' => true,
-                'api_error' => true,
-                'message' => __('Validação via API indisponível. CNPJ validado localmente.')
-            ];
+        } catch (\Throwable $exception) {
+            $this->_logger->error(
+                sprintf(
+                    'Erro ao validar CNPJ via API (%s): %s',
+                    $cnpjClean,
+                    $exception->getMessage()
+                )
+            );
+
+            if ($this->isLocalFallbackEnabled()) {
+                $this->audit('api_exception_fallback', $cnpjClean, [
+                    'error' => $exception->getMessage()
+                ]);
+
+                return $this->buildLocalFallbackPayload(
+                    'Validação via API indisponível. CNPJ validado localmente.'
+                );
+            }
+
+            $this->audit('api_exception_no_fallback', $cnpjClean, [
+                'error' => $exception->getMessage()
+            ]);
+
+            return null;
         }
     }
 
@@ -160,7 +251,7 @@ class CnpjValidator extends AbstractHelper
      */
     public function format(string $cnpj): string
     {
-        $cnpj = preg_replace('/[^0-9]/', '', $cnpj);
+        $cnpj = $this->clean($cnpj);
         
         if (strlen($cnpj) !== 14) {
             return $cnpj;
@@ -184,6 +275,244 @@ class CnpjValidator extends AbstractHelper
      */
     public function clean(string $cnpj): string
     {
-        return preg_replace('/[^0-9]/', '', $cnpj);
+        return (string) preg_replace('/[^0-9]/', '', $cnpj);
+    }
+
+    public function clearCache(?string $cnpj = null): bool
+    {
+        if ($cnpj !== null && trim($cnpj) !== '') {
+            $cleanCnpj = $this->clean($cnpj);
+            if (strlen($cleanCnpj) !== 14) {
+                return false;
+            }
+
+            $removed = $this->cache->remove($this->getCacheId($cleanCnpj));
+            $this->audit('cache_clear_single', $cleanCnpj, ['removed' => $removed ? 1 : 0]);
+
+            return $removed;
+        }
+
+        $cleaned = $this->cache->clean([self::CACHE_TAG]);
+        $this->audit('cache_clear_all', 'all', ['removed' => $cleaned ? 1 : 0]);
+
+        return $cleaned;
+    }
+
+    private function isLookupEnabled(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::CONFIG_PATH_LOOKUP_ENABLED,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    private function getLookupApiUrl(): string
+    {
+        $configuredUrl = trim((string) $this->scopeConfig->getValue(
+            self::CONFIG_PATH_LOOKUP_API_URL,
+            ScopeInterface::SCOPE_STORE
+        ));
+
+        return $configuredUrl !== '' ? $configuredUrl : self::DEFAULT_API_URL;
+    }
+
+    private function getLookupTimeout(): int
+    {
+        $timeout = (int) $this->scopeConfig->getValue(
+            self::CONFIG_PATH_LOOKUP_TIMEOUT,
+            ScopeInterface::SCOPE_STORE
+        );
+
+        return $timeout > 0 ? $timeout : self::DEFAULT_TIMEOUT;
+    }
+
+    private function isRequireActiveStatusEnabled(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::CONFIG_PATH_LOOKUP_REQUIRE_ACTIVE,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    private function isLocalFallbackEnabled(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::CONFIG_PATH_LOOKUP_ALLOW_FALLBACK,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    private function isLookupCacheEnabled(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::CONFIG_PATH_LOOKUP_CACHE_ENABLED,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    private function getLookupCacheTtl(): int
+    {
+        $ttl = (int) $this->scopeConfig->getValue(
+            self::CONFIG_PATH_LOOKUP_CACHE_TTL,
+            ScopeInterface::SCOPE_STORE
+        );
+
+        return $ttl > 0 ? $ttl : self::DEFAULT_CACHE_TTL;
+    }
+
+    public function isRateLimitEnabled(): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::CONFIG_PATH_LOOKUP_RATE_LIMIT_ENABLED,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getRateLimitMaxRequests(): int
+    {
+        $value = (int) $this->scopeConfig->getValue(
+            self::CONFIG_PATH_LOOKUP_RATE_LIMIT_MAX,
+            ScopeInterface::SCOPE_STORE
+        );
+
+        return $value > 0 ? $value : self::DEFAULT_RATE_LIMIT_MAX;
+    }
+
+    public function getRateLimitWindowSeconds(): int
+    {
+        $value = (int) $this->scopeConfig->getValue(
+            self::CONFIG_PATH_LOOKUP_RATE_LIMIT_WINDOW,
+            ScopeInterface::SCOPE_STORE
+        );
+
+        return $value > 0 ? $value : self::DEFAULT_RATE_LIMIT_WINDOW;
+    }
+
+    private function getCacheId(string $cnpj): string
+    {
+        return self::CACHE_KEY_PREFIX . $cnpj;
+    }
+
+    private function loadFromCache(string $cnpj): ?array
+    {
+        if (!$this->isLookupCacheEnabled()) {
+            return null;
+        }
+
+        $cached = $this->cache->load($this->getCacheId($cnpj));
+        if (!$cached) {
+            return null;
+        }
+
+        try {
+            $decoded = $this->json->unserialize($cached);
+        } catch (\InvalidArgumentException $exception) {
+            $this->_logger->warning(
+                sprintf('Cache de CNPJ inválido para %s: %s', $cnpj, $exception->getMessage())
+            );
+
+            return null;
+        }
+
+        if (!is_array($decoded)) {
+            return null;
+        }
+
+        $decoded['source'] = 'cache';
+
+        return $decoded;
+    }
+
+    private function saveToCache(string $cnpj, array $payload, ?int $ttlOverride = null): void
+    {
+        if (!$this->isLookupCacheEnabled()) {
+            return;
+        }
+
+        try {
+            $this->cache->save(
+                $this->json->serialize($payload),
+                $this->getCacheId($cnpj),
+                [self::CACHE_TAG],
+                $ttlOverride ?? $this->getLookupCacheTtl()
+            );
+        } catch (\Throwable $exception) {
+            $this->_logger->warning(
+                sprintf('Falha ao salvar cache de CNPJ %s: %s', $cnpj, $exception->getMessage())
+            );
+        }
+    }
+
+    /**
+     * Cross-verify CNPJ situacao using BrasilAPI when primary API returns non-ATIVA.
+     * Returns the situacao string from the fallback API, or null on failure.
+     */
+    private function crossVerifyWithFallbackApi(string $cnpjClean): ?string
+    {
+        try {
+            $fallbackCurl = clone $this->curl;
+            $fallbackCurl->setOption(CURLOPT_TIMEOUT, 5);
+            $fallbackCurl->setOption(CURLOPT_SSL_VERIFYPEER, true);
+            $fallbackCurl->setHeaders(['Accept' => 'application/json']);
+
+            $fallbackCurl->get(self::FALLBACK_API_URL . $cnpjClean);
+            $body = (string) $fallbackCurl->getBody();
+            $fallbackData = json_decode($body, true);
+
+            if (!is_array($fallbackData)) {
+                return null;
+            }
+
+            // BrasilAPI returns "descricao_situacao_cadastral" (e.g. "ATIVA", "BAIXADA")
+            $situacao = $fallbackData['descricao_situacao_cadastral']
+                ?? $fallbackData['situacao_cadastral'] // numeric code fallback
+                ?? null;
+
+            if ($situacao !== null) {
+                // Normalize: BrasilAPI may return numeric code 2 = ATIVA, 8 = BAIXADA
+                if (is_numeric($situacao)) {
+                    $situacao = ((int) $situacao === 2) ? 'ATIVA' : 'BAIXADA';
+                }
+                return strtoupper((string) $situacao);
+            }
+
+            return null;
+        } catch (\Throwable $e) {
+            $this->_logger->warning('BrasilAPI fallback failed: ' . $e->getMessage());
+            return null;
+        }
+    }
+
+    private function buildLocalFallbackPayload(string $message): array
+    {
+        return [
+            'valid' => true,
+            'api_error' => true,
+            'source' => 'fallback',
+            'message' => $message
+        ];
+    }
+
+    private function audit(string $event, string $cnpj, array $context = []): void
+    {
+        $payload = array_merge(
+            [
+                'event' => $event,
+                'cnpj' => $this->maskForLog($cnpj)
+            ],
+            $context
+        );
+
+        $this->_logger->info('[B2B][CNPJ] ' . $this->json->serialize($payload));
+    }
+
+    private function maskForLog(string $cnpj): string
+    {
+        $clean = $this->clean($cnpj);
+        if (strlen($clean) !== 14) {
+            return $clean;
+        }
+
+        return substr($clean, 0, 2) . '******' . substr($clean, -4);
     }
 }

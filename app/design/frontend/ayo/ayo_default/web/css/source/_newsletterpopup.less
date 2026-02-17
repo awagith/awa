@@ -2,8 +2,8 @@
 	opacity: 0.8 !important;
 }
 .newsletterpopup {
-	height: 100% !important;
-    max-height: 603px !important;
+	height: auto !important;
+    max-height: none !important;
     top: 50% !important;
     left: 50% !important;
     -moz-transform: translateX(-50%) translateY(-50%);
@@ -12,7 +12,7 @@
     -ms-transform: translateX(-50%) translateY(-50%);
     transform: translateX(-50%) translateY(-50%);
 	position: fixed !important;
-	background: #00352f;
+	background: transparent;
 	background-image: none !important;
 }
 .cms-homepage_azone_default #newsletter_pop_up .newletter_popup_close {
@@ -27,7 +27,8 @@
 	max-width: 1160px !important;
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    border-radius: 100%;
+    border-radius: 16px;
+	overflow: hidden;
 	.newletter_popup_close {
         position: absolute;
 	    top: 0;
@@ -96,8 +97,8 @@
 			    padding: 10px 48px;
 				height: 46px;
 			    color: @lightcolor;
-				 background-color: #ff9300;
-			    border: 2px solid #ff9300;
+				 background-color: #b73337;
+			    border: 2px solid #b73337;
 			    font-size: 13px;
 			    font-weight: 500;
 			    line-height: 22px;
@@ -110,8 +111,8 @@
    				 max-width: 440px;
    				 font-family:@bdf;
    				 &:hover {
-			    	background-color: #ff9300;
-   				 	border-color: #ff9300;
+			    	background-color: #b73337;
+   				 	border-color: #b73337;
 				    color: @lightcolor;
 				    text-decoration: none;
    				 }
@@ -130,7 +131,7 @@
 			}
 		}
 		h3 {
-			color: #ff9300;
+			color: #b73337;
 		    display: block;
 		    position: relative;
 		    font-family: @bdf;

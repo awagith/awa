@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * GrupoAwamotos B2B - Customer Account Create Layout
+ * In strict mode, standard registration is disabled
+ * Shows B2B suggestion for mixed mode
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- B2B Suggestion for customers on registration page (Mixed Mode) -->
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="b2b.register.suggestion"
+                   template="GrupoAwamotos_B2B::customer/register-b2b-suggestion.phtml"
+                   after="-"/>
+        </referenceContainer>
+    </body>
+</page>

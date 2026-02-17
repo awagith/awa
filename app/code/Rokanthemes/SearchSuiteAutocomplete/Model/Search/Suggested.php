@@ -5,6 +5,7 @@ namespace Rokanthemes\SearchSuiteAutocomplete\Model\Search;
 use \Rokanthemes\SearchSuiteAutocomplete\Helper\Data as HelperData;
 use \Magento\Search\Helper\Data as SearchHelper;
 use \Magento\Search\Model\AutocompleteInterface;
+use \Magento\Framework\App\RequestInterface;
 use \Rokanthemes\SearchSuiteAutocomplete\Model\Source\AutocompleteFields;
 
 /**
@@ -28,20 +29,28 @@ class Suggested implements \Rokanthemes\SearchSuiteAutocomplete\Model\SearchInte
     protected $autocomplete;
 
     /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    private $request;
+
+    /**
      * Suggested constructor.
      *
      * @param HelperData $helperData
      * @param SearchHelper $searchHelper
      * @param AutocompleteInterface $autocomplete
+     * @param RequestInterface|null $request
      */
     public function __construct(
         HelperData $helperData,
         SearchHelper $searchHelper,
-        AutocompleteInterface $autocomplete
+        AutocompleteInterface $autocomplete,
+        ?RequestInterface $request = null
     ) {
         $this->helperData   = $helperData;
         $this->searchHelper = $searchHelper;
         $this->autocomplete = $autocomplete;
+        $this->request      = $request ?: \Magento\Framework\App\ObjectManager::getInstance()->get(RequestInterface::class);
     }
 
     /**
@@ -57,12 +66,13 @@ class Suggested implements \Rokanthemes\SearchSuiteAutocomplete\Model\SearchInte
         }
 
         $suggestResultNumber = $this->helperData->getSuggestedResultNumber();
+        $categoryId = $this->getCategoryIdFilter();
 
         $autocompleteData = $this->autocomplete->getItems();
         $autocompleteData = array_slice($autocompleteData, 0, $suggestResultNumber);
         foreach ($autocompleteData as $item) {
             $item                   = $item->toArray();
-            $item['url']            = $this->searchHelper->getResultUrl($item['title']);
+            $item['url']            = $this->buildResultUrl($item['title'], $categoryId);
             $responseData['data'][] = $item;
         }
 
@@ -75,5 +85,28 @@ class Suggested implements \Rokanthemes\SearchSuiteAutocomplete\Model\SearchInte
     public function canAddToResult()
     {
         return in_array(AutocompleteFields::SUGGEST, $this->helperData->getAutocompleteFieldsAsArray());
+    }
+
+    /**
+     * @param string $queryText
+     * @param int $categoryId
+     * @return string
+     */
+    private function buildResultUrl($queryText, $categoryId)
+    {
+        $url = $this->searchHelper->getResultUrl($queryText);
+        if ($categoryId > 0) {
+            $url .= (strpos($url, '?') === false ? '?' : '&') . 'cat=' . $categoryId;
+        }
+
+        return $url;
+    }
+
+    /**
+     * @return int
+     */
+    private function getCategoryIdFilter()
+    {
+        return (int)$this->request->getParam('cat');
     }
 }

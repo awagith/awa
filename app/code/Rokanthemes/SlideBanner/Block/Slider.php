@@ -61,10 +61,65 @@ class Slider extends \Magento\Framework\View\Element\Template
      *
      * @return array
      */
-	public function getImageElement($src)
+	public function getImageElement($src, $altText = '', $isFirst = false)
 	{
 		$mediaUrl = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
-		return '<img style="display: none;" class="lazyOwl" alt="' . $this->getSlider()->getSliderTitle() . '" src="'.$mediaUrl . $src . '" data-src="'. $mediaUrl . $src . '" />';
+		if (!$src) {
+			return '<img src="" alt="Slide" loading="lazy" decoding="async" width="1920" height="600" />';
+		}
+		$alt = $altText ? strip_tags($altText) : $this->getSlider()->getSliderTitle();
+		$alt = htmlspecialchars($alt, ENT_QUOTES, 'UTF-8');
+		$loading = $isFirst ? 'eager' : 'lazy';
+		$priority = $isFirst ? ' fetchpriority="high"' : '';
+		return '<img src="' . $mediaUrl . $src . '" alt="' . $alt . '" loading="' . $loading . '" decoding="async" width="1920" height="600"' . $priority . ' />';
+	}
+	
+	public function getImageElementMobile($src, $altText = '', $isFirst = false)
+	{
+		$mediaUrl = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+		if (!$src) {
+			return '<img src="" alt="Slide" loading="lazy" decoding="async" width="768" height="400" />';
+		}
+		$alt = $altText ? strip_tags($altText) : $this->getSlider()->getSliderTitle();
+		$alt = htmlspecialchars($alt, ENT_QUOTES, 'UTF-8');
+		$loading = $isFirst ? 'eager' : 'lazy';
+		$priority = $isFirst ? ' fetchpriority="high"' : '';
+		return '<img src="' . $mediaUrl . $src . '" alt="' . $alt . '" loading="' . $loading . '" decoding="async" width="768" height="400"' . $priority . ' />';
+	}
+
+	/**
+	 * Resolve sanitized alt text for a slide.
+	 */
+	private function resolveAltText($altText)
+	{
+		$sliderTitle = $this->getSlider() ? $this->getSlider()->getSliderTitle() : 'Slide';
+		$raw = $altText ? strip_tags($altText) : $sliderTitle;
+		return htmlspecialchars($raw, ENT_QUOTES, 'UTF-8');
+	}
+
+	/**
+	 * Returns a <picture> element with desktop/mobile sources.
+	 * Eliminates duplicated slider HTML for desktop/mobile.
+	 */
+	public function getPictureElement($desktopSrc, $mobileSrc, $altText = '', $isFirst = false)
+	{
+		$mediaUrl = $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+		$alt = $this->resolveAltText($altText);
+		$loading = $isFirst ? 'eager' : 'lazy';
+		$priority = $isFirst ? ' fetchpriority="high"' : '';
+
+		$desktopUrl = $desktopSrc ? $mediaUrl . $desktopSrc : '';
+		$mobileUrl = $mobileSrc ? $mediaUrl . $mobileSrc : $desktopUrl;
+
+		$source = $desktopUrl
+			? '<source media="(min-width: 768px)" srcset="' . $desktopUrl . '" width="1920" height="600" />'
+			: '';
+
+		return '<picture>'
+			. $source
+			. '<img src="' . ($mobileUrl ?: $desktopUrl) . '" alt="' . $alt . '" loading="' . $loading
+			. '" decoding="async" width="768" height="400"' . $priority . ' />'
+			. '</picture>';
 	}
 	public function getBannerCollection()
 	{
@@ -80,7 +135,18 @@ class Slider extends \Magento\Framework\View\Element\Template
 	}
 	public function getSlider()
 	{
-		if(is_null($this->_slider)):
+		if(is_null($this->_slider)){
+			// First try to load by explicit slider_id if set
+			$sliderId = $this->getSliderId();
+			if($sliderId) {
+				$this->_slider = $this->_sliderFactory->create();
+				$this->_slider->load($sliderId, 'slider_identifier');
+				if($this->_slider->getId() && $this->_slider->getSliderStatus() == 1) {
+					return $this->_slider;
+				}
+			}
+			
+			// Fallback to original logic
 			$all_collections = $this->_sliderFactory->create()->getCollection()->addFieldToFilter('slider_status', 1);
 			if(count($all_collections) > 0){
 				$store_id = $this->getStoreId();
@@ -102,12 +168,7 @@ class Slider extends \Magento\Framework\View\Element\Template
 					}
 				}
 			}
-			else{
-				$sliderId = $this->getSliderId();
-				$this->_slider = $this->_sliderFactory->create();
-				$this->_slider->load($sliderId);
-			}
-		endif;
+		}
 		return $this->_slider;
 	}
 	public function getContentText($html)

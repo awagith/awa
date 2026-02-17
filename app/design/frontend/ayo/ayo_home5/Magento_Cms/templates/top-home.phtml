@@ -1,47 +1,171 @@
-<div class="top-home-content">
+<?php
+/** @var \Magento\Framework\View\Element\Template $this */
+$quickNavItems = [
+	['url' => 'capacetes.html', 'label' => __('Capacetes'), 'icon' => 'fa-shield'],
+	['url' => 'pneus.html', 'label' => __('Pneus'), 'icon' => 'fa-circle-o'],
+	['url' => 'pecas.html', 'label' => __('Peças'), 'icon' => 'fa-cog'],
+	['url' => 'acessorios.html', 'label' => __('Acessórios'), 'icon' => 'fa-wrench'],
+	['url' => 'baterias.html', 'label' => __('Baterias'), 'icon' => 'fa-battery-three-quarters'],
+	['url' => 'oleo-fluidos.html', 'label' => __('Óleo'), 'icon' => 'fa-tint'],
+	['url' => 'kit-relacao.html', 'label' => __('Kit Relação'), 'icon' => 'fa-chain'],
+	['url' => 'lampadas.html', 'label' => __('Lâmpadas'), 'icon' => 'fa-lightbulb-o']
+];
+
+$layout = $this->getLayout();
+
+$renderCmsBlock = static function (string $blockId) use ($layout): string {
+	/** @var \Magento\Cms\Block\Block|null $cmsBlock */
+	$cmsBlock = $layout->createBlock('Magento\Cms\Block\Block');
+	if (!$cmsBlock) {
+		return '';
+	}
+
+	$cmsBlock->setBlockId($blockId);
+	return trim((string)$cmsBlock->toHtml());
+};
+
+/** @var \Rokanthemes\SlideBanner\Block\Slider|null $heroSliderBlock */
+$heroSliderBlock = $layout->createBlock('Rokanthemes\SlideBanner\Block\Slider');
+$heroSliderHtml = '';
+if ($heroSliderBlock) {
+	$heroSliderHtml = trim((string)$heroSliderBlock->setslider_id('homepage5slider')->toHtml());
+}
+
+$heroFallbackHtml = $renderCmsBlock('home_hero');
+$benefitsHtml = $renderCmsBlock('block_top');
+$bannerMidHtml = $renderCmsBlock('banner_mid_home5');
+$notificationHtml = $renderCmsBlock('notification_home5');
+$bestSellersHtml = $renderCmsBlock('category1_home5');
+$popularCategoriesHtml = $renderCmsBlock('category2_home5');
+$launchesHtml = $renderCmsBlock('home_new_products');
+
+/** @var \GrupoAwamotos\B2B\Block\PromoBlock|null $b2bPromoBlock */
+$b2bPromoBlock = $layout->createBlock('GrupoAwamotos\\B2B\\Block\\PromoBlock');
+$b2bPromoHtml = '';
+if ($b2bPromoBlock) {
+	$b2bPromoHtml = trim((string)$b2bPromoBlock->toHtml());
+}
+
+/** @var \Rokanthemes\Superdeals\Block\ProductByCat|null $hotDealBlock */
+$hotDealBlock = $layout->createBlock('Rokanthemes\Superdeals\Block\ProductByCat');
+$hotDealHtml = '';
+if ($hotDealBlock) {
+	$hotDealHtml = trim((string)$hotDealBlock->setTemplate('Rokanthemes_Superdeals::category.phtml')->toHtml());
+}
+
+// ProductTab legacy é mantido via outros blocos/widgets da Home para evitar
+// conflito de tipagem em ambientes com stubs incompletos da extensão.
+$productTabHtml = '';
+?>
+
+<div class="top-home-content top-home-content--above-fold">
+	<nav class="awa-mobile-quick-nav" aria-label="<?php echo $this->escapeHtmlAttr(__('Categorias em destaque')); ?>">
+		<ul class="quick-nav-wrapper" role="list">
+			<?php foreach ($quickNavItems as $item): ?>
+				<li class="quick-nav-item">
+					<a href="<?php echo $this->escapeUrl($this->getUrl($item['url'])); ?>" class="quick-nav-link">
+						<span class="icon" aria-hidden="true">
+							<i class="fa <?php echo $this->escapeHtmlAttr($item['icon']); ?>"></i>
+						</span>
+						<span class="label"><?php echo $this->escapeHtml($item['label']); ?></span>
+					</a>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+	</nav>
+
+	<?php if ($heroSliderHtml !== ''): ?>
 		<div class="banner-slider banner-slider2">
-			<?php echo $this->getLayout()->createBlock('Rokanthemes\SlideBanner\Block\Slider')->setslider_id('homepage5slider')->toHtml(); ?>
+			<?php echo $heroSliderHtml; ?>
 		</div>
-</div>
-<div class="top-home-content">
-	<div class="container">
-		<?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('block_top')->toHtml(); ?>
-		<div class="banner_mid_1">
-			<?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('banner_mid_home5')->toHtml(); ?>
+	<?php elseif ($heroFallbackHtml !== ''): ?>
+		<div class="banner-slider banner-slider2 banner-slider2--fallback">
+			<?php echo $heroFallbackHtml; ?>
 		</div>
-		<div class="hot-deal">
-			<?php echo $block->getLayout()->createBlock('Rokanthemes\Superdeals\Block\ProductByCat')->setTemplate('Rokanthemes_Superdeals::category.phtml')->toHtml();?>
-		</div>
+	<?php endif; ?>
+
+	<div class="awa-hero-cta-strip" role="region" aria-label="<?php echo $this->escapeHtmlAttr(__('Acesso B2B')); ?>">
+		<a href="<?php echo $this->escapeUrl($this->getUrl('customer/account/login')); ?>" class="action primary awa-hero-cta-main">
+			<?php echo $this->escapeHtml(__('Entrar para ver preço (B2B)')); ?>
+		</a>
+		<p class="awa-hero-cta-helper"><?php echo $this->escapeHtml(__('Para atacado/revenda: veja preço por grupo e solicite cotação em minutos.')); ?></p>
+		<p class="awa-hero-cta-note">
+			<a href="<?php echo $this->escapeUrl($this->getUrl('b2b/register')); ?>" class="awa-hero-cta-link">
+				<?php echo $this->escapeHtml(__('Ainda não é cliente B2B? Solicitar cadastro')); ?>
+			</a>
+		</p>
 	</div>
 </div>
+
+<?php if ($benefitsHtml !== '' || $bannerMidHtml !== '' || $hotDealHtml !== ''): ?>
+<div class="top-home-content top-home-content--trust-and-offers">
+	<div class="container">
+		<?php if ($benefitsHtml !== ''): ?>
+			<?php echo $benefitsHtml; ?>
+		<?php endif; ?>
+
+		<?php if ($bannerMidHtml !== ''): ?>
+			<div class="banner_mid_1">
+				<?php echo $bannerMidHtml; ?>
+			</div>
+		<?php endif; ?>
+
+		<?php if ($hotDealHtml !== ''): ?>
+			<div class="hot-deal">
+				<?php echo $hotDealHtml; ?>
+			</div>
+		<?php endif; ?>
+	</div>
+</div>
+<?php endif; ?>
+
+<?php if ($b2bPromoHtml !== ''): ?>
+<div class="top-home-content top-home-content--b2b-promo">
+	<div class="container">
+		<?php echo $b2bPromoHtml; ?>
+	</div>
+</div>
+<?php endif; ?>
+
+<?php if ($productTabHtml !== ''): ?>
 <div class="tab_product">
 	<div class="container">
-		<?php echo $block->getLayout()->createBlock('Rokanthemes\ProductTab\Block\Producttab')->setTemplate('Rokanthemes_ProductTab::producttab.phtml')->toHtml();?>
+		<?php echo $productTabHtml; ?>
 	</div>
 </div>
+<?php endif; ?>
+
+<?php if ($notificationHtml !== ''): ?>
 <div class="block_notification">
-<div class="container">
-<marquee direction="" data-role="notification-marquee">
-<?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('notification_home5')->toHtml(); ?>
-</marquee>
-</div>
-</div>
-<div class="top-home-content">
 	<div class="container">
-		<?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('category1_home5')->toHtml(); ?>
-		<?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('category2_home5')->toHtml(); ?>
-		<div class="the_blog">
-			<?php echo $block->getLayout()->createBlock('Rokanthemes\Blog\Block\Sidebar\Recent')->setTemplate('Rokanthemes_Blog::sidebar/slider.phtml')->toHtml();?>
+		<div class="awa-ticker-wrap" aria-label="<?php echo $this->escapeHtmlAttr(__('Notificações')); ?>">
+			<div class="awa-ticker-content">
+				<?php echo $notificationHtml; ?>
+			</div>
 		</div>
 	</div>
 </div>
-<script type="text/x-magento-init">
-{
-    ".block_notification [data-role=\"notification-marquee\"]": {
-        "js/notification-marquee": {}
-    },
-    ".common-tab-system-fixed": {
-        "js/top-home-tabs": {}
-    }
-}
-</script>
+<?php endif; ?>
+
+<?php if ($bestSellersHtml !== '' || $launchesHtml !== '' || $popularCategoriesHtml !== ''): ?>
+<div class="top-home-content top-home-content--intent-grids">
+	<div class="container">
+		<?php if ($bestSellersHtml !== ''): ?>
+			<?php echo $bestSellersHtml; ?>
+		<?php endif; ?>
+
+		<?php if ($launchesHtml !== ''): ?>
+			<div class="ayo-home5-launches">
+				<header class="awa-intent-heading" aria-label="<?php echo $this->escapeHtmlAttr(__('Lançamentos')); ?>">
+					<h2><?php echo $this->escapeHtml(__('Lançamentos')); ?></h2>
+				</header>
+				<?php echo $launchesHtml; ?>
+			</div>
+		<?php endif; ?>
+
+		<?php if ($popularCategoriesHtml !== ''): ?>
+			<?php echo $popularCategoriesHtml; ?>
+		<?php endif; ?>
+	</div>
+</div>
+<?php endif; ?>

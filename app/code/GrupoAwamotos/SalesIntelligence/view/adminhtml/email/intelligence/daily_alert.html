@@ -1,0 +1,139 @@
+<!--
+/**
+ * Sales Intelligence - Daily Alert Email
+ */
+-->
+<!--@subject {{trans "Alerta Inteligencia de Vendas - %count alertas" count=$alert_count}} @-->
+<!--@vars
+{"var alert_count":"Total de Alertas","var critical_count":"Alertas Criticos","var total_impact":"Impacto Total Estimado","var report_date":"Data do Relatorio"}
+@-->
+
+{{template file="GrupoAwamotos_SalesIntelligence::email/header.html"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <h1 style="color:#1e293b; font-size:24px; margin:0 0 10px;">
+                {{trans "Alerta de Inteligencia de Vendas"}}
+            </h1>
+            <p style="color:#64748b; font-size:14px; margin:0;">
+                {{trans "Relatorio gerado em %date" date=$report_date}}
+            </p>
+        </td>
+    </tr>
+
+    <!-- Summary Cards -->
+    <tr>
+        <td style="padding:20px 0;">
+            <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                    <td style="background:#fef2f2; border-radius:8px; text-align:center; padding:15px; width:33%;">
+                        <span style="color:#991b1b; font-size:12px; text-transform:uppercase;">{{trans "Criticos"}}</span>
+                        <br/>
+                        <strong style="color:#dc2626; font-size:32px;">{{var critical_count}}</strong>
+                    </td>
+                    <td style="width:10px;">&nbsp;</td>
+                    <td style="background:#fefce8; border-radius:8px; text-align:center; padding:15px; width:33%;">
+                        <span style="color:#854d0e; font-size:12px; text-transform:uppercase;">{{trans "Atencao"}}</span>
+                        <br/>
+                        <strong style="color:#d97706; font-size:32px;">{{var warning_count}}</strong>
+                    </td>
+                    <td style="width:10px;">&nbsp;</td>
+                    <td style="background:#f0fdf4; border-radius:8px; text-align:center; padding:15px; width:33%;">
+                        <span style="color:#166534; font-size:12px; text-transform:uppercase;">{{trans "Impacto Total"}}</span>
+                        <br/>
+                        <strong style="color:#059669; font-size:20px;">R$ {{var total_impact}}</strong>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <!-- Alert Details -->
+    <tr>
+        <td>
+            <h2 style="color:#1e293b; font-size:18px; border-bottom:2px solid #e2e8f0; padding-bottom:10px;">
+                {{trans "Detalhes dos Alertas"}}
+            </h2>
+
+            {{depend alerts}}
+            {{foreach alerts as alert}}
+            <table cellspacing="0" cellpadding="12" border="0" width="100%" style="margin:10px 0; border-radius:8px; border-left:4px solid {{if alert.severity=='critical'}}#dc2626{{else}}#d97706{{/if}}; background:#f8fafc;">
+                <tr>
+                    <td>
+                        <table cellspacing="0" cellpadding="0" border="0" width="100%">
+                            <tr>
+                                <td>
+                                    <span style="display:inline-block; background:{{if alert.severity=='critical'}}#fef2f2{{else}}#fefce8{{/if}}; color:{{if alert.severity=='critical'}}#dc2626{{else}}#d97706{{/if}}; padding:2px 8px; border-radius:4px; font-size:11px; font-weight:bold; text-transform:uppercase;">
+                                        {{var alert.severity}}
+                                    </span>
+                                    <span style="display:inline-block; background:#f1f5f9; color:#475569; padding:2px 8px; border-radius:4px; font-size:11px; margin-left:5px;">
+                                        {{var alert.type}}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:8px;">
+                                    <strong style="color:#1e293b; font-size:15px;">{{var alert.title}}</strong>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top:5px;">
+                                    <span style="color:#64748b; font-size:13px;">{{var alert.description}}</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            {{/foreach}}
+            {{/depend}}
+        </td>
+    </tr>
+
+    <!-- Recommendations -->
+    {{depend recommendations}}
+    <tr>
+        <td style="padding-top:15px;">
+            <h2 style="color:#1e293b; font-size:18px; border-bottom:2px solid #e2e8f0; padding-bottom:10px;">
+                {{trans "Top Recomendacoes"}}
+            </h2>
+
+            {{foreach recommendations as rec}}
+            <table cellspacing="0" cellpadding="8" border="0" width="100%" style="margin:5px 0;">
+                <tr>
+                    <td style="width:8px; background:#2563eb; border-radius:4px;">&nbsp;</td>
+                    <td style="padding-left:12px;">
+                        <strong style="color:#1e293b; font-size:13px;">{{var rec.title}}</strong>
+                        <br/>
+                        <span style="color:#64748b; font-size:12px;">{{var rec.action}}</span>
+                    </td>
+                </tr>
+            </table>
+            {{/foreach}}
+        </td>
+    </tr>
+    {{/depend}}
+
+    <!-- CTA -->
+    <tr>
+        <td style="padding:25px 0; text-align:center;">
+            <a href="{{var dashboard_url}}"
+               style="display:inline-block; background:#2563eb; color:#ffffff; padding:12px 30px; border-radius:8px; text-decoration:none; font-weight:bold; font-size:14px;">
+                {{trans "Abrir Dashboard de Inteligencia"}}
+            </a>
+        </td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+        <td>
+            <p style="font-size:11px; color:#94a3b8; text-align:center; margin-top:15px;">
+                {{trans "Este alerta foi gerado automaticamente pelo modulo de Inteligencia de Vendas."}}
+                <br/>
+                {{trans "Para ajustar configuracoes de alerta, acesse Lojas > Configuracao > Sales Intelligence."}}
+            </p>
+        </td>
+    </tr>
+</table>
+

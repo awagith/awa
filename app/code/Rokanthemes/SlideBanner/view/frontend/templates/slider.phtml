@@ -1,72 +1,142 @@
 <?php
 /**
- * Copyright © 2015 Magento. All rights reserved.
- * See COPYING.txt for license details.
+ * AWA Motos - Slideshow Template
+ * Atualizado com acessibilidade, performance e <picture> responsivo
+ * Eliminado HTML duplicado desktop/mobile: usa <picture><source> + <img>
  */
 
 // @codingStandardsIgnoreFile
-if($banners = $block->getBannerCollection()):
-	$slider = $block->getSlider();
-	$sliderId = $block->getSliderId(); 
+if ($banners = $block->getBannerCollection()):
+    $slider = $block->getSlider();
+    $sliderId = $block->getSliderId();
+    $sliderSettings = $slider->getSliderSetting();
+    $totalSlides = is_countable($banners) ? count($banners) : 0;
 ?>
-<div class="wrapper_slider hidden-xs slider_<?php echo $sliderId; ?>">
-	<div class="owl">
-		<?php foreach($banners as $banner){	?>
-			<div class="banner_item">
-			<?php
-			$html = $block->getImageElement($banner->getSlideImage());
-			if($link = $banner->getSlideLink())
-				$html = '<a href="'. $link .'">' . $html . '</a>' ; 
-			echo $html;
-			?>
-			</div>
-		<?php } ?>
-	</div>
+
+<!-- Slider unificado com <picture> responsivo -->
+<div class="wrapper_slider slider_<?php echo $sliderId; ?>"
+     role="region"
+     aria-label="<?php echo $block->escapeHtml(__('Apresentação de slides promocional')); ?>"
+     aria-roledescription="carousel"
+     aria-live="off">
+    <div class="owl" role="list">
+        <?php
+        $slideIndex = 0;
+        foreach ($banners as $banner):
+            if ($banner->getSlideStatus() == '2') { continue; }
+            $slideIndex++;
+            $slideAlt = $banner->getSlideText() ?: ($banner->getSlideTitle() ?: __('Slide %1', $slideIndex));
+        ?>
+        <div class="banner_item" role="listitem" aria-label="<?php echo $block->escapeHtml(__('Slide %1 de %2', $slideIndex, $totalSlides)); ?>">
+            <?php
+                $isFirst = ($slideIndex === 1);
+                $desktopSrc = $banner->getSlideImage();
+                $mobileSrc = $banner->getSlideImageMobile();
+                $html = $block->getPictureElement($desktopSrc, $mobileSrc, $slideAlt, $isFirst);
+                if ($link = $banner->getSlideLink()) {
+                    $html = '<a href="' . $block->escapeUrl($link) . '" title="' . $block->escapeHtml($slideAlt) . '">' . $html . '</a>';
+                }
+                echo $html;
+            ?>
+        </div>
+        <?php endforeach; ?>
+    </div>
 </div>
-<div class="wrapper_slider visible-xs slider_<?php echo $sliderId; ?>_mobile">
-	<div class="owl">
-		<?php foreach($banners as $banner){	?>
-			<div class="banner_item">
-			<?php
-			$html = $block->getImageElement($banner->getSlideImageMobile());
-			if($link = $banner->getSlideLink())
-				$html = '<a href="'. $link .'">' . $html . '</a>' ; 
-			echo $html;
-			?>
-			</div>
-		<?php } ?>
-	</div>
-</div>
+
 <script>
-	require([
-		'jquery',
-		'mage/mage',
-		'rokanthemes/owl'
-	], function ($) {
-		'use strict';
-		jQuery(".slider_<?php echo $sliderId; ?>_mobile .owl").owlCarousel(
-			{
-				lazyLoad:true,
-				<?php foreach($slider->getSliderSetting() as $key=>$value)
-				{
-					if(in_array($key, array('autoPlay', 'navigation', 'stopOnHover', 'pagination', 'scrollPerPage'))){
-						$value == 0 ? $value = 'false': '';
-						$value == 1 ? $value = 'true': '';
-					}
-					echo $key . ':' . $value . ',';
-				} ?>}
-		);
-		jQuery(".slider_<?php echo $sliderId; ?> .owl").owlCarousel(
-			{<?php foreach($slider->getSliderSetting() as $key=>$value)
-				{
-					lazyLoad:true,
-					if(in_array($key, array('autoPlay', 'navigation', 'stopOnHover', 'pagination', 'scrollPerPage'))){
-						$value == 0 ? $value = 'false': '';
-						$value == 1 ? $value = 'true': '';
-					}
-					echo $key . ':' . $value . ',';
-				} ?>}
-		);
-	});
+    require([
+        'jquery',
+        'mage/mage',
+        'rokanthemes/owl'
+    ], function ($) {
+        'use strict';
+
+        var sliderConfig = {
+            lazyLoad: true,
+            singleItem: true,
+            <?php
+            $settings = [];
+            foreach ($sliderSettings as $key => $value) {
+                if (in_array($key, array('autoPlay', 'navigation', 'stopOnHover', 'pagination', 'scrollPerPage'))) {
+                    $value = $value == 0 ? 'false' : 'true';
+                }
+                $settings[] = $key . ': ' . $value;
+            }
+            echo implode(',', $settings);
+            ?>
+        };
+
+        // Respeitar preferências do usuário (reduce motion)
+        try {
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                if (Object.prototype.hasOwnProperty.call(sliderConfig, 'autoPlay')) {
+                    sliderConfig.autoPlay = false;
+                }
+                if (Object.prototype.hasOwnProperty.call(sliderConfig, 'autoplay')) {
+                    sliderConfig.autoplay = false;
+                }
+            }
+        } catch (e) {}
+
+        function enhanceOwlA11y($root) {
+            var $owl = $root.find('.owl');
+            if (!$owl.length || typeof $owl.owlCarousel !== 'function') {
+                return;
+            }
+
+            function applyState() {
+                var $items = $owl.find('.owl-item');
+                if (!$items.length) {
+                    return;
+                }
+
+                $items.each(function () {
+                    var $item = $(this);
+                    var isActive = $item.hasClass('active');
+                    $item.attr('aria-hidden', isActive ? 'false' : 'true');
+
+                    var $links = $item.find('a, button');
+                    if ($links.length) {
+                        $links.attr('tabindex', isActive ? '0' : '-1');
+                    }
+                });
+
+                var $prev = $root.find('.owl-prev');
+                var $next = $root.find('.owl-next');
+                $prev.attr({'aria-label': '<?php echo __('Slide anterior') ?>', 'role': 'button', 'tabindex': '0'});
+                $next.attr({'aria-label': '<?php echo __('Próximo slide') ?>', 'role': 'button', 'tabindex': '0'});
+
+                $root.find('.owl-pagination')
+                    .attr({'role': 'tablist', 'aria-label': '<?php echo __('Indicadores de slides') ?>'});
+
+                var $pages = $root.find('.owl-page');
+                $pages.each(function (index) {
+                    var $page = $(this);
+                    var isSelected = $page.hasClass('active');
+                    $page.attr({
+                        'role': 'tab',
+                        'aria-label': '<?php echo __('Ir para slide') ?> ' + (index + 1),
+                        'aria-selected': isSelected ? 'true' : 'false',
+                        'tabindex': isSelected ? '0' : '-1'
+                    });
+                });
+            }
+
+            $owl.on('initialized.owl.carousel refreshed.owl.carousel changed.owl.carousel', function () {
+                applyState();
+            });
+
+            $root.on('keydown', '.owl-prev, .owl-next, .owl-page', function (ev) {
+                if (ev.key === 'Enter' || ev.key === ' ') {
+                    ev.preventDefault();
+                    $(this).trigger('click');
+                }
+            });
+        }
+
+        var $sliderRoot = $(".slider_<?php echo $sliderId; ?>");
+        $sliderRoot.find('.owl').owlCarousel(sliderConfig);
+        enhanceOwlA11y($sliderRoot);
+    });
 </script>
 <?php endif; ?>

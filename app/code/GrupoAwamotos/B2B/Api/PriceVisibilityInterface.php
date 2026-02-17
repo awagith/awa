@@ -35,4 +35,11 @@ interface PriceVisibilityInterface
      * @return bool
      */
     public function isCustomerApproved(): bool;
+
+    /**
+     * Check if current customer is approved but pending ERP code assignment
+     *
+     * @return bool
+     */
+    public function isApprovedPendingErp(): bool;
 }

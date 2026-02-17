@@ -10,9 +10,10 @@ use GrupoAwamotos\B2B\Api\QuoteRequestRepositoryInterface;
 use GrupoAwamotos\B2B\Helper\Config;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
-class Respond extends Action
+class Respond extends Action implements HttpGetActionInterface
 {
     const ADMIN_RESOURCE = 'GrupoAwamotos_B2B::quotes';
 

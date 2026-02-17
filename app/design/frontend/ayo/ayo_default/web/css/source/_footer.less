@@ -25,6 +25,19 @@
                     color: @primarycolor;
                     font-size: 14px;
                     position: relative;
+
+        @media (max-width: 767px) {
+            .footer-bottom {
+                padding: 20px 0;
+                .copyright {
+                    line-height: 1.4;
+                    margin-bottom: 10px;
+                }
+                .payment-method {
+                    text-align: left;
+                }
+            }
+        }
                     &:hover {
                         color: @linkshover;                 
                     }
@@ -334,6 +347,65 @@
     color: @secondaryColor;
     overflow: hidden;
     background: @bkgfooter;
+
+    .rowFlexMargin {
+        margin-left: -15px;
+        margin-right: -15px;
+    }
+
+    .aw-footer-social {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 20px;
+
+        a {
+            width: 40px;
+            height: 40px;
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            border: 1px solid @bordercolor;
+            border-radius: 100%;
+            background: @bkg;
+            color: @secondaryColor;
+            line-height: 1;
+
+            svg {
+                width: 18px;
+                height: 18px;
+                display: block;
+            }
+
+            &:hover,
+            &:focus {
+                color: @linkshover;
+                border-color: @linkshover;
+                text-decoration: none;
+            }
+        }
+    }
+
+    .sr-text {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
 }
 /* style footer */
 .text_footer>div>ul>li>a {

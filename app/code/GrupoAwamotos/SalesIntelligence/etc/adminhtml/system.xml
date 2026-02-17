@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="salesintelligence" translate="label" type="text" sortOrder="500"
+                 showInDefault="1" showInWebsite="0" showInStore="0">
+            <label>Sales Intelligence</label>
+            <tab>grupoawamotos</tab>
+            <resource>GrupoAwamotos_SalesIntelligence::dashboard</resource>
+
+            <!-- General Settings -->
+            <group id="general" translate="label" type="text" sortOrder="10"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Configuracoes Gerais</label>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Modulo Habilitado</label>
+                    <comment>Ativar dashboard de Inteligencia de Vendas e cache warming</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
+            <!-- Alert Settings -->
+            <group id="alerts" translate="label" type="text" sortOrder="20"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Alertas Automaticos</label>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Alertas por Email</label>
+                    <comment>Enviar alertas automaticos quando condicoes criticas forem detectadas</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <field id="recipient_email" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Email do Destinatario</label>
+                    <comment>Deixe vazio para usar o email geral da loja</comment>
+                    <validate>validate-email</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="weekly_report" translate="label comment" type="select" sortOrder="30"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Relatorio Semanal</label>
+                    <comment>Enviar relatorio completo toda segunda-feira as 7:30</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <!-- Stockout Alerts -->
+                <field id="stockout_enabled" translate="label" type="select" sortOrder="40"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Alerta de Ruptura de Estoque</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="stockout_threshold" translate="label comment" type="text" sortOrder="50"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Limite de Dias para Ruptura</label>
+                    <comment>Alertar quando estoque for suficiente para menos de X dias</comment>
+                    <validate>validate-digits</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="stockout_enabled">1</field>
+                    </depends>
+                </field>
+
+                <!-- Revenue Alerts -->
+                <field id="revenue_enabled" translate="label" type="select" sortOrder="60"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Alerta de Queda de Receita</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="revenue_warning_pct" translate="label comment" type="text" sortOrder="70"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Limite Warning (%)</label>
+                    <comment>Alertar quando receita cair mais que este percentual (negativo, ex: -5)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="revenue_enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="revenue_critical_pct" translate="label comment" type="text" sortOrder="80"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Limite Critico (%)</label>
+                    <comment>Alerta critico quando receita cair mais que este percentual (negativo, ex: -15)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="revenue_enabled">1</field>
+                    </depends>
+                </field>
+
+                <!-- Pipeline Alerts -->
+                <field id="pipeline_enabled" translate="label" type="select" sortOrder="90"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Alerta de Pipeline</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <!-- Churn Alerts -->
+                <field id="churn_enabled" translate="label" type="select" sortOrder="100"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Alerta de Churn</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+
+                <field id="churn_threshold" translate="label comment" type="text" sortOrder="110"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Limite de Clientes em Churn</label>
+                    <comment>Alertar quando houver mais que X clientes em risco</comment>
+                    <validate>validate-digits</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="churn_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

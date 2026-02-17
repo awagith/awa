@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <!-- Expirar cotações vencidas - roda diariamente às 2h -->
+        <job name="grupoawamotos_b2b_expire_quotes"
+             instance="GrupoAwamotos\B2B\Cron\ExpireQuotes"
+             method="execute">
+            <schedule>0 2 * * *</schedule>
+        </job>
+
+        <!-- Processar listas de compras recorrentes - roda diariamente às 6h -->
+        <job name="grupoawamotos_b2b_process_recurring_lists"
+             instance="GrupoAwamotos\B2B\Cron\ProcessRecurringShoppingLists"
+             method="execute">
+            <schedule>0 6 * * *</schedule>
+        </job>
+    </group>
+</config>

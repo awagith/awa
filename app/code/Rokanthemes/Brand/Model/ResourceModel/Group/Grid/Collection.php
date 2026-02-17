@@ -57,7 +57,7 @@ class Collection extends BrandCollection implements SearchResultInterface
     	$resourceModel,
     	$model = 'Magento\Framework\View\Element\UiComponent\DataProvider\Document',
     	$connection = null,
-    	\Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null
+    	?\Magento\Framework\Model\ResourceModel\Db\AbstractDb $resource = null
     	) {
     	parent::__construct(
     		$entityFactory,
@@ -122,7 +122,7 @@ class Collection extends BrandCollection implements SearchResultInterface
      * @return $this
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function setSearchCriteria(\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria = null)
+    public function setSearchCriteria(?\Magento\Framework\Api\SearchCriteriaInterface $searchCriteria = null)
     {
     	return $this;
     }
@@ -156,7 +156,7 @@ class Collection extends BrandCollection implements SearchResultInterface
      * @return $this
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function setItems(array $items = null)
+    public function setItems(?array $items = null)
     {
     	return $this;
     }

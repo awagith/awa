@@ -1,0 +1,82 @@
+<?php
+/**
+ * Template for B2B access restriction.
+ * - Guests: shows login/register modal + replaces add-to-cart buttons
+ * - Non-approved users: shows pending message + hides add-to-cart and checkout buttons
+ */
+
+/** @var \GrupoAwamotos\B2B\Block\LoginToCart $block */
+/** @var \Magento\Framework\Escaper $escaper */
+
+$isGuest = $block->isGuest();
+$isPending = $block->isPendingApproval();
+$loginUrl = $escaper->escapeUrl($block->getLoginUrl());
+$registerUrl = $escaper->escapeUrl($block->getRegisterUrl());
+$b2bRegisterUrl = $escaper->escapeUrl($block->getB2bRegisterUrl());
+$accountUrl = $escaper->escapeUrl($block->getAccountUrl());
+$pendingMessage = $escaper->escapeHtml($block->getPendingMessage());
+
+// Mode determines body class and JS behavior
+$mode = $isGuest ? 'guest' : 'pending';
+?>
+
+<?php /* CSS em GrupoAwamotos_B2B::css/login-to-cart.css */ ?>
+
+<?php if ($isGuest): ?>
+<!-- Modal de Login para Comprar (Visitante) -->
+<div class="b2b-login-modal-overlay" id="b2b-login-modal" aria-hidden="true">
+    <div class="b2b-login-modal" role="dialog" aria-modal="true" aria-labelledby="b2b-login-title" aria-describedby="b2b-login-desc" tabindex="-1">
+        <div class="b2b-login-modal-header">
+            <button type="button" class="b2b-login-modal-close" data-b2b-login-close aria-label="Fechar">&times;</button>
+            <h3 id="b2b-login-title">Fa&ccedil;a login para comprar</h3>
+            <p id="b2b-login-desc">Crie sua conta e aproveite nossas ofertas!</p>
+        </div>
+        <div class="b2b-login-modal-body">
+            <div class="b2b-login-options">
+                <a href="<?= $registerUrl ?>" class="b2b-login-option">
+                    <span class="b2b-login-option-title">Cadastro Pessoa F&iacute;sica</span>
+                    <span class="b2b-login-option-desc">Para compras pessoais - r&aacute;pido e f&aacute;cil</span>
+                </a>
+
+                <a href="<?= $b2bRegisterUrl ?>" class="b2b-login-option b2b-primary">
+                    <span class="b2b-login-option-title">Cadastro Empresarial (B2B)</span>
+                    <span class="b2b-login-option-desc">Revendedores e empresas - descontos especiais!</span>
+                </a>
+            </div>
+
+            <div class="b2b-login-already">
+                J&aacute; tem conta? <a href="<?= $loginUrl ?>">Fazer login</a>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php if ($isPending): ?>
+<!-- Banner de Conta Pendente (Logado mas n&atilde;o aprovado) -->
+<div class="b2b-pending-banner" id="b2b-pending-banner" style="display:none;">
+    <div class="b2b-pending-banner-inner">
+        <svg class="b2b-pending-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <div class="b2b-pending-text">
+            <strong>Conta pendente de aprova&ccedil;&atilde;o</strong>
+            <span><?= $pendingMessage ?></span>
+        </div>
+        <a href="<?= $accountUrl ?>" class="b2b-pending-account-link">Minha Conta</a>
+    </div>
+</div>
+<?php endif; ?>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "GrupoAwamotos_B2B/js/login-to-cart": {
+            "mode": "<?= $escaper->escapeJs($mode) ?>",
+            "pdpButtonText": "<?= $isGuest ? 'Entrar para Comprar' : 'Aguardando Aprova\u00e7\u00e3o' ?>",
+            "listingButtonText": "<?= $isGuest ? 'Entrar para Comprar' : 'Aguardando Aprova\u00e7\u00e3o' ?>"
+        }
+    }
+}
+</script>

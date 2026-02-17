@@ -8,7 +8,7 @@
 
 ?>
 <div class="newsletter-footer">
-  	<label><?php /* @escapeNotVerified */ echo __('Newsletter') ?></label>
+  	<label for="newsletter"><?php /* @escapeNotVerified */ echo __('Receba nossas novidades') ?></label>
     <form class="form- subscribe-"
     novalidate
     action="<?php /* @escapeNotVerified */ echo $block->getFormActionUrl() ?>"
@@ -18,13 +18,13 @@
     <div class="field newsletter">
       <div class="control">
         <input name="email" type="email" id="newsletter"
-        placeholder="<?php /* @escapeNotVerified */ echo __('Seu endereço de e-mail...') ?>"
+        placeholder="<?php /* @escapeNotVerified */ echo __('Your email address...') ?>"
         data-validate="{required:true, 'validate-email':true}"/>
 
       </div>
       <div class="actions">
-        <button class="action subscribe primary" title="<?php /* @escapeNotVerified */ echo __('Inscrever-se') ?>" type="submit">
-          <?php echo __('Inscrever-se'); ?>
+        <button class="action subscribe primary" title="<?php /* @escapeNotVerified */ echo __('Subscribe !') ?>" type="submit">
+          <?php echo __('Subscribe !'); ?>
         </button>
       </div>
     </div>

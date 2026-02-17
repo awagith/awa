@@ -1,29 +1,104 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Customer Account Layout - Add B2B Links
+ * Customer Account Layout - B2B Navigation Links (Unified)
+ * Todas as funcionalidades B2B aparecem integradas na sidebar padrão do Magento.
+ * Links B2B ficam no topo da navegação para destaque profissional.
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="customer_account_navigation">
+            <!-- === SEÇÃO B2B (topo da sidebar) === -->
+            
+            <!-- Painel B2B (primeiro item, substituindo "Minha Conta") -->
+            <block class="Magento\Customer\Block\Account\SortLink"
+                   name="customer-account-navigation-b2b-dashboard-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Painel B2B</argument>
+                    <argument name="path" xsi:type="string">b2b/account/dashboard</argument>
+                    <argument name="sortOrder" xsi:type="number">10</argument>
+                </arguments>
+            </block>
+            
+            <!-- Pedido Rápido -->
+            <block class="Magento\Customer\Block\Account\SortLink"
+                   name="customer-account-navigation-b2b-quickorder-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Pedido Rápido</argument>
+                    <argument name="path" xsi:type="string">b2b/quickorder</argument>
+                    <argument name="sortOrder" xsi:type="number">20</argument>
+                </arguments>
+            </block>
+            
+            <!-- Solicitar Cotação -->
+            <block class="Magento\Customer\Block\Account\SortLink"
+                   name="customer-account-navigation-b2b-quote-request-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Solicitar Cotação</argument>
+                    <argument name="path" xsi:type="string">b2b/quote</argument>
+                    <argument name="sortOrder" xsi:type="number">30</argument>
+                </arguments>
+            </block>
+            
             <!-- Minhas Cotações -->
-            <block class="Magento\Customer\Block\Account\SortLinkInterface"
+            <block class="Magento\Customer\Block\Account\SortLink"
                    name="customer-account-navigation-b2b-quotes-link">
                 <arguments>
                     <argument name="label" xsi:type="string" translate="true">Minhas Cotações</argument>
                     <argument name="path" xsi:type="string">b2b/quote/history</argument>
-                    <argument name="sortOrder" xsi:type="number">250</argument>
+                    <argument name="sortOrder" xsi:type="number">40</argument>
                 </arguments>
             </block>
+            
             <!-- Listas de Compras -->
-            <block class="Magento\Customer\Block\Account\SortLinkInterface"
+            <block class="Magento\Customer\Block\Account\SortLink"
                    name="customer-account-navigation-b2b-shoppinglist-link">
                 <arguments>
                     <argument name="label" xsi:type="string" translate="true">Listas de Compras</argument>
                     <argument name="path" xsi:type="string">b2b/shoppinglist</argument>
-                    <argument name="sortOrder" xsi:type="number">260</argument>
+                    <argument name="sortOrder" xsi:type="number">50</argument>
+                </arguments>
+            </block>
+
+            <!-- Meu Crédito -->
+            <block class="Magento\Customer\Block\Account\SortLink"
+                   name="customer-account-navigation-b2b-credit-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Meu Crédito</argument>
+                    <argument name="path" xsi:type="string">b2b/credit</argument>
+                    <argument name="sortOrder" xsi:type="number">55</argument>
+                </arguments>
+            </block>
+
+            <!-- Aprovações de Pedidos -->
+            <block class="Magento\Customer\Block\Account\SortLink"
+                   name="customer-account-navigation-b2b-approval-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Aprovações</argument>
+                    <argument name="path" xsi:type="string">b2b/approval</argument>
+                    <argument name="sortOrder" xsi:type="number">56</argument>
+                </arguments>
+            </block>
+
+            <!-- Minha Empresa -->
+            <block class="Magento\Customer\Block\Account\SortLink"
+                   name="customer-account-navigation-b2b-company-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Minha Empresa</argument>
+                    <argument name="path" xsi:type="string">b2b/company</argument>
+                    <argument name="sortOrder" xsi:type="number">57</argument>
+                </arguments>
+            </block>
+
+            <!-- Reordenar -->
+            <block class="Magento\Customer\Block\Account\SortLink"
+                   name="customer-account-navigation-b2b-reorder-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Repetir Pedido</argument>
+                    <argument name="path" xsi:type="string">b2b/reorder/history</argument>
+                    <argument name="sortOrder" xsi:type="number">58</argument>
                 </arguments>
             </block>
         </referenceBlock>

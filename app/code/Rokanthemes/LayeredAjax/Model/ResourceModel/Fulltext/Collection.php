@@ -68,9 +68,9 @@ class Collection extends \Magento\Catalog\Model\ResourceModel\Product\Collection
 		\Magento\Framework\Search\Request\Builder $requestBuilder,
 		\Magento\Search\Model\SearchEngine $searchEngine,
 		\Magento\Framework\Search\Adapter\Mysql\TemporaryStorageFactory $temporaryStorageFactory,
-		\Magento\Framework\DB\Adapter\AdapterInterface $connection = null,
+		?\Magento\Framework\DB\Adapter\AdapterInterface $connection = null,
 		$searchRequestName = 'catalog_view_container',
-		SearchResultFactory $searchResultFactory = null
+		?SearchResultFactory $searchResultFactory = null
 	)
 	{
 		$this->queryFactory = $catalogSearchData;

@@ -1,0 +1,812 @@
+/**
+ * AWA Motos - Página de Currículo
+ * Design profissional e moderno
+ */
+
+/* ==========================================================================
+   VARIÁVEIS E RESET
+   ========================================================================== */
+:root {
+    --awa-red: #E53935;
+    --awa-red-dark: #C62828;
+    --awa-red-light: #FFEBEE;
+    --awa-success: #4CAF50;
+    --awa-success-dark: #2E7D32;
+    --awa-warning: #FF9800;
+    --awa-info: #2196F3;
+    --awa-dark: #b73337;
+    --awa-gray: #666;
+    --awa-light: #f8f9fa;
+    --awa-border: #e0e0e0;
+    --awa-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    --awa-radius: 12px;
+    --awa-transition: all 0.3s ease;
+}
+
+/* ==========================================================================
+   WRAPPER E ESTRUTURA
+   ========================================================================== */
+.curriculo-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px 20px;
+}
+
+/* Header da Página */
+.curriculo-page-header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px 30px;
+    background: linear-gradient(135deg, var(--awa-red) 0%, var(--awa-red-dark) 100%);
+    border-radius: var(--awa-radius);
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+}
+
+.curriculo-page-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.curriculo-page-header h1 {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 10px;
+    position: relative;
+}
+
+.curriculo-page-header p {
+    font-size: 16px;
+    opacity: 0.9;
+    margin: 0;
+    position: relative;
+}
+
+.curriculo-page-header .header-icon {
+    width: 70px;
+    height: 70px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 32px;
+}
+
+/* Intro Text */
+.curriculo-intro {
+    background: var(--awa-light);
+    border-left: 4px solid var(--awa-red);
+    padding: 20px 25px;
+    margin-bottom: 30px;
+    border-radius: 0 var(--awa-radius) var(--awa-radius) 0;
+}
+
+.curriculo-intro p {
+    margin: 0;
+    color: var(--awa-gray);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+/* ==========================================================================
+   BARRA DE PROGRESSO
+   ========================================================================== */
+.curriculo-progress {
+    background: #fff;
+    border: 1px solid var(--awa-border);
+    border-radius: var(--awa-radius);
+    padding: 25px 30px;
+    margin-bottom: 30px;
+    box-shadow: var(--awa-shadow);
+}
+
+.curriculo-progress .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.curriculo-progress .progress-text {
+    font-weight: 600;
+    color: var(--awa-dark);
+    font-size: 15px;
+}
+
+.curriculo-progress .progress-text #progress-percent {
+    color: var(--awa-red);
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.curriculo-progress .progress-fields {
+    color: var(--awa-gray);
+    font-size: 13px;
+    background: var(--awa-light);
+    padding: 6px 12px;
+    border-radius: 20px;
+}
+
+.curriculo-progress .progress-bar {
+    background: #e8e8e8;
+    border-radius: 10px;
+    height: 14px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.curriculo-progress .progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    background: linear-gradient(90deg, var(--awa-warning) 0%, #f57c00 100%);
+    position: relative;
+}
+
+.curriculo-progress .progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.curriculo-progress .progress-fill.low {
+    background: linear-gradient(90deg, #ef5350 0%, var(--awa-red) 100%);
+}
+
+.curriculo-progress .progress-fill.medium {
+    background: linear-gradient(90deg, var(--awa-warning) 0%, #f57c00 100%);
+}
+
+.curriculo-progress .progress-fill.high {
+    background: linear-gradient(90deg, #66bb6a 0%, #43a047 100%);
+}
+
+.curriculo-progress .progress-fill.complete {
+    background: linear-gradient(90deg, var(--awa-success) 0%, var(--awa-success-dark) 100%);
+}
+
+.curriculo-progress .progress-steps {
+    display: flex;
+    gap: 12px;
+}
+
+.curriculo-progress .step {
+    flex: 1;
+    text-align: center;
+    padding: 14px 16px;
+    background: var(--awa-light);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #888;
+    transition: var(--awa-transition);
+    position: relative;
+    border: 2px solid transparent;
+}
+
+.curriculo-progress .step::before {
+    content: attr(data-step);
+    display: inline-flex;
+    width: 24px;
+    height: 24px;
+    background: #ccc;
+    border-radius: 50%;
+    margin-right: 8px;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    transition: var(--awa-transition);
+}
+
+.curriculo-progress .step.active {
+    background: #fff3e0;
+    color: #e65100;
+    border-color: var(--awa-warning);
+}
+
+.curriculo-progress .step.active::before {
+    background: var(--awa-warning);
+}
+
+.curriculo-progress .step.in-progress {
+    background: #e3f2fd;
+    color: #1565c0;
+    border-color: var(--awa-info);
+}
+
+.curriculo-progress .step.in-progress::before {
+    background: var(--awa-info);
+    animation: pulse 1.5s infinite;
+}
+
+.curriculo-progress .step.complete {
+    background: #e8f5e9;
+    color: var(--awa-success-dark);
+    border-color: var(--awa-success);
+}
+
+.curriculo-progress .step.complete::before {
+    content: '✓';
+    background: var(--awa-success);
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+/* ==========================================================================
+   FORMULÁRIO
+   ========================================================================== */
+.form.curriculo {
+    background: #fff;
+    border-radius: var(--awa-radius);
+    box-shadow: var(--awa-shadow);
+    overflow: hidden;
+}
+
+.form.curriculo .fieldset {
+    padding: 30px;
+    margin: 0;
+    border: none;
+    border-bottom: 1px solid var(--awa-border);
+}
+
+.form.curriculo .fieldset:last-of-type {
+    border-bottom: none;
+}
+
+.form.curriculo .legend {
+    width: 100%;
+    margin-bottom: 25px;
+    padding: 0;
+    border: none;
+    font-size: 0;
+}
+
+.form.curriculo .legend span {
+    display: inline-flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--awa-dark);
+    background: linear-gradient(135deg, var(--awa-red-light) 0%, #fff 100%);
+    padding: 12px 20px;
+    border-radius: 8px;
+    border-left: 4px solid var(--awa-red);
+}
+
+.form.curriculo .legend span::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: var(--awa-red);
+    border-radius: 50%;
+    margin-right: 12px;
+}
+
+/* Grid de campos */
+.curriculo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+    .curriculo-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Campos do formulário */
+.form.curriculo .field {
+    margin-bottom: 0;
+}
+
+.form.curriculo .field.full-width {
+    grid-column: 1 / -1;
+}
+
+.form.curriculo .label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--awa-dark);
+    font-size: 14px;
+}
+
+.form.curriculo .label span {
+    display: flex;
+    align-items: center;
+}
+
+.form.curriculo .field.required .label span::after {
+    content: '*';
+    color: var(--awa-red);
+    margin-left: 4px;
+    font-weight: 700;
+}
+
+.form.curriculo .control {
+    position: relative;
+}
+
+.form.curriculo .input-text,
+.form.curriculo select,
+.form.curriculo textarea {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 15px;
+    border: 2px solid var(--awa-border);
+    border-radius: 10px;
+    background: #fff;
+    transition: var(--awa-transition);
+    color: var(--awa-dark);
+}
+
+.form.curriculo .input-text:hover,
+.form.curriculo select:hover,
+.form.curriculo textarea:hover {
+    border-color: #bbb;
+}
+
+.form.curriculo .input-text:focus,
+.form.curriculo select:focus,
+.form.curriculo textarea:focus {
+    border-color: var(--awa-red);
+    box-shadow: 0 0 0 4px rgba(229, 57, 53, 0.1);
+    outline: none;
+}
+
+.form.curriculo .input-text.mage-error,
+.form.curriculo select.mage-error,
+.form.curriculo textarea.mage-error {
+    border-color: #f44336;
+    background: #ffebee;
+}
+
+.form.curriculo textarea {
+    min-height: 140px;
+    resize: vertical;
+    line-height: 1.6;
+}
+
+.form.curriculo select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    padding-right: 40px;
+    cursor: pointer;
+}
+
+/* Notas e dicas */
+.form.curriculo .note {
+    font-size: 12px;
+    color: #888;
+    margin-top: 6px;
+    padding-left: 2px;
+}
+
+.form.curriculo .mage-error[role="alert"] {
+    font-size: 12px;
+    color: #d32f2f;
+    margin-top: 6px;
+    display: flex;
+    align-items: center;
+}
+
+.form.curriculo .mage-error[role="alert"]::before {
+    content: '⚠';
+    margin-right: 6px;
+}
+
+/* ==========================================================================
+   UPLOAD DE ARQUIVO
+   ========================================================================== */
+.form.curriculo .file-upload-area {
+    border: 2px dashed var(--awa-border);
+    border-radius: var(--awa-radius);
+    padding: 40px 30px;
+    text-align: center;
+    background: var(--awa-light);
+    transition: var(--awa-transition);
+    cursor: pointer;
+}
+
+.form.curriculo .file-upload-area:hover {
+    border-color: var(--awa-red);
+    background: var(--awa-red-light);
+}
+
+.form.curriculo .file-upload-area.dragover {
+    border-color: var(--awa-red);
+    background: var(--awa-red-light);
+    transform: scale(1.02);
+}
+
+.form.curriculo .file-upload-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+    opacity: 0.6;
+}
+
+.form.curriculo .file-upload-text {
+    font-size: 16px;
+    color: var(--awa-gray);
+    margin-bottom: 8px;
+}
+
+.form.curriculo .file-upload-hint {
+    font-size: 13px;
+    color: #999;
+}
+
+.form.curriculo input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    background: var(--awa-light);
+    border: 2px solid var(--awa-border);
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.form.curriculo input[type="file"]::-webkit-file-upload-button {
+    background: var(--awa-red);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 15px;
+    transition: var(--awa-transition);
+}
+
+.form.curriculo input[type="file"]::-webkit-file-upload-button:hover {
+    background: var(--awa-red-dark);
+}
+
+/* ==========================================================================
+   BOTÕES DE AÇÃO
+   ========================================================================== */
+.form.curriculo .actions-toolbar {
+    padding: 30px;
+    background: linear-gradient(135deg, var(--awa-light) 0%, #fff 100%);
+    border-top: 1px solid var(--awa-border);
+}
+
+.form.curriculo .actions-toolbar .primary {
+    text-align: center;
+}
+
+.form.curriculo .action.submit.primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    background: linear-gradient(135deg, var(--awa-red) 0%, var(--awa-red-dark) 100%);
+    color: #fff;
+    border: none;
+    padding: 18px 50px;
+    font-size: 17px;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--awa-transition);
+    box-shadow: 0 4px 15px rgba(229, 57, 53, 0.3);
+    min-width: 280px;
+}
+
+.form.curriculo .action.submit.primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px rgba(229, 57, 53, 0.4);
+}
+
+.form.curriculo .action.submit.primary:active {
+    transform: translateY(0);
+}
+
+.form.curriculo .action.submit.primary::before {
+    content: '📤';
+    font-size: 20px;
+}
+
+/* ==========================================================================
+   PAINEL DE SUCESSO
+   ========================================================================== */
+.curriculo-success-panel {
+    text-align: center;
+    padding: 50px 40px;
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    border-radius: var(--awa-radius);
+    margin: 20px 0;
+    box-shadow: var(--awa-shadow);
+}
+
+.curriculo-success-panel .success-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--awa-success) 0%, var(--awa-success-dark) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+    font-size: 40px;
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    animation: successBounce 0.6s ease;
+}
+
+@keyframes successBounce {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.curriculo-success-panel h2 {
+    font-size: 28px;
+    color: var(--awa-success-dark);
+    margin: 0 0 15px;
+    font-weight: 700;
+}
+
+.curriculo-success-panel p {
+    font-size: 16px;
+    color: #388e3c;
+    line-height: 1.6;
+    margin: 0 0 10px;
+}
+
+.curriculo-success-panel .tracking-code-box {
+    background: #fff;
+    border: 2px dashed var(--awa-success);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 25px auto;
+    max-width: 350px;
+}
+
+.curriculo-success-panel .tracking-code-box .label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.curriculo-success-panel .tracking-code-box .code {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--awa-success-dark);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+}
+
+.curriculo-success-actions {
+    margin-top: 30px;
+}
+
+.curriculo-success-actions .action.primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--awa-success);
+    color: #fff;
+    padding: 14px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--awa-transition);
+}
+
+.curriculo-success-actions .action.primary:hover {
+    background: var(--awa-success-dark);
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   MENSAGENS DE STATUS
+   ========================================================================== */
+.form-status {
+    margin-bottom: 20px;
+}
+
+.form-error-summary {
+    background: #ffebee;
+    border: 1px solid #ffcdd2;
+    border-left: 4px solid #f44336;
+    border-radius: 0 8px 8px 0;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.form-error-summary p {
+    margin: 0 0 10px;
+    font-weight: 600;
+    color: #c62828;
+}
+
+.form-error-summary ul {
+    margin: 0;
+    padding: 0 0 0 20px;
+}
+
+.form-error-summary li {
+    color: #d32f2f;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* ==========================================================================
+   RESPONSIVO
+   ========================================================================== */
+@media (max-width: 768px) {
+    .curriculo-wrapper {
+        padding: 20px 15px;
+    }
+    
+    .curriculo-page-header {
+        padding: 30px 20px;
+    }
+    
+    .curriculo-page-header h1 {
+        font-size: 24px;
+    }
+    
+    .curriculo-progress {
+        padding: 20px;
+    }
+    
+    .curriculo-progress .progress-steps {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .curriculo-progress .step {
+        padding: 12px;
+    }
+    
+    .form.curriculo .fieldset {
+        padding: 20px;
+    }
+    
+    .form.curriculo .legend span {
+        font-size: 16px;
+        padding: 10px 16px;
+    }
+    
+    .form.curriculo .action.submit.primary {
+        width: 100%;
+        min-width: auto;
+        padding: 16px 30px;
+    }
+    
+    .curriculo-success-panel {
+        padding: 30px 20px;
+    }
+    
+    .curriculo-success-panel h2 {
+        font-size: 22px;
+    }
+}
+
+/* ==========================================================================
+   ANIMAÇÕES
+   ========================================================================== */
+.form.curriculo .field {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+}
+
+.form.curriculo .field:nth-child(1) { animation-delay: 0.1s; }
+.form.curriculo .field:nth-child(2) { animation-delay: 0.15s; }
+.form.curriculo .field:nth-child(3) { animation-delay: 0.2s; }
+.form.curriculo .field:nth-child(4) { animation-delay: 0.25s; }
+.form.curriculo .field:nth-child(5) { animation-delay: 0.3s; }
+.form.curriculo .field:nth-child(6) { animation-delay: 0.35s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Focus visível para acessibilidade */
+.form.curriculo *:focus-visible {
+    outline: 2px solid var(--awa-red);
+    outline-offset: 2px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .curriculo-wrapper {
+        --awa-light: #2a2a2a;
+        --awa-border: #444;
+        --awa-dark: #f0f0f0;
+        --awa-gray: #aaa;
+    }
+}
+
+/* ==========================================================================
+   ESPECIALIDADES GRID (CHECKBOXES)
+   ========================================================================== */
+.curriculo-specialties-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 8px;
+}
+
+@media (max-width: 640px) {
+    .curriculo-specialties-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.specialty-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: var(--awa-light);
+    border: 1px solid var(--awa-border);
+    border-radius: 8px;
+    transition: var(--awa-transition);
+    cursor: pointer;
+}
+
+.specialty-checkbox:hover {
+    border-color: var(--awa-red);
+    background: var(--awa-red-light);
+}
+
+.specialty-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--awa-red);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.specialty-checkbox label {
+    font-size: 14px;
+    color: #333;
+    cursor: pointer;
+    margin: 0;
+    line-height: 1.3;
+}
+
+.specialty-checkbox input[type="checkbox"]:checked + label {
+    color: var(--awa-red-dark);
+    font-weight: 600;
+}

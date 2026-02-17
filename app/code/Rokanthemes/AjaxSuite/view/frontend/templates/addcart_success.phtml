@@ -21,7 +21,7 @@ $item = $block->getQuoteItem();
 		</div>
 	</div>
     <div class="ajaxsuite-buttons">
-		<button id="button_continue_shopping"><?= __('Continue Shopping'); ?></button>
-		<button type="button" data-action="ajaxsuite-navigate" data-url="<?= $block->escapeUrl($this->getUrl('checkout/cart')); ?>"><?= __('View Cart'); ?></button>
+        <button id="button_continue_shopping"><?= __('Continue Shopping'); ?></button>
+        <button onclick="window.location.href='<?php echo $this->getUrl('checkout/cart'); ?>';"><?= __('View Cart'); ?></button>
     </div>
 </div>

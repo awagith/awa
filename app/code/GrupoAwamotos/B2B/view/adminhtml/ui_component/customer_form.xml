@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Adds B2B Credit tab to customer edit form
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="b2b_credit" sortOrder="100">
+        <settings>
+            <collapsible>true</collapsible>
+            <label translate="true">Crédito B2B</label>
+        </settings>
+
+        <field name="b2b_credit_limit" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Limite de Crédito (R$)</label>
+                <dataScope>b2b_credit_limit</dataScope>
+                <validation>
+                    <rule name="validate-number" xsi:type="boolean">true</rule>
+                    <rule name="validate-zero-or-greater" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+        </field>
+
+        <field name="b2b_credit_balance" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Saldo Disponível (R$)</label>
+                <dataScope>b2b_credit_balance</dataScope>
+                <disabled>true</disabled>
+            </settings>
+        </field>
+
+        <field name="b2b_credit_used" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Crédito Utilizado (R$)</label>
+                <dataScope>b2b_credit_used</dataScope>
+                <disabled>true</disabled>
+            </settings>
+        </field>
+
+        <field name="b2b_credit_status" formElement="select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Status do Crédito</label>
+                <dataScope>b2b_credit_status</dataScope>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options>
+                            <option name="active" xsi:type="array">
+                                <item name="value" xsi:type="string">active</item>
+                                <item name="label" xsi:type="string" translate="true">Ativo</item>
+                            </option>
+                            <option name="suspended" xsi:type="array">
+                                <item name="value" xsi:type="string">suspended</item>
+                                <item name="label" xsi:type="string" translate="true">Suspenso</item>
+                            </option>
+                            <option name="blocked" xsi:type="array">
+                                <item name="value" xsi:type="string">blocked</item>
+                                <item name="label" xsi:type="string" translate="true">Bloqueado</item>
+                            </option>
+                        </options>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+    </fieldset>
+</form>

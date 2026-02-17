@@ -1,0 +1,128 @@
+<?php
+/**
+ * B2B Status Panel - Professional Header Component
+ * @var \GrupoAwamotos\B2B\Block\Header\StatusPanel $block
+ */
+?>
+
+<?php if ($block->shouldDisplay()): ?>
+<?php $data = $block->getCustomerData(); ?>
+<div class="b2b-status-panel"
+     data-mage-init='{"GrupoAwamotos_B2B/js/header-status-panel": {}}'
+     role="region"
+     aria-label="<?= $block->escapeHtmlAttr(__('Status B2B')) ?>">
+
+    <!-- Trigger Button -->
+    <button type="button"
+            class="b2b-status-trigger"
+            aria-expanded="false"
+            aria-controls="b2b-status-dropdown"
+            aria-haspopup="true">
+        <span class="status-badge" style="--badge-color: <?= $block->escapeHtmlAttr($data['group_badge']['color']) ?>">
+            <i class="fa fa-<?= $block->escapeHtmlAttr($data['group_badge']['icon']) ?>" aria-hidden="true"></i>
+        </span>
+        <span class="status-info">
+            <span class="status-greeting"><?= $block->escapeHtml(__('Olá, %1', $data['first_name'])) ?></span>
+            <span class="status-group">
+                <?= $block->escapeHtml($data['group_name']) ?>
+                <?php if ($data['discount'] > 0): ?>
+                <span class="status-discount">-<?= (int)$data['discount'] ?>%</span>
+                <?php endif; ?>
+            </span>
+        </span>
+        <i class="fa fa-chevron-down status-arrow" aria-hidden="true"></i>
+    </button>
+
+    <!-- Dropdown Panel -->
+    <div id="b2b-status-dropdown" class="b2b-status-dropdown" aria-hidden="true">
+        <div class="dropdown-inner">
+
+            <!-- User Info Section -->
+            <div class="dropdown-section user-section">
+                <div class="user-avatar" style="--avatar-color: <?= $block->escapeHtmlAttr($data['group_badge']['color']) ?>">
+                    <?= $block->escapeHtml(strtoupper(substr($data['first_name'], 0, 1))) ?>
+                </div>
+                <div class="user-details">
+                    <span class="user-name"><?= $block->escapeHtml($data['full_name']) ?></span>
+                    <?php if ($data['company']): ?>
+                    <span class="user-company">
+                        <i class="fa fa-building-o" aria-hidden="true"></i>
+                        <?= $block->escapeHtml($data['company']) ?>
+                    </span>
+                    <?php endif; ?>
+                    <span class="user-tier" style="--tier-color: <?= $block->escapeHtmlAttr($data['group_badge']['color']) ?>">
+                        <i class="fa fa-<?= $block->escapeHtmlAttr($data['group_badge']['icon']) ?>" aria-hidden="true"></i>
+                        <?= $block->escapeHtml($data['group_name']) ?>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Stats Section -->
+            <div class="dropdown-section stats-section">
+                <div class="stat-item discount-stat">
+                    <span class="stat-icon"><i class="fa fa-percent" aria-hidden="true"></i></span>
+                    <span class="stat-content">
+                        <span class="stat-value">-<?= (int)$data['discount'] ?>%</span>
+                        <span class="stat-label"><?= $block->escapeHtml(__('Desconto Exclusivo')) ?></span>
+                    </span>
+                </div>
+
+                <?php if ($data['credit_limit'] > 0): ?>
+                <div class="stat-item credit-stat">
+                    <span class="stat-icon"><i class="fa fa-credit-card" aria-hidden="true"></i></span>
+                    <span class="stat-content">
+                        <span class="stat-value"><?= /* @noEscape */ $block->formatPrice($data['credit_available']) ?></span>
+                        <span class="stat-label"><?= $block->escapeHtml(__('Crédito Disponível')) ?></span>
+                    </span>
+                    <div class="credit-bar">
+                        <?php $creditPercent = $data['credit_limit'] > 0 ? ($data['credit_available'] / $data['credit_limit']) * 100 : 0; ?>
+                        <div class="credit-bar-fill" style="width: <?= (int)$creditPercent ?>%"></div>
+                    </div>
+                </div>
+                <?php endif; ?>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="dropdown-section actions-section">
+                <span class="section-title"><?= $block->escapeHtml(__('Acesso Rápido')) ?></span>
+                <nav class="quick-actions" aria-label="<?= $block->escapeHtmlAttr(__('Ações rápidas B2B')) ?>">
+                    <?php foreach ($block->getQuickActions() as $action): ?>
+                    <a href="<?= $block->escapeUrl($action['url']) ?>" class="quick-action-link">
+                        <i class="fa fa-<?= $block->escapeHtmlAttr($action['icon']) ?>" aria-hidden="true"></i>
+                        <span><?= $block->escapeHtml($action['label']) ?></span>
+                    </a>
+                    <?php endforeach; ?>
+                </nav>
+            </div>
+
+            <!-- Footer -->
+            <div class="dropdown-footer">
+                <a href="<?= $block->escapeUrl($block->getUrl('customer/account')) ?>" class="footer-link account-link">
+                    <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                    <?= $block->escapeHtml(__('Minha Conta')) ?>
+                </a>
+                <a href="<?= $block->escapeUrl($block->getUrl('customer/account/logout')) ?>"
+                   class="footer-link logout-link"
+                   data-post='<?= $block->escapeHtmlAttr(json_encode(['action' => $block->getUrl('customer/account/logout')])) ?>'>
+                    <i class="fa fa-sign-out" aria-hidden="true"></i>
+                    <?= $block->escapeHtml(__('Sair')) ?>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php elseif ($block->shouldShowRegistrationCTA()): ?>
+<!-- B2B Registration CTA for Guests -->
+<div class="b2b-register-cta">
+    <a href="<?= $block->escapeUrl($block->getRegistrationUrl()) ?>"
+       class="b2b-register-btn"
+       title="<?= $block->escapeHtmlAttr(__('Cadastre-se como cliente B2B e tenha acesso a descontos exclusivos')) ?>">
+        <i class="fa fa-building" aria-hidden="true"></i>
+        <span class="btn-text">
+            <span class="btn-label"><?= $block->escapeHtml(__('Atacado')) ?></span>
+            <span class="btn-sublabel"><?= $block->escapeHtml(__('Cadastre-se')) ?></span>
+        </span>
+    </a>
+</div>
+<?php endif; ?>

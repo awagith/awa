@@ -9,11 +9,23 @@ define([
     return Component.extend({
         defaults: {
             localStorage: '',
-            searchText: ''
+            searchText: '',
+            searchByCat: ''
         },
 
         load: function () {
             var self = this;
+            var requestData = {
+                q: this.searchText
+            };
+            var cacheKey = {
+                q: this.searchText
+            };
+
+            if (this.searchByCat) {
+                requestData.cat = this.searchByCat;
+                cacheKey.cat = this.searchByCat;
+            }
 
             if (this.xhr) {
                 this.xhr.abort();
@@ -23,16 +35,16 @@ define([
                 method: "get",
                 dataType: "json",
                 url: this.url,
-                data: {q: this.searchText},
+                data: requestData,
                 beforeSend: function () {
                     self.spinnerShow();
-                    if (self.loadFromLocalSorage(self.searchText)) {
+                    if (self.loadFromLocalSorage(cacheKey)) {
                         self.showPopup();
                     }
                 },
                 success: $.proxy(function (response) {
                     self.parseData(response);
-                    self.saveToLocalSorage(response, self.searchText);
+                    self.saveToLocalSorage(response, cacheKey);
                     self.spinnerHide();
                     self.showPopup();
                 })

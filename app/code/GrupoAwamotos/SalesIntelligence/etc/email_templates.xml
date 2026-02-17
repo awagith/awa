@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="salesintelligence_daily_alert"
+              label="Sales Intelligence - Alerta Diario"
+              file="intelligence/daily_alert.html"
+              type="html"
+              module="GrupoAwamotos_SalesIntelligence"
+              area="adminhtml"/>
+    <template id="salesintelligence_weekly_report"
+              label="Sales Intelligence - Relatorio Semanal"
+              file="intelligence/weekly_report.html"
+              type="html"
+              module="GrupoAwamotos_SalesIntelligence"
+              area="adminhtml"/>
+</config>

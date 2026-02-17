@@ -1,0 +1,39 @@
+<?php
+/**
+ * B2B Discount Badge Template (acessível, sem CSS inline)
+ * @var \GrupoAwamotos\B2B\Block\DiscountBadge $block
+ */
+?>
+<?php if ($block->shouldDisplay()): ?>
+<?php 
+    $discount = $block->getDiscountPercentage();
+    $groupName = $block->getGroupName();
+    $firstName = $block->getCustomerFirstName();
+?>
+<div class="b2b-discount-badge-header"
+     role="button"
+     tabindex="0"
+     aria-haspopup="true"
+     aria-expanded="false"
+     aria-describedby="b2b-badge-tooltip"
+     data-mage-init='{"GrupoAwamotos_B2B/js/discount-badge":{"tooltipId":"b2b-badge-tooltip"}}'>
+    <div class="badge-inner" aria-hidden="false">
+        <span class="badge-icon" aria-hidden="true">🏢</span>
+        <span class="badge-text">
+            <strong><?= $block->escapeHtml($groupName) ?></strong>
+            <?php if ($discount > 0): ?>
+            <span class="badge-discount">-<?= (int)$discount ?>%</span>
+            <?php endif; ?>
+        </span>
+    </div>
+    <div class="badge-tooltip" id="b2b-badge-tooltip" aria-hidden="true">
+        <p class="tooltip-greeting"><?= $block->escapeHtml(__('Olá, %1!', $firstName)) ?></p>
+        <p class="tooltip-info"><?= $block->escapeHtml(__('Você tem %1%% de desconto em todos os produtos.', $discount)) ?></p>
+        <a href="<?= $block->escapeUrl($block->getUrl('b2b/account/dashboard')) ?>" 
+           class="tooltip-link action secondary"
+           aria-label="<?= $block->escapeHtmlAttr(__('Ver Painel B2B')) ?>">
+            <?= $block->escapeHtml(__('Ver Painel B2B')) ?>
+        </a>
+    </div>
+</div>
+<?php endif; ?>

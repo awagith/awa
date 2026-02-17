@@ -1,0 +1,29 @@
+/*
+ * Print stylesheet baseline for ayo_home5.
+ * Mantém comportamento seguro para impressão e garante geração de print.min.css no deploy estático.
+ */
+
+@media print {
+    .page-header,
+    .page-footer,
+    .nav-sections,
+    .minicart-wrapper,
+    .block-search,
+    .messages,
+    .newsletter,
+    .social-links {
+        display: none !important;
+    }
+
+    .page-main,
+    .columns,
+    .column.main {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    a[href]:after {
+        content: "" !important;
+    }
+}

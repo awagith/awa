@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Ayo_Curriculo::curriculo" title="Currículos" translate="title" module="Ayo_Curriculo" sortOrder="60" parent="Magento_Customer::customer" resource="Ayo_Curriculo::curriculo"/>
+        <add id="Ayo_Curriculo::submission" title="Ver Candidaturas" translate="title" module="Ayo_Curriculo" sortOrder="10" parent="Ayo_Curriculo::curriculo" action="curriculo/submission/index" resource="Ayo_Curriculo::submission"/>
+    </menu>
+</config>

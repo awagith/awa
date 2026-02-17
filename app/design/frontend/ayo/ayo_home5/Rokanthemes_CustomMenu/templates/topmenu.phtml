@@ -1,0 +1,48 @@
+<?php
+/**
+ * Copyright © 2016 TuanHatay. All rights reserved.
+ */
+
+?>
+<?php
+/**
+ * Top menu for store
+ *
+ * @see \Rokanthemes\CustomMenu\Block\Topmenu
+ */
+?>
+<?php
+    $_helper = $this->helper('Rokanthemes\CustomMenu\Helper\Data');
+    $_config = $_helper->getConfig('custommenu');
+    $columnsLimit = 0;
+    if($_config['general']['enable']) {
+?>
+<?php $_menu = $block->getCustomMenuHtml(); ?>
+
+<div class="navigation custommenu main-nav" role="navigation">
+    <ul>
+        <?php echo $_menu; ?>
+    </ul>
+</div>
+
+<script type="text/x-magento-init">
+{
+    ".navigation.custommenu.main-nav": {
+        "js/custom-menu-init": {}
+    }
+}
+</script>
+<?php
+    } else {
+?>
+<?php $_menu = $block->getHtml('level-top', 'submenu', $columnsLimit); ?>
+
+<div class="navigation custommenu main-nav" role="navigation">
+    <ul data-mage-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
+        <?php /* @escapeNotVerified */ echo $_menu; ?>
+    </ul>
+</div>
+
+<?php
+    }
+?>

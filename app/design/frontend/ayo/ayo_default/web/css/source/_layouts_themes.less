@@ -883,7 +883,7 @@ body .action_button .button, body input[type=submit], body button {
     position: fixed;
     top: 16px;
     right: 0;
-    z-index: 999999 !important;
+    z-index: 50001 !important;
     -webkit-animation-name:  fadeInDown;
     -webkit-animation-duration:  5.0s;
     -webkit-animation-timing-function:  linear;
@@ -2395,7 +2395,8 @@ body .chosen-container-single .chosen-single div b:before {
         font-size: 12px;
         font-weight: @headingfontweight;
         background-color: @linkshover;
-        line-height: 38px;
+        line-height: 44px;
+        min-height: 44px;
         width: 100%;
         color: @bkg;
         border-radius: 0;
@@ -3789,7 +3790,7 @@ button:active, .cart.table-wrapper .actions-toolbar>.action:active, .cart.table-
     top: 50%;
     left: 50%;
     background: @bkg;
-    z-index: 99999999;
+    z-index: 100000;
     -moz-transform: translateX(-50%) translateY(-50%);
 -webkit-transform: translateX(-50%) translateY(-50%);
 -o-transform: translateX(-50%) translateY(-50%);
@@ -5246,7 +5247,7 @@ body #billing-new-address-form .field {
 // filter
 .modals-wrapper{
     position: relative;
-    z-index: 99999999;
+    z-index: 100001;
 }
 .filter-content .filter-options .filter-options-item .filter-options-title:after {
     margin-right: 0;
@@ -5385,6 +5386,27 @@ body .filter-content .swatch-attribute.color .swatch-attribute-options a {
             border: 0;
         }
     }
+}
+
+.cms-index-index .cat .block_cat > .row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -webkit-box-align: stretch;
+    -ms-flex-align: stretch;
+    align-items: stretch;
+}
+
+.cms-index-index .cat .block_cat > .row > .leftBlock,
+.cms-index-index .cat .block_cat > .row > .rightBlock,
+.cms-index-index .cat .block_cat > .row > .centerBlock {
+    float: none;
+}
+
+.cms-index-index .cat .block_cat > .row > .leftBlock .vc_tta-tabs-container {
+    width: 100%;
 }
 
 .cat,.hot-deal{ 
@@ -9106,10 +9128,10 @@ button.action-primary.action-accept {
     }
 }
 #quick-background {
-    z-index: 99998;
+    z-index: 15000;
 }
 body #quick-window {
-    z-index: 99999;
+    z-index: 15001;
 }
 
 .filter-content .filter-options .filter-options-item .filter-options-title.active:after {
@@ -9265,10 +9287,16 @@ body {
             li{
                 margin-bottom: 0;
                 a{
+                    min-height: 48px;
                     padding: 10px 10px 6px 10px;
                     display: block;
                     text-align: center;
                     line-height: 1;
+                    &:focus{
+                        outline: 2px solid @linkshover;
+                        outline-offset: 2px;
+                        text-decoration: none;
+                    }
                     span{
                         display: block;
                         font-size: 18px;
@@ -9307,6 +9335,16 @@ body {
                     }
                 }
             }
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    body.has-fixed-bottom {
+        .page-wrapper {
+            padding-bottom: var(--fixed-bottom-height, 70px);
+            padding-bottom: calc(var(--fixed-bottom-height, 70px) + constant(safe-area-inset-bottom));
+            padding-bottom: calc(var(--fixed-bottom-height, 70px) + env(safe-area-inset-bottom));
         }
     }
 }

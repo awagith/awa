@@ -1,0 +1,575 @@
+<?php
+/**
+ * @var \Awa\RealTimeDashboard\Block\Adminhtml\Dashboard $block
+ */
+$data = $block->getDashboardData();
+$summary = $data['summary'];
+$ajaxUrl = $block->getAjaxUrl();
+?>
+
+<div id="awa-realtime-dashboard" data-ajax-url="<?= $block->escapeUrl($ajaxUrl) ?>">
+
+    <!-- Header -->
+    <div class="awa-dash-header">
+        <div class="awa-dash-header-left">
+            <h1>
+                <span class="awa-pulse"></span>
+                Monitor em Tempo Real
+            </h1>
+            <p class="awa-dash-subtitle">AWA Motos — Painel de Atividade ao Vivo</p>
+        </div>
+        <div class="awa-dash-header-right">
+            <span class="awa-server-time" id="awa-server-time"><?= $block->escapeHtml($data['server_time']) ?></span>
+            <button type="button" class="awa-btn-refresh" id="awa-btn-refresh" title="Atualizar agora">
+                &#8635; Atualizar
+            </button>
+            <span class="awa-auto-refresh">Auto-refresh: <strong>30s</strong></span>
+        </div>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="awa-kpi-row">
+        <div class="awa-kpi-card awa-kpi-live">
+            <div class="awa-kpi-icon">&#128065;</div>
+            <div class="awa-kpi-content">
+                <div class="awa-kpi-value" id="kpi-online-now"><?= (int) $summary['online_now'] ?></div>
+                <div class="awa-kpi-label">Online Agora</div>
+                <div class="awa-kpi-sub">últimos 15 min</div>
+            </div>
+        </div>
+        <div class="awa-kpi-card">
+            <div class="awa-kpi-icon">&#128100;</div>
+            <div class="awa-kpi-content">
+                <div class="awa-kpi-value" id="kpi-online-1h"><?= (int) $summary['online_1h'] ?></div>
+                <div class="awa-kpi-label">Visitantes 1h</div>
+                <div class="awa-kpi-sub">última hora</div>
+            </div>
+        </div>
+        <div class="awa-kpi-card">
+            <div class="awa-kpi-icon">&#128200;</div>
+            <div class="awa-kpi-content">
+                <div class="awa-kpi-value" id="kpi-online-24h"><?= (int) $summary['online_24h'] ?></div>
+                <div class="awa-kpi-label">Visitantes 24h</div>
+                <div class="awa-kpi-sub">últimas 24 horas</div>
+            </div>
+        </div>
+        <div class="awa-kpi-card">
+            <div class="awa-kpi-icon">&#128196;</div>
+            <div class="awa-kpi-content">
+                <div class="awa-kpi-value" id="kpi-events-1h"><?= (int) $summary['events_1h'] ?></div>
+                <div class="awa-kpi-label">Pageviews 1h</div>
+                <div class="awa-kpi-sub"><?= (int) $summary['events_24h'] ?> nas 24h</div>
+            </div>
+        </div>
+        <div class="awa-kpi-card awa-kpi-cart">
+            <div class="awa-kpi-icon">&#128722;</div>
+            <div class="awa-kpi-content">
+                <div class="awa-kpi-value" id="kpi-carts"><?= (int) $summary['carts_active'] ?></div>
+                <div class="awa-kpi-label">Carrinhos Ativos</div>
+                <div class="awa-kpi-sub">R$ <span id="kpi-carts-value"><?= $block->escapeHtml($summary['carts_value']) ?></span></div>
+            </div>
+        </div>
+        <div class="awa-kpi-card awa-kpi-order">
+            <div class="awa-kpi-icon">&#128176;</div>
+            <div class="awa-kpi-content">
+                <div class="awa-kpi-value" id="kpi-orders"><?= (int) $summary['orders_today'] ?></div>
+                <div class="awa-kpi-label">Pedidos Hoje</div>
+                <div class="awa-kpi-sub">R$ <span id="kpi-revenue"><?= $block->escapeHtml($summary['revenue_today']) ?></span></div>
+            </div>
+        </div>
+        <div class="awa-kpi-card">
+            <div class="awa-kpi-icon">&#128269;</div>
+            <div class="awa-kpi-content">
+                <div class="awa-kpi-value" id="kpi-searches"><?= (int) $summary['searches_today'] ?></div>
+                <div class="awa-kpi-label">Buscas Hoje</div>
+                <div class="awa-kpi-sub">total de buscas</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="awa-dash-grid">
+
+        <!-- Visitantes Recentes -->
+        <div class="awa-dash-panel awa-panel-visitors">
+            <div class="awa-panel-header">
+                <h3>&#128100; Visitantes Recentes</h3>
+            </div>
+            <div class="awa-panel-body">
+                <table class="awa-table" id="awa-visitors-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Tipo</th>
+                            <th>Identificação</th>
+                            <th>Primeiro Acesso</th>
+                            <th>Último Acesso</th>
+                            <th>Tempo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($data['visitors'] as $visitor): ?>
+                        <tr>
+                            <td><span class="awa-badge">#<?= (int) $visitor['visitor_id'] ?></span></td>
+                            <td>
+                                <?php if (!empty($visitor['email'])): ?>
+                                    <span class="awa-tag awa-tag-customer">Cliente</span>
+                                <?php else: ?>
+                                    <span class="awa-tag awa-tag-anonymous">Anônimo</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if (!empty($visitor['email'])): ?>
+                                    <strong><?= $block->escapeHtml($visitor['firstname'] . ' ' . $visitor['lastname']) ?></strong><br>
+                                    <small><?= $block->escapeHtml($visitor['email']) ?></small>
+                                <?php else: ?>
+                                    <span class="awa-muted">Visitante anônimo</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?= $block->escapeHtml($visitor['created_at']) ?></td>
+                            <td><?= $block->escapeHtml($visitor['last_visit_at']) ?></td>
+                            <td><span class="awa-time-ago"><?= $block->escapeHtml($block->timeAgo($visitor['last_visit_at'])) ?></span></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Produtos Visualizados -->
+        <div class="awa-dash-panel awa-panel-products">
+            <div class="awa-panel-header">
+                <h3>&#128230; Produtos Sendo Vistos</h3>
+            </div>
+            <div class="awa-panel-body">
+                <table class="awa-table" id="awa-products-table">
+                    <thead>
+                        <tr>
+                            <th>Produto</th>
+                            <th>ID</th>
+                            <th>Quando</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($data['viewed_products'] as $product): ?>
+                        <tr>
+                            <td>
+                                <strong><?= $block->escapeHtml($product['product_name'] ?? 'Produto #' . $product['product_id']) ?></strong>
+                            </td>
+                            <td><span class="awa-badge">#<?= (int) $product['product_id'] ?></span></td>
+                            <td><span class="awa-time-ago"><?= $block->escapeHtml($block->timeAgo($product['added_at'])) ?></span></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Carrinhos Ativos -->
+        <div class="awa-dash-panel awa-panel-carts">
+            <div class="awa-panel-header">
+                <h3>&#128722; Carrinhos Ativos</h3>
+            </div>
+            <div class="awa-panel-body">
+                <?php if (empty($data['active_carts'])): ?>
+                    <div class="awa-empty-state">Nenhum carrinho ativo no momento</div>
+                <?php else: ?>
+                    <?php foreach ($data['active_carts'] as $cart): ?>
+                    <div class="awa-cart-card">
+                        <div class="awa-cart-header">
+                            <div class="awa-cart-meta">
+                                <span class="awa-tag awa-tag-cart">Carrinho #<?= (int) $cart['entity_id'] ?></span>
+                                <?php if (!empty($cart['customer_email'])): ?>
+                                    <span class="awa-cart-customer"><?= $block->escapeHtml($cart['customer_firstname'] . ' — ' . $cart['customer_email']) ?></span>
+                                <?php else: ?>
+                                    <span class="awa-muted">Anônimo</span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="awa-cart-total">
+                                <strong><?= $block->formatPrice($cart['grand_total']) ?></strong>
+                                <small><?= (int) $cart['items_count'] ?> item(s)</small>
+                            </div>
+                        </div>
+                        <div class="awa-cart-details">
+                            <div class="awa-cart-ip">
+                                <span class="awa-label">IP:</span> <?= $block->escapeHtml($cart['remote_ip'] ?: '—') ?>
+                            </div>
+                            <div class="awa-cart-time">
+                                <span class="awa-label">Atualizado:</span>
+                                <span class="awa-time-ago"><?= $block->escapeHtml($block->timeAgo($cart['updated_at'])) ?></span>
+                            </div>
+                        </div>
+                        <?php if (!empty($cart['items'])): ?>
+                        <div class="awa-cart-items">
+                            <?php foreach ($cart['items'] as $item): ?>
+                            <div class="awa-cart-item">
+                                <span class="awa-item-name"><?= $block->escapeHtml($item['name']) ?></span>
+                                <span class="awa-item-sku"><?= $block->escapeHtml($item['sku']) ?></span>
+                                <span class="awa-item-qty">x<?= (int) $item['qty'] ?></span>
+                                <span class="awa-item-price"><?= $block->formatPrice($item['row_total']) ?></span>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Buscas Recentes -->
+        <div class="awa-dash-panel awa-panel-searches">
+            <div class="awa-panel-header">
+                <h3>&#128269; Buscas Recentes</h3>
+            </div>
+            <div class="awa-panel-body">
+                <table class="awa-table" id="awa-searches-table">
+                    <thead>
+                        <tr>
+                            <th>Termo</th>
+                            <th>Resultados</th>
+                            <th>Popularidade</th>
+                            <th>Quando</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($data['recent_searches'] as $search): ?>
+                        <tr>
+                            <td>
+                                <strong>"<?= $block->escapeHtml($search['query_text']) ?>"</strong>
+                                <?php if ((int) $search['num_results'] === 0): ?>
+                                    <span class="awa-tag awa-tag-danger">Sem resultado!</span>
+                                <?php endif; ?>
+                            </td>
+                            <td><?= (int) $search['num_results'] ?></td>
+                            <td>
+                                <div class="awa-popularity-bar">
+                                    <div class="awa-popularity-fill" style="width: <?= min((int) $search['popularity'] * 5, 100) ?>%"></div>
+                                </div>
+                                <small><?= (int) $search['popularity'] ?>x</small>
+                            </td>
+                            <td><span class="awa-time-ago"><?= $block->escapeHtml($block->timeAgo($search['updated_at'])) ?></span></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Pedidos Recentes -->
+        <div class="awa-dash-panel awa-panel-orders">
+            <div class="awa-panel-header">
+                <h3>&#128176; Pedidos Recentes</h3>
+            </div>
+            <div class="awa-panel-body">
+                <?php if (empty($data['recent_orders'])): ?>
+                    <div class="awa-empty-state">Nenhum pedido ainda</div>
+                <?php else: ?>
+                <table class="awa-table" id="awa-orders-table">
+                    <thead>
+                        <tr>
+                            <th>Pedido</th>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>IP</th>
+                            <th>Data</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($data['recent_orders'] as $order): ?>
+                        <tr>
+                            <td><span class="awa-badge">#<?= $block->escapeHtml($order['increment_id']) ?></span></td>
+                            <td>
+                                <strong><?= $block->escapeHtml(($order['customer_firstname'] ?? '') . ' ' . ($order['customer_lastname'] ?? '')) ?></strong><br>
+                                <small><?= $block->escapeHtml($order['customer_email'] ?? '') ?></small>
+                            </td>
+                            <td><strong><?= $block->formatPrice($order['grand_total']) ?></strong></td>
+                            <td>
+                                <?php
+                                    $statusClass = 'awa-tag-info';
+                                    if ($order['status'] === 'complete') $statusClass = 'awa-tag-success';
+                                    elseif ($order['status'] === 'processing') $statusClass = 'awa-tag-warning';
+                                    elseif ($order['status'] === 'canceled') $statusClass = 'awa-tag-danger';
+                                    elseif ($order['status'] === 'pending') $statusClass = 'awa-tag-pending';
+                                ?>
+                                <span class="awa-tag <?= $statusClass ?>"><?= $block->escapeHtml(ucfirst($order['status'])) ?></span>
+                            </td>
+                            <td><small><?= $block->escapeHtml($order['remote_ip'] ?? '—') ?></small></td>
+                            <td><span class="awa-time-ago"><?= $block->escapeHtml($block->timeAgo($order['created_at'])) ?></span></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- Timeline de Eventos -->
+        <div class="awa-dash-panel awa-panel-timeline">
+            <div class="awa-panel-header">
+                <h3>&#9201; Timeline de Atividade</h3>
+            </div>
+            <div class="awa-panel-body">
+                <div class="awa-timeline" id="awa-timeline">
+                    <?php foreach ($data['events_timeline'] as $event): ?>
+                    <div class="awa-timeline-item">
+                        <div class="awa-timeline-dot"></div>
+                        <div class="awa-timeline-content">
+                            <div class="awa-timeline-event">
+                                <?php
+                                $eventLabel = $event['event_name'];
+                                $eventIcon = '&#128196;';
+                                if (strpos($event['event_name'], 'view') !== false) {
+                                    $eventLabel = 'Visualizou produto';
+                                    $eventIcon = '&#128065;';
+                                } elseif (strpos($event['event_name'], 'compare') !== false) {
+                                    $eventLabel = 'Comparou produto';
+                                    $eventIcon = '&#128260;';
+                                } elseif (strpos($event['event_name'], 'wishlist') !== false) {
+                                    $eventLabel = 'Adicionou à lista de desejos';
+                                    $eventIcon = '&#10084;';
+                                }
+                                ?>
+                                <span class="awa-event-icon"><?= $eventIcon ?></span>
+                                <span class="awa-event-label"><?= $block->escapeHtml($eventLabel) ?></span>
+                                <?php if (!empty($event['product_name'])): ?>
+                                    <span class="awa-event-product"><?= $block->escapeHtml($event['product_name']) ?></span>
+                                <?php endif; ?>
+                            </div>
+                            <div class="awa-timeline-time"><?= $block->escapeHtml($block->timeAgo($event['logged_at'])) ?></div>
+                        </div>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+require(['jquery'], function($) {
+    'use strict';
+
+    var refreshInterval = 30000;
+    var ajaxUrl = $('#awa-realtime-dashboard').data('ajax-url');
+    var autoRefreshTimer;
+
+    function refreshDashboard() {
+        $('#awa-btn-refresh').addClass('awa-spinning');
+        $.ajax({
+            url: ajaxUrl,
+            type: 'GET',
+            dataType: 'json',
+            cache: false,
+            success: function(data) {
+                updateKPIs(data.summary);
+                updateVisitors(data.visitors);
+                updateProducts(data.viewed_products);
+                updateSearches(data.recent_searches);
+                updateTimeline(data.events_timeline);
+                updateCarts(data.active_carts);
+                updateOrders(data.recent_orders);
+                $('#awa-server-time').text(data.server_time);
+            },
+            error: function() {
+                console.error('AWA Dashboard: Erro ao atualizar dados');
+            },
+            complete: function() {
+                $('#awa-btn-refresh').removeClass('awa-spinning');
+            }
+        });
+    }
+
+    function updateKPIs(s) {
+        animateValue('#kpi-online-now', s.online_now);
+        animateValue('#kpi-online-1h', s.online_1h);
+        animateValue('#kpi-online-24h', s.online_24h);
+        animateValue('#kpi-events-1h', s.events_1h);
+        animateValue('#kpi-carts', s.carts_active);
+        $('#kpi-carts-value').text(s.carts_value);
+        animateValue('#kpi-orders', s.orders_today);
+        $('#kpi-revenue').text(s.revenue_today);
+        animateValue('#kpi-searches', s.searches_today);
+    }
+
+    function animateValue(selector, newVal) {
+        var el = $(selector);
+        var oldVal = parseInt(el.text()) || 0;
+        newVal = parseInt(newVal) || 0;
+        if (oldVal !== newVal) {
+            el.text(newVal).addClass('awa-value-changed');
+            setTimeout(function() { el.removeClass('awa-value-changed'); }, 1500);
+        }
+    }
+
+    function timeAgo(dateStr) {
+        var now = new Date();
+        var past = new Date(dateStr.replace(' ', 'T') + 'Z');
+        var diffMs = now - past;
+        var diffMin = Math.floor(diffMs / 60000);
+        var diffHour = Math.floor(diffMin / 60);
+        var diffDay = Math.floor(diffHour / 24);
+        if (diffDay > 0) return diffDay + 'd ' + (diffHour % 24) + 'h atrás';
+        if (diffHour > 0) return diffHour + 'h ' + (diffMin % 60) + 'min atrás';
+        if (diffMin > 0) return diffMin + 'min atrás';
+        return 'Agora mesmo';
+    }
+
+    function updateVisitors(visitors) {
+        var tbody = $('#awa-visitors-table tbody');
+        tbody.empty();
+        $.each(visitors, function(i, v) {
+            var type = v.email
+                ? '<span class="awa-tag awa-tag-customer">Cliente</span>'
+                : '<span class="awa-tag awa-tag-anonymous">Anônimo</span>';
+            var ident = v.email
+                ? '<strong>' + escH(v.firstname + ' ' + v.lastname) + '</strong><br><small>' + escH(v.email) + '</small>'
+                : '<span class="awa-muted">Visitante anônimo</span>';
+            tbody.append('<tr>' +
+                '<td><span class="awa-badge">#' + v.visitor_id + '</span></td>' +
+                '<td>' + type + '</td>' +
+                '<td>' + ident + '</td>' +
+                '<td>' + escH(v.created_at) + '</td>' +
+                '<td>' + escH(v.last_visit_at) + '</td>' +
+                '<td><span class="awa-time-ago">' + timeAgo(v.last_visit_at) + '</span></td>' +
+            '</tr>');
+        });
+    }
+
+    function updateProducts(products) {
+        var tbody = $('#awa-products-table tbody');
+        tbody.empty();
+        $.each(products, function(i, p) {
+            tbody.append('<tr>' +
+                '<td><strong>' + escH(p.product_name || 'Produto #' + p.product_id) + '</strong></td>' +
+                '<td><span class="awa-badge">#' + p.product_id + '</span></td>' +
+                '<td><span class="awa-time-ago">' + timeAgo(p.added_at) + '</span></td>' +
+            '</tr>');
+        });
+    }
+
+    function updateSearches(searches) {
+        var tbody = $('#awa-searches-table tbody');
+        tbody.empty();
+        $.each(searches, function(i, s) {
+            var noResult = parseInt(s.num_results) === 0
+                ? ' <span class="awa-tag awa-tag-danger">Sem resultado!</span>' : '';
+            var popW = Math.min(parseInt(s.popularity) * 5, 100);
+            tbody.append('<tr>' +
+                '<td><strong>"' + escH(s.query_text) + '"</strong>' + noResult + '</td>' +
+                '<td>' + s.num_results + '</td>' +
+                '<td><div class="awa-popularity-bar"><div class="awa-popularity-fill" style="width:' + popW + '%"></div></div><small>' + s.popularity + 'x</small></td>' +
+                '<td><span class="awa-time-ago">' + timeAgo(s.updated_at) + '</span></td>' +
+            '</tr>');
+        });
+    }
+
+    function updateTimeline(events) {
+        var container = $('#awa-timeline');
+        container.empty();
+        $.each(events, function(i, e) {
+            var label = e.event_name, icon = '&#128196;';
+            if (e.event_name.indexOf('view') !== -1) { label = 'Visualizou produto'; icon = '&#128065;'; }
+            else if (e.event_name.indexOf('compare') !== -1) { label = 'Comparou produto'; icon = '&#128260;'; }
+            else if (e.event_name.indexOf('wishlist') !== -1) { label = 'Adicionou à lista de desejos'; icon = '&#10084;'; }
+            var prodHtml = e.product_name ? '<span class="awa-event-product">' + escH(e.product_name) + '</span>' : '';
+            container.append(
+                '<div class="awa-timeline-item">' +
+                    '<div class="awa-timeline-dot"></div>' +
+                    '<div class="awa-timeline-content">' +
+                        '<div class="awa-timeline-event">' +
+                            '<span class="awa-event-icon">' + icon + '</span>' +
+                            '<span class="awa-event-label">' + escH(label) + '</span>' +
+                            prodHtml +
+                        '</div>' +
+                        '<div class="awa-timeline-time">' + timeAgo(e.logged_at) + '</div>' +
+                    '</div>' +
+                '</div>'
+            );
+        });
+    }
+
+    function updateCarts(carts) {
+        var container = $('.awa-panel-carts .awa-panel-body');
+        container.empty();
+        if (!carts.length) {
+            container.append('<div class="awa-empty-state">Nenhum carrinho ativo no momento</div>');
+            return;
+        }
+        $.each(carts, function(i, c) {
+            var custHtml = c.customer_email
+                ? '<span class="awa-cart-customer">' + escH(c.customer_firstname + ' — ' + c.customer_email) + '</span>'
+                : '<span class="awa-muted">Anônimo</span>';
+            var itemsHtml = '';
+            if (c.items && c.items.length) {
+                $.each(c.items, function(j, it) {
+                    itemsHtml += '<div class="awa-cart-item">' +
+                        '<span class="awa-item-name">' + escH(it.name) + '</span>' +
+                        '<span class="awa-item-sku">' + escH(it.sku) + '</span>' +
+                        '<span class="awa-item-qty">x' + parseInt(it.qty) + '</span>' +
+                        '<span class="awa-item-price">R$ ' + parseFloat(it.row_total).toFixed(2).replace('.', ',') + '</span>' +
+                    '</div>';
+                });
+                itemsHtml = '<div class="awa-cart-items">' + itemsHtml + '</div>';
+            }
+            container.append(
+                '<div class="awa-cart-card">' +
+                    '<div class="awa-cart-header">' +
+                        '<div class="awa-cart-meta">' +
+                            '<span class="awa-tag awa-tag-cart">Carrinho #' + c.entity_id + '</span>' +
+                            custHtml +
+                        '</div>' +
+                        '<div class="awa-cart-total">' +
+                            '<strong>R$ ' + parseFloat(c.grand_total).toFixed(2).replace('.', ',') + '</strong>' +
+                            '<small>' + c.items_count + ' item(s)</small>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="awa-cart-details">' +
+                        '<div class="awa-cart-ip"><span class="awa-label">IP:</span> ' + escH(c.remote_ip || '—') + '</div>' +
+                        '<div class="awa-cart-time"><span class="awa-label">Atualizado:</span> <span class="awa-time-ago">' + timeAgo(c.updated_at) + '</span></div>' +
+                    '</div>' +
+                    itemsHtml +
+                '</div>'
+            );
+        });
+    }
+
+    function updateOrders(orders) {
+        var tbody = $('#awa-orders-table tbody');
+        if (!tbody.length) return;
+        tbody.empty();
+        $.each(orders, function(i, o) {
+            var statusClass = 'awa-tag-info';
+            if (o.status === 'complete') statusClass = 'awa-tag-success';
+            else if (o.status === 'processing') statusClass = 'awa-tag-warning';
+            else if (o.status === 'canceled') statusClass = 'awa-tag-danger';
+            else if (o.status === 'pending') statusClass = 'awa-tag-pending';
+            tbody.append('<tr>' +
+                '<td><span class="awa-badge">#' + escH(o.increment_id) + '</span></td>' +
+                '<td><strong>' + escH((o.customer_firstname || '') + ' ' + (o.customer_lastname || '')) + '</strong><br><small>' + escH(o.customer_email || '') + '</small></td>' +
+                '<td><strong>R$ ' + parseFloat(o.grand_total).toFixed(2).replace('.', ',') + '</strong></td>' +
+                '<td><span class="awa-tag ' + statusClass + '">' + escH(o.status.charAt(0).toUpperCase() + o.status.slice(1)) + '</span></td>' +
+                '<td><small>' + escH(o.remote_ip || '—') + '</small></td>' +
+                '<td><span class="awa-time-ago">' + timeAgo(o.created_at) + '</span></td>' +
+            '</tr>');
+        });
+    }
+
+    function escH(str) {
+        if (!str) return '';
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+
+    // Auto-refresh
+    autoRefreshTimer = setInterval(refreshDashboard, refreshInterval);
+
+    // Manual refresh
+    $('#awa-btn-refresh').on('click', function() {
+        refreshDashboard();
+    });
+});
+</script>

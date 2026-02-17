@@ -1,0 +1,329 @@
+<?php
+/**
+ * Quote View Template
+ *
+ * @var \GrupoAwamotos\B2B\Block\Quote\View $block
+ */
+$quote = $block->getQuoteRequest();
+if (!$quote) {
+    return;
+}
+$items = $block->getItems();
+$status = $quote->getStatus();
+?>
+<div class="b2b-quote-view">
+    <div class="quote-view-header">
+        <div class="quote-view-title">
+            <h1><?= $block->escapeHtml(__('Cotação #%1', $quote->getRequestId())) ?></h1>
+            <span class="quote-status <?= $block->escapeHtmlAttr($block->getStatusClass($status)) ?>">
+                <?= $block->escapeHtml($quote->getStatusLabel()) ?>
+            </span>
+        </div>
+        <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action back">
+            <span><?= $block->escapeHtml(__('Voltar para Cotações')) ?></span>
+        </a>
+    </div>
+
+    <!-- Info da Cotação -->
+    <div class="quote-view-info">
+        <div class="info-grid">
+            <div class="info-item">
+                <span class="info-label"><?= $block->escapeHtml(__('Data da Solicitação')) ?></span>
+                <span class="info-value"><?= $block->escapeHtml($block->formatQuoteDate($quote->getCreatedAt())) ?></span>
+            </div>
+            <?php if ($quote->getExpiresAt()): ?>
+                <div class="info-item">
+                    <span class="info-label"><?= $block->escapeHtml(__('Válida até')) ?></span>
+                    <span class="info-value <?= $quote->isExpired() ? 'expired' : '' ?>">
+                        <?= $block->escapeHtml($block->formatQuoteDate($quote->getExpiresAt())) ?>
+                        <?php if ($quote->isExpired()): ?>
+                            <span class="expired-badge"><?= $block->escapeHtml(__('Expirada')) ?></span>
+                        <?php endif; ?>
+                    </span>
+                </div>
+            <?php endif; ?>
+            <?php if ($quote->getCompanyName()): ?>
+                <div class="info-item">
+                    <span class="info-label"><?= $block->escapeHtml(__('Empresa')) ?></span>
+                    <span class="info-value"><?= $block->escapeHtml($quote->getCompanyName()) ?></span>
+                </div>
+            <?php endif; ?>
+            <?php if ($quote->getCnpj()): ?>
+                <div class="info-item">
+                    <span class="info-label"><?= $block->escapeHtml(__('CNPJ')) ?></span>
+                    <span class="info-value"><?= $block->escapeHtml($quote->getCnpj()) ?></span>
+                </div>
+            <?php endif; ?>
+            <?php if ($quote->getQuotedTotal()): ?>
+                <div class="info-item highlighted">
+                    <span class="info-label"><?= $block->escapeHtml(__('Valor Cotado')) ?></span>
+                    <span class="info-value price"><?= /* @noEscape */ $block->formatPrice($quote->getQuotedTotal()) ?></span>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <!-- Mensagem do Cliente -->
+    <?php if ($quote->getMessage()): ?>
+        <div class="quote-view-section">
+            <h3><?= $block->escapeHtml(__('Sua Mensagem')) ?></h3>
+            <div class="quote-message">
+                <?= $block->escapeHtml($quote->getMessage()) ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <!-- Notas do Administrador -->
+    <?php if ($quote->getAdminNotes()): ?>
+        <div class="quote-view-section">
+            <h3><?= $block->escapeHtml(__('Resposta do Vendedor')) ?></h3>
+            <div class="quote-admin-notes">
+                <?= $block->escapeHtml($quote->getAdminNotes()) ?>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <!-- Itens da Cotação -->
+    <?php if (!empty($items)): ?>
+        <div class="quote-view-section">
+            <h3><?= $block->escapeHtml(__('Itens Solicitados')) ?></h3>
+            <div class="table-wrapper">
+                <table class="data table table-quote-items">
+                    <thead>
+                        <tr>
+                            <th class="col product"><?= $block->escapeHtml(__('Produto')) ?></th>
+                            <th class="col sku"><?= $block->escapeHtml(__('SKU')) ?></th>
+                            <th class="col qty"><?= $block->escapeHtml(__('Qtd')) ?></th>
+                            <th class="col price"><?= $block->escapeHtml(__('Preço Unit.')) ?></th>
+                            <th class="col subtotal"><?= $block->escapeHtml(__('Subtotal')) ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php $total = 0; $quotedTotal = 0; $hasQuotedPrices = false; ?>
+                        <?php foreach ($items as $item): ?>
+                            <?php
+                            $qty = (float) ($item['qty'] ?? 1);
+                            $originalPrice = (float) ($item['price'] ?? $item['original_price'] ?? 0);
+                            $quotedPrice = !empty($item['quoted_price']) ? (float) $item['quoted_price'] : null;
+                            $displayPrice = $quotedPrice ?? $originalPrice;
+                            $subtotal = $qty * $displayPrice;
+                            $total += $qty * $originalPrice;
+                            $quotedTotal += $subtotal;
+                            if ($quotedPrice !== null) { $hasQuotedPrices = true; }
+                            ?>
+                            <tr>
+                                <td class="col product" data-th="<?= $block->escapeHtmlAttr(__('Produto')) ?>">
+                                    <?= $block->escapeHtml($item['name'] ?? '-') ?>
+                                </td>
+                                <td class="col sku" data-th="<?= $block->escapeHtmlAttr(__('SKU')) ?>">
+                                    <?= $block->escapeHtml($item['sku'] ?? '-') ?>
+                                </td>
+                                <td class="col qty" data-th="<?= $block->escapeHtmlAttr(__('Qtd')) ?>">
+                                    <?= (int) $qty ?>
+                                </td>
+                                <td class="col price" data-th="<?= $block->escapeHtmlAttr(__('Preço Unit.')) ?>">
+                                    <?php if ($quotedPrice !== null && $quotedPrice !== $originalPrice): ?>
+                                        <span class="original-price">R$ <?= number_format($originalPrice, 2, ',', '.') ?></span>
+                                        <span class="quoted-price">R$ <?= number_format($quotedPrice, 2, ',', '.') ?></span>
+                                    <?php else: ?>
+                                        R$ <?= number_format($displayPrice, 2, ',', '.') ?>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="col subtotal" data-th="<?= $block->escapeHtmlAttr(__('Subtotal')) ?>">
+                                    R$ <?= number_format($subtotal, 2, ',', '.') ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="col total-label">
+                                <strong><?= $block->escapeHtml(__('Total Solicitado')) ?></strong>
+                            </td>
+                            <td class="col total-value">
+                                <strong>R$ <?= number_format($total, 2, ',', '.') ?></strong>
+                            </td>
+                        </tr>
+                        <?php if ($quote->getQuotedTotal()): ?>
+                            <tr class="quoted-total">
+                                <td colspan="4" class="col total-label">
+                                    <strong><?= $block->escapeHtml(__('Total Cotado')) ?></strong>
+                                </td>
+                                <td class="col total-value">
+                                    <strong class="price"><?= /* @noEscape */ $block->formatPrice($quote->getQuotedTotal()) ?></strong>
+                                </td>
+                            </tr>
+                        <?php endif; ?>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <!-- Ações de Aceitar/Rejeitar (quando status = quoted e não expirado) -->
+    <?php if ($block->canAcceptOrReject()): ?>
+        <div class="quote-view-section quote-decision-section">
+            <h3><?= $block->escapeHtml(__('Responder Cotação')) ?></h3>
+            <p class="decision-info"><?= $block->escapeHtml(__('Analise os valores acima e escolha uma opção:')) ?></p>
+            <div class="quote-decision-actions">
+                <form method="post" action="<?= $block->escapeUrl($block->getAcceptUrl()) ?>" class="quote-accept-form">
+                    <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                    <button type="submit" class="action primary accept-quote-btn">
+                        <span><?= $block->escapeHtml(__('Aceitar e Ir para Pagamento')) ?></span>
+                    </button>
+                </form>
+                <form method="post" action="<?= $block->escapeUrl($block->getRejectUrl()) ?>" class="quote-reject-form"
+                      onsubmit="return confirm('<?= $block->escapeJs(__('Tem certeza que deseja recusar esta cotação?')) ?>');">
+                    <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                    <button type="submit" class="action secondary reject-quote-btn">
+                        <span><?= $block->escapeHtml(__('Recusar Cotação')) ?></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <!-- Ações gerais -->
+    <div class="quote-view-actions">
+        <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action back">
+            <span><?= $block->escapeHtml(__('Voltar')) ?></span>
+        </a>
+        <a href="<?= $block->escapeUrl($block->getNewQuoteUrl()) ?>" class="action primary">
+            <span><?= $block->escapeHtml(__('Nova Cotação')) ?></span>
+        </a>
+    </div>
+</div>
+
+<style>
+    .b2b-quote-view { max-width: 900px; }
+
+    .quote-view-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .quote-view-title { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .quote-view-title h1 { margin: 0; font-size: 1.6rem; }
+
+    .quote-status {
+        display: inline-block;
+        padding: 4px 14px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+    .quote-status.status-success { background: #e8f5e9; color: #2e7d32; }
+    .quote-status.status-pending { background: #fff3e0; color: #e65100; }
+    .quote-status.status-failed { background: #ffebee; color: #c62828; }
+    .quote-status.status-complete { background: #e3f2fd; color: #1565c0; }
+
+    .quote-view-info {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 24px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+    }
+
+    .info-item .info-label {
+        display: block;
+        font-size: 12px;
+        color: #6b7280;
+        text-transform: uppercase;
+        margin-bottom: 4px;
+    }
+    .info-item .info-value { font-size: 15px; color: #1f2937; font-weight: 500; }
+    .info-item .info-value.price { font-size: 20px; color: #059669; font-weight: 700; }
+    .info-item .info-value.expired { color: #c62828; }
+    .info-item.highlighted {
+        background: #f0fdf4;
+        padding: 12px;
+        border-radius: 6px;
+        border: 1px solid #bbf7d0;
+    }
+
+    .expired-badge {
+        display: inline-block;
+        background: #fee2e2;
+        color: #b91c1c;
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 4px;
+        margin-left: 6px;
+    }
+
+    .quote-view-section {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .quote-view-section h3 { margin: 0 0 12px; font-size: 1.1rem; color: #1f2937; }
+
+    .quote-message, .quote-admin-notes {
+        background: #f9fafb;
+        padding: 14px;
+        border-radius: 6px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #374151;
+        white-space: pre-wrap;
+    }
+    .quote-admin-notes { background: #eff6ff; border-left: 3px solid #3b82f6; }
+
+    .table-quote-items { width: 100%; border-collapse: collapse; }
+    .table-quote-items th,
+    .table-quote-items td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e7eb; font-size: 14px; }
+    .table-quote-items th { background: #f9fafb; font-size: 12px; font-weight: 600; color: #6b7280; text-transform: uppercase; }
+    .table-quote-items tfoot td { border-top: 2px solid #e5e7eb; }
+    .table-quote-items .quoted-total td { background: #f0fdf4; }
+    .table-quote-items .quoted-total .price { color: #059669; font-size: 16px; }
+
+    .quote-view-actions { display: flex; gap: 12px; margin-top: 24px; }
+    .quote-view-actions .action.back {
+        padding: 10px 20px;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        color: #374151;
+        text-decoration: none;
+        font-size: 14px;
+    }
+    .quote-view-actions .action.back:hover { background: #f3f4f6; }
+
+    .original-price { text-decoration: line-through; color: #9ca3af; font-size: 12px; display: block; }
+    .quoted-price { color: #059669; font-weight: 600; }
+
+    .quote-decision-section { background: #f0fdf4; border: 2px solid #bbf7d0; }
+    .decision-info { font-size: 14px; color: #374151; margin-bottom: 16px; }
+    .quote-decision-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+    .accept-quote-btn {
+        background: #059669 !important; color: #fff !important;
+        padding: 12px 28px !important; border: none !important; border-radius: 6px !important;
+        font-size: 15px !important; font-weight: 600 !important; cursor: pointer;
+    }
+    .accept-quote-btn:hover { background: #047857 !important; }
+    .reject-quote-btn {
+        background: #fff !important; color: #b91c1c !important;
+        padding: 12px 28px !important; border: 1px solid #fca5a5 !important; border-radius: 6px !important;
+        font-size: 15px !important; font-weight: 500 !important; cursor: pointer;
+    }
+    .reject-quote-btn:hover { background: #fef2f2 !important; }
+
+    @media (max-width: 768px) {
+        .quote-view-header { flex-direction: column; }
+        .info-grid { grid-template-columns: 1fr; }
+        .table-quote-items { display: block; overflow-x: auto; }
+        .quote-decision-actions { flex-direction: column; }
+    }
+</style>

@@ -8,7 +8,16 @@
 declare(strict_types=1);
 error_reporting(E_ALL);
 
-$args = $argv; array_shift($args);
+// Garantir que $argv existe (pode não existir quando rodado via cron ou include)
+global $argv;
+if (!isset($argv) || !is_array($argv)) {
+    $argv = [];
+}
+
+$args = $argv; 
+if (count($args) > 0) {
+    array_shift($args);
+}
 $opts = [ 'batch' => 500, 'truncate' => 0 ];
 foreach ($args as $i => $arg) {
     if (strpos($arg,'--')===0) {

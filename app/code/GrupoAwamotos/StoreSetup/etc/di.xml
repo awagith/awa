@@ -7,4 +7,28 @@
             </argument>
         </arguments>
     </type>
+
+    <!-- Explicit DI for StoreConfigurator to prevent argument order issues -->
+    <type name="GrupoAwamotos\StoreSetup\Setup\StoreConfigurator">
+        <arguments>
+            <argument name="themeCollectionFactory" xsi:type="object">Magento\Theme\Model\ResourceModel\Theme\CollectionFactory</argument>
+            <argument name="sliderFactory" xsi:type="object">Rokanthemes\SlideBanner\Model\SliderFactory</argument>
+            <argument name="slideFactory" xsi:type="object">Rokanthemes\SlideBanner\Model\SlideFactory</argument>
+        </arguments>
+    </type>
+
+    <!-- Garantir handles essenciais de grids UI que estavam faltando -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <!-- Grid de blocos CMS em Conteúdo > Blocos -->
+                <item name="cms_block_listing_data_source"
+                      xsi:type="string">Magento\Cms\Model\ResourceModel\Block\Grid\Collection</item>
+
+                <!-- Grid de configuração de design em Conteúdo > Design > Configuração -->
+                <item name="design_config_listing_data_source"
+                      xsi:type="string">Magento\Theme\Model\ResourceModel\Design\Config\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
 </config>

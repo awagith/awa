@@ -102,7 +102,7 @@ define([
             if (_.isUndefined(customerData.get('cart')())) {
                 customerData.reload('cart');
             }
-            var productUrl = '#',
+            var productUrl = 'javascript:void(0)',
                 cartData = customerData.get('cart')(),
                 items = cartData.items;
 

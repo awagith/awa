@@ -128,24 +128,40 @@ define([
 		showWindow: function(itemShow)
 		{	
 			this.hide();
-			var scrollY = $(window).scrollTop();
-			var width = $('body').width();
+			this.lastActiveElement = document.activeElement;
 			$('#quick-window .wrapper_quickview_item').hide();
 			$('#quick-window').css({
-						top:  scrollY + 200 + 'px',	
-						left:  width/2 - $('#quick-window').width()/2 + 'px', 
 						display: 'block'
 			});
 			if(itemShow)
 				itemShow.show();
+			$('#quick-window').attr('aria-hidden', 'false');
 			$('#quick-background').removeClass('hidden');
+			$('body').addClass('quickview-open');
+
+			// Focus management
+			var $focusTarget = $('#quick-window').find('#quickview-close').first();
+			if ($focusTarget.length) {
+				$focusTarget.trigger('focus');
+			} else {
+				$('#quick-window').trigger('focus');
+			}
 		},
 		hideWindow: function()
 		{
 			$('#quick-window').hide();
 			$('#quick-window .wrapper_quickview_item').hide();
+			$('#quick-window').attr('aria-hidden', 'true');
 			$('#quick-background').addClass('hidden');
 			$('#quickview-content').html('');
+			$('body').removeClass('quickview-open');
+
+			// Restore focus
+			if (this.lastActiveElement && this.lastActiveElement.focus) {
+				try {
+					this.lastActiveElement.focus();
+				} catch (e) {}
+			}
 		},
 		createWindow: function()
 		{
@@ -158,9 +174,53 @@ define([
 			
 			var qWindow = document.createElement('div');
 			$(qWindow).attr('id', 'quick-window');
-			$(qWindow).html('<div id="quickview-header"><button type="button" id="quickview-close" class="quickview-close">close</button></div><div class="quick-view-content" id="quickview-content"></div>');
+			$(qWindow)
+				.attr('role', 'dialog')
+				.attr('aria-modal', 'true')
+				.attr('aria-hidden', 'true')
+				.attr('tabindex', '-1');
+			$(qWindow).html('<div id="quickview-header"><a href="#" id="quickview-close" role="button" aria-label="' + $.mage.__('Close') + '">close</a></div><div class="quick-view-content" id="quickview-content"></div>');
 			$('body').append(qWindow);
-			$('#quickview-close').on('click', this.hideWindow.bind(this));
+
+			// Close interactions
+			$('#quickview-close').on('click', function(e) {
+				e.preventDefault();
+				this.hideWindow();
+			}.bind(this));
+			$('#quick-background').on('click', this.hideWindow.bind(this));
+
+			// ESC to close + focus trap
+			$(document).on('keydown.quickview', function(e) {
+				if ($('#quick-window').is(':visible') !== true) {
+					return;
+				}
+				if (e.key === 'Escape' || e.keyCode === 27) {
+					e.preventDefault();
+					this.hideWindow();
+					return;
+				}
+				if (e.key !== 'Tab' && e.keyCode !== 9) {
+					return;
+				}
+				var $modal = $('#quick-window');
+				var $focusables = $modal
+					.find('a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"]), [contenteditable]')
+					.filter(':visible');
+				if ($focusables.length < 1) {
+					$modal.trigger('focus');
+					e.preventDefault();
+					return;
+				}
+				var first = $focusables.get(0);
+				var last = $focusables.get($focusables.length - 1);
+				if (e.shiftKey && document.activeElement === first) {
+					$(last).trigger('focus');
+					e.preventDefault();
+				} else if (!e.shiftKey && document.activeElement === last) {
+					$(first).trigger('focus');
+					e.preventDefault();
+				}
+			}.bind(this));
 		}
     });
 

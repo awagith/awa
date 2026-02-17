@@ -6,10 +6,28 @@ declare(strict_types=1);
 
 namespace GrupoAwamotos\B2B\Model;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Registry;
 
 class ShoppingListItem extends AbstractModel
 {
+    /**
+     * @var ProductRepositoryInterface
+     */
+    private $productRepository;
+
+    public function __construct(
+        Context $context,
+        Registry $registry,
+        ProductRepositoryInterface $productRepository,
+        array $data = []
+    ) {
+        $this->productRepository = $productRepository;
+        parent::__construct($context, $registry, null, null, $data);
+    }
+
     /**
      * @inheritDoc
      */
@@ -21,7 +39,7 @@ class ShoppingListItem extends AbstractModel
     /**
      * Get product
      *
-     * @return \Magento\Catalog\Model\Product|null
+     * @return \Magento\Catalog\Api\Data\ProductInterface|null
      */
     public function getProduct()
     {
@@ -29,11 +47,8 @@ class ShoppingListItem extends AbstractModel
             return null;
         }
 
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $productRepository = $objectManager->get(\Magento\Catalog\Api\ProductRepositoryInterface::class);
-        
         try {
-            return $productRepository->getById($this->getProductId());
+            return $this->productRepository->getById($this->getProductId());
         } catch (\Exception $e) {
             return null;
         }

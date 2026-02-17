@@ -1,320 +1,873 @@
-/* Security and stacking context for vertical menu */
-.verticalmenu.navigation.side-verticalmenu {
-    position: relative;
-    z-index: 100;
-    pointer-events: auto;
+/**
+ * AWA Motos - Theme LESS Extensions
+ * Customizations integrated into AYO LESS compilation system
+ * Following AYO documentation best practices
+ * @see https://ayo.nextsky.co/documentation/
+ * @date 2026-02-09
+ */
+
+/* Import theme variables/mixins so _extend.less works in both themes.less and styles-m.less */
+@import '_variables_themes.less';
+
+/* ==========================================================================
+   1. BRAND VARIABLES
+   Override AYO defaults with AWA Motos brand palette
+   ========================================================================== */
+@awa-brand-primary: #b73337;
+@awa-brand-secondary: #222;
+@awa-brand-accent: #b73337;
+@awa-text-dark: #333;
+@awa-text-light: #666;
+@awa-border-color: #e6e6e6;
+@awa-bg-light: #f8f9fa;
+@awa-footer-bg-dark: #00352f;
+@awa-success: #28a745;
+@awa-danger: #dc3545;
+
+/* ==========================================================================
+   2. PRICE DISPLAY FIX
+   Show only final price (including tax) per Brazilian standards
+   ========================================================================== */
+.price-box {
+    .price-excluding-tax,
+    .price-wrapper.price-excluding-tax {
+        display: none;
+    }
+
+    .price-label[data-label*="excl"],
+    [class*="excluding"] {
+        display: none;
+    }
+
+    .price-including-tax {
+        .price {
+            font-weight: 600;
+            color: @awa-brand-primary;
+        }
+    }
 }
 
-.category-dropdown {
-    z-index: 50;
+/* JS-applied class for price fix */
+body.awa-price-fixed {
+    .price-excluding-tax {
+        display: none;
+    }
 }
 
-/* ============================================
-   REFINAMENTOS DE BUSCA - UX MODERNO
-   ============================================ */
+/* JS-applied class for hidden duplicate text */
+.awa-hidden-duplicate {
+    display: none;
+}
 
-/* 1. Estrutura e dimensões base */
-.block-search {
-    .block-content {
-        min-height: 44px;
-        transition: box-shadow 0.3s ease;
-        
-        /* Border-radius moderno */
-        border-radius: 8px;
-        overflow: visible;
-        
-        /* Campo de busca */
-        input[type="text"] {
-            min-width: 300px;
-            height: 44px;
-            line-height: 44px;
-            padding: 10px 130px 10px 175px;
-            font-size: 14px;
-            font-style: normal;
-            color: #333;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            
-            /* Placeholder suave */
-            &::placeholder {
-                color: #999;
-                font-style: italic;
-                opacity: 1;
+/* ==========================================================================
+   3. PRODUCT CARD IMPROVEMENTS
+   Better hover states and layout consistency
+   ========================================================================== */
+.product-item {
+    .transitions();
+
+    .product-item-info {
+        position: relative;
+        overflow: hidden;
+
+        &:hover {
+            .product-item-photo img {
+                .transform(scale(1.05));
             }
-            
-            /* Estado de focus melhorado */
-            &:focus {
-                outline: none;
-                box-shadow: 0 0 0 3px rgba(255, 98, 0, 0.2); /* Fallback para cor primária */
-                border-color: #ff6200;
+
+            .product-item-details {
+                .tocart {
+                    opacity: 1;
+                    visibility: visible;
+                    .transform(translateY(0));
+                }
             }
         }
-        
-        /* Botão de busca refinado */
-        button.action.search {
-            height: 44px;
-            line-height: 44px;
-            min-width: 110px;
-            padding: 0 20px;
-            border-radius: 0 8px 8px 0;
-            background: #ff6200; /* Cor primária padrão */
-            transition: all 0.3s ease;
-            cursor: pointer;
+    }
+
+    .product-item-photo {
+        overflow: hidden;
+
+        img {
+            .transitions(transform 0.4s ease);
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    .product-item-details {
+        padding: 10px 0;
+
+        .product-item-name {
+            a {
+                color: @awa-text-dark;
+                .transitions();
+
+                &:hover {
+                    color: @awa-brand-primary;
+                    text-decoration: none;
+                }
+            }
+        }
+
+        .tocart {
+            .transitions();
+        }
+    }
+}
+
+/* ==========================================================================
+   4. HEADER IMPROVEMENTS
+   Better sticky header, top bar, and search layout
+   ========================================================================== */
+.top-header {
+    background: @bkgheader;
+    color: @lightcolor;
+    font-size: 13px;
+
+    a {
+        color: @lightcolor;
+        .transitions();
+
+        &:hover {
+            color: @awa-brand-accent;
+            text-decoration: none;
+        }
+    }
+
+    .top-bar-left,
+    .top-bar-right {
+        line-height: 40px;
+    }
+}
+
+/* Sticky header - per AYO documentation: Rokanthemes > Theme settings */
+.header-wrapper-sticky.enabled-header-sticky {
+    &.is-sticky {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
+        background: @bkg;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        .transitions(all 0.3s ease);
+    }
+
+    .logo-sticky {
+        img {
+            max-height: 40px;
+            width: auto;
+        }
+    }
+}
+
+/* ==========================================================================
+   5. FOOTER IMPROVEMENTS
+   Per AYO docs: footer_info, social_block, footer_menu blocks
+   ========================================================================== */
+.page_footer {
+    .border-top-container {
+        border-top: 1px solid @awa-border-color;
+    }
+
+    .velaFooterMenu {
+        .velaFooterTitle {
+            font-weight: @headingfontweight;
+            color: @headingcolor;
+            font-family: @titlefont;
+            margin-bottom: 15px;
+            position: relative;
+            cursor: default;
+        }
+
+        .velaFooterLinks {
+            li {
+                margin-bottom: 8px;
+
+                a {
+                    color: @footer-color;
+                    .transitions();
+
+                    &:hover {
+                        color: @awa-brand-primary;
+                        padding-left: 5px;
+                    }
+                }
+            }
+        }
+    }
+
+    .vela-contactinfo {
+        .contacinfo-phone,
+        .contacinfo-email,
+        .contacinfo-address {
+            margin-bottom: 10px;
+            color: @footer-color;
+
+            label {
+                font-weight: @headingfontweight;
+                color: @headingcolor;
+                margin-right: 5px;
+            }
+        }
+    }
+}
+
+/* Footer bottom */
+.footer-bottom {
+    background: @awa-footer-bg-dark;
+    color: @lightcolor;
+    padding: 15px 0;
+
+    a {
+        color: rgba(255, 255, 255, 0.7);
+        .transitions();
+
+        &:hover {
+            color: @lightcolor;
+        }
+    }
+
+    .payment-method {
+        text-align: right;
+
+        img {
+            max-height: 30px;
+            margin-left: 5px;
+        }
+    }
+}
+
+/* Back to top button */
+#back-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background: @awa-brand-primary;
+    color: @lightcolor;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 100;
+    .transitions();
+
+    &:hover {
+        background: darken(@awa-brand-primary, 10%);
+        .transform(translateY(-3px));
+    }
+
+    i {
+        font-size: 18px;
+    }
+}
+
+/* ==========================================================================
+   6. MOBILE NAVIGATION FIXES
+   Per AYO docs: accordion footer on mobile, toggle nav
+   ========================================================================== */
+@media (max-width: 767px) {
+    /* Mobile accordion footer titles */
+    .velaFooterMenu .velaFooterTitle {
+        cursor: pointer;
+        position: relative;
+        padding-right: 20px;
+
+        &::after {
+            content: '\f107'; /* fa-angle-down */
+            font-family: 'FontAwesome';
+            position: absolute;
+            right: 0;
+            top: 50%;
+            .transform(translateY(-50%));
+            .transitions();
+        }
+
+        &.active::after {
+            .transform(translateY(-50%) rotate(180deg));
+        }
+    }
+
+    /* Mobile header cleanup */
+    .top-header {
+        .top-bar-left {
+            display: none;
+        }
+
+        .top-bar-right {
+            text-align: center;
+        }
+    }
+
+    /* Mobile menu toggle */
+    .action.nav-toggle {
+        display: block;
+        position: relative;
+        z-index: 14;
+    }
+
+    /* Mobile bottom navigation bar */
+    .fixed-bottom {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: @bkg;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 100;
+        padding: 5px 0;
+
+        .mobile-bottom-link {
             display: flex;
+            justify-content: space-around;
+            margin: 0;
+            padding: 0;
+
+            li {
+                flex: 1;
+                text-align: center;
+
+                a {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    color: @awa-text-light;
+                    font-size: 11px;
+                    text-decoration: none;
+                    padding: 5px;
+
+                    .icon {
+                        font-size: 20px;
+                        margin-bottom: 3px;
+                    }
+
+                    &:hover,
+                    &.active {
+                        color: @awa-brand-primary;
+                    }
+                }
+            }
+        }
+    }
+
+    /* Add padding to body so content doesn't hide behind fixed bottom nav */
+    body {
+        padding-bottom: 60px;
+    }
+
+    /* Product grid: 2 columns on mobile */
+    .products-grid .product-items {
+        display: flex;
+        flex-wrap: wrap;
+
+        .product-item {
+            width: 50%;
+            padding: 0 5px;
+        }
+    }
+}
+
+/* ==========================================================================
+   7. MOBILE MENU OVERLAY
+   Fix nav-sections visibility per AYO toggle-nav pattern
+   ========================================================================== */
+@media (max-width: 767px) {
+    .nav-sections {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 80%;
+        max-width: 320px;
+        height: 100%;
+        background: @bkg;
+        z-index: 200;
+        overflow-y: auto;
+        .transitions(left 0.3s ease);
+
+        &.active,
+        body.nav-open & {
+            left: 0;
+        }
+
+        .nav-sections-items {
+            display: block;
+        }
+
+        .nav-sections-item-content {
+            display: block;
+            padding: 10px;
+        }
+
+        a {
+            color: @menucolor;
+            display: block;
+            padding: 10px 15px;
+            border-bottom: 1px solid @awa-border-color;
+        }
+    }
+
+    /* Dark overlay when menu is open */
+    .shadow_bkg_show {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 199;
+
+        body.nav-open & {
+            display: block;
+        }
+    }
+}
+
+/* ==========================================================================
+   8. ACCESSIBILITY IMPROVEMENTS
+   Focus states, contrast, and screen reader support
+   ========================================================================== */
+/* Focus indicators for keyboard navigation */
+a:focus,
+button:focus,
+input:focus,
+select:focus,
+textarea:focus,
+[tabindex]:focus {
+    outline: 2px solid @awa-brand-primary;
+    outline-offset: 2px;
+}
+
+/* Skip to content link */
+.skip-to-content {
+    position: absolute;
+    top: -100%;
+    left: 0;
+    background: @awa-brand-primary;
+    color: @lightcolor;
+    padding: 10px 20px;
+    z-index: 10000;
+    .transitions();
+
+    &:focus {
+        top: 0;
+    }
+}
+
+/* Ensure minimum touch target size (44x44px per WCAG 2.5.8) */
+.products-grid,
+.products-list,
+.product-info-main {
+    .btn-add-to-cart,
+    .action.tocart {
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .actions-secondary {
+        .towishlist,
+        .tocompare,
+        .quickview-link {
+            min-width: 44px;
+            min-height: 44px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            
-            /* Ícone SVG */
-            .search-icon {
-                width: 18px;
-                height: 18px;
-                flex-shrink: 0;
-                transition: transform 0.3s ease;
-            }
-            
-            /* Texto do botão */
-            .search-text {
-                font-size: 14px;
-                font-weight: 500;
-                white-space: nowrap;
-            }
-            
-            /* Hover state */
-            &:hover {
-                background: #ff6200;
-                filter: brightness(0.9);
-                
-                .search-icon {
-                    transform: scale(1.1);
-                }
-            }
-            
-            /* Active/pressed state */
-            &:active {
-                transform: translateY(1px);
-            }
         }
     }
 }
 
-/* 2. Autocomplete dropdown melhorado */
-.searchsuite-autocomplete {
-    z-index: 9999999;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-radius: 0 0 8px 8px;
-    margin-top: 2px;
-    
-    /* Animação de entrada */
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.25s ease, transform 0.25s ease;
-    pointer-events: none;
-    
-    &.active {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: all;
-    }
-    
-    /* Suavizar scrollbar */
-    ::-webkit-scrollbar {
-        width: 6px;
-    }
-    
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1;
-    }
-    
-    ::-webkit-scrollbar-thumb {
-        background: #ccc;
-        border-radius: 3px;
-        
-        &:hover {
-            background: #999;
-        }
+@media (max-width: 767px) {
+    .action,
+    .tocart,
+    .towishlist,
+    .tocompare,
+    nav a {
+        min-height: 44px;
+        min-width: 44px;
     }
 }
 
-/* 3. Estado de loading aprimorado */
-.search-content.loading {
-    button.action.search {
-        pointer-events: none;
-        opacity: 0.7;
-        position: relative;
-        
-        /* Spinner animado */
-        &:before {
-            content: "";
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            margin-top: -10px;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 0.6s linear infinite;
-        }
-        
-        /* Ocultar ícone durante loading */
-        .search-icon {
-            opacity: 0;
-        }
-    }
-    
-    /* Desabilitar input durante loading */
-    input[type="text"] {
-        pointer-events: none;
-        opacity: 0.6;
-    }
+/* Screen reader text helper */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
 }
 
-/* Animação de spinner */
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+/* ==========================================================================
+   9. NEWSLETTER POPUP IMPROVEMENTS
+   Per AYO docs: Rokanthemes > Theme settings > Newsletter
+   ========================================================================== */
+.newsletterpopup {
+    .newsletter-inner {
+        padding: 30px;
 
-/* 4. Responsividade - Mobile First */
-@media only screen and (max-width: 767px) {
-    .block-search {
-        width: 100%;
-        margin: 15px 0;
-        
-        .block-content {
-            border-radius: 6px;
-            
-            input[type="text"] {
-                min-width: auto;
+        h4 {
+            font-family: @titlefont;
+            font-weight: @headingfontweight;
+            color: @headingcolor;
+            margin-bottom: 15px;
+        }
+
+        .newsletter-form {
+            margin-top: 20px;
+
+            input[type="email"] {
+                border: 1px solid @awa-border-color;
+                padding: 10px 15px;
+                border-radius: 3px;
                 width: 100%;
-                padding: 10px 90px 10px 15px;
-                font-size: 14px;
-            }
-            
-            button.action.search {
-                min-width: 80px;
-                padding: 0 12px;
-                
-                /* Ocultar texto no mobile, manter só ícone */
-                .search-text {
-                    display: none;
-                }
-                
-                .search-icon {
-                    width: 20px;
-                    height: 20px;
-                }
-            }
-        }
-    }
-    
-    /* Dropdown ocupa largura total no mobile */
-    .searchsuite-autocomplete {
-        left: 15px !important;
-        right: 15px !important;
-        width: auto !important;
-        border-radius: 0 0 6px 6px;
-    }
-}
+                .transitions();
 
-/* 5. Responsividade - Tablet */
-@media only screen and (min-width: 768px) and (max-width: 1024px) {
-    .block-search {
-        width: 70%;
-        margin-right: 30px;
-        
-        .block-content {
-            input[type="text"] {
-                min-width: 250px;
-                padding: 10px 110px 10px 150px;
-            }
-            
-            button.action.search {
-                min-width: 100px;
-            }
-        }
-    }
-}
-
-/* 6. Desktop - layout otimizado */
-@media only screen and (min-width: 1025px) {
-    .block-search {
-        .block-content {
-            input[type="text"] {
-                min-width: 350px;
-            }
-            
-            /* Hover sutil no container */
-            &:hover {
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            }
-        }
-    }
-}
-
-/* 7. Melhorias de acessibilidade */
-.block-search {
-    /* Foco visível no form */
-    &:focus-within {
-        .block-content {
-            box-shadow: 0 0 0 2px rgba(255, 98, 0, 0.15);
-        }
-    }
-    
-    /* Skip to content para leitores de tela */
-    .label {
-        position: absolute;
-        clip: rect(1px, 1px, 1px, 1px);
-        padding: 0;
-        border: 0;
-        height: 1px;
-        width: 1px;
-        overflow: hidden;
-        
-        /* Tornar visível ao receber foco (teclado) */
-        &:focus {
-            clip: auto;
-            height: auto;
-            width: auto;
-            position: static;
-            background: #ff6200;
-            color: #fff;
-            padding: 5px 10px;
-            z-index: 10000;
-        }
-    }
-}
-
-/* 8. Estados adicionais */
-.block-search {
-    .block-content {
-        /* Estado de erro (se necessário) */
-        &.has-error {
-            input[type="text"] {
-                border-color: #e02b27;
-                
                 &:focus {
-                    box-shadow: 0 0 0 3px rgba(224, 43, 39, 0.2);
+                    border-color: @awa-brand-primary;
                 }
             }
-        }
-        
-        /* Estado de sucesso/validado */
-        &.is-valid {
-            input[type="text"] {
-                border-color: #28a745;
+
+            button {
+                background: @awa-brand-primary;
+                color: @lightcolor;
+                border: none;
+                padding: 10px 25px;
+                border-radius: 3px;
+                cursor: pointer;
+                .transitions();
+
+                &:hover {
+                    background: darken(@awa-brand-primary, 10%);
+                }
             }
         }
     }
 }
 
-/* 9. Performance - reduzir animações em preferências do sistema */
-@media (prefers-reduced-motion: reduce) {
-    .block-search .block-content input[type="text"],
-    .block-search .block-content button.action.search,
-    .searchsuite-autocomplete {
-        transition: none;
-        animation: none;
+/* ==========================================================================
+   10. DEAL / COUNTDOWN SECTION
+   Per AYO docs: Price count down products
+   ========================================================================== */
+.deal-section,
+.countdown-products {
+    .countdown_block {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 15px 0;
+
+        .countdown-item {
+            text-align: center;
+            min-width: 60px;
+            padding: 10px;
+            background: @awa-bg-light;
+            border-radius: 4px;
+
+            .number {
+                font-size: 24px;
+                font-weight: 700;
+                color: @awa-brand-primary;
+                display: block;
+            }
+
+            .label {
+                font-size: 11px;
+                color: @awa-text-light;
+                text-transform: uppercase;
+            }
+        }
+    }
+}
+
+/* ==========================================================================
+   11. TESTIMONIALS MODULE STYLING
+   Per AYO docs: Rokanthemes > Testimonials
+   ========================================================================== */
+.testimonial-item {
+    text-align: center;
+    padding: 20px;
+
+    .testimonial-content {
+        font-style: italic;
+        color: @awa-text-light;
+        margin-bottom: 15px;
+        position: relative;
+
+        &::before {
+            content: '\f10d'; /* fa-quote-left */
+            font-family: 'FontAwesome';
+            font-size: 24px;
+            color: @awa-brand-primary;
+            opacity: 0.3;
+            display: block;
+            margin-bottom: 10px;
+        }
+    }
+
+    .testimonial-name {
+        font-weight: @headingfontweight;
+        color: @headingcolor;
+    }
+
+    .testimonial-position {
+        font-size: 13px;
+        color: @awa-text-light;
+    }
+}
+
+/* ==========================================================================
+   12. BLOG MODULE STYLING
+   Per AYO docs: Rokanthemes > Blog
+   ========================================================================== */
+.blog-post-item {
+    margin-bottom: 30px;
+
+    .post-image {
+        overflow: hidden;
+        border-radius: 4px;
+
+        img {
+            .transitions(transform 0.4s ease);
+            width: 100%;
+            height: auto;
+        }
+
+        &:hover img {
+            .transform(scale(1.05));
+        }
+    }
+
+    .post-info {
+        padding: 15px 0;
+
+        .post-title {
+            font-family: @titlefont;
+            font-weight: @headingfontweight;
+
+            a {
+                color: @headingcolor;
+                .transitions();
+
+                &:hover {
+                    color: @awa-brand-primary;
+                }
+            }
+        }
+
+        .post-date {
+            font-size: 13px;
+            color: @awa-text-light;
+            margin-bottom: 10px;
+        }
+
+        .post-excerpt {
+            color: @awa-text-light;
+            line-height: 1.6;
+        }
+    }
+}
+
+/* ==========================================================================
+   13. CAROUSEL ALIGNMENT FIXES
+   Normalize slider/item alignment across breakpoints
+   ========================================================================== */
+.wrapper_slider {
+    width: 100%;
+    overflow: hidden;
+
+    .owl,
+    .owl-wrapper-outer,
+    .owl-wrapper,
+    .owl-item,
+    .banner_item,
+    picture,
+    img {
+        width: 100%;
+    }
+
+    .owl-item {
+        display: flex;
+        align-items: stretch;
+    }
+
+    .banner_item {
+        display: block;
+        margin: 0;
+    }
+
+    a,
+    picture {
+        display: block;
+    }
+
+    img {
+        height: auto;
+        vertical-align: middle;
+    }
+
+    .banner_item_bg {
+        margin-top: 0;
+    }
+}
+
+.owl-carousel {
+    .owl-item {
+        .item-product,
+        .wp-item,
+        .item {
+            height: 100%;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .wrapper_slider {
+        .owl-theme .owl-pagination {
+            bottom: 10px;
+        }
+
+        img {
+            object-fit: cover;
+        }
+    }
+}
+
+/* ==========================================================================
+   14. HOME LAYOUT ALIGNMENT FIXES
+   Fix columns/items alignment in homepage sections
+   ========================================================================== */
+.cms-homepage_ayo_default,
+.cms-index-index {
+    .banner-slider-top {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: -10px;
+        margin-right: -10px;
+
+        .block_slider,
+        .block_banner {
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+    }
+
+    .banner-slider-top img,
+    .banner_mid_1 img,
+    .banner_mid_2 img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .cat_special {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    .section-featured-categories {
+        .rows {
+            margin-left: -10px;
+            margin-right: -10px;
+        }
+
+        .wrap-category .owl-item .wp-item {
+            padding: 0 10px;
+            border-left: 0;
+            height: 100%;
+        }
+
+        .wrap-category .owl-item .wp-item .item {
+            min-height: 0;
+            height: 100%;
+        }
+    }
+
+    .categorytab-container,
+    .product-grid {
+        .owl-item .item-product,
+        .owl-item .item-inner {
+            height: 100%;
+        }
+    }
+}
+
+@media (max-width: 1199px) {
+    .cms-homepage_ayo_default,
+    .cms-index-index {
+        .cat_special {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+}
+
+@media (max-width: 991px) {
+    .cms-homepage_ayo_default,
+    .cms-index-index {
+        .banner-slider-top {
+            .block_slider,
+            .block_banner {
+                width: 100%;
+            }
+        }
+
+        .cat_special {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+    }
+}
+
+@media (max-width: 575px) {
+    .cms-homepage_ayo_default,
+    .cms-index-index {
+        .cat_special {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+
+/* Hardening against legacy float/clear rules in responsive_themes */
+.cms-homepage_ayo_default,
+.cms-index-index {
+    .products-grid {
+        ol > li,
+        .category_page_grid_3 .item-product,
+        .category_page_grid_4 .item-product,
+        .category_page_grid_5 .item-product {
+            clear: none !important;
+        }
+
+        .category_page_grid_2,
+        .category_page_grid_3,
+        .category_page_grid_4,
+        .category_page_grid_5 {
+            align-items: stretch;
+        }
+
+        .item-product {
+            height: 100%;
+        }
+    }
+
+    .section-featured-categories .wrap-category {
+        .owl-item,
+        .owl-item .wp-item {
+            display: flex;
+            align-items: stretch;
+        }
+
+        .owl-item .wp-item .item {
+            width: 100%;
+        }
     }
 }

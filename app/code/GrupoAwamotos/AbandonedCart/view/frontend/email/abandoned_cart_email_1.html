@@ -1,0 +1,87 @@
+<!--@subject {{trans "Você esqueceu algo no carrinho!"}} @-->
+<!--@vars {
+"var customer_name":"Nome do Cliente",
+"var cart_value":"Valor do Carrinho",
+"var items_count":"Quantidade de Itens",
+"var cart_url":"URL do Carrinho",
+"var store.getFrontendName()":"Nome da Loja"
+} @-->
+{{template config_path="design/email/header_template"}}
+
+<table style="width: 100%; margin-bottom: 20px;">
+    <tr>
+        <td style="padding: 20px; background-color: #f8f8f8; border-radius: 8px;">
+            <h1 style="color: #b73337; margin: 0 0 15px 0; font-size: 24px;">
+                Olá {{var customer_name}}! 👋
+            </h1>
+            <p style="margin: 0 0 15px 0; font-size: 16px; color: #333;">
+                Notamos que você deixou alguns produtos no seu carrinho.
+                Não queremos que você perca esses itens incríveis!
+            </p>
+        </td>
+    </tr>
+</table>
+
+<table style="width: 100%; margin-bottom: 20px; border: 1px solid #e0e0e0; border-radius: 8px;">
+    <tr>
+        <td style="padding: 15px; background-color: #fff;">
+            <h2 style="color: #333; margin: 0 0 15px 0; font-size: 18px; border-bottom: 2px solid #b73337; padding-bottom: 10px;">
+                🛒 Seu Carrinho
+            </h2>
+            {{depend cart_items}}
+            <table style="width: 100%;">
+                {{var cart_items_html}}
+            </table>
+            {{/depend}}
+            <table style="width: 100%; margin-top: 15px; border-top: 1px solid #e0e0e0; padding-top: 15px;">
+                <tr>
+                    <td style="font-size: 16px; color: #333;">
+                        <strong>{{var items_count}} {{depend items_count}}item(s){{/depend}}</strong>
+                    </td>
+                    <td style="text-align: right;">
+                        <span style="font-size: 20px; font-weight: bold; color: #b73337;">
+                            {{var cart_value}}
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table style="width: 100%; margin-bottom: 20px;">
+    <tr>
+        <td style="text-align: center; padding: 20px;">
+            <a href="{{var cart_url}}"
+               style="display: inline-block; padding: 15px 40px; background-color: #b73337; color: #ffffff; text-decoration: none; font-size: 18px; font-weight: bold; border-radius: 5px; text-transform: uppercase;">
+                Finalizar Compra
+            </a>
+        </td>
+    </tr>
+</table>
+
+<table style="width: 100%; margin-bottom: 20px;">
+    <tr>
+        <td style="padding: 15px; background-color: #fff3cd; border-radius: 8px; border-left: 4px solid #ffc107;">
+            <p style="margin: 0; color: #856404; font-size: 14px;">
+                ⏰ <strong>Seu carrinho será reservado por 7 dias.</strong>
+                Não deixe passar essa oportunidade!
+            </p>
+        </td>
+    </tr>
+</table>
+
+<table style="width: 100%;">
+    <tr>
+        <td style="padding: 15px; text-align: center; color: #666; font-size: 13px;">
+            <p style="margin: 0 0 10px 0;">
+                Precisa de ajuda? Fale conosco pelo WhatsApp ou e-mail.
+            </p>
+            <p style="margin: 0;">
+                <strong>{{var store.getFrontendName()}}</strong>
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!-- Sales Intelligence under ERP Integration section -->
+        <add id="GrupoAwamotos_SalesIntelligence::dashboard"
+             title="Inteligencia de Vendas"
+             module="GrupoAwamotos_SalesIntelligence"
+             parent="GrupoAwamotos_ERPIntegration::erp"
+             sortOrder="3"
+             action="salesintelligence/dashboard/index"
+             resource="GrupoAwamotos_SalesIntelligence::dashboard"/>
+    </menu>
+</config>

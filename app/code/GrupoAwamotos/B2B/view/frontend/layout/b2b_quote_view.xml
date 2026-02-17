@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Quote View Layout
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Detalhes da Cotação</title>
+    </head>
+    <update handle="customer_account"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="GrupoAwamotos\B2B\Block\Quote\View"
+                   name="b2b.quote.view"
+                   template="GrupoAwamotos_B2B::quote/view.phtml"
+                   cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>

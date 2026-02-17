@@ -1,0 +1,99 @@
+<?php
+/**
+ * AWA Motos – SEO <head> extras for the homepage.
+ *
+ * Outputs (inside <head>):
+ *   1. <link rel="canonical">   – currently missing, required by Google
+ *   2. Consolidated JSON-LD     – Organization + LocalBusiness + WebSite
+ *   3. <link rel="preload">     – LCP hero image
+ *   4. <link rel="preconnect">  – external origins
+ *
+ * Included only on cms_index_index via layout XML.
+ *
+ * NOTE: The CMS page content still has 3 duplicate Organization ld+json
+ * blocks. They should be removed from the CMS editor (Admin > Content >
+ * Pages > "home"). This template provides the authoritative version.
+ */
+
+/** @var \Magento\Framework\View\Element\Template $block */
+
+$baseUrl = rtrim($block->getBaseUrl(), '/');
+?>
+<link rel="canonical" href="<?= /* @noEscape */ $baseUrl . '/' ?>" />
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "Organization",
+            "@id": "<?= /* @noEscape */ $baseUrl ?>/#organization",
+            "name": "AWA Motos",
+            "alternateName": "Grupo Awamotos",
+            "url": "<?= /* @noEscape */ $baseUrl ?>/",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "<?= /* @noEscape */ $baseUrl ?>/media/logo/default/logo.png"
+            },
+            "description": "Especialistas em peças, acessórios e equipamentos para motocicletas. Atendemos varejo e atacado (B2B) em todo o Brasil.",
+            "foundingDate": "2010",
+            "contactPoint": {
+                "@type": "ContactPoint",
+                "telephone": "(16) 3301-1890",
+                "contactType": "customer service",
+                "areaServed": "BR",
+                "availableLanguage": "Portuguese"
+            },
+            "sameAs": [
+                "https://www.facebook.com/awamotos",
+                "https://www.instagram.com/awamotos"
+            ]
+        },
+        {
+            "@type": "LocalBusiness",
+            "@id": "<?= /* @noEscape */ $baseUrl ?>/#localbusiness",
+            "name": "AWA Motos",
+            "url": "<?= /* @noEscape */ $baseUrl ?>/",
+            "image": "<?= /* @noEscape */ $baseUrl ?>/media/logo/default/logo.png",
+            "telephone": "(16) 3301-1890",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Araraquara",
+                "addressRegion": "SP",
+                "addressCountry": "BR"
+            },
+            "priceRange": "$$"
+        },
+        {
+            "@type": "WebSite",
+            "@id": "<?= /* @noEscape */ $baseUrl ?>/#website",
+            "name": "AWA Motos",
+            "url": "<?= /* @noEscape */ $baseUrl ?>/",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "<?= /* @noEscape */ $baseUrl ?>/catalogsearch/result/?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+    ]
+}
+</script>
+
+<!-- Preconnect to external origins used on the page -->
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+<link rel="dns-prefetch" href="https://www.google-analytics.com" />
+
+<!-- Preload LCP: Logo (above-the-fold, always visible) -->
+<link rel="preload"
+      href="<?= /* @noEscape */ $baseUrl ?>/media/logo/websites/1/logo_161x92_1.png"
+      as="image"
+      fetchpriority="high" />
+
+<!-- FontAwesome: preload removido — font-awesome.min.css já carrega o woff2 via @font-face.
+     O preload duplicava o download e gerava aviso "preloaded but not used" no console. -->
+
+<!-- Resource Hints: CDN / 3rd-party origins -->
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+<link rel="dns-prefetch" href="https://connect.facebook.net" />

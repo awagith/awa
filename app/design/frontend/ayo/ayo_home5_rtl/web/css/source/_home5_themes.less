@@ -378,24 +378,18 @@
 
 
 .tab_product {
+	/* Neutralizar listview legado no ProductTab para não quebrar carrossel/layout */
 	.item-product.listview .product-thumb {
-	    float: left;
-	    width: 30%;
+	    float: none;
+	    width: 100%;
+	    max-width: 100%;
 	    overflow: hidden;
-	    @media (max-width: 1399px) and (min-width: 1200px){
-	    	 width: 40%;
-	    }
 	}
 	.item-product.listview .product-info {
-	    float: left;
-	    width: 70%;
-	    padding-left: 20px;
-	     @media (max-width: 1399px) and (min-width: 1200px){
-	    	 width: 60%;
-	    }
-	}
-	.item-product .product-info-cart {
-		display: none;
+	    float: none;
+	    width: 100%;
+	    max-width: 100%;
+	    padding-left: 0;
 	}
 }
 .cat_1 {

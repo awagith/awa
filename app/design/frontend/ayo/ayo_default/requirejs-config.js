@@ -1,26 +1,12 @@
 var config = {
-    deps: [
-        'js/lazy-product-images',
-        'js/header-a11y',
-        'js/brasil-masks',
-        'js/form-enhancements',
-        'js/footer-custom',
-        'js/custom/microinteractions'
-    ],
-    paths: {
-        'brasilMasks': 'js/brasil-masks',
-        'formEnhancements': 'js/form-enhancements',
-        'microinteractions': 'js/custom/microinteractions'
-    },
-    shim: {
-        'js/brasil-masks': {
-            deps: ['jquery']
-        },
-        'js/form-enhancements': {
-            deps: ['jquery', 'mage/translate']
-        },
-        'js/custom/microinteractions': {
-            deps: ['jquery']
+    /* awa/fixes path REMOVED — awa-fixes.js is deprecated.
+       All fixes consolidated into awa-master-fix.js (loaded via awa-js-loader.phtml). */
+    paths: {},
+    config: {
+        mixins: {
+            'Magento_Search/js/form-mini': {
+                'Magento_Search/js/quicksearch-a11y-mixin': true
+            }
         }
     }
 };

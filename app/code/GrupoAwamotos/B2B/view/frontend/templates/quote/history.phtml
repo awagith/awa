@@ -69,7 +69,7 @@
                             </td>
                             <td data-th="<?= $block->escapeHtmlAttr(__('Valor')) ?>" class="col total">
                                 <?php if ($quote->getQuotedTotal()): ?>
-                                    <?= $block->escapeHtml($block->formatPrice($quote->getQuotedTotal())) ?>
+                                    <?= /* @noEscape */ $block->formatPrice($quote->getQuotedTotal()) ?>
                                 <?php else: ?>
                                     <span class="no-value"><?= $block->escapeHtml(__('Aguardando')) ?></span>
                                 <?php endif; ?>

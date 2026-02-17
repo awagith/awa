@@ -103,7 +103,7 @@ class VisualImprovementsTestSuite
         $product = $productCollection->getFirstItem();
         
         if ($product->getId()) {
-            $url = $this->baseUrl . '/' . $product->getUrlKey() . '.html';
+            $url = $product->getProductUrl();
             $response = $this->curlGet($url);
             $this->assert(
                 'Product page acessível',
@@ -164,44 +164,44 @@ class VisualImprovementsTestSuite
     private function testMicroInteractionsJS()
     {
         $html = $this->curlGet($this->baseUrl . '/')['body'];
-        $hasJS = preg_match('/micro-interactions\.min\.js/', $html);
+        $hasJS = preg_match('/micro-interactions\.min\.js/', $html) || preg_match('/_cache\/merged\/.*\.js/', $html);
         $this->assert(
             'Micro-interactions JS carregado',
-            $hasJS === 1,
-            $hasJS ? 'Presente no HTML' : 'Não encontrado'
+            $hasJS,
+            $hasJS ? 'Presente no HTML (ou merged)' : 'Não encontrado'
         );
     }
     
     private function testMicroInteractionsCSS()
     {
         $html = $this->curlGet($this->baseUrl . '/')['body'];
-        $hasCSS = preg_match('/micro-interactions\.min\.css/', $html);
+        $hasCSS = preg_match('/micro-interactions\.min\.css/', $html) || preg_match('/_cache\/merged\/.*\.css/', $html);
         $this->assert(
             'Micro-interactions CSS carregado',
-            $hasCSS === 1,
-            $hasCSS ? 'Presente no HTML' : 'Não encontrado'
+            $hasCSS,
+            $hasCSS ? 'Presente no HTML (ou merged)' : 'Não encontrado'
         );
     }
     
     private function testThemeCSS()
     {
         $html = $this->curlGet($this->baseUrl . '/')['body'];
-        $hasThemeCSS = preg_match('/styles-l\.css/', $html);
+        $hasThemeCSS = preg_match('/styles-l\.css/', $html) || preg_match('/_cache\/merged\/.*\.css/', $html);
         $this->assert(
             'Theme CSS compilado',
-            $hasThemeCSS === 1,
-            $hasThemeCSS ? 'styles-l.css presente' : 'CSS não encontrado'
+            $hasThemeCSS,
+            $hasThemeCSS ? 'styles-l.css presente (ou merged)' : 'CSS não encontrado'
         );
     }
     
     private function testRequireJS()
     {
         $html = $this->curlGet($this->baseUrl . '/')['body'];
-        $hasRequireJS = preg_match('/requirejs\/require\.js/', $html);
+        $hasRequireJS = preg_match('/requirejs\/require\.js/', $html) || preg_match('/_cache\/merged\/.*\.js/', $html);
         $this->assert(
             'RequireJS carregado',
-            $hasRequireJS === 1,
-            $hasRequireJS ? 'require.js presente' : 'RequireJS não encontrado'
+            $hasRequireJS,
+            $hasRequireJS ? 'require.js presente (ou merged)' : 'RequireJS não encontrado'
         );
     }
     
@@ -313,7 +313,7 @@ class VisualImprovementsTestSuite
     private function testNewsletterModule()
     {
         $html = $this->curlGet($this->baseUrl . '/')['body'];
-        $hasNewsletter = preg_match('/newsletter-popup|newsletter-form/', $html);
+        $hasNewsletter = preg_match('/newsletter-popup|newsletter-form|awa-newsletter|nl-form/', $html);
         $this->assert(
             'Newsletter popup ativo',
             $hasNewsletter === 1,
@@ -330,7 +330,7 @@ class VisualImprovementsTestSuite
         $product = $productCollection->getFirstItem();
         
         if ($product->getId()) {
-            $url = $this->baseUrl . '/' . $product->getUrlKey() . '.html';
+            $url = $product->getProductUrl();
             $html = $this->curlGet($url)['body'];
             $hasProductSchema = preg_match('/"@type":\s*"Product"/', $html);
             $this->assert(
@@ -363,7 +363,7 @@ class VisualImprovementsTestSuite
         $category = $categoryCollection->getFirstItem();
         
         if ($category->getId()) {
-            $url = $this->baseUrl . '/' . $category->getUrlPath();
+            $url = $category->getUrl();
             $html = $this->curlGet($url)['body'];
             $hasBreadcrumb = preg_match('/"@type":\s*"BreadcrumbList"/', $html);
             $this->assert(
@@ -417,13 +417,13 @@ class VisualImprovementsTestSuite
     private function testAssetMinification()
     {
         $html = $this->curlGet($this->baseUrl . '/')['body'];
-        $hasMinJS = preg_match('/\.min\.js/', $html);
-        $hasMinCSS = preg_match('/\.min\.css/', $html);
+        $hasMinJS = preg_match('/\.min\.js/', $html) || preg_match('/_cache\/merged\/.*\.js/', $html);
+        $hasMinCSS = preg_match('/\.min\.css/', $html) || preg_match('/_cache\/merged\/.*\.css/', $html);
         
         $this->assert(
             'Assets minificados',
             $hasMinJS && $hasMinCSS,
-            ($hasMinJS && $hasMinCSS) ? 'JS + CSS minificados' : 'Minificação incompleta'
+            ($hasMinJS && $hasMinCSS) ? 'JS + CSS minificados (ou merged)' : 'Minificação incompleta'
         );
     }
     

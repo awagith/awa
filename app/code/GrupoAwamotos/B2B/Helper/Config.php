@@ -20,7 +20,9 @@ class Config extends AbstractHelper
     const XML_PATH_HIDE_ADD_TO_CART_GUESTS = 'grupoawamotos_b2b/price_visibility/hide_add_to_cart_guests';
     const XML_PATH_LOGIN_MESSAGE = 'grupoawamotos_b2b/price_visibility/login_message';
     const XML_PATH_SHOW_PRICE_PENDING = 'grupoawamotos_b2b/price_visibility/show_price_pending';
-    
+    const XML_PATH_HIDE_PRICE_NO_ERP = 'grupoawamotos_b2b/price_visibility/hide_price_no_erp';
+    const XML_PATH_PENDING_ERP_MESSAGE = 'grupoawamotos_b2b/price_visibility/pending_erp_message';
+
     // Customer Approval
     const XML_PATH_REQUIRE_APPROVAL = 'grupoawamotos_b2b/customer_approval/require_approval';
     const XML_PATH_AUTO_APPROVE_GROUPS = 'grupoawamotos_b2b/customer_approval/auto_approve_groups';
@@ -129,6 +131,30 @@ class Config extends AbstractHelper
         );
     }
     
+    /**
+     * Check if should hide prices for approved customers without ERP code
+     */
+    public function hidePriceForNoErp($storeId = null): bool
+    {
+        return $this->isEnabled($storeId) && $this->scopeConfig->isSetFlag(
+            self::XML_PATH_HIDE_PRICE_NO_ERP,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * Get message for customers awaiting ERP price list assignment
+     */
+    public function getPendingErpMessage($storeId = null): string
+    {
+        return (string) $this->scopeConfig->getValue(
+            self::XML_PATH_PENDING_ERP_MESSAGE,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
     /**
      * Check if customer approval is required
      */

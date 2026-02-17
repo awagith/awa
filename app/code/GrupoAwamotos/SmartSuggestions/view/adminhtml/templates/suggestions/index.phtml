@@ -1,0 +1,482 @@
+<?php
+/**
+ * Suggestions Index Template
+ *
+ * @var \GrupoAwamotos\SmartSuggestions\Block\Adminhtml\Suggestions\Index $block
+ */
+
+$opportunities = $block->getTopOpportunities(20);
+$selectedCustomerId = (int)$block->getRequest()->getParam('customer_id');
+$cartSuggestion = $selectedCustomerId ? $block->getCartSuggestion($selectedCustomerId) : null;
+?>
+
+<div class="smart-dashboard">
+    <!-- Header -->
+    <div class="smart-dashboard-header">
+        <h1>Sugestões de Carrinho</h1>
+        <p>Gere sugestões personalizadas baseadas no histórico de compras</p>
+    </div>
+
+    <div class="suggestions-layout">
+        <!-- Left: Opportunities -->
+        <div class="suggestions-opportunities">
+            <div class="smart-table-card">
+                <div class="smart-table-header">
+                    <h3>🎯 Top Oportunidades</h3>
+                </div>
+                <table class="data-grid smart-mini-grid">
+                    <thead>
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Segmento</th>
+                            <th class="_right">Dias</th>
+                            <th class="_right">Est. Carrinho</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (empty($opportunities)): ?>
+                        <tr>
+                            <td colspan="5" class="empty-text">Nenhuma oportunidade identificada</td>
+                        </tr>
+                        <?php else: ?>
+                        <?php foreach ($opportunities as $opp): ?>
+                        <tr class="<?= $selectedCustomerId === $opp['customer_id'] ? 'selected-row' : '' ?>">
+                            <td>
+                                <strong><?= $block->escapeHtml($opp['customer_name']) ?></strong>
+                            </td>
+                            <td>
+                                <span class="smart-badge smart-badge-info"><?= $block->escapeHtml($opp['segment']) ?></span>
+                            </td>
+                            <td class="_right">
+                                <?php if ($opp['overdue_ratio'] >= 1.2): ?>
+                                <span class="smart-badge smart-badge-danger"><?= (int)$opp['days_since_purchase'] ?>d</span>
+                                <?php elseif ($opp['overdue_ratio'] >= 1.0): ?>
+                                <span class="smart-badge smart-badge-warning"><?= (int)$opp['days_since_purchase'] ?>d</span>
+                                <?php else: ?>
+                                <?= (int)$opp['days_since_purchase'] ?>d
+                                <?php endif; ?>
+                            </td>
+                            <td class="_right">
+                                <strong><?= $block->formatPrice($opp['estimated_cart_value']) ?></strong>
+                            </td>
+                            <td>
+                                <a href="<?= $block->escapeUrl($block->getUrl('*/*/*', ['customer_id' => $opp['customer_id']])) ?>"
+                                   class="action-default scalable <?= $selectedCustomerId === $opp['customer_id'] ? 'primary' : '' ?>">
+                                    <span>Gerar</span>
+                                </a>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Right: Cart Suggestion -->
+        <div class="suggestions-cart">
+            <?php if ($cartSuggestion && !isset($cartSuggestion['error'])): ?>
+            <div class="cart-suggestion-panel">
+                <!-- Customer Header -->
+                <div class="cart-customer-header">
+                    <h2><?= $block->escapeHtml($cartSuggestion['customer']['trade_name'] ?: $cartSuggestion['customer']['customer_name']) ?></h2>
+                    <p>
+                        <?= $block->escapeHtml($cartSuggestion['customer']['city'] . '/' . $cartSuggestion['customer']['state']) ?>
+                        | CNPJ: <?= $block->escapeHtml($cartSuggestion['customer']['cnpj']) ?>
+                    </p>
+                    <?php if ($cartSuggestion['rfm']): ?>
+                    <div class="cart-rfm-info">
+                        <span class="rfm-badge">RFM: <?= $block->escapeHtml($cartSuggestion['rfm']['rfm_score']) ?></span>
+                        <span class="segment-badge"><?= $block->escapeHtml($cartSuggestion['rfm']['segment']) ?></span>
+                    </div>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Cart Summary -->
+                <div class="cart-summary">
+                    <div class="cart-summary-item">
+                        <span class="label">Total Carrinho</span>
+                        <span class="value"><?= $block->formatPrice($cartSuggestion['cart_summary']['total_value']) ?></span>
+                    </div>
+                    <div class="cart-summary-item">
+                        <span class="label">Produtos</span>
+                        <span class="value"><?= (int)$cartSuggestion['cart_summary']['total_products'] ?></span>
+                    </div>
+                </div>
+
+                <!-- Repurchase Suggestions -->
+                <?php if (!empty($cartSuggestion['suggestions']['repurchase'])): ?>
+                <div class="cart-section">
+                    <h4>🔄 Reposição (Ciclo de Compra)</h4>
+                    <table class="cart-products-table">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th class="_right">Qtd</th>
+                                <th class="_right">Preço</th>
+                                <th class="_right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($cartSuggestion['suggestions']['repurchase'] as $item): ?>
+                            <tr>
+                                <td>
+                                    <code><?= $block->escapeHtml($item['sku']) ?></code>
+                                    <small><?= $block->escapeHtml(substr($item['name'], 0, 40)) ?></small>
+                                    <?php if ($item['urgency'] === 'high'): ?>
+                                    <span class="urgency-high">URGENTE</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="_right"><?= (int)$item['suggested_qty'] ?></td>
+                                <td class="_right"><?= $block->formatPrice($item['unit_price']) ?></td>
+                                <td class="_right"><strong><?= $block->formatPrice($item['suggested_value']) ?></strong></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php endif; ?>
+
+                <!-- Cross-Sell Suggestions -->
+                <?php if (!empty($cartSuggestion['suggestions']['cross_sell'])): ?>
+                <div class="cart-section">
+                    <h4>🛒 Cross-Sell (Comprados Juntos)</h4>
+                    <table class="cart-products-table">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th class="_right">Qtd</th>
+                                <th class="_right">Preço</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($cartSuggestion['suggestions']['cross_sell'] as $item): ?>
+                            <tr>
+                                <td>
+                                    <code><?= $block->escapeHtml($item['sku']) ?></code>
+                                    <small><?= $block->escapeHtml(substr($item['name'], 0, 40)) ?></small>
+                                </td>
+                                <td class="_right"><?= (int)$item['suggested_qty'] ?></td>
+                                <td class="_right"><?= $block->formatPrice($item['unit_price']) ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php endif; ?>
+
+                <!-- Similar Customers Suggestions -->
+                <?php if (!empty($cartSuggestion['suggestions']['similar_customers'])): ?>
+                <div class="cart-section">
+                    <h4>👥 Clientes Similares Compraram</h4>
+                    <table class="cart-products-table">
+                        <thead>
+                            <tr>
+                                <th>Produto</th>
+                                <th class="_right">Qtd</th>
+                                <th class="_right">Preço</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($cartSuggestion['suggestions']['similar_customers'] as $item): ?>
+                            <tr>
+                                <td>
+                                    <code><?= $block->escapeHtml($item['sku']) ?></code>
+                                    <small><?= $block->escapeHtml(substr($item['name'], 0, 40)) ?></small>
+                                </td>
+                                <td class="_right"><?= (int)$item['suggested_qty'] ?></td>
+                                <td class="_right"><?= $block->formatPrice($item['unit_price']) ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <?php endif; ?>
+
+                <!-- Actions -->
+                <div class="cart-actions">
+                    <button type="button" class="action-default scalable primary" id="btn-send-whatsapp"
+                            data-customer-id="<?= (int)$selectedCustomerId ?>"
+                            data-customer-phone="<?= $block->escapeHtml($cartSuggestion['customer']['phone'] ?? '') ?>">
+                        <span>📱 Enviar via WhatsApp</span>
+                    </button>
+                    <button type="button" class="action-default scalable" onclick="window.print()">
+                        <span>🖨️ Imprimir</span>
+                    </button>
+                    <a href="<?= $block->escapeUrl($block->getUrl('*/export/suggestions')) ?>" class="action-default scalable">
+                        <span>📥 Exportar Lista</span>
+                    </a>
+                </div>
+            </div>
+            <?php else: ?>
+            <div class="cart-empty-state">
+                <div class="empty-icon">🛒</div>
+                <h3>Selecione um Cliente</h3>
+                <p>Clique em "Gerar" em uma das oportunidades à esquerda para ver a sugestão de carrinho personalizada.</p>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<style>
+.suggestions-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.suggestions-opportunities .smart-mini-grid td {
+    padding: 12px 16px;
+}
+
+.selected-row {
+    background: #f0f7ff !important;
+}
+
+/* Cart Suggestion Panel */
+.cart-suggestion-panel {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+}
+
+.cart-customer-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    padding: 24px;
+}
+
+.cart-customer-header h2 {
+    margin: 0 0 8px;
+    font-size: 20px;
+}
+
+.cart-customer-header p {
+    margin: 0;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+.cart-rfm-info {
+    margin-top: 12px;
+    display: flex;
+    gap: 10px;
+}
+
+.rfm-badge, .segment-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.rfm-badge {
+    background: rgba(255,255,255,0.2);
+}
+
+.segment-badge {
+    background: rgba(255,255,255,0.3);
+}
+
+.cart-summary {
+    display: flex;
+    padding: 20px 24px;
+    background: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.cart-summary-item {
+    flex: 1;
+    text-align: center;
+}
+
+.cart-summary-item .label {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 4px;
+}
+
+.cart-summary-item .value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+}
+
+.cart-section {
+    padding: 20px 24px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.cart-section h4 {
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.cart-products-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cart-products-table th {
+    padding: 8px 12px;
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #888;
+    border-bottom: 1px solid #f0f0f0;
+    text-align: left;
+}
+
+.cart-products-table td {
+    padding: 10px 12px;
+    font-size: 13px;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.cart-products-table code {
+    font-size: 11px;
+    background: #f5f5f5;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.cart-products-table small {
+    display: block;
+    font-size: 11px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.urgency-high {
+    display: inline-block;
+    padding: 2px 6px;
+    background: #FF4560;
+    color: #fff;
+    font-size: 9px;
+    font-weight: 700;
+    border-radius: 4px;
+    margin-left: 8px;
+}
+
+.cart-actions {
+    padding: 20px 24px;
+    display: flex;
+    gap: 12px;
+}
+
+/* Empty State */
+.cart-empty-state {
+    background: #fff;
+    border-radius: 16px;
+    padding: 60px 40px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.cart-empty-state .empty-icon {
+    font-size: 60px;
+    margin-bottom: 20px;
+    opacity: 0.6;
+}
+
+.cart-empty-state h3 {
+    margin: 0 0 12px;
+    color: #333;
+}
+
+.cart-empty-state p {
+    color: #666;
+    font-size: 14px;
+}
+
+@media (max-width: 1200px) {
+    .suggestions-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.send-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.send-success {
+    background: #00C851 !important;
+    border-color: #00C851 !important;
+}
+
+.send-error {
+    background: #ff4444 !important;
+    border-color: #ff4444 !important;
+}
+</style>
+
+<script>
+require(['jquery'], function($) {
+    $(document).ready(function() {
+        $('#btn-send-whatsapp').on('click', function() {
+            var btn = $(this);
+            var customerId = btn.data('customer-id');
+            var phone = btn.data('customer-phone');
+
+            if (!customerId) {
+                alert('Selecione um cliente primeiro');
+                return;
+            }
+
+            if (!phone) {
+                phone = prompt('Digite o telefone do cliente (com DDD):');
+                if (!phone) return;
+            }
+
+            btn.addClass('send-loading');
+            btn.find('span').text('Enviando...');
+
+            $.ajax({
+                url: '<?= $block->escapeJs($block->getUrl('*/suggestions/send')) ?>',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    customer_id: customerId,
+                    phone: phone,
+                    form_key: FORM_KEY
+                },
+                success: function(response) {
+                    btn.removeClass('send-loading');
+                    if (response.success) {
+                        btn.addClass('send-success');
+                        btn.find('span').text('✓ Enviado!');
+                        setTimeout(function() {
+                            btn.removeClass('send-success');
+                            btn.find('span').text('📱 Enviar via WhatsApp');
+                        }, 3000);
+                    } else {
+                        btn.addClass('send-error');
+                        btn.find('span').text('✗ Erro');
+                        alert('Erro ao enviar: ' + response.message);
+                        setTimeout(function() {
+                            btn.removeClass('send-error');
+                            btn.find('span').text('📱 Enviar via WhatsApp');
+                        }, 3000);
+                    }
+                },
+                error: function() {
+                    btn.removeClass('send-loading');
+                    btn.addClass('send-error');
+                    btn.find('span').text('✗ Erro');
+                    alert('Erro de comunicação com o servidor');
+                    setTimeout(function() {
+                        btn.removeClass('send-error');
+                        btn.find('span').text('📱 Enviar via WhatsApp');
+                    }, 3000);
+                }
+            });
+        });
+    });
+});
+</script>

@@ -10,15 +10,24 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Customer\Api\Data\AddressInterfaceFactory;
+use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
+use Magento\Customer\Api\Data\RegionInterfaceFactory;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Directory\Model\ResourceModel\Region\CollectionFactory as RegionCollectionFactory;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Math\Random;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use GrupoAwamotos\B2B\Helper\CnpjValidator;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Store\Model\ScopeInterface;
 use Psr\Log\LoggerInterface;
 
 class Save implements HttpPostActionInterface
@@ -88,6 +97,36 @@ class Save implements HttpPostActionInterface
      */
     private $logger;
 
+    /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+
+    /**
+     * @var AddressRepositoryInterface
+     */
+    private $addressRepository;
+
+    /**
+     * @var AddressInterfaceFactory
+     */
+    private $addressFactory;
+
+    /**
+     * @var RegionInterfaceFactory
+     */
+    private $regionFactory;
+
+    /**
+     * @var RegionCollectionFactory
+     */
+    private $regionCollectionFactory;
+
+    /**
+     * @var FormKeyValidator
+     */
+    private $formKeyValidator;
+
     public function __construct(
         RequestInterface $request,
         RedirectFactory $resultRedirectFactory,
@@ -101,7 +140,13 @@ class Save implements HttpPostActionInterface
         Random $random,
         TransportBuilder $transportBuilder,
         CnpjValidator $cnpjValidator,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ScopeConfigInterface $scopeConfig,
+        AddressRepositoryInterface $addressRepository,
+        AddressInterfaceFactory $addressFactory,
+        RegionInterfaceFactory $regionFactory,
+        RegionCollectionFactory $regionCollectionFactory,
+        FormKeyValidator $formKeyValidator
     ) {
         $this->request = $request;
         $this->resultRedirectFactory = $resultRedirectFactory;
@@ -116,6 +161,12 @@ class Save implements HttpPostActionInterface
         $this->transportBuilder = $transportBuilder;
         $this->cnpjValidator = $cnpjValidator;
         $this->logger = $logger;
+        $this->scopeConfig = $scopeConfig;
+        $this->addressRepository = $addressRepository;
+        $this->addressFactory = $addressFactory;
+        $this->regionFactory = $regionFactory;
+        $this->regionCollectionFactory = $regionCollectionFactory;
+        $this->formKeyValidator = $formKeyValidator;
     }
 
     /**
@@ -126,6 +177,11 @@ class Save implements HttpPostActionInterface
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
+
+        if (!$this->formKeyValidator->validate($this->request)) {
+            $this->messageManager->addErrorMessage(__('Formulário inválido. Tente novamente.'));
+            return $resultRedirect->setPath('*/*/');
+        }
 
         try {
             // Validar dados
@@ -138,6 +194,24 @@ class Save implements HttpPostActionInterface
             if (!$this->cnpjValidator->validateLocal($data['cnpj'])) {
                 $this->messageManager->addErrorMessage(__('CNPJ inválido. Por favor, verifique e tente novamente.'));
                 return $resultRedirect->setPath('*/*/');
+            }
+
+            // Enrich with API data (best-effort — does not block registration)
+            $apiData = null;
+            try {
+                $apiResult = $this->cnpjValidator->validateApi($data['cnpj']);
+                if ($apiResult !== null && !empty($apiResult['valid'])) {
+                    $apiData = $apiResult;
+                    // Fill empty form fields with API data
+                    if (empty($data['razao_social']) && !empty($apiResult['razao_social'])) {
+                        $data['razao_social'] = $apiResult['razao_social'];
+                    }
+                    if (empty($data['nome_fantasia']) && !empty($apiResult['nome_fantasia'])) {
+                        $data['nome_fantasia'] = $apiResult['nome_fantasia'];
+                    }
+                }
+            } catch (\Throwable $e) {
+                $this->logger->warning('B2B Registration: API enrichment failed — ' . $e->getMessage());
             }
 
             // Verificar se email já existe
@@ -163,9 +237,11 @@ class Save implements HttpPostActionInterface
             // Atributos B2B
             $customer->setCustomAttribute('b2b_cnpj', $this->cnpjValidator->format($data['cnpj']));
             $customer->setCustomAttribute('b2b_razao_social', $data['razao_social']);
+            $customer->setCustomAttribute('b2b_nome_fantasia', $data['nome_fantasia'] ?? '');
             $customer->setCustomAttribute('b2b_inscricao_estadual', $data['inscricao_estadual'] ?? '');
-            $customer->setCustomAttribute('b2b_approved', 0);
-            $customer->setCustomAttribute('b2b_company_phone', $data['phone'] ?? '');
+            $customer->setCustomAttribute('b2b_approval_status', 'pending');
+            $customer->setCustomAttribute('b2b_person_type', 'pj');
+            $customer->setCustomAttribute('b2b_phone', $data['phone'] ?? '');
 
             // Salvar cliente
             $savedCustomer = $this->customerRepository->save($customer);
@@ -175,11 +251,14 @@ class Save implements HttpPostActionInterface
             $customerModel->setPassword($data['password']);
             $customerModel->save();
 
-            // Enviar email de confirmação
+            // Salvar endereço comercial como padrão de cobrança/entrega
+            $this->saveCustomerDefaultAddress($savedCustomer, $data);
+
+            // Enviar email de confirmação ao cliente
             $this->sendConfirmationEmail($savedCustomer, $data);
 
-            // Notificar admin
-            $this->notifyAdmin($savedCustomer, $data);
+            // Nota: notificação ao admin é feita pelo CustomerRegisterObserver/CustomerRegistrationNotification
+            // para evitar notificações duplicadas
 
             $this->messageManager->addSuccessMessage(
                 __('Cadastro realizado com sucesso! Seu acesso B2B será analisado e você receberá um e-mail em breve.')
@@ -190,6 +269,9 @@ class Save implements HttpPostActionInterface
 
             return $resultRedirect->setPath('b2b/account/dashboard');
 
+        } catch (LocalizedException $e) {
+            $this->messageManager->addErrorMessage($e->getMessage());
+            return $resultRedirect->setPath('*/*/');
         } catch (\Exception $e) {
             $this->logger->error('B2B Registration Error: ' . $e->getMessage());
             $this->messageManager->addErrorMessage(
@@ -213,8 +295,18 @@ class Save implements HttpPostActionInterface
         $passwordConfirm = $this->request->getParam('password_confirmation', '');
         $cnpj = preg_replace('/\D/', '', $this->request->getParam('cnpj', ''));
         $razaoSocial = trim($this->request->getParam('razao_social', ''));
+        $nomeFantasia = trim($this->request->getParam('nome_fantasia', ''));
         $inscricaoEstadual = trim($this->request->getParam('inscricao_estadual', ''));
         $phone = trim($this->request->getParam('phone', ''));
+        $phoneDigits = preg_replace('/\D/', '', $phone);
+        $cep = preg_replace('/\D/', '', (string) $this->request->getParam('cep', ''));
+        $logradouro = trim((string) $this->request->getParam('logradouro', ''));
+        $numero = trim((string) $this->request->getParam('numero', ''));
+        $complemento = trim((string) $this->request->getParam('complemento', ''));
+        $bairro = trim((string) $this->request->getParam('bairro', ''));
+        $municipio = trim((string) $this->request->getParam('municipio', ''));
+        $uf = strtoupper(trim((string) $this->request->getParam('uf', '')));
+        $termsAccepted = (int) $this->request->getParam('terms', 0);
 
         $errors = [];
 
@@ -230,8 +322,8 @@ class Save implements HttpPostActionInterface
             $errors[] = __('E-mail inválido.');
         }
 
-        if (empty($password) || strlen($password) < 8) {
-            $errors[] = __('A senha deve ter pelo menos 8 caracteres.');
+        if (empty($password) || strlen($password) < 6) {
+            $errors[] = __('A senha deve ter pelo menos 6 caracteres.');
         }
 
         if ($password !== $passwordConfirm) {
@@ -244,6 +336,38 @@ class Save implements HttpPostActionInterface
 
         if (empty($razaoSocial)) {
             $errors[] = __('Razão Social é obrigatória.');
+        }
+
+        if (empty($phoneDigits) || strlen($phoneDigits) < 10) {
+            $errors[] = __('Telefone comercial é obrigatório e deve ser válido.');
+        }
+
+        if (empty($cep) || strlen($cep) !== 8) {
+            $errors[] = __('CEP é obrigatório e deve conter 8 dígitos.');
+        }
+
+        if ($logradouro === '') {
+            $errors[] = __('Logradouro é obrigatório.');
+        }
+
+        if ($numero === '') {
+            $errors[] = __('Número é obrigatório.');
+        }
+
+        if ($bairro === '') {
+            $errors[] = __('Bairro é obrigatório.');
+        }
+
+        if ($municipio === '') {
+            $errors[] = __('Cidade é obrigatória.');
+        }
+
+        if ($uf === '' || strlen($uf) !== 2) {
+            $errors[] = __('UF é obrigatória e deve conter 2 caracteres.');
+        }
+
+        if ($termsAccepted !== 1) {
+            $errors[] = __('Você deve aceitar os Termos de Uso e a Política de Privacidade.');
         }
 
         if (!empty($errors)) {
@@ -260,8 +384,16 @@ class Save implements HttpPostActionInterface
             'password' => $password,
             'cnpj' => $cnpj,
             'razao_social' => $razaoSocial,
+            'nome_fantasia' => $nomeFantasia,
             'inscricao_estadual' => $inscricaoEstadual,
-            'phone' => $phone
+            'phone' => $phone,
+            'cep' => $cep,
+            'logradouro' => $logradouro,
+            'numero' => $numero,
+            'complemento' => $complemento,
+            'bairro' => $bairro,
+            'municipio' => $municipio,
+            'uf' => $uf
         ];
     }
 
@@ -330,12 +462,117 @@ class Save implements HttpPostActionInterface
                     'admin_url' => $store->getBaseUrl() . 'admin/customer/index/'
                 ])
                 ->setFromByScope('general')
-                ->addTo('contato@grupoawamotos.com.br', 'Administrador')
+                ->addTo($this->getAdminEmail(), 'Administrador')
                 ->getTransport();
 
             $transport->sendMessage();
         } catch (\Exception $e) {
             $this->logger->error('B2B Admin Notification Error: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Salva o endereço comercial como padrão de cobrança e entrega.
+     */
+    private function saveCustomerDefaultAddress(CustomerInterface $customer, array $data): void
+    {
+        try {
+            $address = $this->addressFactory->create();
+            $address->setCustomerId((int) $customer->getId());
+            $address->setFirstname((string) $customer->getFirstname());
+            $address->setLastname((string) $customer->getLastname());
+            $address->setCompany((string) $data['razao_social']);
+            $address->setTelephone((string) $data['phone']);
+            $address->setPostcode($this->formatPostcode((string) $data['cep']));
+            $address->setCity((string) $data['municipio']);
+            $address->setCountryId('BR');
+            $address->setStreet($this->buildStreetLines($data));
+
+            $regionId = $this->resolveBrazilRegionId((string) $data['uf']);
+            if ($regionId !== null) {
+                $address->setRegionId($regionId);
+            } else {
+                $region = $this->regionFactory->create();
+                $region->setRegionCode((string) $data['uf']);
+                $region->setRegion((string) $data['uf']);
+                $address->setRegion($region);
+            }
+
+            $address->setIsDefaultBilling(true);
+            $address->setIsDefaultShipping(true);
+
+            $this->addressRepository->save($address);
+        } catch (\Throwable $exception) {
+            $this->logger->warning(
+                sprintf(
+                    'B2B Address Save Warning (customer_id: %s): %s',
+                    (string) $customer->getId(),
+                    $exception->getMessage()
+                )
+            );
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    private function buildStreetLines(array $data): array
+    {
+        $line1 = trim((string) $data['logradouro']) . ', ' . trim((string) $data['numero']);
+        $line2 = trim((string) ($data['complemento'] ?? ''));
+        $line3 = 'Bairro: ' . trim((string) $data['bairro']);
+
+        $lines = [$line1];
+        if ($line2 !== '') {
+            $lines[] = $line2;
+        }
+        $lines[] = $line3;
+
+        return $lines;
+    }
+
+    private function formatPostcode(string $cep): string
+    {
+        $digits = preg_replace('/\D/', '', $cep);
+        if (strlen($digits) !== 8) {
+            return $cep;
+        }
+
+        return substr($digits, 0, 5) . '-' . substr($digits, 5, 3);
+    }
+
+    private function resolveBrazilRegionId(string $uf): ?int
+    {
+        $regionCode = strtoupper(trim($uf));
+        if (strlen($regionCode) !== 2) {
+            return null;
+        }
+
+        $collection = $this->regionCollectionFactory->create();
+        $collection->addCountryFilter('BR');
+        $collection->addRegionCodeFilter($regionCode);
+        $collection->setPageSize(1);
+
+        $region = $collection->getFirstItem();
+        if (!$region || !$region->getId()) {
+            return null;
+        }
+
+        return (int) $region->getId();
+    }
+
+    /**
+     * Get admin email from configuration
+     *
+     * @return string
+     */
+    private function getAdminEmail(): string
+    {
+        $email = $this->scopeConfig->getValue(
+            'grupoawamotos_b2b/customer_approval/admin_email',
+            ScopeInterface::SCOPE_STORE
+        );
+
+        return $email ?: 'contato@grupoawamotos.com.br';
     }
 }

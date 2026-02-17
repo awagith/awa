@@ -14,6 +14,6 @@ $_product = $block->getProduct();
         echo $success ?></div>
 </div>
 <div class="ajaxsuite-buttons">
-    <button type="button" id="ajaxwishlist" class="action primary" data-action="ajaxsuite-navigate" data-url="<?= $block->escapeUrl($block->getUrl('wishlist'))?>"><span><?= __('View Wish List') ?></span></button>
+    <button type="button" id="ajaxwishlist" class="action primary" onclick="window.location = '<?= $block->getUrl('wishlist')?>'"><span><?= __('View Wish List') ?></span></button>
 </div>
 

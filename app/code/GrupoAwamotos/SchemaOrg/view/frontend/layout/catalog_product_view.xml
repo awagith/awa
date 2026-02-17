@@ -4,12 +4,10 @@
         <referenceContainer name="after.body.start">
             <block class="GrupoAwamotos\SchemaOrg\Block\ProductSchema"
                    name="grupoawamotos.schema.product"
-                   template="GrupoAwamotos_SchemaOrg::product.phtml"
-                   cacheable="false"/>
+                   template="GrupoAwamotos_SchemaOrg::product.phtml"/>
             <block class="GrupoAwamotos\SchemaOrg\Block\Breadcrumbs"
                    name="grupoawamotos.schema.breadcrumbs"
-                   template="GrupoAwamotos_SchemaOrg::breadcrumbs.phtml"
-                   cacheable="false"/>
+                   template="GrupoAwamotos_SchemaOrg::breadcrumbs.phtml"/>
         </referenceContainer>
     </body>
 </page>

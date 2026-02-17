@@ -1,0 +1,63 @@
+<?php
+/**
+ * Quote Request - Cart Items List
+ *
+ * @var \Magento\Checkout\Block\Cart\Sidebar $block
+ */
+$parentBlock = $block->getLayout()->getBlock('b2b.quote.form');
+$items = $parentBlock ? $parentBlock->getCartItems() : [];
+$quote = $parentBlock ? $parentBlock->getQuote() : null;
+?>
+<?php if (!empty($items)): ?>
+    <div class="b2b-quote-items">
+        <h3><?= $block->escapeHtml(__('Itens do Carrinho')) ?></h3>
+        <table class="data table table-quote-items">
+            <thead>
+                <tr>
+                    <th class="col product"><?= $block->escapeHtml(__('Produto')) ?></th>
+                    <th class="col sku"><?= $block->escapeHtml(__('SKU')) ?></th>
+                    <th class="col qty"><?= $block->escapeHtml(__('Qtd')) ?></th>
+                    <th class="col price"><?= $block->escapeHtml(__('Preço')) ?></th>
+                    <th class="col subtotal"><?= $block->escapeHtml(__('Subtotal')) ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($items as $item): ?>
+                    <tr>
+                        <td class="col product" data-th="<?= $block->escapeHtmlAttr(__('Produto')) ?>">
+                            <?= $block->escapeHtml($item->getName()) ?>
+                        </td>
+                        <td class="col sku" data-th="<?= $block->escapeHtmlAttr(__('SKU')) ?>">
+                            <?= $block->escapeHtml($item->getSku()) ?>
+                        </td>
+                        <td class="col qty" data-th="<?= $block->escapeHtmlAttr(__('Qtd')) ?>">
+                            <?= (int) $item->getQty() ?>
+                        </td>
+                        <td class="col price" data-th="<?= $block->escapeHtmlAttr(__('Preço')) ?>">
+                            R$ <?= number_format((float) $item->getPrice(), 2, ',', '.') ?>
+                        </td>
+                        <td class="col subtotal" data-th="<?= $block->escapeHtmlAttr(__('Subtotal')) ?>">
+                            R$ <?= number_format((float) $item->getRowTotal(), 2, ',', '.') ?>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+            <?php if ($quote): ?>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="col total-label">
+                            <strong><?= $block->escapeHtml(__('Total')) ?></strong>
+                        </td>
+                        <td class="col total-value">
+                            <strong>R$ <?= number_format((float) $quote->getGrandTotal(), 2, ',', '.') ?></strong>
+                        </td>
+                    </tr>
+                </tfoot>
+            <?php endif; ?>
+        </table>
+    </div>
+<?php else: ?>
+    <div class="message info">
+        <span><?= $block->escapeHtml(__('Seu carrinho está vazio. Adicione produtos antes de solicitar uma cotação.')) ?></span>
+    </div>
+<?php endif; ?>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!--
+  GrupoAwamotos_CspFix
+  Mitiga corrupsão/race-condition do sri-hashes.json (CSP/SRI) com escrita atômica e load tolerante.
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Csp\Model\SubresourceIntegrity\Storage\File">
+        <plugin name="grupoawamotos_cspfix_sri_atomic_storage" type="GrupoAwamotos\CspFix\Plugin\Csp\SubresourceIntegrity\Storage\FileAtomicPlugin" sortOrder="10" />
+    </type>
+</config>

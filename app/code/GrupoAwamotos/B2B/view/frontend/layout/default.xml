@@ -9,8 +9,18 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="GrupoAwamotos_B2B::css/b2b-header.css"/>
+        <css src="GrupoAwamotos_B2B::css/header-status-panel.css"/>
+        <css src="GrupoAwamotos_B2B::css/login-to-cart.css"/>
     </head>
     <body>
+        <!-- B2B Status Panel in Header (using Ayo theme's toki_header) -->
+        <referenceBlock name="toki_header">
+            <block class="GrupoAwamotos\B2B\Block\Header\StatusPanel"
+                   name="b2b.header.status.panel"
+                   template="GrupoAwamotos_B2B::header/status-panel.phtml"
+                   after="-"/>
+        </referenceBlock>
+        
         <!-- B2B Links in Header top.links -->
         <referenceBlock name="top.links">
             <!-- B2B Register Link (for guests only) -->
@@ -32,16 +42,11 @@
             </block>
         </referenceBlock>
         
-        <!-- B2B Dashboard in customer account navigation (for B2B customers only) -->
-        <referenceBlock name="customer_account_navigation">
-            <block class="GrupoAwamotos\B2B\Block\Link\Dashboard"
-                   name="customer-account-navigation-b2b-dashboard-link">
-                <arguments>
-                    <argument name="label" xsi:type="string" translate="true">Painel B2B</argument>
-                    <argument name="path" xsi:type="string">b2b/account/dashboard</argument>
-                    <argument name="sortOrder" xsi:type="number">5</argument>
-                </arguments>
-            </block>
-        </referenceBlock>
+        <!-- Login to Cart Modal for Guests (when hide_add_to_cart_guests is enabled) -->
+        <referenceContainer name="before.body.end">
+            <block class="GrupoAwamotos\B2B\Block\LoginToCart"
+                   name="b2b.login.to.cart.modal"
+                   template="GrupoAwamotos_B2B::product/login-to-cart.phtml"/>
+        </referenceContainer>
     </body>
 </page>

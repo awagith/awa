@@ -8,6 +8,8 @@ namespace GrupoAwamotos\B2B\Block\Quote;
 
 use GrupoAwamotos\B2B\Helper\Config;
 use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
@@ -29,16 +31,28 @@ class Form extends Template
      */
     private $config;
 
+    /**
+     * @var CustomerRepositoryInterface
+     */
+    private $customerRepository;
+
+    /**
+     * @var CustomerInterface|null|false
+     */
+    private $customerDataCache = false;
+
     public function __construct(
         Context $context,
         CustomerSession $customerSession,
         CheckoutSession $checkoutSession,
         Config $config,
+        CustomerRepositoryInterface $customerRepository,
         array $data = []
     ) {
         $this->customerSession = $customerSession;
         $this->checkoutSession = $checkoutSession;
         $this->config = $config;
+        $this->customerRepository = $customerRepository;
         parent::__construct($context, $data);
     }
 
@@ -53,13 +67,30 @@ class Form extends Template
     }
 
     /**
-     * Get current customer
+     * Get current customer data via repository (reliable for EAV attributes)
      *
-     * @return \Magento\Customer\Model\Customer|null
+     * @return CustomerInterface|null
      */
     public function getCustomer()
     {
-        return $this->isLoggedIn() ? $this->customerSession->getCustomer() : null;
+        if ($this->customerDataCache !== false) {
+            return $this->customerDataCache;
+        }
+
+        if (!$this->isLoggedIn()) {
+            $this->customerDataCache = null;
+            return null;
+        }
+
+        try {
+            $this->customerDataCache = $this->customerRepository->getById(
+                $this->customerSession->getCustomerId()
+            );
+        } catch (\Exception $e) {
+            $this->customerDataCache = null;
+        }
+
+        return $this->customerDataCache;
     }
 
     /**
@@ -81,7 +112,7 @@ class Form extends Template
     public function getCustomerName(): string
     {
         $customer = $this->getCustomer();
-        return $customer ? $customer->getName() : '';
+        return $customer ? $customer->getFirstname() . ' ' . $customer->getLastname() : '';
     }
 
     /**
@@ -92,7 +123,11 @@ class Form extends Template
     public function getCompanyName(): string
     {
         $customer = $this->getCustomer();
-        return $customer ? (string) $customer->getData('b2b_razao_social') : '';
+        if (!$customer) {
+            return '';
+        }
+        $attr = $customer->getCustomAttribute('b2b_razao_social');
+        return $attr ? (string) $attr->getValue() : '';
     }
 
     /**
@@ -103,7 +138,11 @@ class Form extends Template
     public function getCnpj(): string
     {
         $customer = $this->getCustomer();
-        return $customer ? (string) $customer->getData('b2b_cnpj') : '';
+        if (!$customer) {
+            return '';
+        }
+        $attr = $customer->getCustomAttribute('b2b_cnpj');
+        return $attr ? (string) $attr->getValue() : '';
     }
 
     /**
@@ -114,7 +153,11 @@ class Form extends Template
     public function getPhone(): string
     {
         $customer = $this->getCustomer();
-        return $customer ? (string) $customer->getData('b2b_phone') : '';
+        if (!$customer) {
+            return '';
+        }
+        $attr = $customer->getCustomAttribute('b2b_phone');
+        return $attr ? (string) $attr->getValue() : '';
     }
 
     /**

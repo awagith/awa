@@ -1,0 +1,92 @@
+define([
+    'jquery',
+    'rokanthemes/timecircles',
+    'rokanthemes/owl'
+], function ($) {
+    'use strict';
+
+    function resolveBoolean(value, fallback) {
+        if (value === undefined || value === null || value === '') {
+            return fallback;
+        }
+        if (typeof value === 'string') {
+            return !(value === 'false' || value === '0');
+        }
+        return !!value;
+    }
+
+    return function (config, element) {
+        var $scope = $(element);
+        var carouselSelector = config.carouselSelector || '.hot-deal-slide';
+        var countdownSelector = config.countdownSelector || '.super-deal-countdown';
+        var owlConfig = config.owl || {};
+        var labels = config.labels || {};
+        var countdownConfig = config.countdown || {};
+        var carouselOptions = {
+            lazyLoad: resolveBoolean(owlConfig.lazyLoad, true),
+            items: parseInt(owlConfig.items, 10) || 6,
+            itemsDesktop: owlConfig.itemsDesktop || [1366, 5],
+            itemsDesktopSmall: owlConfig.itemsDesktopSmall || [1199, 4],
+            itemsTablet: owlConfig.itemsTablet || [991, 3],
+            itemsMobile: owlConfig.itemsMobile || [680, 2],
+            navigation: resolveBoolean(owlConfig.navigation, true),
+            pagination: resolveBoolean(owlConfig.pagination, false),
+            autoPlay: resolveBoolean(owlConfig.autoPlay, false),
+            afterAction: function () {
+                if (this.$owlItems && this.$owlItems.length) {
+                    this.$owlItems.removeClass('first-active');
+                    this.$owlItems.eq(this.currentItem).addClass('first-active');
+                }
+            }
+        };
+
+        $scope.find(carouselSelector).each(function () {
+            var $carousel = $(this);
+
+            if ($carousel.data('owlCarousel') || $carousel.hasClass('owl-loaded') || $carousel.data('awaSuperdealsCarouselInit')) {
+                return;
+            }
+
+            $carousel.data('awaSuperdealsCarouselInit', 1);
+            $carousel.owlCarousel(carouselOptions);
+        });
+
+        $scope.find(countdownSelector).each(function () {
+            var $countdown = $(this);
+
+            if ($countdown.data('awaSuperdealsCountdownInit') || typeof $countdown.TimeCircles !== 'function') {
+                return;
+            }
+
+            $countdown.data('awaSuperdealsCountdownInit', 1);
+            $countdown.TimeCircles({
+                fg_width: parseFloat(countdownConfig.fg_width) || 0.01,
+                bg_width: parseFloat(countdownConfig.bg_width) || 1.2,
+                text_size: parseFloat(countdownConfig.text_size) || 0.07,
+                circle_bg_color: countdownConfig.circle_bg_color || '#ffffff',
+                time: {
+                    Days: {
+                        show: true,
+                        text: labels.days || 'Days',
+                        color: '#f9bc02'
+                    },
+                    Hours: {
+                        show: true,
+                        text: labels.hours || 'Hours',
+                        color: '#f9bc02'
+                    },
+                    Minutes: {
+                        show: true,
+                        text: labels.minutes || 'Mins',
+                        color: '#f9bc02'
+                    },
+                    Seconds: {
+                        show: true,
+                        text: labels.seconds || 'Secs',
+                        color: '#f9bc02'
+                    }
+                }
+            });
+        });
+    };
+});

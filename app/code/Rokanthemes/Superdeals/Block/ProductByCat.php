@@ -4,7 +4,10 @@ namespace Rokanthemes\Superdeals\Block;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Model\Category;
 use Magento\Catalog\Model\Product;
+use Magento\CatalogInventory\Api\StockConfigurationInterface;
+use Magento\CatalogInventory\Api\StockStateInterface;
 use Magento\Eav\Model\Entity\Collection\AbstractCollection;
+use Magento\Framework\Stdlib\DateTime\DateTime;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\DataObject\IdentityInterface;
 
@@ -50,6 +53,9 @@ class ProductByCat extends \Magento\Catalog\Block\Product\AbstractProduct
     protected $catalogConfig;
     protected $productVisibility;
     protected $scopeConfig;
+    protected $dateTime;
+    protected $stockState;
+    protected $stockConfiguration;
 
     /**
      * @param Context $context
@@ -68,6 +74,9 @@ class ProductByCat extends \Magento\Catalog\Block\Product\AbstractProduct
 		\Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
 		\Magento\Catalog\Model\Product\Visibility $productVisibility,
         \Magento\Reports\Model\ResourceModel\Product\Sold\CollectionFactory $soldProductFactory,
+        DateTime $dateTime,
+        StockStateInterface $stockState,
+        StockConfigurationInterface $stockConfiguration,
         array $data = []
     ) {
         $this->_catalogLayer = $layerResolver->get();
@@ -79,6 +88,9 @@ class ProductByCat extends \Magento\Catalog\Block\Product\AbstractProduct
         $this->catalogConfig = $context->getCatalogConfig();
         $this->productVisibility = $productVisibility;
         $this->soldProductFactory = $soldProductFactory;
+        $this->dateTime = $dateTime;
+        $this->stockState = $stockState;
+        $this->stockConfiguration = $stockConfiguration;
         parent::__construct(
             $context,
             $data
@@ -118,14 +130,10 @@ class ProductByCat extends \Magento\Catalog\Block\Product\AbstractProduct
 		return $products;
 	}
 	public function getStoreUrlBlock() {
-		$_objectManager = \Magento\Framework\App\ObjectManager::getInstance(); //instance of\Magento\Framework\App\ObjectManager
-		$storeManager = $_objectManager->get('Magento\Store\Model\StoreManagerInterface'); 
-		return $storeManager->getStore();
+		return $this->storeManager->getStore();
 	}
 	public function getCurrentTime() {
-		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-		$objDate = $objectManager->create('Magento\Framework\Stdlib\DateTime\DateTime');
-		return $objDate->gmtDate('Y-m-d H:i');
+		return $this->dateTime->gmtDate('Y-m-d H:i');
 	}
 	public function softTrim($text, $count, $wrapText='...'){
 		if(strlen($text)>$count){
@@ -157,9 +165,15 @@ class ProductByCat extends \Magento\Catalog\Block\Product\AbstractProduct
 	}
 	public function getBaseUrlMediaCustom()
     {
-		$om = \Magento\Framework\App\ObjectManager::getInstance();
-		$storeManager = $om->get('Magento\Store\Model\StoreManagerInterface');
-        return $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+        return $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
+    }
+    public function getStockState(): StockStateInterface
+    {
+        return $this->stockState;
+    }
+    public function getStockConfiguration(): StockConfigurationInterface
+    {
+        return $this->stockConfiguration;
     }
     public function getAddToCartUrl($product, $additional = [])
     {

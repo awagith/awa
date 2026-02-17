@@ -1,0 +1,15 @@
+{
+    "name": "grupoawamotos/module-sales-intelligence",
+    "description": "Sales Intelligence & Demand Forecasting Dashboard",
+    "type": "magento2-module",
+    "require": {
+        "grupoawamotos/module-erp-integration": "*",
+        "grupoawamotos/module-b2b": "*"
+    },
+    "autoload": {
+        "files": ["registration.php"],
+        "psr-4": {
+            "GrupoAwamotos\\SalesIntelligence\\": ""
+        }
+    }
+}

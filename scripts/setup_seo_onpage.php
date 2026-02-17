@@ -73,8 +73,9 @@ $seoConfigs = [
     // Meta charset
     'design/head/default_charset' => 'UTF-8',
     
-    // Meta viewport
-    'design/head/includes' => '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
+    // Meta viewport — já definido pelo module-theme base (vendor/magento/module-theme);
+    // não duplicar via design/head/includes
+    // 'design/head/includes' => '',
     
     // Canonical URL
     'catalog/seo/canonical_url' => 1,

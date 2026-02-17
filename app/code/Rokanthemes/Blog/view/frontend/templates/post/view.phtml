@@ -21,7 +21,7 @@
     <div class="post-holder post-holder-<?php echo $_post->getId() ?>">
 		<div class="post-images">
 			<a href="<?php echo $_post->getPostUrl() ?>">
-				<img src="<?php echo $this->getMediaFolder().$_post->getThumbnailimage() ?>"/>
+				<img src="<?php echo $this->getMediaFolder().$_post->getThumbnailimage() ?>" loading="lazy"/>
 			</a> 
 			<?php echo $this->getInfoHtml() ?>
 		</div> 

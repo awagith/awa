@@ -12,13 +12,16 @@
 "In Stock","Em Estoque"
 "Special Price","Preço Especial"
 "Regular Price","Preço Normal"
-"Save","Economize"
-"Discount","Desconto"
+Save,Economize
+Discount,Desconto
 "% Off","% de Desconto"
 "Hurry! Limited Stock","Rápido! Estoque Limitado"
 "Ends In","Termina em"
-"Days","Dias"
-"Hours","Horas"
-"Minutes","Minutos"
-"Seconds","Segundos"
+Days,Dias
+Hours,Horas
+Minutes,Minutos
+Seconds,Segundos
 "Deal Expired","Oferta Expirada"
+"View All","Ver Todos"
+Loading...,Carregando...
+Search,Buscar

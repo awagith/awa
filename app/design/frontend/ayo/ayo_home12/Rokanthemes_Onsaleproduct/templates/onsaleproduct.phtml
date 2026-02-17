@@ -51,10 +51,10 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 									$specialPriceToDate = $_product->getSpecialToDate();
 									// Get Current date
 									if ($specialprice&&($specialPriceFromDate <= $now && $specialPriceToDate >= $now)){
-										echo "<span class='icon-sale icon-product'><?php echo __('Sale') ?></span>";
+										echo "<span class='icon-sale icon-product'>" . __('Sale') . "</span>";
 									}else{
 									if($newFromDate <= $now && $newToDate >= $now) {
-										echo "<span class='icon-new icon-product'><?php echo __('Hot') ?></span>";
+										echo "<span class='icon-new icon-product'>" . __('Hot') . "</span>";
 									 		//echo $now.' -- '.$newsFrom.' -- '.$newsTo;
 									 	}
 									}

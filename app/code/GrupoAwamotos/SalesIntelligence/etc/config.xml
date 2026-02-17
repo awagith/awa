@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <salesintelligence>
+            <general>
+                <enabled>1</enabled>
+            </general>
+            <alerts>
+                <enabled>1</enabled>
+                <recipient_email/>
+                <weekly_report>1</weekly_report>
+                <stockout_enabled>1</stockout_enabled>
+                <stockout_threshold>15</stockout_threshold>
+                <revenue_enabled>1</revenue_enabled>
+                <revenue_warning_pct>-5</revenue_warning_pct>
+                <revenue_critical_pct>-15</revenue_critical_pct>
+                <pipeline_enabled>1</pipeline_enabled>
+                <churn_enabled>1</churn_enabled>
+                <churn_threshold>5</churn_threshold>
+            </alerts>
+        </salesintelligence>
+    </default>
+</config>

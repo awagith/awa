@@ -7,16 +7,48 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
 
-    <!-- Observer para verificar ERP após registro B2B -->
+    <!-- Observer para verificar ERP e notificar após registro B2B -->
     <event name="customer_register_success">
         <observer name="grupoawamotos_b2b_erp_registration_check"
                   instance="GrupoAwamotos\B2B\Observer\ErpRegistrationCheckObserver"/>
+        <observer name="grupoawamotos_b2b_registration_notification"
+                  instance="GrupoAwamotos\B2B\Observer\CustomerRegistrationNotification"/>
     </event>
 
-    <!-- Observer para sincronizar com ERP após aprovação -->
+    <!-- Observer para sincronizar com ERP e notificar após aprovação -->
     <event name="grupoawamotos_b2b_customer_approved">
         <observer name="grupoawamotos_b2b_erp_approval_sync"
                   instance="GrupoAwamotos\B2B\Observer\ErpApprovalSyncObserver"/>
+        <observer name="grupoawamotos_b2b_approval_whatsapp_notification"
+                  instance="GrupoAwamotos\B2B\Observer\CustomerApprovalNotification"/>
+        <observer name="grupoawamotos_b2b_company_auto_create"
+                  instance="GrupoAwamotos\B2B\Observer\CustomerApprovedObserver"/>
+    </event>
+
+    <!-- Notificação de novo pedido B2B -->
+    <event name="sales_order_place_after">
+        <observer name="grupoawamotos_b2b_order_notification"
+                  instance="GrupoAwamotos\B2B\Observer\OrderNotification"/>
+        <observer name="grupoawamotos_b2b_order_approval_trigger"
+                  instance="GrupoAwamotos\B2B\Observer\OrderPlaceAfterObserver"/>
+    </event>
+
+    <!-- Notificação de mudança de status do pedido -->
+    <event name="sales_order_save_after">
+        <observer name="grupoawamotos_b2b_order_status_notification"
+                  instance="GrupoAwamotos\B2B\Observer\OrderStatusNotification"/>
+    </event>
+
+    <!-- Notificação de nova cotação -->
+    <event name="grupoawamotos_b2b_quote_submit_after">
+        <observer name="grupoawamotos_b2b_quote_notification"
+                  instance="GrupoAwamotos\B2B\Observer\QuoteNotification"/>
+    </event>
+
+    <!-- Notificação de resposta de cotação -->
+    <event name="grupoawamotos_b2b_quote_response_after">
+        <observer name="grupoawamotos_b2b_quote_response_notification"
+                  instance="GrupoAwamotos\B2B\Observer\QuoteNotification"/>
     </event>
 
 </config>

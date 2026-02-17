@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420" role="img" aria-labelledby="t d">
+  <title id="t">Combos com Desconto</title>
+  <desc id="d">Banner lateral de ofertas especiais e combos.</desc>
+  <defs>
+    <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f1720"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+  </defs>
+  <rect width="720" height="420" fill="url(#g2)"/>
+  <rect x="520" y="30" width="150" height="70" rx="12" fill="#b73337"/>
+  <text x="595" y="76" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700" fill="#ffffff">-15%</text>
+  <text x="56" y="170" font-family="Arial, Helvetica, sans-serif" font-size="26" fill="#ffffff" opacity="0.85">Ofertas especiais</text>
+  <text x="56" y="220" font-family="Arial, Helvetica, sans-serif" font-size="52" font-weight="700" fill="#ffffff">Combos</text>
+  <text x="56" y="270" font-family="Arial, Helvetica, sans-serif" font-size="24" fill="#ffffff">Economize agora</text>
+</svg>

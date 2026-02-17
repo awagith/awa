@@ -1,0 +1,537 @@
+<?php
+/**
+ * Forecast Index Template
+ *
+ * @var \GrupoAwamotos\SmartSuggestions\Block\Adminhtml\Forecast\Index $block
+ */
+
+$projection = $block->getMonthProjection();
+$nextMonth = $block->getNextMonthProjection();
+$monthlyData = $block->getMonthlyComparison();
+?>
+
+<div class="smart-dashboard">
+    <!-- Header -->
+    <div class="smart-dashboard-header">
+        <h1>Projeções de Vendas</h1>
+        <p>Análise de tendências e previsões de fechamento</p>
+    </div>
+
+    <!-- Current Month Projection -->
+    <div class="forecast-current-month">
+        <h2>📊 <?= $block->escapeHtml($block->getCurrentMonthName()) ?></h2>
+
+        <div class="forecast-main-cards">
+            <!-- Progress Card -->
+            <div class="forecast-progress-card">
+                <div class="progress-header">
+                    <span class="progress-title">Progresso do Mês</span>
+                    <span class="progress-days"><?= (int)($projection['days_passed'] ?? 0) ?> de <?= (int)($projection['total_days'] ?? 0) ?> dias</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill" style="width: <?= min(100, $projection['progress_percentage'] ?? 0) ?>%"></div>
+                </div>
+                <div class="progress-values">
+                    <div class="progress-actual">
+                        <span class="label">Realizado</span>
+                        <span class="value"><?= $block->formatPrice($projection['actual_sales'] ?? 0) ?></span>
+                    </div>
+                    <div class="progress-projected">
+                        <span class="label">Projeção</span>
+                        <span class="value"><?= $block->formatPrice($projection['projection']['realistic'] ?? 0) ?></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projections Card -->
+            <div class="forecast-projections-card">
+                <h4>Cenários de Fechamento</h4>
+                <div class="scenarios">
+                    <div class="scenario pessimistic">
+                        <span class="scenario-label">Pessimista (P10)</span>
+                        <span class="scenario-value"><?= $block->formatPrice($projection['projection']['pessimistic'] ?? 0) ?></span>
+                    </div>
+                    <div class="scenario realistic">
+                        <span class="scenario-label">Realista (P50)</span>
+                        <span class="scenario-value"><?= $block->formatPrice($projection['projection']['realistic'] ?? 0) ?></span>
+                    </div>
+                    <div class="scenario optimistic">
+                        <span class="scenario-label">Otimista (P90)</span>
+                        <span class="scenario-value"><?= $block->formatPrice($projection['projection']['optimistic'] ?? 0) ?></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison Card -->
+            <div class="forecast-comparison-card">
+                <h4>Comparativo</h4>
+                <div class="comparisons">
+                    <div class="comparison">
+                        <span class="comparison-label">vs Mês Anterior</span>
+                        <span class="comparison-value <?= ($projection['comparison']['vs_last_month'] ?? 0) >= 0 ? 'positive' : 'negative' ?>">
+                            <?= ($projection['comparison']['vs_last_month'] ?? 0) >= 0 ? '+' : '' ?><?= (float)($projection['comparison']['vs_last_month'] ?? 0) ?>%
+                        </span>
+                        <span class="comparison-base"><?= $block->formatPrice($projection['comparison']['last_month_value'] ?? 0) ?></span>
+                    </div>
+                    <div class="comparison">
+                        <span class="comparison-label">vs Mesmo Período Ano Anterior</span>
+                        <span class="comparison-value <?= ($projection['comparison']['vs_last_year'] ?? 0) >= 0 ? 'positive' : 'negative' ?>">
+                            <?= ($projection['comparison']['vs_last_year'] ?? 0) >= 0 ? '+' : '' ?><?= (float)($projection['comparison']['vs_last_year'] ?? 0) ?>%
+                        </span>
+                        <span class="comparison-base"><?= $block->formatPrice($projection['comparison']['last_year_value'] ?? 0) ?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Goal Alert -->
+        <?php if (isset($projection['goal']) && !$projection['goal']['achievable']): ?>
+        <div class="forecast-alert">
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+                <strong>Meta Agressiva</strong>
+                <p>Para atingir a meta de <?= $block->formatPrice($projection['goal']['value']) ?>, é necessário
+                   <?= $block->formatPrice($projection['goal']['daily_target']) ?>/dia nos próximos
+                   <?= (int)$projection['days_remaining'] ?> dias. A média atual é <?= $block->formatPrice($projection['daily_average'] ?? 0) ?>/dia.</p>
+            </div>
+        </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="smart-charts-row">
+        <!-- Daily Sales Chart -->
+        <div class="smart-chart-card">
+            <div class="smart-chart-header">
+                <h3>Vendas Diárias (60 dias)</h3>
+            </div>
+            <div id="daily-sales-chart" class="smart-chart"></div>
+        </div>
+
+        <!-- Monthly Comparison Chart -->
+        <div class="smart-chart-card">
+            <div class="smart-chart-header">
+                <h3>Histórico Mensal (12 meses)</h3>
+            </div>
+            <div id="monthly-chart" class="smart-chart"></div>
+        </div>
+    </div>
+
+    <!-- Next Month Projection -->
+    <?php if (!empty($nextMonth)): ?>
+    <div class="forecast-next-month">
+        <h3>📅 Projeção - <?= $block->escapeHtml($nextMonth['month_name'] ?? 'Próximo Mês') ?></h3>
+        <div class="next-month-content">
+            <div class="next-month-value">
+                <span class="projection-label">Projeção Base</span>
+                <span class="projection-value"><?= $block->formatPrice($nextMonth['projection'] ?? 0) ?></span>
+                <span class="projection-range">
+                    Faixa: <?= $block->formatPrice($nextMonth['range']['min'] ?? 0) ?>
+                    - <?= $block->formatPrice($nextMonth['range']['max'] ?? 0) ?>
+                </span>
+            </div>
+            <div class="next-month-factors">
+                <div class="factor">
+                    <span class="factor-icon">📊</span>
+                    <span class="factor-label">Índice Sazonal</span>
+                    <span class="factor-value"><?= number_format(($nextMonth['seasonal_factor'] ?? 1) * 100, 1) ?>%</span>
+                </div>
+                <div class="factor">
+                    <span class="factor-icon">📈</span>
+                    <span class="factor-label">Tendência de Crescimento</span>
+                    <span class="factor-value <?= ($nextMonth['growth_factor'] ?? 0) >= 0 ? 'positive' : 'negative' ?>">
+                        <?= ($nextMonth['growth_factor'] ?? 0) >= 0 ? '+' : '' ?><?= number_format(($nextMonth['growth_factor'] ?? 0) * 100, 1) ?>%
+                    </span>
+                </div>
+                <div class="factor">
+                    <span class="factor-icon">💰</span>
+                    <span class="factor-label">Base (Média 3 meses)</span>
+                    <span class="factor-value"><?= $block->formatPrice($nextMonth['base_value'] ?? 0) ?></span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Monthly Data Table -->
+    <div class="smart-table-card">
+        <div class="smart-table-header">
+            <h3>Histórico Mensal Detalhado</h3>
+        </div>
+        <table class="data-grid">
+            <thead>
+                <tr>
+                    <th>Mês</th>
+                    <th class="_right">Vendas</th>
+                    <th class="_right">Pedidos</th>
+                    <th class="_right">Clientes</th>
+                    <th class="_right">Ticket Médio</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach (array_reverse($monthlyData) as $month): ?>
+                <tr>
+                    <td><strong><?= $block->escapeHtml($month['month_name']) ?> <?= $month['year'] ?></strong></td>
+                    <td class="_right"><?= $block->formatPrice($month['total']) ?></td>
+                    <td class="_right"><?= $block->formatNumber($month['orders']) ?></td>
+                    <td class="_right"><?= $block->formatNumber($month['customers']) ?></td>
+                    <td class="_right"><?= $block->formatPrice($month['ticket_medio']) ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ApexCharts Library -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.44.0/dist/apexcharts.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Daily Sales Chart
+    var salesData = <?= /* @noEscape */ $block->getSalesTrendChartData() ?>;
+
+    if (salesData.dates && salesData.dates.length > 0) {
+        var dailyOptions = {
+            chart: {
+                type: 'area',
+                height: 350,
+                toolbar: { show: true },
+                zoom: { enabled: true }
+            },
+            series: [
+                { name: 'Vendas', data: salesData.sales },
+                { name: 'Média Móvel (7d)', data: salesData.moving_avg }
+            ],
+            xaxis: {
+                categories: salesData.dates,
+                type: 'datetime',
+                labels: { datetimeFormatter: { day: 'dd/MM' } }
+            },
+            yaxis: {
+                labels: {
+                    formatter: function(val) {
+                        return 'R$ ' + (val / 1000).toFixed(0) + 'K';
+                    }
+                }
+            },
+            stroke: { curve: 'smooth', width: [2, 2], dashArray: [0, 5] },
+            fill: {
+                type: 'gradient',
+                gradient: { shadeIntensity: 1, opacityFrom: 0.5, opacityTo: 0.1 }
+            },
+            colors: ['#667eea', '#FEB019'],
+            dataLabels: { enabled: false },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return 'R$ ' + (val || 0).toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                    }
+                }
+            }
+        };
+
+        new ApexCharts(document.querySelector("#daily-sales-chart"), dailyOptions).render();
+    }
+
+    // Monthly Chart
+    var monthlyData = <?= /* @noEscape */ $block->getMonthlyChartData() ?>;
+
+    if (monthlyData.labels && monthlyData.labels.length > 0) {
+        var monthlyOptions = {
+            chart: {
+                type: 'bar',
+                height: 350,
+                toolbar: { show: true }
+            },
+            series: [
+                { name: 'Vendas', data: monthlyData.sales }
+            ],
+            xaxis: {
+                categories: monthlyData.labels
+            },
+            yaxis: {
+                labels: {
+                    formatter: function(val) {
+                        return 'R$ ' + (val / 1000).toFixed(0) + 'K';
+                    }
+                }
+            },
+            colors: ['#667eea'],
+            plotOptions: {
+                bar: {
+                    borderRadius: 8,
+                    columnWidth: '60%'
+                }
+            },
+            dataLabels: { enabled: false },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return 'R$ ' + val.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                    }
+                }
+            }
+        };
+
+        new ApexCharts(document.querySelector("#monthly-chart"), monthlyOptions).render();
+    }
+});
+</script>
+
+<style>
+/* Current Month Section */
+.forecast-current-month {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.forecast-current-month h2 {
+    margin: 0 0 20px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a2e;
+}
+
+.forecast-main-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+/* Progress Card */
+.forecast-progress-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    padding: 20px;
+    color: #fff;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.progress-title { font-weight: 600; }
+.progress-days { opacity: 0.9; font-size: 13px; }
+
+.progress-bar-container {
+    height: 10px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    background: #fff;
+    border-radius: 5px;
+    transition: width 0.5s ease;
+}
+
+.progress-values {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+}
+
+.progress-values .label {
+    display: block;
+    font-size: 12px;
+    opacity: 0.85;
+}
+
+.progress-values .value {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 4px;
+}
+
+/* Projections Card */
+.forecast-projections-card,
+.forecast-comparison-card {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.forecast-projections-card h4,
+.forecast-comparison-card h4 {
+    margin: 0 0 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.scenarios {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.scenario {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.scenario.pessimistic { border-left: 4px solid #FF4560; }
+.scenario.realistic { border-left: 4px solid #00E396; }
+.scenario.optimistic { border-left: 4px solid #008FFB; }
+
+.scenario-label {
+    font-size: 12px;
+    color: #666;
+}
+
+.scenario-value {
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+}
+
+/* Comparisons */
+.comparisons {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.comparison {
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px;
+    background: #fff;
+    border-radius: 8px;
+}
+
+.comparison-label {
+    font-size: 12px;
+    color: #666;
+}
+
+.comparison-value {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 4px 0;
+}
+
+.comparison-value.positive { color: #00E396; }
+.comparison-value.negative { color: #FF4560; }
+
+.comparison-base {
+    font-size: 11px;
+    color: #888;
+}
+
+/* Alert */
+.forecast-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    background: #fff3e0;
+    border-radius: 12px;
+    margin-top: 20px;
+    border-left: 4px solid #ef6c00;
+}
+
+.alert-icon {
+    font-size: 24px;
+}
+
+.alert-content strong {
+    display: block;
+    color: #ef6c00;
+    margin-bottom: 4px;
+}
+
+.alert-content p {
+    margin: 0;
+    font-size: 13px;
+    color: #666;
+}
+
+/* Next Month */
+.forecast-next-month {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.forecast-next-month h3 {
+    margin: 0 0 20px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.next-month-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+}
+
+.next-month-value .projection-label {
+    display: block;
+    font-size: 12px;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.next-month-value .projection-value {
+    display: block;
+    font-size: 36px;
+    font-weight: 700;
+    color: #667eea;
+    margin: 8px 0;
+}
+
+.next-month-value .projection-range {
+    font-size: 13px;
+    color: #666;
+}
+
+.next-month-factors {
+    display: flex;
+    gap: 30px;
+}
+
+.next-month-factors .factor {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.factor-icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.factor-label {
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 4px;
+}
+
+.factor-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.factor-value.positive { color: #00E396; }
+.factor-value.negative { color: #FF4560; }
+</style>

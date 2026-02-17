@@ -19,45 +19,25 @@ $enableLazyLoadingWithoutBorders = (bool)$block->getVar(
     'Magento_Catalog'
 );
 $width = (int)$block->getWidth();
+$height = (int)$block->getHeight();
 $paddingBottom = $block->getRatio() * 100;
-$id_product_fixed = $block->getProductId().rand();
+$productId = (string)$block->getProductId();
+$uniqueId = $escaper->escapeHtmlAttr($productId !== '' ? $productId : 'no-product');
 ?>
-<span class="product-image-container product-image-container-<?= /* @noEscape */ $id_product_fixed ?>">
-    <span class="product-image-wrapper">
+<span class="product-image-container product-image-container-<?= /* @noEscape */ $uniqueId ?>"
+      style="width: <?= /* @noEscape */ $width ?>px;">
+    <span class="product-image-wrapper" style="padding-bottom: <?= /* @noEscape */ $paddingBottom ?>%;">
         <img class="<?= $escaper->escapeHtmlAttr($block->getClass()) ?>"
             <?php foreach ($block->getCustomAttributes() as $name => $value): ?>
                 <?= $escaper->escapeHtmlAttr($name) ?>="<?= $escaper->escapeHtmlAttr($value) ?>"
             <?php endforeach; ?>
             src="<?= $escaper->escapeUrl($block->getImageUrl()) ?>"
             loading="lazy"
+            decoding="async"
+            width="<?= /* @noEscape */ $width ?>"
+            height="<?= /* @noEscape */ $height ?>"
             <?php if ($borders || $enableLazyLoadingWithoutBorders): ?>
             <?php else: ?>
             <?php endif; ?>
             alt="<?= $escaper->escapeHtmlAttr($block->getLabel()) ?>"/></span>
 </span>
-<?php
-$styles = <<<STYLE
-.product-image-container-{$id_product_fixed} {
-    width: {$width}px;
-}
-.product-image-container-{$id_product_fixed} span.product-image-wrapper {
-    padding-bottom: {$paddingBottom}%;
-}
-STYLE;
-//In case a script was using "style" attributes of these elements
-$script = <<<SCRIPT
-prodImageContainers = document.querySelectorAll(".product-image-container-{$id_product_fixed}");
-for (var i = 0; i < prodImageContainers.length; i++) {
-    prodImageContainers[i].style.width = "{$width}px";
-}
-prodImageContainersWrappers = document.querySelectorAll(
-    ".product-image-container-{$id_product_fixed}  span.product-image-wrapper"
-);
-for (var i = 0; i < prodImageContainersWrappers.length; i++) {
-    prodImageContainersWrappers[i].style.paddingBottom = "{$paddingBottom}%";
-}
-SCRIPT;
-
-?>
-<?= /* @noEscape */ $secureRenderer->renderTag('style', [], $styles, false) ?>
-<?= /* @noEscape */ $secureRenderer->renderTag('script', [], $script, false) ?>

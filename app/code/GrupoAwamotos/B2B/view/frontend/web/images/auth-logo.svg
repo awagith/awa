@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="96" viewBox="0 0 320 96" role="img" aria-labelledby="title desc">
+  <title id="title">Grupo AWA Motos</title>
+  <desc id="desc">Logotipo de fallback para autenticacao B2B</desc>
+  <defs>
+    <linearGradient id="awaRed" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c72d32"/>
+      <stop offset="100%" stop-color="#aa1f24"/>
+    </linearGradient>
+  </defs>
+  <rect width="320" height="96" fill="none"/>
+  <ellipse cx="54" cy="42" rx="42" ry="26" fill="none" stroke="url(#awaRed)" stroke-width="6"/>
+  <text x="54" y="51" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="26" fill="#1d2228">AWA</text>
+  <text x="112" y="45" font-family="Arial, Helvetica, sans-serif" font-weight="700" font-size="27" fill="#1d2228">MOTOS</text>
+  <text x="112" y="66" font-family="Arial, Helvetica, sans-serif" font-weight="600" font-size="12" fill="#c72d32" letter-spacing="1.2">GRUPO AWA</text>
+</svg>

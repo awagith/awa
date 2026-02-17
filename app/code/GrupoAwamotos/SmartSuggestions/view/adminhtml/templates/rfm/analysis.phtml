@@ -1,0 +1,494 @@
+<?php
+/**
+ * RFM Analysis Template
+ *
+ * @var \GrupoAwamotos\SmartSuggestions\Block\Adminhtml\Rfm\Analysis $block
+ */
+
+$segments = $block->getSegments();
+$customers = $block->getPaginatedCustomers();
+$currentSegment = $block->getCurrentSegment();
+$totalPages = $block->getTotalPages();
+$currentPage = $block->getCurrentPage();
+$rfmExplanation = $block->getRfmExplanation();
+?>
+
+<div class="smart-dashboard">
+    <!-- Header -->
+    <div class="smart-dashboard-header">
+        <h1>Análise RFM - Segmentação de Clientes</h1>
+        <p>Recência, Frequência e Valor Monetário</p>
+    </div>
+
+    <!-- RFM Explanation -->
+    <div class="rfm-explanation">
+        <h3>O que é RFM?</h3>
+        <div class="rfm-metrics">
+            <?php foreach ($rfmExplanation as $letter => $info): ?>
+            <div class="rfm-metric">
+                <div class="rfm-letter"><?= $block->escapeHtml($letter) ?></div>
+                <div class="rfm-info">
+                    <strong><?= $block->escapeHtml($info['name']) ?></strong>
+                    <p><?= $block->escapeHtml($info['description']) ?></p>
+                    <small><?= $block->escapeHtml($info['interpretation']) ?></small>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- Segment Cards -->
+    <div class="rfm-segments-filter">
+        <h3>Filtrar por Segmento</h3>
+        <div class="rfm-segment-cards">
+            <a href="<?= $block->escapeUrl($block->getSegmentUrl(null)) ?>"
+               class="rfm-segment-card <?= !$currentSegment ? 'active' : '' ?>">
+                <span class="segment-name">Todos</span>
+                <span class="segment-count"><?= $block->formatNumber(array_sum(array_column($segments, 'count'))) ?></span>
+            </a>
+            <?php foreach ($segments as $segment): ?>
+            <a href="<?= $block->escapeUrl($block->getSegmentUrl($segment['segment'])) ?>"
+               class="rfm-segment-card <?= $currentSegment === $segment['segment'] ? 'active' : '' ?>"
+               style="--segment-color: <?= $block->escapeHtml($segment['color']) ?>">
+                <span class="segment-name"><?= $block->escapeHtml($segment['segment']) ?></span>
+                <span class="segment-count"><?= $block->formatNumber($segment['count']) ?></span>
+                <span class="segment-revenue"><?= $block->formatPrice($segment['total_revenue']) ?></span>
+            </a>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- Recommendations for selected segment -->
+    <?php if ($currentSegment): ?>
+    <?php $recommendations = $block->getRecommendations($currentSegment); ?>
+    <div class="rfm-recommendations">
+        <h3>Recomendações para "<?= $block->escapeHtml($currentSegment) ?>"</h3>
+        <div class="rfm-rec-content">
+            <div class="rfm-rec-action">
+                <span class="label">Ação Principal:</span>
+                <span class="value"><?= $block->escapeHtml($recommendations['action']) ?></span>
+            </div>
+            <div class="rfm-rec-priority">
+                <span class="label">Prioridade:</span>
+                <span class="value priority-<?= $block->escapeHtmlAttr(strtolower(str_replace('-', '', $recommendations['priority']))) ?>">
+                    <?= $block->escapeHtml($recommendations['priority']) ?>
+                </span>
+            </div>
+            <div class="rfm-rec-discount">
+                <span class="label">Faixa de Desconto:</span>
+                <span class="value"><?= $block->escapeHtml($recommendations['discount_range']) ?></span>
+            </div>
+        </div>
+        <div class="rfm-rec-strategies">
+            <strong>Estratégias Recomendadas:</strong>
+            <ul>
+                <?php foreach ($recommendations['strategies'] as $strategy): ?>
+                <li><?= $block->escapeHtml($strategy) ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <div class="rfm-rec-channels">
+            <strong>Canais:</strong>
+            <?php foreach ($recommendations['channels'] as $channel): ?>
+            <span class="channel-badge"><?= $block->escapeHtml($channel) ?></span>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Customer Grid -->
+    <div class="rfm-customer-grid">
+        <div class="smart-table-header">
+            <h3>
+                <?php if ($currentSegment): ?>
+                Clientes - <?= $block->escapeHtml($currentSegment) ?>
+                <?php else: ?>
+                Todos os Clientes
+                <?php endif; ?>
+                (<?= $block->formatNumber(count($block->getCustomers())) ?>)
+            </h3>
+        </div>
+
+        <table class="data-grid">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Cliente</th>
+                    <th>Cidade/UF</th>
+                    <th>Segmento</th>
+                    <th class="_center">R</th>
+                    <th class="_center">F</th>
+                    <th class="_center">M</th>
+                    <th class="_right">Recência</th>
+                    <th class="_right">Pedidos</th>
+                    <th class="_right">Valor Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($customers)): ?>
+                <tr>
+                    <td colspan="10" class="empty-text">Nenhum cliente encontrado</td>
+                </tr>
+                <?php else: ?>
+                <?php foreach ($customers as $customer): ?>
+                <tr>
+                    <td><strong>#<?= (int)$customer['customer_id'] ?></strong></td>
+                    <td>
+                        <div class="customer-info">
+                            <strong><?= $block->escapeHtml($customer['trade_name'] ?: $customer['customer_name']) ?></strong>
+                            <?php if ($customer['trade_name'] && $customer['trade_name'] !== $customer['customer_name']): ?>
+                            <small><?= $block->escapeHtml($customer['customer_name']) ?></small>
+                            <?php endif; ?>
+                        </div>
+                    </td>
+                    <td><?= $block->escapeHtml($customer['city'] . '/' . $customer['state']) ?></td>
+                    <td>
+                        <?php
+                        $segmentData = array_filter($segments, fn($s) => $s['segment'] === $customer['segment']);
+                        $segmentColor = !empty($segmentData) ? reset($segmentData)['color'] : '#999';
+                        ?>
+                        <span class="smart-badge" style="background-color: <?= $block->escapeHtmlAttr($segmentColor) ?>20; color: <?= $block->escapeHtmlAttr($segmentColor) ?>">
+                            <?= $block->escapeHtml($customer['segment']) ?>
+                        </span>
+                    </td>
+                    <td class="_center">
+                        <span class="rfm-score rfm-score-<?= (int)$customer['r_score'] ?>"><?= (int)$customer['r_score'] ?></span>
+                    </td>
+                    <td class="_center">
+                        <span class="rfm-score rfm-score-<?= (int)$customer['f_score'] ?>"><?= (int)$customer['f_score'] ?></span>
+                    </td>
+                    <td class="_center">
+                        <span class="rfm-score rfm-score-<?= (int)$customer['m_score'] ?>"><?= (int)$customer['m_score'] ?></span>
+                    </td>
+                    <td class="_right"><?= (int)$customer['recency_days'] ?> dias</td>
+                    <td class="_right"><?= $block->formatNumber($customer['frequency']) ?></td>
+                    <td class="_right"><strong><?= $block->formatPrice($customer['monetary']) ?></strong></td>
+                </tr>
+                <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <?php if ($totalPages > 1): ?>
+        <div class="rfm-pagination">
+            <div class="pagination-info">
+                Página <?= (int)$currentPage ?> de <?= (int)$totalPages ?>
+            </div>
+            <div class="pagination-links">
+                <?php if ($currentPage > 1): ?>
+                <a href="<?= $block->escapeUrl($block->getPageUrl(1)) ?>" class="action-default">Primeira</a>
+                <a href="<?= $block->escapeUrl($block->getPageUrl($currentPage - 1)) ?>" class="action-default">Anterior</a>
+                <?php endif; ?>
+
+                <?php
+                $startPage = max(1, $currentPage - 2);
+                $endPage = min($totalPages, $currentPage + 2);
+                for ($p = $startPage; $p <= $endPage; $p++):
+                ?>
+                <a href="<?= $block->escapeUrl($block->getPageUrl($p)) ?>"
+                   class="action-default <?= $p === $currentPage ? 'primary' : '' ?>">
+                    <?= (int)$p ?>
+                </a>
+                <?php endfor; ?>
+
+                <?php if ($currentPage < $totalPages): ?>
+                <a href="<?= $block->escapeUrl($block->getPageUrl($currentPage + 1)) ?>" class="action-default">Próxima</a>
+                <a href="<?= $block->escapeUrl($block->getPageUrl($totalPages)) ?>" class="action-default">Última</a>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<style>
+/* RFM Explanation */
+.rfm-explanation {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.rfm-explanation h3 {
+    margin: 0 0 16px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.rfm-metrics {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.rfm-metric {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    flex: 1;
+    min-width: 250px;
+}
+
+.rfm-letter {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rfm-info strong {
+    display: block;
+    font-size: 14px;
+    color: #333;
+}
+
+.rfm-info p {
+    margin: 4px 0;
+    font-size: 13px;
+    color: #666;
+}
+
+.rfm-info small {
+    font-size: 11px;
+    color: #00E396;
+    font-style: italic;
+}
+
+/* Segment Cards */
+.rfm-segments-filter {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+.rfm-segments-filter h3 {
+    margin: 0 0 16px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.rfm-segment-cards {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.rfm-segment-card {
+    display: flex;
+    flex-direction: column;
+    padding: 12px 16px;
+    background: #f5f7fa;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    text-decoration: none;
+    color: #333;
+    min-width: 120px;
+    transition: all 0.2s ease;
+    border-left: 4px solid var(--segment-color, #667eea);
+}
+
+.rfm-segment-card:hover {
+    background: #fff;
+    border-color: #e0e0e0;
+    transform: translateY(-2px);
+}
+
+.rfm-segment-card.active {
+    background: #fff;
+    border-color: var(--segment-color, #667eea);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.rfm-segment-card .segment-name {
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.rfm-segment-card .segment-count {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--segment-color, #667eea);
+    margin: 4px 0;
+}
+
+.rfm-segment-card .segment-revenue {
+    font-size: 11px;
+    color: #888;
+}
+
+/* Recommendations */
+.rfm-recommendations {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border-top: 4px solid #667eea;
+}
+
+.rfm-recommendations h3 {
+    margin: 0 0 16px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.rfm-rec-content {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.rfm-rec-content > div {
+    display: flex;
+    flex-direction: column;
+}
+
+.rfm-rec-content .label {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+}
+
+.rfm-rec-content .value {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.priority-alta { color: #FF4560 !important; }
+.priority-critica { color: #c62828 !important; }
+.priority-media { color: #FEB019 !important; }
+.priority-mediaalta { color: #ef6c00 !important; }
+.priority-baixa { color: #888 !important; }
+
+.rfm-rec-strategies {
+    margin-bottom: 16px;
+}
+
+.rfm-rec-strategies ul {
+    margin: 8px 0 0 20px;
+    padding: 0;
+}
+
+.rfm-rec-strategies li {
+    margin-bottom: 6px;
+    color: #555;
+}
+
+.rfm-rec-channels {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.channel-badge {
+    padding: 4px 12px;
+    background: #e3f2fd;
+    color: #1565c0;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* Customer Grid */
+.rfm-customer-grid {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+}
+
+.rfm-customer-grid .smart-table-header {
+    padding: 18px 24px;
+    background: #fafbfc;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.rfm-customer-grid .data-grid {
+    width: 100%;
+}
+
+.rfm-customer-grid .data-grid th {
+    background: #fafbfc;
+    padding: 12px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #666;
+}
+
+.rfm-customer-grid .data-grid td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.customer-info {
+    line-height: 1.4;
+}
+
+.customer-info small {
+    display: block;
+    font-size: 11px;
+    color: #888;
+}
+
+/* RFM Score Badges */
+.rfm-score {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.rfm-score-1 { background: #ffebee; color: #c62828; }
+.rfm-score-2 { background: #fff3e0; color: #ef6c00; }
+.rfm-score-3 { background: #fff8e1; color: #f9a825; }
+.rfm-score-4 { background: #e8f5e9; color: #2e7d32; }
+.rfm-score-5 { background: #e3f2fd; color: #1565c0; }
+
+/* Pagination */
+.rfm-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.pagination-info {
+    font-size: 13px;
+    color: #666;
+}
+
+.pagination-links {
+    display: flex;
+    gap: 6px;
+}
+
+.pagination-links .action-default {
+    min-width: auto;
+    padding: 6px 12px;
+}
+
+.pagination-links .action-default.primary {
+    background: #667eea;
+    color: #fff;
+}
+</style>

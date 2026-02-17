@@ -1,0 +1,866 @@
+/* ===========================================
+   AWA MOTOS — GRID UNIFICADO (Normalização Global)
+   Tema: AYO/Rokanthemes (Home5)
+
+   ARQUIVO 5/5 da camada AWA (carrega DEPOIS de awa-fixes.css).
+
+   PROPÓSITO:
+   Normalizar TODOS os grids e carrosséis da Home e Categoria
+   para um padrão visual único, eliminando empilhamento vertical
+   indevido e garantindo layout consistente em todas as resoluções.
+
+   PROBLEMA RAIZ:
+   O awa-components.css cobre .products-grid .product-items, mas
+   o tema AYO usa classes diferentes:
+     - .product-grid (UL na categoria, sem .product-items)
+     - .productTabContent (OWL container do ProductTab)
+     - .categorytab-container / .cat_1 / .cat_home (Categorytab)
+     - .rokan-featuredproduct/.rokan-bestseller/etc (módulos OWL)
+     - .product_row (wrapper de rows dentro de slides OWL)
+   Nenhuma dessas é coberta pelo CSS Grid do awa-components.
+
+   ESTRATÉGIA:
+   1. Grid da Categoria — forçar CSS Grid no container .product-grid
+      (override do float-based .category_page_grid_N do LESS legado)
+   2. Carrosséis OWL pré-init — esconder slides extras até JS init
+   3. Cards dentro de OWL — assegurar flex column + height 100%
+   4. .product_row — normalizar para não quebrar o layout de slides
+   5. Seções da Home — consistência de espaçamento e max-width
+
+   ESPECIFICIDADE:
+   body .page-wrapper (sem !important) — exceto overrides de inline.
+   ============================================================ */
+
+/* ============================================================
+   §1 — GRID DA PÁGINA DE CATEGORIA (AYO list.phtml)
+   O markup é: ul.product-grid.category_page_grid_4 > div.item-product
+   O LESS legado usa float:left + width% — substituímos por CSS Grid.
+   ============================================================ */
+body .page-wrapper .products-grid .product-grid,
+body .page-wrapper .products-grid ul.product-grid {
+    display: grid;
+    gap: var(--awa-grid-gap);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+/* Neutralizar float e nth-child clear do LESS legado */
+body .page-wrapper .products-grid .product-grid > .item-product,
+body .page-wrapper .products-grid .product-grid > div,
+body .page-wrapper .products-grid .product-grid > li {
+    float: none;
+    clear: none;
+    width: auto;
+    padding: 0;
+    margin: 0;
+}
+
+/* §1a — Breakpoints de colunas para Categoria */
+@media (width >= 1400px) {
+    body .page-wrapper .products-grid .product-grid,
+    body .page-wrapper .products-grid ul.product-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (width >= 992px) and (width <= 1399px) {
+    body .page-wrapper .products-grid .product-grid,
+    body .page-wrapper .products-grid ul.product-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (width >= 769px) and (width <= 991px) {
+    body .page-wrapper .products-grid .product-grid,
+    body .page-wrapper .products-grid ul.product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--awa-grid-gap-sm);
+    }
+}
+
+@media (width >= 480px) and (width <= 768px) {
+    body .page-wrapper .products-grid .product-grid,
+    body .page-wrapper .products-grid ul.product-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--awa-grid-gap-sm);
+    }
+}
+
+@media (width <= 479px) {
+    body .page-wrapper .products-grid .product-grid,
+    body .page-wrapper .products-grid ul.product-grid {
+        grid-template-columns: 1fr;
+        gap: var(--awa-grid-gap-xs);
+    }
+}
+
+/* §1b — Com sidebar: 1 coluna a menos no range desktop */
+@media (width >= 992px) and (width <= 1399px) {
+    body.page-layout-2columns-left .page-wrapper .products-grid .product-grid,
+    body.page-layout-2columns-right .page-wrapper .products-grid .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (width >= 1400px) {
+    body.page-layout-2columns-left .page-wrapper .products-grid .product-grid,
+    body.page-layout-2columns-right .page-wrapper .products-grid .product-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* §1c — Neutralizar o switcher de grid mode (category_page_grid_N)
+   O LESS legado define width% por .category_page_grid_2/_3/_4/_5.
+   Com CSS Grid, a coluna é controlada pelo container, não pelo item. */
+body .page-wrapper .category_page_grid_2 { grid-template-columns: repeat(2, 1fr); }
+
+body .page-wrapper .category_page_grid_3 { grid-template-columns: repeat(3, 1fr); }
+
+body .page-wrapper .category_page_grid_4 { grid-template-columns: repeat(4, 1fr); }
+
+body .page-wrapper .category_page_grid_5 { grid-template-columns: repeat(5, 1fr); }
+
+/* Ainda respeitar breakpoints móveis para qualquer grid_N */
+@media (width >= 769px) and (width <= 991px) {
+    body .page-wrapper .category_page_grid_4,
+    body .page-wrapper .category_page_grid_5 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (width >= 480px) and (width <= 768px) {
+    body .page-wrapper .category_page_grid_2,
+    body .page-wrapper .category_page_grid_3,
+    body .page-wrapper .category_page_grid_4,
+    body .page-wrapper .category_page_grid_5 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (width <= 479px) {
+    body .page-wrapper .category_page_grid_2,
+    body .page-wrapper .category_page_grid_3,
+    body .page-wrapper .category_page_grid_4,
+    body .page-wrapper .category_page_grid_5 {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
+   §1d — HOTFIX CATEGORIA (container-products-switch + 2 colunas)
+   Mantém o controle estrutural da categoria centralizado neste arquivo.
+   ============================================================ */
+body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row {
+    display: grid;
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    gap: var(--awa-gap);
+    align-items: start;
+}
+
+body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row > [class*="col-sm-3"] {
+    float: none;
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+    order: 1;
+}
+
+body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row > .col-main {
+    float: none;
+    width: auto;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0;
+    order: 2;
+}
+
+body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--awa-grid-gap);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch > li.item-product,
+body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch > div.item-product,
+body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch > li,
+body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch > div {
+    float: none;
+    clear: none;
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+}
+
+/* Fallback visual para OWL pré-init na categoria */
+body.catalog-category-view .page-wrapper .owl:not(.owl-carousel) {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--awa-space-3);
+    overflow: hidden;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+body.catalog-category-view .page-wrapper .owl:not(.owl-carousel) > li,
+body.catalog-category-view .page-wrapper .owl:not(.owl-carousel) > .item,
+body.catalog-category-view .page-wrapper .owl:not(.owl-carousel) > .item-product,
+body.catalog-category-view .page-wrapper .owl:not(.owl-carousel) > .product_row {
+    flex: 0 0 100%;
+    min-width: 0;
+}
+
+@media (width >= 1400px) {
+    body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+@media (width >= 992px) and (width <= 1399px) {
+    body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (width >= 768px) and (width <= 991px) {
+    body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row {
+        grid-template-columns: 1fr;
+    }
+
+    body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row > [class*="col-sm-3"],
+    body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row > .col-main {
+        order: initial;
+    }
+
+    body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (width >= 480px) and (width <= 767px) {
+    body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row {
+        grid-template-columns: 1fr;
+    }
+
+    body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (width <= 479px) {
+    body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row {
+        grid-template-columns: 1fr;
+    }
+
+    body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
+   §2 — OWL CAROUSEL PRÉ-INIT (TODOS OS MÓDULOS)
+   Antes do JS OWL carregar, os slides empilham verticalmente.
+   Solução: esconder todos exceto o primeiro grupo de itens
+   até que a classe .owl-carousel seja adicionada pelo JS.
+   ============================================================ */
+
+/* §2a — Módulos que usam ul.owl como container */
+body .page-wrapper .rokan-featuredproduct .owl:not(.owl-carousel) > li ~ li,
+body .page-wrapper .rokan-bestseller .owl:not(.owl-carousel) > li ~ li,
+body .page-wrapper .rokan-newproduct .owl:not(.owl-carousel) > li ~ li,
+body .page-wrapper .rokan-mostviewed .owl:not(.owl-carousel) > li ~ li,
+body .page-wrapper .rokan-toprate .owl:not(.owl-carousel) > li ~ li,
+body .page-wrapper .rokan-onsaleproduct .owl:not(.owl-carousel) > li ~ li {
+    display: none;
+}
+
+/* Mostrar primeiro grupo como flex row inline enquanto OWL não inicializou */
+body .page-wrapper .rokan-featuredproduct .owl:not(.owl-carousel),
+body .page-wrapper .rokan-bestseller .owl:not(.owl-carousel),
+body .page-wrapper .rokan-newproduct .owl:not(.owl-carousel),
+body .page-wrapper .rokan-mostviewed .owl:not(.owl-carousel),
+body .page-wrapper .rokan-toprate .owl:not(.owl-carousel),
+body .page-wrapper .rokan-onsaleproduct .owl:not(.owl-carousel) {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: var(--awa-grid-gap-sm);
+}
+
+body .page-wrapper .rokan-featuredproduct .owl:not(.owl-carousel) > li:first-child,
+body .page-wrapper .rokan-bestseller .owl:not(.owl-carousel) > li:first-child,
+body .page-wrapper .rokan-newproduct .owl:not(.owl-carousel) > li:first-child,
+body .page-wrapper .rokan-mostviewed .owl:not(.owl-carousel) > li:first-child,
+body .page-wrapper .rokan-toprate .owl:not(.owl-carousel) > li:first-child,
+body .page-wrapper .rokan-onsaleproduct .owl:not(.owl-carousel) > li:first-child {
+    display: block;
+    flex: 0 0 25%;
+    min-width: 0;
+}
+
+/* §2b — Fallback robusto para módulos que já vêm com .owl-carousel no HTML.
+   Antes do JS do OWL montar .owl-wrapper/.owl-item, os slides estão como filhos diretos
+   (.product_row) e precisam ficar lado a lado para evitar lista vertical quebrada. */
+body .page-wrapper .cat_home.owl-carousel > .product_row,
+body .page-wrapper .cat_home2.owl-carousel > .product_row,
+body .page-wrapper .productTabContent.owl-carousel > .product_row,
+body .page-wrapper .category_tab_slider.owl-carousel > .product_row,
+body .page-wrapper .hot-deal-slide.owl-carousel > .product_row {
+    float: left !important;
+    clear: none !important;
+    display: block !important;
+    width: 25% !important;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* Alguns templates usam item direto (sem .product_row) antes da init do OWL. */
+body .page-wrapper .cat_home.owl-carousel > .item-product,
+body .page-wrapper .cat_home2.owl-carousel > .item-product,
+body .page-wrapper .productTabContent.owl-carousel > .item-product,
+body .page-wrapper .productTabContent.owl-carousel > .item-product-parent,
+body .page-wrapper .category_tab_slider.owl-carousel > .item,
+body .page-wrapper .hot-deal-slide.owl-carousel > .item {
+    float: left !important;
+    clear: none !important;
+    display: block !important;
+    width: 25% !important;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* Pré-init: limitar quantidade visível por viewport.
+   Após init do OWL os filhos diretos deixam de ser .product_row, então esta regra não interfere. */
+body .page-wrapper .cat_home.owl-carousel > .product_row:nth-child(n+5),
+body .page-wrapper .cat_home2.owl-carousel > .product_row:nth-child(n+5),
+body .page-wrapper .productTabContent.owl-carousel > .product_row:nth-child(n+5),
+body .page-wrapper .category_tab_slider.owl-carousel > .product_row:nth-child(n+5),
+body .page-wrapper .hot-deal-slide.owl-carousel > .product_row:nth-child(n+5) {
+    display: none;
+}
+
+body .page-wrapper .cat_home.owl-carousel > .item-product:nth-child(n+5),
+body .page-wrapper .cat_home2.owl-carousel > .item-product:nth-child(n+5),
+body .page-wrapper .productTabContent.owl-carousel > .item-product:nth-child(n+5),
+body .page-wrapper .productTabContent.owl-carousel > .item-product-parent:nth-child(n+5),
+body .page-wrapper .category_tab_slider.owl-carousel > .item:nth-child(n+5),
+body .page-wrapper .hot-deal-slide.owl-carousel > .item:nth-child(n+5) {
+    display: none;
+}
+
+@media (width <= 1199px) {
+    body .page-wrapper .cat_home.owl-carousel > .product_row,
+    body .page-wrapper .cat_home2.owl-carousel > .product_row,
+    body .page-wrapper .productTabContent.owl-carousel > .product_row,
+    body .page-wrapper .category_tab_slider.owl-carousel > .product_row,
+    body .page-wrapper .hot-deal-slide.owl-carousel > .product_row {
+        width: 33.3333% !important;
+    }
+
+    body .page-wrapper .cat_home.owl-carousel > .item-product,
+    body .page-wrapper .cat_home2.owl-carousel > .item-product,
+    body .page-wrapper .productTabContent.owl-carousel > .item-product,
+    body .page-wrapper .productTabContent.owl-carousel > .item-product-parent,
+    body .page-wrapper .category_tab_slider.owl-carousel > .item,
+    body .page-wrapper .hot-deal-slide.owl-carousel > .item {
+        width: 33.3333% !important;
+    }
+
+    body .page-wrapper .cat_home.owl-carousel > .product_row:nth-child(n+4),
+    body .page-wrapper .cat_home2.owl-carousel > .product_row:nth-child(n+4),
+    body .page-wrapper .productTabContent.owl-carousel > .product_row:nth-child(n+4),
+    body .page-wrapper .category_tab_slider.owl-carousel > .product_row:nth-child(n+4),
+    body .page-wrapper .hot-deal-slide.owl-carousel > .product_row:nth-child(n+4) {
+        display: none;
+    }
+
+    body .page-wrapper .cat_home.owl-carousel > .item-product:nth-child(n+4),
+    body .page-wrapper .cat_home2.owl-carousel > .item-product:nth-child(n+4),
+    body .page-wrapper .productTabContent.owl-carousel > .item-product:nth-child(n+4),
+    body .page-wrapper .productTabContent.owl-carousel > .item-product-parent:nth-child(n+4),
+    body .page-wrapper .category_tab_slider.owl-carousel > .item:nth-child(n+4),
+    body .page-wrapper .hot-deal-slide.owl-carousel > .item:nth-child(n+4) {
+        display: none;
+    }
+}
+
+@media (width <= 991px) {
+    body .page-wrapper .cat_home.owl-carousel > .product_row,
+    body .page-wrapper .cat_home2.owl-carousel > .product_row,
+    body .page-wrapper .productTabContent.owl-carousel > .product_row,
+    body .page-wrapper .category_tab_slider.owl-carousel > .product_row,
+    body .page-wrapper .hot-deal-slide.owl-carousel > .product_row {
+        width: 50% !important;
+    }
+
+    body .page-wrapper .cat_home.owl-carousel > .item-product,
+    body .page-wrapper .cat_home2.owl-carousel > .item-product,
+    body .page-wrapper .productTabContent.owl-carousel > .item-product,
+    body .page-wrapper .productTabContent.owl-carousel > .item-product-parent,
+    body .page-wrapper .category_tab_slider.owl-carousel > .item,
+    body .page-wrapper .hot-deal-slide.owl-carousel > .item {
+        width: 50% !important;
+    }
+
+    body .page-wrapper .cat_home.owl-carousel > .product_row:nth-child(n+3),
+    body .page-wrapper .cat_home2.owl-carousel > .product_row:nth-child(n+3),
+    body .page-wrapper .productTabContent.owl-carousel > .product_row:nth-child(n+3),
+    body .page-wrapper .category_tab_slider.owl-carousel > .product_row:nth-child(n+3),
+    body .page-wrapper .hot-deal-slide.owl-carousel > .product_row:nth-child(n+3) {
+        display: none;
+    }
+
+    body .page-wrapper .cat_home.owl-carousel > .item-product:nth-child(n+3),
+    body .page-wrapper .cat_home2.owl-carousel > .item-product:nth-child(n+3),
+    body .page-wrapper .productTabContent.owl-carousel > .item-product:nth-child(n+3),
+    body .page-wrapper .productTabContent.owl-carousel > .item-product-parent:nth-child(n+3),
+    body .page-wrapper .category_tab_slider.owl-carousel > .item:nth-child(n+3),
+    body .page-wrapper .hot-deal-slide.owl-carousel > .item:nth-child(n+3) {
+        display: none;
+    }
+}
+
+@media (width <= 680px) {
+    body .page-wrapper .cat_home.owl-carousel > .product_row,
+    body .page-wrapper .cat_home2.owl-carousel > .product_row,
+    body .page-wrapper .productTabContent.owl-carousel > .product_row,
+    body .page-wrapper .category_tab_slider.owl-carousel > .product_row,
+    body .page-wrapper .hot-deal-slide.owl-carousel > .product_row {
+        width: 100% !important;
+    }
+
+    body .page-wrapper .cat_home.owl-carousel > .item-product,
+    body .page-wrapper .cat_home2.owl-carousel > .item-product,
+    body .page-wrapper .productTabContent.owl-carousel > .item-product,
+    body .page-wrapper .productTabContent.owl-carousel > .item-product-parent,
+    body .page-wrapper .category_tab_slider.owl-carousel > .item,
+    body .page-wrapper .hot-deal-slide.owl-carousel > .item {
+        width: 100% !important;
+    }
+
+    body .page-wrapper .cat_home.owl-carousel > .product_row:nth-child(n+2),
+    body .page-wrapper .cat_home2.owl-carousel > .product_row:nth-child(n+2),
+    body .page-wrapper .productTabContent.owl-carousel > .product_row:nth-child(n+2),
+    body .page-wrapper .category_tab_slider.owl-carousel > .product_row:nth-child(n+2),
+    body .page-wrapper .hot-deal-slide.owl-carousel > .product_row:nth-child(n+2) {
+        display: none;
+    }
+
+    body .page-wrapper .cat_home.owl-carousel > .item-product:nth-child(n+2),
+    body .page-wrapper .cat_home2.owl-carousel > .item-product:nth-child(n+2),
+    body .page-wrapper .productTabContent.owl-carousel > .item-product:nth-child(n+2),
+    body .page-wrapper .productTabContent.owl-carousel > .item-product-parent:nth-child(n+2),
+    body .page-wrapper .category_tab_slider.owl-carousel > .item:nth-child(n+2),
+    body .page-wrapper .hot-deal-slide.owl-carousel > .item:nth-child(n+2) {
+        display: none;
+    }
+}
+
+/* ============================================================
+   §3 — CARDS DENTRO DE OWL (pós-init)
+   Quando OWL inicializou, cada .owl-item contém um slide.
+   Garantir que os cards dentro de cada slide tenham height 100%,
+   flex-column e visual consistente com o grid estático.
+   ============================================================ */
+
+/* Cards flex-column dentro de qualquer OWL */
+body .page-wrapper .owl-carousel .owl-item .item-product,
+body .page-wrapper .owl-carousel .owl-item .product-item {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: auto;
+    float: none;
+    min-width: 0;
+}
+
+/* .product_row dentro de OWL — é wrapper vertical de N cards por slide (rows config)
+   Deve permitir stacking vertical INTENCIONAL dentro do mesmo slide */
+body .page-wrapper .owl-carousel .owl-item .product_row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--awa-grid-gap-sm);
+    height: 100%;
+}
+
+/* .item-product-parent (wrapper extra no ProductTab ayo_home5) */
+body .page-wrapper .owl-carousel .owl-item .item-product-parent {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+body .page-wrapper .owl-carousel .owl-item .item-product-parent > .item-product {
+    flex: 1;
+}
+
+/* .content-item-product (wrapper no ProductTab base e Superdeals) */
+body .page-wrapper .owl-carousel .owl-item .content-item-product {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* .item + .item-inner (Categorytab base grid.phtml) */
+body .page-wrapper .owl-carousel .owl-item .item {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+body .page-wrapper .owl-carousel .owl-item .item-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Legacy AYO rules set clear:both on tab cards; this stacks items vertically.
+   Inside Owl slides, cards must not clear previous floated items. */
+body .page-wrapper .section-bestseller .tab_container .owl-carousel .item-product,
+body .page-wrapper .section-bestseller .tab_container .owl-item .item-product,
+body .page-wrapper .product-tab .tab_container .owl-carousel .item-product,
+body .page-wrapper .categorytab-container .owl-carousel .item-product {
+    clear: none !important;
+}
+
+/* ============================================================
+   §4 — OWL PÓS-INIT: COMPATIBILIDADE OWL v1
+   .owl-wrapper deve permanecer block (padrão do plugin),
+   enquanto os .owl-item mantêm float:left.
+   ============================================================ */
+body .page-wrapper .owl-carousel .owl-wrapper {
+    display: block !important;
+}
+
+body .page-wrapper .owl-carousel .owl-item {
+    float: left;
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Garantir que owl-wrapper-outer corta overflow corretamente */
+body .page-wrapper .owl-carousel .owl-wrapper-outer {
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+/* ============================================================
+   §5 — SEÇÕES DA HOMEPAGE: ESPAÇAMENTO CONSISTENTE
+   Garantir que cada seção de produto na home tenha margin/padding
+   padronizado para ritmo visual uniforme.
+   ============================================================ */
+body .page-wrapper .rokan-featuredproduct,
+body .page-wrapper .rokan-bestseller,
+body .page-wrapper .rokan-newproduct,
+body .page-wrapper .rokan-mostviewed,
+body .page-wrapper .rokan-toprate,
+body .page-wrapper .rokan-onsaleproduct,
+body .page-wrapper .categorytab-container,
+body .page-wrapper .list-tab-product,
+body .page-wrapper .hot-deal {
+    margin-bottom: var(--awa-space-8);
+}
+
+/* Títulos de seção — espaçamento consistente */
+body .page-wrapper .rokan-product-heading,
+body .page-wrapper .rokan-featured-heading {
+    margin-bottom: var(--awa-space-6);
+}
+
+/* ============================================================
+   §6 — TABS (Categorytab e ProductTab): CONSISTÊNCIA
+   ============================================================ */
+
+/* Tab container — sem padding extra que descasa com o grid */
+body .page-wrapper .cat_1 .tab_container,
+body .page-wrapper .list-tab-product .tab_container {
+    padding: 0;
+}
+
+/* Tab content area — sem margin/padding extras */
+body .page-wrapper .cat_1 .tab_content_identify,
+body .page-wrapper .list-tab-product .tab_content {
+    padding: 0;
+}
+
+/* ============================================================
+   §7 — PRODUCT-INFO CONSISTÊNCIA
+   Garantir que a área de info (nome, preço, botão) dentro de
+   cards AYO em carrosséis tenha o mesmo padding/alinhamento
+   que os cards de grid estático.
+   ============================================================ */
+body .page-wrapper .owl-carousel .item-product .product-info {
+    padding: var(--awa-space-3) var(--awa-space-4) var(--awa-space-4);
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+body .page-wrapper .owl-carousel .item-product .product-info .product-name {
+    margin-top: 0;
+    margin-bottom: var(--awa-space-2);
+}
+
+body .page-wrapper .owl-carousel .item-product .product-info-cart {
+    margin-top: auto;
+}
+
+/* ============================================================
+   §8 — IMAGE CONTAINER UNIFORMIDADE
+   Todos os thumbnails de produto — mesma aspect-ratio e overflow.
+   ============================================================ */
+body .page-wrapper .owl-carousel .item-product .product-thumb {
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    position: relative;
+    background: var(--awa-gray-100);
+    border-radius: var(--awa-radius) var(--awa-radius) 0 0;
+}
+
+body .page-wrapper .owl-carousel .item-product .product-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* ============================================================
+   §9 — cat_special CSS Grid (fix do bug 3fr)
+   O LESS original usa repeat(3, 3fr) — corrigir para 1fr.
+   ============================================================ */
+@media (width <= 767px) {
+    body .page-wrapper .cat_special {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ============================================================
+   §10 — LIST VIEW (produtos em lista)
+   Garantir que a UL .product-list use 1 coluna sem float.
+   ============================================================ */
+body .page-wrapper .products-list .product-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--awa-grid-gap-sm);
+    list-style: none;
+    padding: 0;
+}
+
+body .page-wrapper .products-list .product-list > li {
+    float: none;
+    width: 100%;
+}
+
+body .page-wrapper .products-list .product-list .item-product {
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+body .page-wrapper .products-list .product-list .item-product .product-thumb {
+    flex: 0 0 200px;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--awa-radius) 0 0 var(--awa-radius);
+}
+
+body .page-wrapper .products-list .product-list .item-product .product-info {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (width <= 479px) {
+    body .page-wrapper .products-list .product-list .item-product {
+        flex-direction: column;
+    }
+
+    body .page-wrapper .products-list .product-list .item-product .product-thumb {
+        flex: none;
+        width: 100%;
+        border-radius: var(--awa-radius) var(--awa-radius) 0 0;
+    }
+}
+
+/* ============================================================
+   §11 — TOOLBAR / GRID SWITCHER COMPAT
+   Quando o JS switcher muda data-view-mode, atualizar grid-cols.
+   Usa seletores de atributo para compatibilidade máxima.
+   ============================================================ */
+body .page-wrapper .product-grid[data-view-mode="2"] {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+body .page-wrapper .product-grid[data-view-mode="3"] {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+body .page-wrapper .product-grid[data-view-mode="4"] {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+body .page-wrapper .product-grid[data-view-mode="5"] {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+@media (width >= 1400px) {
+    body .page-wrapper .product-grid[data-view-mode="5"] {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+@media (width >= 769px) and (width <= 991px) {
+    body .page-wrapper .product-grid[data-view-mode="4"],
+    body .page-wrapper .product-grid[data-view-mode="5"] {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (width >= 480px) and (width <= 768px) {
+    body .page-wrapper .product-grid[data-view-mode="2"],
+    body .page-wrapper .product-grid[data-view-mode="3"],
+    body .page-wrapper .product-grid[data-view-mode="4"],
+    body .page-wrapper .product-grid[data-view-mode="5"] {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (width <= 479px) {
+    body .page-wrapper .product-grid[data-view-mode="2"],
+    body .page-wrapper .product-grid[data-view-mode="3"],
+    body .page-wrapper .product-grid[data-view-mode="4"],
+    body .page-wrapper .product-grid[data-view-mode="5"] {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
+   §12 — CONTENÇÃO SEGURA
+   Evitar que badges/actions vazem para fora dos cards.
+   ============================================================ */
+body .page-wrapper .owl-carousel .item-product {
+    position: relative;
+    overflow: visible;
+    isolation: isolate;
+    border-radius: var(--awa-radius);
+    border: 1px solid var(--awa-gray-200);
+    background: #fff;
+    transition: transform var(--awa-transition),
+                box-shadow var(--awa-transition),
+                border-color var(--awa-transition);
+}
+
+body .page-wrapper .owl-carousel .item-product:hover {
+    border-color: var(--awa-gray-300);
+    box-shadow: var(--awa-shadow-hover);
+    transform: translateY(-4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body .page-wrapper .owl-carousel .item-product:hover {
+        transform: none;
+    }
+}
+
+/* ============================================================
+   §13 — OWL NAVIGATION PADRONIZADA
+   Visual único para botões prev/next em todos os carrosséis.
+   ============================================================ */
+body .page-wrapper .owl-carousel .owl-buttons {
+    position: absolute;
+    top: -50px;
+    right: 0;
+    display: flex;
+    gap: var(--awa-space-2);
+}
+
+body .page-wrapper .owl-carousel .owl-buttons .owl-prev,
+body .page-wrapper .owl-carousel .owl-buttons .owl-next {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--awa-radius-full);
+    background: var(--awa-gray-100);
+    color: var(--awa-dark);
+    border: 1px solid var(--awa-gray-200);
+    cursor: pointer;
+    transition: background var(--awa-transition),
+                color var(--awa-transition),
+                border-color var(--awa-transition);
+    font-size: 0;
+    line-height: 1;
+}
+
+body .page-wrapper .owl-carousel .owl-buttons .owl-prev::before,
+body .page-wrapper .owl-carousel .owl-buttons .owl-next::before {
+    font-family: FontAwesome, 'Font Awesome 5 Free', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+body .page-wrapper .owl-carousel .owl-buttons .owl-prev::before {
+    content: "\f104";
+}
+
+body .page-wrapper .owl-carousel .owl-buttons .owl-next::before {
+    content: "\f105";
+}
+
+body .page-wrapper .owl-carousel .owl-buttons .owl-prev:hover,
+body .page-wrapper .owl-carousel .owl-buttons .owl-next:hover {
+    background: var(--awa-red);
+    color: #fff;
+    border-color: var(--awa-red);
+}
+
+/* Dots padronizados */
+body .page-wrapper .owl-carousel .owl-pagination {
+    text-align: center;
+    margin-top: var(--awa-space-5);
+}
+
+body .page-wrapper .owl-carousel .owl-pagination .owl-page {
+    display: inline-block;
+}
+
+body .page-wrapper .owl-carousel .owl-pagination .owl-page span {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: var(--awa-radius-full);
+    background: var(--awa-gray-300);
+    margin: 0 4px;
+    transition: background var(--awa-transition), transform var(--awa-transition);
+}
+
+body .page-wrapper .owl-carousel .owl-pagination .owl-page.active span,
+body .page-wrapper .owl-carousel .owl-pagination .owl-page:hover span {
+    background: var(--awa-red);
+    transform: scale(1.2);
+}
+
+/* ============================================================
+   §14 — SAFETY NET: FALLBACK GENÉRICO ANTI-EMPILHAMENTO
+   Se nenhuma regra acima matchear, qualquer container de produto
+   sem display explicito recebe flex-wrap.
+   ============================================================ */
+body .page-wrapper [class*="rokan-"] .row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Impedir que li/div filhos sem width colapsem */
+body .page-wrapper [class*="rokan-"] .row > ul {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}

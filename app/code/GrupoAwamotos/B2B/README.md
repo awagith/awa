@@ -4,8 +4,27 @@
 
 Módulo B2B enterprise-grade para Magento 2.4.8 com funcionalidades completas para comércio business-to-business.
 
-## Versão: 1.2.0
-**Última atualização:** Dezembro 2024
+## Versão: 1.3.0
+**Última atualização:** Janeiro 2026
+
+---
+
+## 🔒 Modo de Operação
+
+### Modo Estrito (Strict) - PADRÃO
+- **Apenas cadastros B2B são permitidos**
+- Registro padrão de clientes desabilitado
+- Tentativas de acesso a `/customer/account/create` são redirecionadas para `/b2b/register`
+- Links de "Criar Conta" apontam para cadastro B2B
+- Ideal para lojas exclusivamente corporativas
+
+### Modo Misto (Mixed)
+- Permite cadastros B2B e B2C
+- Ambos os formulários de registro estão disponíveis
+- Sugestão de B2B exibida no registro padrão
+- Ideal para lojas híbridas
+
+**Configuração:** `Admin > Stores > Configuration > Grupo Awamotos > B2B Settings > General > Modo B2B`
 
 ---
 
@@ -41,7 +60,7 @@ Módulo B2B enterprise-grade para Magento 2.4.8 com funcionalidades completas pa
 ### 3. 📋 Sistema de Cotações (RFQ)
 
 **URLs:**
-- `/b2b/quote/request` - Solicitar nova cotação
+- `/b2b/quote/index` - Solicitar nova cotação
 - `/b2b/quote/history` - Histórico de cotações
 
 **Admin:**
@@ -261,6 +280,12 @@ php bin/magento setup:di:compile
 # Limpar cache
 php bin/magento cache:flush
 
+# Limpar cache de consultas de CNPJ (todas)
+php bin/magento b2b:cnpj-cache:clear
+
+# Limpar cache de consulta de um CNPJ específico
+php bin/magento b2b:cnpj-cache:clear --cnpj=11222333000181
+
 # Testar funcionalidades
 php scripts/test_b2b_module.php
 php scripts/test_b2b_enhancements.php
@@ -274,7 +299,7 @@ php scripts/test_b2b_enhancements.php
 |------|-----------|
 | `/b2b/register/index` | Formulário de cadastro B2B |
 | `/b2b/account/dashboard` | Dashboard do cliente B2B |
-| `/b2b/quote/request` | Solicitar cotação |
+| `/b2b/quote/index` | Solicitar cotação |
 | `/b2b/quote/history` | Histórico de cotações |
 | `/admin/grupoawamotos_b2b/quote/` | Admin - Listagem de cotações |
 
@@ -286,6 +311,8 @@ O módulo utiliza a API gratuita da ReceitaWS para validação de CNPJ:
 - Endpoint: `https://receitaws.com.br/v1/cnpj/{cnpj}`
 - Retorna: Razão Social, Situação, Endereço, etc.
 - Rate limit: Respeitar limites da API
+- Consulta externa, timeout, exigência de status ATIVA e cache são configuráveis no Admin:
+  `Stores > Configuration > Grupo Awamotos > B2B > Consulta CNPJ`
 
 ---
 

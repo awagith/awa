@@ -1,0 +1,71 @@
+<?php
+/**
+ * Template: Página "Ativar Acesso Online" (claim de conta)
+ *
+ * @var \GrupoAwamotos\B2B\Block\Account\Claim $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<div class="b2b-login-page">
+    <div class="b2b-login-logo">
+        <a href="<?= $escaper->escapeUrl($block->getHomeUrl()) ?>">
+            <img src="<?= $escaper->escapeUrl($block->getLogoSrc()) ?>"
+                 alt="<?= $escaper->escapeHtmlAttr($block->getLogoAlt()) ?>"
+                 loading="eager" />
+        </a>
+    </div>
+
+    <div class="b2b-login-header">
+        <div class="b2b-login-bar"></div>
+    </div>
+
+    <div class="b2b-login-card">
+        <h1 class="b2b-login-title">Ativar Acesso Online</h1>
+        <p class="b2b-login-subtitle">
+            J&aacute; comprou conosco e precisa de acesso &agrave; loja online?
+        </p>
+
+        <p class="b2b-claim-description">
+            Informe seu e-mail ou CNPJ cadastrado e enviaremos um link
+            para voc&ecirc; criar sua senha de acesso.
+        </p>
+
+        <form class="b2b-login-form"
+              action="<?= $escaper->escapeUrl($block->getFormActionUrl()) ?>"
+              method="post"
+              id="b2b-claim-form"
+              data-mage-init='{"validation":{}}'>
+            <?= $block->getBlockHtml('formkey') ?>
+
+            <div class="b2b-field">
+                <input type="text"
+                       name="cnpj_or_email"
+                       id="b2b-cnpj-or-email"
+                       required
+                       data-validate="{required:true}"
+                       placeholder="E-mail ou CNPJ" />
+            </div>
+
+            <div class="b2b-login-actions">
+                <button type="submit" class="b2b-btn-claim-submit" title="Enviar link de acesso">
+                    <span>ENVIAR LINK DE ACESSO</span>
+                </button>
+            </div>
+        </form>
+
+        <a href="<?= $escaper->escapeUrl($block->getLoginUrl()) ?>" class="b2b-claim-back">
+            &larr; Voltar para login
+        </a>
+    </div>
+
+    <div class="b2b-login-footer">
+        <a href="https://wa.me/5516997367588?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20para%20ativar%20meu%20acesso%20B2B"
+           class="b2b-login-whatsapp"
+           target="_blank"
+           rel="noopener noreferrer">
+            Precisa de ajuda? Fale conosco pelo <strong>WhatsApp</strong>
+        </a>
+        <p class="b2b-login-footer-brand">Grupo AWA Motos</p>
+        <p class="b2b-login-footer-contact">contato@grupoawamotos.com.br</p>
+    </div>
+</div>

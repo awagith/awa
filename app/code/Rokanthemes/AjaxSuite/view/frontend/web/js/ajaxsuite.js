@@ -7,15 +7,6 @@ define([
 ], function ($, $t, customerData, ajaxsuitepopup) {
     'use strict';
 
-    $(document).on('click', '[data-action="ajaxsuite-navigate"]', function (event) {
-        var targetUrl = $(this).data('url');
-
-        if (targetUrl) {
-            event.preventDefault();
-            window.location.href = targetUrl;
-        }
-    });
-
     $.widget('rokanthemes.ajaxsuite', {
         options: {
                 popupWrapperSelector : '#mb-ajaxsuite-popup-wrapper',
@@ -93,7 +84,7 @@ define([
             }
             $('body').on('click',self.options.ajaxWishList.wishlistBtnSelector, function (e) {
                 if (!get_customer_data) {
-                    $(self.options.ajaxWishList.wishlistBtnSelector).addClass("trigger-auth-popup").attr('data-action', 'ajax-popup-login').attr('href', '#').removeAttr("data-post");
+                    $(self.options.ajaxWishList.wishlistBtnSelector).addClass("trigger-auth-popup").attr('data-action', 'ajax-popup-login').attr('href', 'javascript:void(0);').removeAttr("data-post");
                     e.preventDefault();
                     return;
                 }
@@ -255,6 +246,14 @@ define([
                     self.enableAddToCartButton(form);
                     $(self.options.ajaxCart.minicartSelector).trigger('contentUpdated');
 					$('body').removeClass('ajax-cart');
+                },
+                error: function (xhr, status, error) {
+                    console.error('AjaxSuite Cart Error:', status, error);
+                    self.enableAddToCartButton(form);
+                    $(self.options.ajaxCart.minicartSelector).trigger('contentUpdated');
+                    $('body').removeClass('ajax-cart');
+                    // Fallback: submit form normally
+                    form.off('submit').submit();
                 }
             });
         },

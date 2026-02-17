@@ -1,0 +1,130 @@
+{
+    "name": "AWA Motos - Peças e Acessórios para Motos",
+    "short_name": "AWA Motos",
+    "description": "Loja online de peças, acessórios e equipamentos para motociclistas. Qualidade e preço justo para sua moto.",
+    "start_url": "/?utm_source=pwa&utm_medium=homescreen",
+    "scope": "/",
+    "display": "standalone",
+    "orientation": "portrait-primary",
+    "background_color": "#ffffff",
+    "theme_color": "#e31e24",
+    "lang": "pt-BR",
+    "dir": "ltr",
+    "categories": ["shopping", "auto", "lifestyle"],
+    "iarc_rating_id": "",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "/media/logo/stores/1/awa-icon-72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/media/logo/stores/1/awa-icon-96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/media/logo/stores/1/awa-icon-128.png",
+            "sizes": "128x128",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/media/logo/stores/1/awa-icon-144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/media/logo/stores/1/awa-icon-152.png",
+            "sizes": "152x152",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/media/logo/stores/1/awa-icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/media/logo/stores/1/awa-icon-384.png",
+            "sizes": "384x384",
+            "type": "image/png",
+            "purpose": "any maskable"
+        },
+        {
+            "src": "/media/logo/stores/1/awa-icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/media/pwa/screenshot-wide.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Página inicial AWA Motos"
+        },
+        {
+            "src": "/media/pwa/screenshot-mobile.png",
+            "sizes": "750x1334",
+            "type": "image/png",
+            "form_factor": "narrow",
+            "label": "Catálogo de produtos"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Catálogo de Peças",
+            "short_name": "Peças",
+            "description": "Navegue pelo catálogo de peças para motos",
+            "url": "/pecas.html?utm_source=pwa&utm_medium=shortcut",
+            "icons": [
+                {
+                    "src": "/media/pwa/shortcut-pecas.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Acessórios",
+            "short_name": "Acessórios",
+            "description": "Acessórios para você e sua moto",
+            "url": "/acessorios.html?utm_source=pwa&utm_medium=shortcut",
+            "icons": [
+                {
+                    "src": "/media/pwa/shortcut-acessorios.png",
+                    "sizes": "192x192"
+                }
+            ]
+        },
+        {
+            "name": "Minha Conta",
+            "short_name": "Conta",
+            "description": "Acesse sua conta",
+            "url": "/customer/account/?utm_source=pwa&utm_medium=shortcut",
+            "icons": [
+                {
+                    "src": "/media/pwa/shortcut-conta.png",
+                    "sizes": "192x192"
+                }
+            ]
+        }
+    ],
+    "related_applications": [],
+    "protocol_handlers": [],
+    "share_target": {
+        "action": "/catalogsearch/result/",
+        "method": "GET",
+        "params": {
+            "text": "q"
+        }
+    },
+    "display_override": ["standalone", "minimal-ui", "browser"]
+}

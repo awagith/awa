@@ -2,8 +2,26 @@
 /**
  * B2B Registration Form Template
  * @var \GrupoAwamotos\B2B\Block\Register\Form $block
+ * @var \Magento\Framework\Escaper $escaper
  */
+$validateCnpjUrl = $block->escapeUrl($block->getUrl('b2b/register/validateCnpj'));
+$termsUrl = $block->escapeUrl($block->getUrl('terms'));
+$privacyPolicyUrl = $block->escapeUrl($block->getUrl('privacy-policy-cookie-restriction-mode'));
 ?>
+<div class="b2b-login-page b2b-register-shell">
+    <div class="b2b-login-logo">
+        <a href="<?= $escaper->escapeUrl($block->getHomeUrl()) ?>">
+            <img src="<?= $escaper->escapeUrl($block->getLogoSrc()) ?>"
+                 alt="<?= $escaper->escapeHtmlAttr($block->getLogoAlt()) ?>"
+                 loading="eager" />
+        </a>
+    </div>
+
+    <div class="b2b-login-header">
+        <div class="b2b-login-bar"></div>
+    </div>
+
+    <div class="b2b-register-shell-content">
 <div class="b2b-register-page">
     <?php if ($block->isLoggedIn()): ?>
         <div class="b2b-already-logged">
@@ -18,17 +36,26 @@
         <div class="b2b-register-container">
             <!-- Header -->
             <div class="register-header">
-                <h1><?= $block->escapeHtml(__('Cadastro B2B')) ?></h1>
+                <h2 class="register-title"><?= $block->escapeHtml(__('Cadastro B2B - Pessoa Jurídica')) ?></h2>
                 <p class="subtitle"><?= $block->escapeHtml(__('Crie sua conta empresarial e tenha acesso a preços especiais, crédito e cotações personalizadas.')) ?></p>
+                <p class="register-trust-note"><?= $block->escapeHtml(__('Análise em até 1 dia útil. Você receberá o retorno no e-mail cadastrado.')) ?></p>
             </div>
 
             <!-- Benefits -->
             <div class="b2b-benefits">
-                <div class="benefit-item">
-                    <div class="benefit-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
-                            <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                <div class="benefit-item benefit-animate" data-animate-delay="0">
+                    <div class="benefit-icon benefit-icon-discount">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <defs>
+                                <linearGradient id="discountGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#ef4444;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#dc2626;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <circle cx="12" cy="12" r="10" fill="url(#discountGrad)" opacity="0.2"/>
+                            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" stroke="url(#discountGrad)" stroke-width="2" fill="none"/>
+                            <circle cx="7" cy="7" r="1.5" fill="url(#discountGrad)"/>
+                            <text x="14" y="15" font-size="8" font-weight="bold" fill="url(#discountGrad)">%</text>
                         </svg>
                     </div>
                     <div class="benefit-text">
@@ -36,11 +63,20 @@
                         <span><?= $block->escapeHtml(__('Até 20% de desconto em todos os produtos')) ?></span>
                     </div>
                 </div>
-                <div class="benefit-item">
-                    <div class="benefit-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                            <line x1="1" y1="10" x2="23" y2="10"></line>
+                <div class="benefit-item benefit-animate" data-animate-delay="100">
+                    <div class="benefit-icon benefit-icon-credit">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <defs>
+                                <linearGradient id="creditGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#2563eb;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <rect x="2" y="5" width="20" height="14" rx="2" fill="url(#creditGrad)" opacity="0.2"/>
+                            <rect x="2" y="5" width="20" height="14" rx="2" stroke="url(#creditGrad)" stroke-width="2" fill="none"/>
+                            <line x1="2" y1="10" x2="22" y2="10" stroke="url(#creditGrad)" stroke-width="2"/>
+                            <circle cx="6" cy="15" r="1" fill="url(#creditGrad)"/>
+                            <line x1="10" y1="15" x2="18" y2="15" stroke="url(#creditGrad)" stroke-width="1.5" opacity="0.6"/>
                         </svg>
                     </div>
                     <div class="benefit-text">
@@ -48,13 +84,21 @@
                         <span><?= $block->escapeHtml(__('Limite de crédito para faturamento')) ?></span>
                     </div>
                 </div>
-                <div class="benefit-item">
-                    <div class="benefit-icon">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                            <line x1="16" y1="13" x2="8" y2="13"></line>
-                            <line x1="16" y1="17" x2="8" y2="17"></line>
+                <div class="benefit-item benefit-animate" data-animate-delay="200">
+                    <div class="benefit-icon benefit-icon-quote">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none">
+                            <defs>
+                                <linearGradient id="quoteGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+                                    <stop offset="100%" style="stop-color:#059669;stop-opacity:1" />
+                                </linearGradient>
+                            </defs>
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" fill="url(#quoteGrad)" opacity="0.2"/>
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="url(#quoteGrad)" stroke-width="2" fill="none"/>
+                            <polyline points="14 2 14 8 20 8" stroke="url(#quoteGrad)" stroke-width="2" fill="none"/>
+                            <line x1="16" y1="13" x2="8" y2="13" stroke="url(#quoteGrad)" stroke-width="1.5"/>
+                            <line x1="16" y1="17" x2="8" y2="17" stroke="url(#quoteGrad)" stroke-width="1.5"/>
+                            <line x1="12" y1="9" x2="8" y2="9" stroke="url(#quoteGrad)" stroke-width="1.5" opacity="0.6"/>
                         </svg>
                     </div>
                     <div class="benefit-text">
@@ -67,56 +111,168 @@
             <!-- Form -->
             <form class="b2b-register-form" action="<?= $block->escapeUrl($block->getFormAction()) ?>" method="post" id="b2b-register-form" data-mage-init='{"validation":{}}'>
                 <?= $block->getBlockHtml('formkey') ?>
-                
+
+                <!-- Dados da Empresa -->
                 <div class="form-section">
                     <h3><?= $block->escapeHtml(__('Dados da Empresa')) ?></h3>
-                    
+
                     <div class="field required">
                         <label for="cnpj" class="label"><span><?= $block->escapeHtml(__('CNPJ')) ?></span></label>
-                        <div class="control">
-                            <input type="text" name="cnpj" id="cnpj" title="<?= $block->escapeHtmlAttr(__('CNPJ')) ?>" 
-                                   class="input-text" data-validate="{required:true}" 
+                        <div class="control cnpj-control">
+                            <input type="text" name="cnpj" id="cnpj" title="<?= $block->escapeHtmlAttr(__('CNPJ')) ?>"
+                                   class="input-text" data-validate="{required:true}"
                                    placeholder="00.000.000/0000-00" maxlength="18"
-                                   data-mage-init='{"inputMask": {"mask": "00.000.000/0000-00"}}'>
-                            <div class="cnpj-status"></div>
+                                   autocomplete="off">
+                            <div id="cnpj-status" class="cnpj-status"></div>
+                        </div>
+                        <div id="cnpj-feedback" class="cnpj-feedback"></div>
+                    </div>
+
+                    <!-- Dados auto-preenchidos (aparecem após consulta CNPJ) -->
+                    <div id="cnpj-company-data" class="cnpj-company-data" style="display:none;">
+                        <div class="company-info-card">
+                            <div class="company-info-header">
+                                <span class="company-info-badge" id="cnpj-source-badge">Dados da Receita Federal</span>
+                                <span id="cnpj-situacao" class="cnpj-situacao"></span>
+                            </div>
+                            <div class="company-info-grid">
+                                <div class="company-info-item">
+                                    <span class="info-label">Atividade Principal</span>
+                                    <span id="cnpj-atividade" class="info-value"></span>
+                                </div>
+                                <div class="company-info-item">
+                                    <span class="info-label">Porte</span>
+                                    <span id="cnpj-porte" class="info-value"></span>
+                                </div>
+                                <div class="company-info-item" id="cnpj-rf-telefone-row" style="display:none;">
+                                    <span class="info-label">Telefone (Receita Federal)</span>
+                                    <span id="cnpj-rf-telefone" class="info-value info-value-muted"></span>
+                                </div>
+                                <div class="company-info-item" id="cnpj-rf-email-row" style="display:none;">
+                                    <span class="info-label">E-mail (Receita Federal)</span>
+                                    <span id="cnpj-rf-email" class="info-value info-value-muted"></span>
+                                </div>
+                            </div>
+                            <div class="company-info-alert" id="cnpj-rf-contact-note" style="display:none;">
+                                <span class="alert-icon">&#9888;</span>
+                                <div class="alert-content">
+                                    <strong>Importante:</strong> Os dados de contato da Receita Federal podem ser do <strong>contador ou escritório de contabilidade</strong>.
+                                    <br>Nos campos abaixo, use <strong>seu e-mail e telefone pessoais</strong> para receber o acesso à conta.
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="field required">
                         <label for="razao_social" class="label"><span><?= $block->escapeHtml(__('Razão Social')) ?></span></label>
                         <div class="control">
-                            <input type="text" name="razao_social" id="razao_social" title="<?= $block->escapeHtmlAttr(__('Razão Social')) ?>" 
+                            <input type="text" name="razao_social" id="razao_social" title="<?= $block->escapeHtmlAttr(__('Razão Social')) ?>"
                                    class="input-text" data-validate="{required:true}" placeholder="Nome empresarial completo">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label for="nome_fantasia" class="label"><span><?= $block->escapeHtml(__('Nome Fantasia')) ?></span></label>
+                        <div class="control">
+                            <input type="text" name="nome_fantasia" id="nome_fantasia" title="<?= $block->escapeHtmlAttr(__('Nome Fantasia')) ?>"
+                                   class="input-text" placeholder="Nome comercial (opcional)">
                         </div>
                     </div>
 
                     <div class="field">
                         <label for="inscricao_estadual" class="label"><span><?= $block->escapeHtml(__('Inscrição Estadual')) ?></span></label>
                         <div class="control">
-                            <input type="text" name="inscricao_estadual" id="inscricao_estadual" 
-                                   title="<?= $block->escapeHtmlAttr(__('Inscrição Estadual')) ?>" 
-                                   class="input-text" placeholder="Opcional - deixe em branco se isento">
+                            <input type="text" name="inscricao_estadual" id="inscricao_estadual"
+                                   title="<?= $block->escapeHtmlAttr(__('Inscrição Estadual')) ?>"
+                                   class="input-text" placeholder="Deixe em branco se isento">
+                        </div>
+                    </div>
+
+                    <div class="field required">
+                        <label for="phone" class="label"><span><?= $block->escapeHtml(__('Telefone / WhatsApp')) ?></span></label>
+                        <div class="control">
+                            <input type="tel" name="phone" id="phone" title="<?= $block->escapeHtmlAttr(__('Telefone')) ?>"
+                                   class="input-text" data-validate="{required:true}" placeholder="(00) 00000-0000">
+                        </div>
+                        <div class="note"><?= $block->escapeHtml(__('Informe seu número direto, não o do contador.')) ?></div>
+                    </div>
+                </div>
+
+                <!-- Endereço Comercial (auto-preenchido) -->
+                <div class="form-section" id="address-section">
+                    <h3><?= $block->escapeHtml(__('Endereço Comercial')) ?></h3>
+
+                    <div class="field required">
+                        <label for="cep" class="label"><span><?= $block->escapeHtml(__('CEP')) ?></span></label>
+                        <div class="control">
+                            <input type="text" name="cep" id="cep" title="<?= $block->escapeHtmlAttr(__('CEP')) ?>"
+                                   class="input-text" data-validate="{required:true}" placeholder="00000-000" maxlength="9">
+                        </div>
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field field-wide required">
+                            <label for="logradouro" class="label"><span><?= $block->escapeHtml(__('Logradouro')) ?></span></label>
+                            <div class="control">
+                                <input type="text" name="logradouro" id="logradouro" title="<?= $block->escapeHtmlAttr(__('Logradouro')) ?>"
+                                       class="input-text" data-validate="{required:true}" placeholder="Rua, Avenida...">
+                            </div>
+                        </div>
+
+                        <div class="field field-narrow required">
+                            <label for="numero" class="label"><span><?= $block->escapeHtml(__('Número')) ?></span></label>
+                            <div class="control">
+                                <input type="text" name="numero" id="numero" title="<?= $block->escapeHtmlAttr(__('Número')) ?>"
+                                       class="input-text" data-validate="{required:true}" placeholder="Nº">
+                            </div>
                         </div>
                     </div>
 
                     <div class="field">
-                        <label for="phone" class="label"><span><?= $block->escapeHtml(__('Telefone Comercial')) ?></span></label>
+                        <label for="complemento" class="label"><span><?= $block->escapeHtml(__('Complemento')) ?></span></label>
                         <div class="control">
-                            <input type="tel" name="phone" id="phone" title="<?= $block->escapeHtmlAttr(__('Telefone')) ?>" 
-                                   class="input-text" placeholder="(00) 00000-0000">
+                            <input type="text" name="complemento" id="complemento" title="<?= $block->escapeHtmlAttr(__('Complemento')) ?>"
+                                   class="input-text" placeholder="Sala, Andar, Bloco...">
+                        </div>
+                    </div>
+
+                    <div class="field-row">
+                        <div class="field required">
+                            <label for="bairro" class="label"><span><?= $block->escapeHtml(__('Bairro')) ?></span></label>
+                            <div class="control">
+                                <input type="text" name="bairro" id="bairro" title="<?= $block->escapeHtmlAttr(__('Bairro')) ?>"
+                                       class="input-text" data-validate="{required:true}">
+                            </div>
+                        </div>
+
+                        <div class="field required">
+                            <label for="municipio" class="label"><span><?= $block->escapeHtml(__('Cidade')) ?></span></label>
+                            <div class="control">
+                                <input type="text" name="municipio" id="municipio" title="<?= $block->escapeHtmlAttr(__('Cidade')) ?>"
+                                       class="input-text" data-validate="{required:true}">
+                            </div>
+                        </div>
+
+                        <div class="field field-narrow required">
+                            <label for="uf" class="label"><span><?= $block->escapeHtml(__('UF')) ?></span></label>
+                            <div class="control">
+                                <input type="text" name="uf" id="uf" title="<?= $block->escapeHtmlAttr(__('UF')) ?>"
+                                       class="input-text" data-validate="{required:true}" maxlength="2" placeholder="SP">
+                            </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Dados de Contato -->
                 <div class="form-section">
                     <h3><?= $block->escapeHtml(__('Dados de Contato')) ?></h3>
-                    
+
                     <div class="field-row">
                         <div class="field required">
                             <label for="firstname" class="label"><span><?= $block->escapeHtml(__('Nome')) ?></span></label>
                             <div class="control">
-                                <input type="text" name="firstname" id="firstname" 
-                                       title="<?= $block->escapeHtmlAttr(__('Nome')) ?>" 
+                                <input type="text" name="firstname" id="firstname"
+                                       title="<?= $block->escapeHtmlAttr(__('Nome')) ?>"
                                        class="input-text" data-validate="{required:true}">
                             </div>
                         </div>
@@ -124,8 +280,8 @@
                         <div class="field required">
                             <label for="lastname" class="label"><span><?= $block->escapeHtml(__('Sobrenome')) ?></span></label>
                             <div class="control">
-                                <input type="text" name="lastname" id="lastname" 
-                                       title="<?= $block->escapeHtmlAttr(__('Sobrenome')) ?>" 
+                                <input type="text" name="lastname" id="lastname"
+                                       title="<?= $block->escapeHtmlAttr(__('Sobrenome')) ?>"
                                        class="input-text" data-validate="{required:true}">
                             </div>
                         </div>
@@ -134,59 +290,66 @@
                     <div class="field required">
                         <label for="email" class="label"><span><?= $block->escapeHtml(__('E-mail')) ?></span></label>
                         <div class="control">
-                            <input type="email" name="email" id="email" 
-                                   title="<?= $block->escapeHtmlAttr(__('E-mail')) ?>" 
+                            <input type="email" name="email" id="email"
+                                   title="<?= $block->escapeHtmlAttr(__('E-mail')) ?>"
                                    class="input-text" data-validate="{required:true, 'validate-email':true}"
-                                   placeholder="email@empresa.com.br">
+                                   placeholder="seuemail@empresa.com.br">
                         </div>
+                        <div class="note"><?= $block->escapeHtml(__('Use seu e-mail pessoal. Será usado para login e recuperação de senha.')) ?></div>
+                        <div id="erp-email-alert" class="erp-email-alert" style="display:none;"></div>
                     </div>
                 </div>
 
+                <!-- Segurança -->
                 <div class="form-section">
                     <h3><?= $block->escapeHtml(__('Segurança')) ?></h3>
-                    
+
                     <div class="field required">
                         <label for="password" class="label"><span><?= $block->escapeHtml(__('Senha')) ?></span></label>
                         <div class="control">
-                            <input type="password" name="password" id="password" 
-                                   title="<?= $block->escapeHtmlAttr(__('Senha')) ?>" 
-                                   class="input-text" data-validate="{required:true, 'validate-customer-password':true}"
+                            <input type="password" name="password" id="password"
+                                   title="<?= $block->escapeHtmlAttr(__('Senha')) ?>"
+                                   class="input-text"
+                                   minlength="6"
+                                   data-validate="{required:true, minlength:6}"
                                    autocomplete="new-password">
-                            <div class="password-strength-meter"></div>
                         </div>
-                        <div class="note"><?= $block->escapeHtml(__('Mínimo 8 caracteres, com letras e números')) ?></div>
+                        <div class="note"><?= $block->escapeHtml(__('Mínimo 6 caracteres')) ?></div>
                     </div>
 
                     <div class="field required">
                         <label for="password_confirmation" class="label"><span><?= $block->escapeHtml(__('Confirmar Senha')) ?></span></label>
                         <div class="control">
-                            <input type="password" name="password_confirmation" id="password_confirmation" 
-                                   title="<?= $block->escapeHtmlAttr(__('Confirmar Senha')) ?>" 
+                            <input type="password" name="password_confirmation" id="password_confirmation"
+                                   title="<?= $block->escapeHtmlAttr(__('Confirmar Senha')) ?>"
                                    class="input-text" data-validate="{required:true, equalTo:'#password'}"
                                    autocomplete="new-password">
                         </div>
                     </div>
+
+                    <div id="email-check-alert" class="email-check-alert" style="display:none;" role="alert" aria-live="polite"></div>
                 </div>
 
+                <!-- Termos -->
                 <div class="form-section terms-section">
                     <div class="field choice required">
                         <input type="checkbox" name="terms" id="terms" value="1" class="checkbox" data-validate="{required:true}">
                         <label for="terms" class="label">
-                            <span><?= /* @noEscape */ __('Li e aceito os <a href="%1" target="_blank">Termos de Uso</a> e <a href="%2" target="_blank">Política de Privacidade</a>', $block->getUrl('terms'), $block->getUrl('privacy')) ?></span>
+                            <span><?= /* @noEscape */ __('Li e aceito os <a href="%1" target="_blank" rel="noopener">Termos de Uso</a> e <a href="%2" target="_blank" rel="noopener">Política de Privacidade</a>', $termsUrl, $privacyPolicyUrl) ?></span>
                         </label>
                     </div>
                 </div>
 
                 <div class="actions-toolbar">
                     <div class="primary">
-                        <button type="submit" class="action submit primary" title="<?= $block->escapeHtmlAttr(__('Criar Conta B2B')) ?>">
-                            <span><?= $block->escapeHtml(__('Criar Conta B2B')) ?></span>
+                        <button type="submit" class="action submit primary create-b2b-account" title="<?= $block->escapeHtmlAttr(__('Criar Conta B2B')) ?>">
+                            <span><?= $block->escapeHtml(__('Criar conta B2B')) ?></span>
                         </button>
                     </div>
                     <div class="secondary">
                         <span><?= $block->escapeHtml(__('Já tem uma conta?')) ?></span>
-                        <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>" class="action secondary">
-                            <?= $block->escapeHtml(__('Faça Login')) ?>
+                        <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>" class="action secondary b2b-login-link" aria-label="<?= $block->escapeHtmlAttr(__('Já possui cadastro? Faça login')) ?>">
+                            <?= $block->escapeHtml(__('Faça login')) ?>
                         </a>
                     </div>
                 </div>
@@ -194,22 +357,38 @@
         </div>
     <?php endif; ?>
 </div>
+    </div>
+
+    <div class="b2b-login-footer">
+        <a href="https://wa.me/5516997367588?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20para%20cadastro%20B2B"
+           class="b2b-login-whatsapp"
+           target="_blank"
+           rel="noopener noreferrer">
+            Precisa de ajuda? Fale conosco pelo <strong>WhatsApp</strong>
+        </a>
+        <p class="b2b-login-footer-brand">Grupo AWA Motos</p>
+        <p class="b2b-login-footer-contact">contato@grupoawamotos.com.br</p>
+    </div>
+</div>
 
 <script type="text/x-magento-init">
 {
     "#b2b-register-form": {
         "validation": {}
-    },
-    "#cnpj": {
-        "inputMask": {
-            "mask": "00.000.000/0000-00"
-        }
     }
 }
 </script>
 
 <script>
-require(['jquery', 'domReady!'], function($) {
+require(['jquery', 'mage/url', 'domReady!'], function($, urlBuilder) {
+    var cnpjValidateUrl = '<?= /* @noEscape */ $validateCnpjUrl ?>';
+    var cnpjTimer = null;
+    var lastCnpj = '';
+    var cnpjValidated = false;
+    var rateLimitTimer = null;
+    var erpEmailFull = null;
+    var erpEmailMasked = null;
+
     // CNPJ mask
     $('#cnpj').on('input', function() {
         var value = $(this).val().replace(/\D/g, '');
@@ -219,6 +398,19 @@ require(['jquery', 'domReady!'], function($) {
             value = value.replace(/\.(\d{3})(\d)/, '.$1/$2');
             value = value.replace(/(\d{4})(\d)/, '$1-$2');
             $(this).val(value);
+        }
+
+        var digits = $(this).val().replace(/\D/g, '');
+
+        if (digits.length === 14 && digits !== lastCnpj) {
+            lastCnpj = digits;
+            clearTimeout(cnpjTimer);
+            cnpjTimer = setTimeout(function() {
+                consultarCnpj(digits);
+            }, 500);
+        } else if (digits.length < 14) {
+            lastCnpj = '';
+            resetCnpjStatus();
         }
     });
 
@@ -235,5 +427,347 @@ require(['jquery', 'domReady!'], function($) {
             $(this).val(value);
         }
     });
+
+    // CEP mask
+    $('#cep').on('input', function() {
+        var value = $(this).val().replace(/\D/g, '');
+        if (value.length > 5) {
+            value = value.substring(0, 5) + '-' + value.substring(5, 8);
+        }
+        $(this).val(value);
+    });
+
+    function setCnpjStatus(type, message) {
+        var $status = $('#cnpj-status');
+        var $feedback = $('#cnpj-feedback');
+        $status.removeClass('status-loading status-success status-error').addClass('status-' + type);
+
+        if (type === 'loading') {
+            $status.html('<span class="cnpj-spinner"></span>');
+            $feedback.html('<span class="feedback-loading">Consultando Receita Federal...</span>').show();
+        } else if (type === 'success') {
+            $status.html('<span class="cnpj-check">&#10003;</span>');
+            $feedback.html('<span class="feedback-success">' + message + '</span>').show();
+        } else if (type === 'error') {
+            $status.html('<span class="cnpj-x">&#10007;</span>');
+            $feedback.html('<span class="feedback-error">' + message + '</span>').show();
+        }
+    }
+
+    function resetCnpjStatus() {
+        $('#cnpj-status').removeClass('status-loading status-success status-error').html('');
+        $('#cnpj-feedback').html('').hide();
+        $('#cnpj-company-data').slideUp(200);
+        $('#erp-email-alert').hide();
+        erpEmailFull = null;
+        erpEmailMasked = null;
+        cnpjValidated = false;
+        updateSubmitState();
+    }
+
+    function consultarCnpj(cnpj, forceRefresh) {
+        setCnpjStatus('loading', '');
+        cnpjValidated = false;
+        updateSubmitState();
+
+        $.ajax({
+            url: cnpjValidateUrl,
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                cnpj: cnpj,
+                force_refresh: forceRefresh ? 1 : 0,
+                form_key: $('input[name="form_key"]').val()
+            },
+            success: function(response) {
+                // Rate-limit: show countdown timer
+                if (response.rate_limited) {
+                    startRateLimitCountdown(response.retry_after || 60);
+                    return;
+                }
+
+                // Duplicate CNPJ: show specific message with link to login
+                if (response.cnpj_duplicate) {
+                    setCnpjStatus('error', response.message
+                        + ' <a href="<?= $block->escapeUrl($block->getLoginUrl()) ?>" class="cnpj-login-link">Fazer login</a>');
+                    $('#cnpj-company-data').slideUp(200);
+                    cnpjValidated = false;
+                    updateSubmitState();
+                    return;
+                }
+
+                if (response.success) {
+                    if (response.api_unavailable) {
+                        setCnpjStatus('success', 'CNPJ válido (API indisponível, preencha manualmente).');
+                        $('#cnpj-company-data').slideUp(200);
+                        cnpjValidated = true;
+                        updateSubmitState();
+                        return;
+                    }
+
+                    setCnpjStatus('success', 'CNPJ válido - Empresa ativa');
+                    cnpjValidated = true;
+                    updateSubmitState();
+
+                    // Auto-preencher campos
+                    if (response.razao_social) {
+                        $('#razao_social').val(response.razao_social).addClass('autofilled');
+                    }
+                    if (response.nome_fantasia) {
+                        $('#nome_fantasia').val(response.nome_fantasia).addClass('autofilled');
+                    }
+                    // Telefone e email da RF: mostrar apenas como referência no card, NÃO auto-preencher
+                    // Esses dados podem ser do contador/escritório, não do cliente
+                    if (response.telefone) {
+                        $('#cnpj-rf-telefone').text(response.telefone);
+                        $('#cnpj-rf-telefone-row').show();
+                    } else {
+                        $('#cnpj-rf-telefone').text('Não informado na RF');
+                        $('#cnpj-rf-telefone-row').show();
+                    }
+                    if (response.email) {
+                        $('#cnpj-rf-email').text(response.email);
+                        $('#cnpj-rf-email-row').show();
+                    } else {
+                        $('#cnpj-rf-email').text('Não informado na RF');
+                        $('#cnpj-rf-email-row').show();
+                    }
+                    // Sempre mostrar o alerta — mesmo sem dados da RF, o cliente precisa ser lembrado
+                    $('#cnpj-rf-contact-note').show();
+                    if (response.cep) {
+                        var cepClean = response.cep.replace(/\D/g, '');
+                        if (cepClean.length > 5) {
+                            cepClean = cepClean.substring(0, 5) + '-' + cepClean.substring(5, 8);
+                        }
+                        $('#cep').val(cepClean).addClass('autofilled');
+                    }
+                    if (response.logradouro) {
+                        $('#logradouro').val(response.logradouro).addClass('autofilled');
+                    }
+                    if (response.numero) {
+                        $('#numero').val(response.numero).addClass('autofilled');
+                    }
+                    if (response.complemento) {
+                        $('#complemento').val(response.complemento).addClass('autofilled');
+                    }
+                    if (response.bairro) {
+                        $('#bairro').val(response.bairro).addClass('autofilled');
+                    }
+                    if (response.municipio) {
+                        $('#municipio').val(response.municipio).addClass('autofilled');
+                    }
+                    if (response.uf) {
+                        $('#uf').val(response.uf).addClass('autofilled');
+                    }
+
+                    // Show data source indicator
+                    var sourceLabel = 'Dados da Receita Federal';
+                    if (response.source === 'cache') {
+                        sourceLabel = 'Dados da Receita Federal (cache)';
+                    }
+                    $('#cnpj-source-badge').text(sourceLabel);
+
+                    // Mostrar card de dados da empresa
+                    if (response.situacao) {
+                        $('#cnpj-situacao').text(response.situacao).attr('class', 'cnpj-situacao situacao-' + response.situacao.toLowerCase());
+                    }
+                    if (response.atividade_principal) {
+                        $('#cnpj-atividade').text(response.atividade_principal);
+                    }
+                    if (response.porte) {
+                        $('#cnpj-porte').text(response.porte);
+                    }
+                    $('#cnpj-company-data').slideDown(300);
+
+                    // ERP email verification
+                    erpEmailFull = null;
+                    erpEmailMasked = null;
+                    if (response.erp_found && response.erp_email) {
+                        erpEmailMasked = response.erp_email;
+                        erpEmailFull = response.erp_email_full || null;
+                        showErpEmailAlert();
+                    } else {
+                        $('#erp-email-alert').hide();
+                    }
+
+                } else {
+                    var errorMsg = response.message || 'CNPJ inválido';
+                    // If status came from cache or shows BAIXADA, offer force-refresh
+                    if (response.situacao && response.situacao.toUpperCase() !== 'ATIVA') {
+                        errorMsg += ' <button type="button" class="cnpj-retry-btn" id="cnpj-force-refresh">'
+                            + 'Consultar novamente (dados podem estar desatualizados)</button>';
+                    }
+                    setCnpjStatus('error', errorMsg);
+                    $('#cnpj-company-data').slideUp(200);
+                    cnpjValidated = false;
+                    updateSubmitState();
+                }
+            },
+            error: function() {
+                setCnpjStatus('error', 'Erro ao consultar. Tente novamente.');
+                cnpjValidated = false;
+                updateSubmitState();
+            }
+        });
+    }
+
+    // === ERP Email Verification ===
+    function showErpEmailAlert() {
+        var $alert = $('#erp-email-alert');
+        var currentEmail = $('#email').val().trim().toLowerCase();
+
+        if (!erpEmailMasked) {
+            $alert.hide();
+            return;
+        }
+
+        if (!currentEmail) {
+            $alert.html(
+                '<div class="erp-alert erp-alert-info">' +
+                    '<span class="erp-alert-icon">&#128269;</span>' +
+                    '<div class="erp-alert-content">' +
+                        '<strong>Cliente encontrado no sistema!</strong><br>' +
+                        'E-mail cadastrado: <strong>' + erpEmailMasked + '</strong><br>' +
+                        '<small>Informe o mesmo e-mail para vincular sua conta automaticamente.</small>' +
+                    '</div>' +
+                '</div>'
+            ).slideDown(300);
+            return;
+        }
+
+        if (erpEmailFull && currentEmail === erpEmailFull) {
+            $alert.html(
+                '<div class="erp-alert erp-alert-success">' +
+                    '<span class="erp-alert-icon">&#10004;</span>' +
+                    '<div class="erp-alert-content">' +
+                        '<strong>E-mail confirmado!</strong> Sua conta sera vinculada automaticamente.' +
+                    '</div>' +
+                '</div>'
+            ).slideDown(200);
+        } else {
+            $alert.html(
+                '<div class="erp-alert erp-alert-warning">' +
+                    '<span class="erp-alert-icon">&#9888;</span>' +
+                    '<div class="erp-alert-content">' +
+                        '<strong>Atencao:</strong> O e-mail cadastrado no sistema e <strong>' + erpEmailMasked + '</strong>.<br>' +
+                        'O e-mail informado e diferente. Deseja continuar com <strong>' + currentEmail + '</strong>?<br>' +
+                        '<small>Se possivel, use o mesmo e-mail para vincular seu historico de compras.</small>' +
+                    '</div>' +
+                '</div>'
+            ).slideDown(200);
+        }
+    }
+
+    function isValidEmail(email) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function updateEmailCheckAlert() {
+        var email = $('#email').val().trim();
+        var password = $('#password').val();
+        var passwordConfirmation = $('#password_confirmation').val();
+        var $alert = $('#email-check-alert');
+
+        if (passwordConfirmation.length >= 6 && password === passwordConfirmation && isValidEmail(email)) {
+            $alert.html(
+                '<div class="email-check-alert-box">' +
+                    '<span class="email-check-alert-icon">&#9888;</span>' +
+                    '<div class="email-check-alert-content">' +
+                        '<strong>Confirme seu e-mail antes de criar a conta:</strong><br>' +
+                        'A aprovação e a recuperação de senha serão enviadas para <strong>' + email + '</strong>.' +
+                    '</div>' +
+                '</div>'
+            ).stop(true, true).slideDown(180);
+            return;
+        }
+
+        $alert.stop(true, true).slideUp(120).empty();
+    }
+
+    $('#email').on('input blur', function() {
+        if (erpEmailMasked) {
+            showErpEmailAlert();
+        }
+
+        updateEmailCheckAlert();
+    });
+
+    $('#password, #password_confirmation').on('input blur', updateEmailCheckAlert);
+
+    function startRateLimitCountdown(seconds) {
+        var remaining = seconds;
+        setCnpjStatus('error', 'Muitas consultas. Aguarde <strong>' + remaining + 's</strong>...');
+        $('#cnpj').prop('disabled', true);
+
+        if (rateLimitTimer) clearInterval(rateLimitTimer);
+        rateLimitTimer = setInterval(function() {
+            remaining--;
+            if (remaining <= 0) {
+                clearInterval(rateLimitTimer);
+                rateLimitTimer = null;
+                $('#cnpj').prop('disabled', false);
+                setCnpjStatus('error', 'Você pode consultar novamente agora.');
+                // Auto-retry
+                var digits = $('#cnpj').val().replace(/\D/g, '');
+                if (digits.length === 14) {
+                    consultarCnpj(digits);
+                }
+            } else {
+                setCnpjStatus('error', 'Muitas consultas. Aguarde <strong>' + remaining + 's</strong>...');
+            }
+        }, 1000);
+    }
+
+    function updateSubmitState() {
+        var $submit = $('#b2b-register-form .actions-toolbar .action.submit.primary');
+        var digits = $('#cnpj').val().replace(/\D/g, '');
+        // Only block submit when CNPJ has 14 digits but hasn't been validated yet
+        if (digits.length === 14 && !cnpjValidated) {
+            $submit.prop('disabled', true).addClass('cnpj-pending');
+        } else {
+            $submit.prop('disabled', false).removeClass('cnpj-pending');
+        }
+    }
+
+    // Force refresh: bypass cache when user clicks retry
+    $(document).on('click', '#cnpj-force-refresh', function(e) {
+        e.preventDefault();
+        var digits = $('#cnpj').val().replace(/\D/g, '');
+        if (digits.length === 14) {
+            consultarCnpj(digits, true);
+        }
+    });
+
+    // Remover classe autofilled ao editar campo manualmente
+    $('.b2b-register-form input').on('focus', function() {
+        $(this).removeClass('autofilled');
+    });
+
+    // Evitar envio duplo e sinalizar processamento
+    $('#b2b-register-form').on('submit', function(e) {
+        var $form = $(this);
+        if ($form.data('isSubmitting')) {
+            e.preventDefault();
+            return false;
+        }
+
+        if (!$form.validation('isValid')) {
+            return true;
+        }
+
+        $form.data('isSubmitting', true).addClass('is-submitting');
+        var $submitButton = $form.find('.actions-toolbar .action.submit.primary');
+        $submitButton.addClass('is-loading').prop('disabled', true);
+        $submitButton.find('span').text('<?= $block->escapeJs(__('Enviando cadastro...')) ?>');
+    });
+
+    // Animate benefit items
+    setTimeout(function() {
+        $('.benefit-item').each(function() {
+            $(this).addClass('benefit-animate');
+        });
+    }, 100);
+
+    updateEmailCheckAlert();
 });
 </script>

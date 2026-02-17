@@ -55,16 +55,22 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 									$specialPriceToDate = $_product->getSpecialToDate();
 									// Get Current date
 									if ($specialprice&&($specialPriceFromDate <= $now && $specialPriceToDate >= $now)){
-									 		echo "<span class='icon-sale icon-product'><?php echo __('Sale') ?></span>";
+									 		echo "<span class='icon-sale icon-product'>" . __('Sale') . "</span>";
 									 	}
 									 	else{
 									 	if($newFromDate <= $now && $newToDate >= $now) {
-									 		echo "<span class='icon-new icon-product'><?php echo __('Hot') ?></span>";
+									 		echo "<span class='icon-new icon-product'>" . __('Hot') . "</span>";
 											//echo $now.' -- '.$newsFrom.' -- '.$newsTo;
 									 	}
 									}
 									?>
-									<?php $productImage = $block->getImage($_product, $image); ?>
+									<?php
+									$productImage = $block->getImage($_product, $image);
+									if ($pos != null) {
+										$position = ' style="left:' . $productImage->getWidth() . 'px;'
+											. 'top:' . $productImage->getHeight() . 'px;"';
+									}
+									?>
 									<?php // Product Image ?>
 									<div class="product-thumb">
 										<a href="<?php /* @escapeNotVerified */ echo $_product->getProductUrl() ?>" class="product-thumb-link">
@@ -81,25 +87,12 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 											</a>
 										<div class="actions-secondary">
 											<ul class="product-extra-link add-to-links">
-											
-												<li>
-													<a href="#"
-													   data-post='<?php echo $block->getAddToWishlistParams($_product); ?>'
-													   class="wishlist-link action towishlist" data-action="add-to-wishlist"
-													   title="<?php echo __('Add to Wishlist') ?>">
-													</a>
-												</li>
+												<?php /* B2B: wishlist desativada */ ?>
 												<li class="quickview-product">
-													<a class="quickview-link" data-role="quickview-button" data-id="<?php echo $_product->getId(); ?>" href="#" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_product->getId()) ?>" title="<?php echo __('Quick view');?>">
+													<a class="quickview-link" data-role="quickview-button" data-id="<?php echo $_product->getId(); ?>" href="javascript: void(0);" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_product->getId()) ?>" title="<?php echo __('Quick view');?>">
 													</a>
 												</li>
-												<?php $compareHelper = $this->helper('Magento\Catalog\Helper\Product\Compare');?>
-													<li>
-														<a href="#" class="compare-link action tocompare"
-														   data-post='<?php echo $compareHelper->getPostDataParams($_product);?>'
-														   title="<?php echo __('Add to Compare') ?>">
-														</a>
-													</li>
+												<?php /* B2B: compare desativado */ ?>
 											</ul>										
 										</div>
 										<div class="product-info-cart">
@@ -172,13 +165,36 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 			}
 			</script>
 		<?php endif; ?>
-			<script type="text/x-magento-init">
-                {
-                    ".rokan-onsaleproduct": {
-                        "Rokanthemes_Onsaleproduct/js/onsaleproduct": {}
-                    }
-                }
-            </script>
+			<script>
+				require([
+					'jquery',
+					'mage/mage',
+					'rokanthemes/owl'
+				], function ($) {
+					'use strict';
+
+					jQuery(".rokan-onsaleproduct .owl_onsale").owlCarousel({
+						lazyLoad:true,
+						autoPlay : false,
+						items : 4,
+						itemsDesktop : [1366,3],
+						itemsDesktopSmall : [1199,2],
+						itemsTablet: [768,2],
+						itemsMobile : [480,1],
+						slideSpeed : 500,
+						paginationSpeed : 500,
+						rewindSpeed : 500,
+						navigation : true,
+						stopOnHover : true,
+						pagination :false,
+						scrollPerPage:true,
+						afterAction: function(el){
+						    this.$owlItems.removeClass('first-active')
+						    this.$owlItems .eq(this.currentItem).addClass('first-active')  
+					    }
+					});
+				});
+			</script>
 	<?php endif; ?>
 	</div>
 <?php } ?>

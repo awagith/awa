@@ -95,24 +95,7 @@
                             <?php else: ?>
                                 <a class="action primary" href="<?= $block->escapeUrl($product->getProductUrl()) ?>"><span><?= __('View Details') ?></span></a>
                             <?php endif; ?>
-                            <div class="actions-secondary">
-                                <?php if ($block->isWishlistEnabled()): ?>
-                                <form action="<?= $block->getUrl('wishlist/index/add') ?>" method="post">
-                                    <?= $block->getBlockHtml('formkey') ?>
-                                    <input type="hidden" name="product" value="<?= (int)$product->getId() ?>" />
-                                    <button type="submit" class="action towishlist" title="<?= $block->escapeHtmlAttr(__('Add to Wish List')) ?>">
-                                        <span><?= __('Add to Wish List') ?></span>
-                                    </button>
-                                </form>
-                                <?php endif; ?>
-                                <form action="<?= $block->getUrl('catalog/product_compare/add') ?>" method="post">
-                                    <?= $block->getBlockHtml('formkey') ?>
-                                    <input type="hidden" name="product" value="<?= (int)$product->getId() ?>" />
-                                    <button type="submit" class="action tocompare" title="<?= $block->escapeHtmlAttr(__('Add to Compare')) ?>">
-                                        <span><?= __('Add to Compare') ?></span>
-                                    </button>
-                                </form>
-                            </div>
+                            <!-- B2B: Wishlist e Compare removidos - desnecessários para autopeças B2B -->
                         </div>
                     </div>
                 </div>

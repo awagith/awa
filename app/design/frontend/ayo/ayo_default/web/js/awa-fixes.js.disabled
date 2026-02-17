@@ -1,0 +1,176 @@
+/**
+ * AWA Motos - Visual Fixes v4.0
+ * RequireJS AMD module following Magento 2 / AYO best practices
+ * @see https://ayo.nextsky.co/documentation/
+ * @date 2026-02-09
+ */
+define(['jquery', 'domReady!'], function ($) {
+    'use strict';
+
+    var AWA = {
+        initialized: false,
+
+        /**
+         * Initialize all fixes
+         */
+        init: function () {
+            if (this.initialized) {
+                return;
+            }
+
+            this.fixPriceDisplay();
+            this.fixBannerDuplication();
+            this.addMobileMenuToggles();
+            this.fixBackToTop();
+            this.observeDynamicContent();
+
+            this.initialized = true;
+        },
+
+        /**
+         * Fix price display - show only including-tax price (BR standard)
+         * Root cause: Both price-including-tax and price-excluding-tax are visible
+         */
+        fixPriceDisplay: function () {
+            // Use CSS class approach instead of inline styles
+            $('body').addClass('awa-price-fixed');
+        },
+
+        /**
+         * Fix banner text duplication in slider/hero cards
+         */
+        fixBannerDuplication: function () {
+            $('.ayo-home5-hero-card, .owl-item, .slide-item').each(function () {
+                var $container = $(this);
+                var textMap = {};
+
+                $container.find('span, strong, h1, h2, h3, h4, h5, h6').each(function () {
+                    var $el = $(this);
+                    var text = $.trim($el.text()).toLowerCase();
+
+                    if (text.length < 3 || $el.closest('a.btn, button').length) {
+                        return;
+                    }
+
+                    if (textMap[text]) {
+                        $el.addClass('awa-hidden-duplicate');
+                    } else {
+                        textMap[text] = true;
+                    }
+                });
+            });
+        },
+
+        /**
+         * Add open-children-toggle to menu items with submenus
+         * Per AYO documentation: "If it has submenu, put this HTML tag
+         * <div class="open-children-toggle"></div> after level-top
+         * to open submenu in mobile."
+         */
+        addMobileMenuToggles: function () {
+            // Horizontal menu items with children
+            $('.nav-sections .level-top.parent, .nav-sections .level0.parent').each(function () {
+                var $item = $(this);
+                if (!$item.find('> .open-children-toggle').length) {
+                    $item.append('<div class="open-children-toggle" role="button" aria-label="Toggle submenu" tabindex="0"></div>');
+                }
+            });
+
+            // Vertical menu items with children
+            $('.vertical-menu .level-top.parent, .vertical-menu .level0.parent').each(function () {
+                var $item = $(this);
+                if (!$item.find('> .open-children-toggle').length) {
+                    $item.append('<div class="open-children-toggle" role="button" aria-label="Toggle submenu" tabindex="0"></div>');
+                }
+            });
+
+            // Event delegation for toggle clicks
+            $(document).on('click.awaMenuToggle', '.open-children-toggle', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                var $parent = $(this).parent();
+                $parent.toggleClass('_active');
+                $parent.find('> .submenu, > ul.level0').slideToggle(200);
+            });
+
+            // Keyboard accessibility for toggles
+            $(document).on('keydown.awaMenuToggle', '.open-children-toggle', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    $(this).trigger('click');
+                }
+            });
+        },
+
+        /**
+         * Back to top button smooth scroll
+         */
+        fixBackToTop: function () {
+            var $backTop = $('#back-top');
+
+            $(window).on('scroll.awaBackTop', function () {
+                if ($(this).scrollTop() > 300) {
+                    $backTop.fadeIn(200);
+                } else {
+                    $backTop.fadeOut(200);
+                }
+            });
+
+            $backTop.on('click.awaBackTop', function (e) {
+                e.preventDefault();
+                $('html, body').animate({ scrollTop: 0 }, 400);
+            });
+        },
+
+        /**
+         * Use MutationObserver for dynamically loaded content
+         * instead of setTimeout polling
+         */
+        observeDynamicContent: function () {
+            var self = this;
+
+            if (typeof MutationObserver === 'undefined') {
+                return;
+            }
+
+            var observer = new MutationObserver(function (mutations) {
+                var needsUpdate = false;
+
+                mutations.forEach(function (mutation) {
+                    if (mutation.addedNodes.length > 0) {
+                        for (var i = 0; i < mutation.addedNodes.length; i++) {
+                            var node = mutation.addedNodes[i];
+                            if (node.nodeType === 1) {
+                                // Check if new content has price boxes or menu items
+                                if (node.querySelector && (
+                                    node.querySelector('.price-box') ||
+                                    node.querySelector('.level-top.parent') ||
+                                    node.querySelector('.owl-item')
+                                )) {
+                                    needsUpdate = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                });
+
+                if (needsUpdate) {
+                    self.fixPriceDisplay();
+                    self.fixBannerDuplication();
+                    self.addMobileMenuToggles();
+                }
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        }
+    };
+
+    // Initialize
+    AWA.init();
+
+    return AWA;
+});

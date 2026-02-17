@@ -8,34 +8,13 @@
 
 ?>
 <?php if (count($block->getStores())>1): ?>
-<?php $labelId = 'language-switcher-' . uniqid(); ?>
-<div class="form-language" role="navigation" aria-labelledby="<?php echo $labelId; ?>">
-    <span class="form-language-label" id="<?php echo $labelId; ?>"><?php /* @escapeNotVerified */ echo __('Your Language:') ?></span>
-    <ul class="flags-list">
+<div class="form-language">
+    <label for="select-language"><?php /* @escapeNotVerified */ echo __('Your Language:') ?></label>
+    <select id="select-language" title="<?php /* @escapeNotVerified */ echo __('Your Language') ?>" onchange="window.location.href=this.value" class="flags">
     <?php foreach ($block->getStores() as $_lang): ?>
-        <?php
-            $isCurrent = $_lang->getId() == $block->getCurrentStoreId();
-            $flagUrl = $block->getViewFileUrl('images/flags/flag_' . $_lang->getCode() . '.gif');
-            $languageName = $block->escapeHtml($_lang->getName());
-        ?>
-        <li class="flags-item<?php echo $isCurrent ? ' is-active' : ''; ?>">
-            <?php if ($isCurrent): ?>
-                <span class="flags-link" aria-current="true">
-                    <span class="flags-icon" role="img" aria-label="<?php echo $languageName; ?>">
-                        <img src="<?php echo $flagUrl; ?>" alt="" loading="lazy" width="18" height="12" />
-                    </span>
-                    <span class="flags-name"><?php echo $languageName; ?></span>
-                </span>
-            <?php else: ?>
-                <a class="flags-link" href="<?php /* @escapeNotVerified */ echo $_lang->getCurrentUrl(); ?>">
-                    <span class="flags-icon" role="img" aria-label="<?php echo $languageName; ?>">
-                        <img src="<?php echo $flagUrl; ?>" alt="" loading="lazy" width="18" height="12" />
-                    </span>
-                    <span class="flags-name"><?php echo $languageName; ?></span>
-                </a>
-            <?php endif; ?>
-        </li>
+        <?php $_selected = ($_lang->getId() == $block->getCurrentStoreId()) ? ' selected="selected"' : '' ?>
+        <option value="<?php /* @escapeNotVerified */ echo $_lang->getCurrentUrl() ?>" style="background-image:url('<?php /* @escapeNotVerified */ echo $block->getViewFileUrl('images/flags/flag_' . $_lang->getCode() . '.gif') ?>');"<?php /* @escapeNotVerified */ echo $_selected ?>><?php echo $block->escapeHtml($_lang->getName()) ?></option>
     <?php endforeach; ?>
-    </ul>
+    </select>
 </div>
 <?php endif; ?>

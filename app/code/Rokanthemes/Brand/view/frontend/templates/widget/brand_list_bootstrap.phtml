@@ -77,7 +77,7 @@ $html = $_helper->filter($html);
 					<?php } ?>
 					<div class="col-lg-<?php echo $lg_column ?> col-md-<?php echo $md_column ?> col-sm-<?php echo $sm_column ?> col-xs-<?php echo $xs_column ?>">
 						<div class="brand-item">
-							<div class="brand-image"><a href="<?php echo $_brand->getUrl(); ?>" title="<?php echo $_brand->getName(); ?>"><img src="<?php echo $_brand->getThumbnailUrl(); ?>" alt="<?php echo $_brand->getName(); ?>"/></a></div>
+							<div class="brand-image"><a href="<?php echo $_brand->getUrl(); ?>" title="<?php echo $_brand->getName(); ?>"><img src="<?php echo $_brand->getThumbnailUrl(); ?>" alt="<?php echo $_brand->getName(); ?>" loading="lazy"/></a></div>
 							<?php if($show_brand_name){ ?>
 							<div class="brand-name"><a href="<?php echo $_brand->getUrl(); ?>" title="<?php echo $_brand->getName(); ?>"><?php echo $_brand->getName() ?></a></div>
 							<?php } ?>
@@ -107,8 +107,5 @@ $html = $_helper->filter($html);
 <?php } ?>
 
 <script type="text/javascript">
-	require([<?php if($this->helper("Rokanthemes\All\Helper\Data")->getConfig("enable_bootstrap_js")): ?>
-		"Rokanthemes_All/lib/bootstrap/js/bootstrap.min",
-	<?php endif; ?>
-		], function () {});
+	require(['jquery'], function () {});
 </script>

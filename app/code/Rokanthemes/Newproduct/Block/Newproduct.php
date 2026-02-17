@@ -11,6 +11,13 @@ use Magento\Framework\DataObject\IdentityInterface;
 
 class Newproduct extends \Magento\Catalog\Block\Product\AbstractProduct {
 
+    /**
+     * Default template for block
+     *
+     * @var string
+     */
+    protected $_template = "Rokanthemes_Newproduct::newproduct.phtml";
+
 	/**
      * Default toolbar block name
      *

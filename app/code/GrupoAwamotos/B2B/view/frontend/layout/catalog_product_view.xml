@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- B2B: Customer-specific price comparison on PDP -->
+        <referenceContainer name="product.info.main">
+            <block class="GrupoAwamotos\B2B\Block\Product\CustomerPriceInfo"
+                   name="b2b.customer.price.info"
+                   template="GrupoAwamotos_B2B::product/customer-price-info.phtml"
+                   after="product.info.price"/>
+        </referenceContainer>
+    </body>
+</page>

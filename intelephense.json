@@ -1,0 +1,14 @@
+{
+    "intelephense.files.exclude": [
+        "**/generated/**",
+        "**/var/**",
+        "**/pub/static/**",
+        "**/vendor/**/.git/**",
+        "**/.git/**",
+        "**/node_modules/**"
+    ],
+    "intelephense.environment.includePaths": [
+        "vendor",
+        "app/code"
+    ]
+}

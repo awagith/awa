@@ -1,11 +1,11 @@
-<div id="header" class="header-container" role="banner">
+<div id="header" class="header-container">
 	<div class="header-content">
 		<div class="top-header">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-6 col-lg-6 hidden-xs hidden-sm">	
 						<div class="top-bar-left">
-							<?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('top-left-static')->toHtml(); ?>
+							<?php echo $this->getChildHtml('top-left-static'); ?>
 						</div>
 					</div>
 					<div class="col-xs-12 col-md-6 col-lg-6">
@@ -35,18 +35,18 @@
 							                <?php echo $this->getChildHtml("minicart");?>
 							              </div>
 						             </div>
-					                <?php echo $this->getChildHtml("topSearch");?>
-					                <?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('hotline_header')->toHtml(); ?>
+					                <?php echo $this->getChildHtml('topSearch'); ?>
+					                <?php echo $this->getChildHtml('hotline_header'); ?>
 					            </div>	
 					        </div>	
 					    </div>
 			        </div>    
 		    	</div>
 		    </div>
-		    <div class="header-control header-nav cms_home_1" role="navigation">
+		    <div class="header-control header-nav cms_home_1">
 		    	<div class="container">
 		    		<div class="row">
-						<span data-action="toggle-nav" class="action nav-toggle"><span><?php /* @escapeNotVerified */ echo __('Toggle Nav') ?></span></span>
+						<span data-action="toggle-nav" class="action nav-toggle"><span><?= $escaper->escapeHtml(__('Toggle Nav')) ?></span></span>
 						<div class="col-lg-2 col-md-3 col-sm-2 col-xs-6 menu_left_home1">
 							<?php echo $this->getChildHtml("menu.vertical")?>
 							<?php echo $this->getChildHtml("navigation-sections")?>

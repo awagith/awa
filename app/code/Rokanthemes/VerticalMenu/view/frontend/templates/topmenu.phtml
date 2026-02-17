@@ -16,13 +16,20 @@
     $_config = $_helper->getConfig('verticalmenu');
     $columnsLimit = 0;
     if($_config['general']['enable']) {
+        $limitShow = isset($_config['general']['limit_show']) ? (int)$_config['general']['limit_show'] : 0;
 ?>
 <?php $_menu = $block->getVerticalMenuHtml(); ?>
 
-<nav class="navigation verticalmenu">
-    <ul>
+<nav class="navigation verticalmenu" aria-label="<?= $escaper->escapeHtmlAttr(__('Product Categories')) ?>">
+    <ul data-limit-show="<?= (int)$limitShow ?>">
         <?php echo $_menu; ?>
     </ul>
+    <?php if ($limitShow > 0): ?>
+    <a href="javascript:void(0);" class="viewall vm-toggle-categories" data-show-text="<?= $escaper->escapeHtmlAttr(__('Show More')) ?>" data-hide-text="<?= $escaper->escapeHtmlAttr(__('Show Less')) ?>">
+        <span class="vm-toggle-text"><?= $escaper->escapeHtml(__('Show More')) ?></span>
+        <i class="fa fa-angle-down vm-toggle-icon"></i>
+    </a>
+    <?php endif; ?>
 </nav>
 
 <script type="text/javascript">
@@ -38,7 +45,7 @@
 ?>
 <?php $_menu = $block->getHtml('level-top', 'submenu', $columnsLimit); ?>
 
-<nav class="navigation verticalmenu">
+<nav class="navigation verticalmenu" aria-label="<?= $escaper->escapeHtmlAttr(__('Product Categories')) ?>">
     <ul data-mage-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
         <?php /* @escapeNotVerified */ echo $_menu; ?>
     </ul>

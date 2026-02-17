@@ -54,7 +54,13 @@ $_current_timer = time();
 						?>
 
 						<div class="item-product item-product1 text-center">
-								<?php $productImage = $block->getImage($_product, $image); ?>
+								<?php
+								$productImage = $block->getImage($_product, $image);
+								if ($pos != null) {
+									$position = ' style="left:' . $productImage->getWidth() . 'px;'
+										. 'top:' . $productImage->getHeight() . 'px;"';
+								}
+								?>
 								<?php // Product Image ?>
 								<div class="product-thumb">
 									<div class="count-down deal-timer">
@@ -66,19 +72,9 @@ $_current_timer = time();
 										<?php if(($_product->getPrice() > $_product->getSpecialPrice() || $_product->getTypeId() == 'bundle') && $_product->getTimershow() == 1) { ?>
 											<?php if($_product->getSpecialPrice()!= 0 || $_product->getSpecialPrice()!= "" ) { ?>
 													<?php if($timer_head_active == 'showall' || $timer_head_active == 'listpage' && $timer_head_active!='hideall' && $timer_head!= '') { ?>
-													<div id="heading<?php echo $count; ?>" class="countdown-heading"><?php echo $timer_head ?></div>
+													<div id="heading<?php echo $count; ?>" style="/*color:#<?php //echo $head_color; ?>;*/ font-size: 14px; font-weight:bold;padding-top:0px;clear: both;"><?php echo $timer_head ?></div>
 													<?php } ?>
-                                                    <?php
-                                                        $toDate = $_product->getSpecialTODate();
-                                                        $fromDate = $_product->getSpecialFromDate();
-                                                        $dthen = strtotime($toDate . ' 23:59:00');
-                                                        $dnow = $_current_timer;
-                                                        $gsecs = $dthen - $dnow;
-                                                        if(strtotime($fromDate) > $_current_timer){
-                                                            $gsecs = -1;
-                                                        }
-                                                    ?>
-													<div id="countbox_<?php echo $count; ?>" class="timer-list" data-mage-init='{"Rokanthemes_Pricecountdown/js/countdown": {"seconds": <?php echo $gsecs; ?>}}'></div>
+													<div id="countbox_<?php echo $count; ?>" class="timer-list"></div>
 													<?php if($timer_desc_active == 'showall' || $timer_desc_active == 'listpage' && $timer_desc_active!='hideall') { ?>
 													<?php
 															if($_product->getTypeId() == 'bundle')
@@ -86,6 +82,27 @@ $_current_timer = time();
 																echo '<h1>Discount up to '.(100 - $_product->getSpecialPrice()*1).'% </h1>';
 															}
 														} ?> 
+													<script type="text/javascript">
+													var DisplayFormat = "<span class='countdown-section'><span class='countdown-amount'>%%D%%</span><span class='countdown-period'> : </span></span><span class='countdown-section'><span class='countdown-amount'>%%H%%</span><span class='countdown-period'> : </span></span><span class='countdown-section'><span class='countdown-amount'>%%M%%</span><span class='countdown-period'> : </span></span><span class='countdown-section'><span class='countdown-amount'>%%S%%</span><span class='countdown-period'></span></span>";
+														var dthen<?php echo $count; ?> = new Date("<?php echo Date("m/d/y", strtotime($toDate)).' 11:59:00 PM'; ?>");
+														start = "<?php echo Date("m/d/y h:i:s A", $_current_timer); ?>";
+														start_date = Date.parse(start);
+														var dnow<?php echo $count; ?> = new Date(start_date);
+														if(CountStepper>0)
+															ddiff= new Date((dnow<?php echo $count; ?>)-(dthen<?php echo $count; ?>));
+														else
+															ddiff = new Date((dthen<?php echo $count; ?>)-(dnow<?php echo $count; ?>));
+														//gsecs<?php echo $count; ?> = Math.floor(ddiff.valueOf()/1000);
+														<?php if(strtotime($fromDate) <= $_current_timer){ ?>
+															gsecs<?php echo $count; ?> = Math.floor(ddiff.valueOf()/1000);
+														<?php }else{ ?>
+															gsecs<?php echo $count; ?> = -1;
+														<?php } ?>
+
+														var iid<?php echo $count; ?> = "countbox_<?php echo $count; ?>";
+														CountBack(gsecs<?php echo $count; ?>,"countbox_"+j, j);
+														j++;
+													</script>
 													<?php $count = $count + 1; ?>
 													<?php
 												}
@@ -197,12 +214,31 @@ $_current_timer = time();
 			}
 			</script>
 		<?php endif; ?>
-			<script type="text/x-magento-init">
-				{
-					".rokan-onsaleproduct .owl": {
-						"Rokanthemes_Pricecountdown/js/price_countdown_slider": {}
-					}
-				}
+			<script>
+				require([
+					'jquery',
+					'mage/mage',
+					'rokanthemes/owl'
+				], function ($) {
+					'use strict';
+
+					jQuery(".rokan-onsaleproduct .owl").owlCarousel({
+						lazyLoad:true,
+						autoPlay : false,
+						items : 4,
+						itemsDesktop : [1199,3],
+						itemsDesktopSmall : [980,3],
+						itemsTablet: [768,2],
+						itemsMobile : [479,1],
+						slideSpeed : 500,
+						paginationSpeed : 500,
+						rewindSpeed : 500,
+						navigation : true,
+						stopOnHover : true,
+						pagination :false,
+						scrollPerPage:true,
+					});
+				});
 			</script>
 	<?php endif; ?>
 	</div>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="empty"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="b2b_auth_shell"/>
+    <head>
+        <title>Ativar Acesso Online</title>
+        <css src="GrupoAwamotos_B2B::css/b2b-login.css"/>
+    </head>
+    <body>
+        <referenceContainer name="main">
+            <block class="Magento\Framework\View\Element\Messages"
+                   name="b2b.claim.messages"
+                   before="-"/>
+            <block class="GrupoAwamotos\B2B\Block\Account\Claim"
+                   name="b2b.account.claim"
+                   template="GrupoAwamotos_B2B::account/claim.phtml"
+                   cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>

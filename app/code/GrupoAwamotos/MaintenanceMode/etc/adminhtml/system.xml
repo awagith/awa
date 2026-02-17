@@ -1,0 +1,215 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="grupoawamotos_maintenance" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Modo de Manutenção</label>
+            <tab>grupoawamotos</tab>
+            <resource>GrupoAwamotos_MaintenanceMode::config</resource>
+            
+            <!-- CONFIGURAÇÕES GERAIS -->
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>⚙️ Configurações Gerais</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ativar Modo de Manutenção/Em Breve</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment><![CDATA[<strong style="color:red;">⚠️ ATENÇÃO:</strong> Ao ativar, visitantes verão a página de manutenção/em breve.]]></comment>
+                </field>
+                <field id="mode" translate="label comment" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Modo</label>
+                    <source_model>GrupoAwamotos\MaintenanceMode\Model\Config\Source\Mode</source_model>
+                    <comment>Escolha entre Modo de Manutenção ou Página "Em Breve"</comment>
+                </field>
+                <field id="secret_key" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>🔑 Código Secreto de Acesso</label>
+                    <comment><![CDATA[<strong>Acesso sem IP:</strong> Use <code>seusite.com/?preview=CODIGO</code> para liberar acesso por 72h]]></comment>
+                </field>
+                <field id="cookie_duration" translate="label comment" type="text" sortOrder="25" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Duração do Acesso (horas)</label>
+                    <comment>Por quantas horas o cookie de acesso será válido (padrão: 72h)</comment>
+                    <validate>validate-number</validate>
+                </field>
+                <field id="whitelist_ips" translate="label comment" type="textarea" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>IPs Permitidos (Whitelist)</label>
+                    <comment>Um IP por linha. Esses IPs poderão acessar o site normalmente.</comment>
+                </field>
+                <field id="allowed_cms_pages" translate="label comment" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Páginas CMS Permitidas</label>
+                    <comment>Identificadores de páginas CMS acessíveis (separados por vírgula). Ex: contact,faq,about-us</comment>
+                </field>
+                <field id="allowed_routes" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Rotas Permitidas</label>
+                    <comment>Rotas do Magento acessíveis (separados por vírgula). Ex: newsletter,contact</comment>
+                </field>
+            </group>
+
+            <!-- MODO MANUTENÇÃO -->
+            <group id="maintenance" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>🔧 Página de Manutenção</label>
+                <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Título da Página</label>
+                </field>
+                <field id="message" translate="label comment" type="editor" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mensagem</label>
+                    <frontend_model>GrupoAwamotos\MaintenanceMode\Block\Adminhtml\System\Config\Editor</frontend_model>
+                    <comment>Use HTML para formatar. Imagens devem usar URLs absolutas.</comment>
+                </field>
+                <field id="show_countdown" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mostrar Contador Regressivo</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="countdown_date" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Data/Hora de Retorno</label>
+                    <comment>Formato: YYYY-MM-DD HH:MM (ex: 2025-12-15 18:00)</comment>
+                    <depends>
+                        <field id="show_countdown">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- MODO EM BREVE -->
+            <group id="coming_soon" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>🚀 Página "Em Breve"</label>
+                <field id="title" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Título da Página</label>
+                </field>
+                <field id="message" translate="label comment" type="editor" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mensagem</label>
+                    <frontend_model>GrupoAwamotos\MaintenanceMode\Block\Adminhtml\System\Config\Editor</frontend_model>
+                </field>
+                <field id="show_countdown" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mostrar Contador Regressivo</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="countdown_date" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Data de Lançamento</label>
+                    <comment>Formato: YYYY-MM-DD HH:MM</comment>
+                    <depends>
+                        <field id="show_countdown">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- DESIGN -->
+            <group id="design" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>🎨 Design e Aparência</label>
+                <field id="logo" translate="label comment" type="image" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Logo</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Image</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">maintenance</upload_dir>
+                    <base_url type="media" scope_info="1">maintenance</base_url>
+                    <comment>Formatos: PNG, JPG, SVG. Tamanho recomendado: 300x100px</comment>
+                </field>
+                <field id="background_type" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Tipo de Fundo</label>
+                    <source_model>GrupoAwamotos\MaintenanceMode\Model\Config\Source\BackgroundType</source_model>
+                </field>
+                <field id="background_color" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cor de Fundo</label>
+                    <comment>Código hexadecimal (ex: #1a237e)</comment>
+                    <depends>
+                        <field id="background_type">color</field>
+                    </depends>
+                </field>
+                <field id="background_gradient" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Gradiente</label>
+                    <comment>Duas cores separadas por vírgula (ex: #1a237e,#000428)</comment>
+                    <depends>
+                        <field id="background_type">gradient</field>
+                    </depends>
+                </field>
+                <field id="background_image" translate="label" type="image" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Imagem de Fundo</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Image</backend_model>
+                    <upload_dir config="system/filesystem/media" scope_info="1">maintenance</upload_dir>
+                    <base_url type="media" scope_info="1">maintenance</base_url>
+                    <depends>
+                        <field id="background_type">image</field>
+                    </depends>
+                </field>
+                <field id="background_video" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>URL do Vídeo de Fundo</label>
+                    <comment>URL do vídeo MP4 ou YouTube embed</comment>
+                    <depends>
+                        <field id="background_type">video</field>
+                    </depends>
+                </field>
+                <field id="text_color" translate="label" type="text" sortOrder="45" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cor do Texto</label>
+                    <comment>Código hexadecimal (ex: #ffffff)</comment>
+                </field>
+                <field id="custom_css" translate="label" type="textarea" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>CSS Customizado</label>
+                    <comment>CSS adicional para personalização avançada</comment>
+                </field>
+            </group>
+
+            <!-- NEWSLETTER -->
+            <group id="newsletter" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>📧 Formulário de Newsletter</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mostrar Formulário de Inscrição</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Título do Formulário</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="button_text" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Texto do Botão</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="success_message" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mensagem de Sucesso</label>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <!-- REDES SOCIAIS -->
+            <group id="social" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>🌐 Redes Sociais</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mostrar Links Sociais</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="facebook" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Facebook</label>
+                    <comment>URL completa do perfil</comment>
+                </field>
+                <field id="instagram" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Instagram</label>
+                </field>
+                <field id="youtube" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>YouTube</label>
+                </field>
+                <field id="whatsapp" translate="label comment" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>WhatsApp</label>
+                    <comment>Apenas números com código do país (ex: 5516997367588)</comment>
+                </field>
+            </group>
+
+            <!-- INFORMAÇÕES DE CONTATO -->
+            <group id="contact" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>📞 Informações de Contato</label>
+                <field id="show_info" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mostrar Informações de Contato</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="phone" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Telefone</label>
+                </field>
+                <field id="whatsapp" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>WhatsApp</label>
+                </field>
+                <field id="email" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>E-mail</label>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

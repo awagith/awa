@@ -8,6 +8,8 @@ namespace GrupoAwamotos\B2B\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\App\ObjectManager;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Store\Model\ScopeInterface;
 
@@ -37,6 +39,11 @@ class Data extends AbstractHelper
     private $customerSession;
 
     /**
+     * @var CustomerRepositoryInterface
+     */
+    private $customerRepository;
+
+    /**
      * @var array
      */
     private $b2bGroups = [
@@ -48,9 +55,11 @@ class Data extends AbstractHelper
 
     public function __construct(
         Context $context,
-        CustomerSession $customerSession
+        CustomerSession $customerSession,
+        ?CustomerRepositoryInterface $customerRepository = null
     ) {
         $this->customerSession = $customerSession;
+        $this->customerRepository = $customerRepository;
         parent::__construct($context);
     }
 
@@ -159,6 +168,27 @@ class Data extends AbstractHelper
 
         $groupId = (int)$this->customerSession->getCustomerGroupId();
         return in_array($groupId, $this->b2bGroups);
+    }
+
+    /**
+     * Check if a specific customer is B2B by ID
+     *
+     * @param int $customerId
+     * @return bool
+     */
+    public function isB2BCustomerById(int $customerId): bool
+    {
+        try {
+            if ($this->customerRepository === null) {
+                $this->customerRepository = ObjectManager::getInstance()->get(CustomerRepositoryInterface::class);
+            }
+
+            $customer = $this->customerRepository->getById($customerId);
+            $groupId = (int)$customer->getGroupId();
+            return in_array($groupId, $this->b2bGroups);
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**

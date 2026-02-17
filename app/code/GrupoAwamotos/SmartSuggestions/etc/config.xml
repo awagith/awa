@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <smart_suggestions>
+            <general>
+                <enabled>1</enabled>
+                <debug_mode>0</debug_mode>
+            </general>
+            <rfm>
+                <analysis_period_days>365</analysis_period_days>
+                <recency_weight>0.35</recency_weight>
+                <frequency_weight>0.35</frequency_weight>
+                <monetary_weight>0.30</monetary_weight>
+                <min_orders>2</min_orders>
+            </rfm>
+            <suggestions>
+                <max_repurchase_items>10</max_repurchase_items>
+                <max_crosssell_items>5</max_crosssell_items>
+                <max_similar_items>5</max_similar_items>
+                <cycle_tolerance_percent>20</cycle_tolerance_percent>
+                <min_support_crosssell>3</min_support_crosssell>
+            </suggestions>
+            <forecast>
+                <monte_carlo_iterations>1000</monte_carlo_iterations>
+                <moving_avg_days>14</moving_avg_days>
+                <trend_weight>0.3</trend_weight>
+                <seasonality_weight>0.2</seasonality_weight>
+                <monthly_goal>500000</monthly_goal>
+            </forecast>
+            <whatsapp>
+                <enabled>0</enabled>
+                <provider>meta</provider>
+                <api_url>https://graph.facebook.com/v18.0</api_url>
+                <message_template><![CDATA[Olá {{customer_name}}! 👋
+
+Preparamos uma seleção especial de produtos para você:
+
+{{products_list}}
+
+💰 *Total estimado: {{total_value}}*
+
+Entre em contato para fazer seu pedido!
+
+_{{store_name}}_]]></message_template>
+            </whatsapp>
+            <cron>
+                <rfm_enabled>1</rfm_enabled>
+                <rfm_schedule>0 2 * * *</rfm_schedule>
+                <suggestions_enabled>0</suggestions_enabled>
+                <suggestions_schedule>0 6 * * 1</suggestions_schedule>
+                <auto_send_whatsapp>0</auto_send_whatsapp>
+            </cron>
+            <export>
+                <csv_delimiter>;</csv_delimiter>
+                <include_headers>1</include_headers>
+            </export>
+        </smart_suggestions>
+    </default>
+</config>

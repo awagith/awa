@@ -1,0 +1,151 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * GrupoAwamotos SmartSuggestions - Database Schema
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <!-- Tabela de Histórico de Sugestões -->
+    <table name="smart_suggestions_history" resource="default" engine="innodb" comment="Smart Suggestions History">
+        <column xsi:type="int" name="history_id" unsigned="true" nullable="false" identity="true" comment="History ID"/>
+        <column xsi:type="int" name="erp_customer_id" unsigned="true" nullable="false" comment="ERP Customer ID"/>
+        <column xsi:type="varchar" name="customer_name" length="255" nullable="false" comment="Customer Name"/>
+        <column xsi:type="varchar" name="customer_phone" length="50" nullable="true" comment="Customer Phone"/>
+        <column xsi:type="varchar" name="customer_cnpj" length="20" nullable="true" comment="Customer CNPJ"/>
+        <column xsi:type="mediumtext" name="suggestion_data" nullable="true" comment="Suggestion Data JSON"/>
+        <column xsi:type="decimal" name="total_value" precision="12" scale="4" nullable="false" default="0" comment="Total Suggested Value"/>
+        <column xsi:type="int" name="products_count" unsigned="true" nullable="false" default="0" comment="Products Count"/>
+        <column xsi:type="varchar" name="status" length="50" nullable="false" default="generated" comment="Status"/>
+        <column xsi:type="varchar" name="channel" length="50" nullable="true" comment="Channel"/>
+        <column xsi:type="varchar" name="whatsapp_message_id" length="255" nullable="true" comment="WhatsApp Message ID"/>
+        <column xsi:type="text" name="error_message" nullable="true" comment="Error Message"/>
+        <column xsi:type="int" name="converted_order_id" unsigned="true" nullable="true" comment="Converted Order ID"/>
+        <column xsi:type="decimal" name="conversion_value" precision="12" scale="4" nullable="true" comment="Actual Conversion Value"/>
+        <column xsi:type="int" name="admin_user_id" unsigned="true" nullable="true" comment="Admin User ID"/>
+        <column xsi:type="text" name="notes" nullable="true" comment="Notes"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="sent_at" nullable="true" comment="Sent At"/>
+        <column xsi:type="timestamp" name="converted_at" nullable="true" comment="Converted At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="history_id"/>
+        </constraint>
+        <index referenceId="SMART_SUGGESTIONS_HISTORY_ERP_CUSTOMER_ID" indexType="btree">
+            <column name="erp_customer_id"/>
+        </index>
+        <index referenceId="SMART_SUGGESTIONS_HISTORY_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+        <index referenceId="SMART_SUGGESTIONS_HISTORY_CHANNEL" indexType="btree">
+            <column name="channel"/>
+        </index>
+        <index referenceId="SMART_SUGGESTIONS_HISTORY_CREATED_AT" indexType="btree">
+            <column name="created_at"/>
+        </index>
+    </table>
+
+    <!-- Tabela de Cache RFM (performance) -->
+    <table name="smart_suggestions_rfm_cache" resource="default" engine="innodb" comment="RFM Analysis Cache">
+        <column xsi:type="int" name="rfm_id" unsigned="true" nullable="false" identity="true" comment="RFM ID"/>
+        <column xsi:type="int" name="erp_customer_id" unsigned="true" nullable="false" comment="ERP Customer ID"/>
+        <column xsi:type="varchar" name="customer_name" length="255" nullable="false" comment="Customer Name"/>
+        <column xsi:type="varchar" name="customer_cnpj" length="20" nullable="true" comment="Customer CNPJ"/>
+        <column xsi:type="varchar" name="customer_phone" length="50" nullable="true" comment="Customer Phone"/>
+        <column xsi:type="varchar" name="customer_city" length="100" nullable="true" comment="Customer City"/>
+        <column xsi:type="varchar" name="customer_uf" length="2" nullable="true" comment="Customer UF"/>
+        <column xsi:type="int" name="recency_days" unsigned="true" nullable="false" default="0" comment="Days Since Last Purchase"/>
+        <column xsi:type="int" name="frequency" unsigned="true" nullable="false" default="0" comment="Number of Orders"/>
+        <column xsi:type="decimal" name="monetary" precision="14" scale="4" nullable="false" default="0" comment="Total Monetary Value"/>
+        <column xsi:type="smallint" name="r_score" unsigned="true" nullable="false" default="1" comment="Recency Score (1-5)"/>
+        <column xsi:type="smallint" name="f_score" unsigned="true" nullable="false" default="1" comment="Frequency Score (1-5)"/>
+        <column xsi:type="smallint" name="m_score" unsigned="true" nullable="false" default="1" comment="Monetary Score (1-5)"/>
+        <column xsi:type="varchar" name="rfm_score" length="3" nullable="false" default="111" comment="Combined RFM Score"/>
+        <column xsi:type="varchar" name="segment" length="50" nullable="false" default="Average" comment="Customer Segment"/>
+        <column xsi:type="decimal" name="avg_ticket" precision="12" scale="4" nullable="true" comment="Average Ticket"/>
+        <column xsi:type="int" name="avg_days_between_orders" unsigned="true" nullable="true" comment="Average Days Between Orders"/>
+        <column xsi:type="date" name="last_order_date" nullable="true" comment="Last Order Date"/>
+        <column xsi:type="date" name="first_order_date" nullable="true" comment="First Order Date"/>
+        <column xsi:type="timestamp" name="calculated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Last Calculation"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="rfm_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="SMART_SUGGESTIONS_RFM_CACHE_ERP_CUSTOMER_ID">
+            <column name="erp_customer_id"/>
+        </constraint>
+        <index referenceId="SMART_SUGGESTIONS_RFM_CACHE_SEGMENT" indexType="btree">
+            <column name="segment"/>
+        </index>
+        <index referenceId="SMART_SUGGESTIONS_RFM_CACHE_RFM_SCORE" indexType="btree">
+            <column name="rfm_score"/>
+        </index>
+        <index referenceId="SMART_SUGGESTIONS_RFM_CACHE_RECENCY_DAYS" indexType="btree">
+            <column name="recency_days"/>
+        </index>
+    </table>
+
+    <!-- Tabela de Fila WhatsApp -->
+    <table name="smart_suggestions_whatsapp_queue" resource="default" engine="innodb" comment="WhatsApp Message Queue">
+        <column xsi:type="int" name="queue_id" unsigned="true" nullable="false" identity="true" comment="Queue ID"/>
+        <column xsi:type="int" name="history_id" unsigned="true" nullable="true" comment="Related History ID"/>
+        <column xsi:type="int" name="erp_customer_id" unsigned="true" nullable="false" comment="ERP Customer ID"/>
+        <column xsi:type="varchar" name="phone" length="50" nullable="false" comment="Phone Number"/>
+        <column xsi:type="varchar" name="message_type" length="50" nullable="false" default="cart_suggestion" comment="Message Type"/>
+        <column xsi:type="mediumtext" name="message_content" nullable="false" comment="Message Content"/>
+        <column xsi:type="varchar" name="status" length="30" nullable="false" default="pending" comment="Status (pending, sent, delivered, read, failed)"/>
+        <column xsi:type="varchar" name="whatsapp_message_id" length="255" nullable="true" comment="WhatsApp Message ID"/>
+        <column xsi:type="text" name="error_message" nullable="true" comment="Error Message"/>
+        <column xsi:type="smallint" name="retry_count" unsigned="true" nullable="false" default="0" comment="Retry Count"/>
+        <column xsi:type="timestamp" name="scheduled_at" nullable="true" comment="Scheduled Send Time"/>
+        <column xsi:type="timestamp" name="sent_at" nullable="true" comment="Actual Send Time"/>
+        <column xsi:type="timestamp" name="delivered_at" nullable="true" comment="Delivered Time"/>
+        <column xsi:type="timestamp" name="read_at" nullable="true" comment="Read Time"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="queue_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="SMART_SUGGESTIONS_WHATSAPP_QUEUE_HISTORY_ID"
+                    table="smart_suggestions_whatsapp_queue" column="history_id"
+                    referenceTable="smart_suggestions_history" referenceColumn="history_id"
+                    onDelete="SET NULL"/>
+        <index referenceId="SMART_SUGGESTIONS_WHATSAPP_QUEUE_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+        <index referenceId="SMART_SUGGESTIONS_WHATSAPP_QUEUE_SCHEDULED_AT" indexType="btree">
+            <column name="scheduled_at"/>
+        </index>
+    </table>
+
+    <!-- Tabela de Projeções de Vendas -->
+    <table name="smart_suggestions_sales_forecast" resource="default" engine="innodb" comment="Sales Forecast Data">
+        <column xsi:type="int" name="forecast_id" unsigned="true" nullable="false" identity="true" comment="Forecast ID"/>
+        <column xsi:type="varchar" name="period_type" length="20" nullable="false" comment="Period Type (daily, monthly)"/>
+        <column xsi:type="date" name="period_date" nullable="false" comment="Period Date"/>
+        <column xsi:type="decimal" name="actual_sales" precision="14" scale="4" nullable="true" comment="Actual Sales"/>
+        <column xsi:type="decimal" name="projected_sales" precision="14" scale="4" nullable="true" comment="Projected Sales"/>
+        <column xsi:type="decimal" name="projection_low" precision="14" scale="4" nullable="true" comment="Low Projection (P10)"/>
+        <column xsi:type="decimal" name="projection_high" precision="14" scale="4" nullable="true" comment="High Projection (P90)"/>
+        <column xsi:type="decimal" name="target" precision="14" scale="4" nullable="true" comment="Sales Target"/>
+        <column xsi:type="int" name="orders_count" unsigned="true" nullable="true" comment="Orders Count"/>
+        <column xsi:type="decimal" name="avg_ticket" precision="12" scale="4" nullable="true" comment="Average Ticket"/>
+        <column xsi:type="decimal" name="seasonal_index" precision="6" scale="4" nullable="true" comment="Seasonal Index"/>
+        <column xsi:type="decimal" name="trend_factor" precision="6" scale="4" nullable="true" comment="Trend Factor"/>
+        <column xsi:type="decimal" name="confidence" precision="5" scale="4" nullable="true" comment="Confidence Level"/>
+        <column xsi:type="timestamp" name="calculated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Last Calculation"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="forecast_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="SMART_SUGGESTIONS_SALES_FORECAST_PERIOD">
+            <column name="period_type"/>
+            <column name="period_date"/>
+        </constraint>
+        <index referenceId="SMART_SUGGESTIONS_SALES_FORECAST_PERIOD_DATE" indexType="btree">
+            <column name="period_date"/>
+        </index>
+    </table>
+
+</schema>

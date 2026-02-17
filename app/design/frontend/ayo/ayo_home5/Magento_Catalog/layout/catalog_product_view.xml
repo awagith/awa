@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * AWA Motos — catalog_product_view.xml
+ * Carrega CSS de catálogo também em páginas de produto
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+    </head>
+    <body>
+        <!-- B2B: Remove Compare from product view -->
+        <referenceBlock name="view.addto.compare" remove="true"/>
+        <referenceBlock name="related.product.addto.compare" remove="true"/>
+        <referenceBlock name="upsell.product.addto.compare" remove="true"/>
+        <!-- B2B: Remove Wishlist from product view -->
+        <referenceBlock name="view.addto.wishlist" remove="true"/>
+        <referenceBlock name="related.product.addto.wishlist" remove="true"/>
+        <referenceBlock name="upsell.product.addto.wishlist" remove="true"/>
+    </body>
+</page>

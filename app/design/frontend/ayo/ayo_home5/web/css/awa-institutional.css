@@ -1,0 +1,349 @@
+/**
+ * awa-institutional.css
+ * Estilos para páginas CMS institucionais — AWA Motos
+ * Escopo: .awa-inst (wrapper de conteúdo) + .contact-index-index (página de contato)
+ */
+
+/* ============================================================
+   BASE
+   ============================================================ */
+.cms-page-view .awa-inst {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 0 1rem 2rem;
+    line-height: 1.75;
+    color: #333;
+    font-size: 1rem;
+}
+
+.cms-page-view .awa-inst h1 {
+    font-size: 2rem;
+    color: #222;
+    margin: 0 0 1rem;
+    line-height: 1.3;
+}
+
+.cms-page-view .awa-inst h2 {
+    font-size: 1.35rem;
+    color: #333;
+    margin: 2.5rem 0 1rem;
+    padding-bottom: .5rem;
+    border-bottom: 2px solid #ff9300;
+}
+
+.cms-page-view .awa-inst h3 {
+    font-size: 1.1rem;
+    color: #444;
+    margin: 1.5rem 0 .75rem;
+}
+
+.cms-page-view .awa-inst a {
+    color: #ff9300;
+    text-decoration: underline;
+}
+
+.cms-page-view .awa-inst a:hover,
+.cms-page-view .awa-inst a:focus {
+    color: #cc7600;
+}
+
+/* ============================================================
+   RESUMO NO TOPO
+   ============================================================ */
+.awa-inst .awa-summary {
+    background: #f9f9f9;
+    border-left: 4px solid #ff9300;
+    padding: 1.25rem 1.5rem;
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 2rem;
+}
+
+/* ============================================================
+   GRID DE CARDS
+   ============================================================ */
+.awa-inst .awa-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.25rem;
+    margin: 1.5rem 0;
+}
+
+.awa-inst .awa-card {
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 1.25rem;
+    border-left: 4px solid #ff9300;
+}
+
+.awa-inst .awa-card h3 {
+    color: #ff9300;
+    margin-top: 0;
+    font-size: 1.05rem;
+}
+
+.awa-inst .awa-card ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.awa-inst .awa-card li {
+    margin-bottom: .4rem;
+}
+
+/* ============================================================
+   PASSOS NUMERADOS
+   ============================================================ */
+.awa-inst .awa-steps {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+}
+
+.awa-inst .awa-steps li {
+    counter-increment: step;
+    padding: .75rem 0 .75rem 3.25rem;
+    position: relative;
+    border-left: 2px solid #e5e5e5;
+    margin-left: 1rem;
+}
+
+.awa-inst .awa-steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: -1.1rem;
+    top: .65rem;
+    width: 2rem;
+    height: 2rem;
+    background: #ff9300;
+    color: #fff;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 2rem;
+    font-weight: 700;
+    font-size: .9rem;
+}
+
+/* ============================================================
+   CTA BOX
+   ============================================================ */
+.awa-inst .awa-cta {
+    background: linear-gradient(135deg, #ff9300, #ff7800);
+    color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.awa-inst .awa-cta h3 {
+    color: #fff;
+    margin-top: 0;
+}
+
+.awa-inst .awa-cta p { color: #fff; }
+
+.awa-inst .awa-cta a.awa-btn {
+    display: inline-block;
+    background: #fff;
+    color: #ff9300;
+    padding: .75rem 2rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 700;
+    margin-top: .5rem;
+    transition: background .2s, color .2s;
+}
+
+.awa-inst .awa-cta a.awa-btn:hover,
+.awa-inst .awa-cta a.awa-btn:focus {
+    background: #333;
+    color: #fff;
+}
+
+/* ============================================================
+   TABELA
+   ============================================================ */
+.awa-inst .awa-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.awa-inst .awa-table th,
+.awa-inst .awa-table td {
+    padding: .75rem;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.awa-inst .awa-table th {
+    background: #f5f5f5;
+    font-weight: 600;
+}
+
+/* ============================================================
+   DESTAQUE / INFO
+   ============================================================ */
+.awa-inst .awa-info {
+    background: #fff3e0;
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin: 1rem 0;
+}
+
+/* ============================================================
+   SEÇÃO B2B
+   ============================================================ */
+.awa-inst .awa-b2b {
+    background: linear-gradient(135deg, #fff3e0, #fff);
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #ff9300;
+    margin: 1.5rem 0;
+}
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+.awa-inst .awa-faq-category {
+    margin-top: 2rem;
+}
+
+.awa-inst .awa-faq-item {
+    border-bottom: 1px solid #eee;
+    padding: 1rem 0;
+}
+
+.awa-inst .awa-faq-item h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 1rem;
+}
+
+.awa-inst .awa-faq-item p {
+    margin: .5rem 0 0;
+    color: #555;
+}
+
+/* ============================================================
+   HUB DE LINKS
+   ============================================================ */
+.awa-inst .awa-hub {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.awa-inst .awa-hub a {
+    display: block;
+    background: #f8f8f8;
+    padding: 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #333;
+    border: 1px solid #e5e5e5;
+    text-align: center;
+    font-weight: 600;
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.awa-inst .awa-hub a:hover,
+.awa-inst .awa-hub a:focus {
+    border-color: #ff9300;
+    box-shadow: 0 2px 8px rgba(255,147,0,.15);
+    color: #ff9300;
+}
+
+/* ============================================================
+   DIREITOS (LGPD / PRIVACIDADE)
+   ============================================================ */
+.awa-inst .awa-rights {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.awa-inst .awa-right {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.awa-inst .awa-right h4 {
+    color: #ff9300;
+    margin: 0 0 .5rem;
+    font-size: 1rem;
+}
+
+/* ============================================================
+   PÁGINA DE CONTATO (rota nativa /contact)
+   ============================================================ */
+.contact-index-index .awa-contact-header {
+    max-width: 920px;
+    margin: 0 auto 2rem;
+}
+
+.contact-index-index .awa-contact-channels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.contact-index-index .awa-contact-channel {
+    background: #f8f8f8;
+    padding: 1.25rem 1rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.contact-index-index .awa-contact-channel strong {
+    display: block;
+    margin-bottom: .5rem;
+    color: #ff9300;
+}
+
+.contact-index-index .awa-contact-channel a {
+    color: #ff9300;
+    text-decoration: underline;
+}
+
+/* ============================================================
+   RESPONSIVO
+   ============================================================ */
+@media (max-width: 768px) {
+    .cms-page-view .awa-inst {
+        padding: 0 .75rem 1.5rem;
+    }
+
+    .cms-page-view .awa-inst h1 {
+        font-size: 1.5rem;
+    }
+
+    .cms-page-view .awa-inst h2 {
+        font-size: 1.15rem;
+    }
+
+    .awa-inst .awa-grid,
+    .awa-inst .awa-hub,
+    .awa-inst .awa-rights {
+        grid-template-columns: 1fr;
+    }
+
+    .contact-index-index .awa-contact-channels {
+        grid-template-columns: 1fr;
+    }
+
+    .awa-inst .awa-table {
+        font-size: .9rem;
+    }
+
+    .awa-inst .awa-table th,
+    .awa-inst .awa-table td {
+        padding: .5rem;
+    }
+}

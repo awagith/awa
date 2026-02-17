@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <preference for="GrupoAwamotos\AbandonedCart\Api\AbandonedCartRepositoryInterface"
+                type="GrupoAwamotos\AbandonedCart\Model\AbandonedCartRepository"/>
+
+    <preference for="GrupoAwamotos\AbandonedCart\Api\Data\AbandonedCartInterface"
+                type="GrupoAwamotos\AbandonedCart\Model\AbandonedCart"/>
+
+    <preference for="GrupoAwamotos\AbandonedCart\Api\EmailSenderInterface"
+                type="GrupoAwamotos\AbandonedCart\Model\EmailSender"/>
+
+    <preference for="GrupoAwamotos\AbandonedCart\Api\CouponGeneratorInterface"
+                type="GrupoAwamotos\AbandonedCart\Model\CouponGenerator"/>
+
+    <type name="Magento\Framework\Console\CommandListInterface">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="abandonedcart_process" xsi:type="object">GrupoAwamotos\AbandonedCart\Console\Command\ProcessCommand</item>
+                <item name="abandonedcart_send" xsi:type="object">GrupoAwamotos\AbandonedCart\Console\Command\SendCommand</item>
+                <item name="abandonedcart_report" xsi:type="object">GrupoAwamotos\AbandonedCart\Console\Command\ReportCommand</item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>

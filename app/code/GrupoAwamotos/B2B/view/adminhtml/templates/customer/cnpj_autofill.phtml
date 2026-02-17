@@ -1,0 +1,15 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$lookupUrl = $block->escapeUrl($block->getUrl('b2b/cnpj/lookup'));
+$clearCacheUrl = $block->escapeUrl($block->getUrl('b2b/cnpj/clearCache'));
+?>
+<script type="text/x-magento-init">
+{
+    "*": {
+        "GrupoAwamotos_B2B/js/customer-cnpj-autofill": {
+            "lookupUrl": "<?= /* @noEscape */ $lookupUrl ?>",
+            "clearCacheUrl": "<?= /* @noEscape */ $clearCacheUrl ?>"
+        }
+    }
+}
+</script>

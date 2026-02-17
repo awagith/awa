@@ -122,4 +122,13 @@ class ViewBlock extends Template
     {
         return $product->getProductUrl();
     }
+
+    /**
+     * Get set recurring URL
+     */
+    public function getSetRecurringUrl(): string
+    {
+        $list = $this->getCurrentList();
+        return $list ? $this->getUrl('b2b/shoppinglist/setrecurring', ['id' => $list->getId()]) : '#';
+    }
 }

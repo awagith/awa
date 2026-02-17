@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:App/etc/config.xsd">
+    <default>
+        <ayo_curriculo>
+            <general>
+                <enabled>1</enabled>
+                <recipient_email></recipient_email>
+                <sender_email_identity>general</sender_email_identity>
+                <copy_to></copy_to>
+                <max_file_size_mb>5</max_file_size_mb>
+                <send_confirmation>1</send_confirmation>
+            </general>
+        </ayo_curriculo>
+    </default>
+</config>

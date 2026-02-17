@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">ayo_curriculo_submission_listing.ayo_curriculo_submission_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>ayo_curriculo_submission_columns</spinner>
+        <deps>
+            <dep>ayo_curriculo_submission_listing.ayo_curriculo_submission_listing_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="ayo_curriculo_submission_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">entity_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>Ayo_Curriculo::submission</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="ayo_curriculo_submission_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>entity_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filterSearch name="fulltext"/>
+        <filters name="listing_filters">
+            <filterSelect name="status" provider="${ $.parentName }">
+                <settings>
+                    <options class="Ayo\Curriculo\Model\Source\Status"/>
+                    <caption translate="true">Todos</caption>
+                    <label translate="true">Status</label>
+                    <dataScope>status</dataScope>
+                </settings>
+            </filterSelect>
+            <filterSelect name="work_area" provider="${ $.parentName }">
+                <settings>
+                    <options class="Ayo\Curriculo\Model\Source\WorkArea"/>
+                    <caption translate="true">Todas</caption>
+                    <label translate="true">Área</label>
+                    <dataScope>work_area</dataScope>
+                </settings>
+            </filterSelect>
+            <filterSelect name="availability" provider="${ $.parentName }">
+                <settings>
+                    <options class="Ayo\Curriculo\Model\Source\Availability"/>
+                    <caption translate="true">Todas</caption>
+                    <label translate="true">Disponibilidade</label>
+                    <dataScope>availability</dataScope>
+                </settings>
+            </filterSelect>
+            <filterSelect name="contract_type" provider="${ $.parentName }">
+                <settings>
+                    <options class="Ayo\Curriculo\Model\Source\ContractType"/>
+                    <caption translate="true">Todos</caption>
+                    <label translate="true">Contrato</label>
+                    <dataScope>contract_type</dataScope>
+                </settings>
+            </filterSelect>
+        </filters>
+        <massaction name="listing_massaction">
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Tem certeza que deseja excluir as candidaturas selecionadas?</message>
+                        <title translate="true">Excluir Candidaturas</title>
+                    </confirm>
+                    <url path="curriculo/submission/massDelete"/>
+                    <type>delete</type>
+                    <label translate="true">Excluir</label>
+                </settings>
+            </action>
+            <action name="status">
+                <settings>
+                    <type>status</type>
+                    <label translate="true">Alterar Status</label>
+                    <actions class="Ayo\Curriculo\Model\Source\MassStatus"/>
+                </settings>
+            </action>
+        </massaction>
+        <paging name="listing_paging"/>
+        <exportButton name="export_button"/>
+    </listingToolbar>
+    <columns name="ayo_curriculo_submission_columns">
+        <settings>
+            <childDefaults>
+                <param name="fieldAction" xsi:type="array">
+                    <item name="provider" xsi:type="string">ayo_curriculo_submission_listing.ayo_curriculo_submission_listing.ayo_curriculo_submission_columns.actions</item>
+                    <item name="target" xsi:type="string">applyAction</item>
+                    <item name="params" xsi:type="array">
+                        <item name="0" xsi:type="string">view</item>
+                        <item name="1" xsi:type="string">${ $.$data.rowIndex }</item>
+                    </item>
+                </param>
+            </childDefaults>
+        </settings>
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>entity_id</indexField>
+            </settings>
+        </selectionsColumn>
+        <column name="entity_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>desc</sorting>
+            </settings>
+        </column>
+        <column name="tracking_code">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Código</label>
+                <bodyTmpl>ui/grid/cells/text</bodyTmpl>
+            </settings>
+        </column>
+        <column name="name">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Nome</label>
+            </settings>
+        </column>
+        <column name="email">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Email</label>
+            </settings>
+        </column>
+        <column name="phone">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Telefone</label>
+            </settings>
+        </column>
+        <column name="position">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Cargo</label>
+            </settings>
+        </column>
+        <column name="work_area">
+            <settings>
+                <filter>select</filter>
+                <options class="Ayo\Curriculo\Model\Source\WorkArea"/>
+                <dataType>select</dataType>
+                <label translate="true">Área</label>
+            </settings>
+        </column>
+        <column name="specialties">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Especialidades</label>
+                <visible>false</visible>
+            </settings>
+        </column>
+        <column name="cnh">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">CNH</label>
+                <visible>false</visible>
+            </settings>
+        </column>
+        <column name="availability">
+            <settings>
+                <filter>select</filter>
+                <options class="Ayo\Curriculo\Model\Source\Availability"/>
+                <dataType>select</dataType>
+                <label translate="true">Disponibilidade</label>
+            </settings>
+        </column>
+        <column name="contract_type">
+            <settings>
+                <filter>select</filter>
+                <options class="Ayo\Curriculo\Model\Source\ContractType"/>
+                <dataType>select</dataType>
+                <label translate="true">Contrato</label>
+                <visible>false</visible>
+            </settings>
+        </column>
+        <column name="salary_expectation">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Pretensão</label>
+                <visible>false</visible>
+            </settings>
+        </column>
+        <column name="referral_source">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Origem</label>
+                <visible>false</visible>
+            </settings>
+        </column>
+        <column name="status" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Ayo\Curriculo\Model\Source\Status"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Status</label>
+            </settings>
+        </column>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Data</label>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="Ayo\Curriculo\Ui\Component\Listing\Column\Actions">
+            <settings>
+                <indexField>entity_id</indexField>
+                <label translate="true">Ações</label>
+            </settings>
+        </actionsColumn>
+    </columns>
+</listing>

@@ -2,21 +2,19 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
-        <!-- ERP Customers in Customers Menu -->
-        <add id="GrupoAwamotos_ERPIntegration::erp_customers"
-             title="Clientes ERP"
+        <!-- Top-level: Grupo Awamotos -->
+        <add id="GrupoAwamotos_ERPIntegration::grupo_awamotos"
+             title="Grupo Awamotos"
              module="GrupoAwamotos_ERPIntegration"
-             parent="Magento_Customer::customer"
-             sortOrder="20"
-             action="erpintegration/customer/index"
-             resource="GrupoAwamotos_ERPIntegration::customers"/>
+             sortOrder="55"
+             resource="GrupoAwamotos_ERPIntegration::erp"/>
 
-        <!-- ERP Integration in System Menu -->
+        <!-- ERP Integration section -->
         <add id="GrupoAwamotos_ERPIntegration::erp"
              title="ERP Integration"
              module="GrupoAwamotos_ERPIntegration"
-             parent="Magento_Backend::system"
-             sortOrder="100"
+             parent="GrupoAwamotos_ERPIntegration::grupo_awamotos"
+             sortOrder="10"
              resource="GrupoAwamotos_ERPIntegration::erp"/>
         <add id="GrupoAwamotos_ERPIntegration::erp_dashboard"
              title="Dashboard ERP"
@@ -46,5 +44,14 @@
              sortOrder="10"
              action="erpintegration/log/index"
              resource="GrupoAwamotos_ERPIntegration::log"/>
+
+        <!-- ERP Customers shortcut in Customers menu -->
+        <add id="GrupoAwamotos_ERPIntegration::erp_customers"
+             title="Clientes ERP"
+             module="GrupoAwamotos_ERPIntegration"
+             parent="Magento_Customer::customer"
+             sortOrder="20"
+             action="erpintegration/customer/index"
+             resource="GrupoAwamotos_ERPIntegration::customers"/>
     </menu>
 </config>

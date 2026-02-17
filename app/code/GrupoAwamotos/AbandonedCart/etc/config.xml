@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <abandoned_cart>
+            <general>
+                <enabled>1</enabled>
+                <min_cart_value>50</min_cart_value>
+                <exclude_guest>0</exclude_guest>
+            </general>
+            <email_1>
+                <enabled>1</enabled>
+                <delay_hours>1</delay_hours>
+                <template>abandoned_cart_email_1</template>
+                <subject>Você esqueceu algo no carrinho!</subject>
+            </email_1>
+            <email_2>
+                <enabled>1</enabled>
+                <delay_hours>24</delay_hours>
+                <template>abandoned_cart_email_2</template>
+                <subject>Seus produtos estão esperando por você</subject>
+                <coupon_enabled>1</coupon_enabled>
+                <coupon_discount>10</coupon_discount>
+                <coupon_type>percent</coupon_type>
+            </email_2>
+            <email_3>
+                <enabled>1</enabled>
+                <delay_hours>72</delay_hours>
+                <template>abandoned_cart_email_3</template>
+                <subject>Última chance: 15% OFF no seu carrinho</subject>
+                <coupon_enabled>1</coupon_enabled>
+                <coupon_discount>15</coupon_discount>
+                <coupon_type>percent</coupon_type>
+            </email_3>
+        </abandoned_cart>
+    </default>
+</config>

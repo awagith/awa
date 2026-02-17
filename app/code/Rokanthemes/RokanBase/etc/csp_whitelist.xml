@@ -52,6 +52,7 @@
         </policy>
         <policy id="img-src">
             <values>
+                <value id="blob" type="host">blob:</value>
                 <value id="cloudflare" type="host">*.cloudflare.com</value>
                 <value id="klarna-base" type="host">*.klarna.com</value>
                 <value id="googleadservices" type="host">*.googleadservices.com</value>

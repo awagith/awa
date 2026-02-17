@@ -1,11 +1,23 @@
 <?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <!-- Critical CSS para performance (above-the-fold) -->
-        <css src="css/critical.css"/>
-        <!-- Micro-interactions CSS -->
-        <css src="css/micro-interactions.css"/>
-        <!-- Micro-interactions JS - carregado async para performance -->
-        <script src="js/micro-interactions.js" async="true"/>
+		<!-- viewport meta já definido pelo module-theme base; não duplicar -->
+		<css src="css/bootstrap.css" />
+		<css src="css/font-awesome.min.css" />
+		<css src="css/owl.carousel.css" />
+		<css src="css/animation_theme.css" />
+		<css src="css/icomoon.css" />
+		<css src="css/simple-line-icons.css" />
+		<css src="css/styles-l.css" />
+		<css src="css/styles-m.css" />
+		<css src="css/themes.css" />
+		<!-- awa-bugfixes.css movido para child theme (ayo_home5) para corrigir ordem de cascata CSS -->
+		<link src="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet" type="text/css" src_type="url" />
     </head>
 </page>

@@ -4,21 +4,19 @@
  * See COPYING.txt for license details.
  */
 
-// @codingStandardsIgnoreFile
-
-?>
-<?php
 /**
  * Top menu for store
  *
  * @see \Magento\Theme\Block\Html\Topmenu
+ * @var \Magento\Theme\Block\Html\Topmenu $block
+ * @var \Magento\Framework\Escaper $escaper
  */
 ?>
 <?php $columnsLimit = $block->getColumnsLimit() ?: 0; ?>
 <?php $_menu = $block->getHtml('level-top', 'submenu', $columnsLimit) ?>
-	<nav class="navigation">
+	<nav class="navigation" role="navigation" aria-label="<?= $escaper->escapeHtmlAttr(__('Main Menu')) ?>">
 		<ul data-mage-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
-			<li class="menu-home level0 nav-0 first level-top ui-menu-item"><a class="level-top ui-corner-all" href="#"><?php echo __('Home')?></a></li>
-			<?php /* @escapeNotVerified */ echo $_menu; ?>
+			<li class="menu-home level0 nav-0 first level-top ui-menu-item"><a class="level-top ui-corner-all" href="<?= $escaper->escapeUrl($block->getUrl('')) ?>"><?= $escaper->escapeHtml(__('Home')) ?></a></li>
+			<?= /** @noEscape */ $_menu; ?>
 		</ul>
 	</nav>

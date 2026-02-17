@@ -7,21 +7,50 @@
 			padding: 15px 15px;
 			margin-bottom: 20px;
 			background: #f8f8f8;
+			border: 1px solid #e0e0e0;
+			border-radius: 8px;
 			width: 100%;
 			box-sizing: border-box;
 			display: flex;
 			justify-content: space-between;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 			#current-address{
 				flex: 1;
 				.input-box{
 					#locator-search{
 						border-radius:5px 0 0 5px;
+						height: 50px;
+						border: 1px solid #ddd;
+						padding: 0 15px;
+						font-size: 14px;
+						transition: border-color 0.3s ease;
+						&:focus {
+							border-color: #007bff;
+							outline: none;
+						}
+						&::placeholder {
+							color: #999;
+						}
 					}
 				}
 			}
 			.bstlocator_input{
 				.button{
 					height: 50px;
+					background: #007bff;
+					color: #fff;
+					border: none;
+					border-radius: 0 5px 5px 0;
+					padding: 0 20px;
+					font-weight: 600;
+					cursor: pointer;
+					transition: background 0.3s ease;
+					&:hover {
+						background: #0056b3;
+					}
+					span span {
+						color: #fff;
+					}
 				}
 			}
 		}
@@ -29,30 +58,126 @@
 			overflow: auto;
 			height: 100vh;
 			max-height: 600px;
+			.store-list-header {
+				padding: 20px 15px 15px;
+				margin: 0;
+				background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+				color: #fff;
+				border-radius: 8px 8px 0 0;
+				box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+				h3 {
+					margin: 0 0 5px 0;
+					font-size: 20px;
+					font-weight: 700;
+					color: #fff;
+				}
+				.store-list-subtitle {
+					margin: 0;
+					font-size: 13px;
+					opacity: 0.9;
+					font-weight: 400;
+				}
+			}
 			#store_list{
+				padding: 15px;
+				background: #fafafa;
 				.list{
 					display: flex;
 					margin-bottom: 15px;
 					overflow: auto;
 					font-size: 14px;
-					background: #f6f6f6;
+					background: #fff;
+					border: 1px solid #e0e0e0;
+					border-radius: 8px;
+					box-shadow: 0 2px 4px rgba(0,0,0,0.08);
 					cursor: pointer;
 					flex-wrap: wrap;
+					transition: all 0.3s ease;
+					&:hover {
+						box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+						transform: translateY(-2px);
+						border-color: #007bff;
+					}
 					.image{
 						flex: 0 0 40%;
 						max-width: 150px;
 						margin: 15px;
+						border-radius: 6px;
+						overflow: hidden;
+						img {
+							width: 100%;
+							height: 120px;
+							object-fit: cover;
+							transition: transform 0.3s ease;
+						}
+						&:hover img {
+							transform: scale(1.05);
+						}
 					}
 					.location-information{
 						flex: 1;
 						margin: 15px;
 						margin-left: 0;
+						min-width: 250px;
+						h2 {
+							margin: 0 0 10px 0;
+							font-size: 18px;
+							color: #333;
+							font-weight: 600;
+						}
 						div {
-							a{
-								font-weight: 500;
-								font-size: 1.8rem;
-								margin-bottom: 20px;
+							margin-bottom: 6px;
+							color: #666;
+							font-size: 14px;
+							line-height: 1.5;
+							strong {
+								color: #333;
+								font-weight: 600;
 							}
+							a{
+								color: #007bff;
+								text-decoration: none;
+								&:hover {
+									text-decoration: underline;
+								}
+							}
+						}
+						.store-actions {
+							display: flex;
+							gap: 10px;
+							margin-top: 12px;
+							flex-wrap: wrap;
+							.btn-view-detail, .btn-whatsapp {
+								display: inline-block;
+								padding: 8px 16px;
+								border-radius: 4px;
+								font-size: 13px;
+								font-weight: 500;
+								text-decoration: none;
+								transition: all 0.2s ease;
+								text-align: center;
+							}
+							.btn-view-detail {
+								background: #007bff;
+								color: #fff;
+								&:hover {
+									background: #0056b3;
+								}
+							}
+							.btn-whatsapp {
+								background: #25D366;
+								color: #fff;
+								i {
+									margin-right: 5px;
+								}
+								&:hover {
+									background: #128C7E;
+								}
+							}
+						}
+						.store-phone a {
+							color: #007bff;
+							font-weight: 500;
 						}
 					}
 					.today_time{
@@ -65,12 +190,25 @@
 						-ms-flex-pack: justify;
 						align-items:center;
 						margin-top: 5px;
-						padding: 5px 15px 5px 15px;
-						background: #dfdfdf;
-						&:before{
-							content: "\f017";
-							font: normal normal normal 14px/1 FontAwesome;
-							margin-right: 10px;
+						padding: 10px 15px;
+						background: #f0f0f0;
+						border-radius: 0 0 8px 8px;
+						font-size: 13px;
+						i.fa {
+							margin-right: 8px;
+							color: #007bff;
+						}
+						.open-hours {
+							font-weight: 600;
+							color: #28a745;
+						}
+						.closed-label {
+							font-weight: 600;
+							color: #dc3545;
+						}
+						.closed-label {
+							font-weight: 600;
+							color: #dc3545;
 						}
 						.locator_arrow{
 							margin-left: auto;
@@ -208,6 +346,25 @@
 		.column_right{
 			order: -1;
 			padding: 0 0 30px !important;
+			height: 50vh !important;
+		}
+		.column_left {
+			.center {
+				max-height: none !important;
+			}
+			#store_list .list {
+				flex-direction: column;
+				.image {
+					max-width: 100%;
+					margin: 15px 15px 0 15px;
+					img {
+						height: 200px;
+					}
+				}
+				.location-information {
+					min-width: 100%;
+				}
+			}
 		}
 	}
 }

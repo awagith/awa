@@ -1,6 +1,22 @@
 <?php
 	$data = $block->getConfig();
+  $currentYear = date('Y');
+  $copyrightText = $data['general']['copyright'];
+  
+  // Adicionar ano dinâmico se não estiver presente
+  if (strpos($copyrightText, $currentYear) === false) {
+    // Se tem um ano base (ex: 2017), mantém o range
+    if (preg_match('/(\d{4})/', $copyrightText, $matches)) {
+      $baseYear = $matches[1];
+      if ($baseYear != $currentYear) {
+        $copyrightText = str_replace($baseYear, $baseYear . '–' . $currentYear, $copyrightText);
+      }
+    } else {
+      // Se não tem ano, adiciona o ano atual
+      $copyrightText .= ' ' . $currentYear;
+    }
+  }
 ?>
 <small class="copyright">
-    <span><?php echo $data['general']['copyright'];?></span>
+    <span><?php echo $copyrightText; ?></span>
 </small>

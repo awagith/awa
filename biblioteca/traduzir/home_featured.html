@@ -1,5 +1,9 @@
 <!-- title: Home - Produtos em Destaque | identifier: home_featured -->
-<div class="featured-products">
-    <h2>Produtos em Destaque</h2>
-    {{block class="Rokanthemes\Featuredpro\Block\Widget\Featuredpro" template="widget/featuredpro_list.phtml"}}
+<div class="ayo-home5-product-grid ayo-home5-product-grid--carousel" aria-label="Produtos em Destaque">
+    {{widget type="Rokanthemes\Featuredpro\Block\Widget\Featuredpro"
+        template="widget/featuredpro_list.phtml"
+        limit="12"
+        row="1"
+        navigation="1"
+        pagination="0"}}
 </div>

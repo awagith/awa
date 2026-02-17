@@ -1,21 +1,16 @@
 <?xml version="1.0"?>
-<!--
-/**
- * Admin Menu Configuration
- */
--->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
-        <!-- Menu principal B2B -->
+        <!-- B2B section under Grupo Awamotos -->
         <add id="GrupoAwamotos_B2B::b2b"
              title="B2B"
              translate="title"
              module="GrupoAwamotos_B2B"
-             sortOrder="50"
+             parent="GrupoAwamotos_ERPIntegration::grupo_awamotos"
+             sortOrder="30"
              resource="GrupoAwamotos_B2B::b2b"/>
-        
-        <!-- Submenu: Clientes Pendentes -->
+
         <add id="GrupoAwamotos_B2B::customer_approval"
              title="Clientes Pendentes"
              translate="title"
@@ -24,8 +19,7 @@
              parent="GrupoAwamotos_B2B::b2b"
              action="grupoawamotos_b2b/customer/pending"
              resource="GrupoAwamotos_B2B::customer_approval"/>
-        
-        <!-- Submenu: Todos os Clientes B2B -->
+
         <add id="GrupoAwamotos_B2B::customer_all"
              title="Todos os Clientes B2B"
              translate="title"
@@ -34,28 +28,25 @@
              parent="GrupoAwamotos_B2B::b2b"
              action="grupoawamotos_b2b/customer/index"
              resource="GrupoAwamotos_B2B::customer_approval"/>
-        
-        <!-- Submenu: Cotações -->
+
         <add id="GrupoAwamotos_B2B::quotes"
-             title="Solicitações de Cotação"
+             title="Cotacoes"
              translate="title"
              module="GrupoAwamotos_B2B"
              sortOrder="20"
              parent="GrupoAwamotos_B2B::b2b"
              action="grupoawamotos_b2b/quote/index"
              resource="GrupoAwamotos_B2B::quotes"/>
-        
-        <!-- Submenu: Aprovação de Pedidos -->
+
         <add id="GrupoAwamotos_B2B::order_approval"
-             title="Aprovação de Pedidos"
+             title="Aprovacao de Pedidos"
              translate="title"
              module="GrupoAwamotos_B2B"
              sortOrder="25"
              parent="GrupoAwamotos_B2B::b2b"
              action="grupoawamotos_b2b/approval/index"
              resource="GrupoAwamotos_B2B::order_approval"/>
-        
-        <!-- Submenu: Transportadoras -->
+
         <add id="GrupoAwamotos_B2B::carrier"
              title="Transportadoras B2B"
              translate="title"
@@ -64,10 +55,27 @@
              parent="GrupoAwamotos_B2B::b2b"
              action="b2b/carrier/index"
              resource="GrupoAwamotos_B2B::carrier"/>
-        
-        <!-- Submenu: Configurações -->
+
+        <add id="GrupoAwamotos_B2B::attendants"
+             title="Gestao de Atendentes"
+             translate="title"
+             module="GrupoAwamotos_B2B"
+             sortOrder="35"
+             parent="GrupoAwamotos_B2B::b2b"
+             action="grupoawamotos_b2b/attendant/index"
+             resource="GrupoAwamotos_B2B::attendants"/>
+
+        <add id="GrupoAwamotos_B2B::notifications"
+             title="Log de Notificacoes"
+             translate="title"
+             module="GrupoAwamotos_B2B"
+             sortOrder="40"
+             parent="GrupoAwamotos_B2B::b2b"
+             action="grupoawamotos_b2b/notification/index"
+             resource="GrupoAwamotos_B2B::notifications"/>
+
         <add id="GrupoAwamotos_B2B::config"
-             title="Configurações B2B"
+             title="Configuracoes B2B"
              translate="title"
              module="GrupoAwamotos_B2B"
              sortOrder="100"

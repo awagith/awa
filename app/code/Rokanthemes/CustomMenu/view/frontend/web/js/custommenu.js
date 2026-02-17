@@ -47,18 +47,11 @@
             });
         });
         $(".nav-toggle").click(function(e){
-            if(!$("html").hasClass("nav-open")) {
-                $("html").addClass("nav-before-open");
-                setTimeout(function(){
-                    $("html").addClass("nav-open");
-                }, 300);
+            var $body = $("body");
+            if ($body.data("awa-nav-managed")) {
+                return;
             }
-            else {
-                $("html").removeClass("nav-open");
-                setTimeout(function(){
-                    $("html").removeClass("nav-before-open");
-                }, 300);
-            }
+            $body.toggleClass("nav-open");
         }); 
         $(".navigation.custommenu li.ui-menu-item > .open-children-toggle").unbind("click").bind("click",function(){
             if(!$(this).parent().children(".submenu").hasClass("opened")) {

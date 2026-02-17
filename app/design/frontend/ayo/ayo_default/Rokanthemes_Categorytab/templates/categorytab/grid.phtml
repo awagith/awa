@@ -6,8 +6,8 @@
 	$speed = $block->getConfig('speed');
 	$qty = $block->getConfig('qty');
 	$showCart = $block->getConfig('addtocart');
-	$showWishlist = $block->getConfig('wishlist');
-	$showCompare = $block->getConfig('compare');
+	$showWishlist = false; // B2B
+	$showCompare = false; // B2B
 	$show_navigation = $block->getConfig('navigation');
 	$show_pagination = $block->getConfig('pagination');
 	$auto = $block->getConfig('auto');
@@ -106,7 +106,7 @@
 														<?php endif; ?>
 														<?php if ($showCompare): ?>
 															<li class="quickview-product">
-																<a class="quickview-link" data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="#" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>"></a>
+																<a class="quickview-link" data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="javascript: void(0);" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>"></a>
 														    </li>
 															<?php if ($block->getAddToCompareUrl() && $showCompare): ?>
 															<?php $compareHelper = $this->helper('Magento\Catalog\Helper\Product\Compare');?>
@@ -162,22 +162,12 @@
 				   										<?php echo $block->getReviewsSummaryHtml($_item, $templateType,true); ?>
 				   									<?php endif; ?>
 												</div>
-												<?php
-													$soldByLabel = '';
-													$soldByAttribute = $_item->getResource()->getAttribute('sold_by');
-													if ($soldByAttribute) {
-														$soldByValue = $_item->getData('sold_by');
-														if ($soldByValue !== null && $soldByValue !== '') {
-															$soldByLabel = $soldByAttribute->getSource()->getOptionText($soldByValue);
-															if (is_array($soldByLabel)) {
-																$soldByLabel = implode(', ', array_filter($soldByLabel));
-															}
-														}
-													}
-													if ($soldByLabel) {
-														echo '<div class="sold-by"><span>' . __('Sold by:') . '</span>' . $this->escapeHtml($soldByLabel) . '</div>';
-													}
-												?>
+												<div class="sold-by">
+													<?php
+														$cats = $_item->getAttributeText('sold_by');
+														echo ' <span>'.__('Sold by:').'</span>' .$cats;
+													 ?>
+												</div>
 												<div class="info-price">
 													<?php /* @escapeNotVerified */ echo $this->helper('Rokanthemes\Themeoption\Helper\Data')->getPriceDisplayCustom($block->getProductPrice($_item)) ?>
 												</div>
@@ -197,16 +187,52 @@
 					<?php }?>
 				</div>
 			</div>
-			<div class="load_more"><a class="loadmore"><?php echo __('Load more'); ?></a></div> 
+			<div class="load_more"><a class="loadmore">Load more </a></div> 
 		</div>
 	 </div> <!-- .tab_container --> 
 </div>
-<script type="text/x-magento-init">
-    {
-        ".categorytab-container.cat_1": {
-            "Rokanthemes_Categorytab/js/grid": {
-                "identify": "<?php echo $identify; ?>"
-            }
-        }
-    }
+<script type="text/javascript">
+require([
+	'jquery',
+	'mage/mage',
+	'rokanthemes/owl',
+	'rokanthemes/lazyloadimg'
+], function ($) {
+	'use strict';
+
+	jQuery(".tab_content_<?php echo $identify; ?>").hide();
+	jQuery(".tab_content_<?php echo $identify; ?>:first").show(); 
+
+	jQuery("ul.tabs<?php echo '-'.$identify;?> li").click(function() {
+		jQuery("ul.tabs<?php echo '-'.$identify;?> li").removeClass("active");
+		jQuery(this).addClass("active");
+		jQuery(".tab_content_<?php echo $identify; ?>").hide();
+		var activeTab = $(this).attr("rel"); 
+		jQuery("#"+activeTab).show();
+		$("img.lazy").lazyload({
+			skip_invisible: false
+		});
+	});
+	$( document ).ready(function() {	
+		$(".cat_special32").owlCarousel({
+			lazyLoad:true,
+			items : 6,
+			itemsDesktop : [1366, 4],
+	        itemsDesktopSmall : [1199,4],
+	        itemsTablet : [991, 3],
+	        itemsMobile : [680, 2],
+		    navigation : false,
+		    pagination : false,
+		     afterAction: function(el){
+		     this.$owlItems.removeClass('first-active')
+		     this.$owlItems .eq(this.currentItem).addClass('first-active')  
+		    }
+		});
+	});
+	$(document).ready(function(){
+	  $(".loadmore").click(function(){
+	    $(".cat_1 .cat_special .product_row").show();
+	  });
+	});
+});
 </script>

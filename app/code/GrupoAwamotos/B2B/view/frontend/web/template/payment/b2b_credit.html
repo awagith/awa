@@ -1,0 +1,67 @@
+<!--
+/**
+ * B2B Credit Payment Method Template
+ */
+-->
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <div class="payment-method-title field choice">
+        <input type="radio"
+               name="payment[method]"
+               class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
+        <label data-bind="attr: {'for': getCode()}" class="label">
+            <span data-bind="text: getTitle()"></span>
+            <span class="b2b-credit-badge">B2B</span>
+        </label>
+    </div>
+
+    <div class="payment-method-content" data-bind="css: {'_active': (getCode() == isChecked())}">
+        <div class="payment-method-billing-address">
+            <!-- ko foreach: $parent.getRegion('billingAdditional') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!-- /ko -->
+        </div>
+
+        <!-- ko if: getCreditInfo() -->
+        <div class="b2b-credit-info">
+            <div class="credit-summary">
+                <div class="credit-item">
+                    <span class="label" data-bind="i18n: 'Limite de Crédito:'"></span>
+                    <span class="value" data-bind="text: getCreditInfo().limit_formatted"></span>
+                </div>
+                <div class="credit-item">
+                    <span class="label" data-bind="i18n: 'Crédito Disponível:'"></span>
+                    <span class="value available" data-bind="text: getCreditInfo().available_formatted"></span>
+                </div>
+            </div>
+            <p class="credit-note" data-bind="i18n: 'O valor será debitado do seu crédito B2B ao confirmar o pedido.'"></p>
+        </div>
+        <!-- /ko -->
+
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            <!-- /ko -->
+        </div>
+
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button class="action primary checkout"
+                        type="submit"
+                        data-bind="click: placeOrder, attr: {title: $t('Confirmar Pedido')}, enable: (getCode() == isChecked()), css: {disabled: !isPlaceOrderActionAllowed()}">
+                    <span data-bind="i18n: 'Confirmar Pedido'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.b2b-credit-badge { background: #1976d2; color: #fff; font-size: 10px; padding: 2px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle; }
+.b2b-credit-info { background: #f5f9ff; border: 1px solid #d0e3f7; border-radius: 6px; padding: 16px; margin: 12px 0; }
+.credit-summary { display: flex; gap: 24px; margin-bottom: 8px; }
+.credit-item .label { color: #666; font-size: 13px; }
+.credit-item .value { font-weight: 600; font-size: 15px; display: block; }
+.credit-item .value.available { color: #2e7d32; }
+.credit-note { color: #999; font-size: 12px; margin: 0; }
+</style>

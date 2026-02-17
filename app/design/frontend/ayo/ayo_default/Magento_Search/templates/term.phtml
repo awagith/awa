@@ -11,14 +11,8 @@
     <ul class="search-terms">
         <?php foreach ($block->getTerms() as $_term): ?>
             <li class="item">
-                <?php
-                    $relativeSize = ($_term->getRatio() * 70) + 75;
-                    $normalizedSize = (int)round($relativeSize / 5) * 5;
-                    $normalizedSize = max(50, min(200, $normalizedSize));
-                    $sizeClass = 'search-term-scale-' . $normalizedSize;
-                ?>
                 <a href="<?php /* @escapeNotVerified */ echo $block->getSearchUrl($_term) ?>"
-                   class="<?php echo $sizeClass; ?>">
+                   style="font-size:<?php /* @escapeNotVerified */ echo $_term->getRatio()*70+75 ?>%;">
                     <?php echo $block->escapeHtml($_term->getName()) ?>
                 </a>
             </li>

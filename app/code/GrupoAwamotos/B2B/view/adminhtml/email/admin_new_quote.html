@@ -1,0 +1,76 @@
+<!--
+/**
+ * Email template: Admin - Nova Cotação Recebida
+ */
+-->
+<!--@subject Nova Solicitação de Cotação B2B - #{{var quote.getId()}} @-->
+<!--@vars {
+"var quote":"Quote Request Object",
+"var customer_name":"Customer Name",
+"var customer_email":"Customer Email",
+"var company_name":"Company Name",
+"var store.getFrontendName()":"Store Name",
+"var admin_url":"Admin URL"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <h1 style="font-size: 24px; font-weight: 700; color: #1f2937; margin: 0 0 15px;">
+                Nova Solicitação de Cotação Recebida
+            </h1>
+            <p style="font-size: 16px; color: #4b5563; margin: 0 0 20px;">
+                Uma nova solicitação de cotação foi enviada por um cliente B2B.
+            </p>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table style="width: 100%; background: #fef3c7; border: 1px solid #fbbf24; border-radius: 12px; padding: 25px; margin: 20px 0;">
+                <tr>
+                    <td style="text-align: center;">
+                        <span style="display: inline-block; width: 60px; height: 60px; background: #f59e0b; border-radius: 50%; margin-bottom: 15px; line-height: 60px;">
+                            <span style="color: #fff; font-size: 24px;">📋</span>
+                        </span>
+                        <p style="font-size: 18px; font-weight: 600; color: #92400e; margin: 0;">
+                            Cotação #{{var quote.getId()}}
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <table style="width: 100%; background: #f9fafb; border-radius: 8px; padding: 20px;">
+                <tr>
+                    <td>
+                        <p style="font-size: 14px; color: #374151; font-weight: 600; margin: 0 0 15px;">Dados do Cliente:</p>
+                        <p style="margin: 0 0 8px;"><strong>Nome:</strong> {{var customer_name}}</p>
+                        <p style="margin: 0 0 8px;"><strong>Email:</strong> {{var customer_email}}</p>
+                        <p style="margin: 0 0 8px;"><strong>Empresa:</strong> {{var company_name}}</p>
+                        <p style="margin: 0 0 8px;"><strong>Data:</strong> {{var quote.getCreatedAt()}}</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr class="email-action">
+        <td style="text-align: center; padding: 25px;">
+            <a href="{{var admin_url}}" style="background-color: #f59e0b; color: #fff; padding: 15px 35px; text-decoration: none; border-radius: 4px; display: inline-block; font-size: 16px; font-weight: 600;">
+                Ver Cotação no Admin
+            </a>
+        </td>
+    </tr>
+    <tr class="email-outro">
+        <td>
+            <p style="color: #6b7280; font-size: 14px;">
+                Acesse o painel administrativo para responder a esta cotação.
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

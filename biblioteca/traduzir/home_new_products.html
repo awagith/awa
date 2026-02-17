@@ -1,5 +1,9 @@
 <!-- title: Home - Novos Produtos | identifier: home_new_products -->
-<div class="new-products">
-    <h2>Novos Produtos</h2>
-    {{block class="Rokanthemes\Newproduct\Block\Widget\Newproduct" template="widget/newproduct_list.phtml"}}
+<div class="ayo-home5-product-grid ayo-home5-product-grid--carousel" aria-label="Novos Produtos">
+    {{widget type="Rokanthemes\Newproduct\Block\Widget\Newproduct"
+        template="widget/newproduct_list.phtml"
+        limit="12"
+        row="1"
+        navigation="1"
+        pagination="0"}}
 </div>

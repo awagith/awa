@@ -18,30 +18,30 @@
     $_postNameStripped = $block->stripTags($_post->getTitle(), null, true);
 ?>
 <div class="post-view">
-    <div class="post-holder post-holder-<?php echo $_post->getId() ?>">
+    <div class="post-holder post-holder-<?php echo (int)$_post->getId() ?>">
 		<div class="post-images">
-			<a href="<?php echo $_post->getPostUrl() ?>">
-                <img src="<?php echo $this->getMediaFolder().$_post->getDetailimage() ?>"/>
+			<a href="<?php echo $block->escapeUrl($_post->getPostUrl()) ?>">
+                <img src="<?php echo $block->escapeUrl($this->getMediaFolder().$_post->getDetailimage()) ?>" alt="<?php echo $block->escapeHtmlAttr($_post->getTitle()) ?>" loading="lazy" />
 			</a> 
 			
 		</div> 
        
         <div class="post-content">
             
-             <h3 class="post-title"><a title="<?php echo $_postUrl ?>" href="<?php echo $_postUrl ?>"><?php echo $_postNameStripped; ?></a>
+             <h3 class="post-title"><a title="<?php echo $block->escapeHtmlAttr($_post->getTitle()) ?>" href="<?php echo $block->escapeUrl($_postUrl) ?>"><?php echo $_postNameStripped; ?></a>
              </h3>
-             <div class="post-info-extra">Post Date:
+             <div class="post-info-extra"><?php echo $block->escapeHtml(__('Post Date:')) ?>
                 <div class="post-date"><strong><?php echo date('d', strtotime($_post->getPublishTime())); ?></strong><span><?php echo date('M, Y', strtotime($_post->getPublishTime())); ?></span></div>
                 <!-- <div class="post-format"><i class="fa fa-picture-o"></i></div> -->
             </div>
             <div class="post-description">
-                <?php echo $block->getContent() ?>
+                <?php /* @noEscape */ echo $block->getContent() ?>
                 <div class="clear"></div>
             </div>
         </div>
          <div class="post-header clearfix">
 
-            <div class="addthis_toolbox addthis_default_style" addthis:url="<?php echo $_postUrl ?>">
+            <div class="addthis_toolbox addthis_default_style" addthis:url="<?php echo $block->escapeUrl($_postUrl) ?>">
                 <a class="addthis_button_facebook"></a>
                 <a class="addthis_button_twitter"></a>
                 <a class="addthis_button_email"></a>

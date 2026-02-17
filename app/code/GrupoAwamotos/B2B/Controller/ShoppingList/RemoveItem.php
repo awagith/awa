@@ -11,6 +11,7 @@ use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
 use Magento\Framework\Message\ManagerInterface;
 use GrupoAwamotos\B2B\Model\ShoppingListService;
 
@@ -42,6 +43,11 @@ class RemoveItem implements HttpPostActionInterface
     private $messageManager;
 
     /**
+     * @var FormKeyValidator
+     */
+    private $formKeyValidator;
+
+    /**
      * @var ShoppingListService
      */
     private $shoppingListService;
@@ -59,6 +65,7 @@ class RemoveItem implements HttpPostActionInterface
         RedirectFactory $redirectFactory,
         JsonFactory $jsonFactory,
         RequestInterface $request,
+        FormKeyValidator $formKeyValidator,
         ManagerInterface $messageManager,
         ShoppingListService $shoppingListService
     ) {
@@ -66,6 +73,7 @@ class RemoveItem implements HttpPostActionInterface
         $this->redirectFactory = $redirectFactory;
         $this->jsonFactory = $jsonFactory;
         $this->request = $request;
+        $this->formKeyValidator = $formKeyValidator;
         $this->messageManager = $messageManager;
         $this->shoppingListService = $shoppingListService;
     }
@@ -75,6 +83,16 @@ class RemoveItem implements HttpPostActionInterface
      */
     public function execute()
     {
+        if (!$this->formKeyValidator->validate($this->request)) {
+            if ($this->request->isAjax()) {
+                $result = $this->jsonFactory->create();
+                return $result->setData(['success' => false, 'message' => __('Formulário inválido. Tente novamente.')]);
+            }
+            $this->messageManager->addErrorMessage(__('Formulário inválido. Tente novamente.'));
+            $redirect = $this->redirectFactory->create();
+            return $redirect->setPath('b2b/shoppinglist');
+        }
+
         if (!$this->customerSession->isLoggedIn()) {
             if ($this->request->isAjax()) {
                 $result = $this->jsonFactory->create();

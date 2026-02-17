@@ -1,65 +1,67 @@
-<!-- Schema.org Organization - Grupo Awamotos -->
+<?php
+/**
+ * Schema.org Organization + LocalBusiness + WebSite — NON-homepage pages only.
+ *
+ * Na homepage, o awa-seo-head.phtml já renderiza um @graph consolidado
+ * com Organization + LocalBusiness + WebSite. Duplicar aqui causaria
+ * múltiplos schemas Organization, o que o Google pode penalizar.
+ *
+ * @var $block \Magento\Framework\View\Element\Template
+ * @var \GrupoAwamotos\SchemaOrg\ViewModel\OpenGraph $og
+ */
+$og = $block->getData('og_viewmodel') ?: $block->getData('view_model');
+if ($og && $og->isHomepage()) {
+    return; // homepage usa awa-seo-head.phtml
+}
+$baseUrl = $og ? $og->getBaseUrl() : rtrim($block->getBaseUrl(), '/');
+?>
+<!-- Schema.org Organization - AWA Motos (non-homepage) -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "Grupo Awamotos",
-  "url": "https://srv1113343.hstgr.cloud/",
-  "logo": "https://srv1113343.hstgr.cloud/media/logo/default/logo.png",
+  "name": "AWA Motos",
+  "legalName": "AWA Motos Peças e Acessórios",
+  "url": "<?= /* @noEscape */ $baseUrl ?>/",
+  "logo": "<?= /* @noEscape */ $baseUrl ?>/media/logo/default/logo.png",
   "description": "Especialistas em peças e acessórios para motocicletas. Capacetes, baús, luvas, escapamentos e muito mais com entrega rápida e segura.",
   "contactPoint": {
     "@type": "ContactPoint",
-    "telephone": "+55-11-99999-9999",
+    "telephone": "+55-16-3301-1890",
     "contactType": "Customer Service",
-    "contactOption": "TollFree",
-    "areaServed": "BR"
+    "areaServed": "BR",
+    "availableLanguage": ["Portuguese"]
   },
   "address": {
     "@type": "PostalAddress",
-    "addressLocality": "São Paulo",
+    "streetAddress": "Rua Lavineo de Arruda Falcão",
+    "addressLocality": "Araraquara",
     "addressRegion": "SP",
+    "postalCode": "14808-390",
     "addressCountry": "BR"
   },
   "sameAs": [
-    "https://facebook.com/grupoawamotos",
-    "https://instagram.com/grupoawamotos"
+    "https://www.facebook.com/awamotos",
+    "https://www.instagram.com/awamotos",
+    "https://www.youtube.com/@awamotos",
+    "https://wa.me/5516997367588"
   ]
 }
 </script>
 
-<!-- Schema.org LocalBusiness -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "Grupo Awamotos",
-  "image": "https://srv1113343.hstgr.cloud/media/logo/default/logo.png",
-  "telephone": "+55-11-99999-9999",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "Rua Exemplo, 123",
-    "addressLocality": "São Paulo",
-    "addressRegion": "SP",
-    "postalCode": "01234-567",
-    "addressCountry": "BR"
-  },
-  "openingHours": [
-    "Mo-Fr 08:00-18:00",
-    "Sa 08:00-12:00"
-  ]
-}
-</script>
-
-<!-- Schema.org Website -->
+<!-- Schema.org WebSite (SearchAction for sitelinks) -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "Grupo Awamotos",
-  "url": "https://srv1113343.hstgr.cloud/",
+  "name": "AWA Motos",
+  "url": "<?= /* @noEscape */ $baseUrl ?>/",
   "potentialAction": {
     "@type": "SearchAction",
-    "target": "https://srv1113343.hstgr.cloud/catalogsearch/result/?q={search_term_string}",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "<?= /* @noEscape */ $baseUrl ?>/catalogsearch/result/?q={search_term_string}"
+    },
     "query-input": "required name=search_term_string"
   }
 }

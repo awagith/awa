@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="ayo" translate="label" sortOrder="900">
+            <label>AYO</label>
+        </tab>
+        <section id="ayo_curriculo" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Currículo</label>
+            <tab>ayo</tab>
+            <resource>Ayo_Curriculo::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Configurações</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Habilitado</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="recipient_email" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Email de destino</label>
+                    <comment>Se vazio, será usado o email geral da loja.</comment>
+                </field>
+                <field id="sender_email_identity" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Identidade do remetente</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                </field>
+                <field id="copy_to" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cópia (BCC)</label>
+                    <comment>Separe múltiplos emails por vírgula.</comment>
+                </field>
+                <field id="max_file_size_mb" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Tamanho máximo do arquivo (MB)</label>
+                    <frontend_class>validate-number validate-zero-or-greater</frontend_class>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

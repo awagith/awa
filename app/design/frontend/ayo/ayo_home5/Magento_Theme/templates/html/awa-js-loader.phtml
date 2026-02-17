@@ -1,0 +1,8 @@
+<?php
+/**
+ * AWA Motos - Custom JS Loader
+ * Loads awa-master-fix.js after DOM is ready
+ */
+$staticUrl = $block->getViewFileUrl('js/awa-master-fix.js');
+?>
+<script src="<?= $block->escapeUrl($staticUrl) ?>" defer></script>

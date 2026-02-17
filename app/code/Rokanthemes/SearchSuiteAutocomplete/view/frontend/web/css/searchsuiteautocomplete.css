@@ -34,7 +34,7 @@ form.minisearch.loading .control input[type="text"] {
     margin-top: 4px;
     width: 350px;
     position: absolute;
-    z-index: 9999999;
+    z-index: 10000;
 }
 .searchsuite-autocomplete .suggest,
 .searchsuite-autocomplete .product {

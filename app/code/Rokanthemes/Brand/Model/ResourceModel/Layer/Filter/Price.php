@@ -14,9 +14,9 @@ class Price extends \Magento\Catalog\Model\ResourceModel\Layer\Filter\Price
         \Magento\Customer\Model\Session $session,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         $connectionName = null,
-        IndexScopeResolverInterface $priceTableResolver = null,
-        Context $httpContext = null,
-        DimensionFactory $dimensionFactory = null
+        ?IndexScopeResolverInterface $priceTableResolver = null,
+        ?Context $httpContext = null,
+        ?DimensionFactory $dimensionFactory = null
     ) {
         parent::__construct($context, $eventManager, $layerResolver, $session, $storeManager, $connectionName, $priceTableResolver, $httpContext, $dimensionFactory);
     }

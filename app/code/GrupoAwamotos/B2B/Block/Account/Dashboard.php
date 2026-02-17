@@ -15,6 +15,11 @@ use GrupoAwamotos\B2B\Model\ResourceModel\CreditLimit\CollectionFactory as Credi
 use GrupoAwamotos\B2B\Helper\Data as B2BHelper;
 use Magento\Framework\Pricing\Helper\Data as PricingHelper;
 use Magento\Customer\Api\CustomerRepositoryInterface;
+use GrupoAwamotos\B2B\Model\Attendant\AttendantManager;
+use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
+use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
+use Magento\Catalog\Helper\Image as ImageHelper;
+use Magento\Framework\App\ResourceConnection;
 
 class Dashboard extends Template
 {
@@ -53,6 +58,31 @@ class Dashboard extends Template
      */
     private $customerRepository;
 
+    /**
+     * @var AttendantManager
+     */
+    private $attendantManager;
+
+    /**
+     * @var ProductCollectionFactory
+     */
+    private $productCollectionFactory;
+
+    /**
+     * @var CategoryCollectionFactory
+     */
+    private $categoryCollectionFactory;
+
+    /**
+     * @var ImageHelper
+     */
+    private $imageHelper;
+
+    /**
+     * @var ResourceConnection
+     */
+    private $resourceConnection;
+
     public function __construct(
         Context $context,
         CustomerSession $customerSession,
@@ -62,6 +92,11 @@ class Dashboard extends Template
         B2BHelper $b2bHelper,
         PricingHelper $pricingHelper,
         CustomerRepositoryInterface $customerRepository,
+        AttendantManager $attendantManager,
+        ProductCollectionFactory $productCollectionFactory,
+        CategoryCollectionFactory $categoryCollectionFactory,
+        ImageHelper $imageHelper,
+        ResourceConnection $resourceConnection,
         array $data = []
     ) {
         $this->customerSession = $customerSession;
@@ -71,6 +106,11 @@ class Dashboard extends Template
         $this->b2bHelper = $b2bHelper;
         $this->pricingHelper = $pricingHelper;
         $this->customerRepository = $customerRepository;
+        $this->attendantManager = $attendantManager;
+        $this->productCollectionFactory = $productCollectionFactory;
+        $this->categoryCollectionFactory = $categoryCollectionFactory;
+        $this->imageHelper = $imageHelper;
+        $this->resourceConnection = $resourceConnection;
         parent::__construct($context, $data);
     }
 
@@ -111,8 +151,8 @@ class Dashboard extends Template
     {
         $customer = $this->getCustomer();
         if ($customer) {
-            $attr = $customer->getCustomAttribute('b2b_approved');
-            return $attr && $attr->getValue();
+            $attr = $customer->getCustomAttribute('b2b_approval_status');
+            return $attr && $attr->getValue() === 'approved';
         }
         return false;
     }
@@ -360,7 +400,7 @@ class Dashboard extends Template
      */
     public function getQuoteRequestUrl(): string
     {
-        return $this->getUrl('b2b/quote/request');
+        return $this->getUrl('b2b/quote/index');
     }
 
     /**
@@ -381,5 +421,324 @@ class Dashboard extends Template
     public function getOrdersUrl(): string
     {
         return $this->getUrl('sales/order/history');
+    }
+
+    /**
+     * Get shopping list URL
+     *
+     * @return string
+     */
+    public function getShoppingListUrl(): string
+    {
+        return $this->getUrl('b2b/shoppinglist');
+    }
+
+    /**
+     * Get attendant info for current customer
+     *
+     * @return array|null
+     */
+    public function getAttendantInfo(): ?array
+    {
+        $customerId = $this->customerSession->getCustomerId();
+        if (!$customerId) {
+            return null;
+        }
+
+        try {
+            return $this->attendantManager->getCustomerAttendant((int)$customerId);
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get onboarding checklist for new B2B customers
+     *
+     * @return array
+     */
+    public function getOnboardingChecklist(): array
+    {
+        if (!$this->getCustomer()) {
+            return [];
+        }
+
+        return [
+            $this->buildChecklistItem('cnpj', 'CNPJ validado pela Receita Federal', !empty($this->getCnpj()), 'Validar CNPJ', 'b2b/register'),
+            $this->buildChecklistItem('approval', 'Conta B2B aprovada', $this->isApproved(), 'Aguardando aprovação...', ''),
+            $this->buildChecklistItem('address', 'Endereço de entrega cadastrado', $this->customerHasAddress(), 'Adicionar Endereço', 'customer/address/new'),
+            $this->buildChecklistItem('order', 'Primeiro pedido realizado', $this->getRecentOrders(1)->getSize() > 0, 'Ver Catálogo', 'catalogsearch/result/?q='),
+            $this->buildChecklistItem('list', 'Lista de compras criada', $this->hasShoppingLists(), 'Criar Lista', 'b2b/shoppinglist/create'),
+        ];
+    }
+
+    /**
+     * Build a single checklist item array
+     *
+     * @param string $id
+     * @param string $label
+     * @param bool $done
+     * @param string $actionLabel
+     * @param string $actionPath
+     * @return array
+     */
+    private function buildChecklistItem(string $id, string $label, bool $done, string $actionLabel, string $actionPath): array
+    {
+        return [
+            'id' => $id,
+            'label' => __($label),
+            'done' => $done,
+            'action_label' => $done ? '' : __($actionLabel),
+            'action_url' => ($done || $actionPath === '') ? '' : $this->getUrl($actionPath),
+        ];
+    }
+
+    /**
+     * Get onboarding completion percentage
+     *
+     * @return int
+     */
+    public function getOnboardingProgress(): int
+    {
+        $checklist = $this->getOnboardingChecklist();
+        if (empty($checklist)) {
+            return 0;
+        }
+        $done = array_filter($checklist, fn($item) => $item['done']);
+        return (int)round((count($done) / count($checklist)) * 100);
+    }
+
+    /**
+     * Check if onboarding is complete (all steps done)
+     *
+     * @return bool
+     */
+    public function isOnboardingComplete(): bool
+    {
+        return $this->getOnboardingProgress() === 100;
+    }
+
+    /**
+     * Get smart suggestions based on customer profile
+     *
+     * @return array
+     */
+    public function getSmartSuggestions(): array
+    {
+        if (!$this->getCustomer()) {
+            return [];
+        }
+
+        $suggestions = array_filter([
+            $this->buildQuoteSuggestion(),
+            $this->buildQuickOrderSuggestion(),
+            $this->buildAttendantSuggestion(),
+            $this->buildShoppingListSuggestion(),
+            $this->buildCatalogSuggestion(),
+        ]);
+
+        usort($suggestions, fn($a, $b) => ($a['priority'] ?? 99) <=> ($b['priority'] ?? 99));
+        return array_slice(array_values($suggestions), 0, 4);
+    }
+
+    private function buildQuoteSuggestion(): ?array
+    {
+        if ($this->getPendingQuotesCount() > 0 || $this->getApprovedQuotesCount() > 0) {
+            return null;
+        }
+        return [
+            'type' => 'quote',
+            'title' => __('Solicite sua primeira cotação'),
+            'description' => __('Envie uma lista de produtos e receba preços personalizados para sua empresa.'),
+            'action_label' => __('Solicitar Cotação'),
+            'action_url' => $this->getQuoteRequestUrl(),
+            'priority' => 1,
+        ];
+    }
+
+    private function buildQuickOrderSuggestion(): ?array
+    {
+        if (!$this->isApproved()) {
+            return null;
+        }
+        return [
+            'type' => 'quickorder',
+            'title' => __('Pedido Rápido por SKU'),
+            'description' => __('Já sabe o código do produto? Adicione direto ao carrinho por SKU ou referência.'),
+            'action_label' => __('Fazer Pedido Rápido'),
+            'action_url' => $this->getUrl('b2b/quickorder'),
+            'priority' => 2,
+        ];
+    }
+
+    private function buildAttendantSuggestion(): ?array
+    {
+        $attendant = $this->getAttendantInfo();
+        if (!$attendant) {
+            return null;
+        }
+        if ($this->getRecentOrders(1)->getSize() > 0) {
+            return null;
+        }
+        return [
+            'type' => 'attendant',
+            'title' => __('Fale com seu atendente'),
+            'description' => __('%1 do departamento %2 pode ajudar com suas primeiras compras.', $attendant['name'] ?? '', $attendant['department'] ?? 'Comercial'),
+            'action_label' => __('Enviar WhatsApp'),
+            'action_url' => $this->buildAttendantContactUrl($attendant),
+            'priority' => 3,
+            'external' => true,
+        ];
+    }
+
+    private function buildAttendantContactUrl(array $attendant): string
+    {
+        if (!empty($attendant['whatsapp'])) {
+            return 'https://wa.me/55' . preg_replace('/\D/', '', $attendant['whatsapp']);
+        }
+        return 'mailto:' . ($attendant['email'] ?? '');
+    }
+
+    private function buildShoppingListSuggestion(): ?array
+    {
+        if ($this->hasShoppingLists()) {
+            return null;
+        }
+        return [
+            'type' => 'shoppinglist',
+            'title' => __('Organize seus produtos favoritos'),
+            'description' => __('Crie listas de compras para agilizar pedidos recorrentes da sua empresa.'),
+            'action_label' => __('Criar Lista de Compras'),
+            'action_url' => $this->getUrl('b2b/shoppinglist/create'),
+            'priority' => 4,
+        ];
+    }
+
+    private function buildCatalogSuggestion(): ?array
+    {
+        if (!$this->isApproved() || $this->getRecentOrders(1)->getSize() > 0) {
+            return null;
+        }
+        return [
+            'type' => 'catalog',
+            'title' => __('Explore nosso catálogo'),
+            'description' => __('Conheça as peças e acessórios mais vendidos com preço especial para sua empresa.'),
+            'action_label' => __('Ver Produtos'),
+            'action_url' => $this->getUrl('catalogsearch/result/?q='),
+            'priority' => 5,
+        ];
+    }
+
+    /**
+     * Get featured product categories
+     *
+     * @return array
+     */
+    public function getFeaturedCategories(): array
+    {
+        try {
+            $collection = $this->categoryCollectionFactory->create();
+            $collection->addAttributeToSelect(['name', 'url_path', 'image'])
+                ->addAttributeToFilter('is_active', 1)
+                ->addAttributeToFilter('level', 2)
+                ->addAttributeToFilter('include_in_menu', 1)
+                ->setPageSize(6)
+                ->setOrder('position', 'ASC');
+
+            $categories = [];
+            foreach ($collection as $category) {
+                $categories[] = [
+                    'name' => $category->getName(),
+                    'url' => $this->getUrl($category->getUrlPath() ?: ('catalog/category/view/id/' . $category->getId())),
+                    'id' => $category->getId(),
+                ];
+            }
+            return $categories;
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
+     * Check if customer has any address
+     *
+     * @return bool
+     */
+    private function customerHasAddress(): bool
+    {
+        $customer = $this->getCustomer();
+        if (!$customer) {
+            return false;
+        }
+        $addresses = $customer->getAddresses();
+        return !empty($addresses);
+    }
+
+    /**
+     * Check if customer has shopping lists
+     *
+     * @return bool
+     */
+    private function hasShoppingLists(): bool
+    {
+        // Check if there are any shopping lists for this customer
+        $customerId = $this->customerSession->getCustomerId();
+        if (!$customerId) {
+            return false;
+        }
+
+        try {
+            $connection = $this->resourceConnection->getConnection();
+            $tableName = $this->resourceConnection->getTableName('grupoawamotos_b2b_shopping_list');
+            if ($connection->isTableExists($tableName)) {
+                $select = $connection->select()
+                    ->from($tableName, ['COUNT(*)'])
+                    ->where('customer_id = ?', $customerId);
+                return (int)$connection->fetchOne($select) > 0;
+            }
+        } catch (\Exception $e) {
+            // Table may not exist yet
+        }
+        return false;
+    }
+
+    /**
+     * Get account registration date formatted
+     *
+     * @return string
+     */
+    public function getRegistrationDate(): string
+    {
+        $customer = $this->getCustomer();
+        if ($customer && $customer->getCreatedAt()) {
+            return date('d/m/Y', strtotime($customer->getCreatedAt()));
+        }
+        return '';
+    }
+
+    /**
+     * Check if this is a recently registered customer (within 30 days)
+     *
+     * @return bool
+     */
+    public function isNewCustomer(): bool
+    {
+        $customer = $this->getCustomer();
+        if ($customer && $customer->getCreatedAt()) {
+            $registrationDate = strtotime($customer->getCreatedAt());
+            $thirtyDaysAgo = strtotime('-30 days');
+            return $registrationDate > $thirtyDaysAgo;
+        }
+        return false;
+    }
+
+    /**
+     * Quick order URL
+     *
+     * @return string
+     */
+    public function getQuickOrderUrl(): string
+    {
+        return $this->getUrl('b2b/quickorder');
     }
 }

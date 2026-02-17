@@ -1,0 +1,17 @@
+<?php
+/**
+ * Cookie settings runtime initialization via AMD init module.
+ *
+ * @var $block \Magento\Framework\View\Element\Js\Cookie
+ */
+$isCookieSecure = $block->getSessionConfig()->getCookieSecure() ? 'true' : 'false';
+?>
+<script type="text/x-magento-init">
+{
+    "*": {
+        "GrupoAwamotos_Theme/js/runtime/cookies-config-init": {
+            "secure": <?= /* @noEscape */ $isCookieSecure ?>
+        }
+    }
+}
+</script>

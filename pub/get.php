@@ -46,14 +46,6 @@ $request = new \Magento\MediaStorage\Model\File\Storage\Request(
     )
 );
 $relativePath = $request->getPathInfo();
-
-// Prevent admin and TFA routes from being processed as media files
-if (strpos($relativePath, 'admin') === 0 || 
-    strpos($relativePath, '/admin') !== false ||
-    strpos($relativePath, 'tfa') !== false) {
-    require 'errors/404.php';
-    exit;
-}
 if (file_exists($configCacheFile) && is_readable($configCacheFile)) {
     $config = json_decode(file_get_contents($configCacheFile), true);
 

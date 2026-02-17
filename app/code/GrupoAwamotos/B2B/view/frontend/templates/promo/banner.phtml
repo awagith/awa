@@ -12,10 +12,10 @@
                 <span class="badge-text">ATACADO</span>
             </div>
             <h2 class="b2b-promo-title">
-                <?= $block->escapeHtml(__('Sua Empresa Merece Mais!')) ?>
+                <?= $block->escapeHtml(__('Atacado e Revendedor com preço de parceiro')) ?>
             </h2>
             <p class="b2b-promo-subtitle">
-                <?= $block->escapeHtml(__('Torne-se um revendedor e tenha acesso a benefícios exclusivos')) ?>
+                <?= $block->escapeHtml(__('Entre para ver preços B2B, solicitar cadastro e comprar com condições diferenciadas.')) ?>
             </p>
             
             <div class="b2b-benefits-grid">
@@ -33,15 +33,26 @@
             </div>
             
             <div class="b2b-promo-actions">
-                <a href="<?= $block->escapeUrl($block->getRegisterUrl()) ?>" 
+                <a href="<?= $block->escapeUrl($block->isGuest() ? $block->getLoginUrl() : $block->getRegisterUrl()) ?>"
                    class="action primary b2b-register-btn"
-                   title="<?= $block->escapeHtmlAttr(__('Cadastrar Minha Empresa')) ?>">
-                    <span><?= $block->escapeHtml(__('Cadastrar Minha Empresa')) ?></span>
+                   title="<?= $block->escapeHtmlAttr($block->isGuest() ? __('Entrar para ver preço') : __('Solicitar cadastro B2B')) ?>">
+                    <span><?= $block->escapeHtml($block->isGuest() ? __('Entrar para ver preço') : __('Solicitar cadastro B2B')) ?></span>
+                </a>
+                <a href="<?= $block->escapeUrl($block->getQuoteUrl()) ?>"
+                   class="action secondary b2b-quote-btn"
+                   title="<?= $block->escapeHtmlAttr(__('Solicitar cotação')) ?>">
+                    <span><?= $block->escapeHtml(__('Solicitar cotação')) ?></span>
                 </a>
                 <span class="promo-note">
-                    <?= $block->escapeHtml(__('Cadastro rápido - Análise em até 24h')) ?>
+                    <?= $block->escapeHtml(__('Cadastro rápido • análise em até 24h úteis')) ?>
                 </span>
             </div>
+
+            <ul class="b2b-quick-rules" role="list">
+                <?php foreach ($block->getQuickRules() as $rule): ?>
+                    <li><?= $block->escapeHtml(__($rule)) ?></li>
+                <?php endforeach; ?>
+            </ul>
         </div>
         
         <div class="b2b-promo-visual">
@@ -56,7 +67,7 @@
 
 <style>
 .b2b-promo-banner {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+    background: linear-gradient(135deg, #b73337 0%, #8e2629 50%, #6d1d1f 100%);
     border-radius: 12px;
     padding: 40px;
     margin: 30px 0;
@@ -80,10 +91,11 @@
 
 .b2b-promo-badge {
     display: inline-block;
-    background: linear-gradient(90deg, #f39c12, #e74c3c);
+    background: #fff;
     padding: 6px 16px;
     border-radius: 20px;
     margin-bottom: 15px;
+    color: #b73337;
 }
 
 .badge-text {
@@ -130,7 +142,7 @@
 .benefit-icon {
     width: 40px;
     height: 40px;
-    background: rgba(243, 156, 18, 0.2);
+    background: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -140,7 +152,7 @@
 
 .benefit-icon span::before {
     font-size: 18px;
-    color: #f39c12;
+    color: #fff;
 }
 
 .icon-percent::before { content: '%'; font-weight: bold; }
@@ -172,7 +184,8 @@
 }
 
 .b2b-register-btn {
-    background: linear-gradient(90deg, #f39c12, #e67e22) !important;
+    background: linear-gradient(135deg, #fff, #f5f5f5) !important;
+    color: #b73337 !important;
     border: none !important;
     padding: 15px 35px !important;
     font-size: 16px !important;
@@ -181,17 +194,48 @@
     text-transform: uppercase !important;
     letter-spacing: 1px !important;
     transition: transform 0.3s, box-shadow 0.3s !important;
-    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.4) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
 }
 
 .b2b-register-btn:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(243, 156, 18, 0.5) !important;
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3) !important;
+    background: #fff !important;
 }
 
 .promo-note {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.6);
+}
+
+.b2b-quote-btn {
+    border-color: rgba(255, 255, 255, 0.55) !important;
+    color: #fff !important;
+    background: transparent !important;
+}
+
+.b2b-quote-btn:hover {
+    border-color: #fff !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+}
+
+.b2b-quick-rules {
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 6px;
+}
+
+.b2b-quick-rules li {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.b2b-quick-rules li::before {
+    content: '•';
+    margin-right: 8px;
+    color: #fff;
 }
 
 .b2b-promo-visual {
@@ -201,13 +245,14 @@
 .discount-badge-large {
     width: 160px;
     height: 160px;
-    background: linear-gradient(135deg, #f39c12, #e74c3c);
+    background: #fff;
+    color: #b73337;
     border-radius: 50%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 40px rgba(243, 156, 18, 0.4);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
     animation: pulse-badge 2s infinite;
 }
 

@@ -7,11 +7,6 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceContainer name="cart.summary">
-            <block class="GrupoAwamotos\B2B\Block\Quote\Button" 
-                   name="b2b.quote.button" 
-                   template="GrupoAwamotos_B2B::quote/button.phtml"
-                   after="-"/>
-        </referenceContainer>
+        <!-- Removido: bloco de cotação B2B no carrinho (b2b-cart-quote-box) -->
     </body>
 </page>

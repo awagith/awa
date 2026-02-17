@@ -8,18 +8,9 @@
 
 ?>
 <?php $_product = $block->getProduct() ?>
-<?php
-$helper = $this->helper('Magento\Catalog\Helper\Product');
-$shareUrl = $this->escapeUrl('https://www.facebook.com/sharer.php?u=' . rawurlencode($block->getProductUrl($_product)));
-$emailUrl = $helper->getEmailToFriendUrl($_product);
-?>
-<div class="product-social-actions" data-mage-init='{"Magento_Catalog/js/product/share-print":{"windowName":"Facebook","windowFeatures":"width=500,height=500"}}'>
-    <?php if ($block->canEmailToFriend()): ?>
-        <a title="<?php /* @escapeNotVerified */ echo __('Email') ?>" href="<?php /* @escapeNotVerified */ echo $emailUrl ?>"
-           class="action email-link"><i class="fa fa-envelope"></i></a>
-    <?php endif; ?>
-    <a href="#" title="<?php /* @escapeNotVerified */ echo __('Print') ?>" class="action print-link" data-role="print-link"><i class="fa fa-print"></i></a>
-    <a href="<?php echo $shareUrl; ?>" title="<?php /* @escapeNotVerified */ echo __('Share') ?>" class="action share-link" data-role="share-link" target="_blank" rel="noopener">
-        <i class="fa fa-share"></i>
-    </a>
-</div>
+<?php if ($block->canEmailToFriend()): ?>
+    <a title="<?php /* @escapeNotVerified */ echo __('Email') ?>" href="<?php /* @escapeNotVerified */ echo $this->helper('Magento\Catalog\Helper\Product')->getEmailToFriendUrl($_product) ?>"
+       class="action email-link"><i class="fa fa-envelope"></i></a>
+<?php endif; ?>
+<a href="#" onclick="window.print();return false;" title="<?php /* @escapeNotVerified */ echo __('Print') ?>" class="action print-link"><i class="fa fa-print"></i></a>
+<a href="https://www.facebook.com/sharer.php?u=<?php echo $block->getProductUrl($_product) ?>" title="<?php /* @escapeNotVerified */ echo __('Share') ?>" onclick="return !window.open(this.href, 'Facebook', 'width=500,height=500')"><i class="fa fa-share"></i></a>

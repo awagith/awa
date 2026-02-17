@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 namespace GrupoAwamotos\Fitment\Setup\Patch\Data;
 
 use Magento\Eav\Setup\EavSetupFactory;

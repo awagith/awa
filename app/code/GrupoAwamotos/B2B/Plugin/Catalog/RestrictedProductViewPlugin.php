@@ -12,7 +12,9 @@ use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\UrlInterface;
 use GrupoAwamotos\B2B\Helper\Data as B2BHelper;
+use GrupoAwamotos\B2B\Helper\Config as B2BConfig;
 
 class RestrictedProductViewPlugin
 {
@@ -46,13 +48,25 @@ class RestrictedProductViewPlugin
      */
     private $request;
 
+    /**
+     * @var B2BConfig
+     */
+    private $b2bConfig;
+
+    /**
+     * @var UrlInterface
+     */
+    private $urlBuilder;
+
     public function __construct(
         ProductRepositoryInterface $productRepository,
         CustomerSession $customerSession,
         RedirectFactory $redirectFactory,
         ManagerInterface $messageManager,
         B2BHelper $b2bHelper,
-        RequestInterface $request
+        RequestInterface $request,
+        B2BConfig $b2bConfig,
+        UrlInterface $urlBuilder
     ) {
         $this->productRepository = $productRepository;
         $this->customerSession = $customerSession;
@@ -60,39 +74,56 @@ class RestrictedProductViewPlugin
         $this->messageManager = $messageManager;
         $this->b2bHelper = $b2bHelper;
         $this->request = $request;
+        $this->b2bConfig = $b2bConfig;
+        $this->urlBuilder = $urlBuilder;
     }
 
     /**
-     * Check B2B restrictions before viewing product
+     * Around execute - block access to restricted products
      *
      * @param View $subject
-     * @return null|\Magento\Framework\Controller\Result\Redirect
+     * @param callable $proceed
+     * @return \Magento\Framework\Controller\ResultInterface
      */
-    public function beforeExecute(View $subject)
+    public function aroundExecute(View $subject, callable $proceed)
     {
         if (!$this->b2bHelper->isEnabled()) {
-            return null;
+            return $proceed();
+        }
+
+        $isLoggedIn = $this->customerSession->isLoggedIn();
+
+        // B2B Puro: redireciona visitantes não-logados para página de login
+        if (!$isLoggedIn) {
+            $productId = (int) $this->request->getParam('id');
+            $productUrl = $this->urlBuilder->getUrl('catalog/product/view', ['id' => $productId]);
+            $referer = base64_encode($productUrl);
+
+            $this->messageManager->addNoticeMessage(
+                __('Faça login ou cadastre-se para acessar nossos produtos.')
+            );
+
+            $redirect = $this->redirectFactory->create();
+            return $redirect->setPath('b2b/account/login', ['referer' => $referer]);
         }
 
         $productId = (int) $this->request->getParam('id');
         if (!$productId) {
-            return null;
+            return $proceed();
         }
 
         try {
             $product = $this->productRepository->getById($productId);
         } catch (\Exception $e) {
-            return null;
+            return $proceed();
         }
 
         $isB2BExclusive = (bool) $product->getData('b2b_exclusive');
         $allowedGroups = $product->getData('b2b_customer_groups');
 
         if (!$isB2BExclusive && empty($allowedGroups)) {
-            return null; // No restrictions
+            return $proceed();
         }
-
-        $isLoggedIn = $this->customerSession->isLoggedIn();
         $customerGroupId = $isLoggedIn ? (int) $this->customerSession->getCustomerGroupId() : 0;
         $isB2BCustomer = in_array($customerGroupId, $this->b2bHelper->getB2BGroupIds());
 
@@ -101,7 +132,7 @@ class RestrictedProductViewPlugin
             $this->messageManager->addNoticeMessage(
                 __('Este produto é exclusivo para clientes B2B. Faça login ou cadastre sua empresa.')
             );
-            
+
             $redirect = $this->redirectFactory->create();
             return $redirect->setPath('b2b/register');
         }
@@ -112,13 +143,13 @@ class RestrictedProductViewPlugin
                 $this->messageManager->addNoticeMessage(
                     __('Este produto não está disponível para o seu grupo de clientes.')
                 );
-                
+
                 $redirect = $this->redirectFactory->create();
                 return $redirect->setPath('/');
             }
         }
 
-        return null;
+        return $proceed();
     }
 
     /**

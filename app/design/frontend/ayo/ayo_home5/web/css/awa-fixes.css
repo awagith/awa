@@ -1,0 +1,1326 @@
+/* ===========================================
+   AWA MOTOS — FIXES (Correções pontuais)
+   Tema: AYO/Rokanthemes (Home5)
+   
+   ARQUIVO 4/4 da camada AWA consolidada.
+   Carrega POR ÚLTIMO — após core, layout, components.
+   
+   CONTEÚDO: Apenas correções de bugs visuais que NÃO são cobertos
+   pelos 3 arquivos anteriores. Sem estilos estruturais duplicados.
+   
+   REGRA: se a correção é estilística (hover, cor, espaçamento),
+   pertence a core/layout/components. Se é um BUG VISUAL do tema
+   ou do conteúdo CMS, pertence aqui.
+=========================================== */
+
+/* ============================================================
+   FIX-01 — BANNER TEXT DUPLICATION (P0)
+   SVG banners have baked-in text + HTML overlay text = doubling.
+   Hide pseudo-elements that create ghost text shadows.
+   ============================================================ */
+body .page-wrapper .ayo-home5-hero-card__title::before,
+body .page-wrapper .ayo-home5-hero-card__title::after,
+body .page-wrapper .ayo-home5-hero-card__eyebrow::before,
+body .page-wrapper .ayo-home5-hero-card__eyebrow::after {
+    display: none;
+    content: '';
+}
+
+/* Duplicate slides (headline+headline) */
+body .page-wrapper .owl-item .item-slide h1 + h1,
+body .page-wrapper .owl-item .item-slide h2 + h2,
+body .page-wrapper .owl-item .item-slide h3 + h3,
+body .page-wrapper .owl-item .item-slide .title + .title,
+body .page-wrapper .banner-content h1 + h1,
+body .page-wrapper .banner-content h2 + h2 {
+    display: none;
+}
+
+/* Duplicate text layers inside banner items */
+body .page-wrapper .homeslider-container .owl-item .item-slide > div:not(:first-child),
+body .page-wrapper .banner-slider .owl-item > div > div:nth-child(n+2):not(.btn, a),
+body .page-wrapper .slide-content p + p:not(.btn-wrapper) {
+    display: none;
+}
+
+/* "Banner 1 Placeholder" dummy card */
+body .page-wrapper .ayo-home5-hero-card.placeholder-mode {
+    display: none;
+}
+
+/* ============================================================
+   FIX-02 — TESTIMONIAL EMPTY AVATARS (P1)
+   <img src="" alt=""> produces broken-image icons.
+   Replace with gradient circle + FontAwesome user icon.
+   ============================================================ */
+body .page-wrapper .info-testimonial .author-test-link img[src=""] {
+    display: none;
+}
+
+body .page-wrapper .info-testimonial .author-test-link a {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--awa-red-dark) 0%, var(--awa-red) 100%);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+body .page-wrapper .info-testimonial .author-test-link a::before {
+    content: "\f007";
+    font-family: FontAwesome, sans-serif;
+    font-size: 22px;
+    color: rgb(255 255 255 / 90%);
+}
+
+/* ============================================================
+   FIX-03 — PLACEHOLDER HOVER IMAGES (P2)
+   Products without alternate image show placeholder.jpg on hover.
+   ============================================================ */
+body .page-wrapper .product-item .second-thumb img[src*="placeholder/placeholder"] {
+    visibility: hidden;
+    opacity: 0;
+}
+
+body .page-wrapper .product-item:hover .first-thumb:has(+ .second-thumb img[src*="placeholder/placeholder"]) {
+    opacity: 1;
+}
+
+/* FIX-04 — REMOVIDO: consolidado em awa-layout.css (.newsletter-footer > label) */
+
+/* ============================================================
+   FIX-05 — EMPTY HEADINGS / CONTAINERS (P2-P3)
+   Hide empty wrappers that produce blank space.
+   ============================================================ */
+body .page-wrapper .box-testimo > h2:empty,
+body .page-wrapper .testimonials-home > h2:empty {
+    display: none;
+}
+
+body .page-wrapper .header-nav .box_language > .top-header:empty {
+    display: none;
+}
+
+body .page-wrapper .boxServiceImage:empty {
+    display: none;
+}
+
+/* ============================================================
+   FIX-06 — COUNTDOWN EMPTY STATE (P3)
+   .super-deal-countdown empty until TimeCircles JS inits.
+   ============================================================ */
+body .page-wrapper .super-deal-countdown:empty {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+}
+
+body .page-wrapper .super-deal-countdown:empty::after {
+    content: "\f017";
+    font-family: FontAwesome, sans-serif;
+    font-size: 28px;
+    color: var(--awa-gray-500); /* R11-06: token */
+}
+
+/* ============================================================
+   FIX-07 — EMPTY CATEGORY TAB FALLBACK (P2)
+   Some tabs have empty OWL carousels.
+   ============================================================ */
+body .page-wrapper .cat_home.owl-carousel:empty,
+body .page-wrapper .categorytab-container .tab-content:empty {
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body .page-wrapper .cat_home.owl-carousel:empty::after {
+    content: "Produtos em breve";
+    color: var(--awa-gray-500);
+    font-style: italic;
+    font-size: 14px;
+}
+
+/* ============================================================
+   FIX-08 — OWL CAROUSEL PRE-INIT STACKING (P1)
+   Before OWL JS initializes, all slides stack vertically.
+   Show only first, hide rest until JS kicks in.
+   ============================================================ */
+body .page-wrapper .wrapper_slider .owl:not(.owl-carousel) {
+    overflow: hidden;
+    position: relative;
+}
+
+body .page-wrapper .wrapper_slider .owl:not(.owl-carousel) .banner_item ~ .banner_item {
+    display: none;
+}
+
+body .page-wrapper .owl-container:not(.owl-carousel) > *:not(:first-child),
+body .page-wrapper .hot-deal-slide:not(.owl-carousel) > *:not(:first-child) {
+    display: none;
+}
+
+/* ============================================================
+   FIX-09 — NESTED BANNER-SLIDER DOUBLE PADDING (P3)
+   .banner-slider inside .banner-slider doubles spacing.
+   ============================================================ */
+body .page-wrapper .ayo-home5-wrapper > .banner-slider {
+    padding: 0;
+    margin: 0;
+}
+
+/* Base layout para seções CMS exclusivas da Home5 (Canal StoreSetup) */
+body .page-wrapper .ayo-home5-wrapper {
+    display: block;
+    width: 100%;
+    overflow-x: clip;
+}
+
+body .page-wrapper .ayo-home5-wrapper > .ayo-home5-section {
+    margin: var(--awa-space-8) 0;
+}
+
+body .page-wrapper .ayo-home5-wrapper > .ayo-home5-section:first-of-type {
+    margin-top: 0;
+}
+
+body .page-wrapper .ayo-home5-wrapper > .ayo-home5-section:last-of-type {
+    margin-bottom: 0;
+}
+
+body .page-wrapper .banner-slider .banner-slider {
+    padding: 0;
+    margin: 0;
+}
+
+/* ============================================================
+   FIX-10 — VERTICAL MENU HOMEPAGE DISPLAY (P2)
+   Show categories by default on homepage (all breakpoints).
+   Complementa regra desktop-only em awa-layout.css L553.
+   Sem !important — permite que config admin AYO tenha precedência.
+   ============================================================ */
+body .page-wrapper .cms-index-index .verticalmenu .togge-menu.list-category-dropdown,
+body .page-wrapper .cms-index-index .side-verticalmenu .togge-menu,
+body .page-wrapper .cms-home .verticalmenu .togge-menu,
+body .page-wrapper .cms-homepage_ayo_home5 .verticalmenu .togge-menu {
+    display: block;
+}
+
+body .page-wrapper .cms-index-index .menu_left_home1 .category-dropdown {
+    width: 100%;
+}
+
+/* ============================================================
+   FIX-11 — MARQUEE / NOTIFICATION BAR (P3)
+   Deprecated <marquee> fallback with CSS animation.
+   ============================================================ */
+body.cms-index-index .page-wrapper .block_notification,
+body.cms-home .page-wrapper .block_notification,
+body.cms-homepage_ayo_home5 .page-wrapper .block_notification {
+    overflow: hidden;
+    white-space: nowrap;
+    background: var(--awa-dark); /* R11-06: token */
+    color: #fff;
+    padding: 8px 0;
+    font-size: 13px;
+}
+
+body.cms-index-index .page-wrapper .block_notification marquee,
+body.cms-home .page-wrapper .block_notification marquee,
+body.cms-homepage_ayo_home5 .page-wrapper .block_notification marquee {
+    display: inline-block;
+    animation: marquee-scroll 20s linear infinite;
+}
+
+/* R9-13: Respeitar preferência de reduced-motion para marquee */
+@media (prefers-reduced-motion: reduce) {
+    body.cms-index-index .page-wrapper .block_notification marquee,
+    body.cms-home .page-wrapper .block_notification marquee,
+    body.cms-homepage_ayo_home5 .page-wrapper .block_notification marquee {
+        animation: none;
+    }
+}
+
+@keyframes marquee-scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* ============================================================
+   FIX-12 — CLS PREVENTION: ASPECT RATIO RESERVATIONS (P1)
+   Reserve vertical space before images load.
+   NOTE: No `contain:` rules — they break OWL width calculations.
+   ============================================================ */
+body .page-wrapper .banner-slider,
+body .page-wrapper .banner-slider2 {
+    min-height: 120px;
+}
+
+@media (width >= 768px) {
+    body .page-wrapper .banner-slider,
+    body .page-wrapper .banner-slider2 {
+        min-height: 300px;
+    }
+}
+
+body .page-wrapper .ayo-home5-cat-item img,
+body .page-wrapper .banner_mid_1 img {
+    width: 100%;
+    height: auto;
+}
+
+body .page-wrapper .the_blog .post-item img,
+body .page-wrapper .blog-post-item img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    aspect-ratio: 16 / 9; /* R16-04: CLS prevention — reserva espaço antes do load */
+}
+
+/* .logo img — REMOVIDO: consolidado em awa-layout.css com mesma especificidade */
+
+/* ============================================================
+   FIX-13 — NEWSLETTER POPUP UX (P2)
+   Better visual hierarchy for the popup form.
+   Popup lives outside .page-wrapper — uses body prefix.
+   ============================================================ */
+body .newsletterpopup {
+    z-index: 10100; /* R10-17: acima do vertical-menu submenu (10000) */
+}
+
+body #newsletter_pop_up {
+    background-color: #fff;
+}
+
+body .ayo-newsletter-popup {
+    text-align: center;
+    padding: 30px 20px;
+}
+
+/* R11-05: prefixo newsletterpopup para especificidade */
+body .newsletterpopup .newsletter-popup-badge {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--awa-red-dark) 0%, var(--awa-red) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body .newsletterpopup .newsletter-popup-badge i {
+    font-size: 28px;
+    color: #fff;
+}
+
+body .newsletterpopup .newsletter-popup-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--awa-dark);
+    margin: 0 0 4px;
+    letter-spacing: 0.5px;
+}
+
+body .newsletterpopup .newsletter-popup-subtitle {
+    font-size: 16px;
+    color: var(--awa-gray-500);
+    margin: 0 0 12px;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+
+body .newsletterpopup .newsletter-popup-description {
+    font-size: 14px;
+    color: var(--awa-gray-500);
+    margin: 0 0 20px;
+    line-height: 1.5;
+}
+
+body .newsletterpopup .field.newsletter .control,
+body .ayo-newsletter-popup .field.newsletter .control {
+    display: flex;
+    gap: 8px;
+}
+
+body .newsletterpopup .field.newsletter input[type="email"],
+body .ayo-newsletter-popup .field.newsletter input[type="email"] {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid var(--awa-gray-200);
+    border-radius: var(--awa-radius-sm);
+    font-size: 14px;
+    transition: border-color var(--awa-transition-fast); /* R12-06 */
+}
+
+body .newsletterpopup .field.newsletter input[type="email"]:focus,
+body .ayo-newsletter-popup .field.newsletter input[type="email"]:focus {
+    border-color: var(--awa-red);
+    box-shadow: 0 0 0 3px var(--awa-red-light); /* R13: token */
+    outline: none; /* VB-06: popup fora de .page-wrapper — remover outline padrão */
+}
+
+body .newsletterpopup .action.subscribe,
+body .ayo-newsletter-popup .action.subscribe {
+    background: var(--awa-red);
+    color: #fff;
+    border: none;
+    border-radius: var(--awa-radius-sm);
+    padding: 12px 24px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--awa-transition-fast); /* R12-06 */
+    white-space: nowrap;
+}
+
+body .newsletterpopup .action.subscribe:hover,
+body .ayo-newsletter-popup .action.subscribe:hover {
+    background: var(--awa-red-dark);
+}
+
+/* R16-03: focus-visible para botão fora de .page-wrapper */
+body .newsletterpopup .action.subscribe:focus-visible,
+body .ayo-newsletter-popup .action.subscribe:focus-visible {
+    outline: 2px solid var(--awa-red);
+    outline-offset: 2px;
+    background: var(--awa-red-dark);
+}
+
+body .newsletterpopup .newsletter-popup-privacy {
+    margin-top: 16px;
+    font-size: 11px;
+    color: var(--awa-gray-500); /* BUG-04: era gray-400 (#ced4da) — contraste 1.46:1 sobre branco. gray-500 (#6c757d) = ~4.6:1 ✓ */
+}
+
+@media (width <= 767px) {
+    body .newsletterpopup .content-popup {
+        width: 95vw;
+        max-width: 95vw;
+        margin: 0 auto;
+    }
+
+    body .newsletterpopup .field.newsletter .control {
+        flex-direction: column;
+    }
+}
+
+/* Newsletter popup ≤480px — R12-01: prefixo newsletterpopup */
+@media (width <= 480px) {
+    body .ayo-newsletter-popup {
+        padding: 20px 15px;
+    }
+
+    body .newsletterpopup .newsletter-popup-title {
+        font-size: 20px;
+    }
+
+    body .newsletterpopup .newsletter-popup-subtitle {
+        font-size: 14px;
+    }
+
+    body .newsletterpopup .newsletter-popup-description {
+        font-size: 13px;
+    }
+
+    body .newsletterpopup .newsletter-popup-badge {
+        width: 52px;
+        height: 52px;
+    }
+
+    body .newsletterpopup .newsletter-popup-badge i {
+        font-size: 22px;
+    }
+
+    body .newsletterpopup .action.subscribe,
+    body .ayo-newsletter-popup .action.subscribe {
+        padding: 10px 18px;
+        font-size: 13px;
+    }
+}
+
+/* Newsletter popup ≤375px — R12-01: prefixo newsletterpopup */
+@media (width <= 375px) {
+    body .ayo-newsletter-popup {
+        padding: 15px 12px;
+    }
+
+    body .newsletterpopup .newsletter-popup-title {
+        font-size: 18px;
+    }
+
+    body .newsletterpopup .newsletter-popup-subtitle {
+        font-size: 13px;
+    }
+
+    body .newsletterpopup .newsletter-popup-description {
+        font-size: 12px;
+        margin-bottom: 15px;
+    }
+
+    body .newsletterpopup .field.newsletter input[type="email"],
+    body .ayo-newsletter-popup .field.newsletter input[type="email"] {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+}
+
+/* ============================================================
+   FIX-13B — NEWSLETTER POPUP HOMEPAGE (home5 visual match)
+   Estilos do template ativo Rokanthemes_Themeoption/newsletterpopup.phtml
+   ============================================================ */
+body #newsletter_pop_up.newsletterpopup {
+    --awa-text-on-dark: #fff;
+    --awa-text-on-danger: #fff;
+    --awa-text-on-light: var(--awa-dark);
+    --awa-text-muted-on-light: var(--awa-gray-500);
+
+    background: rgb(0 0 0 / 60%);
+    position: fixed;
+    inset: 0;
+    padding: 16px;
+}
+
+body #newsletter_pop_up.newsletterpopup.nl-popup-fallback-open {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+body.nl-popup-body-open {
+    overflow: hidden;
+}
+
+body #newsletter_pop_up .nl-popup-card {
+    width: 100%;
+    margin: 0 auto;
+    max-width: 680px !important;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: var(--awa-shadow-hover);
+    position: relative;
+}
+
+body #newsletter_pop_up .nl-popup-layout {
+    display: grid;
+    grid-template-columns: minmax(220px, 44%) 1fr;
+    min-height: 350px;
+}
+
+body #newsletter_pop_up .newletter_popup_close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    background: var(--awa-red);
+    color: var(--awa-text-on-danger);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+}
+
+body #newsletter_pop_up .newletter_popup_close:hover {
+    background: var(--awa-red-dark);
+}
+
+body #newsletter_pop_up .newletter_popup_close:focus-visible {
+    outline: 2px solid var(--awa-red);
+    outline-offset: 2px;
+}
+
+body #newsletter_pop_up .nl-popup-hero {
+    background: linear-gradient(180deg, var(--awa-red) 0%, var(--awa-red-dark) 100%);
+    background-size: cover;
+    background-position: center;
+    color: var(--awa-text-on-danger);
+    display: flex;
+}
+
+body #newsletter_pop_up .nl-popup-hero-overlay {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(180deg, rgb(0 0 0 / 6%) 0%, rgb(0 0 0 / 24%) 100%);
+}
+
+body #newsletter_pop_up .nl-popup-hero-content {
+    text-align: center;
+    padding: 20px 18px;
+}
+
+body #newsletter_pop_up .nl-popup-hero-logo {
+    margin: 0 auto 14px;
+    max-width: 90px;
+    height: auto;
+}
+
+body #newsletter_pop_up .nl-popup-hero-discount {
+    font-size: 70px;
+    line-height: 0.9;
+    font-weight: 800;
+    letter-spacing: -1px;
+}
+
+body #newsletter_pop_up .nl-popup-hero-off {
+    margin-top: 4px;
+    font-size: 40px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: 4px;
+}
+
+body #newsletter_pop_up .nl-popup-hero-caption {
+    margin-top: 8px;
+    font-size: 11px;
+    line-height: 1.25;
+    letter-spacing: 1.4px;
+    font-weight: 700;
+}
+
+body #newsletter_pop_up .nl-popup-content {
+    padding: 14px 24px 12px;
+    background: #fff;
+}
+
+body #newsletter_pop_up .nl-popup-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    color: var(--awa-gray-700);
+    background: var(--awa-gray-100);
+    margin-bottom: 8px;
+}
+
+body #newsletter_pop_up .nl-popup-badge svg,
+body #newsletter_pop_up .nl-popup-urgency svg,
+body #newsletter_pop_up .nl-popup-trust svg {
+    flex-shrink: 0;
+}
+
+body #newsletter_pop_up .nl-popup-title {
+    margin: 0;
+    font-size: 34px;
+    line-height: 1;
+    font-weight: 800;
+    color: var(--awa-text-on-light);
+    letter-spacing: -0.7px;
+    white-space: nowrap;
+}
+
+body #newsletter_pop_up .nl-popup-title-highlight {
+    color: var(--awa-text-on-light);
+    margin-left: 2px;
+}
+
+body #newsletter_pop_up .nl-popup-subtitle {
+    margin: 0 0 8px;
+    font-size: 25px;
+    line-height: 1.1;
+    font-weight: 700;
+    color: var(--awa-text-on-light);
+}
+
+body #newsletter_pop_up .nl-popup-desc {
+    margin: 0 0 8px;
+    color: var(--awa-text-muted-on-light);
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+body #newsletter_pop_up .nl-popup-urgency {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    border: 1px solid var(--awa-gray-200);
+    border-radius: 8px;
+    background: #f8f5f5;
+    padding: 7px 10px;
+    color: var(--awa-gray-700);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+body #newsletter_pop_up .nl-popup-form {
+    margin-bottom: 8px;
+}
+
+body #newsletter_pop_up .nl-popup-form .field.newsletter {
+    margin-bottom: 7px;
+}
+
+body #newsletter_pop_up .nl-popup-form .field.newsletter .control {
+    display: block;
+}
+
+body #newsletter_pop_up .nl-popup-form input[type="email"] {
+    width: 100%;
+    border: 2px solid var(--awa-gray-200);
+    border-radius: 11px;
+    min-height: 42px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--awa-text-on-light);
+}
+
+body #newsletter_pop_up .nl-popup-form input[type="email"]::placeholder {
+    color: var(--awa-gray-400);
+}
+
+body #newsletter_pop_up .nl-popup-form .actions {
+    margin: 0;
+}
+
+body #newsletter_pop_up .nl-popup-form .action.subscribe {
+    width: 100%;
+    border-radius: 10px;
+    min-height: 43px;
+    padding: 10px 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.2px;
+    font-size: 14px;
+    background: var(--awa-red);
+    box-shadow: var(--awa-shadow);
+    color: var(--awa-text-on-danger);
+}
+
+body #newsletter_pop_up .nl-popup-form .action.subscribe .nl-btn-arrow {
+    color: var(--awa-text-on-danger);
+}
+
+body #newsletter_pop_up .nl-popup-form .action.subscribe:hover,
+body #newsletter_pop_up .nl-popup-form .action.subscribe:focus-visible {
+    background: var(--awa-red-dark);
+}
+
+body #newsletter_pop_up .nl-btn-arrow {
+    transform: translateY(1px);
+}
+
+body #newsletter_pop_up .nl-popup-trust {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 9px 0 7px;
+}
+
+body #newsletter_pop_up .nl-popup-trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--awa-gray-500);
+    font-size: 10px;
+    line-height: 1;
+}
+
+body #newsletter_pop_up .nl-popup-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 2px;
+}
+
+body #newsletter_pop_up .subscribe-bottom {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+body #newsletter_pop_up .subscribe-bottom input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    margin: 0;
+}
+
+body #newsletter_pop_up .subscribe-bottom label {
+    margin: 0;
+    font-size: 11px;
+    color: var(--awa-gray-500);
+    cursor: pointer;
+}
+
+body #newsletter_pop_up .newletter_popup_close_text {
+    font-size: 11px;
+    color: var(--awa-red);
+    text-decoration: none;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+body #newsletter_pop_up .newletter_popup_close_text:hover,
+body #newsletter_pop_up .newletter_popup_close_text:focus-visible {
+    color: var(--awa-red-dark);
+    text-decoration: underline;
+}
+
+body #newsletter_pop_up .nl-popup-success {
+    min-height: 180px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    gap: 8px;
+}
+
+body #newsletter_pop_up .nl-popup-success-icon {
+    color: var(--awa-red);
+}
+
+body #newsletter_pop_up .nl-popup-success-title {
+    margin: 0;
+    font-size: 22px;
+    color: var(--awa-text-on-light);
+}
+
+body #newsletter_pop_up .nl-popup-success-text {
+    margin: 0;
+    color: var(--awa-text-muted-on-light);
+    font-size: 14px;
+}
+
+body #newsletter_pop_up.popup-closing .nl-popup-card {
+    transform: translateY(8px);
+    opacity: 0;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+@media (width <= 991px) {
+    body #newsletter_pop_up .nl-popup-layout {
+        grid-template-columns: 36% 1fr;
+        min-height: 320px;
+    }
+
+    body #newsletter_pop_up .nl-popup-content {
+        padding: 16px 18px 14px;
+    }
+
+    body #newsletter_pop_up .nl-popup-title {
+        font-size: 30px;
+    }
+
+    body #newsletter_pop_up .nl-popup-subtitle {
+        font-size: 20px;
+    }
+
+    body #newsletter_pop_up .nl-popup-hero-discount {
+        font-size: 58px;
+    }
+
+    body #newsletter_pop_up .nl-popup-hero-off {
+        font-size: 31px;
+    }
+}
+
+@media (width <= 767px) {
+    body #newsletter_pop_up.newsletterpopup {
+        padding: 10px;
+    }
+
+    body #newsletter_pop_up .nl-popup-card {
+        max-width: 94vw !important;
+    }
+
+    body #newsletter_pop_up .nl-popup-layout {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+
+    body #newsletter_pop_up .nl-popup-hero {
+        min-height: 140px;
+    }
+
+    body #newsletter_pop_up .nl-popup-hero-content {
+        padding: 18px 14px;
+    }
+
+    body #newsletter_pop_up .nl-popup-hero-logo {
+        margin-bottom: 8px;
+        max-width: 70px;
+    }
+
+    body #newsletter_pop_up .nl-popup-hero-discount {
+        font-size: 46px;
+    }
+
+    body #newsletter_pop_up .nl-popup-hero-off {
+        font-size: 26px;
+        letter-spacing: 2px;
+    }
+
+    body #newsletter_pop_up .nl-popup-hero-caption {
+        margin-top: 3px;
+        font-size: 10px;
+        letter-spacing: 1px;
+    }
+
+    body #newsletter_pop_up .nl-popup-content {
+        padding: 14px;
+    }
+
+    body #newsletter_pop_up .nl-popup-title {
+        font-size: 28px;
+        white-space: normal;
+    }
+
+    body #newsletter_pop_up .nl-popup-subtitle {
+        font-size: 20px;
+    }
+
+    body #newsletter_pop_up .nl-popup-footer {
+        flex-wrap: wrap;
+    }
+}
+
+@media (width <= 420px) {
+    body #newsletter_pop_up .nl-popup-trust {
+        gap: 6px;
+    }
+
+    body #newsletter_pop_up .nl-popup-trust-item {
+        font-size: 10px;
+    }
+
+    body #newsletter_pop_up .nl-popup-title {
+        font-size: 24px;
+    }
+
+    body #newsletter_pop_up .nl-popup-subtitle {
+        font-size: 18px;
+    }
+
+    body #newsletter_pop_up .nl-popup-desc {
+        font-size: 13px;
+        line-height: 1.35;
+    }
+
+    body #newsletter_pop_up .nl-popup-form .action.subscribe {
+        font-size: 13px;
+        min-height: 42px;
+    }
+}
+
+/* ============================================================
+   FIX-14 — TESTIMONIALS SECTION POLISH (P3)
+   ============================================================ */
+body .page-wrapper .testimonials-slider .item,
+body .page-wrapper .testimonials-home .item {
+    padding: 20px;
+    border-radius: var(--awa-radius);
+    background: #fff;
+    box-shadow: var(--awa-shadow); /* R12-13 */
+    border: 1px solid var(--awa-gray-200);
+    transition: box-shadow var(--awa-transition); /* R12-06 */
+    display: flex; /* LB-05: equal-height para testimonial cards */
+    flex-direction: column;
+    height: 100%;
+}
+
+/* LB-05: conteúdo do testimonial empurra rodapé ao fundo */
+body .page-wrapper .testimonials-home .item .content-test {
+    flex-grow: 1;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--awa-gray-700);
+    position: relative;
+    padding-left: 20px;
+}
+
+body .page-wrapper .testimonials-slider .item:hover,
+body .page-wrapper .testimonials-home .item:hover {
+    box-shadow: var(--awa-shadow-hover); /* R12-13 */
+}
+
+body .page-wrapper .testimonials-home .item .content-test::before {
+    content: "\201C";
+    font-size: 48px;
+    color: var(--awa-red);
+    position: absolute;
+    left: -5px;
+    top: -15px;
+    font-family: Georgia, serif;
+    opacity: 0.3;
+}
+
+/* ============================================================
+   FIX-15 — BLOG SECTION IMPROVEMENTS (P3)
+   ============================================================ */
+body .page-wrapper .the_blog .post-item,
+body .page-wrapper .blog-post-item {
+    border-radius: var(--awa-radius);
+    overflow: hidden;
+    box-shadow: var(--awa-shadow); /* R12-13 */
+    transition: box-shadow var(--awa-transition), transform var(--awa-transition); /* R12-06 */
+    background: #fff;
+    display: flex; /* LB-05: equal-height para blog cards fora de OWL */
+    flex-direction: column;
+    height: 100%;
+}
+
+/* LB-05: conteúdo interno flex-grow para empurrar rodapé ao fundo */
+body .page-wrapper .the_blog .post-item .post-content,
+body .page-wrapper .blog-post-item .post-content {
+    flex-grow: 1;
+}
+
+body .page-wrapper .the_blog .post-item:hover,
+body .page-wrapper .blog-post-item:hover {
+    box-shadow: var(--awa-shadow-hover); /* R12-13 */
+    transform: translateY(-2px);
+}
+
+body .page-wrapper .the_blog .post-item .post-title a,
+body .page-wrapper .blog-post-item .post-title a {
+    font-weight: 600;
+    line-height: 1.4;
+    transition: color var(--awa-transition-fast); /* R12-06 */
+}
+
+body .page-wrapper .the_blog .post-item .post-title a:hover,
+body .page-wrapper .blog-post-item .post-title a:hover {
+    color: var(--awa-red);
+}
+
+/* ============================================================
+   FIX-16 — HOT DEAL / COUNTDOWN SECTION (P3)
+   ============================================================ */
+body .page-wrapper .hot-deal-tab-slider {
+    border-radius: var(--awa-radius);
+    overflow: hidden;
+    background: #fff;
+    box-shadow: var(--awa-shadow); /* R12-13 */
+}
+
+body .page-wrapper .countdown_block {
+    background: linear-gradient(135deg, var(--awa-dark) 0%, var(--footer-bg-secondary) 100%); /* R11-06: token */
+    color: #fff;
+    padding: 15px 20px;
+    text-align: center;
+    border-radius: var(--awa-radius-sm) var(--awa-radius-sm) 0 0; /* R13: era 8px hardcoded */
+}
+
+body .page-wrapper .title_countdown {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 8px;
+}
+
+/* FIX-17 — REMOVIDO */
+
+/* ============================================================
+   FIX-18 — ICON FONT FALLBACK (P2)
+   Ensure icon elements don't show empty squares.
+   ============================================================ */
+body .page-wrapper .product-extra-link a::before,
+body .page-wrapper .actions-secondary a::before,
+body .page-wrapper .towishlist::before,
+body .page-wrapper .tocompare::before {
+    font-family: icomoon, FontAwesome, simple-line-icons, sans-serif;
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body .page-wrapper .product-extra-link a:empty::before,
+body .page-wrapper .actions-secondary a:empty::before {
+    content: '';
+}
+
+/* ============================================================
+   FIX-19 — RESPONSIVO: TESTIMONIALS MOBILE (P3)
+   ============================================================ */
+@media (width <= 480px) {
+    body .page-wrapper .testimonial-item {
+        padding: 15px;
+    }
+
+    body .page-wrapper .testimonial-item .author-info {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    body .page-wrapper .testimonial-item .author-avatar {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* ============================================================
+   FIX-20 — RESPONSIVO: COUNTDOWN MOBILE (P3)
+   ============================================================ */
+@media (width <= 480px) {
+    body .page-wrapper .countdown_block {
+        padding: 12px 15px;
+    }
+
+    body .page-wrapper .title_countdown {
+        font-size: 13px;
+    }
+
+    body .page-wrapper .time_circles > div {
+        min-width: 40px;
+        min-height: 40px;
+        padding: 4px;
+    }
+
+    body .page-wrapper .time_circles > div .number {
+        font-size: 14px;
+    }
+
+    body .page-wrapper .time_circles > div .text {
+        font-size: 9px;
+    }
+}
+
+/* ============================================================
+   FIX-21 — RESPONSIVO: BLOG POSTS MOBILE (P3)
+   ============================================================ */
+@media (width <= 480px) {
+    body .page-wrapper .blog-post-item,
+    body .page-wrapper .the_blog .post-item {
+        border-radius: var(--awa-radius-sm);
+    }
+
+    body .page-wrapper .blog-post-item .post-content,
+    body .page-wrapper .the_blog .post-item .post-content {
+        padding: 12px;
+    }
+
+    body .page-wrapper .blog-post-item .post-title a {
+        font-size: 14px;
+    }
+}
+
+@media (width <= 320px) {
+    body .page-wrapper .blog-post-item .post-content,
+    body .page-wrapper .the_blog .post-item .post-content {
+        padding: 10px;
+    }
+}
+
+/* ============================================================
+   FIX-22 — RESPONSIVO: BANNER/HERO SLIDER MOBILE (P3)
+   ============================================================ */
+@media (width <= 767px) {
+    body .page-wrapper .banner-slider .item-banner img,
+    body .page-wrapper .slide-banner .item img,
+    body .page-wrapper .banner-text {
+        border-radius: 0;
+    }
+
+    body .page-wrapper .banner-text {
+        font-size: 14px;
+        padding: 10px;
+    }
+}
+
+@media (width <= 375px) {
+    body .page-wrapper .banner-text h2,
+    body .page-wrapper .banner-text .title {
+        font-size: 18px;
+    }
+
+    body .page-wrapper .banner-text p,
+    body .page-wrapper .banner-text .subtitle {
+        font-size: 12px;
+    }
+}
+
+/* ============================================================
+   FIX-23 — OWL CAROUSEL: ALINHAMENTO + GUTTERS RESPONSIVOS (P1)
+   Mantém largura calculada pelo OWL JS e padroniza espaçamento em
+   todas as resoluções (v1 + v2).
+   ============================================================ */
+body .page-wrapper .owl-carousel {
+    --awa-owl-item-gutter: 16px;
+}
+
+/* Compatível com OWL v2 (.owl-stage*) e v1 (.owl-wrapper*) */
+body .page-wrapper .owl-carousel .owl-stage,
+body .page-wrapper .owl-carousel .owl-wrapper {
+    align-items: stretch;
+}
+
+body .page-wrapper .owl-carousel .owl-stage-outer,
+body .page-wrapper .owl-carousel .owl-wrapper-outer {
+    margin-left: calc(var(--awa-owl-item-gutter) / -2);
+    margin-right: calc(var(--awa-owl-item-gutter) / -2);
+}
+
+body .page-wrapper .owl-carousel .owl-item {
+    float: left !important; /* OWL v1/v2: evita empilhamento vertical */
+    clear: none !important;
+    flex: 0 0 auto;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-left: calc(var(--awa-owl-item-gutter) / 2);
+    padding-right: calc(var(--awa-owl-item-gutter) / 2);
+}
+
+/* Evita espaçamento duplo quando OWL injeta margin inline */
+body .page-wrapper .owl-carousel .owl-item[style*="margin-right"],
+body .page-wrapper .owl-carousel .owl-item[style*="margin-right:"] {
+    margin-right: 0 !important;
+}
+
+body .page-wrapper .owl-carousel .owl-item > * {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Hero/Banner full-bleed */
+body .page-wrapper .ayo-home5-hero-layout__main .owl-carousel,
+body .page-wrapper .banner-slider .owl-carousel,
+body .page-wrapper .homeslider-container .owl-carousel {
+    --awa-owl-item-gutter: 0px;
+}
+
+/* Logos e parceiros ganham mais respiro em desktop */
+body .page-wrapper .brand-slider .owl-carousel,
+body .page-wrapper .brand-logo .owl-carousel,
+body .page-wrapper .partner-slider .owl-carousel,
+body .page-wrapper .manufacturer-slider .owl-carousel {
+    --awa-owl-item-gutter: 20px;
+}
+
+/* Testimonials/blog com leitura melhor em cards */
+body .page-wrapper .testimonials-slider .owl-carousel,
+body .page-wrapper .testimonials-home .owl-carousel,
+body .page-wrapper .the_blog .owl-carousel {
+    --awa-owl-item-gutter: 20px;
+}
+
+@media (width <= 1199px) {
+    body .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 14px;
+    }
+
+    body .page-wrapper .brand-slider .owl-carousel,
+    body .page-wrapper .brand-logo .owl-carousel,
+    body .page-wrapper .partner-slider .owl-carousel,
+    body .page-wrapper .manufacturer-slider .owl-carousel,
+    body .page-wrapper .testimonials-slider .owl-carousel,
+    body .page-wrapper .testimonials-home .owl-carousel,
+    body .page-wrapper .the_blog .owl-carousel {
+        --awa-owl-item-gutter: 16px;
+    }
+}
+
+@media (width <= 991px) {
+    body .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 12px;
+    }
+
+    body .page-wrapper .brand-slider .owl-carousel,
+    body .page-wrapper .brand-logo .owl-carousel,
+    body .page-wrapper .partner-slider .owl-carousel,
+    body .page-wrapper .manufacturer-slider .owl-carousel,
+    body .page-wrapper .testimonials-slider .owl-carousel,
+    body .page-wrapper .testimonials-home .owl-carousel,
+    body .page-wrapper .the_blog .owl-carousel {
+        --awa-owl-item-gutter: 14px;
+    }
+}
+
+@media (width <= 767px) {
+    body .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 10px;
+    }
+
+    body .page-wrapper .brand-slider .owl-carousel,
+    body .page-wrapper .brand-logo .owl-carousel,
+    body .page-wrapper .partner-slider .owl-carousel,
+    body .page-wrapper .manufacturer-slider .owl-carousel,
+    body .page-wrapper .testimonials-slider .owl-carousel,
+    body .page-wrapper .testimonials-home .owl-carousel,
+    body .page-wrapper .the_blog .owl-carousel {
+        --awa-owl-item-gutter: 12px;
+    }
+}
+
+@media (width <= 480px) {
+    body .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 8px;
+    }
+
+    body .page-wrapper .brand-slider .owl-carousel,
+    body .page-wrapper .brand-logo .owl-carousel,
+    body .page-wrapper .partner-slider .owl-carousel,
+    body .page-wrapper .manufacturer-slider .owl-carousel,
+    body .page-wrapper .testimonials-slider .owl-carousel,
+    body .page-wrapper .testimonials-home .owl-carousel,
+    body .page-wrapper .the_blog .owl-carousel {
+        --awa-owl-item-gutter: 10px;
+    }
+}
+
+@media (width <= 375px) {
+    body .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 6px;
+    }
+
+    body .page-wrapper .brand-slider .owl-carousel,
+    body .page-wrapper .brand-logo .owl-carousel,
+    body .page-wrapper .partner-slider .owl-carousel,
+    body .page-wrapper .manufacturer-slider .owl-carousel,
+    body .page-wrapper .testimonials-slider .owl-carousel,
+    body .page-wrapper .testimonials-home .owl-carousel,
+    body .page-wrapper .the_blog .owl-carousel {
+        --awa-owl-item-gutter: 8px;
+    }
+}
+
+@media (width <= 320px) {
+    body .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 4px;
+    }
+
+    body .page-wrapper .brand-slider .owl-carousel,
+    body .page-wrapper .brand-logo .owl-carousel,
+    body .page-wrapper .partner-slider .owl-carousel,
+    body .page-wrapper .manufacturer-slider .owl-carousel,
+    body .page-wrapper .testimonials-slider .owl-carousel,
+    body .page-wrapper .testimonials-home .owl-carousel,
+    body .page-wrapper .the_blog .owl-carousel {
+        --awa-owl-item-gutter: 6px;
+    }
+}
+
+/* B2B: Ocultar botões de Wishlist e Compare em toda a loja */
+.action.towishlist,
+.action.tocompare,
+.wishlist-link,
+.compare-link,
+.wishlist-product,
+.compare-product,
+a[data-action="add-to-wishlist"],
+.product-addto-links .towishlist,
+.product-addto-links .tocompare {
+    display: none !important;
+}

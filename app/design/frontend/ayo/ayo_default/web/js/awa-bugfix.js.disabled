@@ -1,0 +1,350 @@
+/**
+ * AWA Motos - Visual Bug Fix Script v3.1
+ * Comprehensive fixes for DOM-based visual issues
+ * @date 2026-02-08
+ * @updated Enhanced targeting for banners and mobile header
+ */
+
+(function () {
+    'use strict';
+
+    var AWA_FIX = {
+        debug: true, // Enable for debugging
+        initialized: false,
+        fixes: []
+    };
+
+    function log(msg, data) {
+        if (AWA_FIX.debug) {
+            console.log('[AWA Fix v3.1]', msg, data || '');
+        }
+    }
+
+    // ===========================================
+    // 1. FIX BANNER TEXT DUPLICATION (Primary Fix)
+    // Target: .ayo-home5-hero-card elements
+    // ===========================================
+    function fixBannerDuplication() {
+        log('Fixing banners...');
+
+        // Target the hero cards specifically
+        document.querySelectorAll('.ayo-home5-hero-card').forEach(function (card) {
+            // Find all text elements in the card
+            var allText = card.querySelectorAll('span, strong, p, h1, h2, h3, h4, h5, h6');
+            var textMap = {};
+
+            allText.forEach(function (el) {
+                var text = el.textContent.trim().toLowerCase();
+                // Skip short text or buttons
+                if (text.length < 3 || el.closest('a.btn, button')) return;
+                // Skip if already hidden
+                if (el.style.display === 'none') return;
+
+                if (textMap[text]) {
+                    // Found duplicate - hide the second occurrence
+                    el.style.cssText = 'display: none !important; visibility: hidden !important;';
+                    AWA_FIX.fixes.push('Hidden banner text: ' + text.substring(0, 30));
+                    log('Hidden duplicate banner text:', text);
+                } else {
+                    textMap[text] = el;
+                }
+            });
+        });
+
+        // Generic slider duplicate fix
+        document.querySelectorAll('.owl-item, .slide-item, [class*="slider"] .item').forEach(function (slide) {
+            var titles = slide.querySelectorAll('h1, h2, h3, h4, .title');
+            var seen = {};
+
+            titles.forEach(function (title) {
+                var text = title.textContent.trim().toLowerCase();
+                if (text.length < 3) return;
+
+                if (seen[text]) {
+                    title.style.cssText = 'display: none !important;';
+                    log('Hidden duplicate title:', text);
+                } else {
+                    seen[text] = true;
+                }
+            });
+        });
+
+        log('Banner fix complete. Fixed: ' + AWA_FIX.fixes.length);
+    }
+
+    // ===========================================
+    // 2. FIX PRICE DUPLICATION
+    // ===========================================
+    function fixPriceDuplication() {
+        log('Fixing prices...');
+
+        // Hide all price-excluding-tax elements
+        document.querySelectorAll('.price-excluding-tax, .price-wrapper.price-excluding-tax').forEach(function (el) {
+            el.style.cssText = 'display: none !important;';
+        });
+
+        // Fix price-box duplications
+        document.querySelectorAll('.price-box').forEach(function (priceBox) {
+            // Hide duplicate containers
+            var containers = priceBox.querySelectorAll('.price-container');
+            for (var i = 1; i < containers.length; i++) {
+                containers[i].style.cssText = 'display: none !important;';
+            }
+
+            // Hide duplicate wrappers
+            var wrappers = priceBox.querySelectorAll('.price-wrapper');
+            var seenTypes = {};
+            wrappers.forEach(function (wrapper) {
+                var cls = wrapper.className;
+                // If it's not including-tax or regular, hide it
+                if (cls.indexOf('excluding') > -1) {
+                    wrapper.style.cssText = 'display: none !important;';
+                    return;
+                }
+                // Track and hide duplicates
+                var priceEl = wrapper.querySelector('.price');
+                if (priceEl) {
+                    var val = priceEl.textContent.trim();
+                    if (seenTypes[val]) {
+                        wrapper.style.cssText = 'display: none !important;';
+                    } else {
+                        seenTypes[val] = true;
+                    }
+                }
+            });
+
+            // Direct price element duplicates
+            var allPrices = priceBox.querySelectorAll('.price');
+            var priceVals = {};
+            allPrices.forEach(function (price) {
+                // Skip if in old-price
+                if (price.closest('.old-price')) return;
+                // Skip if already hidden
+                if (window.getComputedStyle(price).display === 'none') return;
+
+                var val = price.textContent.trim();
+                if (priceVals[val]) {
+                    price.style.cssText = 'display: none !important;';
+                    log('Hidden duplicate price:', val);
+                } else {
+                    priceVals[val] = true;
+                }
+            });
+        });
+
+        log('Price fix complete');
+    }
+
+    // ===========================================
+    // 3. FIX MOBILE HEADER
+    // ===========================================
+    function fixMobileHeader() {
+        if (window.innerWidth > 767) return;
+
+        log('Fixing mobile header...');
+
+        // Option 1: Hide panel completely
+        document.querySelectorAll('.panel.wrapper, .panel.header').forEach(function (el) {
+            el.style.cssText = 'display: none !important;';
+            log('Hidden panel on mobile');
+        });
+
+        // Option 2: Clean up header content layout
+        var headerContent = document.querySelector('.header.content');
+        if (headerContent) {
+            headerContent.style.cssText =
+                'display: flex !important; flex-wrap: wrap !important; ' +
+                'align-items: center !important; justify-content: space-between !important; ' +
+                'padding: 10px !important; gap: 8px !important;';
+        }
+
+        // Resize logo for mobile
+        var logo = document.querySelector('.header.content .logo');
+        if (logo) {
+            logo.style.cssText = 'max-width: 100px !important;';
+            var logoImg = logo.querySelector('img');
+            if (logoImg) {
+                logoImg.style.cssText = 'max-height: 40px !important; width: auto !important;';
+            }
+        }
+
+        log('Mobile header fix complete');
+    }
+
+    // ===========================================
+    // 4. FIX COUNTDOWN TIMER
+    // ===========================================
+    function fixCountdownTimer() {
+        log('Fixing countdown...');
+
+        document.querySelectorAll('.countdown_block, .super-deal-countdown, [class*="countdown"]').forEach(function (el) {
+            if (el.querySelector('.time_circles') || el.querySelector('[class*="timer"]')) {
+                el.style.cssText =
+                    'display: flex !important; flex-direction: row !important; ' +
+                    'align-items: center !important; gap: 10px !important; flex-wrap: nowrap !important;';
+            }
+        });
+
+        document.querySelectorAll('.time_circles').forEach(function (tc) {
+            tc.style.cssText = 'display: flex !important; flex-direction: row !important; gap: 10px !important;';
+        });
+
+        document.querySelectorAll('.time_circles > div').forEach(function (item) {
+            item.style.cssText =
+                'display: inline-flex !important; flex-direction: column !important; ' +
+                'align-items: center !important; min-width: 55px !important; min-height: 55px !important;';
+        });
+
+        log('Countdown fix complete');
+    }
+
+    // ===========================================
+    // 5. FIX FLOATING BUTTONS
+    // ===========================================
+    function fixFloatingButtons() {
+        if (window.innerWidth > 767) return;
+
+        document.querySelectorAll('.awa-whatsapp-float, .whatsapp-float, [class*="whatsapp"]').forEach(function (btn) {
+            if (window.getComputedStyle(btn).position === 'fixed') {
+                btn.style.cssText +=
+                    'width: 50px !important; height: 50px !important; ' +
+                    'bottom: 80px !important; z-index: 9990 !important;';
+            }
+        });
+
+        document.querySelectorAll('#awaBackToTop, .back-to-top, #back-to-top').forEach(function (btn) {
+            btn.style.cssText +=
+                'width: 40px !important; height: 40px !important; ' +
+                'bottom: 140px !important; z-index: 9989 !important;';
+        });
+    }
+
+    // ===========================================
+    // 6. FIX BANNER PLACEHOLDER TEXT
+    // ===========================================
+    function fixBannerPlaceholder() {
+        // Robust text finder for "Placeholder"
+        var allElements = document.getElementsByTagName('*');
+        for (var i = 0; i < allElements.length; i++) {
+            var el = allElements[i];
+            // Check direct text content
+            if (el.children.length === 0 && el.textContent) {
+                if (el.textContent.indexOf('Banner 1 Placeholder') > -1 ||
+                    el.textContent.indexOf('Banner 2 Placeholder') > -1 ||
+                    el.textContent.indexOf('Banner 3 Placeholder') > -1) {
+
+                    // Found it - hide a reasonable parent
+                    var parent = el.parentElement;
+                    // Walk up to find the slide container
+                    var slide = el.closest('.item-slide') || el.closest('.banner-item') || parent;
+                    if (slide) {
+                        // Check if it has a real background image? 
+                        // For now, just hide the text layer
+                        el.style.display = 'none';
+                        parent.style.display = 'none';
+                        // Try to hide the wrapper
+                        if (el.closest('.text-content') || el.closest('.content')) {
+                            (el.closest('.text-content') || el.closest('.content')).style.display = 'none';
+                        }
+                        log('Hidden placeholder banner text via JS');
+                    }
+                }
+            }
+        }
+    }
+
+    // ===========================================
+    // 7. FIX MOBILE NAV OVERLAY HANDLER
+    // ===========================================
+    function fixMobileNavOverlay() {
+        if (window.innerWidth > 767) return;
+
+        var navSections = document.querySelector('.nav-sections');
+
+        // Force correct functionality of the hamburger
+        document.addEventListener('click', function (e) {
+            if (e.target.closest('.nav-toggle')) {
+                setTimeout(function () {
+                    // Toggle visibility based on class presence
+                    if (document.body.classList.contains('nav-open') && navSections) {
+                        navSections.style.display = 'block';
+                        navSections.style.visibility = 'visible';
+                    } else if (navSections) {
+                        navSections.style.display = 'none';
+                    }
+                }, 100);
+            }
+
+            // Close if clicking overlay backdrop (if pseudo-element)
+            // Or if clicking outside
+            if (document.body.classList.contains('nav-open') &&
+                !e.target.closest('.nav-sections') &&
+                !e.target.closest('.nav-toggle')) {
+                // Usually Magento handles this, but custom fix:
+                document.querySelector('html').classList.remove('nav-open');
+                document.querySelector('html').classList.remove('nav-before-open');
+                document.body.classList.remove('nav-open');
+                if (navSections) navSections.style.display = 'none';
+            }
+        });
+    }
+
+    // ===========================================
+    // MAIN RUNNER
+    // ===========================================
+    function runAllFixes() {
+        log('====== AWA Visual Fixes v3.1 Starting ======');
+
+        try { fixBannerPlaceholder(); } catch (e) { log('Placeholder fix error', e); }
+        try { fixMobileNavOverlay(); } catch (e) { log('Mobile nav fix error', e); }
+
+        try {
+            fixBannerDuplication();
+        } catch (e) { log('Banner fix error:', e); }
+
+        try {
+            fixPriceDuplication();
+        } catch (e) { log('Price fix error:', e); }
+
+        try {
+            fixMobileHeader();
+        } catch (e) { log('Mobile header fix error:', e); }
+
+        try {
+            fixCountdownTimer();
+        } catch (e) { log('Countdown fix error:', e); }
+
+        try {
+            fixFloatingButtons();
+        } catch (e) { log('Float button fix error:', e); }
+
+        AWA_FIX.initialized = true;
+        log('====== AWA Visual Fixes v3.1 Complete ======');
+        log('Total fixes applied:', AWA_FIX.fixes.length);
+    }
+
+    // Execute on DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', runAllFixes);
+    } else {
+        runAllFixes();
+    }
+
+    // Re-run for dynamic content
+    setTimeout(runAllFixes, 500);
+    setTimeout(runAllFixes, 1500);
+    setTimeout(runAllFixes, 3500);
+
+    // Window resize handler
+    var resizeTimer;
+    window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function () {
+            fixMobileHeader();
+            fixFloatingButtons();
+            fixMobileNavOverlay();
+        }, 200);
+    });
+
+    log('AWA Bug Fix v3.1 script initialized');
+})();

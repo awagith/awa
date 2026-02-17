@@ -3,27 +3,11 @@
  * See COPYING.txt for license details.
  */
  define([
-	'jquery',
-	'mage/translate',
-	'Magento_Catalog/js/catalog-add-to-cart',
-	'require'
-	], function($, $t, mageCatalogAddToCart, require) {
-		"use strict";
-
-	$(document).on('click', '[data-action="close-fancybox"]', function (event) {
-		event.preventDefault();
-
-		if ($.fancybox && $.fancybox.close) {
-			$.fancybox.close();
-			return;
-		}
-
-		require(['rokanthemes/fancybox'], function () {
-			if ($.fancybox && $.fancybox.close) {
-				$.fancybox.close();
-			}
-		});
-	});
+ 	'jquery',
+ 	'mage/translate',
+ 	'Magento_Catalog/js/catalog-add-to-cart'
+ 	], function($, $t) {
+ 		"use strict";
 		
     $.widget('mage.catalogAddToCart', {
 

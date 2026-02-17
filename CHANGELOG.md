@@ -1,3 +1,77 @@
+# CHANGELOG - Grupo Awamotos Magento Store
+
+## [Modo Estrito B2B] - 2026-01-28
+
+### 🎯 Implementação Principal
+**Objetivo:** Loja aceita APENAS cadastros empresariais B2B
+
+### ✨ Novidades (Added)
+- **Modo Estrito B2B**: Novo modo que desabilita completamente cadastros de pessoa física
+- **Plugin CreateRedirect**: Redireciona `/customer/account/create` → `/b2b/register`
+- **Plugin CreatePostRedirect**: Bloqueia tentativas de POST em registro padrão
+- **Plugin CustomerLink**: Altera links "Criar Conta" para apontar ao cadastro B2B
+- **Script de Teste**: `scripts/test_b2b_strict_mode.sh` para validar implementação
+
+### 🔧 Modificações (Changed)
+- **Modo padrão alterado**: `b2b_mode` de `mixed` → `strict` em `config.xml`
+- **README B2B atualizado**: Versão 1.3.0 com documentação do modo estrito
+- **Configuração bloqueada**: Modo B2B salvo em `app/etc/env.php` (locked)
+
+### 📁 Arquivos Criados
+```
+app/code/GrupoAwamotos/B2B/Plugin/Customer/Account/
+├── CreateRedirect.php
+├── CreatePostRedirect.php
+└── ...
+
+app/code/GrupoAwamotos/B2B/Plugin/Customer/Block/Account/
+└── CustomerLink.php
+
+scripts/
+└── test_b2b_strict_mode.sh
+
+Documentação:
+├── MODO_ESTRITO_B2B.md
+├── RESUMO_MODO_ESTRITO_B2B.md
+└── app/code/GrupoAwamotos/B2B/README.md (atualizado)
+```
+
+### 🔒 Segurança
+- ✅ Impossível criar conta PF mesmo via API
+- ✅ Validação CNPJ obrigatória via ReceitaWS
+- ✅ Aprovação manual obrigatória para todos os cadastros
+- ✅ Plugins interceptam todas as rotas de registro
+
+### 🎮 Comandos Executados
+```bash
+php bin/magento setup:upgrade
+php bin/magento setup:di:compile
+php bin/magento config:set grupoawamotos_b2b/general/b2b_mode strict --lock-env
+php bin/magento cache:flush
+bash scripts/test_b2b_strict_mode.sh
+```
+
+### ✅ Validação
+- [x] 3 plugins registrados corretamente
+- [x] Modo estrito ativado
+- [x] Cache limpo
+- [x] Testes passando
+- [x] Documentação completa
+
+### 🔄 Reversibilidade
+Para voltar ao modo misto (B2B + B2C):
+```bash
+php bin/magento config:set grupoawamotos_b2b/general/b2b_mode mixed --lock-env
+php bin/magento cache:flush
+```
+
+### 📖 Documentação
+- [MODO_ESTRITO_B2B.md](MODO_ESTRITO_B2B.md) - Detalhes técnicos completos
+- [RESUMO_MODO_ESTRITO_B2B.md](RESUMO_MODO_ESTRITO_B2B.md) - Guia rápido
+- [app/code/GrupoAwamotos/B2B/README.md](app/code/GrupoAwamotos/B2B/README.md) - Módulo v1.3.0
+
+---
+
 2.4.0
 =============
 * GitHub issues:

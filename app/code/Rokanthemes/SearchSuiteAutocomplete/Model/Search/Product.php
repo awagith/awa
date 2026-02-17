@@ -6,6 +6,7 @@ use \Rokanthemes\SearchSuiteAutocomplete\Helper\Data as HelperData;
 use \Magento\Search\Helper\Data as SearchHelper;
 use \Magento\Catalog\Model\Layer\Resolver as LayerResolver;
 use \Magento\Framework\ObjectManagerInterface as ObjectManager;
+use \Magento\Framework\App\RequestInterface;
 use \Magento\Search\Model\QueryFactory;
 use \Rokanthemes\SearchSuiteAutocomplete\Model\Source\AutocompleteFields;
 use \Rokanthemes\SearchSuiteAutocomplete\Model\Source\ProductFields;
@@ -41,6 +42,11 @@ class Product implements \Rokanthemes\SearchSuiteAutocomplete\Model\SearchInterf
     private $queryFactory;
 
     /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    private $request;
+
+    /**
      * Product constructor.
      *
      * @param HelperData $helperData
@@ -48,19 +54,22 @@ class Product implements \Rokanthemes\SearchSuiteAutocomplete\Model\SearchInterf
      * @param LayerResolver $layerResolver
      * @param ObjectManager $objectManager
      * @param QueryFactory $queryFactory
+     * @param RequestInterface|null $request
      */
     public function __construct(
         HelperData $helperData,
         SearchHelper $searchHelper,
         LayerResolver $layerResolver,
         ObjectManager $objectManager,
-        QueryFactory $queryFactory
+        QueryFactory $queryFactory,
+        ?RequestInterface $request = null
     ) {
         $this->helperData    = $helperData;
         $this->searchHelper  = $searchHelper;
         $this->layerResolver = $layerResolver;
         $this->objectManager = $objectManager;
         $this->queryFactory  = $queryFactory;
+        $this->request       = $request ?: $this->objectManager->get(RequestInterface::class);
     }
 
     /**
@@ -89,10 +98,16 @@ class Product implements \Rokanthemes\SearchSuiteAutocomplete\Model\SearchInterf
             );
         }
 
+        $categoryId = $this->getCategoryIdFilter();
         $responseData['size'] = $productCollection->getSize();
-        $responseData['url']  = ($productCollection->getSize() > 0) ? $this->searchHelper->getResultUrl(
-            $queryText
-        ) : '';
+        $responseData['url']  = '';
+        if ($productCollection->getSize() > 0) {
+            $resultUrl = $this->searchHelper->getResultUrl($queryText);
+            if ($categoryId > 0) {
+                $resultUrl .= (strpos($resultUrl, '?') === false ? '?' : '&') . 'cat=' . $categoryId;
+            }
+            $responseData['url'] = $resultUrl;
+        }
 
         $query->saveNumResults($responseData['size']);
         $query->saveIncrementalPopularity();
@@ -122,7 +137,22 @@ class Product implements \Rokanthemes\SearchSuiteAutocomplete\Model\SearchInterf
                                                  ->setOrder('relevance')
                                                  ->addSearchFilter($queryText);
 
+        $categoryId = $this->getCategoryIdFilter();
+        if ($categoryId > 0) {
+            $productCollection->addCategoriesFilter(['in' => [$categoryId]]);
+        }
+
         return $productCollection;
+    }
+
+    /**
+     * Read category filter from request.
+     *
+     * @return int
+     */
+    private function getCategoryIdFilter()
+    {
+        return (int)$this->request->getParam('cat');
     }
 
     /**

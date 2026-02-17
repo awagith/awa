@@ -1,4 +1,4 @@
-"Checkout","Finalizar Compra"
+Checkout,"Finalizar Compra"
 "One Page Checkout","Checkout em Uma Página"
 "Billing Address","Endereço de Cobrança"
 "Shipping Address","Endereço de Entrega"
@@ -9,29 +9,35 @@
 "Continue Shopping","Continuar Comprando"
 "Apply Discount Code","Aplicar Cupom de Desconto"
 "Discount Code","Código de Desconto"
-"Apply","Aplicar"
-"Cancel","Cancelar"
+Apply,Aplicar
+Cancel,Cancelar
 "Grand Total","Total Geral"
-"Subtotal","Subtotal"
-"Shipping","Frete"
-"Tax","Impostos"
-"Discount","Desconto"
+Subtotal,Subtotal
+Shipping,Frete
+Tax,Impostos
+Discount,Desconto
 "Same as billing address","Mesmo endereço de cobrança"
-"Street Address","Endereço"
-"City","Cidade"
-"State/Province","Estado"
-"Zip/Postal Code","CEP"
-"Country","País"
-"Telephone","Telefone"
-"First Name","Nome"
-"Last Name","Sobrenome"
-"Company","Empresa"
-"Email Address","E-mail"
-"Password","Senha"
+"Street Address",Endereço
+City,Cidade
+State/Province,Estado
+"Zip/Postal Code",CEP
+Country,País
+Telephone,Telefone
+"First Name",Nome
+"Last Name",Sobrenome
+Company,Empresa
+"Email Address",E-mail
+Password,Senha
 "Confirm Password","Confirmar Senha"
 "Create an Account","Criar uma Conta"
-"Sign In","Entrar"
+"Sign In",Entrar
 "Forgot Your Password?","Esqueceu sua Senha?"
 "What's this?","O que é isso?"
 "You have no items in your shopping cart.","Você não tem itens no carrinho."
 "Loading next step...","Carregando próxima etapa..."
+"Add to Cart","Adicionar ao Carrinho"
+"View All","Ver Todos"
+"Shop Now","Comprar Agora"
+"Quick View","Visualização Rápida"
+Loading...,Carregando...
+Search,Buscar

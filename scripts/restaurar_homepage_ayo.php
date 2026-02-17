@@ -299,6 +299,8 @@ $pageContent = <<<'HTML'
         {{block class="Magento\Cms\Block\Block" block_id="featured_categories"}}
     </section>
 
+    <!-- DESATIVADO: Seção "Escolhas do time" (home_featured) -->
+    <!--
     <section class="ayo-home5-section container">
         <header class="ayo-home5-heading">
             <span class="ayo-home5-label">Destaques</span>
@@ -307,10 +309,14 @@ $pageContent = <<<'HTML'
         </header>
         {{block class="Magento\Cms\Block\Block" block_id="home_featured"}}
     </section>
+    -->
 
+    <!-- DESATIVADO: Seção Promo (home_banner_promo) -->
+    <!--
     <section class="ayo-home5-section container ayo-home5-section--promo">
         {{block class="Magento\Cms\Block\Block" block_id="home_banner_promo"}}
     </section>
+    -->
 
     <section class="ayo-home5-section container">
         <header class="ayo-home5-heading">
@@ -321,6 +327,8 @@ $pageContent = <<<'HTML'
         {{block class="Magento\Cms\Block\Block" block_id="home_new_products"}}
     </section>
 
+    <!-- DESATIVADO: Seção "Seleções da comunidade" (home1_product_thumb) -->
+    <!--
     <section class="ayo-home5-section container">
         <header class="ayo-home5-heading">
             <span class="ayo-home5-label">Mais buscados</span>
@@ -329,6 +337,7 @@ $pageContent = <<<'HTML'
         </header>
         {{block class="Magento\Cms\Block\Block" block_id="home1_product_thumb"}}
     </section>
+    -->
 </div>
 
 <style type="text/css">

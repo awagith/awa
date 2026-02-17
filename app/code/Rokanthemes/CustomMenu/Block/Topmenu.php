@@ -164,11 +164,17 @@ class Topmenu extends \Magento\Framework\View\Element\Template
                     if($level == 1 && $rt_menu_icon_img) {
                         $html .= '<div class="menu-thumb-img"><a class="menu-thumb-link" href="'.$this->_categoryHelper->getCategoryUrl($child).'"><img src="' .$cat_model->getImageUrl('rt_menu_icon_img'). '" alt="'.$child->getName().'"/></a></div>';
                     }
-                    $html .= '<a href="'.$this->_categoryHelper->getCategoryUrl($child).'">';
+                    // Verificar se é a categoria atual para aria-current
+                    $childUrl = $this->_categoryHelper->getCategoryUrl($child);
+                    $currentUrl = $this->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]);
+                    $isCurrentChild = (rtrim($currentUrl, '/') === rtrim($childUrl, '/'));
+                    $ariaCurrentChild = $isCurrentChild ? ' aria-current="page"' : '';
+                    
+                    $html .= '<a href="'.$childUrl.'"'.$ariaCurrentChild.'>';
                     if ($level > 1 && $rt_menu_icon_img)
                         $html .= '<img class="menu-thumb-icon" src="' .$cat_model->getImageUrl('rt_menu_icon_img'). '" alt="'.$child->getName().'"/>';
                     elseif($rt_menu_font_icon)
-                        $html .= '<em class="menu-thumb-icon '.$rt_menu_font_icon.'"></em>';
+                        $html .= '<em class="menu-thumb-icon '.$rt_menu_font_icon.'" aria-hidden="true"></em>';
                     $html .= '<span>'.$child->getName();
                     if($rt_menu_cat_label)
                         $html .= '<span class="cat-label cat-label-'.$rt_menu_cat_label.'">'.$this->_custommenuConfig['cat_labels'][$rt_menu_cat_label].'</span>';
@@ -260,11 +266,17 @@ class Topmenu extends \Magento\Framework\View\Element\Template
                 if(count($children) > 0) {
                     $html .= '<div class="open-children-toggle"></div>';
                 }
-                $html .= '<a href="'.$this->_categoryHelper->getCategoryUrl($category).'" class="level-top">';
+                // Verificar se é a categoria atual para aria-current
+                $categoryUrl = $this->_categoryHelper->getCategoryUrl($category);
+                $currentUrl = $this->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]);
+                $isCurrentCategory = (rtrim($currentUrl, '/') === rtrim($categoryUrl, '/'));
+                $ariaCurrent = $isCurrentCategory ? ' aria-current="page"' : '';
+                
+                $html .= '<a href="'.$categoryUrl.'" class="level-top"'.$ariaCurrent.'>';
                 if ($rt_menu_icon_img)
                     $html .= '<img class="menu-thumb-icon" src="' . $cat_model->getImageUrl('rt_menu_icon_img') . '" alt="'.$category->getName().'"/>';
                 elseif($rt_menu_font_icon)
-                    $html .= '<em class="menu-thumb-icon '.$rt_menu_font_icon.'"></em>';
+                    $html .= '<em class="menu-thumb-icon '.$rt_menu_font_icon.'" aria-hidden="true"></em>';
                 $html .= $category->getName();
                 if($rt_menu_cat_label)
                     $html .= '<span class="cat-label cat-label-'.$rt_menu_cat_label.'">'.$this->_custommenuConfig['cat_labels'][$rt_menu_cat_label].'</span>';

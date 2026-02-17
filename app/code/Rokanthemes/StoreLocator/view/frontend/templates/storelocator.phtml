@@ -3,17 +3,17 @@
         <div class="block-content">
             <div id="current-address" class="bstlocator_input">
                 <div class="input-box">
-                    <input type="text" value="" class="input-text" id="locator-search" name="address" placeholder="<?= __('Enter a location')?>">
+                    <input type="text" value="" class="input-text" id="locator-search" name="address" placeholder="<?= __('Digite seu endereço, cidade ou CEP...')?>">
 					<input type="hidden" id="lat" name="lat">
                     <input type="hidden" id="long" name="long">
 				</div>
             </div>
 
             <div class="bstlocator_input">
-                <button class="button" title="Filter"  id="sortByFilter" >
+                <button class="button" title="<?= __('Buscar') ?>"  id="sortByFilter" >
                     <span>
                         <span>
-                            <?= __('Search')?>
+                            <i class="fa fa-search"></i> <?= __('Buscar')?>
                         </span>
                     </span>
                 </button>
@@ -21,7 +21,11 @@
         </div>
 		
 		<div class="center"> 
-			<div class="store_list"><?= $block->getChildHtml('store_list') ?></div>
+			<div class="store-list-header">
+				<h3><?= __('Nossas Lojas') ?></h3>
+				<p class="store-list-subtitle"><?= __('Clique em uma loja para ver no mapa') ?></p>
+			</div>
+			<div class="store_list" style="display: block !important; visibility: visible !important;"><?= $block->getChildHtml('store_list') ?></div>
 		</div>
     </div>
 	<div class="column_right" style="width: 67%;height: 80vh; max-height: 800px;padding-left: 15px;">

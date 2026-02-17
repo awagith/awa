@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+    contact_index_index.xml — Melhorias na página /contact (rota nativa Magento_Contact).
+    - Injeta CSS institucional
+    - Adiciona bloco CMS awa_contact_header acima do formulário
+    - Define meta title e meta description em pt-BR
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <head>
+        <title>Fale Conosco | AWA Motos</title>
+        <meta name="description"
+              content="Entre em contato com a AWA Motos por telefone, e-mail ou WhatsApp. Formulário de contato, canais de atendimento e prazo de resposta."/>
+        <css src="css/awa-institutional.css"/>
+    </head>
+
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Cms\Block\Block"
+                   name="awa.contact.header"
+                   before="-">
+                <arguments>
+                    <argument name="block_id" xsi:type="string">awa_contact_header</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

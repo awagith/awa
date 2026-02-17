@@ -1,0 +1,29 @@
+<?php
+/**
+ * AWA Motos root template override
+ * - Force lang="pt-BR" (BCP-47) instead of Magento default "pt" (ISO 639-1)
+ *
+ * Based on: vendor/magento/module-theme/view/base/templates/root.phtml
+ */
+
+// Replace lang="pt" with lang="pt-BR" in html attributes
+$htmlAttrs = $htmlAttributes;
+if (strpos($htmlAttrs, 'lang="pt"') !== false) {
+    $htmlAttrs = str_replace('lang="pt"', 'lang="pt-BR"', $htmlAttrs);
+}
+?>
+<!doctype html>
+<html <?= /* @noEscape */ $htmlAttrs ?>>
+    <head <?= /* @noEscape */ $headAttributes ?>>
+        <?= /* @noEscape */ $requireJs ?>
+        <?= /* @noEscape */ $headContent ?>
+        <?= /* @noEscape */ $headCritical ?>
+        <?= /* @noEscape */ $headAssets ?>
+        <?= /* @noEscape */ $headAdditional ?>
+    </head>
+    <body data-container="body"
+          data-mage-init='{"loaderAjax": {}, "loader": { "icon": "<?= /* @noEscape */ $loaderIcon ?>"}}'
+        <?= /* @noEscape */ $bodyAttributes ?>>
+        <?= /* @noEscape */ $layoutContent ?>
+    </body>
+</html>

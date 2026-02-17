@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * AWA Motos — checkout_cart_index.xml
+ * Carrega CSS de checkout na página de carrinho
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="css/awa-checkout-home5.css" />
+    </head>
+</page>

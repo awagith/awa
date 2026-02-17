@@ -1,0 +1,182 @@
+<?php
+/**
+ * Quick Order Template
+ * Allows B2B customers to add multiple products by SKU
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ */
+$addUrl = $block->getUrl('b2b/quickorder/add');
+?>
+<div class="b2b-quickorder">
+    <div class="block-title">
+        <strong><?= $block->escapeHtml(__('Pedido Rápido')) ?></strong>
+        <p class="quickorder-description">
+            <?= $block->escapeHtml(__('Adicione produtos rapidamente informando o SKU e a quantidade desejada.')) ?>
+        </p>
+    </div>
+
+    <div class="quickorder-form-container" id="quickorder-container">
+        <div class="quickorder-rows" id="quickorder-rows">
+            <div class="quickorder-header-row">
+                <span class="col-sku"><?= $block->escapeHtml(__('SKU')) ?></span>
+                <span class="col-qty"><?= $block->escapeHtml(__('Qtd')) ?></span>
+                <span class="col-action"></span>
+            </div>
+            <!-- Rows will be populated by JS -->
+        </div>
+
+        <div class="quickorder-add-row">
+            <button type="button" id="quickorder-add-row" class="action secondary">
+                <span>+ <?= $block->escapeHtml(__('Adicionar Linha')) ?></span>
+            </button>
+        </div>
+
+        <div class="quickorder-results" id="quickorder-results" style="display:none;">
+            <div class="results-success" id="quickorder-success"></div>
+            <div class="results-errors" id="quickorder-errors"></div>
+        </div>
+
+        <div class="quickorder-actions">
+            <button type="button" id="quickorder-submit" class="action primary">
+                <span><?= $block->escapeHtml(__('Adicionar ao Carrinho')) ?></span>
+            </button>
+            <a href="<?= $block->escapeUrl($block->getUrl('checkout/cart')) ?>" class="action secondary">
+                <span><?= $block->escapeHtml(__('Ver Carrinho')) ?></span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .b2b-quickorder { max-width: 700px; }
+    .b2b-quickorder .block-title { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e0e0e0; }
+    .b2b-quickorder .block-title strong { font-size: 1.4rem; }
+    .quickorder-description { margin-top: 8px; color: #666; font-size: 14px; }
+
+    .quickorder-header-row {
+        display: flex; gap: 12px; padding: 8px 0;
+        font-size: 12px; font-weight: 600; color: #6b7280;
+        text-transform: uppercase; border-bottom: 1px solid #e5e7eb;
+    }
+    .quickorder-header-row .col-sku { flex: 3; }
+    .quickorder-header-row .col-qty { flex: 1; }
+    .quickorder-header-row .col-action { width: 36px; }
+
+    .quickorder-row {
+        display: flex; gap: 12px; padding: 8px 0;
+        align-items: center; border-bottom: 1px solid #f3f4f6;
+    }
+    .quickorder-row input[type="text"] { flex: 3; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }
+    .quickorder-row input[type="number"] { flex: 1; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; text-align: center; }
+    .quickorder-row input:focus { border-color: #0066FF; outline: none; box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2); }
+    .quickorder-row .btn-remove {
+        width: 36px; height: 36px; border: none; background: #fee2e2;
+        color: #b91c1c; border-radius: 6px; cursor: pointer; font-size: 18px;
+        display: flex; align-items: center; justify-content: center;
+    }
+    .quickorder-row .btn-remove:hover { background: #fecaca; }
+    .quickorder-row.has-error input[type="text"] { border-color: #ef4444; }
+    .quickorder-row .row-status { font-size: 12px; margin-top: 2px; }
+    .quickorder-row .row-status.error { color: #dc2626; }
+    .quickorder-row .row-status.success { color: #16a34a; }
+
+    .quickorder-add-row { margin: 12px 0; }
+    .quickorder-actions { display: flex; gap: 12px; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb; }
+
+    .quickorder-results { margin: 16px 0; }
+    .results-success { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 12px; margin-bottom: 8px; color: #166534; font-size: 14px; }
+    .results-errors { background: #fef2f2; border: 1px solid #fecaca; border-radius: 6px; padding: 12px; color: #991b1b; font-size: 14px; }
+    .results-success:empty, .results-errors:empty { display: none; }
+
+    .quickorder-loading { opacity: 0.5; pointer-events: none; }
+</style>
+
+<script>
+require(['jquery'], function($) {
+    'use strict';
+
+    var addUrl = '<?= /* @noEscape */ $addUrl ?>';
+    var rowIndex = 0;
+    var $container = $('#quickorder-rows');
+    var $results = $('#quickorder-results');
+
+    function addRow() {
+        rowIndex++;
+        var html = '<div class="quickorder-row" data-index="' + rowIndex + '">' +
+            '<input type="text" name="items[' + rowIndex + '][sku]" placeholder="Ex: SKU-001" class="sku-input" />' +
+            '<input type="number" name="items[' + rowIndex + '][qty]" value="1" min="1" class="qty-input" />' +
+            '<button type="button" class="btn-remove" title="Remover">&times;</button>' +
+            '</div>';
+        $container.append(html);
+    }
+
+    // Initial rows
+    for (var i = 0; i < 5; i++) { addRow(); }
+
+    $('#quickorder-add-row').on('click', function() { addRow(); });
+
+    $container.on('click', '.btn-remove', function() {
+        var $rows = $container.find('.quickorder-row');
+        if ($rows.length > 1) {
+            $(this).closest('.quickorder-row').remove();
+        }
+    });
+
+    $('#quickorder-submit').on('click', function() {
+        var items = [];
+        $container.find('.quickorder-row').each(function() {
+            var sku = $(this).find('.sku-input').val().trim();
+            var qty = parseInt($(this).find('.qty-input').val()) || 1;
+            if (sku) {
+                items.push({ sku: sku, qty: qty });
+            }
+        });
+
+        if (items.length === 0) {
+            alert('Informe pelo menos um SKU.');
+            return;
+        }
+
+        var $btn = $(this);
+        $btn.prop('disabled', true).text('Processando...');
+        $('#quickorder-container').addClass('quickorder-loading');
+
+        $.ajax({
+            url: addUrl,
+            type: 'POST',
+            dataType: 'json',
+            data: { items: items, form_key: $.mage.cookies.get('form_key') },
+            success: function(response) {
+                $results.show();
+                var $success = $('#quickorder-success').empty();
+                var $errors = $('#quickorder-errors').empty();
+
+                if (response.added && response.added.length > 0) {
+                    var html = '<strong>' + response.message + '</strong><ul>';
+                    $.each(response.added, function(i, item) {
+                        html += '<li>' + item.name + ' (SKU: ' + item.sku + ') - Qtd: ' + item.qty + '</li>';
+                    });
+                    html += '</ul>';
+                    $success.html(html).show();
+                }
+
+                if (response.errors && response.errors.length > 0) {
+                    var html = '<strong>Erros:</strong><ul>';
+                    $.each(response.errors, function(i, err) {
+                        html += '<li>SKU: ' + err.sku + ' - ' + err.message + '</li>';
+                    });
+                    html += '</ul>';
+                    $errors.html(html).show();
+                }
+            },
+            error: function() {
+                alert('Erro ao processar pedido. Tente novamente.');
+            },
+            complete: function() {
+                $btn.prop('disabled', false).text('<?= $block->escapeJs(__('Adicionar ao Carrinho')) ?>');
+                $('#quickorder-container').removeClass('quickorder-loading');
+            }
+        });
+    });
+});
+</script>

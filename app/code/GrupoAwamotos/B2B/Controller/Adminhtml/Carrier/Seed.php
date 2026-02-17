@@ -9,8 +9,9 @@ namespace GrupoAwamotos\B2B\Controller\Adminhtml\Carrier;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use GrupoAwamotos\B2B\Model\CarrierService;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 
-class Seed extends Action
+class Seed extends Action implements HttpPostActionInterface
 {
     /**
      * Authorization level

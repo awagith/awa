@@ -1,0 +1,92 @@
+<?php
+/**
+ * Template: Página "Acesse sua conta" (estilo Forceline)
+ *
+ * @var \GrupoAwamotos\B2B\Block\Account\Login $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<div class="b2b-login-page">
+    <div class="b2b-login-logo">
+        <a href="<?= $escaper->escapeUrl($block->getHomeUrl()) ?>">
+            <img src="<?= $escaper->escapeUrl($block->getLogoSrc()) ?>"
+                 alt="<?= $escaper->escapeHtmlAttr($block->getLogoAlt()) ?>"
+                 loading="eager" />
+        </a>
+    </div>
+
+    <div class="b2b-login-header">
+        <div class="b2b-login-bar"></div>
+    </div>
+
+    <div class="b2b-login-card">
+        <h1 class="b2b-login-title">Acesse sua conta</h1>
+        <p class="b2b-login-subtitle">
+            Preencha seus dados de login para acessar sua central do cliente
+        </p>
+
+        <form class="b2b-login-form"
+              action="<?= $escaper->escapeUrl($block->getPostActionUrl()) ?>"
+              method="post"
+              id="b2b-login-form"
+              data-mage-init='{"validation":{}}'>
+            <?= $block->getBlockHtml('formkey') ?>
+
+            <div class="b2b-field">
+                <input type="text"
+                       name="login[username]"
+                       id="b2b-email"
+                       autocomplete="email"
+                       required
+                       data-validate="{required:true}"
+                       placeholder="E-mail ou CNPJ" />
+            </div>
+
+            <div class="b2b-field">
+                <input type="password"
+                       name="login[password]"
+                       id="b2b-pass"
+                       autocomplete="current-password"
+                       required
+                       data-validate="{required:true}"
+                       placeholder="Senha" />
+            </div>
+
+            <div class="b2b-login-forgot">
+                <span>Esqueceu sua senha?</span>
+                <a href="<?= $escaper->escapeUrl($block->getForgotPasswordUrl()) ?>">Recuperar</a>
+            </div>
+
+            <div class="b2b-login-actions">
+                <button type="submit" class="b2b-btn-entrar" title="Entrar">
+                    <span>ENTRAR</span>
+                </button>
+            </div>
+        </form>
+
+        <div class="b2b-login-divider">
+            <span>OU</span>
+        </div>
+
+        <div class="b2b-login-ctas">
+            <a href="<?= $escaper->escapeUrl($block->getB2BRegisterUrl()) ?>" class="b2b-btn-register">
+                PRIMEIRO ACESSO? <strong>CADASTRE-SE</strong>
+            </a>
+
+            <a href="<?= $escaper->escapeUrl($block->getClaimAccountUrl()) ?>" class="b2b-btn-claim">
+                COMPROU E N&Atilde;O POSSUI SENHA? <strong>CADASTRE-SE</strong>
+            </a>
+        </div>
+    </div>
+
+    <div class="b2b-login-footer">
+        <a href="https://wa.me/5516997367588?text=Ol%C3%A1%2C%20preciso%20de%20ajuda%20para%20acessar%20minha%20conta%20B2B"
+           class="b2b-login-whatsapp"
+           target="_blank"
+           rel="noopener noreferrer">
+            Precisa de ajuda? Fale conosco pelo <strong>WhatsApp</strong>
+        </a>
+        <p class="b2b-login-footer-brand">Grupo AWA Motos</p>
+        <p class="b2b-login-footer-contact">contato@grupoawamotos.com.br</p>
+    </div>
+</div>

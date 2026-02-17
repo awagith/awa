@@ -1,8 +1,14 @@
 <?php
 /**
- * Product Schema.org Block
+ * Product Schema.org Block (DEPRECATED)
  * Gera JSON-LD para páginas de produto
+ *
+ * @deprecated Use \GrupoAwamotos\SchemaOrg\Block\ProductSchema instead.
+ *             This class is not referenced by any layout XML and will be
+ *             removed in a future release.
  */
+declare(strict_types=1);
+
 namespace GrupoAwamotos\SchemaOrg\Block;
 
 use Magento\Framework\View\Element\Template;

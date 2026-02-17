@@ -6,6 +6,8 @@ declare(strict_types=1);
 
 namespace GrupoAwamotos\CarrierSelect\Model\Carrier;
 
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Quote\Model\Quote\Address\RateRequest;
 use Magento\Shipping\Model\Carrier\AbstractCarrier;
 use Magento\Shipping\Model\Carrier\CarrierInterface;
@@ -43,6 +45,10 @@ class CarrierSelect extends AbstractCarrier implements CarrierInterface
      */
     private CollectionFactory $carrierCollectionFactory;
 
+    private CustomerSession $customerSession;
+
+    private CustomerRepositoryInterface $customerRepository;
+
     /**
      * @param ScopeConfigInterface $scopeConfig
      * @param ErrorFactory $rateErrorFactory
@@ -59,12 +65,38 @@ class CarrierSelect extends AbstractCarrier implements CarrierInterface
         ResultFactory $rateResultFactory,
         MethodFactory $rateMethodFactory,
         CollectionFactory $carrierCollectionFactory,
+        CustomerSession $customerSession,
+        CustomerRepositoryInterface $customerRepository,
         array $data = []
     ) {
         $this->rateResultFactory = $rateResultFactory;
         $this->rateMethodFactory = $rateMethodFactory;
         $this->carrierCollectionFactory = $carrierCollectionFactory;
+        $this->customerSession = $customerSession;
+        $this->customerRepository = $customerRepository;
         parent::__construct($scopeConfig, $rateErrorFactory, $logger, $data);
+    }
+
+    private function getPreferredCarrierCode(): ?string
+    {
+        if (!$this->customerSession->isLoggedIn()) {
+            return null;
+        }
+
+        try {
+            $customerId = (int)$this->customerSession->getCustomerId();
+            if ($customerId <= 0) {
+                return null;
+            }
+
+            $customer = $this->customerRepository->getById($customerId);
+            $attr = $customer->getCustomAttribute('b2b_carrier_code');
+            $value = $attr ? trim((string)$attr->getValue()) : '';
+
+            return $value !== '' ? $value : null;
+        } catch (\Throwable $exception) {
+            return null;
+        }
     }
 
     /**
@@ -80,46 +112,39 @@ class CarrierSelect extends AbstractCarrier implements CarrierInterface
         }
 
         $result = $this->rateResultFactory->create();
-        
-        // Buscar transportadoras ativas do banco
-        $carriers = $this->carrierCollectionFactory->create()
-            ->addActiveFilter()
-            ->addSortOrder();
 
-        if ($carriers->getSize() > 0) {
-            // Criar um método de envio para cada transportadora
-            foreach ($carriers as $carrier) {
-                $method = $this->rateMethodFactory->create();
-                
-                $method->setCarrier($this->_code);
-                $method->setCarrierTitle($this->getConfigData('title'));
-                
-                // Código único para cada transportadora
-                $method->setMethod($carrier->getCode());
-                $method->setMethodTitle($carrier->getName());
-                
-                // Preço zero (a combinar)
-                $shippingPrice = 0;
-                $method->setPrice($shippingPrice);
-                $method->setCost($shippingPrice);
-                
-                $result->append($method);
+        $preferredCode = $this->getPreferredCarrierCode();
+
+        if ($preferredCode !== null) {
+            // Cliente tem transportadora preferencial (do ERP) — mostra só ela
+            $preferredCarriers = $this->carrierCollectionFactory->create()
+                ->addActiveFilter()
+                ->addFieldToFilter('code', $preferredCode);
+
+            if ($preferredCarriers->getSize() > 0) {
+                foreach ($preferredCarriers as $carrier) {
+                    $method = $this->rateMethodFactory->create();
+                    $method->setCarrier($this->_code);
+                    $method->setCarrierTitle($this->getConfigData('title'));
+                    $method->setMethod($carrier->getCode());
+                    $method->setMethodTitle($carrier->getName() . ' (Frete a combinar)');
+                    $method->setPrice(0);
+                    $method->setCost(0);
+                    $result->append($method);
+                }
+                return $result;
             }
-        } else {
-            // Se não houver transportadoras, mostra método genérico
-            $method = $this->rateMethodFactory->create();
-            
-            $method->setCarrier($this->_code);
-            $method->setCarrierTitle($this->getConfigData('title'));
-            $method->setMethod('acombinar');
-            $method->setMethodTitle(__('Frete a combinar'));
-            
-            $shippingPrice = $this->getConfigData('price');
-            $method->setPrice($shippingPrice);
-            $method->setCost($shippingPrice);
-            
-            $result->append($method);
         }
+
+        // Fallback: cliente sem transportadora definida — mostra opção genérica
+        $method = $this->rateMethodFactory->create();
+        $method->setCarrier($this->_code);
+        $method->setCarrierTitle($this->getConfigData('title'));
+        $method->setMethod('acombinar');
+        $method->setMethodTitle(__('Frete a combinar — transportadora será definida'));
+        $method->setPrice(0);
+        $method->setCost(0);
+        $result->append($method);
 
         return $result;
     }
@@ -131,18 +156,17 @@ class CarrierSelect extends AbstractCarrier implements CarrierInterface
      */
     public function getAllowedMethods(): array
     {
-        $methods = [];
-        
-        $carriers = $this->carrierCollectionFactory->create()
-            ->addActiveFilter()
-            ->addSortOrder();
+        $methods = ['acombinar' => __('Frete a combinar')];
 
-        foreach ($carriers as $carrier) {
-            $methods[$carrier->getCode()] = $carrier->getName();
-        }
+        $preferredCode = $this->getPreferredCarrierCode();
+        if ($preferredCode !== null) {
+            $carriers = $this->carrierCollectionFactory->create()
+                ->addActiveFilter()
+                ->addFieldToFilter('code', $preferredCode);
 
-        if (empty($methods)) {
-            $methods['acombinar'] = __('Frete a combinar');
+            foreach ($carriers as $carrier) {
+                $methods[$carrier->getCode()] = $carrier->getName();
+            }
         }
 
         return $methods;

@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="grupoawamotos_abandonedcart_process" instance="GrupoAwamotos\AbandonedCart\Cron\ProcessAbandonedCarts" method="execute">
+            <schedule>*/15 * * * *</schedule>
+        </job>
+        <job name="grupoawamotos_abandonedcart_send" instance="GrupoAwamotos\AbandonedCart\Cron\SendEmails" method="execute">
+            <schedule>0 * * * *</schedule>
+        </job>
+        <job name="grupoawamotos_abandonedcart_cleanup" instance="GrupoAwamotos\AbandonedCart\Cron\CleanupOldRecords" method="execute">
+            <schedule>0 3 * * *</schedule>
+        </job>
+    </group>
+</config>

@@ -32,8 +32,8 @@ class Store extends AbstractModel implements StoreInterface, IdentityInterface
         Context $context,
         Registry $registry,
         CountryFactory $countryFactory,
-		AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+		?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         $this->countryFactory = $countryFactory;

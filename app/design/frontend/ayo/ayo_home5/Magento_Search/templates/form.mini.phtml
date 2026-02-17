@@ -1,0 +1,52 @@
+<?php
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+?>
+<?php
+/** @var $block \Magento\Framework\View\Element\Template */
+/** @var $helper \Magento\Search\Helper\Data */
+$helper = $this->helper('Magento\Search\Helper\Data');
+
+// SearchbyCat: carregar categorias para dropdown
+$categoryHelper = $this->helper('Magento\Catalog\Helper\Category');
+$categories = $categoryHelper->getStoreCategories(true, false, true);
+?>
+<div class="block block-search" role="search" aria-label="<?php echo $block->escapeHtmlAttr(__('Busca de produtos')) ?>">
+    <div class="block-content">
+        <form class="form minisearch search-content cat-search" id="search_mini_form" action="<?php echo $block->escapeUrl($helper->getResultUrl()) ?>" method="get">
+            <div class="field search">
+                <label class="label" for="search" data-role="minisearch-label">
+                    <span><?php echo $block->escapeHtml(__('Buscar')); ?></span>
+                </label>
+                <div class="control">
+                    <div class="field-by-cat-search">
+                        <select name="cat" id="choose_category" aria-label="<?php echo $block->escapeHtmlAttr(__('Filtrar por categoria')) ?>">
+                            <option value=""><?php echo $block->escapeHtml(__('Todas as Categorias')); ?></option>
+                            <?php foreach ($categories as $cat): ?>
+                                <option value="<?php echo (int)$cat->getId(); ?>"><?php echo $block->escapeHtml($cat->getName()); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <input id="search" data-mage-init='{"quickSearch":{
+                                "formSelector":"#search_mini_form",
+                                "url":"<?php echo $block->escapeUrl($block->getUrl('search/ajax/suggest')); ?>",
+                                "destinationSelector":"#search_autocomplete"}
+                           }' type="search" name="<?php echo $block->escapeHtmlAttr($helper->getQueryParamName()) ?>" value="<?php echo $block->escapeHtmlAttr($helper->getEscapedQueryText()) ?>" placeholder="<?php echo $block->escapeHtmlAttr(__('Buscar peças, capacetes, acessórios...')); ?>" class="input-text" maxlength="<?php echo (int)$helper->getMaxQueryLength();?>" role="combobox" aria-label="<?php echo $block->escapeHtmlAttr(__('Buscar')) ?>" aria-autocomplete="both" aria-expanded="false" aria-controls="search_autocomplete" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+                    <div id="search_autocomplete" class="search-autocomplete searchsuite-autocomplete" aria-label="<?php echo $block->escapeHtmlAttr(__('Sugestões de busca')) ?>"></div>
+                    <?php echo $block->getChildHtml() ?>
+                </div>
+            </div>
+            <div class="actions">
+                <button type="submit"
+                        title="<?php echo $block->escapeHtml(__('Buscar')) ?>"
+                        class="action search">
+                    <span><?php echo $block->escapeHtml(__('Buscar')); ?></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

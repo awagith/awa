@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="ayo_curriculo_submissions" resource="default" engine="innodb" comment="Curriculo Submissions">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="varchar" name="tracking_code" nullable="false" length="20" comment="Tracking Code"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Candidate Name"/>
+        <column xsi:type="varchar" name="email" nullable="false" length="255" comment="Candidate Email"/>
+        <column xsi:type="varchar" name="phone" nullable="true" length="50" comment="Phone"/>
+        <column xsi:type="varchar" name="cep" nullable="true" length="10" comment="CEP"/>
+        <column xsi:type="varchar" name="cpf" nullable="true" length="20" comment="CPF"/>
+        <column xsi:type="varchar" name="cnpj" nullable="true" length="25" comment="CNPJ"/>
+        <column xsi:type="varchar" name="city" nullable="true" length="100" comment="City"/>
+        <column xsi:type="varchar" name="state" nullable="true" length="50" comment="State"/>
+        <column xsi:type="varchar" name="position" nullable="true" length="255" comment="Desired Position"/>
+        <column xsi:type="varchar" name="experience_level" nullable="true" length="100" comment="Experience Level"/>
+        <column xsi:type="varchar" name="linkedin" nullable="true" length="500" comment="LinkedIn URL"/>
+        <column xsi:type="varchar" name="portfolio" nullable="true" length="500" comment="Portfolio URL"/>
+        <column xsi:type="text" name="message" nullable="true" comment="Message"/>
+        <column xsi:type="varchar" name="file_path" nullable="true" length="500" comment="CV File Path"/>
+        <column xsi:type="varchar" name="file_name" nullable="true" length="255" comment="CV File Name"/>
+        <column xsi:type="varchar" name="work_area" nullable="true" length="255" comment="Work Area / Department"/>
+        <column xsi:type="text" name="specialties" nullable="true" comment="Specialties (JSON)"/>
+        <column xsi:type="varchar" name="cnh" nullable="true" length="10" comment="Driver License Category"/>
+        <column xsi:type="varchar" name="availability" nullable="true" length="50" comment="Availability"/>
+        <column xsi:type="varchar" name="contract_type" nullable="true" length="50" comment="Contract Type"/>
+        <column xsi:type="varchar" name="salary_expectation" nullable="true" length="100" comment="Salary Expectation"/>
+        <column xsi:type="varchar" name="referral_source" nullable="true" length="100" comment="How Found Us"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="50" default="pending" comment="Status"/>
+        <column xsi:type="text" name="notes" nullable="true" comment="Internal Notes"/>
+        <column xsi:type="int" name="store_id" unsigned="true" nullable="false" default="0" comment="Store ID"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="AYO_CURRICULO_SUBMISSIONS_TRACKING_CODE">
+            <column name="tracking_code"/>
+        </constraint>
+        <index referenceId="AYO_CURRICULO_SUBMISSIONS_EMAIL" indexType="btree">
+            <column name="email"/>
+        </index>
+        <index referenceId="AYO_CURRICULO_SUBMISSIONS_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+        <index referenceId="AYO_CURRICULO_SUBMISSIONS_CREATED_AT" indexType="btree">
+            <column name="created_at"/>
+        </index>
+    </table>
+</schema>

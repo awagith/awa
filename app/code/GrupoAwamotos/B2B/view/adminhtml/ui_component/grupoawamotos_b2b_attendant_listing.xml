@@ -1,0 +1,121 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * B2B Attendant Listing Grid
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">grupoawamotos_b2b_attendant_listing.grupoawamotos_b2b_attendant_listing_data_source</item>
+        </item>
+    </argument>
+
+    <settings>
+        <spinner>grupoawamotos_b2b_attendant_columns</spinner>
+        <deps>
+            <dep>grupoawamotos_b2b_attendant_listing.grupoawamotos_b2b_attendant_listing_data_source</dep>
+        </deps>
+    </settings>
+
+    <dataSource name="grupoawamotos_b2b_attendant_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">attendant_id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>GrupoAwamotos_B2B::attendants</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider"
+                      name="grupoawamotos_b2b_attendant_listing_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>attendant_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+
+    <listingToolbar name="listing_top">
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filterSearch name="fulltext"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+
+    <columns name="grupoawamotos_b2b_attendant_columns">
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>attendant_id</indexField>
+            </settings>
+        </selectionsColumn>
+
+        <column name="attendant_id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+
+        <column name="name">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Nome</label>
+            </settings>
+        </column>
+
+        <column name="email">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">E-mail</label>
+            </settings>
+        </column>
+
+        <column name="phone">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Telefone</label>
+            </settings>
+        </column>
+
+        <column name="department">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Departamento</label>
+            </settings>
+        </column>
+
+        <column name="whatsapp">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">WhatsApp</label>
+            </settings>
+        </column>
+
+        <column name="is_active" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="Magento\Config\Model\Config\Source\Yesno"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Ativo</label>
+            </settings>
+        </column>
+
+        <column name="customer_count">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">Clientes</label>
+            </settings>
+        </column>
+
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Criado em</label>
+            </settings>
+        </column>
+    </columns>
+</listing>

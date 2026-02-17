@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="empty"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="b2b_auth_shell"/>
+    <head>
+        <title>Acesse sua conta</title>
+        <css src="GrupoAwamotos_B2B::css/b2b-login.css"/>
+    </head>
+    <body>
+        <referenceContainer name="main">
+            <block class="Magento\Framework\View\Element\Messages"
+                   name="b2b.login.messages"
+                   before="-"/>
+            <block class="GrupoAwamotos\B2B\Block\Account\Login"
+                   name="b2b.account.login"
+                   template="GrupoAwamotos_B2B::account/login.phtml"
+                   cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>

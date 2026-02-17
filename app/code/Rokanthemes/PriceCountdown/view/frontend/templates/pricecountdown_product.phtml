@@ -3,7 +3,7 @@ $toDate = $this->helper('Rokanthemes\PriceCountdown\Helper\Data')->getConfigData
 $fromDate = $this->helper('Rokanthemes\PriceCountdown\Helper\Data')->getConfigData('pricecountdown/product_page/from_date_p_v');
 $_current_timer = time();
 $product = $block->getProduct();
-if(strtotime($toDate) >= strtotime($_current_timer)){
+if(!empty($toDate) && strtotime($toDate) >= $_current_timer){
 	if($product->getTypeId() != 'configurable' && $product->getTypeId() != 'grouped' && $product->getTypeId() != 'bundle'){
 		$count = 100;
 		$stockItem = $product->getExtensionAttributes()->getStockItem();
@@ -15,7 +15,7 @@ if(strtotime($toDate) >= strtotime($_current_timer)){
 <div class="countdown-page-product-custom">
 	<div class="des-countdown-p-p-c"><?php echo str_replace('%s', $stockss, $this->helper('Rokanthemes\PriceCountdown\Helper\Data')->getConfigData('pricecountdown/product_page/messages_p_v'));?></div>
 	<div class="progressbar-countdown-parent">
-		<div class="progressbar-countdown-p-p-c"><div style="width: <?php echo (($stocks - $percent_sold) / $stocks) * 100 ; ?>%;"></div></div>
+		<div class="progressbar-countdown-p-p-c"><div style="width: <?php echo max(0, min(100, (($stocks - $percent_sold) / $stocks) * 100)); ?>%;"></div></div>
 	</div>
 	<div id="countbox-p-p-c-container"></div>
 </div>
@@ -31,7 +31,7 @@ if(strtotime($toDate) >= strtotime($_current_timer)){
 	else
 		ddiff = new Date((dthen<?php echo $count; ?>)-(dnow<?php echo $count; ?>));
 	//gsecs<?php echo $count; ?> = Math.floor(ddiff.valueOf()/1000);
-	<?php if(strtotime($fromDate) <= $_current_timer){ ?>
+	<?php if(!empty($fromDate) && strtotime($fromDate) <= $_current_timer){ ?>
 		gsecs<?php echo $count; ?> = Math.floor(ddiff.valueOf()/1000);
 	<?php }else{ ?>
 		gsecs<?php echo $count; ?> = -1;

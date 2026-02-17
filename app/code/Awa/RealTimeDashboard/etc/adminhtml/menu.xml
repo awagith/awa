@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="Awa_RealTimeDashboard::main"
+             title="Monitor Tempo Real"
+             module="Awa_RealTimeDashboard"
+             sortOrder="5"
+             resource="Awa_RealTimeDashboard::dashboard"/>
+        <add id="Awa_RealTimeDashboard::dashboard"
+             title="Dashboard ao Vivo"
+             module="Awa_RealTimeDashboard"
+             sortOrder="10"
+             parent="Awa_RealTimeDashboard::main"
+             action="awa_dashboard/dashboard/index"
+             resource="Awa_RealTimeDashboard::dashboard"/>
+    </menu>
+</config>

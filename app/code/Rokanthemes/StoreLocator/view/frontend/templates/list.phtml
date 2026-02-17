@@ -10,7 +10,7 @@ $storeManager = $objectManager->get('Magento\Store\Model\StoreManagerInterface')
 $currentStore = $storeManager->getStore();
 $mediaUrl = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA);
 ?>
-<div id="store_list">
+<div id="store_list" style="display: block !important; visibility: visible !important; opacity: 1 !important;">
     <?php foreach ($locations as $location): ?>
         <div class="list" name="mapLocation" data-id="<?php echo $i ?>">
 			<?php 
@@ -35,15 +35,36 @@ $mediaUrl = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_
 					<div><?php echo __('Country') ?>: <?php echo $this->escapeHtml($location->getCountry()); ?></div>
 				<?php }?>
 				<?php if (trim($location->getAddress())) { ?>
-					<div><?php echo __('Address') ?>: <?php echo $this->escapeHtml($location->getAddress()); ?></div>
-				<?php }?> 
+					<div><strong><?php echo __('Endereço') ?>:</strong> <?php echo $this->escapeHtml($location->getAddress()); ?></div>
+				<?php }?>
+				<?php if (trim($location->getPhone())) { ?>
+					<div class="store-phone"><strong><?php echo __('Telefone') ?>:</strong> <a href="tel:<?php echo preg_replace('/[^0-9]/', '', $location->getPhone()); ?>"><?php echo $this->escapeHtml($location->getPhone()); ?></a></div>
+				<?php }?>
 				
-				<div class="view-detail"><a href="<?php echo $this->getUrl('store-locator/store/view/key/'.$location->getId()) ?>"><?php echo __('View Detail') ?></a></div>
+				<div class="store-actions">
+					<a href="<?php echo $this->getUrl('store-locator/store/view/key/'.$location->getId()) ?>" class="btn-view-detail"><?php echo __('Ver Detalhes') ?></a>
+					<?php if (trim($location->getPhone())) { 
+						$cleanPhone = preg_replace('/[^0-9]/', '', $location->getPhone());
+						if (strlen($cleanPhone) >= 10) { ?>
+							<a href="https://wa.me/55<?php echo $cleanPhone; ?>" target="_blank" class="btn-whatsapp" title="Chamar no WhatsApp">
+								<i class="fa fa-whatsapp"></i> WhatsApp
+							</a>
+					<?php }} ?>
+				</div>
 			</div>
 			<?php $time_today = $block->getTimeStoreLocator($location->getStoreId()) ?>
 			<div class="today_time">
-                <?= __('Opening Hours:')?> 
-				<?php if($time_today['today'] == 0){?><?php echo __('Closed') ?><?php }else{ ?><?php if($time_today['time_today']->from->hours < 10){echo '0'.$time_today['time_today']->from->hours;} ?> : <?php if($time_today['time_today']->from->minutes < 10){echo '0'.$time_today['time_today']->from->minutes;} ?> AM - <?php if($time_today['time_today']->to->hours < 10){echo '0'.$time_today['time_today']->to->hours;} ?> : <?php if($time_today['time_today']->to->minutes < 10){echo '0'.$time_today['time_today']->to->minutes;} ?> PM <?php }?>
+				<i class="fa fa-clock-o"></i>
+                <?= __('Horário: ')?> 
+				<?php if($time_today['today'] == 0){?>
+					<span class="closed-label"><?php echo __('Fechado Hoje') ?></span>
+				<?php }else{ ?>
+					<span class="open-hours">
+						<?php echo str_pad($time_today['time_today']->from->hours, 2, '0', STR_PAD_LEFT); ?>:<?php echo str_pad($time_today['time_today']->from->minutes, 2, '0', STR_PAD_LEFT); ?>
+						 - 
+						<?php echo str_pad($time_today['time_today']->to->hours, 2, '0', STR_PAD_LEFT); ?>:<?php echo str_pad($time_today['time_today']->to->minutes, 2, '0', STR_PAD_LEFT); ?>
+					</span>
+				<?php }?>
 				<div class="locator_arrow"></div>
 			</div>
 			<div class="all_today_time" style="display:none;">

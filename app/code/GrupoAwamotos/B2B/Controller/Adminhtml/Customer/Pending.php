@@ -8,9 +8,10 @@ namespace GrupoAwamotos\B2B\Controller\Adminhtml\Customer;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
-class Pending extends Action
+class Pending extends Action implements HttpGetActionInterface
 {
     const ADMIN_RESOURCE = 'GrupoAwamotos_B2B::customer_approval';
 

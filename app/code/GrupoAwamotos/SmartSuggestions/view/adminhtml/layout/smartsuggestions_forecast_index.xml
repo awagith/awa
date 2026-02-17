@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="GrupoAwamotos_SmartSuggestions::css/dashboard.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="GrupoAwamotos\SmartSuggestions\Block\Adminhtml\Forecast\Index"
+                   name="smart.forecast.index"
+                   template="GrupoAwamotos_SmartSuggestions::forecast/index.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

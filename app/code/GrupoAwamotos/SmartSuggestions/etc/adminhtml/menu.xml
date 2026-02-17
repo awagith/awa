@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <!-- SmartSuggestions under Grupo Awamotos (to be deprecated) -->
+        <add id="GrupoAwamotos_SmartSuggestions::smart"
+             title="Sugestoes Inteligentes"
+             module="GrupoAwamotos_SmartSuggestions"
+             parent="GrupoAwamotos_ERPIntegration::grupo_awamotos"
+             sortOrder="40"
+             resource="GrupoAwamotos_SmartSuggestions::smart"/>
+
+        <add id="GrupoAwamotos_SmartSuggestions::dashboard"
+             title="Dashboard"
+             module="GrupoAwamotos_SmartSuggestions"
+             parent="GrupoAwamotos_SmartSuggestions::smart"
+             sortOrder="1"
+             action="smartsuggestions/dashboard/index"
+             resource="GrupoAwamotos_SmartSuggestions::dashboard"/>
+
+        <add id="GrupoAwamotos_SmartSuggestions::rfm"
+             title="Analise RFM"
+             module="GrupoAwamotos_SmartSuggestions"
+             parent="GrupoAwamotos_SmartSuggestions::smart"
+             sortOrder="5"
+             action="smartsuggestions/rfm/index"
+             resource="GrupoAwamotos_SmartSuggestions::rfm"/>
+
+        <add id="GrupoAwamotos_SmartSuggestions::suggestions"
+             title="Sugestoes de Carrinho"
+             module="GrupoAwamotos_SmartSuggestions"
+             parent="GrupoAwamotos_SmartSuggestions::smart"
+             sortOrder="10"
+             action="smartsuggestions/suggestions/index"
+             resource="GrupoAwamotos_SmartSuggestions::suggestions"/>
+
+        <add id="GrupoAwamotos_SmartSuggestions::forecast"
+             title="Projecoes"
+             module="GrupoAwamotos_SmartSuggestions"
+             parent="GrupoAwamotos_SmartSuggestions::smart"
+             sortOrder="15"
+             action="smartsuggestions/forecast/index"
+             resource="GrupoAwamotos_SmartSuggestions::forecast"/>
+
+        <add id="GrupoAwamotos_SmartSuggestions::history"
+             title="Historico"
+             module="GrupoAwamotos_SmartSuggestions"
+             parent="GrupoAwamotos_SmartSuggestions::smart"
+             sortOrder="20"
+             action="smartsuggestions/history/index"
+             resource="GrupoAwamotos_SmartSuggestions::history"/>
+    </menu>
+</config>

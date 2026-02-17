@@ -1,0 +1,361 @@
+<?php
+/**
+ * Smart Suggestions Dashboard
+ *
+ * @var \GrupoAwamotos\SmartSuggestions\Block\Adminhtml\Dashboard $block
+ */
+
+$projection = $block->getMonthProjection();
+$nextMonth = $block->getNextMonthProjection();
+$rfmSegments = $block->getRfmSegments();
+$topCustomers = $block->getTopCustomers(5);
+$atRiskCustomers = $block->getAtRiskCustomers(5);
+?>
+
+<div class="smart-dashboard">
+    <!-- Header -->
+    <div class="smart-dashboard-header">
+        <h1>Dashboard - Sugestões Inteligentes</h1>
+        <p>Análise de clientes, projeções de vendas e oportunidades</p>
+    </div>
+
+    <!-- KPI Cards -->
+    <div class="smart-kpi-grid">
+        <!-- Month Projection -->
+        <div class="smart-kpi-card smart-kpi-primary">
+            <div class="smart-kpi-icon">📈</div>
+            <div class="smart-kpi-content">
+                <div class="smart-kpi-value"><?= $block->formatPrice($projection['projection']['realistic'] ?? 0) ?></div>
+                <div class="smart-kpi-label">Projeção do Mês</div>
+                <div class="smart-kpi-detail">
+                    <?php if (isset($projection['comparison']['vs_last_month'])): ?>
+                        <?php $change = $projection['comparison']['vs_last_month']; ?>
+                        <span class="<?= $change >= 0 ? 'positive' : 'negative' ?>">
+                            <?= $change >= 0 ? '▲' : '▼' ?> <?= abs($change) ?>% vs mês anterior
+                        </span>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actual Sales -->
+        <div class="smart-kpi-card smart-kpi-success">
+            <div class="smart-kpi-icon">💰</div>
+            <div class="smart-kpi-content">
+                <div class="smart-kpi-value"><?= $block->formatPrice($projection['actual_sales'] ?? 0) ?></div>
+                <div class="smart-kpi-label">Vendas Realizadas</div>
+                <div class="smart-kpi-detail">
+                    <?= (float)($projection['progress_percentage'] ?? 0) ?>% da projeção
+                </div>
+            </div>
+        </div>
+
+        <!-- Total Customers -->
+        <div class="smart-kpi-card smart-kpi-info">
+            <div class="smart-kpi-icon">👥</div>
+            <div class="smart-kpi-content">
+                <?php $totalCustomers = array_sum(array_column($rfmSegments, 'count')); ?>
+                <div class="smart-kpi-value"><?= $block->formatNumber($totalCustomers) ?></div>
+                <div class="smart-kpi-label">Clientes Analisados</div>
+                <div class="smart-kpi-detail">
+                    Segmentação RFM ativa
+                </div>
+            </div>
+        </div>
+
+        <!-- At Risk Alert -->
+        <div class="smart-kpi-card smart-kpi-warning">
+            <div class="smart-kpi-icon">⚠️</div>
+            <div class="smart-kpi-content">
+                <?php
+                $atRiskCount = 0;
+                foreach ($rfmSegments as $seg) {
+                    if (in_array($seg['segment'], ['At Risk', "Can't Lose"])) {
+                        $atRiskCount += $seg['count'];
+                    }
+                }
+                ?>
+                <div class="smart-kpi-value"><?= $block->formatNumber($atRiskCount) ?></div>
+                <div class="smart-kpi-label">Clientes em Risco</div>
+                <div class="smart-kpi-detail">
+                    Requerem atenção urgente
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <?php if (isset($projection['goal'])): ?>
+    <div class="smart-progress-section">
+        <div class="smart-progress-header">
+            <span>Progresso para Meta: <?= $block->formatPrice($projection['goal']['value']) ?></span>
+            <span><?= (int)($projection['days_remaining'] ?? 0) ?> dias restantes</span>
+        </div>
+        <div class="smart-progress-bar">
+            <div class="smart-progress-fill" style="width: <?= min(100, $projection['progress_percentage'] ?? 0) ?>%"></div>
+        </div>
+        <div class="smart-progress-footer">
+            <span>Realizado: <?= $block->formatPrice($projection['actual_sales'] ?? 0) ?></span>
+            <span>Falta: <?= $block->formatPrice($projection['goal']['remaining'] ?? 0) ?></span>
+            <span>Meta diária: <?= $block->formatPrice($projection['goal']['daily_target'] ?? 0) ?></span>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Charts Row -->
+    <div class="smart-charts-row">
+        <!-- Sales Trend Chart -->
+        <div class="smart-chart-card">
+            <div class="smart-chart-header">
+                <h3>Tendência de Vendas (30 dias)</h3>
+                <a href="<?= $block->escapeUrl($block->getForecastUrl()) ?>" class="action-default">Ver Projeções</a>
+            </div>
+            <div id="sales-trend-chart" class="smart-chart"></div>
+        </div>
+
+        <!-- RFM Segments Chart -->
+        <div class="smart-chart-card">
+            <div class="smart-chart-header">
+                <h3>Segmentação de Clientes (RFM)</h3>
+                <a href="<?= $block->escapeUrl($block->getRfmUrl()) ?>" class="action-default">Ver Análise</a>
+            </div>
+            <div id="rfm-segments-chart" class="smart-chart"></div>
+        </div>
+    </div>
+
+    <!-- Tables Row -->
+    <div class="smart-tables-row">
+        <!-- Top Customers -->
+        <div class="smart-table-card">
+            <div class="smart-table-header">
+                <h3>🏆 Top Clientes (Champions)</h3>
+            </div>
+            <table class="data-grid smart-mini-grid">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Segmento</th>
+                        <th class="_right">Valor Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($topCustomers as $customer): ?>
+                    <tr>
+                        <td>
+                            <strong><?= $block->escapeHtml($customer['trade_name'] ?: $customer['customer_name']) ?></strong>
+                            <small class="customer-location"><?= $block->escapeHtml($customer['city'] . '/' . $customer['state']) ?></small>
+                        </td>
+                        <td>
+                            <span class="smart-badge" style="background-color: <?= $this->escapeHtml($rfmSegments[0]['color'] ?? '#00E396') ?>20; color: <?= $this->escapeHtml($rfmSegments[0]['color'] ?? '#00E396') ?>">
+                                <?= $block->escapeHtml($customer['segment']) ?>
+                            </span>
+                        </td>
+                        <td class="_right"><strong><?= $block->formatPrice($customer['monetary']) ?></strong></td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- At Risk Customers -->
+        <div class="smart-table-card smart-table-warning">
+            <div class="smart-table-header">
+                <h3>⚠️ Clientes em Risco</h3>
+                <a href="<?= $block->escapeUrl($block->getSuggestionsUrl()) ?>" class="action-default">Gerar Sugestões</a>
+            </div>
+            <table class="data-grid smart-mini-grid">
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Dias sem Compra</th>
+                        <th class="_right">Valor Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($atRiskCustomers)): ?>
+                    <tr>
+                        <td colspan="3" class="empty-text">Nenhum cliente em risco identificado</td>
+                    </tr>
+                    <?php else: ?>
+                    <?php foreach ($atRiskCustomers as $customer): ?>
+                    <tr>
+                        <td>
+                            <strong><?= $block->escapeHtml($customer['trade_name'] ?: $customer['customer_name']) ?></strong>
+                            <small class="customer-location"><?= $block->escapeHtml($customer['city'] . '/' . $customer['state']) ?></small>
+                        </td>
+                        <td>
+                            <span class="smart-badge smart-badge-warning"><?= (int)$customer['recency_days'] ?> dias</span>
+                        </td>
+                        <td class="_right"><strong><?= $block->formatPrice($customer['monetary']) ?></strong></td>
+                    </tr>
+                    <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- RFM Segments Summary -->
+    <div class="smart-segments-summary">
+        <h3>Resumo por Segmento</h3>
+        <div class="smart-segments-grid">
+            <?php foreach ($rfmSegments as $segment): ?>
+            <div class="smart-segment-card" style="border-left-color: <?= $block->escapeHtml($segment['color']) ?>">
+                <div class="smart-segment-header">
+                    <span class="smart-segment-name"><?= $block->escapeHtml($segment['segment']) ?></span>
+                    <span class="smart-segment-count"><?= $block->formatNumber($segment['count']) ?></span>
+                </div>
+                <div class="smart-segment-stats">
+                    <div class="smart-segment-stat">
+                        <span class="stat-label">Receita Total</span>
+                        <span class="stat-value"><?= $block->formatPrice($segment['total_revenue']) ?></span>
+                    </div>
+                    <div class="smart-segment-stat">
+                        <span class="stat-label">Ticket Médio</span>
+                        <span class="stat-value"><?= $block->formatPrice($segment['avg_order_value'] ?? 0) ?></span>
+                    </div>
+                    <div class="smart-segment-stat">
+                        <span class="stat-label">Recência Média</span>
+                        <span class="stat-value"><?= round($segment['avg_recency'] ?? 0) ?> dias</span>
+                    </div>
+                </div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- Next Month Projection -->
+    <?php if (!empty($nextMonth)): ?>
+    <div class="smart-next-month">
+        <h3>📅 Projeção - <?= $block->escapeHtml($nextMonth['month_name'] ?? '') ?></h3>
+        <div class="smart-next-month-content">
+            <div class="smart-next-month-main">
+                <span class="projection-value"><?= $block->formatPrice($nextMonth['projection'] ?? 0) ?></span>
+                <span class="projection-range">
+                    Faixa: <?= $block->formatPrice($nextMonth['range']['min'] ?? 0) ?>
+                    - <?= $block->formatPrice($nextMonth['range']['max'] ?? 0) ?>
+                </span>
+            </div>
+            <div class="smart-next-month-factors">
+                <div class="factor">
+                    <span class="factor-label">Índice Sazonal</span>
+                    <span class="factor-value"><?= number_format(($nextMonth['seasonal_factor'] ?? 1) * 100, 1) ?>%</span>
+                </div>
+                <div class="factor">
+                    <span class="factor-label">Tendência</span>
+                    <span class="factor-value <?= ($nextMonth['growth_factor'] ?? 0) >= 0 ? 'positive' : 'negative' ?>">
+                        <?= ($nextMonth['growth_factor'] ?? 0) >= 0 ? '+' : '' ?><?= number_format(($nextMonth['growth_factor'] ?? 0) * 100, 1) ?>%
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+</div>
+
+<!-- ApexCharts Library -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.44.0/dist/apexcharts.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Sales Trend Chart
+    var salesData = <?= /* @noEscape */ $block->getSalesTrendData() ?>;
+
+    if (salesData.dates && salesData.dates.length > 0) {
+        var salesOptions = {
+            chart: {
+                type: 'area',
+                height: 320,
+                toolbar: { show: true, tools: { download: true, zoom: true, pan: true } },
+                animations: { enabled: true, easing: 'easeinout', speed: 800 }
+            },
+            series: [
+                { name: 'Vendas', data: salesData.sales },
+                { name: 'Média Móvel (7d)', data: salesData.moving_avg }
+            ],
+            xaxis: {
+                categories: salesData.dates,
+                type: 'datetime',
+                labels: { datetimeFormatter: { day: 'dd/MM' } }
+            },
+            yaxis: {
+                labels: {
+                    formatter: function(val) {
+                        return 'R$ ' + (val / 1000).toFixed(0) + 'K';
+                    }
+                }
+            },
+            stroke: { curve: 'smooth', width: [2, 2], dashArray: [0, 5] },
+            fill: {
+                type: 'gradient',
+                gradient: { shadeIntensity: 1, opacityFrom: 0.5, opacityTo: 0.1 }
+            },
+            colors: ['#00E396', '#FEB019'],
+            dataLabels: { enabled: false },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return 'R$ ' + val.toLocaleString('pt-BR', {minimumFractionDigits: 2});
+                    }
+                }
+            },
+            legend: { position: 'top' }
+        };
+
+        var salesChart = new ApexCharts(document.querySelector("#sales-trend-chart"), salesOptions);
+        salesChart.render();
+    }
+
+    // RFM Segments Chart
+    var rfmData = <?= /* @noEscape */ $block->getRfmChartData() ?>;
+
+    if (rfmData.labels && rfmData.labels.length > 0) {
+        var rfmOptions = {
+            chart: {
+                type: 'donut',
+                height: 320
+            },
+            series: rfmData.series,
+            labels: rfmData.labels,
+            colors: rfmData.colors,
+            legend: {
+                position: 'right',
+                fontSize: '12px'
+            },
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '65%',
+                        labels: {
+                            show: true,
+                            total: {
+                                show: true,
+                                label: 'Total Clientes',
+                                formatter: function(w) {
+                                    return w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString('pt-BR');
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function(val, opts) {
+                    return opts.w.config.series[opts.seriesIndex];
+                }
+            },
+            tooltip: {
+                y: {
+                    formatter: function(val) {
+                        return val + ' clientes';
+                    }
+                }
+            }
+        };
+
+        var rfmChart = new ApexCharts(document.querySelector("#rfm-segments-chart"), rfmOptions);
+        rfmChart.render();
+    }
+});
+</script>

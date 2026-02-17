@@ -10,6 +10,19 @@ use Magento\Payment\Model\Method\AbstractMethod;
 use Magento\Quote\Api\Data\CartInterface;
 use Magento\Framework\DataObject;
 
+/**
+ * "A Combinar" offline payment method.
+ *
+ * Extends AbstractMethod which is marked @deprecated in favour of the Payment
+ * Gateway Adapter pattern. However, Magento 2.4.8-p3 core offline methods
+ * (Checkmo, Banktransfer, Cashondelivery, Purchaseorder) still extend
+ * AbstractMethod. Migrating this trivial no-op authorize to the full Adapter
+ * pattern (~150 lines of XML virtual types) adds complexity with zero
+ * functional gain. This will be revisited if/when Magento removes
+ * AbstractMethod in a future major release.
+ *
+ * @SuppressWarnings(PHPMD.DeprecatedCode)
+ */
 class ACombinar extends AbstractMethod
 {
     const CODE = 'acombinar';
@@ -75,7 +88,7 @@ class ACombinar extends AbstractMethod
      * @param CartInterface|null $quote
      * @return bool
      */
-    public function isAvailable(CartInterface $quote = null): bool
+    public function isAvailable(?CartInterface $quote = null): bool
     {
         return parent::isAvailable($quote);
     }

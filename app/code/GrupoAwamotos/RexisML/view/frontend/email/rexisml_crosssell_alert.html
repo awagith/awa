@@ -1,0 +1,80 @@
+<!--
+/**
+ * Template de Email - Alerta de Oportunidades de Cross-sell
+ */
+-->
+<!--@subject REXIS ML - Oportunidades de Cross-sell Detectadas @-->
+<!--@vars {
+    "var opportunities":"Array de oportunidades",
+    "var total_value":"Valor total potencial",
+    "var alert_date":"Data do alerta"
+} @-->
+
+{{template config_path="design/email/header_template"}}
+
+<table class="message-info">
+    <tr>
+        <td>
+            <h1 style="color: #10b981; font-size: 24px; margin: 0 0 20px;">
+                Cross-sell - REXIS ML
+            </h1>
+            <p style="font-size: 16px; line-height: 24px; margin: 0 0 20px;">
+                O sistema REXIS ML identificou <strong>novas oportunidades de cross-sell</strong>
+                com alto score que podem aumentar o ticket medio dos seus clientes.
+            </p>
+            <p style="font-size: 14px; color: #666; margin: 0 0 30px;">
+                <strong>Data do Alerta:</strong> {{var alert_date}}<br>
+                <strong>Valor Potencial Total:</strong> R$ {{var total_value}}
+            </p>
+        </td>
+    </tr>
+</table>
+
+<table class="message-details" style="width: 100%; border-collapse: collapse; margin: 0 0 30px;">
+    <thead>
+        <tr style="background: #f3f4f6;">
+            <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb;">Cliente</th>
+            <th style="padding: 12px; text-align: left; border: 1px solid #e5e7eb;">Produto Sugerido</th>
+            <th style="padding: 12px; text-align: center; border: 1px solid #e5e7eb;">Score ML</th>
+            <th style="padding: 12px; text-align: right; border: 1px solid #e5e7eb;">Valor Previsto</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{var opportunities_html}}
+    </tbody>
+</table>
+
+<table class="message-cta" style="width: 100%; margin: 0 0 30px;">
+    <tr>
+        <td style="text-align: center; padding: 20px; background: #d1fae5; border-radius: 8px;">
+            <p style="margin: 0 0 15px; font-size: 14px; font-weight: 600; color: #065f46;">
+                Acao Recomendada
+            </p>
+            <p style="margin: 0 0 15px; font-size: 13px; color: #064e3b;">
+                Inclua esses produtos nas campanhas de marketing direcionadas<br>
+                ou configure ofertas de bundle/kit para esses clientes.
+            </p>
+            <a href="{{store url='admin/rexisml/dashboard/index'}}"
+               style="display: inline-block; padding: 12px 24px; background: #10b981; color: #fff; text-decoration: none; border-radius: 6px; font-weight: 600;">
+                Acessar Dashboard REXIS ML
+            </a>
+        </td>
+    </tr>
+</table>
+
+<table class="message-footer" style="width: 100%; margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+    <tr>
+        <td style="font-size: 12px; color: #9ca3af; line-height: 18px;">
+            <p style="margin: 0 0 10px;">
+                Este e um alerta automatico gerado pelo sistema REXIS ML.<br>
+                Os dados sao baseados em analise de Market Basket Analysis (Algoritmo Apriori).
+            </p>
+            <p style="margin: 0;">
+                <strong>Score ML:</strong> Probabilidade do cliente comprar o produto sugerido (0-100%)<br>
+                <strong>Lift:</strong> Forca da associacao entre produtos (>1 indica correlacao positiva)
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

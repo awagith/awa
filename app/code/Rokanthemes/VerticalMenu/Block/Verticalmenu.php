@@ -192,8 +192,6 @@ class Verticalmenu extends \Magento\Framework\View\Element\Template
         $categories = $this->getStoreCategories(true,false,true);
         
         $this->_verticalmenuConfig = $this->_helper->getConfig('verticalmenu');
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-		$helper = $objectManager->get('Rokanthemes\VerticalMenu\Helper\Data');
         $max_level = $this->_verticalmenuConfig['general']['max_level'];
         $html .= $this->getCustomBlockHtml('before');
         foreach($categories as $category) {
@@ -208,7 +206,7 @@ class Verticalmenu extends \Magento\Framework\View\Element\Template
             if(!$vc_menu_hide_item) {
                 $children = $this->getActiveChildCategories($category);
                 $vc_menu_cat_label = $cat_model->getData('vc_menu_cat_label');
-                $vc_menu_icon_img = $helper->getVerticalIconimageUrl($cat_model);
+                $vc_menu_icon_img = $this->_helper->getVerticalIconimageUrl($cat_model);
                 $vc_menu_font_icon = $cat_model->getData('vc_menu_font_icon');
                 $vc_menu_cat_columns = $cat_model->getData('vc_menu_cat_columns');
                 $vc_menu_float_type = $cat_model->getData('vc_menu_float_type');
@@ -279,6 +277,23 @@ class Verticalmenu extends \Magento\Framework\View\Element\Template
                     }
                     if(($menu_type=="fullwidth" || $menu_type=="staticwidth") && $menu_bottom_content) {
                         $html .= '<div class="menu-bottom-block">'.$this->getBlockContent($menu_bottom_content).'</div>';
+                    } elseif (($menu_type=="fullwidth" || $menu_type=="staticwidth") && count($children) > 0) {
+                        // Hybrid fallback: show category image as promotional banner
+                        $catImage = $cat_model->getData('image');
+                        if ($catImage) {
+                            try {
+                                $catImageUrl = $cat_model->getImageUrl('image');
+                            } catch (\Exception $e) {
+                                $mediaUrl = $this->_storeManager->getStore()->getBaseUrl(
+                                    \Magento\Framework\UrlInterface::URL_TYPE_MEDIA
+                                );
+                                $catImageUrl = $mediaUrl . 'catalog/category/' . $catImage;
+                            }
+                            $html .= '<div class="menu-bottom-block menu-bottom-block-auto">';
+                            $html .= '<a href="'.$this->_categoryHelper->getCategoryUrl($category).'" class="menu-category-banner">';
+                            $html .= '<img loading="lazy" src="'.$catImageUrl.'" alt="'.htmlspecialchars($category->getName()).'" />';
+                            $html .= '</a></div>';
+                        }
                     }
                     $html .= '</div>';
                 }

@@ -12,9 +12,10 @@ use GrupoAwamotos\B2B\Helper\Config;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Mail\Template\TransportBuilder;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
-class Save extends Action
+class Save extends Action implements HttpPostActionInterface
 {
     const ADMIN_RESOURCE = 'GrupoAwamotos_B2B::quotes';
 

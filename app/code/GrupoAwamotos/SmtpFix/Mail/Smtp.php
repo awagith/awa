@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Copyright © GrupoAwamotos. All rights reserved.
  * Fix para compatibilidade do MagePal Gmail SMTP App com Symfony Mailer no Magento 2.4.8

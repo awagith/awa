@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Pacote de Tradução PT-BR Customizado
+ * Awamotos.com
+ */
+-->
+<language xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="urn:magento:framework:App/Language/package.xsd">
+    <code>pt_BR</code>
+    <vendor>awamotos</vendor>
+    <package>pt_br</package>
+    <sort_order>100</sort_order>
+    <use vendor="magento" package="pt_br"/>
+</language>

@@ -1,12 +1,15 @@
 <?php
+declare(strict_types=1);
+
 namespace GrupoAwamotos\Fitment\Controller\Fitment;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\View\Result\PageFactory;
 
-class Index extends Action
+class Index extends Action implements HttpGetActionInterface
 {
     private CollectionFactory $collectionFactory;
     private PageFactory $pageFactory;

@@ -5,6 +5,11 @@ namespace GrupoAwamotos\Fitment\Cron;
 
 use Psr\Log\LoggerInterface;
 
+/**
+ * Cron job para reconstrução completa do índice FULLTEXT fallback (diário 03:15).
+ *
+ * Executa como sub-processo para evitar que exit() do script mate o cron scheduler.
+ */
 class FallbackRebuild
 {
     private LoggerInterface $logger;
@@ -16,16 +21,28 @@ class FallbackRebuild
 
     public function execute(): void
     {
-        try {
-            if (!defined('BP')) {
-                define('BP', dirname(__DIR__, 4));
-            }
-            require BP . '/app/bootstrap.php';
-            // Simula argv para rebuild com truncate diário
-            $GLOBALS['argv'] = ['fallback_search_rebuild.php', '--truncate'];
-            require BP . '/scripts/fallback_search_rebuild.php';
-        } catch (\Throwable $e) {
-            $this->logger->error('[Fitment] Fallback rebuild falhou: ' . $e->getMessage());
+        $script = BP . '/scripts/fallback_search_rebuild.php';
+
+        if (!file_exists($script)) {
+            $this->logger->error('[Fitment] Script não encontrado: ' . $script);
+            return;
+        }
+
+        $phpBin = PHP_BINARY ?: '/usr/bin/php';
+        $cmd = escapeshellarg($phpBin) . ' ' . escapeshellarg($script) . ' --truncate 2>&1';
+
+        $output = [];
+        $exitCode = 0;
+        exec($cmd, $output, $exitCode);
+
+        $outputStr = implode("\n", $output);
+
+        if ($exitCode !== 0) {
+            $this->logger->error(
+                '[Fitment] Fallback rebuild falhou (exit ' . $exitCode . '): ' . $outputStr
+            );
+        } else {
+            $this->logger->info('[Fitment] Fallback rebuild OK: ' . $outputStr);
         }
     }
 }

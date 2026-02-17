@@ -1,0 +1,310 @@
+<?php
+/** @var \Ayo\Curriculo\Block\Adminhtml\Submission\View $block */
+$submission = $block->getSubmission();
+if (!$submission->getId()) {
+    return;
+}
+?>
+<style>
+    .curriculo-view-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .curriculo-view-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #E53935;
+    }
+    .curriculo-view-header h2 {
+        margin: 0;
+        font-size: 24px;
+        color: #333;
+    }
+    .curriculo-tracking-code {
+        background: #f5f5f5;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-family: monospace;
+        font-size: 16px;
+        font-weight: bold;
+        color: #E53935;
+    }
+    .curriculo-section {
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .curriculo-section h3 {
+        margin: 0 0 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+        color: #333;
+        font-size: 16px;
+    }
+    .curriculo-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    .curriculo-field {
+        margin-bottom: 10px;
+    }
+    .curriculo-field label {
+        display: block;
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .curriculo-field .value {
+        font-size: 15px;
+        color: #333;
+    }
+    .curriculo-field .value a {
+        color: #1976d2;
+        text-decoration: none;
+    }
+    .curriculo-field .value a:hover {
+        text-decoration: underline;
+    }
+    .curriculo-message {
+        background: #fafafa;
+        padding: 15px;
+        border-radius: 6px;
+        white-space: pre-wrap;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+    .curriculo-status-badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 15px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .curriculo-status-badge.pending { background: #fff3e0; color: #e65100; }
+    .curriculo-status-badge.reviewing { background: #e3f2fd; color: #1565c0; }
+    .curriculo-status-badge.interview { background: #f3e5f5; color: #7b1fa2; }
+    .curriculo-status-badge.approved { background: #e8f5e9; color: #2e7d32; }
+    .curriculo-status-badge.rejected { background: #ffebee; color: #c62828; }
+    .curriculo-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    .curriculo-actions button,
+    .curriculo-actions a.action-default {
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-size: 14px;
+        text-decoration: none;
+        cursor: pointer;
+        border: none;
+    }
+    .curriculo-actions .action-primary {
+        background: #E53935;
+        color: #fff;
+    }
+    .curriculo-actions .action-secondary {
+        background: #1976d2;
+        color: #fff;
+    }
+    .curriculo-actions .action-default {
+        background: #f5f5f5;
+        color: #333;
+        border: 1px solid #ddd;
+    }
+    .status-form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .status-form select {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+</style>
+
+<div class="curriculo-view-container">
+    <div class="curriculo-view-header">
+        <h2><?= $block->escapeHtml(__('Detalhes da Candidatura')) ?></h2>
+        <span class="curriculo-tracking-code"><?= $block->escapeHtml($submission->getData('tracking_code')) ?></span>
+    </div>
+
+    <div class="curriculo-section">
+        <h3><?= $block->escapeHtml(__('Status da Candidatura')) ?></h3>
+        <form method="post" action="<?= $block->escapeUrl($block->getSaveStatusUrl()) ?>" class="status-form">
+            <?= $block->getBlockHtml('formkey') ?>
+            <span class="curriculo-status-badge <?= $block->escapeHtmlAttr($submission->getData('status')) ?>">
+                <?= $block->escapeHtml($block->getStatusLabel($submission->getData('status') ?: 'pending')) ?>
+            </span>
+            <select name="status">
+                <?php foreach ($block->getStatusOptions() as $option): ?>
+                    <option value="<?= $block->escapeHtmlAttr($option['value']) ?>" 
+                            <?= $option['value'] === $submission->getData('status') ? 'selected' : '' ?>>
+                        <?= $block->escapeHtml($option['label']) ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+            <button type="submit" class="action-default"><?= $block->escapeHtml(__('Atualizar Status')) ?></button>
+        </form>
+    </div>
+
+    <div class="curriculo-section">
+        <h3><?= $block->escapeHtml(__('Dados Pessoais')) ?></h3>
+        <div class="curriculo-grid">
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('Nome')) ?></label>
+                <div class="value"><?= $block->escapeHtml($submission->getData('name')) ?></div>
+            </div>
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('Email')) ?></label>
+                <div class="value">
+                    <a href="mailto:<?= $block->escapeHtmlAttr($submission->getData('email')) ?>">
+                        <?= $block->escapeHtml($submission->getData('email')) ?>
+                    </a>
+                </div>
+            </div>
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('Telefone')) ?></label>
+                <div class="value">
+                    <a href="tel:<?= $block->escapeHtmlAttr(preg_replace('/\D/', '', $submission->getData('phone') ?: '')) ?>">
+                        <?= $block->escapeHtml($submission->getData('phone')) ?>
+                    </a>
+                </div>
+            </div>
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('CPF')) ?></label>
+                <div class="value"><?= $block->escapeHtml($submission->getData('cpf') ?: '-') ?></div>
+            </div>
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('CEP')) ?></label>
+                <div class="value"><?= $block->escapeHtml($submission->getData('cep') ?: '-') ?></div>
+            </div>
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('Cidade/Estado')) ?></label>
+                <div class="value">
+                    <?= $block->escapeHtml(($submission->getData('city') ?: '-') . ' / ' . ($submission->getData('state') ?: '-')) ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="curriculo-section">
+        <h3><?= $block->escapeHtml(__('Informações Profissionais')) ?></h3>
+        <div class="curriculo-grid">
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('Área de Interesse')) ?></label>
+                <div class="value"><?= $block->escapeHtml($submission->getData('work_area') ?: '-') ?></div>
+            </div>
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('Cargo Desejado')) ?></label>
+                <div class="value"><?= $block->escapeHtml($submission->getData('position') ?: '-') ?></div>
+            </div>
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('Nível de Experiência')) ?></label>
+                <div class="value"><?= $block->escapeHtml($submission->getData('experience_level') ?: '-') ?></div>
+            </div>
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('CNH')) ?></label>
+                <div class="value"><?= $block->escapeHtml($submission->getData('cnh') ?: '-') ?></div>
+            </div>
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('Disponibilidade')) ?></label>
+                <div class="value"><?= $block->escapeHtml($submission->getData('availability') ?: '-') ?></div>
+            </div>
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('Tipo de Contrato')) ?></label>
+                <div class="value"><?= $block->escapeHtml($submission->getData('contract_type') ?: '-') ?></div>
+            </div>
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('Pretensão Salarial')) ?></label>
+                <div class="value"><?= $block->escapeHtml($submission->getData('salary_expectation') ?: '-') ?></div>
+            </div>
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('Como nos conheceu')) ?></label>
+                <div class="value"><?= $block->escapeHtml($submission->getData('referral_source') ?: '-') ?></div>
+            </div>
+        </div>
+        <?php $specialties = $submission->getData('specialties'); ?>
+        <?php if ($specialties): ?>
+        <div class="curriculo-field" style="margin-top: 15px;">
+            <label><?= $block->escapeHtml(__('Especialidades')) ?></label>
+            <div class="value" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 5px;">
+                <?php foreach (explode(',', $specialties) as $spec): ?>
+                    <span style="background: #FFEBEE; color: #C62828; padding: 4px 12px; border-radius: 15px; font-size: 12px; font-weight: 500;">
+                        <?= $block->escapeHtml(trim($spec)) ?>
+                    </span>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+        <div class="curriculo-grid" style="margin-top: 15px;">
+            <?php if ($submission->getData('linkedin')): ?>
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('LinkedIn')) ?></label>
+                <div class="value">
+                    <a href="<?= $block->escapeUrl($submission->getData('linkedin')) ?>" target="_blank">
+                        <?= $block->escapeHtml($submission->getData('linkedin')) ?>
+                    </a>
+                </div>
+            </div>
+            <?php endif; ?>
+            <?php if ($submission->getData('portfolio')): ?>
+            <div class="curriculo-field">
+                <label><?= $block->escapeHtml(__('Portfólio')) ?></label>
+                <div class="value">
+                    <a href="<?= $block->escapeUrl($submission->getData('portfolio')) ?>" target="_blank">
+                        <?= $block->escapeHtml($submission->getData('portfolio')) ?>
+                    </a>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <?php if ($submission->getData('message')): ?>
+    <div class="curriculo-section">
+        <h3><?= $block->escapeHtml(__('Mensagem / Apresentação')) ?></h3>
+        <div class="curriculo-message"><?= $block->escapeHtml($submission->getData('message')) ?></div>
+    </div>
+    <?php endif; ?>
+
+    <div class="curriculo-section">
+        <h3><?= $block->escapeHtml(__('Currículo Anexado')) ?></h3>
+        <div class="curriculo-field">
+            <label><?= $block->escapeHtml(__('Arquivo')) ?></label>
+            <div class="value">
+                <?= $block->escapeHtml($submission->getData('file_name') ?: 'Não disponível') ?>
+                <?php if ($submission->getData('file_path')): ?>
+                    <a href="<?= $block->escapeUrl($block->getDownloadUrl()) ?>" class="action-secondary" style="margin-left: 10px; padding: 5px 10px; font-size: 12px;">
+                        <?= $block->escapeHtml(__('⬇ Baixar')) ?>
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+        <div class="curriculo-field">
+            <label><?= $block->escapeHtml(__('Data de Envio')) ?></label>
+            <div class="value"><?= $block->escapeHtml($submission->getData('created_at')) ?></div>
+        </div>
+    </div>
+
+    <div class="curriculo-actions">
+        <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action-default">
+            <?= $block->escapeHtml(__('← Voltar para Lista')) ?>
+        </a>
+        <?php if ($submission->getData('file_path')): ?>
+        <a href="<?= $block->escapeUrl($block->getDownloadUrl()) ?>" class="action-secondary">
+            <?= $block->escapeHtml(__('⬇ Baixar Currículo')) ?>
+        </a>
+        <?php endif; ?>
+    </div>
+</div>

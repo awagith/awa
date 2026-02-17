@@ -285,6 +285,7 @@
     grid-template-columns: minmax(0, 1fr);
     gap: var(--awa-space-5);
     align-items: start;
+    grid-auto-flow: row;
 }
 
 /* Ajuste fino do ritmo visual: reduz o vão entre hero e serviços/ofertas */
@@ -294,6 +295,12 @@
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers > .container > * {
     min-width: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers > .container > .banner_mid_1,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers > .container > .hot-deal {
+    width: 100%;
+    max-width: 100%;
 }
 
 /* Benefícios/serviços sempre full-width antes das colunas */
@@ -324,6 +331,7 @@
 @media (width >= 992px) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers > .container {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: stretch;
     }
 }
 

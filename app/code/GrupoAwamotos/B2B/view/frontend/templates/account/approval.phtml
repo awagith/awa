@@ -1,0 +1,160 @@
+<?php
+/** @var \GrupoAwamotos\B2B\Block\Account\Approval $block */
+$pendingApprovals = $block->getPendingApprovals();
+$myApprovals = $block->getMyApprovals();
+$canApprove = $block->canApprove();
+?>
+<div class="b2b-approval-page">
+    <div class="b2b-section-header">
+        <h1><?= __('Aprovações de Pedidos') ?></h1>
+        <?php if ($canApprove): ?>
+            <span class="badge badge--approver"><?= __('Você pode aprovar pedidos') ?></span>
+        <?php endif; ?>
+    </div>
+
+    <?php if ($canApprove && $pendingApprovals->getSize() > 0): ?>
+    <!-- Pedidos Aguardando Sua Aprovação -->
+    <div class="approval-section">
+        <h2><?= __('Aguardando Sua Aprovação') ?> <span class="count">(<?= $pendingApprovals->getSize() ?>)</span></h2>
+        <table class="data table table-approvals">
+            <thead>
+                <tr>
+                    <th><?= __('Pedido') ?></th>
+                    <th><?= __('Valor') ?></th>
+                    <th><?= __('Nível Atual') ?></th>
+                    <th><?= __('Nível Requerido') ?></th>
+                    <th><?= __('Data') ?></th>
+                    <th><?= __('Ações') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($pendingApprovals as $approval): ?>
+                <tr>
+                    <td data-th="<?= __('Pedido') ?>">
+                        <?= $block->escapeHtml($block->getOrderIncrementId((int)$approval->getData('order_id'))) ?>
+                    </td>
+                    <td data-th="<?= __('Valor') ?>">
+                        <?= /* @noEscape */ $block->formatPrice((float)$approval->getData('order_total')) ?>
+                    </td>
+                    <td data-th="<?= __('Nível') ?>">
+                        <?= $block->escapeHtml($block->getLevelLabel((int)$approval->getData('current_level'))) ?>
+                    </td>
+                    <td data-th="<?= __('Requerido') ?>">
+                        <?= $block->escapeHtml($block->getLevelLabel((int)$approval->getData('required_level'))) ?>
+                    </td>
+                    <td data-th="<?= __('Data') ?>">
+                        <?= $block->escapeHtml(date('d/m/Y H:i', strtotime($approval->getData('created_at')))) ?>
+                    </td>
+                    <td data-th="<?= __('Ações') ?>" class="approval-actions">
+                        <button type="button" class="btn-approve"
+                                onclick="b2bApprovalAction(<?= (int)$approval->getId() ?>, 'approve')">
+                            <?= __('Aprovar') ?>
+                        </button>
+                        <button type="button" class="btn-reject"
+                                onclick="b2bApprovalAction(<?= (int)$approval->getId() ?>, 'reject')">
+                            <?= __('Rejeitar') ?>
+                        </button>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php endif; ?>
+
+    <!-- Meus Pedidos em Aprovação -->
+    <div class="approval-section">
+        <h2><?= __('Meus Pedidos em Aprovação') ?></h2>
+        <?php if ($myApprovals->getSize() > 0): ?>
+        <table class="data table table-my-approvals">
+            <thead>
+                <tr>
+                    <th><?= __('Pedido') ?></th>
+                    <th><?= __('Valor') ?></th>
+                    <th><?= __('Status') ?></th>
+                    <th><?= __('Nível Atual') ?></th>
+                    <th><?= __('Data') ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($myApprovals as $approval): ?>
+                <tr>
+                    <td data-th="<?= __('Pedido') ?>">
+                        <?= $block->escapeHtml($block->getOrderIncrementId((int)$approval->getData('order_id'))) ?>
+                    </td>
+                    <td data-th="<?= __('Valor') ?>">
+                        <?= /* @noEscape */ $block->formatPrice((float)$approval->getData('order_total')) ?>
+                    </td>
+                    <td data-th="<?= __('Status') ?>">
+                        <span class="approval-status approval-status--<?= $block->escapeHtmlAttr($approval->getData('status')) ?>">
+                            <?= $block->escapeHtml($block->getStatusLabel($approval->getData('status'))) ?>
+                        </span>
+                    </td>
+                    <td data-th="<?= __('Nível') ?>">
+                        <?= $block->escapeHtml($block->getLevelLabel((int)$approval->getData('current_level'))) ?>
+                    </td>
+                    <td data-th="<?= __('Data') ?>">
+                        <?= $block->escapeHtml(date('d/m/Y H:i', strtotime($approval->getData('created_at')))) ?>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+        <?php else: ?>
+            <p class="empty-message"><?= __('Nenhum pedido aguardando aprovação.') ?></p>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script>
+function b2bApprovalAction(approvalId, action) {
+    var comment = '';
+    if (action === 'reject') {
+        comment = prompt('<?= __('Motivo da rejeição:') ?>');
+        if (comment === null) return;
+    }
+
+    fetch('<?= $block->escapeJs($block->getActionUrl()) ?>', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: new URLSearchParams({
+            approval_id: approvalId,
+            action: action,
+            comment: comment,
+            reason: comment,
+            form_key: window.FORM_KEY || ''
+        })
+    })
+    .then(r => r.json())
+    .then(data => {
+        alert(data.message);
+        if (data.success) location.reload();
+    })
+    .catch(() => alert('<?= __('Erro ao processar. Tente novamente.') ?>'));
+}
+</script>
+
+<style>
+.b2b-approval-page .b2b-section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.badge--approver { background: #e3f2fd; color: #1565c0; padding: 4px 12px; border-radius: 12px; font-size: 12px; }
+.approval-section { margin-bottom: 32px; }
+.approval-section h2 { font-size: 18px; margin-bottom: 16px; }
+.approval-section .count { color: #e53935; }
+.table-approvals, .table-my-approvals { width: 100%; border-collapse: collapse; }
+.table-approvals th, .table-my-approvals th { text-align: left; padding: 10px 12px; background: #f5f5f5; border-bottom: 2px solid #ddd; font-size: 13px; text-transform: uppercase; }
+.table-approvals td, .table-my-approvals td { padding: 10px 12px; border-bottom: 1px solid #eee; }
+.approval-actions { display: flex; gap: 6px; }
+.btn-approve { background: #2e7d32; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+.btn-approve:hover { background: #1b5e20; }
+.btn-reject { background: #e53935; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+.btn-reject:hover { background: #c62828; }
+.approval-status { font-size: 12px; padding: 2px 10px; border-radius: 12px; }
+.approval-status--pending { background: #fff3e0; color: #e65100; }
+.approval-status--approved { background: #e8f5e9; color: #2e7d32; }
+.approval-status--rejected { background: #fce4ec; color: #c62828; }
+.approval-status--cancelled { background: #f5f5f5; color: #999; }
+.empty-message { color: #999; text-align: center; padding: 40px; }
+</style>

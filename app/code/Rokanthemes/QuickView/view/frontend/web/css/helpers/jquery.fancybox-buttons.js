@@ -22,7 +22,7 @@
 		defaults : {
 			skipSingle : false, // disables if gallery contains single image
 			position   : 'top', // 'top' or 'bottom'
-			tpl        : '<div id="fancybox-buttons"><ul><li><a class="btnPrev" title="Previous" href="#"></a></li><li><a class="btnPlay" title="Start slideshow" href="#"></a></li><li><a class="btnNext" title="Next" href="#"></a></li><li><a class="btnToggle" title="Toggle size" href="#"></a></li><li><a class="btnClose" title="Close" href="#"></a></li></ul></div>'
+			tpl        : '<div id="fancybox-buttons"><ul><li><a class="btnPrev" title="Previous" href="javascript:;"></a></li><li><a class="btnPlay" title="Start slideshow" href="javascript:;"></a></li><li><a class="btnNext" title="Next" href="javascript:;"></a></li><li><a class="btnToggle" title="Toggle size" href="javascript:;"></a></li><li><a class="btnClose" title="Close" href="javascript:;"></a></li></ul></div>'
 		},
 
 		list : null,
@@ -61,26 +61,11 @@
 				this.list = $(opts.tpl).addClass(opts.position).appendTo('body');
 
 				buttons = {
-					prev   : this.list.find('.btnPrev').on('click', function(event) {
-						event.preventDefault();
-						F.prev();
-					}),
-					next   : this.list.find('.btnNext').on('click', function(event) {
-						event.preventDefault();
-						F.next();
-					}),
-					play   : this.list.find('.btnPlay').on('click', function(event) {
-						event.preventDefault();
-						F.play();
-					}),
-					toggle : this.list.find('.btnToggle').on('click', function(event) {
-						event.preventDefault();
-						F.toggle();
-					}),
-					close  : this.list.find('.btnClose').on('click', function(event) {
-						event.preventDefault();
-						F.close();
-					})
+					prev   : this.list.find('.btnPrev').click( F.prev ),
+					next   : this.list.find('.btnNext').click( F.next ),
+					play   : this.list.find('.btnPlay').click( F.play ),
+					toggle : this.list.find('.btnToggle').click( F.toggle ),
+					close  : this.list.find('.btnClose').click( F.close )
 				}
 			}
 

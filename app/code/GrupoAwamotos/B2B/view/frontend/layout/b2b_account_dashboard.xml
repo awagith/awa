@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * B2B Account Dashboard Layout
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Minha Conta B2B</title>
+        <css src="GrupoAwamotos_B2B::css/b2b-dashboard.css"/>
+    </head>
+    <update handle="customer_account"/>
+    <body>
+        <referenceContainer name="content">
+            <block class="GrupoAwamotos\B2B\Block\Account\Dashboard"
+                   name="b2b.account.dashboard"
+                   template="GrupoAwamotos_B2B::account/dashboard.phtml"
+                   cacheable="false">
+                <!-- ERP Suggestions block as child (data only, no own template) -->
+                <block class="GrupoAwamotos\ERPIntegration\Block\Customer\Suggestions"
+                       name="erp.dashboard.suggestions"
+                       cacheable="false"/>
+                <!-- RexisML AI Recommendations (data reais do pipeline) -->
+                <block class="GrupoAwamotos\RexisML\Block\Recommendations"
+                       name="rexisml.b2b.recommendations"
+                       template="GrupoAwamotos_RexisML::b2b/recommendations-widget.phtml"
+                       cacheable="false">
+                    <arguments>
+                        <argument name="limit" xsi:type="number">6</argument>
+                    </arguments>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

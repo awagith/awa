@@ -1,13 +1,19 @@
-"RokanBase","RokanBase"
+RokanBase,RokanBase
 "Theme Configuration","Configuração do Tema"
-"Settings","Configurações"
-"General","Geral"
-"Enable","Ativar"
-"Disable","Desativar"
-"Yes","Sim"
-"No","Não"
-"Default","Padrão"
-"Custom","Personalizado"
-"Save","Salvar"
-"Reset","Redefinir"
-"Apply","Aplicar"
+Settings,Configurações
+General,Geral
+Enable,Ativar
+Disable,Desativar
+Yes,Sim
+No,Não
+Default,Padrão
+Custom,Personalizado
+Save,Salvar
+Reset,Redefinir
+Apply,Aplicar
+"Add to Cart","Adicionar ao Carrinho"
+"View All","Ver Todos"
+"Shop Now","Comprar Agora"
+"Quick View","Visualização Rápida"
+Loading...,Carregando...
+Search,Buscar

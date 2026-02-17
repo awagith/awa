@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * AWA Motos – cms_index_index.xml (child theme override)
+ *
+ * Restored to match original Ayo Home5 behavior:
+ *   - content-top-home + top-home.phtml renders ALL homepage sections
+ *     (slider, banners, hot-deal, producttab, categories, blog, testimonials)
+ *   - CMS page content should be EMPTY (all content comes from top-home.phtml)
+ *   - SEO head + H1 kept as AWA enhancements
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+
+    <head>
+        <!--; Removidos: awa-homepage-home5.css, awa-slidebanner-fix.css, awa-b2b-professional.css
+             esses arquivos não existem e causavam erro mime type no console.
+             todo o css da homepage já está consolidado em awa-core/layout/components/fixes.css -->
+    </head>
+
+    <body>
+        <!-- remove inline core require.config snippets on homepage only -->
+        <referenceBlock name="theme.active.editor" remove="true"/>
+        <referenceBlock name="google.maps.api" remove="true"/>
+
+        <!-- ==========; SEO: canonical + structured data in <head> ========== -->
+        <referenceContainer name="head.additional">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.seo.head"
+                   template="Magento_Cms::awa-seo-head.phtml" />
+        </referenceContainer>
+
+        <referenceContainer name="page.top">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.seo.h1"
+                   template="Magento_Cms::awa-seo-h1.phtml"
+                   before="-" />
+            <referenceBlock name="nav.bar.title" remove="true"/>
+        </referenceContainer>
+
+        <!-- ========== original; AYO: content-top-home is kept (from parent ayo_default) ========== -->
+        <!-- top-home.phtml; renders: slider (homepage5slider), block_top, banner_mid_home5,
+             hot-deal (superdeals), producttab, notification_home5, category1/2_home5,
+             blog, testimonials — this is the standard ayo home5 rendering path -->
+
+        <!-- ==========; FIX: remove cms page content on homepage ========== -->
+        <!-- all homepage content is rendered by top-home.phtml via content-top-home.
+             any widgets/content in the cms page body cause duplicate sections
+             (e.g., "Novidades" appearing twice). remove the cms content block
+             so only top-home.phtml controls homepage output. -->
+        <referenceBlock name="cms_page_content" remove="true"/>
+    </body>
+</page>

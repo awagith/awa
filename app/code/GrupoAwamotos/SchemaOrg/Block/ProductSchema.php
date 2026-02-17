@@ -3,6 +3,7 @@
  * Product Schema.org Block
  * Gera markup JSON-LD para páginas de produto
  */
+declare(strict_types=1);
 
 namespace GrupoAwamotos\SchemaOrg\Block;
 
@@ -80,11 +81,12 @@ class ProductSchema extends Template
                     'catalog/product' . $product->getImage();
 
         // Dados básicos
+        $description = $product->getShortDescription() ?: $product->getDescription();
         $schema = [
             '@context' => 'https://schema.org',
             '@type' => 'Product',
             'name' => $product->getName(),
-            'description' => strip_tags($product->getShortDescription() ?: $product->getDescription()),
+            'description' => $description ? strip_tags($description) : '',
             'sku' => $product->getSku(),
             'image' => $imageUrl,
             'url' => $product->getProductUrl(),

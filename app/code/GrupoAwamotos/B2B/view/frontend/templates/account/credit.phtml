@@ -1,0 +1,115 @@
+<?php
+/** @var \GrupoAwamotos\B2B\Block\Account\Credit $block */
+$credit = $block->getCreditLimit();
+$transactions = $block->getTransactions();
+$usagePercent = $block->getUsagePercent();
+?>
+<div class="b2b-credit-page">
+    <div class="b2b-section-header">
+        <h1><?= __('Meu Crédito B2B') ?></h1>
+    </div>
+
+    <!-- Resumo de Crédito -->
+    <div class="credit-summary-cards">
+        <div class="credit-card credit-card--limit">
+            <span class="credit-card__label"><?= __('Limite Total') ?></span>
+            <span class="credit-card__value"><?= /* @noEscape */ $block->formatPrice($credit->getCreditLimit()) ?></span>
+        </div>
+        <div class="credit-card credit-card--used">
+            <span class="credit-card__label"><?= __('Utilizado') ?></span>
+            <span class="credit-card__value"><?= /* @noEscape */ $block->formatPrice($credit->getUsedCredit()) ?></span>
+        </div>
+        <div class="credit-card credit-card--available">
+            <span class="credit-card__label"><?= __('Disponível') ?></span>
+            <span class="credit-card__value"><?= /* @noEscape */ $block->formatPrice($credit->getAvailableCredit()) ?></span>
+        </div>
+    </div>
+
+    <!-- Barra de Uso -->
+    <div class="credit-usage-bar">
+        <div class="credit-usage-bar__label">
+            <span><?= __('Uso do Crédito') ?></span>
+            <span><?= number_format($usagePercent, 0) ?>%</span>
+        </div>
+        <div class="credit-usage-bar__track">
+            <div class="credit-usage-bar__fill <?= $usagePercent > 80 ? 'credit-usage-bar__fill--warning' : '' ?>"
+                 style="width: <?= (float)$usagePercent ?>%"></div>
+        </div>
+    </div>
+
+    <!-- Histórico de Transações -->
+    <div class="credit-transactions">
+        <h2><?= __('Histórico de Transações') ?></h2>
+
+        <?php if ($transactions->getSize() > 0): ?>
+            <table class="data table table-credit-transactions">
+                <thead>
+                    <tr>
+                        <th><?= __('Data') ?></th>
+                        <th><?= __('Tipo') ?></th>
+                        <th><?= __('Valor') ?></th>
+                        <th><?= __('Saldo Após') ?></th>
+                        <th><?= __('Referência') ?></th>
+                        <th><?= __('Observação') ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($transactions as $txn): ?>
+                        <?php $amount = (float) $txn->getData('amount'); ?>
+                        <tr>
+                            <td data-th="<?= __('Data') ?>">
+                                <?= $block->escapeHtml(date('d/m/Y H:i', strtotime($txn->getData('created_at')))) ?>
+                            </td>
+                            <td data-th="<?= __('Tipo') ?>">
+                                <span class="txn-type txn-type--<?= $block->escapeHtmlAttr($txn->getData('type')) ?>">
+                                    <?= $block->escapeHtml($block->getTransactionTypeLabel($txn->getData('type'))) ?>
+                                </span>
+                            </td>
+                            <td data-th="<?= __('Valor') ?>" class="<?= $amount >= 0 ? 'txn-positive' : 'txn-negative' ?>">
+                                <?= $amount >= 0 ? '+' : '' ?><?= /* @noEscape */ $block->formatPrice($amount) ?>
+                            </td>
+                            <td data-th="<?= __('Saldo') ?>">
+                                <?= /* @noEscape */ $block->formatPrice((float) $txn->getData('balance_after')) ?>
+                            </td>
+                            <td data-th="<?= __('Ref') ?>"><?= $block->escapeHtml($txn->getData('reference')) ?></td>
+                            <td data-th="<?= __('Obs') ?>"><?= $block->escapeHtml($txn->getData('comment')) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <p class="empty-message"><?= __('Nenhuma transação registrada ainda.') ?></p>
+        <?php endif; ?>
+    </div>
+</div>
+
+<style>
+.credit-summary-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+.credit-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; text-align: center; }
+.credit-card__label { display: block; font-size: 13px; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+.credit-card__value { display: block; font-size: 28px; font-weight: 700; }
+.credit-card--limit .credit-card__value { color: #333; }
+.credit-card--used .credit-card__value { color: #e53935; }
+.credit-card--available .credit-card__value { color: #2e7d32; }
+.credit-usage-bar { margin-bottom: 32px; }
+.credit-usage-bar__label { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; color: #666; }
+.credit-usage-bar__track { height: 10px; background: #e0e0e0; border-radius: 5px; overflow: hidden; }
+.credit-usage-bar__fill { height: 100%; background: #1976d2; border-radius: 5px; transition: width 0.6s ease; }
+.credit-usage-bar__fill--warning { background: #e53935; }
+.credit-transactions h2 { margin-bottom: 16px; font-size: 18px; }
+.table-credit-transactions { width: 100%; border-collapse: collapse; }
+.table-credit-transactions th { text-align: left; padding: 10px 12px; background: #f5f5f5; border-bottom: 2px solid #ddd; font-size: 13px; text-transform: uppercase; }
+.table-credit-transactions td { padding: 10px 12px; border-bottom: 1px solid #eee; font-size: 14px; }
+.txn-positive { color: #2e7d32; font-weight: 600; }
+.txn-negative { color: #e53935; font-weight: 600; }
+.txn-type { font-size: 12px; padding: 2px 8px; border-radius: 12px; background: #f0f0f0; }
+.txn-type--charge { background: #fce4ec; color: #c62828; }
+.txn-type--refund { background: #e8f5e9; color: #2e7d32; }
+.txn-type--adjustment { background: #fff3e0; color: #e65100; }
+.txn-type--payment { background: #e3f2fd; color: #1565c0; }
+.empty-message { color: #999; text-align: center; padding: 40px; }
+@media (max-width: 768px) {
+    .credit-summary-cards { grid-template-columns: 1fr; }
+    .credit-card__value { font-size: 22px; }
+}
+</style>

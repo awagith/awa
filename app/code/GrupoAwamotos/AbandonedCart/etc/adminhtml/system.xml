@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="grupoawamotos" translate="label" sortOrder="150">
+            <label>Grupo Awamotos</label>
+        </tab>
+        <section id="abandoned_cart" translate="label" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Carrinho Abandonado</label>
+            <tab>grupoawamotos</tab>
+            <resource>GrupoAwamotos_AbandonedCart::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Configurações Gerais</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ativar Recuperação de Carrinhos</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Ativa o envio automático de emails para recuperar carrinhos abandonados</comment>
+                </field>
+                <field id="min_cart_value" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Valor Mínimo do Carrinho (R$)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                    <comment>Carrinhos com valor abaixo deste limite não receberão emails</comment>
+                </field>
+                <field id="exclude_guest" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Excluir Visitantes</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Se sim, apenas clientes logados receberão emails</comment>
+                </field>
+            </group>
+            <group id="email_1" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Email 1 - Lembrete Inicial</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ativar</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="delay_hours" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Atraso (horas)</label>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                    <comment>Tempo após abandono para enviar este email</comment>
+                </field>
+                <field id="subject" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Assunto do Email</label>
+                </field>
+                <field id="template" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Template do Email</label>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
+            </group>
+            <group id="email_2" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Email 2 - Com Cupom 10%</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ativar</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="delay_hours" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Atraso (horas)</label>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                    <comment>Tempo após abandono para enviar este email</comment>
+                </field>
+                <field id="subject" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Assunto do Email</label>
+                </field>
+                <field id="coupon_enabled" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Incluir Cupom</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="coupon_discount" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Desconto do Cupom</label>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                    <depends>
+                        <field id="coupon_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="coupon_type" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Tipo de Desconto</label>
+                    <source_model>GrupoAwamotos\AbandonedCart\Model\Config\Source\DiscountType</source_model>
+                    <depends>
+                        <field id="coupon_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="email_3" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Email 3 - Última Chance 15%</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ativar</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="delay_hours" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Atraso (horas)</label>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                    <comment>Tempo após abandono para enviar este email</comment>
+                </field>
+                <field id="subject" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Assunto do Email</label>
+                </field>
+                <field id="coupon_enabled" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Incluir Cupom</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="coupon_discount" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Desconto do Cupom</label>
+                    <validate>validate-number validate-greater-than-zero</validate>
+                    <depends>
+                        <field id="coupon_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="coupon_type" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Tipo de Desconto</label>
+                    <source_model>GrupoAwamotos\AbandonedCart\Model\Config\Source\DiscountType</source_model>
+                    <depends>
+                        <field id="coupon_enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,22 +1,35 @@
 <?php
 /**
- * Copyright © 2016 Magento. All rights reserved.
- * See COPYING.txt for license details.
+ * Authorization link - B2B override
+ * Guests: link to /b2b/account/login
+ * Logged in: standard logout behavior
+ *
+ * @var $block \Magento\Customer\Block\Account\AuthorizationLink
  */
 
-// @codingStandardsIgnoreFile
-
-/** @var $block \Magento\Customer\Block\Account\AuthorizationLink */
 $dataPostParam = '';
 $icon = '<i class="fa fa-unlock-alt"></i>';
+$customHref = '';
+
 if ($block->isLoggedIn()) {
     $dataPostParam = sprintf(" data-post='%s'", $block->getPostParams());
-	$icon = '<i class="fa fa-sign-in"></i>';
+    $icon = '<i class="fa fa-sign-in"></i>';
+} else {
+    // Override: point to B2B login instead of standard Magento login
+    $customHref = ' href="' . $block->escapeUrl($block->getUrl('b2b/account/login')) . '"';
 }
 ?>
-<li class="authorization-link" data-label="<?php echo $block->escapeHtml(__('or')); ?>">
-    <a title="<?php echo $block->escapeHtml($block->getLabel()); ?>" <?php /* @escapeNotVerified */ echo $block->getLinkAttributes(); ?><?php /* @escapeNotVerified */ echo $dataPostParam; ?>>
-        <?php echo $icon; ?>
-        <?php echo $block->escapeHtml($block->getLabel()); ?>
-    </a>
+<li class="authorization-link" data-label="<?= $block->escapeHtml(__('or')) ?>">
+    <?php if ($block->isLoggedIn()): ?>
+        <a title="<?= $block->escapeHtml($block->getLabel()) ?>"
+           <?= $block->getLinkAttributes() ?><?= $dataPostParam ?>>
+            <?= $icon ?>
+            <?= $block->escapeHtml($block->getLabel()) ?>
+        </a>
+    <?php else: ?>
+        <a title="<?= $block->escapeHtml(__('Entrar')) ?>"<?= $customHref ?>>
+            <?= $icon ?>
+            <?= $block->escapeHtml(__('Entrar')) ?>
+        </a>
+    <?php endif; ?>
 </li>

@@ -7,7 +7,7 @@
     left: 175px;
     width: calc(~"100% - 305px");
     position: absolute;
-    z-index: 9999999;
+    z-index: 10000;
     border: 0;
     border-radius: 0 0 3px 3px;
 }
@@ -222,14 +222,17 @@
 }
 .block-search{
     float: right;
-    width: 60%;
-    margin-right: 50px;
+    width: calc(~"100% - 70px");
+    margin-right: 10px;
     position: relative;
-    z-index: 9;
+    z-index: 99;
     height: 50px;
+    overflow: visible;
     .block-content{
         background: #fff;
         border-radius: 30px;
+        position: relative;
+        overflow: visible;
         .field-by-cat-search{
             position: absolute;
             max-width: 160px;
@@ -291,7 +294,7 @@
         input{
             width: 100%;
             background-color: transparent;
-            padding: 10px 100px 10px 175px;
+            padding: 10px 100px 10px 20px;
             border: none;
             font-family: @bdf;
             font-size: 12px;
@@ -301,6 +304,9 @@
             color: #444;
             position: static;
             margin: 0;
+        }
+        .field-by-cat-search ~ .field.search input{
+            padding-left: 175px;
         }
         button.action{
             position: absolute;
@@ -338,6 +344,65 @@
         }
     }
 }
+
+// QuickSearch (Magento) usa #search_autocomplete. O tema tem estilos para .searchsuite-autocomplete;
+// aqui só garantimos posicionamento e evitamos o box vazio piscando.
+.block-search #search_autocomplete.searchsuite-autocomplete{
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    display: none;
+    max-height: 60vh;
+    overflow: auto;
+    overflow-x: hidden;
+    margin-top: 0;
+    border-radius: 0 0 30px 30px;
+}
+.block-search #search_autocomplete.searchsuite-autocomplete:not(:empty){
+    display: block;
+}
+
+// SearchSuiteAutocomplete (KO component) – dropdown com fotos de produtos
+.block-search .searchsuite-autocomplete{
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    width: 100% !important;
+    margin-top: 0;
+    border: 0;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #fff;
+    .title{
+        background: @linkshover;
+        color: #fff;
+        padding: 10px 15px;
+        margin: 0;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        .see-all{
+            color: #fff;
+            font-weight: 400;
+            font-size: 12px;
+            &:hover{
+                text-decoration: underline;
+            }
+        }
+    }
+    .no-result{
+        padding: 20px 15px;
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+    }
+}
 .search-content.loading button.action:before{
     content: "" !important;
     position: absolute;
@@ -360,21 +425,62 @@
 }
 .searchsuite-autocomplete{
     .product ul {
-        padding: 0 10px;
+        padding: 0;
         margin-bottom: 0;
         list-style-type: none;
         li{
-            border-bottom: 1px solid #e1e1e1;
-            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            &:hover{
+                background-color: #f8f8f8;
+            }
+            &:last-child{
+                border-bottom: 0;
+            }
         }
+    }
+    .qs-option-image{
+        float: none !important;
+        flex-shrink: 0;
+        width: 60px !important;
+        max-width: 60px !important;
+        img{
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            display: block;
+        }
+    }
+    .qs-option-info{
+        float: none !important;
+        flex: 1;
+        padding-left: 0 !important;
+        width: auto !important;
+        margin-bottom: 0 !important;
     }
     .qs-option-title{
         width: 100%;
         display: -webkit-box;
-        -webkit-line-clamp: 1;
+        -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
         text-overflow: ellipsis;
+        a{
+            color: #333;
+            font-size: 13px;
+            line-height: 1.3;
+            font-weight: 500;
+            &:hover{
+                color: @linkshover;
+            }
+        }
+    }
+    .qs-option-reviews{
+        display: none;
     }
     .qs-option-reviews .product-reviews-summary{
         margin: 0;
@@ -382,11 +488,45 @@
     .reviews-actions{
         display: none;
     }
-    .qs-option-price p{
-        margin: 0;
+    .qs-option-price{
+        margin-top: 4px !important;
+        p{
+            margin: 0;
+        }
+        .price{
+            font-size: 14px;
+            font-weight: 700;
+            color: @linkshover;
+        }
+    }
+    .qs-option-sku{
+        display: none !important;
+    }
+    .qs-option-shortdescription,
+    .qs-option-description{
+        display: none !important;
+    }
+    .qs-option-addtocart{
+        display: none !important;
     }
 }
+body.background_shadow::before{
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.3);
+    z-index: 9;
+    pointer-events: none;
+}
 @media only screen and (max-width: 767px) {
+    .block-search #search_autocomplete.searchsuite-autocomplete{
+        left: 15px;
+        right: 15px;
+        width: auto;
+    }
     .searchsuite-autocomplete {
         border-top: 0;
         left: 15px;

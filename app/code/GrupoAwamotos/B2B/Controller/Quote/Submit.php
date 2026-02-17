@@ -9,6 +9,7 @@ namespace GrupoAwamotos\B2B\Controller\Quote;
 use GrupoAwamotos\B2B\Api\QuoteRequestRepositoryInterface;
 use GrupoAwamotos\B2B\Helper\Config;
 use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\RequestInterface;
@@ -70,6 +71,11 @@ class Submit implements HttpPostActionInterface
      */
     private $logger;
 
+    /**
+     * @var CustomerRepositoryInterface
+     */
+    private $customerRepository;
+
     public function __construct(
         RequestInterface $request,
         JsonFactory $jsonFactory,
@@ -80,7 +86,8 @@ class Submit implements HttpPostActionInterface
         Config $config,
         FormKeyValidator $formKeyValidator,
         ManagerInterface $messageManager,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        CustomerRepositoryInterface $customerRepository
     ) {
         $this->request = $request;
         $this->jsonFactory = $jsonFactory;
@@ -92,6 +99,7 @@ class Submit implements HttpPostActionInterface
         $this->formKeyValidator = $formKeyValidator;
         $this->messageManager = $messageManager;
         $this->logger = $logger;
+        $this->customerRepository = $customerRepository;
     }
 
     /**
@@ -130,14 +138,25 @@ class Submit implements HttpPostActionInterface
                 'phone' => $postData['phone'] ?? null,
             ];
             
-            // Preencher dados do cliente logado
+            // Preencher dados do cliente logado (via repository para EAV attributes)
             if ($this->customerSession->isLoggedIn()) {
-                $customer = $this->customerSession->getCustomer();
+                $customer = $this->customerRepository->getById($this->customerSession->getCustomerId());
                 $customerData['email'] = $customer->getEmail();
-                $customerData['name'] = $customer->getName();
-                $customerData['company_name'] = $customer->getData('b2b_razao_social') ?: $customerData['company_name'];
-                $customerData['cnpj'] = $customer->getData('b2b_cnpj') ?: $customerData['cnpj'];
-                $customerData['phone'] = $customer->getData('b2b_phone') ?: $customerData['phone'];
+                $customerData['name'] = $customer->getFirstname() . ' ' . $customer->getLastname();
+
+                $razaoAttr = $customer->getCustomAttribute('b2b_razao_social');
+                $cnpjAttr = $customer->getCustomAttribute('b2b_cnpj');
+                $phoneAttr = $customer->getCustomAttribute('b2b_phone');
+
+                if ($razaoAttr && $razaoAttr->getValue()) {
+                    $customerData['company_name'] = $razaoAttr->getValue();
+                }
+                if ($cnpjAttr && $cnpjAttr->getValue()) {
+                    $customerData['cnpj'] = $cnpjAttr->getValue();
+                }
+                if ($phoneAttr && $phoneAttr->getValue()) {
+                    $customerData['phone'] = $phoneAttr->getValue();
+                }
             }
             
             // Validar dados obrigatórios
@@ -175,7 +194,7 @@ class Submit implements HttpPostActionInterface
             
             $this->messageManager->addSuccessMessage($successMessage);
             $redirect = $this->redirectFactory->create();
-            return $redirect->setPath('b2b/quote/success', ['id' => $quoteRequest->getRequestId()]);
+            return $redirect->setPath('b2b/quote/history');
             
         } catch (\Exception $e) {
             $this->logger->error('B2B Quote Submit error: ' . $e->getMessage());

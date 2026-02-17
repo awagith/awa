@@ -7,7 +7,7 @@ var config = {
 		"*": {
 			conflict: "Rokanthemes_Brand/js/conflict",
 			owlcarousel: "Rokanthemes_Brand/js/owl.carousel",
-			boostrap: "Rokanthemes_Brand/js/bootstrap.min",
+			bootstrap: "Rokanthemes_Brand/js/bootstrap.min",
 		}
 	}
 };

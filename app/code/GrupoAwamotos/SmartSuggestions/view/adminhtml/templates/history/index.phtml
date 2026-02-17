@@ -1,0 +1,274 @@
+<?php
+/**
+ * History Index Template
+ *
+ * @var \GrupoAwamotos\SmartSuggestions\Block\Adminhtml\History\Index $block
+ */
+
+$collection = $block->getHistoryCollection();
+$stats = $block->getConversionStats();
+$statuses = $block->getAvailableStatuses();
+$currentStatus = $block->getRequest()->getParam('status');
+?>
+
+<div class="smart-dashboard">
+    <!-- Header -->
+    <div class="smart-dashboard-header">
+        <h1>Histórico de Sugestões</h1>
+        <p>Acompanhe todas as sugestões geradas e enviadas</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="smart-kpi-grid">
+        <div class="smart-kpi-card">
+            <div class="smart-kpi-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <span>📋</span>
+            </div>
+            <div class="smart-kpi-content">
+                <span class="smart-kpi-label">Total Geradas</span>
+                <span class="smart-kpi-value"><?= (int)$stats['total_suggestions'] ?></span>
+            </div>
+        </div>
+        <div class="smart-kpi-card">
+            <div class="smart-kpi-icon" style="background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);">
+                <span>📤</span>
+            </div>
+            <div class="smart-kpi-content">
+                <span class="smart-kpi-label">Enviadas</span>
+                <span class="smart-kpi-value"><?= (int)$stats['total_sent'] ?></span>
+            </div>
+        </div>
+        <div class="smart-kpi-card">
+            <div class="smart-kpi-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <span>✅</span>
+            </div>
+            <div class="smart-kpi-content">
+                <span class="smart-kpi-label">Convertidas</span>
+                <span class="smart-kpi-value"><?= (int)$stats['total_converted'] ?></span>
+            </div>
+        </div>
+        <div class="smart-kpi-card">
+            <div class="smart-kpi-icon" style="background: linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%);">
+                <span>📊</span>
+            </div>
+            <div class="smart-kpi-content">
+                <span class="smart-kpi-label">Taxa Conversão</span>
+                <span class="smart-kpi-value"><?= (float)$stats['conversion_rate'] ?>%</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Value Stats -->
+    <div class="smart-stats-row" style="margin-bottom: 25px;">
+        <div class="smart-stat-box">
+            <span class="stat-label">Valor Total Sugerido</span>
+            <span class="stat-value"><?= $block->formatPrice($stats['total_suggested_value']) ?></span>
+        </div>
+        <div class="smart-stat-box">
+            <span class="stat-label">Valor Total Convertido</span>
+            <span class="stat-value" style="color: #00C851;"><?= $block->formatPrice($stats['total_converted_value']) ?></span>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="smart-filters">
+        <form method="get" action="<?= $block->escapeUrl($block->getUrl('*/*/*')) ?>">
+            <div class="filter-row">
+                <div class="filter-item">
+                    <label>Status:</label>
+                    <select name="status" onchange="this.form.submit()">
+                        <option value="">Todos</option>
+                        <?php foreach ($statuses as $value => $label): ?>
+                        <option value="<?= $block->escapeHtml($value) ?>" <?= $currentStatus === $value ? 'selected' : '' ?>>
+                            <?= $block->escapeHtml($label) ?>
+                        </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <label>Canal:</label>
+                    <select name="channel" onchange="this.form.submit()">
+                        <option value="">Todos</option>
+                        <option value="whatsapp">WhatsApp</option>
+                        <option value="email">Email</option>
+                        <option value="manual">Manual</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <button type="button" class="action-default scalable" onclick="window.location='<?= $block->escapeUrl($block->getExportUrl()) ?>'">
+                        <span>📥 Exportar CSV</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- History Table -->
+    <div class="smart-table-card">
+        <div class="smart-table-header">
+            <h3>📜 Histórico</h3>
+            <span class="table-count"><?= $collection->getSize() ?> registros</span>
+        </div>
+        <table class="data-grid smart-mini-grid">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th class="_right">Valor</th>
+                    <th class="_right">Produtos</th>
+                    <th>Status</th>
+                    <th>Canal</th>
+                    <th>Criada em</th>
+                    <th>Enviada em</th>
+                    <th>Convertida em</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if ($collection->getSize() === 0): ?>
+                <tr>
+                    <td colspan="9" class="empty-text">Nenhum registro encontrado</td>
+                </tr>
+                <?php else: ?>
+                <?php foreach ($collection as $item): ?>
+                <tr>
+                    <td><?= $item->getId() ?></td>
+                    <td>
+                        <strong><?= $block->escapeHtml($item->getCustomerName()) ?></strong>
+                        <br><small>ID: <?= $item->getCustomerId() ?></small>
+                    </td>
+                    <td class="_right">
+                        <strong><?= $block->formatPrice($item->getTotalValue()) ?></strong>
+                        <?php if ($item->isConverted()): ?>
+                        <br><small style="color: #00C851;">Conv: <?= $block->formatPrice((float)$item->getData('conversion_value')) ?></small>
+                        <?php endif; ?>
+                    </td>
+                    <td class="_right"><?= (int) $item->getData('products_count') ?></td>
+                    <td>
+                        <span class="smart-badge <?= $block->escapeHtmlAttr($block->getStatusBadgeClass($item->getStatus())) ?>">
+                            <?= $block->escapeHtml($block->getStatusLabel($item->getStatus())) ?>
+                        </span>
+                    </td>
+                    <td>
+                        <?php if ($item->getChannel()): ?>
+                        <span class="smart-badge smart-badge-secondary">
+                            <?= ucfirst($block->escapeHtml($item->getChannel())) ?>
+                        </span>
+                        <?php else: ?>
+                        -
+                        <?php endif; ?>
+                    </td>
+                    <td><?= $block->formatHistoryDate($item->getData('created_at')) ?></td>
+                    <td><?= $block->formatHistoryDate($item->getData('sent_at')) ?></td>
+                    <td><?= $block->formatHistoryDate($item->getData('converted_at')) ?></td>
+                </tr>
+                <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+        <!-- Pagination -->
+        <?php if ($block->getTotalPages() > 1): ?>
+        <div class="smart-pagination">
+            <?php for ($i = 1; $i <= $block->getTotalPages(); $i++): ?>
+            <a href="<?= $block->escapeUrl($block->getUrl('*/*/*', ['page' => $i, 'status' => $currentStatus])) ?>"
+               class="<?= $i === $block->getCurrentPage() ? 'active' : '' ?>">
+                <?= $i ?>
+            </a>
+            <?php endfor; ?>
+        </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<style>
+.smart-filters {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.filter-row {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-item label {
+    font-weight: 600;
+    color: #555;
+}
+
+.filter-item select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 150px;
+}
+
+.smart-stats-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.smart-stat-box {
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.smart-stat-box .stat-label {
+    display: block;
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.smart-stat-box .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #333;
+}
+
+.table-count {
+    font-size: 14px;
+    color: #888;
+}
+
+.smart-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px;
+}
+
+.smart-pagination a {
+    padding: 8px 14px;
+    border-radius: 6px;
+    background: #f5f5f5;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.smart-pagination a:hover {
+    background: #e0e0e0;
+}
+
+.smart-pagination a.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+}
+</style>

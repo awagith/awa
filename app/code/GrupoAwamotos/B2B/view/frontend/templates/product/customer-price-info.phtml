@@ -1,0 +1,90 @@
+<?php
+/**
+ * Customer-specific ERP price comparison on PDP
+ * @var \GrupoAwamotos\B2B\Block\Product\CustomerPriceInfo $block
+ */
+$priceData = $block->getCustomerPriceData();
+if (!$priceData) {
+    return;
+}
+$customerPrice = $priceData['customer_price'];
+$basePrice = $priceData['base_price'];
+$savingsPct = $priceData['savings_pct'];
+$listName = $priceData['price_list_name'];
+?>
+<div class="b2b-customer-price-info">
+    <div class="b2b-price-comparison">
+        <div class="b2b-your-price">
+            <span class="b2b-price-label"><?= $block->escapeHtml(__('Seu preço:')) ?></span>
+            <span class="b2b-price-value"><?= /* @noEscape */ $block->formatPrice($customerPrice) ?></span>
+        </div>
+        <?php if ($savingsPct > 0): ?>
+            <div class="b2b-base-price">
+                <span class="b2b-price-label"><?= $block->escapeHtml(__('Preço base:')) ?></span>
+                <span class="b2b-price-value-old"><?= /* @noEscape */ $block->formatPrice($basePrice) ?></span>
+                <span class="b2b-savings-badge">-<?= $block->escapeHtml((string) $savingsPct) ?>%</span>
+            </div>
+        <?php endif; ?>
+    </div>
+    <?php if ($listName): ?>
+        <div class="b2b-price-list-info">
+            <span class="b2b-list-label"><?= $block->escapeHtml(__('Tabela: %1', $listName)) ?></span>
+        </div>
+    <?php endif; ?>
+</div>
+<style>
+    .b2b-customer-price-info {
+        margin: 12px 0;
+        padding: 12px 16px;
+        background: #f0fdf4;
+        border: 1px solid #bbf7d0;
+        border-radius: 8px;
+    }
+    .b2b-your-price {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 4px;
+    }
+    .b2b-your-price .b2b-price-label {
+        font-size: 14px;
+        color: #166534;
+        font-weight: 600;
+    }
+    .b2b-your-price .b2b-price-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: #15803d;
+    }
+    .b2b-base-price {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .b2b-base-price .b2b-price-label {
+        font-size: 12px;
+        color: #6b7280;
+    }
+    .b2b-base-price .b2b-price-value-old {
+        font-size: 13px;
+        color: #9ca3af;
+        text-decoration: line-through;
+    }
+    .b2b-savings-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        background: #15803d;
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        border-radius: 12px;
+    }
+    .b2b-price-list-info {
+        margin-top: 8px;
+        padding-top: 8px;
+        border-top: 1px solid #dcfce7;
+    }
+    .b2b-list-label {
+        display: none;
+    }
+</style>

@@ -1,0 +1,14 @@
+/* ==============================================
+   AWA MOTOS — Checkout bridge stylesheet
+   Tema: AYO/Rokanthemes (Home5)
+
+   Motivo:
+   O layout referencia `css/awa-checkout-home5.css`.
+   Este arquivo garante asset estável em runtime mesmo quando
+   não há customização visual específica no checkout.
+============================================== */
+
+body.checkout-index-index .page-wrapper,
+body.checkout-cart-index .page-wrapper {
+    --awa-checkout-home5-loaded: 1;
+}

@@ -58,23 +58,23 @@ class Brand extends \Magento\Framework\Model\AbstractModel
     /**
      * @param \Magento\Framework\Model\Context                          $context                  
      * @param \Magento\Framework\Registry                               $registry                           
-     * @param \Rokanthemes\Brand\Model\ResourceModel\Brand|null                      $resource                 
-     * @param \Rokanthemes\Brand\Model\ResourceModel\Brand\Collection|null           $resourceCollection       
      * @param \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory 
      * @param \Magento\Store\Model\StoreManagerInterface                $storeManager             
      * @param \Magento\Framework\UrlInterface                           $url                      
      * @param \Rokanthemes\Brand\Helper\Data                                    $brandHelper              
+     * @param \Rokanthemes\Brand\Model\ResourceModel\Brand|null                      $resource                 
+     * @param \Rokanthemes\Brand\Model\ResourceModel\Brand\Collection|null           $resourceCollection       
      * @param array                                                     $data                     
      */
     public function __construct(
         \Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
-        \Rokanthemes\Brand\Model\ResourceModel\Brand $resource = null,
-        \Rokanthemes\Brand\Model\ResourceModel\Brand\Collection $resourceCollection = null,
         \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productCollectionFactory,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\UrlInterface $url,
         \Rokanthemes\Brand\Helper\Data $brandHelper,
+        ?\Rokanthemes\Brand\Model\ResourceModel\Brand $resource = null,
+        ?\Rokanthemes\Brand\Model\ResourceModel\Brand\Collection $resourceCollection = null,
         array $data = []
         ) {
         $this->_storeManager = $storeManager;

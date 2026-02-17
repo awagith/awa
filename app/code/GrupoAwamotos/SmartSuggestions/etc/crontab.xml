@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="smart_suggestions">
+        <job name="smart_suggestions_rfm_calculate" instance="GrupoAwamotos\SmartSuggestions\Cron\CalculateRfm" method="execute">
+            <config_path>smart_suggestions/cron/rfm_schedule</config_path>
+        </job>
+        <job name="smart_suggestions_generate" instance="GrupoAwamotos\SmartSuggestions\Cron\GenerateSuggestions" method="execute">
+            <config_path>smart_suggestions/cron/suggestions_schedule</config_path>
+        </job>
+    </group>
+</config>

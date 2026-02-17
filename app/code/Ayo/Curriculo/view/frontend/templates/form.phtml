@@ -1,0 +1,647 @@
+<?php
+/** @var \Ayo\Curriculo\Block\Form $block */
+/** @var \Magento\Framework\Escaper $escaper */
+?>
+<div class="curriculo-wrapper">
+    <!-- Header da Página -->
+    <div class="curriculo-page-header">
+        <div class="header-icon">📋</div>
+        <h1><?= $escaper->escapeHtml(__('Trabalhe Conosco')) ?></h1>
+        <p><?= $escaper->escapeHtml(__('Faça parte da equipe AWA Motos e construa sua carreira conosco')) ?></p>
+    </div>
+
+    <div class="curriculo-intro">
+        <p><strong><?= $escaper->escapeHtml(__('Bem-vindo(a)!')) ?></strong> <?= $escaper->escapeHtml(__('Preencha o formulário abaixo com seus dados. Campos marcados com * são obrigatórios. Após o envio, você receberá um código para acompanhar sua candidatura.')) ?></p>
+    </div>
+
+    <?php if (!$block->isEnabled()): ?>
+        <div class="message info">
+            <div><?= $escaper->escapeHtml(__('Formulário temporariamente indisponível. Tente novamente mais tarde.')) ?></div>
+        </div>
+    <?php else: ?>
+        <?php $fieldErrors = $block->getFieldErrors(); ?>
+        <div class="form-status" role="status" aria-live="polite" aria-atomic="true">
+            <?php if ($block->isSuccess()): ?>
+                <?= $escaper->escapeHtml(__('Obrigado! Recebemos seu currículo e entraremos em contato.')) ?>
+            <?php endif; ?>
+            <?php if (!empty($fieldErrors)): ?>
+                <div class="form-error-summary" role="alert">
+                    <p><?= $escaper->escapeHtml(__('Revise os campos destacados:')) ?></p>
+                    <ul>
+                        <?php foreach ($fieldErrors as $errorMessage): ?>
+                            <li><?= $escaper->escapeHtml($errorMessage) ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+        </div>
+        <?php if ($block->isSuccess()): ?>
+            <div class="curriculo-success-panel" role="region" aria-label="<?= $escaper->escapeHtmlAttr(__('Envio concluído')) ?>" tabindex="-1">
+                <div class="success-icon">✓</div>
+                <h2><?= $escaper->escapeHtml(__('Currículo Enviado com Sucesso!')) ?></h2>
+                <p><?= $escaper->escapeHtml(__('Parabéns! Seu currículo foi recebido pela nossa equipe de RH.')) ?></p>
+                <p><?= $escaper->escapeHtml(__('Você receberá um email de confirmação com um código para acompanhar sua candidatura.')) ?></p>
+                
+                <div class="success-info-box" style="background: #fff; border-radius: 12px; padding: 25px; margin: 25px 0; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 30px; flex-wrap: wrap;">
+                        <div style="text-align: center;">
+                            <div style="font-size: 32px; margin-bottom: 8px;">📧</div>
+                            <div style="font-size: 13px; color: #666;"><?= $escaper->escapeHtml(__('Verifique seu email')) ?></div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 32px; margin-bottom: 8px;">🔍</div>
+                            <div style="font-size: 13px; color: #666;"><?= $escaper->escapeHtml(__('Use o código para acompanhar')) ?></div>
+                        </div>
+                        <div style="text-align: center;">
+                            <div style="font-size: 32px; margin-bottom: 8px;">📞</div>
+                            <div style="font-size: 13px; color: #666;"><?= $escaper->escapeHtml(__('Aguarde nosso contato')) ?></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="curriculo-success-actions" style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <a class="action primary" href="<?= $escaper->escapeUrl($block->getUrl('curriculo/index/status')) ?>" style="background: #2196F3;">
+                        <span>🔍 <?= $escaper->escapeHtml(__('Acompanhar Candidatura')) ?></span>
+                    </a>
+                    <a class="action primary" href="<?= $escaper->escapeUrl($block->getUrl('curriculo')) ?>" style="background: #4CAF50;">
+                        <span>📄 <?= $escaper->escapeHtml(__('Enviar outro currículo')) ?></span>
+                    </a>
+                </div>
+            </div>
+        <?php else: ?>
+            <!-- Progress Bar -->
+            <div class="curriculo-progress" id="curriculo-progress">
+                <div class="progress-header">
+                    <span class="progress-text"><?= $escaper->escapeHtml(__('Progresso')) ?>: <span id="progress-percent">0</span>%</span>
+                    <span class="progress-fields"><span id="filled-fields">0</span> <?= $escaper->escapeHtml(__('de')) ?> <span id="total-fields">0</span> <?= $escaper->escapeHtml(__('campos')) ?></span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="progress-steps">
+                    <span class="step active" data-step="1"><?= $escaper->escapeHtml(__('Dados Pessoais')) ?></span>
+                    <span class="step" data-step="2"><?= $escaper->escapeHtml(__('Profissional')) ?></span>
+                    <span class="step" data-step="3"><?= $escaper->escapeHtml(__('Currículo')) ?></span>
+                </div>
+            </div>
+
+            <form class="form curriculo"
+                  id="curriculo-form"
+                  action="<?= $escaper->escapeUrl($block->getPostUrl()) ?>"
+                  method="post"
+                  enctype="multipart/form-data"
+                  data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Campos obrigatórios')) ?>"
+                  data-mage-init='{
+                    "validation": {},
+                    "curriculoProgress": {},
+                    "formEnhancements": {
+                        "selectors": {
+                            "form": "#curriculo-form",
+                            "input": "#curriculo-form input, #curriculo-form select, #curriculo-form textarea",
+                            "submit": "#curriculo-form button[type=submit], #curriculo-form input[type=submit]",
+                            "qty": "#curriculo-form .qty-wrapper, #curriculo-form .control.qty",
+                            "password": "#curriculo-form input[type=password]",
+                            "cpf": "#curriculo-form .cpf-input",
+                            "cnpj": "#curriculo-form .cnpj-input",
+                            "cep": "#curriculo-form .cep-input",
+                            "phone": "#curriculo-form .phone-input",
+                            "url": "#curriculo-form .url-input"
+                        },
+                        "options": {
+                            "autoFormat": true,
+                            "showPasswordToggle": false,
+                            "floatingLabels": false,
+                            "liveValidation": false,
+                            "urlAutoFix": true,
+                            "docValidation": true,
+                            "phoneValidation": true,
+                        "formStatus": true,
+                        "successScroll": true,
+                        "cleanSuccessParam": true,
+                        "analytics": true,
+                        "analyticsForm": "curriculo-form",
+                        "trackFillTime": true,
+                        "draftSave": true,
+                        "draftRestoreMode": "prompt",
+                        "draftTtlHours": 168,
+                        "submitLock": true,
+                        "submitLockText": "Enviando...",
+                        "fileValidation": true,
+                        "charCounter": true,
+                        "submitLoading": false
+                    }
+                }
+              }'>
+            <?= $block->getBlockHtml('formkey') ?>
+
+            <fieldset class="fieldset" data-progress-step="1">
+                <legend class="legend"><span><?= $escaper->escapeHtml(__('Dados pessoais')) ?></span></legend>
+                <div class="curriculo-grid">
+                    <?php $nameError = $block->getFieldError('name'); ?>
+                    <div class="field name required">
+                        <label class="label" for="name"><span><?= $escaper->escapeHtml(__('Nome completo')) ?></span></label>
+                        <div class="control">
+                            <input name="name"
+                                   id="name"
+                                   title="<?= $escaper->escapeHtmlAttr(__('Nome completo')) ?>"
+                                   class="input-text<?= $nameError ? ' mage-error' : '' ?>"
+                                   type="text"
+                                   maxlength="120"
+                                   autocomplete="name"
+                                   required="required"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getPostValue('name')) ?>"
+                                   <?= $nameError ? 'aria-invalid="true" aria-describedby="name_error"' : '' ?>
+                                   data-validate="{required:true}" />
+                            <?php if ($nameError): ?>
+                                <div class="mage-error" id="name_error" role="alert"><?= $escaper->escapeHtml($nameError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php $emailError = $block->getFieldError('email'); ?>
+                    <div class="field email required">
+                        <label class="label" for="email"><span><?= $escaper->escapeHtml(__('Email')) ?></span></label>
+                        <div class="control">
+                            <input name="email"
+                                   id="email"
+                                   title="<?= $escaper->escapeHtmlAttr(__('Email')) ?>"
+                                   class="input-text<?= $emailError ? ' mage-error' : '' ?>"
+                                   type="email"
+                                   maxlength="160"
+                                   autocomplete="email"
+                                   required="required"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getPostValue('email')) ?>"
+                                   <?= $emailError ? 'aria-invalid="true" aria-describedby="email_error"' : '' ?>
+                                   data-validate="{required:true, 'validate-email':true}"
+                                   data-mage-init='{"mage/trim-input":{}}' />
+                            <?php if ($emailError): ?>
+                                <div class="mage-error" id="email_error" role="alert"><?= $escaper->escapeHtml($emailError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="curriculo-grid">
+                    <?php $cepError = $block->getFieldError('cep'); ?>
+                    <div class="field cep">
+                        <label class="label" for="cep"><span><?= $escaper->escapeHtml(__('CEP')) ?></span></label>
+                        <div class="control">
+                            <input name="cep"
+                                   id="cep"
+                                   title="<?= $escaper->escapeHtmlAttr(__('CEP')) ?>"
+                                   class="input-text cep-input<?= $cepError ? ' mage-error' : '' ?>"
+                                   type="text"
+                                   inputmode="numeric"
+                                   maxlength="9"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getPostValue('cep')) ?>"
+                                   <?= $cepError ? 'aria-invalid="true" aria-describedby="cep_error"' : '' ?>
+                                   autocomplete="postal-code" />
+                            <?php if ($cepError): ?>
+                                <div class="mage-error" id="cep_error" role="alert"><?= $escaper->escapeHtml($cepError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php $phoneError = $block->getFieldError('phone'); ?>
+                    <div class="field phone required">
+                        <label class="label" for="phone"><span><?= $escaper->escapeHtml(__('Telefone')) ?></span></label>
+                        <div class="control">
+                            <?php $phoneDescribed = $phoneError ? 'phone_note phone_error' : 'phone_note'; ?>
+                            <input name="phone"
+                                   id="phone"
+                                   title="<?= $escaper->escapeHtmlAttr(__('Telefone')) ?>"
+                                   class="input-text phone-input<?= $phoneError ? ' mage-error' : '' ?>"
+                                   type="tel"
+                                   inputmode="tel"
+                                   maxlength="40"
+                                   autocomplete="tel"
+                                   required="required"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getPostValue('phone')) ?>"
+                                   data-validate="{required:true}"
+                                   aria-describedby="<?= $escaper->escapeHtmlAttr($phoneDescribed) ?>"
+                                   <?= $phoneError ? 'aria-invalid="true"' : '' ?> />
+                            <div class="note" id="phone_note"><?= $escaper->escapeHtml(__('Formato: (11) 99999-9999')) ?></div>
+                            <?php if ($phoneError): ?>
+                                <div class="mage-error" id="phone_error" role="alert"><?= $escaper->escapeHtml($phoneError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="curriculo-grid">
+                    <?php $cpfError = $block->getFieldError('cpf'); ?>
+                    <div class="field cpf">
+                        <label class="label" for="cpf"><span><?= $escaper->escapeHtml(__('CPF (opcional)')) ?></span></label>
+                        <div class="control">
+                            <?php $cpfDescribed = $cpfError ? 'cpf_note cpf_error' : 'cpf_note'; ?>
+                            <input name="cpf"
+                                   id="cpf"
+                                   title="<?= $escaper->escapeHtmlAttr(__('CPF')) ?>"
+                                   class="input-text cpf-input<?= $cpfError ? ' mage-error' : '' ?>"
+                                   type="text"
+                                   inputmode="numeric"
+                                   maxlength="14"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getPostValue('cpf')) ?>"
+                                   autocomplete="tax-id"
+                                   aria-describedby="<?= $escaper->escapeHtmlAttr($cpfDescribed) ?>"
+                                   <?= $cpfError ? 'aria-invalid="true"' : '' ?> />
+                            <div class="note" id="cpf_note"><?= $escaper->escapeHtml(__('Apenas números. Ex: 000.000.000-00')) ?></div>
+                            <?php if ($cpfError): ?>
+                                <div class="mage-error" id="cpf_error" role="alert"><?= $escaper->escapeHtml($cpfError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php $cnpjError = $block->getFieldError('cnpj'); ?>
+                    <div class="field cnpj">
+                        <label class="label" for="cnpj"><span><?= $escaper->escapeHtml(__('CNPJ (opcional)')) ?></span></label>
+                        <div class="control">
+                            <?php $cnpjDescribed = $cnpjError ? 'cnpj_note cnpj_error' : 'cnpj_note'; ?>
+                            <input name="cnpj"
+                                   id="cnpj"
+                                   title="<?= $escaper->escapeHtmlAttr(__('CNPJ')) ?>"
+                                   class="input-text cnpj-input<?= $cnpjError ? ' mage-error' : '' ?>"
+                                   type="text"
+                                   inputmode="numeric"
+                                   maxlength="18"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getPostValue('cnpj')) ?>"
+                                   autocomplete="tax-id"
+                                   aria-describedby="<?= $escaper->escapeHtmlAttr($cnpjDescribed) ?>"
+                                   <?= $cnpjError ? 'aria-invalid="true"' : '' ?> />
+                            <div class="note" id="cnpj_note"><?= $escaper->escapeHtml(__('Apenas números. Ex: 00.000.000/0000-00')) ?></div>
+                            <?php if ($cnpjError): ?>
+                                <div class="mage-error" id="cnpj_error" role="alert"><?= $escaper->escapeHtml($cnpjError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="curriculo-grid">
+                    <?php $cityError = $block->getFieldError('city'); ?>
+                    <div class="field city">
+                        <label class="label" for="city"><span><?= $escaper->escapeHtml(__('Cidade')) ?></span></label>
+                        <div class="control">
+                            <input name="city"
+                                   id="city"
+                                   title="<?= $escaper->escapeHtmlAttr(__('Cidade')) ?>"
+                                   class="input-text<?= $cityError ? ' mage-error' : '' ?>"
+                                   type="text"
+                                   maxlength="60"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getPostValue('city')) ?>"
+                                   <?= $cityError ? 'aria-invalid="true" aria-describedby="city_error"' : '' ?>
+                                   autocomplete="address-level2" />
+                            <?php if ($cityError): ?>
+                                <div class="mage-error" id="city_error" role="alert"><?= $escaper->escapeHtml($cityError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php $stateError = $block->getFieldError('state'); ?>
+                    <div class="field state">
+                        <label class="label" for="state"><span><?= $escaper->escapeHtml(__('Estado')) ?></span></label>
+                        <div class="control">
+                            <input name="state"
+                                   id="state"
+                                   title="<?= $escaper->escapeHtmlAttr(__('Estado')) ?>"
+                                   class="input-text<?= $stateError ? ' mage-error' : '' ?>"
+                                   type="text"
+                                   maxlength="40"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getPostValue('state')) ?>"
+                                   <?= $stateError ? 'aria-invalid="true" aria-describedby="state_error"' : '' ?>
+                                   autocomplete="address-level1" />
+                            <?php if ($stateError): ?>
+                                <div class="mage-error" id="state_error" role="alert"><?= $escaper->escapeHtml($stateError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="fieldset" data-progress-step="2">
+                <legend class="legend"><span><?= $escaper->escapeHtml(__('Perfil profissional')) ?></span></legend>
+                <div class="curriculo-grid">
+                    <?php $workAreaError = $block->getFieldError('work_area'); ?>
+                    <div class="field work_area required">
+                        <label class="label" for="work_area"><span><?= $escaper->escapeHtml(__('Área de Interesse')) ?></span></label>
+                        <div class="control">
+                            <select name="work_area" id="work_area" class="select<?= $workAreaError ? ' mage-error' : '' ?>" required="required" data-validate="{required:true}" <?= $workAreaError ? 'aria-invalid="true" aria-describedby="work_area_error"' : '' ?>>
+                                <option value=""><?= $escaper->escapeHtml(__('Selecione a área')) ?></option>
+                                <?php
+                                $workAreas = [
+                                    'Vendas / Comercial',
+                                    'Estoque / Logística',
+                                    'Atendimento ao Cliente',
+                                    'Marketing / E-commerce',
+                                    'Financeiro / Administrativo',
+                                    'TI / Tecnologia',
+                                    'Mecânica / Oficina',
+                                    'Compras',
+                                    'RH / Gestão de Pessoas',
+                                ];
+                                foreach ($workAreas as $area): ?>
+                                    <option value="<?= $escaper->escapeHtmlAttr($area) ?>" <?= $block->getPostValue('work_area') === $area ? 'selected="selected"' : '' ?>><?= $escaper->escapeHtml(__($area)) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php if ($workAreaError): ?>
+                                <div class="mage-error" id="work_area_error" role="alert"><?= $escaper->escapeHtml($workAreaError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php $positionError = $block->getFieldError('position'); ?>
+                    <div class="field position">
+                        <label class="label" for="position"><span><?= $escaper->escapeHtml(__('Cargo desejado')) ?></span></label>
+                        <div class="control">
+                            <input name="position"
+                                   id="position"
+                                   title="<?= $escaper->escapeHtmlAttr(__('Cargo desejado')) ?>"
+                                   class="input-text<?= $positionError ? ' mage-error' : '' ?>"
+                                   type="text"
+                                   maxlength="80"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getPostValue('position')) ?>"
+                                   autocomplete="organization-title"
+                                   <?= $positionError ? 'aria-invalid="true" aria-describedby="position_error"' : '' ?>
+                                   data-show-counter="true" />
+                            <?php if ($positionError): ?>
+                                <div class="mage-error" id="position_error" role="alert"><?= $escaper->escapeHtml($positionError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="field specialties">
+                    <label class="label"><span><?= $escaper->escapeHtml(__('Especialidades')) ?></span></label>
+                    <div class="control curriculo-specialties-grid">
+                        <?php
+                        $specialtiesOptions = [
+                            'Peças de Motos',
+                            'Acessórios e Equipamentos',
+                            'Mecânica de Motos',
+                            'Atendimento B2B / Atacado',
+                            'E-commerce / Marketplace',
+                            'Logística / Expedição',
+                            'Marketing Digital',
+                            'Gestão de Equipes',
+                            'Sistemas ERP / Magento',
+                            'Vendas Externas',
+                        ];
+                        $selectedSpecialties = $block->getPostValue('specialties');
+                        $selectedArray = is_string($selectedSpecialties) && $selectedSpecialties !== ''
+                            ? explode(',', $selectedSpecialties)
+                            : (is_array($selectedSpecialties) ? $selectedSpecialties : []);
+                        $selectedArray = array_map('trim', $selectedArray);
+                        foreach ($specialtiesOptions as $index => $specialty): ?>
+                            <div class="specialty-checkbox">
+                                <input type="checkbox"
+                                       name="specialties[]"
+                                       id="specialty_<?= $index ?>"
+                                       value="<?= $escaper->escapeHtmlAttr($specialty) ?>"
+                                       <?= in_array($specialty, $selectedArray) ? 'checked="checked"' : '' ?> />
+                                <label for="specialty_<?= $index ?>"><?= $escaper->escapeHtml(__($specialty)) ?></label>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="note"><?= $escaper->escapeHtml(__('Selecione todas as áreas em que você tem experiência')) ?></div>
+                </div>
+
+                <div class="curriculo-grid">
+                    <?php $experienceError = $block->getFieldError('experience_level'); ?>
+                    <div class="field experience_level">
+                        <label class="label" for="experience_level"><span><?= $escaper->escapeHtml(__('Nível de experiência')) ?></span></label>
+                        <div class="control">
+                            <select name="experience_level" id="experience_level" class="select<?= $experienceError ? ' mage-error' : '' ?>" <?= $experienceError ? 'aria-invalid="true" aria-describedby="experience_error"' : '' ?>>
+                                <option value=""><?= $escaper->escapeHtml(__('Selecione')) ?></option>
+                                <option value="Estágio" <?= $block->getPostValue('experience_level') === 'Estágio' ? 'selected="selected"' : '' ?>><?= $escaper->escapeHtml(__('Estágio')) ?></option>
+                                <option value="Júnior" <?= $block->getPostValue('experience_level') === 'Júnior' ? 'selected="selected"' : '' ?>><?= $escaper->escapeHtml(__('Júnior')) ?></option>
+                                <option value="Pleno" <?= $block->getPostValue('experience_level') === 'Pleno' ? 'selected="selected"' : '' ?>><?= $escaper->escapeHtml(__('Pleno')) ?></option>
+                                <option value="Sênior" <?= $block->getPostValue('experience_level') === 'Sênior' ? 'selected="selected"' : '' ?>><?= $escaper->escapeHtml(__('Sênior')) ?></option>
+                                <option value="Liderança" <?= $block->getPostValue('experience_level') === 'Liderança' ? 'selected="selected"' : '' ?>><?= $escaper->escapeHtml(__('Liderança')) ?></option>
+                            </select>
+                            <?php if ($experienceError): ?>
+                                <div class="mage-error" id="experience_error" role="alert"><?= $escaper->escapeHtml($experienceError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php $cnhError = $block->getFieldError('cnh'); ?>
+                    <div class="field cnh">
+                        <label class="label" for="cnh"><span><?= $escaper->escapeHtml(__('CNH (Habilitação)')) ?></span></label>
+                        <div class="control">
+                            <select name="cnh" id="cnh" class="select<?= $cnhError ? ' mage-error' : '' ?>" <?= $cnhError ? 'aria-invalid="true" aria-describedby="cnh_error"' : '' ?>>
+                                <option value=""><?= $escaper->escapeHtml(__('Selecione')) ?></option>
+                                <?php
+                                $cnhOptions = ['Não possuo', 'A', 'B', 'AB', 'C', 'D', 'E', 'Outra'];
+                                foreach ($cnhOptions as $cnh): ?>
+                                    <option value="<?= $escaper->escapeHtmlAttr($cnh) ?>" <?= $block->getPostValue('cnh') === $cnh ? 'selected="selected"' : '' ?>><?= $escaper->escapeHtml(__($cnh)) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php if ($cnhError): ?>
+                                <div class="mage-error" id="cnh_error" role="alert"><?= $escaper->escapeHtml($cnhError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="curriculo-grid">
+                    <?php $availabilityError = $block->getFieldError('availability'); ?>
+                    <div class="field availability">
+                        <label class="label" for="availability"><span><?= $escaper->escapeHtml(__('Disponibilidade')) ?></span></label>
+                        <div class="control">
+                            <select name="availability" id="availability" class="select<?= $availabilityError ? ' mage-error' : '' ?>" <?= $availabilityError ? 'aria-invalid="true" aria-describedby="availability_error"' : '' ?>>
+                                <option value=""><?= $escaper->escapeHtml(__('Selecione')) ?></option>
+                                <?php
+                                $availabilityOptions = ['Imediata', '15 dias', '30 dias', 'A combinar'];
+                                foreach ($availabilityOptions as $avail): ?>
+                                    <option value="<?= $escaper->escapeHtmlAttr($avail) ?>" <?= $block->getPostValue('availability') === $avail ? 'selected="selected"' : '' ?>><?= $escaper->escapeHtml(__($avail)) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php if ($availabilityError): ?>
+                                <div class="mage-error" id="availability_error" role="alert"><?= $escaper->escapeHtml($availabilityError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php $contractError = $block->getFieldError('contract_type'); ?>
+                    <div class="field contract_type">
+                        <label class="label" for="contract_type"><span><?= $escaper->escapeHtml(__('Tipo de Contrato')) ?></span></label>
+                        <div class="control">
+                            <select name="contract_type" id="contract_type" class="select<?= $contractError ? ' mage-error' : '' ?>" <?= $contractError ? 'aria-invalid="true" aria-describedby="contract_error"' : '' ?>>
+                                <option value=""><?= $escaper->escapeHtml(__('Selecione')) ?></option>
+                                <?php
+                                $contractOptions = ['CLT', 'PJ', 'Estágio', 'Temporário', 'Ambos (CLT ou PJ)'];
+                                foreach ($contractOptions as $contract): ?>
+                                    <option value="<?= $escaper->escapeHtmlAttr($contract) ?>" <?= $block->getPostValue('contract_type') === $contract ? 'selected="selected"' : '' ?>><?= $escaper->escapeHtml(__($contract)) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php if ($contractError): ?>
+                                <div class="mage-error" id="contract_error" role="alert"><?= $escaper->escapeHtml($contractError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="curriculo-grid">
+                    <?php $salaryError = $block->getFieldError('salary_expectation'); ?>
+                    <div class="field salary_expectation">
+                        <label class="label" for="salary_expectation"><span><?= $escaper->escapeHtml(__('Pretensão Salarial (opcional)')) ?></span></label>
+                        <div class="control">
+                            <input name="salary_expectation"
+                                   id="salary_expectation"
+                                   title="<?= $escaper->escapeHtmlAttr(__('Pretensão Salarial')) ?>"
+                                   class="input-text<?= $salaryError ? ' mage-error' : '' ?>"
+                                   type="text"
+                                   maxlength="50"
+                                   placeholder="<?= $escaper->escapeHtmlAttr(__('Ex: R$ 3.000,00')) ?>"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getPostValue('salary_expectation')) ?>"
+                                   <?= $salaryError ? 'aria-invalid="true" aria-describedby="salary_error"' : '' ?> />
+                            <?php if ($salaryError): ?>
+                                <div class="mage-error" id="salary_error" role="alert"><?= $escaper->escapeHtml($salaryError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php $referralError = $block->getFieldError('referral_source'); ?>
+                    <div class="field referral_source">
+                        <label class="label" for="referral_source"><span><?= $escaper->escapeHtml(__('Como nos conheceu?')) ?></span></label>
+                        <div class="control">
+                            <select name="referral_source" id="referral_source" class="select<?= $referralError ? ' mage-error' : '' ?>" <?= $referralError ? 'aria-invalid="true" aria-describedby="referral_error"' : '' ?>>
+                                <option value=""><?= $escaper->escapeHtml(__('Selecione')) ?></option>
+                                <?php
+                                $referralOptions = ['Site AWA Motos', 'Redes Sociais', 'Indicação', 'LinkedIn', 'Indeed / Vagas.com', 'Google', 'Outro'];
+                                foreach ($referralOptions as $ref): ?>
+                                    <option value="<?= $escaper->escapeHtmlAttr($ref) ?>" <?= $block->getPostValue('referral_source') === $ref ? 'selected="selected"' : '' ?>><?= $escaper->escapeHtml(__($ref)) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                            <?php if ($referralError): ?>
+                                <div class="mage-error" id="referral_error" role="alert"><?= $escaper->escapeHtml($referralError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <div class="curriculo-grid">
+                    <?php $linkedinError = $block->getFieldError('linkedin'); ?>
+                    <div class="field linkedin">
+                        <label class="label" for="linkedin"><span><?= $escaper->escapeHtml(__('LinkedIn')) ?></span></label>
+                        <div class="control">
+                            <input name="linkedin"
+                                   id="linkedin"
+                                   title="<?= $escaper->escapeHtmlAttr(__('LinkedIn')) ?>"
+                                   class="input-text url-input<?= $linkedinError ? ' mage-error' : '' ?>"
+                                   type="url"
+                                   inputmode="url"
+                                   maxlength="255"
+                                   autocomplete="url"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getPostValue('linkedin')) ?>"
+                                   <?= $linkedinError ? 'aria-invalid="true" aria-describedby="linkedin_error"' : '' ?>
+                                   placeholder="https://"
+                                   data-validate="{'validate-url':true}" />
+                            <?php if ($linkedinError): ?>
+                                <div class="mage-error" id="linkedin_error" role="alert"><?= $escaper->escapeHtml($linkedinError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                    <?php $portfolioError = $block->getFieldError('portfolio'); ?>
+                    <div class="field portfolio">
+                        <label class="label" for="portfolio"><span><?= $escaper->escapeHtml(__('Portfólio')) ?></span></label>
+                        <div class="control">
+                            <input name="portfolio"
+                                   id="portfolio"
+                                   title="<?= $escaper->escapeHtmlAttr(__('Portfólio')) ?>"
+                                   class="input-text url-input<?= $portfolioError ? ' mage-error' : '' ?>"
+                                   type="url"
+                                   inputmode="url"
+                                   maxlength="255"
+                                   autocomplete="url"
+                                   value="<?= $escaper->escapeHtmlAttr($block->getPostValue('portfolio')) ?>"
+                                   <?= $portfolioError ? 'aria-invalid="true" aria-describedby="portfolio_error"' : '' ?>
+                                   placeholder="https://"
+                                   data-validate="{'validate-url':true}" />
+                            <?php if ($portfolioError): ?>
+                                <div class="mage-error" id="portfolio_error" role="alert"><?= $escaper->escapeHtml($portfolioError) ?></div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+                <?php $messageError = $block->getFieldError('message'); ?>
+                <div class="field message">
+                    <label class="label" for="message"><span><?= $escaper->escapeHtml(__('Resumo profissional (opcional)')) ?></span></label>
+                    <div class="control">
+                        <textarea name="message"
+                                  id="message"
+                                  title="<?= $escaper->escapeHtmlAttr(__('Resumo profissional')) ?>"
+                                  class="input-text<?= $messageError ? ' mage-error' : '' ?>"
+                                  rows="4"
+                                  maxlength="2000"
+                                  <?= $messageError ? 'aria-invalid="true" aria-describedby="message_error"' : '' ?>
+                                  data-show-counter="true"><?= $escaper->escapeHtml($block->getPostValue('message')) ?></textarea>
+                        <?php if ($messageError): ?>
+                            <div class="mage-error" id="message_error" role="alert"><?= $escaper->escapeHtml($messageError) ?></div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="fieldset">
+                <legend class="legend"><span><?= $escaper->escapeHtml(__('Currículo')) ?></span></legend>
+                <?php $fileError = $block->getFieldError('cv_file'); ?>
+                <div class="field cv-file required">
+                    <label class="label" for="cv_file"><span><?= $escaper->escapeHtml(__('Arquivo do currículo')) ?></span></label>
+                    <div class="control">
+                        <?php $fileDescribed = $fileError ? 'cv_file_note cv_file_error' : 'cv_file_note'; ?>
+                        <input name="cv_file"
+                               id="cv_file"
+                               title="<?= $escaper->escapeHtmlAttr(__('Arquivo do currículo')) ?>"
+                               class="input-text<?= $fileError ? ' mage-error' : '' ?>"
+                               type="file"
+                               accept=".pdf,.doc,.docx"
+                               data-max-size-mb="<?= (int)$block->getMaxFileSizeMb() ?>"
+                               data-allowed-ext="pdf,doc,docx"
+                               required="required"
+                               data-validate="{required:true}"
+                               aria-describedby="<?= $escaper->escapeHtmlAttr($fileDescribed) ?>"
+                               <?= $fileError ? 'aria-invalid="true"' : '' ?> />
+                        <?php if ($block->getPostValue('name') !== ''): ?>
+                            <div class="note"><?= $escaper->escapeHtml(__('Por segurança, anexe o arquivo novamente.')) ?></div>
+                        <?php endif; ?>
+                        <div class="note" id="cv_file_note">
+                            <?= $escaper->escapeHtml(__('Formatos aceitos: %1. Tamanho máximo: %2 MB.', $block->getAllowedExtensionsLabel(), $block->getMaxFileSizeMb())) ?>
+                        </div>
+                        <?php if ($fileError): ?>
+                            <div class="mage-error" id="cv_file_error" role="alert"><?= $escaper->escapeHtml($fileError) ?></div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php $consentError = $block->getFieldError('consent'); ?>
+                <div class="field consent required">
+                    <div class="control">
+                        <input type="checkbox"
+                               name="consent"
+                               id="consent"
+                               value="1"
+                               required="required"
+                               <?= $block->isPostValueChecked('consent') ? 'checked="checked"' : '' ?>
+                               data-validate="{required:true}"
+                               <?= $consentError ? 'aria-invalid="true" aria-describedby="consent_error"' : '' ?> />
+                        <label for="consent">
+                            <?= $escaper->escapeHtml(__('Declaro que as informações são verdadeiras e autorizo o contato para processo seletivo.')) ?>
+                        </label>
+                        <?php if ($consentError): ?>
+                            <div class="mage-error" id="consent_error" role="alert"><?= $escaper->escapeHtml($consentError) ?></div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div class="field hideit no-display" aria-hidden="true">
+                <label for="hideit">Deixe este campo em branco</label>
+                <input type="text" name="hideit" id="hideit" value="" tabindex="-1" autocomplete="off" />
+            </div>
+
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <button type="submit" title="<?= $escaper->escapeHtmlAttr(__('Enviar currículo')) ?>" class="action submit primary">
+                        <span><?= $escaper->escapeHtml(__('Enviar currículo')) ?></span>
+                    </button>
+                </div>
+            </div>
+            </form>
+
+            <script type="text/x-magento-init">
+                {
+                    "*": {
+                        "Magento_Customer/js/block-submit-on-send": {
+                            "formId": "curriculo-form"
+                        }
+                    }
+                }
+            </script>
+        <?php endif; ?>
+    <?php endif; ?>
+</div>

@@ -1,0 +1,9 @@
+node_modules/**
+vendor/**
+pub/static/**
+generated/**
+
+# LESS do tema Magento usa variáveis/mixins (@var, darken(), calc(~"..."))
+# que geram falsos positivos no stylelint sem o parser postcss-less.
+# Mantemos lint apenas para CSS puro.
+**/*.less

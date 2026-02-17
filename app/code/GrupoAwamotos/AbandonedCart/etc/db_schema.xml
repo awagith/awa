@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="grupoawamotos_abandoned_cart" resource="default" engine="innodb" comment="Grupo Awamotos Abandoned Cart">
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true" comment="Entity ID"/>
+        <column xsi:type="int" name="quote_id" unsigned="true" nullable="false" comment="Quote ID"/>
+        <column xsi:type="int" name="customer_id" unsigned="true" nullable="true" comment="Customer ID"/>
+        <column xsi:type="varchar" name="customer_email" nullable="false" length="255" comment="Customer Email"/>
+        <column xsi:type="varchar" name="customer_name" nullable="true" length="255" comment="Customer Name"/>
+        <column xsi:type="smallint" name="store_id" unsigned="true" nullable="false" default="0" comment="Store ID"/>
+        <column xsi:type="decimal" name="cart_value" scale="4" precision="12" nullable="false" default="0" comment="Cart Value"/>
+        <column xsi:type="int" name="items_count" unsigned="true" nullable="false" default="0" comment="Items Count"/>
+        <column xsi:type="timestamp" name="abandoned_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Abandoned At"/>
+        <column xsi:type="smallint" name="email_1_sent" unsigned="true" nullable="false" default="0" comment="Email 1 Sent"/>
+        <column xsi:type="timestamp" name="email_1_sent_at" nullable="true" comment="Email 1 Sent At"/>
+        <column xsi:type="smallint" name="email_2_sent" unsigned="true" nullable="false" default="0" comment="Email 2 Sent"/>
+        <column xsi:type="timestamp" name="email_2_sent_at" nullable="true" comment="Email 2 Sent At"/>
+        <column xsi:type="smallint" name="email_3_sent" unsigned="true" nullable="false" default="0" comment="Email 3 Sent"/>
+        <column xsi:type="timestamp" name="email_3_sent_at" nullable="true" comment="Email 3 Sent At"/>
+        <column xsi:type="smallint" name="recovered" unsigned="true" nullable="false" default="0" comment="Recovered"/>
+        <column xsi:type="timestamp" name="recovered_at" nullable="true" comment="Recovered At"/>
+        <column xsi:type="varchar" name="coupon_code" nullable="true" length="50" comment="Coupon Code"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="20" default="pending" comment="Status"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="GRUPOAWAMOTOS_ABANDONED_CART_QUOTE_ID">
+            <column name="quote_id"/>
+        </constraint>
+        <index referenceId="GRUPOAWAMOTOS_ABANDONED_CART_CUSTOMER_EMAIL" indexType="btree">
+            <column name="customer_email"/>
+        </index>
+        <index referenceId="GRUPOAWAMOTOS_ABANDONED_CART_CUSTOMER_ID" indexType="btree">
+            <column name="customer_id"/>
+        </index>
+        <index referenceId="GRUPOAWAMOTOS_ABANDONED_CART_STORE_ID" indexType="btree">
+            <column name="store_id"/>
+        </index>
+        <index referenceId="GRUPOAWAMOTOS_ABANDONED_CART_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+        <index referenceId="GRUPOAWAMOTOS_ABANDONED_CART_ABANDONED_AT" indexType="btree">
+            <column name="abandoned_at"/>
+        </index>
+        <index referenceId="GRUPOAWAMOTOS_ABANDONED_CART_RECOVERED" indexType="btree">
+            <column name="recovered"/>
+        </index>
+    </table>
+</schema>

@@ -71,7 +71,7 @@ $pretext                = $_helper->filter($this->getConfig('brand_block/pretext
 					<?php } ?>
 					<div class="col-lg-<?php echo $lg_column ?> col-md-<?php echo $md_column ?> col-sm-<?php echo $sm_column ?> col-xs-<?php echo $xs_column ?>">
 						<div class="brand-item">
-							<div class="brand-image"><a href="<?php echo $_brand->getUrl(); ?>" title="<?php echo $_brand->getName(); ?>"><img src="<?php echo $_brand->getThumbnailUrl(); ?>" alt="<?php echo $_brand->getName(); ?>"/></a></div>
+							<div class="brand-image"><a href="<?php echo $_brand->getUrl(); ?>" title="<?php echo $_brand->getName(); ?>"><img src="<?php echo $_brand->getThumbnailUrl(); ?>" alt="<?php echo $_brand->getName(); ?>" loading="lazy"/></a></div>
 							<?php if($show_brand_name){ ?>
 							<div class="brand-name"><a href="<?php echo $_brand->getUrl(); ?>" title="<?php echo $_brand->getName(); ?>"><?php echo $_brand->getName() ?></a></div>
 							<?php } ?>
@@ -88,16 +88,13 @@ $pretext                = $_helper->filter($this->getConfig('brand_block/pretext
 		</div>
 		<?php if($nav && $total>$xs_column_item){ ?>
 		<div class="carousel-controls">
-			<a class="left carousel-control" href="#productcarousel-<?php echo $blockId ?>" role="button" data-slide="prev"><?php echo $nav_prev?$nav_prev:'Previous'); ?></a>
-			<a class="right carousel-control" href="#productcarousel-<?php echo $blockId ?>" role="button" data-slide="next"><?php echo $nav_next?$nav_next:'Next'; ?></a>
+			<a class="left carousel-control" href="#productcarousel-<?php echo $blockId ?>" role="button" data-slide="prev"><?php echo $nav_prev ? $nav_prev : 'Previous'; ?></a>
+			<a class="right carousel-control" href="#productcarousel-<?php echo $blockId ?>" role="button" data-slide="next"><?php echo $nav_next ? $nav_next : 'Next'; ?></a>
 		</div>
 		<?php } ?>
 	</div>
 </div>
 <?php } ?>
 <script type="text/javascript">
-	require([<?php if($this->helper("Rokanthemes\All\Helper\Data")->getConfig("enable_bootstrap_js")): ?>
-		"Rokanthemes_All/lib/bootstrap/js/bootstrap.min",
-	<?php endif; ?>
-		], function () {});
+	require(['jquery'], function () {});
 </script>

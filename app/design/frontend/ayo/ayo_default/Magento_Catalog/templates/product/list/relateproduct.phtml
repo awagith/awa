@@ -91,28 +91,9 @@
 						<?php endif; ?>
 						<div class="actions-secondary">	
 							<ul class="product-extra-link add-to-links">
-								<li>
-									<?php if ($this->helper('Magento\Wishlist\Helper\Data')->isAllow()): ?>
-										<a href="#"
-										   data-post='<?php echo $block->getAddToWishlistParams($_item); ?>'
-										   class="wishlist-link action towishlist" data-action="add-to-wishlist"
-										   title="<?php echo __('Add to Wishlist') ?>">
-											
-										</a>
-									<?php endif; ?>
-								</li>
+								<?php /* B2B: wishlist/compare desativados */ ?>
 								<li class="quickview-product">
-									<a class="quickview-link data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="#" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>"></a>
-								</li>
-								<li>
-									<?php if ($block->getAddToCompareUrl()): ?>
-										<?php $compareHelper = $this->helper('Magento\Catalog\Helper\Product\Compare');?>
-										<a href="#" class="compare-link action tocompare"
-										   data-post='<?php echo $compareHelper->getPostDataParams($_item);?>'
-										   title="<?php echo __('Add to Compare') ?>">
-											
-										</a>
-									<?php endif; ?>
+									<a class="quickview-link data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="javascript: void(0);" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>"></a>
 								</li>
 							</ul>
 						</div>
@@ -163,10 +144,28 @@
 
 </section>
 <?php endif;?>
-<script type="text/x-magento-init">
-    {
-        "#relate_product_slider": {
-            "Magento_Catalog/js/related": {}
-        }
-    }
+<script type="text/javascript">
+	require([
+		'jquery',
+		'mage/mage',
+		'rokanthemes/owl'
+	], function ($) {
+		'use strict';
+
+		$( document ).ready(function() {	
+			$("#relate_product_slider").owlCarousel({
+				lazyLoad:true,
+				items : 6,
+				itemsDesktop : [1366, 5],
+		        itemsDesktopSmall : [1199,4],
+		        itemsTablet : [991, 3],
+		        itemsMobile : [680, 2],
+			    navigation : true,
+			     afterAction: function(el){
+			     this.$owlItems.removeClass('first-active')
+			     this.$owlItems .eq(this.currentItem).addClass('first-active')  
+			    }
+			});
+		});
+	});
 </script>

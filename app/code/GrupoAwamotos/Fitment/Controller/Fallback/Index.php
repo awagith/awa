@@ -1,11 +1,14 @@
 <?php
+declare(strict_types=1);
+
 namespace GrupoAwamotos\Fitment\Controller\Fallback;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
-class Index extends Action
+class Index extends Action implements HttpGetActionInterface
 {
     protected PageFactory $pageFactory;
 

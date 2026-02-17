@@ -1,0 +1,14 @@
+<?php
+/**
+ * AWA Motos – Visually-hidden H1 for the homepage.
+ *
+ * Google expects exactly one <h1> per page. The CMS content uses <h2> for
+ * section headings, so we supply the primary H1 here – hidden from sighted
+ * users but read by screen-readers and crawlers.
+ *
+ * Included only on cms_index_index via layout XML.
+ */
+
+/** @var \Magento\Framework\View\Element\Template $block */
+?>
+<h1 class="awa-sr-only">AWA Motos &mdash; Peças e Acessórios para Motos</h1>

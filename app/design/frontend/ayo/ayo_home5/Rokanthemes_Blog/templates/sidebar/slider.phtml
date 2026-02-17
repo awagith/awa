@@ -1,7 +1,5 @@
 <?php
 
-use \Magento\Framework\Stdlib\StringUtils;
-
 /**
  * Copyright © 2015 RokanThemes.com. All rights reserved.
 
@@ -18,7 +16,6 @@ use \Magento\Framework\Stdlib\StringUtils;
 
 <?php
 
-	$stringFilter = new \Magento\Framework\Stdlib\StringUtils;
 	$enable = $this->getConfig('enable_frontend');
 	$auto = $this->getConfig('auto');
 	$speed = $this->getConfig('speed');
@@ -45,7 +42,7 @@ use \Magento\Framework\Stdlib\StringUtils;
 <?php if ($_postCollection->count() && $enable) { ?>
 <section class="widget box-section block-recent-posts" data-bind="scope: 'recemt-posts'">
 		<div class="rokan-product-heading rokan-onsale-heading">
-			<h2><?php echo __($title) ?> <span class="sup-title"> <?php echo __('Blog') ?></span></h2>
+			<h2><?php echo $block->escapeHtml(__($title)) ?> <span class="sup-title"> <?php echo $block->escapeHtml(__('Blog')) ?></span></h2>
 			<div class="des-title">
 				<?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('home3_des_title')->toHtml(); ?>
 			</div>
@@ -58,8 +55,8 @@ use \Magento\Framework\Stdlib\StringUtils;
 							<div class="product-item">
 								<div class="item-blog">
 									<div class="blog-image">
-										<a href="<?php echo $_post->getPostUrl() ?>">
-											<img alt="<?php echo $_post->getTitle(); ?>" src="<?php echo $this->getMediaFolder().$_post->getThumbnailimage() ?>" />
+										<a href="<?php echo $block->escapeUrl($_post->getPostUrl()) ?>">
+											<img alt="<?php echo $block->escapeHtmlAttr($_post->getTitle()); ?>" src="<?php echo $block->escapeUrl($this->getMediaFolder().$_post->getThumbnailimage()) ?>" loading="lazy" />
 										</a>
 									</div>
 									<div class="blog-content">
@@ -77,16 +74,18 @@ use \Magento\Framework\Stdlib\StringUtils;
 												    	}
 												    }
 											 ?>
-												 <a href="<?php echo $name_d; ?>"> <?php echo $name_c; ?> </a>
+												 <a href="<?php echo $block->escapeUrl($name_d); ?>"> <?php echo $block->escapeHtml($name_c); ?> </a>
 											</div>
-											<h3 class="blog-title"><a href="<?php echo $_post->getPostUrl() ?>"><?php echo $block->escapeHtml($_post->getTitle()) ?></a>
+											<h3 class="blog-title"><a href="<?php echo $block->escapeUrl($_post->getPostUrl()) ?>"><?php echo $block->escapeHtml($_post->getTitle()) ?></a>
 											</h3>
 											<div class="time-conment">
 												<?php 
 													$date = $_post->getPublishTime();
+													$meses = ['Jan'=>'Jan','Feb'=>'Fev','Mar'=>'Mar','Apr'=>'Abr','May'=>'Mai','Jun'=>'Jun','Jul'=>'Jul','Aug'=>'Ago','Sep'=>'Set','Oct'=>'Out','Nov'=>'Nov','Dec'=>'Dez'];
+													$mesEN = date("M", strtotime($date));
+													$mesPT = isset($meses[$mesEN]) ? $meses[$mesEN] : $mesEN;
 												?>
-												Post Date: 
-												<span class="date-time"><span class="date"><?php echo __(date("d", strtotime($date))) ?></span><span class="separator">-</span><span class="month"><?php echo __(date("M", strtotime($date))) ?></span>-<span class="year"><?php echo __(date("Y", strtotime($date))) ?></span></span>
+												<span class="date-time"><span class="date"><?php echo date("d", strtotime($date)) ?></span> <span class="month"><?php echo $mesPT ?></span> <span class="year"><?php echo date("Y", strtotime($date)) ?></span></span>
 											</div>
 											<?php $length = 106; ?>
 										</div>
@@ -111,15 +110,15 @@ use \Magento\Framework\Stdlib\StringUtils;
 
 		jQuery(".block-recent-posts .owl").owlCarousel({
 			lazyLoad:true,
-			items : <?php echo $default; ?>,
+			items : <?php echo (int)$default; ?>,
 			margin: 30,
-			itemsDesktop : [1199,<?php echo $desktop; ?>],
-			itemsDesktopSmall : [991,<?php echo $desktop_small; ?>],
-			itemsTablet: [768,<?php echo $tablet; ?>],
-			itemsMobile : [480,<?php echo $mobile; ?>],
-			slideSpeed : <?php echo $pagination; ?>,
-			paginationSpeed : <?php echo $pagination; ?>,
-			rewindSpeed : <?php echo $pagination; ?>,
+			itemsDesktop : [1199,<?php echo (int)$desktop; ?>],
+			itemsDesktopSmall : [991,<?php echo (int)$desktop_small; ?>],
+			itemsTablet: [768,<?php echo (int)$tablet; ?>],
+			itemsMobile : [480,<?php echo (int)$mobile; ?>],
+			slideSpeed : <?php echo (int)$pagination; ?>,
+			paginationSpeed : <?php echo (int)$pagination; ?>,
+			rewindSpeed : <?php echo (int)$pagination; ?>,
 			addClassActive: true,
 			navigation : <?php echo $show_next_back; ?>,
 			stopOnHover : true,

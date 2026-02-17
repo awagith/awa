@@ -7,6 +7,34 @@
 	}
 }
 
+.products-grid,
+.products-list {
+	.product-item-photo,
+	.product-thumb {
+		.product-image-container {
+			display: block;
+			width: 100% !important;
+			max-width: 100% !important;
+
+			.product-image-wrapper {
+				display: block;
+				overflow: hidden;
+			}
+
+			img {
+				display: block;
+				max-width: 100%;
+				height: auto;
+			}
+		}
+
+		.product-image-container[class*="product-image-container-"] {
+			width: 100% !important;
+			max-width: 100% !important;
+		}
+	}
+}
+
 .header-wrapper-sticky.enable-sticky {
   border-bottom: 1px solid @bordercolor;
 }
@@ -19,6 +47,76 @@
 .cms-index-index .page-main.container{
 	display: none;
 }
+
+.cms-index-index .cat .block_cat > .row {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	-webkit-box-align: stretch;
+	-ms-flex-align: stretch;
+	align-items: stretch;
+}
+
+.cms-index-index .cat .block_cat > .row > .leftBlock,
+.cms-index-index .cat .block_cat > .row > .rightBlock,
+.cms-index-index .cat .block_cat > .row > .centerBlock {
+	float: none;
+}
+
+@media (min-width: 1200px) {
+	.cms-index-index .cat .block_cat > .row > .leftBlock {
+		width: 16.66666667%;
+		max-width: 16.66666667%;
+		flex: 0 0 16.66666667%;
+	}
+	.cms-index-index .cat .block_cat > .row > .leftBlock + .rightBlock,
+	.cms-index-index .cat .block_cat > .row > .leftBlock + .centerBlock {
+		width: 83.33333333%;
+		max-width: 83.33333333%;
+		flex: 0 0 83.33333333%;
+	}
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+	.cms-index-index .cat .block_cat > .row > .leftBlock {
+		width: 25%;
+		max-width: 25%;
+		flex: 0 0 25%;
+	}
+	.cms-index-index .cat .block_cat > .row > .leftBlock + .rightBlock,
+	.cms-index-index .cat .block_cat > .row > .leftBlock + .centerBlock {
+		width: 75%;
+		max-width: 75%;
+		flex: 0 0 75%;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+	.cms-index-index .cat .block_cat > .row > .leftBlock {
+		width: 41.66666667%;
+		max-width: 41.66666667%;
+		flex: 0 0 41.66666667%;
+	}
+	.cms-index-index .cat .block_cat > .row > .leftBlock + .rightBlock,
+	.cms-index-index .cat .block_cat > .row > .leftBlock + .centerBlock {
+		width: 58.33333333%;
+		max-width: 58.33333333%;
+		flex: 0 0 58.33333333%;
+	}
+}
+
+@media (max-width: 767px) {
+	.cms-index-index .cat .block_cat > .row > .leftBlock,
+	.cms-index-index .cat .block_cat > .row > .rightBlock,
+	.cms-index-index .cat .block_cat > .row > .centerBlock {
+		width: 100%;
+		max-width: 100%;
+		flex: 0 0 100%;
+	}
+}
+
 .banner_item_bg{
 	margin: 0;
 }
@@ -80,22 +178,22 @@
 	margin-bottom: 60px;
 }
 .rokan-product-heading{
-    padding: 0px 0 15px 0;
+	padding: 0 0 15px;
     position: relative;
     border-bottom: 1px solid #e1e1e1;
     margin-bottom: 30px;
 }
 .tab_product{
-	padding: 80px 0 140px;
+	padding: 56px 0 88px;
 	background: #f5f5f5;
 	text-align: center;
 	.rokan-product-heading {
 		border: 0;
 		padding: 0;
 		h2{
-			font-size: 30px;
+			font-size: 26px;
 			span{
-				font-size: 30px;
+				font-size: 26px;
 			}
 		}
 	}
@@ -103,25 +201,26 @@
 		margin-top: 0 !important;
 	}
 	.item-product{
-		padding: 20px;
+		padding: 16px;
 		background: #fff;
-		border-radius: 3px;
+		border-radius: 6px;
 	    display: -webkit-box;
 	    display: -ms-flexbox;
 	    display: flex;
-	    -webkit-box-pack: justify;
-	    -ms-flex-pack: justify;
-	    justify-content: space-between;
+	    -webkit-box-pack: start;
+	    -ms-flex-pack: start;
+	    justify-content: flex-start;
 	    -webkit-box-align: center;
-	    -ms-flex-align: center;
-	    align-items: center;
+	    -ms-flex-align: stretch;
+	    align-items: stretch;
+		gap: 12px;
 	}
 	.item-product.listview .product-info{
 		margin-top: 0;
 	}
 	.item-product-parent{
 		padding: 0 15px;
-		margin-bottom: 30px;
+		margin-bottom: 20px;
 	}
 	.product_row .item-product-parent:last-child{
 		margin-bottom: 0;
@@ -129,7 +228,7 @@
 	.item-product .product-info-cart{
 		position: static;
 	    opacity: 1;
-	    margin-top: 25px;
+	    margin-top: 16px;
 	    width: auto;
 	    text-align: left;
 	    button{
@@ -155,18 +254,18 @@
 	.vc_tta-tabs-container{ 
 		display: inline-block;
 		width: 100%;
-	    margin-bottom: 30px;
+	    margin-bottom: 20px;
 	    border-bottom: 1px solid #e1e1e1;
 		.tabs li{
 			float: none;
 			display: inline-block;
-			margin: 0 15px;
+			margin: 0 10px;
 			a{
-				font-size: 18px;
+				font-size: 16px;
 				position: relative;
 				font-weight: 400;
-				line-height: 40px;
-    			padding-bottom: 10px;
+				line-height: 34px;
+	    		padding-bottom: 8px;
     			color: #888;
 				&:before{
 					content: "";
@@ -197,7 +296,7 @@
 		}
 	}
 	.owl-pagination{
-		bottom: -60px;
+		bottom: -44px;
 	}
 }
 .cat .owl-theme .owl-controls .owl-buttons .owl-prev,
@@ -255,9 +354,9 @@
 			top: 0;
 			width: 51px;
 			height: 51px;
-			background-color: #222;
-			-webkit-mask: url(images/newletter_icon.svg) no-repeat 100% 100%;
-    		mask: url(images/newletter_icon.svg);
+			background-color: @linkshover;
+			-webkit-mask: url("images/newletter_icon.svg") no-repeat 100% 100%;
+	    		mask: url("images/newletter_icon.svg");
 		}
 	}
 	.velaFooterTitle{
@@ -306,8 +405,8 @@
 				width: 50px;
 				height: 50px;
 				background-color: @linkshover;
-			    -webkit-mask: url(images/support_icon.svg) no-repeat 100% 100%;
-				mask: url(images/support_icon.svg);
+			    -webkit-mask: url("images/support_icon.svg") no-repeat 100% 100%;
+				mask: url("images/support_icon.svg");
 			}
 		}
 	}
@@ -381,14 +480,14 @@
 }
 @media (max-width: 480px){
 	.owl-carousel .item-product {
-	    padding: 0 10px;
+	    padding: 0;
 	}
 	.tab_product {
 		.item-product.listview .product-info{
 			margin-top: 0;
 		}
 		.item-product {
-		    padding: 10px !important;
+		    padding: 10px;
 		}
 	}
 	.newsletter-footer .control {
@@ -448,7 +547,7 @@
 }
 .onsale_product .item-product .product-info-cart button{
 	&.item_added span:before{
-	  background-color: #222;
+	  background-color: @linkshover;
 	}
 }
 
@@ -457,28 +556,320 @@
 	border-top: 0 !important;
 }
 
+/* Vertical Menu — Home 5 refinements */
+.cms-index-index {
+	.menu_left_home1 {
+		position: relative;
+		z-index: 9999;
+	}
+	.verticalmenu.navigation.side-verticalmenu {
+		width: 100%;
+		h2.title-category-dropdown {
+			background-color: @linkshover;
+			font-weight: 600;
+			letter-spacing: 0.5px;
+			text-transform: uppercase;
+			font-size: 15px;
+			position: relative;
+			&:hover {
+				background-color: darken(@linkshover, 10%);
+			}
+			&.active {
+				border-radius: 6px 6px 0 0;
+			}
+		}
+		> ul {
+			border-radius: 0 0 6px 6px;
+			border: 1px solid @bordercolor;
+			border-top: 0;
+			li.level0 {
+				> a {
+					padding: 10px 15px;
+					line-height: 22px;
+					position: relative;
+					&:hover {
+						padding-left: 18px;
+						color: @linkshover;
+					}
+					/* Category icon (FontAwesome) — adds visual interest */
+					> .cat-icon {
+						margin-right: 8px;
+						width: 18px;
+						text-align: center;
+						font-size: 14px;
+						color: #888;
+						transition: color 0.2s ease;
+					}
+					&:hover > .cat-icon {
+						color: @linkshover;
+					}
+				}
+				/* Category label badges (Novo, Quente, Oferta) */
+				> a > span.cat-label {
+					display: inline-block;
+					font-size: 10px;
+					font-weight: 700;
+					text-transform: uppercase;
+					padding: 2px 6px;
+					border-radius: 3px;
+					line-height: 1;
+					margin-left: 6px;
+					vertical-align: middle;
+					&.cat-label-v1 {
+						background-color: @linkshover;
+						color: #fff;
+					}
+					&.cat-label-v2 {
+						background-color: #ff9800;
+						color: #fff;
+					}
+					&.cat-label-v3 {
+						background-color: #4caf50;
+						color: #fff;
+					}
+				}
+				/* Fullwidth submenu — proper width for flyout */
+				&.fullwidth .level0.submenu {
+					min-width: 550px;
+					max-width: 700px;
+					padding: 20px 15px;
+				}
+				.level0.submenu {
+					min-width: 550px;
+					.row {
+						margin: 0;
+					}
+					.subchildmenu.mega-columns {
+						display: flex;
+						flex-wrap: wrap;
+						padding: 0;
+						margin: 0;
+						> li {
+							padding: 8px 15px;
+							margin-bottom: 5px;
+							box-sizing: border-box;
+							a.title-cat-mega-menu {
+								font-weight: 600;
+								font-size: 14px;
+								margin-bottom: 5px;
+								display: block;
+								border-bottom: 1px solid #f0f0f0;
+								padding-bottom: 8px;
+								color: @maincolor;
+								text-transform: capitalize;
+								transition: color 0.2s ease;
+								&:hover {
+									color: @linkshover;
+								}
+							}
+							/* Nested level2 subcategories */
+							ul.subchildmenu {
+								padding: 0;
+								margin: 0;
+								list-style: none;
+								li.level2 {
+									a {
+										font-size: 13px;
+										color: #666;
+										padding: 4px 0;
+										display: block;
+										transition: color 0.2s ease, padding-left 0.2s ease;
+										&:hover {
+											color: @linkshover;
+											padding-left: 5px;
+										}
+									}
+								}
+							}
+						}
+						/* Column widths by declared class */
+						&.columns2 > li { width: 50%; }
+						&.columns3 > li { width: 33.333%; }
+						&.columns4 > li { width: 25%; }
+						/* Smart auto-sizing — when columns4 but few items, use wider columns */
+						&.columns4 > li:first-child:nth-last-child(1) { width: 100%; }
+						&.columns4 > li:first-child:nth-last-child(2),
+						&.columns4 > li:first-child:nth-last-child(2) ~ li { width: 50%; }
+						&.columns4 > li:first-child:nth-last-child(3),
+						&.columns4 > li:first-child:nth-last-child(3) ~ li { width: 33.333%; }
+					}
+				}
+				/* Staticwidth submenu — used with explicit pixel width */
+				&.staticwidth .level0.submenu {
+					.menu-bottom-block {
+						margin-top: 15px;
+						border-top: 1px solid #f0f0f0;
+						padding-top: 15px;
+						position: relative;
+						z-index: 1;
+						text-align: center;
+						p { margin: 0; }
+						img {
+							max-width: 100%;
+							height: auto;
+							border-radius: 4px;
+						}
+					}
+				}
+				/* Bottom block (both manual CMS and auto-generated from category image) */
+				.level0.submenu .menu-bottom-block {
+					margin-top: 15px;
+					border-top: 1px solid #f0f0f0;
+					padding-top: 15px;
+					position: relative;
+					z-index: 1;
+					p { margin: 0; }
+					img {
+						max-width: 100%;
+						height: auto;
+						border-radius: 6px;
+						display: block;
+					}
+				}
+				.level0.submenu .menu-bottom-block-auto {
+					text-align: center;
+					a.menu-category-banner {
+						display: block;
+						overflow: hidden;
+						border-radius: 6px;
+						transition: opacity 0.25s ease, transform 0.25s ease;
+						&:hover {
+							opacity: 0.92;
+							transform: scale(1.01);
+						}
+						img {
+							width: 100%;
+							height: auto;
+							object-fit: cover;
+							max-height: 180px;
+						}
+					}
+				}
+				/* Parent arrow indicator — more visible */
+				&.parent > a:after {
+					color: #bbb;
+					font-size: 11px;
+				}
+				&.parent:hover > a:after {
+					color: @linkshover;
+					transform: translateX(4px);
+				}
+			}
+			/* expand-category-link inside ul */
+			> li.expand-category-link {
+				border-top: 1px solid @bordercolor;
+				background: #fafafa;
+				border-radius: 0 0 6px 6px;
+				a {
+					color: @maincolor;
+					font-weight: 600;
+					font-size: 13px;
+					display: flex;
+					align-items: center;
+					justify-content: center;
+					gap: 6px;
+					padding: 12px 20px;
+					transition: background 0.2s ease, color 0.2s ease;
+					&:hover {
+						color: @linkshover;
+						background: #f0f0f0;
+					}
+				}
+				&.expanding {
+					background: #f5f5f5;
+				}
+			}
+			/* Vertical background images (CMS block) */
+			> li.vertical-bg-img {
+				border: 0;
+				padding: 0;
+				a { border: 0; }
+			}
+		}
+	}
+}
+
+/* Shadow overlay when vertical menu is open */
+.background_shadow_show {
+	.shadow_bkg_show {
+		cursor: pointer;
+	}
+}
+
+/* Vertical Menu — Tablet responsive (Home 5) */
+@media (max-width: 1199px) and (min-width: 992px) {
+	.cms-index-index .verticalmenu.navigation.side-verticalmenu {
+		h2.title-category-dropdown {
+			font-size: 13px;
+			padding: 14px 15px;
+			letter-spacing: 0;
+		}
+		> ul li.level0 {
+			padding: 0 12px;
+			> a {
+				font-size: 13px;
+				padding: 8px 8px;
+			}
+			.level0.submenu {
+				min-width: 400px;
+			}
+		}
+	}
+}
+
+/* Vertical Menu — Mobile responsive (Home 5) */
+@media (max-width: 767px) {
+	.cms-index-index .verticalmenu.navigation.side-verticalmenu {
+		position: relative;
+		border-radius: 6px;
+		h2.title-category-dropdown {
+			font-size: 13px;
+			padding: 12px 15px;
+			border-radius: 6px;
+			&.active {
+				border-radius: 6px 6px 0 0;
+			}
+		}
+		> ul {
+			li.level0 {
+				padding: 0 10px;
+				> a {
+					font-size: 13px;
+					padding: 8px 5px;
+				}
+				.level0.submenu {
+					min-width: 100% !important;
+					position: static !important;
+					transform: none !important;
+					border: 0;
+					border-top: 1px solid #eee;
+					box-shadow: none;
+					border-radius: 0;
+				}
+			}
+			> li.expand-category-link a {
+				font-size: 12px;
+				padding: 10px 15px;
+			}
+		}
+	}
+}
+
 
 
 
 .tab_product {
 	.item-product.listview .product-thumb {
-	    float: left;
-	    width: 30%;
+	    float: none;
+	    width: 100%;
+	    max-width: 100%;
 	    overflow: hidden;
-	    @media (max-width: 1399px) and (min-width: 1200px){
-	    	 width: 40%;
-	    }
 	}
 	.item-product.listview .product-info {
-	    float: left;
-	    width: 70%;
-	    padding-left: 20px;
-	     @media (max-width: 1399px) and (min-width: 1200px){
-	    	 width: 60%;
-	    }
-	}
-	.item-product .product-info-cart {
-		display: none;
+	    float: none;
+	    width: 100%;
+	    max-width: 100%;
+	    padding-left: 0;
 	}
 }
 .cat_1 {

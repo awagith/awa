@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!--
+    B2B: Remove all compare products UI elements.
+    Product comparison is disabled for B2B autoparts e-commerce.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="catalog.compare.link" remove="true"/>
+        <referenceBlock name="catalog.compare.sidebar" remove="true"/>
+    </body>
+</page>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget id="rokanthemes_newproduct_list" class="Rokanthemes\Newproduct\Block\Widget\Newproduct">
+        <label translate="true">Rokanthemes New Products</label>
+        <description translate="true">Displays new products carousel</description>
+        <parameters>
+            <parameter name="limit" xsi:type="text" visible="true" sort_order="10">
+                <label translate="true">Number of Products</label>
+                <value>12</value>
+            </parameter>
+            <parameter name="row" xsi:type="text" visible="true" sort_order="20">
+                <label translate="true">Rows</label>
+                <value>1</value>
+            </parameter>
+            <parameter name="navigation" xsi:type="select" visible="true" sort_order="30"
+                       source_model="Magento\Config\Model\Config\Source\Yesno">
+                <label translate="true">Show Navigation</label>
+            </parameter>
+            <parameter name="pagination" xsi:type="select" visible="true" sort_order="40"
+                       source_model="Magento\Config\Model\Config\Source\Yesno">
+                <label translate="true">Show Pagination</label>
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>

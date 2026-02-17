@@ -1,0 +1,217 @@
+<?php
+declare(strict_types=1);
+
+namespace GrupoAwamotos\B2B\Model;
+
+use GrupoAwamotos\B2B\Model\CreditLimitFactory;
+use GrupoAwamotos\B2B\Model\CreditTransactionFactory;
+use GrupoAwamotos\B2B\Model\ResourceModel\CreditLimit as CreditLimitResource;
+use GrupoAwamotos\B2B\Model\ResourceModel\CreditTransaction as CreditTransactionResource;
+use GrupoAwamotos\B2B\Model\ResourceModel\CreditLimit\CollectionFactory as CreditCollectionFactory;
+use GrupoAwamotos\B2B\Model\ResourceModel\CreditTransaction\CollectionFactory as TxnCollectionFactory;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Psr\Log\LoggerInterface;
+
+class CreditService
+{
+    private CreditLimitFactory $creditFactory;
+    private CreditTransactionFactory $txnFactory;
+    private CreditLimitResource $creditResource;
+    private CreditTransactionResource $txnResource;
+    private CreditCollectionFactory $creditCollectionFactory;
+    private TxnCollectionFactory $txnCollectionFactory;
+    private ScopeConfigInterface $scopeConfig;
+    private LoggerInterface $logger;
+
+    public function __construct(
+        CreditLimitFactory $creditFactory,
+        CreditTransactionFactory $txnFactory,
+        CreditLimitResource $creditResource,
+        CreditTransactionResource $txnResource,
+        CreditCollectionFactory $creditCollectionFactory,
+        TxnCollectionFactory $txnCollectionFactory,
+        ScopeConfigInterface $scopeConfig,
+        LoggerInterface $logger
+    ) {
+        $this->creditFactory = $creditFactory;
+        $this->txnFactory = $txnFactory;
+        $this->creditResource = $creditResource;
+        $this->txnResource = $txnResource;
+        $this->creditCollectionFactory = $creditCollectionFactory;
+        $this->txnCollectionFactory = $txnCollectionFactory;
+        $this->scopeConfig = $scopeConfig;
+        $this->logger = $logger;
+    }
+
+    public function isEnabled(): bool
+    {
+        return (bool) $this->scopeConfig->getValue('grupoawamotos_b2b/credit/enabled');
+    }
+
+    /**
+     * Get payment method title from config
+     */
+    public function getPaymentTitle(): string
+    {
+        return (string) ($this->scopeConfig->getValue('grupoawamotos_b2b/credit/payment_title') ?: 'Crédito B2B (Faturamento)');
+    }
+
+    /**
+     * Get or create credit limit for customer
+     */
+    public function getCreditLimit(int $customerId): CreditLimit
+    {
+        $collection = $this->creditCollectionFactory->create();
+        $collection->addFieldToFilter('customer_id', $customerId);
+        $credit = $collection->getFirstItem();
+
+        if (!$credit->getId()) {
+            $credit = $this->creditFactory->create();
+            $credit->setCustomerId($customerId);
+            $credit->setCreditLimit(0);
+            $credit->setUsedCredit(0);
+            $credit->setCurrencyCode('BRL');
+            $this->creditResource->save($credit);
+        }
+
+        return $credit;
+    }
+
+    /**
+     * Set credit limit for customer (admin action)
+     */
+    public function setLimit(int $customerId, float $limit, ?int $adminId = null, string $comment = ''): CreditLimit
+    {
+        $credit = $this->getCreditLimit($customerId);
+        $oldLimit = $credit->getCreditLimit();
+        $credit->setCreditLimit($limit);
+        $this->creditResource->save($credit);
+
+        $this->logTransaction(
+            $customerId,
+            CreditTransaction::TYPE_ADJUSTMENT,
+            $limit - $oldLimit,
+            $credit->getAvailableCredit(),
+            null,
+            'limit_change',
+            $comment ?: sprintf('Limite alterado de R$ %.2f para R$ %.2f', $oldLimit, $limit),
+            $adminId
+        );
+
+        return $credit;
+    }
+
+    /**
+     * Charge credit (debit for an order)
+     */
+    public function charge(int $customerId, float $amount, int $orderId, string $reference = ''): void
+    {
+        $credit = $this->getCreditLimit($customerId);
+
+        if ($credit->getAvailableCredit() < $amount) {
+            throw new LocalizedException(__('Crédito insuficiente. Disponível: R$ %1', number_format($credit->getAvailableCredit(), 2, ',', '.')));
+        }
+
+        $credit->setUsedCredit($credit->getUsedCredit() + $amount);
+        $this->creditResource->save($credit);
+
+        $this->logTransaction(
+            $customerId,
+            CreditTransaction::TYPE_CHARGE,
+            -$amount,
+            $credit->getAvailableCredit(),
+            $orderId,
+            $reference ?: "Pedido #$orderId"
+        );
+
+        $this->logger->info("B2B Credit charged: customer=$customerId amount=$amount order=$orderId");
+    }
+
+    /**
+     * Refund credit
+     */
+    public function refund(int $customerId, float $amount, int $orderId, string $reference = ''): void
+    {
+        $credit = $this->getCreditLimit($customerId);
+        $newUsed = max(0, $credit->getUsedCredit() - $amount);
+        $credit->setUsedCredit($newUsed);
+        $this->creditResource->save($credit);
+
+        $this->logTransaction(
+            $customerId,
+            CreditTransaction::TYPE_REFUND,
+            $amount,
+            $credit->getAvailableCredit(),
+            $orderId,
+            $reference ?: "Estorno Pedido #$orderId"
+        );
+    }
+
+    /**
+     * Record payment received (reduces used_credit)
+     */
+    public function recordPayment(int $customerId, float $amount, ?int $adminId = null, string $comment = ''): void
+    {
+        $credit = $this->getCreditLimit($customerId);
+        $newUsed = max(0, $credit->getUsedCredit() - $amount);
+        $credit->setUsedCredit($newUsed);
+        $this->creditResource->save($credit);
+
+        $this->logTransaction(
+            $customerId,
+            CreditTransaction::TYPE_PAYMENT,
+            $amount,
+            $credit->getAvailableCredit(),
+            null,
+            'payment',
+            $comment,
+            $adminId
+        );
+    }
+
+    /**
+     * Get transaction history for customer
+     */
+    public function getTransactions(int $customerId, int $limit = 20): \Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection
+    {
+        $collection = $this->txnCollectionFactory->create();
+        $collection->filterByCustomer($customerId);
+        $collection->setOrder('created_at', 'DESC');
+        $collection->setPageSize($limit);
+        return $collection;
+    }
+
+    /**
+     * Check if customer has sufficient credit
+     */
+    public function hasSufficientCredit(int $customerId, float $amount): bool
+    {
+        $credit = $this->getCreditLimit($customerId);
+        return $credit->getAvailableCredit() >= $amount;
+    }
+
+    private function logTransaction(
+        int $customerId,
+        string $type,
+        float $amount,
+        float $balanceAfter,
+        ?int $orderId = null,
+        ?string $reference = null,
+        ?string $comment = null,
+        ?int $adminId = null
+    ): void {
+        $txn = $this->txnFactory->create();
+        $txn->setData([
+            'customer_id' => $customerId,
+            'type' => $type,
+            'amount' => $amount,
+            'balance_after' => $balanceAfter,
+            'order_id' => $orderId,
+            'reference' => $reference,
+            'comment' => $comment,
+            'admin_user_id' => $adminId,
+        ]);
+        $this->txnResource->save($txn);
+    }
+}

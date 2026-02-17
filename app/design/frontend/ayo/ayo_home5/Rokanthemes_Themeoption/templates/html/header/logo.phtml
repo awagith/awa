@@ -13,12 +13,12 @@
 <?php $storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt();?>
 <div class="logo">
 <?php if (!$block->isHomePage()):?>
-    <a href="<?php echo $block->getUrl(''); ?>" title="<?php /* @escapeNotVerified */ echo $storeName ?>">
+    <a href="<?php echo $block->escapeUrl($block->getUrl('')); ?>" title="<?php echo $block->escapeHtmlAttr($storeName) ?>">
 <?php endif ?>
-	<img src="<?php /* @escapeNotVerified */ echo $block->getLogoSrc() ?>"
-		 alt="<?php /* @escapeNotVerified */ echo $block->getLogoAlt() ?>"
-		 <?php echo $block->getLogoWidth() ? 'width="' . $block->getLogoWidth() . '"' : '' ?>
-		 <?php echo $block->getLogoHeight() ? 'height="' . $block->getLogoHeight() . '"' : '' ?>
+	<img src="<?php echo $block->escapeUrl($block->getLogoSrc()) ?>"
+		 alt="<?php echo $block->escapeHtmlAttr($block->getLogoAlt()) ?>"
+		 <?php echo $block->getLogoWidth() ? 'width="' . (int)$block->getLogoWidth() . '"' : '' ?>
+		 <?php echo $block->getLogoHeight() ? 'height="' . (int)$block->getLogoHeight() . '"' : '' ?>
 	/>
 <?php if (!$block->isHomePage()):?>
     </a>

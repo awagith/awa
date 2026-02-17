@@ -1,17 +1,18 @@
-"Custom Menu","Menu Personalizado"
-"Menu","Menu"
-"Navigation","Navegação"
-"Categories","Categorias"
+Menu,Menu
 "All Categories","Todas as Categorias"
-"Shop by Category","Comprar por Categoria"
-"Browse","Navegar"
+"Shop By Category","Comprar por Categoria"
+"Shop By Department","Comprar por Departamento"
+Department,Departamento
+Departments,Departamentos
+Browse,Navegar
+"Browse All","Ver Todos"
+"Main Menu","Menu Principal"
+"Main Navigation","Navegação Principal"
+"Top Menu","Menu Superior"
+"View All Products","Ver Todos os Produtos"
+"Add to Cart","Adicionar ao Carrinho"
 "View All","Ver Todos"
-"Departments","Departamentos"
-"Shop Now","Compre Agora"
-"New","Novo"
-"Hot","Quente"
-"Sale","Promoção"
-"Featured","Destaque"
-"More Categories","Mais Categorias"
-"Sub Categories","Subcategorias"
-"Popular","Popular"
+"Shop Now","Comprar Agora"
+"Quick View","Visualização Rápida"
+Loading...,Carregando...
+Search,Buscar

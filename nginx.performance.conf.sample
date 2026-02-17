@@ -1,0 +1,14 @@
+# Snippet opcional de performance (Nginx)
+# Inclua dentro do server { ... } ou http { ... } conforme diretiva.
+
+# gzip já existe no nginx.conf.sample; use brotli apenas se disponível.
+
+# Brotli (se módulo instalado)
+# brotli on;
+# brotli_comp_level 5;
+# brotli_types text/plain text/css application/javascript application/json application/xml image/svg+xml;
+
+# Timeouts prudentes (ajuste conforme infra)
+# client_body_timeout 30s;
+# client_header_timeout 30s;
+# send_timeout 30s;

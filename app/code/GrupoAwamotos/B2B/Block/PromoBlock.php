@@ -74,6 +74,45 @@ class PromoBlock extends Template
     }
 
     /**
+     * Is current visitor a guest?
+     */
+    public function isGuest(): bool
+    {
+        return !$this->customerSession->isLoggedIn();
+    }
+
+    /**
+     * Get login URL for B2B price visibility.
+     */
+    public function getLoginUrl(): string
+    {
+        return $this->getUrl('customer/account/login');
+    }
+
+    /**
+     * Get quote request URL.
+     */
+    public function getQuoteUrl(): string
+    {
+        return $this->getUrl('b2b/quote/index');
+    }
+
+    /**
+     * Short operational rules shown in homepage B2B promo.
+     *
+     * @return string[]
+     */
+    public function getQuickRules(): array
+    {
+        return [
+            'Pedido mínimo inicial: R$ 500',
+            'Reposição a partir de R$ 300',
+            'Múltiplos por embalagem quando aplicável',
+            'Grupos Atacado/VIP com vantagens progressivas'
+        ];
+    }
+
+    /**
      * Get benefits list
      *
      * @return array

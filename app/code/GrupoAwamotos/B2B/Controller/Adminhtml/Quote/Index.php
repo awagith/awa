@@ -8,9 +8,10 @@ namespace GrupoAwamotos\B2B\Controller\Adminhtml\Quote;
 
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
+use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\View\Result\PageFactory;
 
-class Index extends Action
+class Index extends Action implements HttpGetActionInterface
 {
     const ADMIN_RESOURCE = 'GrupoAwamotos_B2B::quotes';
 

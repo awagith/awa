@@ -1,0 +1,42 @@
+{
+  "name": "grupo-awamotos-ayo-theme",
+  "version": "1.0.0",
+  "description": "Magento 2.4.8-p3 Rokanthemes Ayo - JS Bundle Optimization",
+  "private": true,
+  "scripts": {
+    "build": "webpack --mode production",
+    "build:dev": "webpack --mode development",
+    "build:watch": "webpack --mode development --watch",
+    "analyze": "webpack --mode production --profile --json > stats.json && webpack-bundle-analyzer stats.json",
+    "optimize": "./scripts/build-optimize.sh",
+    "deploy": "./scripts/deploy-optimized.sh",
+    "lighthouse": "lhci autorun",
+    "lighthouse:ci": "lhci autorun --config=.lighthouserc.js",
+    "validate": "./scripts/build-optimize.sh",
+    "lint:css": "stylelint \"app/design/frontend/ayo/ayo_home5/web/css/{awa-core.css,awa-layout.css,awa-components.css,awa-fixes.css,awa-grid-unified.css,awa-consistency.css,awa-checkout-home5.css}\"",
+    "lint:css:fix": "stylelint \"app/design/frontend/ayo/ayo_home5/web/css/{awa-core.css,awa-layout.css,awa-components.css,awa-fixes.css,awa-grid-unified.css,awa-consistency.css,awa-checkout-home5.css}\" --fix"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@lhci/cli": "^0.12.0",
+    "babel-loader": "^9.2.1",
+    "core-js": "^3.39.0",
+    "stylelint": "^16.26.1",
+    "stylelint-config-standard": "^37.0.0",
+    "terser-webpack-plugin": "^5.3.10",
+    "webpack": "^5.97.0",
+    "webpack-bundle-analyzer": "^4.10.2",
+    "webpack-cli": "^5.1.4"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "sideEffects": false
+}
