@@ -306,6 +306,11 @@
     contain-intrinsic-size: auto 0;
 }
 
+/* Zerar margins legadas da _extend.less no velaServicesInner dentro de trust-and-offers */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .velaServicesInner {
+    margin: 0 !important;
+}
+
 /* Neste bloco usamos gap do grid; evitar somar margens/paddings legados */
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .banner_mid_1,
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal {
@@ -856,17 +861,19 @@
 =========================================== */
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row,
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex {
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: var(--awa-space-4);
+    display: grid !important;
+    grid-template-columns: repeat(5, minmax(0, 1fr)) !important;
+    gap: var(--awa-space-4) !important;
+    flex-wrap: unset !important; /* anula flex-wrap da _extend.less */
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row > [class*="col-"],
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex > [class*="col-"] {
-    width: auto;
-    max-width: 100%;
+    width: auto !important;
+    max-width: 100% !important;
     float: none;
     padding: 0;
+    flex: unset !important; /* anula flex: 0 0 20% da _extend.less */
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .boxService {
@@ -934,8 +941,8 @@
 @media (width <= 991px) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: var(--awa-space-3);
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: var(--awa-space-3) !important;
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row > [class*="col-"]:nth-child(n+4),
@@ -948,7 +955,7 @@
 @media (width <= 767px) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row > [class*="col-"]:nth-child(n+4),
@@ -972,8 +979,8 @@
 @media (width <= 480px) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex {
-        grid-template-columns: 1fr;
-        gap: var(--awa-space-2);
+        grid-template-columns: 1fr !important;
+        gap: var(--awa-space-2) !important;
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row > [class*="col-"]:nth-child(n+4),
@@ -983,5 +990,126 @@
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper {
         padding-inline: 12px;
+    }
+}
+
+/* ===========================================
+   AF-10: HOME5 ALIGNMENT SYSTEM
+   Normalização de colunas/containers e responsividade
+   sem quebrar widgets legados Rokanthemes.
+
+   Problema resolvido: .page-main (padding 20px) +
+   .container internos (padding 20px) = 40px de padding
+   duplo. O token --awa-home-inline-padding unifica
+   o padding inline e elimina desalinhamento entre
+   .page-main (15px em ≤1199px) e containers (20px).
+=========================================== */
+
+/* Token centralizado — fonte única para padding inline da homepage */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper {
+    --awa-home-inline-padding: 20px;
+}
+
+/* .page-main na homepage: zera padding inline (seções internas controlam via token) */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page-main {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Aplica o token em todos os wrappers-chave da homepage */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container {
+    padding-left: var(--awa-home-inline-padding);
+    padding-right: var(--awa-home-inline-padding);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold {
+    padding-left: var(--awa-home-inline-padding);
+    padding-right: var(--awa-home-inline-padding);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .block_notification > .container {
+    padding-left: var(--awa-home-inline-padding);
+    padding-right: var(--awa-home-inline-padding);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product > .container {
+    padding-left: var(--awa-home-inline-padding);
+    padding-right: var(--awa-home-inline-padding);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper {
+    padding-inline: var(--awa-home-inline-padding);
+}
+
+/* Full-bleed: usa o token negado para manter alinhamento perfeito com o container pai */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold .awa-mobile-quick-nav {
+    margin-left: calc(-1 * var(--awa-home-inline-padding));
+    margin-right: calc(-1 * var(--awa-home-inline-padding));
+}
+
+/* Hero CTA strip: largura relativa ao token */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip {
+    width: calc(100% - 2 * var(--awa-home-inline-padding));
+}
+
+/* Container-duplo: neutralizar quando Rokanthemes injeta .container dentro de outro */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container .container {
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Row/col normalização: converte .row flutuante restante dentro de .container para CSS Grid */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--awa-grid-gap, 24px);
+    margin: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > [class*="col-"] {
+    float: none;
+    width: auto;
+    max-width: 100%;
+    padding: 0;
+}
+
+/* Col-span mapping: converte col-md-{N} do Bootstrap 3 para grid-column */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-3 { grid-column: span 3; }
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-4 { grid-column: span 4; }
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-5 { grid-column: span 5; }
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-6 { grid-column: span 6; }
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-7 { grid-column: span 7; }
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-8 { grid-column: span 8; }
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-9 { grid-column: span 9; }
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-12 { grid-column: span 12; }
+
+/* ======================== AF-10 RESPONSIVO ======================== */
+
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper {
+        --awa-home-inline-padding: 15px;
+    }
+
+    /* Colunas colapsam para full-width em tablet */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row {
+        grid-template-columns: 1fr;
+        gap: var(--awa-grid-gap, 20px);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > [class*="col-"] {
+        grid-column: auto;
+    }
+}
+
+@media (width <= 480px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper {
+        --awa-home-inline-padding: 12px;
+    }
+}
+
+@media (width <= 320px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper {
+        --awa-home-inline-padding: 10px;
     }
 }
