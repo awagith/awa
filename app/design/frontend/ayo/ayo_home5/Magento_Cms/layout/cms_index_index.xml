@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <!-- R35: awa-consistency-home5.css carregado apenas na homepage (antes era global via default_head_blocks.xml) -->
+    <head>
+        <css src="css/awa-consistency-home5.css"/>
+    </head>
     <body>
         <referenceBlock name="theme.active.editor" remove="true"/>
         <referenceBlock name="google.maps.api" remove="true"/>
@@ -18,7 +22,7 @@
                    before="-"/>
         </referenceContainer>
 
-        <!-- Moved outside referenceContainer (XSD validation requires referenceBlock at body level) -->
+        <!-- referenceBlock at body level (XSD requires this, not nested in referenceContainer) -->
         <referenceBlock name="nav.bar.title" remove="true"/>
         <referenceBlock name="cms_page_content" remove="true"/>
     </body>

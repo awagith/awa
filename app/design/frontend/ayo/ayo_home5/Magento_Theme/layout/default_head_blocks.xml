@@ -1,45 +1,24 @@
 <?xml version="1.0"?>
-<!--
-/**
- * Copyright © 2015 Magento. All rights reserved.
- * See COPYING.txt for license details.
- */
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"; xsi:nonamespaceschemalocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <!-- viewport meta já definido pelo module-theme base; não duplicar -->
-
-        <!-- ========== LIBRARIES (theme core) ========== -->
-           <css src="css/bootstrap.css" />
-        <css src="css/font-awesome.min.css" />
-        <css src="css/owl.carousel.css" />
-        <css src="css/animation_theme.css" />
-        <css src="css/icomoon.css" />
-        <css src="css/simple-line-icons.css" />
-
-        <!-- ========== MAGENTO / AYO CORE ========== -->
-        <css src="css/styles-l.css" />
-        <css src="css/styles-m.css" />
-        <css src="css/themes.css" />
-        <css src="css/themes5.css" />
-
-        <!-- ========== AWA CONSOLIDADO (4 arquivos) ========== -->
-        <!-- Substitui: awa-master.css, awa-header-combined.css, awa-header.css,
-             awa-footer.css, awa-footer-v2.css, awa-footer-home5-standard.css,
-             awa-products.css, awa-pages.css, awa-visual-enhancements.css,
-             awa-home5-sections.css, awa-bugfixes.css, awa-ayo-alignment-fix.css,
-             awa-verticalmenu-fix.css, awa-ayo-enhancements.css,
-             awa-palette-global.css, awa-auditoria-visual-2026.css -->
-        <css src="css/awa-core.css" />
-        <css src="css/awa-layout.css" />
-        <css src="css/awa-components.css" />
-        <css src="css/awa-fixes.css" />
-
-        <!-- poppins é carregado automaticamente pelo rokanthemes head.phtml via admin config -->
+        <css src="css/themes5.css"/>
+        <css src="css/awa-core.css"/>
+        <css src="css/awa-layout.css"/>
+        <css src="css/awa-components.css"/>
+        <css src="css/awa-consistency.css"/>
+        <css src="css/awa-consistency-ui.css"/>
+        <!-- R35: awa-consistency-home5.css movido para cms_index_index.xml (homepage-only).
+             todas as regras ja sao scopadas via :is(body.cms-index-index, body.cms-home, ...)
+             entao carrega-lo globalmente desperdicava ~18 kb de parse em paginas nao-homepage. -->
+        <css src="css/awa-fixes.css"/>
+        <css src="css/awa-grid-unified.css"/>
     </head>
     <body>
-        <referencecontainer name="before.body.end">
-            <block class="Magento\Framework\View\Element\Template" name="awa.master.fix.js" template="Magento_Theme::html/awa-js-loader.phtml" />
-        </referencecontainer>
+        <referenceContainer name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.master.fix.js"
+                   template="Magento_Theme::html/awa-js-loader.phtml"/>
+        </referenceContainer>
     </body>
-</page>duplicarLIBRARIES<csssrc=<csssrc=<csssrc=<csssrc=<csssrc=<csssrc=MAGENTOAYOCORE<csssrc=<csssrc=<csssrc=<csssrc=AWACONSOLIDADOSubstitui
+</page>
