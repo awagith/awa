@@ -105,7 +105,7 @@ class EmailSender
                 self::TEMPLATE_AT_RISK_ADMIN,
                 $this->helper->getAtRiskAlertEmail(),
                 $templateVars,
-                'adminhtml'
+                'frontend'
             );
 
             $this->logger->info(sprintf(
@@ -242,7 +242,7 @@ class EmailSender
                 self::TEMPLATE_RFM_WEEKLY,
                 $this->helper->getAtRiskAlertEmail(),
                 $templateVars,
-                'adminhtml'
+                'frontend'
             );
 
             $this->logger->info('[ERP Alert] Weekly RFM report sent.');
@@ -303,7 +303,7 @@ class EmailSender
                 self::TEMPLATE_FORECAST,
                 $this->helper->getAtRiskAlertEmail(),
                 $templateVars,
-                'adminhtml'
+                'frontend'
             );
 
             $this->logger->info(sprintf(

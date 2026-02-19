@@ -89,12 +89,34 @@ class RfmCalculator
 
         $connection = $this->resource->getConnection();
         $table = $this->resource->getTableName('rexis_customer_classification');
+        $customerEntityTable = $this->resource->getTableName('customer_entity');
+
+        // Filter out deleted customers to avoid FK constraint violation
+        $customerIds = array_map('intval', array_keys($agg));
+        $existingIds = [];
+        foreach (array_chunk($customerIds, 1000) as $chunk) {
+            $select = $connection->select()
+                ->from($customerEntityTable, ['entity_id'])
+                ->where('entity_id IN (?)', $chunk);
+            $existingIds = array_merge($existingIds, $connection->fetchCol($select));
+        }
+        $existingIdsMap = array_flip($existingIds);
+        $skipped = count($agg) - count(array_intersect_key($agg, $existingIdsMap));
+        if ($skipped > 0) {
+            $this->logger->warning(
+                sprintf('[RexisML RFM] Skipped %d customers (deleted from customer_entity)', $skipped)
+            );
+        }
 
         // Clear current month data
         $connection->delete($table, ['mes_rexis_code = ?' => $mesCode]);
 
         $count = 0;
         foreach ($agg as $cid => $data) {
+            // Skip customers that no longer exist in customer_entity
+            if (!isset($existingIdsMap[(int)$cid])) {
+                continue;
+            }
             // Recency: lower days = better = higher score (invert)
             $rScore = 6 - $this->quintileScore($recArr[$cid], $rQuintiles);
             $fScore = $this->quintileScore($freqArr[$cid], $fQuintiles);

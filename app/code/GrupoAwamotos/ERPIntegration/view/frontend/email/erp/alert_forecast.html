@@ -1,0 +1,98 @@
+<!--
+/**
+ * ERP Integration - Sales Forecast Alert Email (Admin)
+ */
+-->
+<!--@subject {{trans "Alerta de Projeção de Vendas - %month" month=$current_month}} @-->
+<!--@vars
+{"var actual_sales":"Vendas Realizadas","var projected_sales":"Projeção","var monthly_target":"Meta Mensal","var store.getFrontendName()":"Nome da Loja"}
+@-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <p class="greeting">{{trans "Alerta de Projeção de Vendas"}}</p>
+            <p>
+                {{trans "A projeção de vendas para o mês atual está <strong>abaixo da meta</strong> estabelecida."}}
+            </p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <table cellspacing="0" cellpadding="15" border="0" width="100%" style="margin:20px 0;">
+                <tr>
+                    <td style="background:#e3f2fd; border-radius:8px; text-align:center; width:33%;">
+                        <span style="color:#666; font-size:12px;">{{trans "Realizado"}}</span>
+                        <br/>
+                        <strong style="color:#1565c0; font-size:28px;">R$ {{var actual_sales}}</strong>
+                    </td>
+                    <td style="background:#fff3e0; border-radius:8px; text-align:center; width:33%;">
+                        <span style="color:#666; font-size:12px;">{{trans "Projeção"}}</span>
+                        <br/>
+                        <strong style="color:#ef6c00; font-size:28px;">R$ {{var projected_sales}}</strong>
+                    </td>
+                    <td style="background:#ffebee; border-radius:8px; text-align:center; width:33%;">
+                        <span style="color:#666; font-size:12px;">{{trans "Meta"}}</span>
+                        <br/>
+                        <strong style="color:#c62828; font-size:28px;">R$ {{var monthly_target}}</strong>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr class="email-details">
+        <td>
+            <h3 style="color:#333; border-bottom:2px solid #333; padding-bottom:10px;">
+                {{trans "Detalhes da Projeção"}}
+            </h3>
+            <table cellspacing="0" cellpadding="8" border="0" width="100%">
+                <tr>
+                    <td style="border-bottom:1px solid #eee;">{{trans "Dias transcorridos no mês:"}}</td>
+                    <td style="border-bottom:1px solid #eee; text-align:right;"><strong>{{var days_passed}}</strong></td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:1px solid #eee;">{{trans "Dias restantes:"}}</td>
+                    <td style="border-bottom:1px solid #eee; text-align:right;"><strong>{{var days_remaining}}</strong></td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:1px solid #eee;">{{trans "Meta diária necessária:"}}</td>
+                    <td style="border-bottom:1px solid #eee; text-align:right;"><strong>R$ {{var daily_target}}</strong></td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:1px solid #eee;">{{trans "Média diária atual:"}}</td>
+                    <td style="border-bottom:1px solid #eee; text-align:right;"><strong>R$ {{var daily_average}}</strong></td>
+                </tr>
+                <tr>
+                    <td style="border-bottom:1px solid #eee;">{{trans "Gap para atingir meta:"}}</td>
+                    <td style="border-bottom:1px solid #eee; text-align:right; color:#c62828;"><strong>R$ {{var gap_amount}}</strong></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr class="email-action">
+        <td>
+            <p style="margin-top:20px;">
+                <strong>{{trans "Ações Recomendadas:"}}</strong>
+            </p>
+            <ul style="margin:10px 0; padding-left:20px;">
+                <li>{{trans "Intensificar contato com clientes Champions e Leais"}}</li>
+                <li>{{trans "Enviar campanhas de reengajamento para clientes Em Risco"}}</li>
+                <li>{{trans "Revisar propostas em aberto e agilizar fechamentos"}}</li>
+                <li>{{trans "Considerar promoções ou condições especiais"}}</li>
+            </ul>
+        </td>
+    </tr>
+    <tr class="email-footer">
+        <td>
+            <p style="margin-top:20px; font-size:12px; color:#666;">
+                {{trans "Este alerta foi gerado automaticamente pelo módulo de Integração ERP."}}
+                <br/>
+                {{trans "Nível de confiança da projeção: %confidence%%" confidence=$confidence_level}}
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+
+    <!-- FitmentKeywordType for ES5/OpenSearch CompositeResolver (primary) -->
+    <type name="Magento\Elasticsearch\Elasticsearch5\Model\Adapter\FieldMapper\Product\FieldProvider\FieldType\Resolver\CompositeResolver">
+        <arguments>
+            <argument name="items" xsi:type="array">
+                <item name="fitmentKeyword" xsi:type="object" sortOrder="5">GrupoAwamotos\Fitment\Model\Adapter\FieldMapper\Product\FieldProvider\FieldType\Resolver\FitmentKeywordType</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- FitmentKeywordType for base CompositeResolver (fallback) -->
+    <type name="Magento\Elasticsearch\Model\Adapter\FieldMapper\Product\FieldProvider\FieldType\Resolver\CompositeResolver">
+        <arguments>
+            <argument name="items" xsi:type="array">
+                <item name="fitmentKeyword" xsi:type="object" sortOrder="5">GrupoAwamotos\Fitment\Model\Adapter\FieldMapper\Product\FieldProvider\FieldType\Resolver\FitmentKeywordType</item>
+            </argument>
+        </arguments>
+    </type>
+
+</config>

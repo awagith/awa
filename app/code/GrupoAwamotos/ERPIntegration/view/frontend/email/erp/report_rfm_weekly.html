@@ -1,0 +1,81 @@
+<!--
+/**
+ * ERP Integration - Weekly RFM Report Email (Admin)
+ */
+-->
+<!--@subject {{trans "Relatório Semanal RFM - %store_name" store_name=$store.getFrontendName()}} @-->
+<!--@vars
+{"var segments":"Dados dos Segmentos","var total_customers":"Total de Clientes","var store.getFrontendName()":"Nome da Loja"}
+@-->
+
+{{template config_path="design/email/header_template"}}
+
+<table>
+    <tr class="email-intro">
+        <td>
+            <p class="greeting">{{trans "Relatório Semanal de Segmentação RFM"}}</p>
+            <p>
+                {{trans "Confira abaixo a distribuição dos seus <strong>%total_customers</strong> clientes por segmento RFM." total_customers=$total_customers}}
+            </p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <h3 style="color:#333; border-bottom:2px solid #333; padding-bottom:10px;">
+                {{trans "Distribuição por Segmento"}}
+            </h3>
+            <table class="order-details" cellspacing="0" cellpadding="0" border="0" width="100%">
+                <tr>
+                    <th style="text-align:left; padding:10px; background:#f5f5f5; border-bottom:1px solid #ddd;">{{trans "Segmento"}}</th>
+                    <th style="text-align:center; padding:10px; background:#f5f5f5; border-bottom:1px solid #ddd;">{{trans "Clientes"}}</th>
+                    <th style="text-align:center; padding:10px; background:#f5f5f5; border-bottom:1px solid #ddd;">{{trans "% do Total"}}</th>
+                    <th style="text-align:right; padding:10px; background:#f5f5f5; border-bottom:1px solid #ddd;">{{trans "Receita Total"}}</th>
+                    <th style="text-align:left; padding:10px; background:#f5f5f5; border-bottom:1px solid #ddd;">{{trans "Ação Sugerida"}}</th>
+                </tr>
+                {{var segments}}
+            </table>
+        </td>
+    </tr>
+    <tr class="email-highlights">
+        <td style="padding-top:20px;">
+            <h3 style="color:#333; border-bottom:2px solid #333; padding-bottom:10px;">
+                {{trans "Destaques da Semana"}}
+            </h3>
+            <table cellspacing="0" cellpadding="10" border="0" width="100%">
+                <tr>
+                    <td style="background:#e8f5e9; border-radius:8px; text-align:center; width:25%;">
+                        <strong style="color:#2e7d32; font-size:24px;">{{var champions_count}}</strong>
+                        <br/>
+                        <span style="color:#666;">{{trans "Champions"}}</span>
+                    </td>
+                    <td style="background:#e3f2fd; border-radius:8px; text-align:center; width:25%;">
+                        <strong style="color:#1565c0; font-size:24px;">{{var loyal_count}}</strong>
+                        <br/>
+                        <span style="color:#666;">{{trans "Leais"}}</span>
+                    </td>
+                    <td style="background:#fff3e0; border-radius:8px; text-align:center; width:25%;">
+                        <strong style="color:#ef6c00; font-size:24px;">{{var at_risk_count}}</strong>
+                        <br/>
+                        <span style="color:#666;">{{trans "Em Risco"}}</span>
+                    </td>
+                    <td style="background:#ffebee; border-radius:8px; text-align:center; width:25%;">
+                        <strong style="color:#c62828; font-size:24px;">{{var lost_count}}</strong>
+                        <br/>
+                        <span style="color:#666;">{{trans "Perdidos"}}</span>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr class="email-footer">
+        <td>
+            <p style="margin-top:20px; font-size:12px; color:#666;">
+                {{trans "Este relatório foi gerado automaticamente pelo módulo de Integração ERP."}}
+                <br/>
+                {{trans "Período: %period" period=$report_period}}
+            </p>
+        </td>
+    </tr>
+</table>
+
+{{template config_path="design/email/footer_template"}}

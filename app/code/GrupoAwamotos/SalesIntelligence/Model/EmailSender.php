@@ -156,7 +156,7 @@ class EmailSender
             $transport = $this->transportBuilder
                 ->setTemplateIdentifier($templateId)
                 ->setTemplateOptions([
-                    'area' => 'frontend',
+                    'area' => 'adminhtml',
                     'store' => $store->getId(),
                 ])
                 ->setTemplateVars($templateVars)
