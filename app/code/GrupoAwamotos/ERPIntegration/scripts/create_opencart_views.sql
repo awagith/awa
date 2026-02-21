@@ -17,6 +17,20 @@
 --
 -- Conexão: usuário MySQL 'sectra' criado via painel Hostinger
 -- Config SECTRA (seção 24.05): host=72.61.94.22, db=magento, user=sectra
+--
+-- PERMISSÕES necessárias para o usuário 'sectra':
+--   GRANT SELECT ON magento.* TO 'sectra'@'%';
+--   GRANT INSERT ON magento.oc_order_history TO 'sectra'@'%';
+--   GRANT INSERT ON magento.oc_order_imported TO 'sectra'@'%';
+--   GRANT INSERT, UPDATE ON magento.oc_pre_registration TO 'sectra'@'%';
+--
+-- Fluxo de deduplicação:
+--   1. SECTRA lê pedidos de oc_order (VIEW) WHERE order_status_id = 1
+--   2. SECTRA importa e faz INSERT INTO oc_order_history
+--   3. Trigger trg_order_history_auto_import auto-insere em oc_order_imported
+--   4. Pedido desaparece da VIEW oc_order (NOT EXISTS clause)
+--   5. Se SECTRA tentar UPDATE oc_order SET order_status_id=0 → falha (VIEW read-only)
+--      mas isso é inofensivo pois o trigger já cuidou da deduplicação
 -- =============================================================
 
 -- ---------------------------------------------------------------
@@ -135,6 +149,21 @@ CREATE TABLE IF NOT EXISTS oc_order_history (
     date_added DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (order_history_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Trigger: quando SECTRA insere em oc_order_history (após importar pedido),
+-- auto-insere em oc_order_imported para remover o pedido da VIEW oc_order.
+-- No OpenCart original, SECTRA fazia UPDATE oc_order SET order_status_id=0.
+-- Como oc_order é VIEW (read-only, não updatable), usamos este trigger.
+DROP TRIGGER IF EXISTS trg_order_history_auto_import;
+DELIMITER //
+CREATE TRIGGER trg_order_history_auto_import
+AFTER INSERT ON oc_order_history
+FOR EACH ROW
+BEGIN
+    INSERT IGNORE INTO oc_order_imported (order_id, imported_at)
+    VALUES (NEW.order_id, NOW());
+END//
+DELIMITER ;
 
 -- ---------------------------------------------------------------
 -- 8. Tabela estática: oc_setting (config da loja — OpenCardB2B lê daqui)
@@ -387,6 +416,18 @@ CREATE TABLE IF NOT EXISTS oc_product_id_map (
 -- Mapeamento especial: SKU '41544' (Bauleto 41L genérico) → 98050005 (410 PT)
 
 -- ---------------------------------------------------------------
+-- 13b. Tabela: oc_order_imported (controle de pedidos já importados pelo SECTRA)
+--      Após SECTRA importar um pedido, INSERT aqui para excluí-lo da view oc_order.
+--      No OpenCart original, SECTRA fazia UPDATE oc_order SET order_status_id=0.
+--      Como oc_order é VIEW (read-only), usamos esta tabela auxiliar.
+--      O usuário sectra precisa de: GRANT INSERT ON magento.oc_order_imported TO 'sectra'@'%';
+-- ---------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS oc_order_imported (
+    order_id INT NOT NULL PRIMARY KEY,
+    imported_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ---------------------------------------------------------------
 -- 14. Tabela: oc_pre_registration (clientes prospect para SECTRA)
 --     SECTRA importa prospects via: Comercial→Ferramentas→Integração AWA→Importar Clientes Prospect
 --     Tabela real (não VIEW) pois SECTRA pode gravar/atualizar registros.
@@ -504,7 +545,8 @@ LEFT JOIN oc_zone bz ON bz.name COLLATE utf8mb4_0900_ai_ci = ba.region AND bz.co
 LEFT JOIN oc_zone sz ON sz.name COLLATE utf8mb4_0900_ai_ci = sa.region AND sz.country_id = 30
 LEFT JOIN oc_customer_id_map m ON m.magento_customer_id = so.customer_id
 WHERE so.customer_id IS NOT NULL
-  AND so.state IN ('new', 'pending_payment', 'processing');
+  AND so.state IN ('new', 'pending_payment', 'processing')
+  AND NOT EXISTS (SELECT 1 FROM oc_order_imported oi WHERE oi.order_id = so.entity_id + 200000);
 
 -- ---------------------------------------------------------------
 -- 16. VIEW: oc_order_product (itens do pedido)
@@ -654,4 +696,5 @@ UNION ALL SELECT 'oc_zone_mapping',  COUNT(*) FROM oc_zone_mapping
 UNION ALL SELECT 'oc_custom_field',  COUNT(*) FROM oc_custom_field
 UNION ALL SELECT 'oc_customer_id_map', COUNT(*) FROM oc_customer_id_map
 UNION ALL SELECT 'oc_product_id_map', COUNT(*) FROM oc_product_id_map
+UNION ALL SELECT 'oc_order_imported', COUNT(*) FROM oc_order_imported
 UNION ALL SELECT 'oc_pre_registration', COUNT(*) FROM oc_pre_registration;
