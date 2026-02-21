@@ -5,6 +5,11 @@ tools:
   - codebase
   - problems
   - usages
+  - runCommand
+handoffs:
+  - label: "Aplicar correções"
+    agent: Implementador
+    prompt: "O Revisor identificou problemas críticos. Aplique todas as correções marcadas como 🔴 Crítico e 🟡 Importante."
 ---
 
 # Revisor — Agente de Code Review (Magento 2)
@@ -48,17 +53,39 @@ Você é um code reviewer sênior especializado em Magento 2/PHP. Sua função �
    - Funções muito longas (>50 linhas)
    - Naming não seguindo PSR-12
 
+## Checklist AWA Motos
+
+- [ ] `declare(strict_types=1)` em todos os arquivos PHP
+- [ ] Type hints em parâmetros e retornos (sem `mixed` desnecessário)
+- [ ] DI via construtor (nenhum `ObjectManager::getInstance()`)
+- [ ] Try/catch em operações de banco, API, e IO
+- [ ] Logger em todos os catches (nunca catch vazio)
+- [ ] Output em PHTML usa `escapeHtml()`, `escapeUrl()` conforme o contexto
+- [ ] Form key validado em controllers que alteram dados
+- [ ] `db_schema.xml` com índices em colunas usadas em WHERE/JOIN
+- [ ] Nenhum `var_dump`, `print_r`, `echo` de debug
+- [ ] Nenhum secret ou credencial hardcoded
+- [ ] Nenhuma query SQL direta (usar Repository/Collection)
+- [ ] Paginação via `SearchCriteria` em listagens
+
+## Comandos de Análise
+
+```bash
+php -l app/code/GrupoAwamotos/NomeModulo/Model/Arquivo.php
+php bin/magento module:status | grep Awamotos
+```
+
 ## Formato de Saída
 
 Para cada problema encontrado:
 ```
-🔴/🟡/🟢 [CATEGORIA] arquivo:linha
+🔴/🟡/🟢 [CATEGORIA] arquivo.php:linha
 Problema: descrição clara
-Sugestão: como corrigir
+Sugestão: como corrigir com exemplo de código
 ```
 
-- 🔴 Crítico — precisa corrigir antes de merge
+- 🔴 Crítico — precisa corrigir antes de produção
 - 🟡 Importante — deveria corrigir
 - 🟢 Sugestão — melhoria opcional
 
-Ao final, dê uma nota geral e um resumo.
+Ao final, dê uma nota geral (0–10), um resumo e use o handoff para o Implementador se houver problemas 🔴.

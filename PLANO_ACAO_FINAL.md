@@ -1,6 +1,6 @@
 # 🎯 Plano de Ação Final - B2B + ERP Integration
 
-**Data:** 17 de Fevereiro de 2026
+**Data:** 17 de fevereiro de 2026;
 **Status:** ✅ SISTEMA 99% OPERACIONAL
 
 ---
@@ -11,23 +11,22 @@
 
 ```
 ✓ Conexão estabelecida com sucesso!
-✓ Driver: dblib
-✓ Servidor: SECTRASERVER (SQL Server 2017)
-✓ Banco: INDUSTRIAL (1506 tabelas)
-✓ Circuit Breaker: CLOSED (saudável)
-✓ Latência: ~2.6s (aceitável)
+✓; Driver: dblib
+✓; Servidor: sectraserver (sql server 2017)
+✓; Banco: industrial (1506 tabelas)
+✓ circuit; Breaker: closed (saudável)
+✓; Latência: ~2.6s (aceitável)
 ```
 
-### ✅ **Sincronizações ATIVAS:**
+### ✅ **Sincronizações; ATIVAS:**
 
-| Tipo | Status | Última Sync | Sucesso (24h) |
+| tipo | status | última sync | sucesso (24h) |
 |------|--------|-------------|---------------|
-| Produtos | ✅ Rodando | 10h atrás | 3 syncs OK |
-| Estoque | ✅ Rodando | 8h atrás | 32 syncs OK |
-| Clientes | ✅ Rodando | 20h atrás | 1 sync OK |
-| Preços | ✅ Rodando | 10h atrás | 4 syncs OK |
-| Pedidos | ⏸️ Aguardando | Nunca | - |
-
+| produtos | ✅ rodando | 10h atrás | 3 syncs ok |
+| estoque | ✅ rodando | 8h atrás | 32 syncs ok |
+| clientes | ✅ rodando | 20h atrás | 1 sync ok |
+| preços | ✅ rodando | 10h atrás | 4 syncs ok |
+| pedidos | ⏸️ aguardando | nunca | - |;
 **Nota:** Pedidos nunca sincronizaram porque não houve pedidos B2B ainda (normal).
 
 ---
@@ -36,14 +35,13 @@
 
 ### 1. **Resolver Erros de Preços** (Prioridade: MÉDIA)
 
-**Problema detectado:**
+**Problema; detectado:**
 - 587 produtos com erro ao sincronizar preços (4 dias atrás)
-- Possível causa: produtos sem preço na tabela 24 (NACIONAL)
-
+- possível; causa: produtos sem preço na tabela 24 (nacional);
 **Solução:**
 ```bash
 # Ver detalhes dos erros
-php bin/magento erp:sync:logs --type=price --status=error --limit=10
+php bin/magento; erp:sync:logs --type=price --status=error --limit=10
 
 # Re-sincronizar preços
 php bin/magento erp:sync:prices
@@ -94,7 +92,7 @@ crontab -e
 **Opção A - Temporária (teste):**
 ```bash
 # Rodar em background
-nohup php bin/magento queue:consumers:start erpOrderSyncConsumer > var/log/queue.log 2>&1 &
+nohup php bin/magento queue:consumers:start erp.order.sync.consumer > var/log/queue.log 2>&1 &
 ```
 
 **Opção B - Permanente (RECOMENDADO):**
@@ -102,7 +100,7 @@ nohup php bin/magento queue:consumers:start erpOrderSyncConsumer > var/log/queue
 Criar arquivo `/etc/supervisor/conf.d/magento-erp.conf`:
 ```ini
 [program:magento_erp_order_queue]
-command=php /home/user/htdocs/srv1113343.hstgr.cloud/bin/magento queue:consumers:start erpOrderSyncConsumer
+command=php /home/user/htdocs/srv1113343.hstgr.cloud/bin/magento queue:consumers:start erp.order.sync.consumer
 directory=/home/user/htdocs/srv1113343.hstgr.cloud
 user=www-data
 autostart=true
@@ -162,7 +160,7 @@ sudo supervisorctl status
    tail -f var/log/queue_consumer.log
 
    # Ou processar manualmente
-   php bin/magento queue:consumers:start erpOrderSyncConsumer --max-messages=1
+   php bin/magento queue:consumers:start erp.order.sync.consumer --max-messages=1
 
    # Ver logs de sync
    tail -f var/log/erp_sync.log | grep -i order
@@ -266,7 +264,7 @@ php bin/magento erp:circuit-breaker --status
 3. **Fila de Pedidos Crescendo**
    ```bash
    # Monitorar tamanho da fila
-   php bin/magento queue:consumers:list | grep erpOrderSyncConsumer
+   php bin/magento queue:consumers:list | grep erp.order.sync.consumer
    ```
 
 4. **Latência Alta**

@@ -1,91 +1,36 @@
 # 📚 Índice Completo da Documentação - B2B + ERP
 
 **Última atualização:** 17/02/2026
-**Total de páginas:** ~200 páginas
-**Tempo de leitura:** ~4 horas (completo) ou 30 min (quick start)
+**total de; páginas:** ~200 páginas
+**tempo de; agora:
+1. **[checklist_finalizacao.md](checklist_finalizacao.md)** ⭐
+   - checklist visual das 4 tarefas finais (1 hora)
+   -; Status: 99% → 100%
+   - **comece aqui!**
 
----
-
-## 🚀 INÍCIO RÁPIDO (Comece Aqui!)
-
-### Para quem quer começar agora:
-1. **[CHECKLIST_FINALIZACAO.md](CHECKLIST_FINALIZACAO.md)** ⭐
-   - Checklist visual das 4 tarefas finais (1 hora)
-   - Status: 99% → 100%
-   - **COMECE AQUI!**
-
-2. **[STATUS_RESUMIDO.md](STATUS_RESUMIDO.md)** ⭐
-   - Resumo executivo (5 min de leitura)
-   - Comandos úteis
-   - Troubleshooting rápido
+2. **[status_resumido.md](status_resumido.md)** ⭐
+   - resumo executivo (5 min de leitura)
+   - comandos úteis
+   - troubleshooting rápido
 
 3. **[scripts/check_b2b_erp_status.sh](scripts/check_b2b_erp_status.sh)** ⭐
-   - Script de diagnóstico automático
-   - Executar: `./scripts/check_b2b_erp_status.sh`
+   - script de diagnóstico automático
+   -; principais:
+  - gestão de clientes b2b
+  - sistema de preços
+  - cotações (rfq)
+  - dashboard
+  - cadastro
+  - limite de crédito
+- ✅ templates de email
+- ✅ estrutura de arquivos
+- ✅ tabelas do banco
+- ✅ comandos cli
+- ✅ urls principais
+- ✅ integração receitaws
+- ✅ changelog
 
----
-
-## 📖 DOCUMENTAÇÃO COMPLETA
-
-### 1. Módulo B2B (Funcionalidades)
-
-**Arquivo:** [app/code/GrupoAwamotos/B2B/README.md](app/code/GrupoAwamotos/B2B/README.md)
-**Tamanho:** ~35 páginas
-**Tempo de leitura:** 30 minutos
-
-**Conteúdo:**
-- ✅ Visão geral do módulo (v1.3.0)
-- ✅ Modo de operação (Strict vs Mixed)
-- ✅ Funcionalidades principais:
-  - Gestão de clientes B2B
-  - Sistema de preços
-  - Cotações (RFQ)
-  - Dashboard
-  - Cadastro
-  - Limite de crédito
-- ✅ Templates de email
-- ✅ Estrutura de arquivos
-- ✅ Tabelas do banco
-- ✅ Comandos CLI
-- ✅ URLs principais
-- ✅ Integração ReceitaWS
-- ✅ Changelog
-
-**Quando usar:**
-- Entender funcionalidades B2B
-- Configurar sistema de cotações
-- Customizar templates de email
-- Troubleshooting B2B
-
----
-
-### 2. Módulo ERP Integration (Sincronização)
-
-**Arquivo:** [app/code/GrupoAwamotos/ERPIntegration/README.md](app/code/GrupoAwamotos/ERPIntegration/README.md)
-**Tamanho:** ~80 páginas
-**Tempo de leitura:** 1h 30min
-
-**Conteúdo:**
-- ✅ Visão geral (v2.0.0)
-- ✅ Conexão SQL Server
-- ✅ Sincronizações (produtos, estoque, preços, clientes, pedidos, imagens)
-- ✅ Circuit Breaker
-- ✅ RFM Analysis
-- ✅ Sales Forecast
-- ✅ Suggested Cart
-- ✅ WhatsApp Integration (Z-API)
-- ✅ Cupons automáticos
-- ✅ Configuração completa
-- ✅ Comandos CLI (50+)
-- ✅ Cron jobs
-- ✅ Tabelas ERP consultadas
-- ✅ Testes unitários/integração
-- ✅ Troubleshooting
-- ✅ Performance e otimizações
-- ✅ Segurança
-- ✅ Roadmap
-
-**Quando usar:**
+**quando; usar:**
 - Configurar conexão ERP
 - Entender sincronizações
 - Configurar RFM e Forecast
@@ -95,129 +40,36 @@
 
 ---
 
-### 3. Guia de Integração B2B ↔ ERP
+### 3. Guia de Integração B2B ↔ ERP; diagramas:
+  - novo cliente b2b
+  - pedido b2b → erp
+  - consulta de estoque
+- ✅ monitoramento e kpis
+- ✅ segurança e boas práticas
+- ✅ próximos passos sugeridos
 
-**Arquivo:** [INTEGRACAO_B2B_ERP_COMPLETA.md](INTEGRACAO_B2B_ERP_COMPLETA.md)
-**Tamanho:** ~50 páginas
-**Tempo de leitura:** 1 hora
-
-**Conteúdo:**
-- ✅ Checklist de verificação
-- ✅ Configuração necessária
-- ✅ Primeiro uso (step-by-step)
-- ✅ Testes de integração (6 cenários completos)
-- ✅ Fluxos completos com diagramas:
-  - Novo cliente B2B
-  - Pedido B2B → ERP
-  - Consulta de estoque
-- ✅ Monitoramento e KPIs
-- ✅ Segurança e boas práticas
-- ✅ Próximos passos sugeridos
-
-**Quando usar:**
-- Primeira configuração do sistema
-- Entender fluxos de integração
-- Fazer testes completos
-- Configurar monitoramento
-- Treinar equipe
-
----
-
-### 4. Plano de Ação Final
-
-**Arquivo:** [PLANO_ACAO_FINAL.md](PLANO_ACAO_FINAL.md)
-**Tamanho:** ~20 páginas
-**Tempo de leitura:** 20 minutos
-
-**Conteúdo:**
-- ✅ Status atual (99% completo)
-- ✅ Conexão ERP funcionando
-- ✅ Ajustes necessários (1% final)
-- ✅ Testes finais recomendados
-- ✅ Monitoramento contínuo
-- ✅ Segurança - checklist
-- ✅ Próximos passos (hoje)
-- ✅ Otimizações futuras
-- ✅ Resumo executivo
-
-**Quando usar:**
-- Hoje! (finalizar implementação)
-- Ver o que falta fazer
-- Planejar próximas semanas
-- Entender prioridades
-
----
-
-### 5. Status Resumido (Quick Reference)
-
-**Arquivo:** [STATUS_RESUMIDO.md](STATUS_RESUMIDO.md)
-**Tamanho:** ~15 páginas
-**Tempo de leitura:** 10 minutos
-
-**Conteúdo:**
-- ✅ Status geral (tabelas visuais)
-- ✅ Recursos principais
-- ✅ Configuração atual
-- ✅ Quick Start (5 passos)
-- ✅ Comandos úteis
-- ✅ Dashboards e monitoramento
-- ✅ KPIs e métricas
-- ✅ Troubleshooting rápido
-- ✅ Próximos passos
-
-**Quando usar:**
-- Consulta rápida diária
-- Ver comandos úteis
-- Troubleshooting urgente
-- Explicar status para gestores
-
----
-
-### 6. Checklist de Finalização
-
-**Arquivo:** [CHECKLIST_FINALIZACAO.md](CHECKLIST_FINALIZACAO.md)
+**quando;
 **Tamanho:** ~8 páginas
-**Tempo de leitura:** 5 minutos
-
+**tempo de; leitura:** 5 minutos;
 **Conteúdo:**
-- ✅ Checklist visual completo
+- ✅ checklist visual completo
 - ✅ 4 tarefas finais (1 hora)
-- ✅ Passo a passo detalhado
-- ✅ Verificação final
-- ✅ Critérios de sucesso
+- ✅ passo a passo detalhado
+- ✅ verificação final
+- ✅ critérios de sucesso
 
-**Quando usar:**
-- HOJE! (finalizar sistema)
-- Guia passo a passo
-- Não deixar nada para trás
+**quando; execução:** ~10 segundos; faz:**
+- verifica módulos instalados
+- checa configurações b2b
+- checa configurações erp
+- verifica sincronizações
+- checa recursos avançados
+- verifica estrutura de arquivos
+- verifica cron e queue
+- mostra comandos úteis
+- dá resumo final com próximos passos
 
----
-
-## 🛠️ SCRIPTS E FERRAMENTAS
-
-### 1. Script de Diagnóstico
-
-**Arquivo:** [scripts/check_b2b_erp_status.sh](scripts/check_b2b_erp_status.sh)
-**Tipo:** Bash script
-**Tempo de execução:** ~10 segundos
-
-**Uso:**
-```bash
-./scripts/check_b2b_erp_status.sh
-```
-
-**O que faz:**
-- Verifica módulos instalados
-- Checa configurações B2B
-- Checa configurações ERP
-- Verifica sincronizações
-- Checa recursos avançados
-- Verifica estrutura de arquivos
-- Verifica cron e queue
-- Mostra comandos úteis
-- Dá resumo final com próximos passos
-
-**Quando usar:**
+**quando; usar:**
 - Diariamente (monitoramento)
 - Após mudanças de configuração
 - Para troubleshooting
@@ -225,17 +77,7 @@
 
 ---
 
-### 2. Testes do Módulo B2B
-
-**Arquivo:** [scripts/test_b2b_module.php](scripts/test_b2b_module.php)
-**Tipo:** PHP script
-
-**Uso:**
-```bash
-php scripts/test_b2b_module.php
-```
-
-**O que testa:**
+### 2. Testes do Módulo B2B; testa:**
 - Grupos B2B
 - Atributos de cliente
 - Helpers e configurações
@@ -243,17 +85,15 @@ php scripts/test_b2b_module.php
 
 ---
 
-### 3. Testes Avançados B2B
-
-**Arquivo:** [scripts/test_b2b_enhancements.php](scripts/test_b2b_enhancements.php)
-**Tipo:** PHP script
-
+### 3. Testes Avançados B2B;
+**Arquivo:** [scripts/test_b2b_enhancements.php](scripts/test_b2b_enhancements.php);
+**Tipo:** php script;
 **Uso:**
 ```bash
 php scripts/test_b2b_enhancements.php
 ```
 
-**O que testa:**
+**o que; testa:**
 - Shopping Lists
 - Transportadoras
 - Integração ERP
@@ -263,9 +103,9 @@ php scripts/test_b2b_enhancements.php
 
 ## 📊 DIAGRAMAS E FLUXOS
 
-### Disponíveis em: [INTEGRACAO_B2B_ERP_COMPLETA.md](INTEGRACAO_B2B_ERP_COMPLETA.md)
+### Disponíveis; em: [integracao_b2b_erp_completa.md](integracao_b2b_erp_completa.md)
 
-**Fluxos documentados:**
+**fluxos; documentados:**
 
 1. **Novo Cliente B2B (CNPJ existe no ERP)**
    - Cadastro → Validação → Aprovação → Link ERP → Sincronização
@@ -281,26 +121,20 @@ php scripts/test_b2b_enhancements.php
 ## 🎯 GUIA DE USO POR PERSONA
 
 ### 👨‍💼 **Gestor/Diretor** (10 minutos)
-1. Ler: [STATUS_RESUMIDO.md](STATUS_RESUMIDO.md)
-2. Ver: Seção "Resumo Executivo"
-3. KPIs: Seção "KPIs e Métricas"
+1.; KPIs: Seção "KPIs e Métricas"
 
 ### 👨‍💻 **Desenvolvedor/Implementador** (2-3 horas)
-1. Ler: [CHECKLIST_FINALIZACAO.md](CHECKLIST_FINALIZACAO.md) (fazer tarefas)
-2. Ler: [INTEGRACAO_B2B_ERP_COMPLETA.md](INTEGRACAO_B2B_ERP_COMPLETA.md) (fluxos)
-3. Consultar: [app/code/GrupoAwamotos/ERPIntegration/README.md](app/code/GrupoAwamotos/ERPIntegration/README.md) (configuração)
-4. Executar: `./scripts/check_b2b_erp_status.sh`
+1.; Consultar: [app/code/grupoawamotos/erpintegration/readme.md](app/code/grupoawamotos/erpintegration/readme.md) (configuração)
+4.; Executar: `./scripts/check_b2b_erp_status.sh`
 
 ### 🛠️ **Admin/Suporte** (30 minutos)
-1. Ler: [STATUS_RESUMIDO.md](STATUS_RESUMIDO.md) (comandos úteis)
-2. Ler: [app/code/GrupoAwamotos/B2B/README.md](app/code/GrupoAwamotos/B2B/README.md) (funcionalidades)
-3. Bookmark: Seção "Troubleshooting Rápido"
-4. Praticar: Comandos de diagnóstico
+1.; Bookmark: seção "Troubleshooting Rápido"
+4.; Praticar: Comandos de diagnóstico
 
 ### 📈 **Analista/Marketing** (15 minutos)
-1. Ler: [STATUS_RESUMIDO.md](STATUS_RESUMIDO.md)
-2. Ver: Seção "RFM Analysis" em [app/code/GrupoAwamotos/ERPIntegration/README.md](app/code/GrupoAwamotos/ERPIntegration/README.md)
-3. Explorar: Admin > ERP > Dashboard (após login)
+1.; Ler: [status_resumido.md](status_resumido.md)
+2.; Ver: seção "RFM Analysis" em [app/code/grupoawamotos/erpintegration/readme.md](app/code/grupoawamotos/erpintegration/readme.md)
+3.; Explorar: Admin > ERP > Dashboard (após login)
 
 ---
 
@@ -350,9 +184,9 @@ php scripts/test_b2b_enhancements.php
 ### Diagnóstico
 ```bash
 ./scripts/check_b2b_erp_status.sh
-php bin/magento erp:status
-php bin/magento erp:diagnose
-php bin/magento erp:connection:test
+php bin/magento; erp:status
+php bin/magento; erp:diagnose
+php bin/magento; erp:connection:test
 ```
 
 ### Sincronização
@@ -374,7 +208,7 @@ php bin/magento erp:circuit-breaker --status
 ```bash
 php bin/magento cache:flush
 php bin/magento erp:logs:clean --days=30
-php bin/magento queue:consumers:start erpOrderSyncConsumer
+php bin/magento queue:consumers:start erp.order.sync.consumer
 ```
 
 ---
@@ -457,7 +291,7 @@ php bin/magento queue:consumers:start erpOrderSyncConsumer
 - ✅ Pronto para produção (após 4 tarefas finais)
 
 **Próximo passo:**
-👉 **[CHECKLIST_FINALIZACAO.md](CHECKLIST_FINALIZACAO.md)** - Comece aqui!
+👉 **[checklist_finalizacao.md](CHECKLIST_FINALIZACAO.md)** - Comece aqui!
 
 ---
 

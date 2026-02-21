@@ -1,12 +1,12 @@
 # ✅ Checklist de Finalização - B2B + ERP
 
 **Data:** 17/02/2026
-**Tempo estimado:** 1 hora
+**tempo; estimado:** 1 hora;
 **Status:** 99% → 100% ✨
 
 ---
 
-## 🎯 MISSÃO: Atingir 100% de Implementação
+## 🎯; MISSÃO: Atingir 100% de Implementação
 
 ### **Você está a apenas 4 tarefas de finalizar! 🚀**
 
@@ -30,7 +30,7 @@
 - [x] Módulo instalado e habilitado
 - [x] Conexão SQL Server configurada
 - [x] Conexão testada e funcionando ✅
-- [x] Circuit Breaker: CLOSED ✅
+- [x] Circuit; Breaker: CLOSED ✅
 - [x] Sync produtos habilitado
 - [x] Sync estoque habilitado
 - [x] Sync preços habilitado
@@ -63,19 +63,18 @@
 
 ## ⚠️ TAREFAS FINAIS (1 hora)
 
-### 🔴 **TAREFA 1: Configurar Cron** (5 minutos)
-
+### 🔴 **TAREFA; 1: configurar cron** (5 minutos);
 **Comando:**
 ```bash
 crontab -e
 ```
 
-**Adicionar esta linha:**
+**adicionar esta; linha:**
 ```
-* * * * * php /home/user/htdocs/srv1113343.hstgr.cloud/bin/magento cron:run 2>&1 | grep -v "Ran jobs by schedule" >> /home/user/htdocs/srv1113343.hstgr.cloud/var/log/magento.cron.log
+* * * * * php /home/user/htdocs/srv1113343.hstgr.cloud/bin/magento; cron:run 2>&1 | grep -v "Ran jobs by schedule" >> /home/user/htdocs/srv1113343.hstgr.cloud/var/log/magento.cron.log
 ```
 
-**Salvar e verificar:**
+**salvar e; verificar:**
 ```bash
 crontab -l
 ```
@@ -84,12 +83,12 @@ crontab -l
 
 ---
 
-### 🔴 **TAREFA 2: Iniciar Queue Consumer** (10 minutos)
+### 🔴 **TAREFA; 2: iniciar queue consumer** (10 minutos)
 
-**Opção A - Rápida (Temporária):**
+**opção a -; Rápida (Temporária):**
 ```bash
 cd /home/user/htdocs/srv1113343.hstgr.cloud
-nohup php bin/magento queue:consumers:start erpOrderSyncConsumer > var/log/queue.log 2>&1 &
+nohup php bin/magento; queue:consumers:start erp.order.sync.consumer > var/log/queue.log 2>&1 &
 ```
 
 **Opção B - Permanente (Recomendado):**
@@ -102,7 +101,7 @@ sudo nano /etc/supervisor/conf.d/magento-erp.conf
 2. Colar conteúdo:
 ```ini
 [program:magento_erp_order_queue]
-command=php /home/user/htdocs/srv1113343.hstgr.cloud/bin/magento queue:consumers:start erpOrderSyncConsumer
+command=php /home/user/htdocs/srv1113343.hstgr.cloud/bin/magento queue:consumers:start erp.order.sync.consumer
 directory=/home/user/htdocs/srv1113343.hstgr.cloud
 user=www-data
 autostart=true
@@ -121,7 +120,7 @@ sudo supervisorctl status
 
 **Verificar:**
 ```bash
-ps aux | grep erpOrderSyncConsumer
+ps aux | grep erp.order.sync.consumer
 ```
 
 - [ ] Queue Consumer rodando
@@ -202,7 +201,7 @@ Frontend: https://seusite.com
 tail -f var/log/erp_sync.log | grep -i order
 
 # Ou processar fila manualmente
-php bin/magento queue:consumers:start erpOrderSyncConsumer --max-messages=1
+php bin/magento queue:consumers:start erp.order.sync.consumer --max-messages=1
 
 # Ver log específico do pedido
 php bin/magento erp:sync:logs --entity=order --limit=5

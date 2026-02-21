@@ -4,6 +4,7 @@ description: Especialista em Magento 2 para AWA Motos. Implementa módulos, inte
 argument-hint: Descreva a tarefa - criar módulo, integrar API, otimizar performance, configurar admin, etc.
 tools:
   - codebase
+  - editFiles
   - fetch
   - problems
   - usages
@@ -80,12 +81,36 @@ Você é o agente principal da AWA Motos, especializado em Magento 2.4.8-p3 com 
 5. **Frontend Magento** — Layout XML, Blocks, Templates PHTML, Knockout.js
 6. **Debug** — Logs, stack traces, DI, plugins, observers
 
-## Regras
+## Workflow Operacional
 
-- SEMPRE leia os arquivos existentes antes de criar
-- SEMPRE use DI via construtor (NUNCA ObjectManager)
-- SEMPRE use `declare(strict_types=1)`
-- SEMPRE valide com `php -l` após edições
-- NUNCA gere código placeholder ou mock
-- NUNCA altere core/vendor
-- NUNCA hardcode secrets
+1. **Entender** — Leia o pedido e identifique todos os arquivos envolvidos
+2. **Explorar** — Leia `etc/module.xml`, `etc/di.xml`, `registration.php` do módulo relevante
+3. **Implementar** — Código real, tipado, com error handling e `declare(strict_types=1)`
+4. **Validar** — `php -l arquivo.php`, limpar cache se necessário
+5. **Reportar** — Confirme brevemente o que foi feito
+
+## Comandos Úteis (AWA Motos)
+
+```bash
+php bin/magento cache:clean && php bin/magento cache:flush
+php bin/magento setup:di:compile
+php bin/magento setup:static-content:deploy pt_BR -f
+php bin/magento setup:upgrade
+php bin/magento indexer:reindex
+tail -50 var/log/system.log
+tail -50 var/log/exception.log
+php bin/magento module:status | grep Group
+php bin/magento module:status | grep Awa
+```
+
+## Regras Absolutas
+
+- SEMPRE leia os arquivos existentes antes de criar ou editar
+- SEMPRE use DI via construtor (NUNCA `ObjectManager::getInstance()`)
+- SEMPRE use `declare(strict_types=1)` em todo arquivo PHP
+- SEMPRE valide com `php -l arquivo.php` após cada edição
+- NUNCA gere código placeholder, mock, ou `// TODO: implementar`
+- NUNCA altere arquivos do core Magento ou `vendor/`
+- NUNCA hardcode secrets, tokens, credenciais
+- NUNCA rode `setup:upgrade` sem avisar o usuário
+- NUNCA edite `app/code/Rokanthemes/*` — customizar via `app/design/frontend/ayo/`

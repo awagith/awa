@@ -251,7 +251,7 @@ Funcionalidades Entregues:
      → Log completo
      → Tabelas: FN_PEDIDOS, FN_PEDIDOSITENS
      → Queue: erp.order.sync
-     → Consumer: erpOrderSyncConsumer
+     → Consumer: erp.order.sync.consumer
 
   ✅ Sincronização de Imagens
      → Múltiplas fontes (table, folder, url)
@@ -381,7 +381,7 @@ Pontos de Integração:
   ✅ Pedidos → ERP
      → Observer: OrderPlaceAfter
      → Queue: erp.order.sync
-     → Consumer: erpOrderSyncConsumer
+     → Consumer: erp.order.sync.consumer
      → Vincula erp_code do cliente
      → Insere em FN_PEDIDOS e FN_PEDIDOSITENS
      → Log completo de sincronização

@@ -4,6 +4,7 @@ SHELL := /usr/bin/env bash
 LOCALE ?= pt_BR
 JOBS ?= 4
 BASE_URL ?= https://awamotos.com/
+MAGENTO ?= ./bin/magento-www
 
 .PHONY: help
 help: ## Mostra esta ajuda
@@ -29,7 +30,7 @@ doctor: ## Diagnóstico rápido (não destrutivo)
 
 .PHONY: store-setup
 store-setup: ## Reaplica seed idempotente (CMS/tema/categorias) do GrupoAwamotos
-	@php bin/magento grupoawamotos:store:setup
+	@$(MAGENTO) grupoawamotos:store:setup
 
 .PHONY: predeploy
 predeploy: ## Checagem pré-deploy (não destrutiva)
@@ -61,11 +62,11 @@ deploy-prod-maint-clean: ## Deploy em production + maintenance + limpeza de est�
 
 .PHONY: cache-status
 cache-status: ## Status do cache
-	@php bin/magento cache:status
+	@$(MAGENTO) cache:status
 
 .PHONY: cache-flush
 cache-flush: ## Flush do cache
-	@php bin/magento cache:flush
+	@$(MAGENTO) cache:flush
 
 .PHONY: frontend
 frontend: ## Deploy frontend RÁPIDO (detecta tema ativo automaticamente)
@@ -77,23 +78,23 @@ frontend-full: ## Deploy frontend COMPLETO (limpa tudo, DI, todos temas)
 
 .PHONY: indexer-status
 indexer-status: ## Status dos indexadores
-	@php bin/magento indexer:status
+	@$(MAGENTO) indexer:status
 
 .PHONY: reindex
 reindex: ## Reindexar tudo
-	@php bin/magento indexer:reindex
+	@$(MAGENTO) indexer:reindex
 
 .PHONY: mode-show
 mode-show: ## Mostrar modo (developer/production)
-	@php bin/magento deploy:mode:show
+	@$(MAGENTO) deploy:mode:show
 
 .PHONY: mode-dev
 mode-dev: ## Alterar para developer
-	@php bin/magento deploy:mode:set developer
+	@$(MAGENTO) deploy:mode:set developer
 
 .PHONY: mode-prod
 mode-prod: ## Alterar para production
-	@php bin/magento deploy:mode:set production
+	@$(MAGENTO) deploy:mode:set production
 
 .PHONY: logs
 logs: ## Tail de logs (system + exception)
@@ -156,32 +157,32 @@ permissions-lockdown-apply: ## Lockdown de permissões (aplica)
 
 .PHONY: erp-sync-products
 erp-sync-products: ## Sincroniza produtos do ERP (texto/preço/status)
-	@php bin/magento erp:sync:products
+	@$(MAGENTO) erp:sync:products
 
 .PHONY: erp-sync-images
 erp-sync-images: ## Sincroniza imagens de produtos do ERP
-	@php bin/magento erp:sync:images
+	@$(MAGENTO) erp:sync:images
 
 .PHONY: erp-sync-images-force
 erp-sync-images-force: ## Sincroniza imagens do ERP (força mesmo se desabilitado)
-	@php bin/magento erp:sync:images --force
+	@$(MAGENTO) erp:sync:images --force
 
 .PHONY: erp-sync-all
 erp-sync-all: ## Sincroniza tudo: produtos + imagens + estoque + preços
 	@echo "=== Sincronizando Produtos ==="
-	@php bin/magento erp:sync:products
+	@$(MAGENTO) erp:sync:products
 	@echo ""
 	@echo "=== Sincronizando Imagens ==="
-	@php bin/magento erp:sync:images
+	@$(MAGENTO) erp:sync:images
 	@echo ""
 	@echo "=== Sincronizando Estoque ==="
-	@php bin/magento erp:sync:stock
+	@$(MAGENTO) erp:sync:stock
 	@echo ""
 	@echo "=== Sincronizando Preços ==="
-	@php bin/magento erp:sync:prices
+	@$(MAGENTO) erp:sync:prices
 	@echo ""
 	@echo "=== Flush de cache ==="
-	@php bin/magento cache:flush
+	@$(MAGENTO) cache:flush
 	@echo "✅ Sync completo!"
 
 .PHONY: erp-fix-images
@@ -194,4 +195,4 @@ erp-diagnose-images: ## Diagnóstico de imagens ERP (somente leitura)
 
 .PHONY: erp-status
 erp-status: ## Status da integração ERP (conexão, tabelas, contagens)
-	@php bin/magento erp:status
+	@$(MAGENTO) erp:status
