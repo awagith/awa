@@ -1,25 +1,34 @@
 <?php
+declare(strict_types=1);
+
 namespace Ayo\Curriculo\Controller\Index;
 
+use Ayo\Curriculo\Model\Mail\SymfonyEmailMimeMessage;
+use Ayo\Curriculo\Model\SubmissionFactory;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\File\Mime;
+use Magento\Framework\File\UploaderFactory;
 use Magento\Framework\Filesystem;
-use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Mail\EmailMessageInterface;
 use Magento\Framework\Mail\Template\TransportBuilder;
+use Magento\Framework\Mail\Template\FactoryInterface as TemplateFactoryInterface;
+use Magento\Framework\Mail\Template\SenderResolverInterface;
+use Magento\Framework\Mail\TransportInterfaceFactory;
+use Magento\Framework\ObjectManagerInterface;
 use Magento\Framework\Translate\Inline\StateInterface;
 use Magento\Framework\Validator\EmailAddress;
 use Magento\Framework\Validator\Url as UrlValidator;
-use Magento\MediaStorage\Model\File\UploaderFactory;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
-use Ayo\Curriculo\Model\SubmissionFactory;
+use Symfony\Component\Mime\Email;
 
 class Post extends Action implements HttpPostActionInterface
 {
@@ -36,8 +45,7 @@ class Post extends Action implements HttpPostActionInterface
     private const ALLOWED_MIME_TYPES = [
         'application/pdf',
         'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'application/octet-stream'
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     ];
 
     /**
@@ -105,11 +113,35 @@ class Post extends Action implements HttpPostActionInterface
      */
     private $submissionFactory;
 
+    /**
+     * @var TemplateFactoryInterface
+     */
+    private $templateFactory;
+
+    /**
+     * @var SenderResolverInterface
+     */
+    private $senderResolver;
+
+    /**
+     * @var TransportInterfaceFactory
+     */
+    private $transportFactory;
+
+    /**
+     * @var ObjectManagerInterface
+     */
+    private $objectManager;
+
     public function __construct(
         Context $context,
         FormKeyValidator $formKeyValidator,
         ScopeConfigInterface $scopeConfig,
         TransportBuilder $transportBuilder,
+        TemplateFactoryInterface $templateFactory,
+        SenderResolverInterface $senderResolver,
+        TransportInterfaceFactory $transportFactory,
+        ObjectManagerInterface $objectManager,
         DataPersistorInterface $dataPersistor,
         StateInterface $inlineTranslation,
         StoreManagerInterface $storeManager,
@@ -125,6 +157,10 @@ class Post extends Action implements HttpPostActionInterface
         $this->formKeyValidator = $formKeyValidator;
         $this->scopeConfig = $scopeConfig;
         $this->transportBuilder = $transportBuilder;
+        $this->templateFactory = $templateFactory;
+        $this->senderResolver = $senderResolver;
+        $this->transportFactory = $transportFactory;
+        $this->objectManager = $objectManager;
         $this->dataPersistor = $dataPersistor;
         $this->inlineTranslation = $inlineTranslation;
         $this->storeManager = $storeManager;
@@ -140,6 +176,7 @@ class Post extends Action implements HttpPostActionInterface
     public function execute()
     {
         $resultRedirect = $this->resultRedirectFactory->create();
+        /** @var \Magento\Framework\App\Request\Http $request */
         $request = $this->getRequest();
         $data = (array)$request->getPostValue();
 
@@ -181,7 +218,7 @@ class Post extends Action implements HttpPostActionInterface
             $storedFile = $this->saveFile();
             $trackingCode = $this->generateTrackingCode();
             $this->saveSubmission($data, $storedFile, $trackingCode);
-            $this->sendEmail($data, $storedFile);
+            $this->sendEmail($data, $storedFile, $trackingCode);
             $this->sendConfirmationEmail($data, $trackingCode);
             $this->messageManager->addSuccessMessage(__('Recebemos seu currículo. Obrigado!'));
             $this->dataPersistor->clear('ayo_curriculo');
@@ -316,6 +353,11 @@ class Post extends Action implements HttpPostActionInterface
                 $errors[] = __('Formato de arquivo inválido.');
                 $fieldErrors['cv_file'] = __('Formato de arquivo inválido.');
             }
+
+            if ($extension !== '' && !$this->isFileSignatureValid($fileInfo['tmp_name'], $extension)) {
+                $errors[] = __('O conteúdo do arquivo não corresponde ao formato informado.');
+                $fieldErrors['cv_file'] = __('O conteúdo do arquivo não corresponde ao formato informado.');
+            }
         }
 
         return [$errors, $fieldErrors];
@@ -352,7 +394,7 @@ class Post extends Action implements HttpPostActionInterface
      * @return void
      * @throws LocalizedException
      */
-    private function sendEmail(array $data, string $storedFile): void
+    private function sendEmail(array $data, string $storedFile, string $trackingCode): void
     {
         $storeId = (int)$this->storeManager->getStore()->getId();
         $recipientEmail = trim((string)$this->scopeConfig->getValue(
@@ -381,7 +423,16 @@ class Post extends Action implements HttpPostActionInterface
             $sender = 'general';
         }
 
+        $senderResolved = $this->senderResolver->resolve($sender, $storeId);
+        $fromEmail = (string)($senderResolved['email'] ?? '');
+        $fromName = (string)($senderResolved['name'] ?? '');
+        if ($fromEmail === '') {
+            throw new LocalizedException(__('Email do remetente não configurado.'));
+        }
+
         $specialtiesValue = $this->formatSpecialties($data['specialties'] ?? []);
+
+        $statusUrl = $this->_url->getUrl('curriculo/index/status');
 
         $vars = [
             'name' => $this->sanitizeText($data['name'] ?? ''),
@@ -406,10 +457,73 @@ class Post extends Action implements HttpPostActionInterface
             'message' => $this->sanitizeMultiline($data['message'] ?? ''),
             'file_path' => $this->sanitizeText('var/' . ltrim($storedFile, '/')),
             'file_name' => $this->sanitizeText(basename($storedFile)),
+            'tracking_code' => $trackingCode,
+            'status_url' => $statusUrl,
+            'submitted_date' => date('d/m/Y H:i'),
         ];
 
         $this->inlineTranslation->suspend();
         try {
+            $template = $this->templateFactory
+                ->get('ayo_curriculo_email_template')
+                ->setOptions([
+                    'area' => \Magento\Framework\App\Area::AREA_FRONTEND,
+                    'store' => $storeId,
+                ])
+                ->setVars(['data' => $vars]);
+
+            $htmlBody = (string)$template->processTemplate();
+            $subject = (string)$template->getSubject();
+            if (trim($subject) === '') {
+                $subject = (string)__('Novo Currículo: %1', $vars['name']);
+            }
+
+            $email = new Email();
+            $email->html($htmlBody, 'utf-8');
+            $email->text($this->htmlToText($htmlBody), 'utf-8');
+
+            $varDirectory = $this->filesystem->getDirectoryRead(DirectoryList::VAR_DIR);
+            $attachmentAbsolutePath = $varDirectory->getAbsolutePath($storedFile);
+            if (is_file($attachmentAbsolutePath) && is_readable($attachmentAbsolutePath)) {
+                $attachmentMimeType = (string)$this->mime->getMimeType($attachmentAbsolutePath);
+                $email->attachFromPath(
+                    $attachmentAbsolutePath,
+                    $vars['file_name'] !== '' ? $vars['file_name'] : null,
+                    $attachmentMimeType !== '' ? $attachmentMimeType : null
+                );
+            }
+
+            $messageData = [
+                'body' => new SymfonyEmailMimeMessage($email),
+                'subject' => $subject,
+                'to' => [[
+                    'email' => $recipientEmail,
+                    'name' => '',
+                ]],
+                'from' => [[
+                    'email' => $fromEmail,
+                    'name' => $fromName,
+                ]],
+                'replyTo' => [[
+                    'email' => $vars['email'],
+                    'name' => $vars['name'],
+                ]],
+            ];
+
+            $copyTo = $this->getCopyToEmails($storeId);
+            if (!empty($copyTo)) {
+                $messageData['bcc'] = array_map(static function (string $bccEmail): array {
+                    return ['email' => $bccEmail, 'name' => ''];
+                }, $copyTo);
+            }
+
+            /** @var EmailMessageInterface $message */
+            $message = $this->objectManager->create(EmailMessageInterface::class, $messageData);
+            $transport = $this->transportFactory->create(['message' => $message]);
+            $transport->sendMessage();
+        } catch (\Throwable $e) {
+            $this->logger->error('Falha ao enviar email de currículo com anexo. Tentando fallback sem anexo.', ['exception' => $e]);
+
             $builder = $this->transportBuilder
                 ->setTemplateIdentifier('ayo_curriculo_email_template')
                 ->setTemplateOptions([
@@ -431,6 +545,56 @@ class Post extends Action implements HttpPostActionInterface
         } finally {
             $this->inlineTranslation->resume();
         }
+    }
+
+    private function htmlToText(string $html): string
+    {
+        $text = preg_replace('#<\s*br\s*/?>#i', "\n", $html);
+        $text = preg_replace('#</\s*p\s*>#i', "\n\n", (string)$text);
+        $text = trim(strip_tags((string)$text));
+        // Normaliza whitespace sem destruir quebras de linha
+        $text = preg_replace("/\n{3,}/", "\n\n", $text);
+        return (string)$text;
+    }
+
+    private function isFileSignatureValid(string $tmpPath, string $extension): bool
+    {
+        if (!is_file($tmpPath) || !is_readable($tmpPath)) {
+            return false;
+        }
+
+        $header = file_get_contents($tmpPath, false, null, 0, 8);
+        if ($header === false || $header === '') {
+            return false;
+        }
+
+        if ($extension === 'pdf') {
+            return strncmp($header, "%PDF-", 5) === 0;
+        }
+
+        if ($extension === 'docx') {
+            $zipHeader = "PK\x03\x04";
+            if (strncmp($header, $zipHeader, 4) !== 0) {
+                return false;
+            }
+
+            $zip = new \ZipArchive();
+            if ($zip->open($tmpPath) !== true) {
+                return false;
+            }
+
+            $documentEntry = $zip->locateName('word/document.xml');
+            $contentTypesEntry = $zip->locateName('[Content_Types].xml');
+            $zip->close();
+
+            return $documentEntry !== false && $contentTypesEntry !== false;
+        }
+
+        if ($extension === 'doc') {
+            return strncmp($header, "\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1", 8) === 0;
+        }
+
+        return false;
     }
 
     private function getCopyToEmails(int $storeId): array
@@ -689,6 +853,8 @@ class Post extends Action implements HttpPostActionInterface
             $sender = 'general';
         }
 
+        $statusUrl = $this->_url->getUrl('curriculo/index/status');
+
         $vars = [
             'name' => $this->sanitizeText($data['name'] ?? ''),
             'email' => $candidateEmail,
@@ -697,6 +863,7 @@ class Post extends Action implements HttpPostActionInterface
             'work_area' => $this->sanitizeText($data['work_area'] ?? ''),
             'tracking_code' => $trackingCode,
             'submitted_date' => date('d/m/Y H:i'),
+            'status_url' => $statusUrl,
         ];
 
         $this->inlineTranslation->suspend();

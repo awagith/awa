@@ -5,25 +5,24 @@
  */
 -->
 <!--@subject Recebemos seu currículo - AWA Motos @-->
-<!--@vars {
-"var candidate_name":"Nome do candidato",
-"var position":"Cargo desejado",
-"var tracking_code":"Código de acompanhamento",
-"var status_url":"URL de status"
-} @-->
+
 
 <!-- Email Container -->
-<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background-color: #f4f4f4; margin: 0; padding: 0;">
+<table cellpadding="0" cellspacing="0" border="0" width="100%"
+    style="background-color: #f4f4f4; margin: 0; padding: 0;">
     <tr>
         <td align="center" style="padding: 40px 20px;">
-            
+
             <!-- Main Content Card -->
-            <table cellpadding="0" cellspacing="0" border="0" width="600" style="max-width: 600px; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
-                
+            <table cellpadding="0" cellspacing="0" border="0" width="600"
+                style="max-width: 600px; background: #ffffff; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden;">
+
                 <!-- Header -->
                 <tr>
-                    <td style="background: linear-gradient(135deg, #E53935 0%, #C62828 100%); padding: 25px 40px; text-align: center;">
-                        <h1 style="color: #ffffff; font-size: 26px; margin: 0; font-weight: 700; font-family: Arial, sans-serif;">
+                    <td
+                        style="background: linear-gradient(135deg, #E53935 0%, #C62828 100%); padding: 25px 40px; text-align: center;">
+                        <h1
+                            style="color: #ffffff; font-size: 26px; margin: 0; font-weight: 700; font-family: Arial, sans-serif;">
                             AWA MOTOS
                         </h1>
                         <p style="color: rgba(255,255,255,0.8); font-size: 13px; margin: 8px 0 0; letter-spacing: 1px;">
@@ -31,15 +30,19 @@
                         </p>
                     </td>
                 </tr>
-                
+
                 <!-- Success Banner -->
                 <tr>
-                    <td style="background: linear-gradient(135deg, #43A047 0%, #2E7D32 100%); padding: 35px 40px; text-align: center;">
+                    <td
+                        style="background: linear-gradient(135deg, #43A047 0%, #2E7D32 100%); padding: 35px 40px; text-align: center;">
                         <table cellpadding="0" cellspacing="0" border="0" width="100%">
                             <tr>
                                 <td align="center">
-                                    <div style="width: 70px; height: 70px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 20px; line-height: 70px;">
-                                        <span style="font-size: 35px; color: #fff;">&#10004;</span>
+                                    <div
+                                        style="width: 70px; height: 70px; background: rgba(255,255,255,0.2); border-radius: 50%; margin: 0 auto 20px; line-height: 70px;">
+                                        <span style="font-size: 35px; color: #fff;">&#10004;
+
+                                        </span>
                                     </div>
                                     <h2 style="color: #ffffff; font-size: 26px; margin: 0 0 10px; font-weight: 600;">
                                         Currículo Recebido!
@@ -52,29 +55,35 @@
                         </table>
                     </td>
                 </tr>
-                
+
                 <!-- Content -->
                 <tr>
                     <td style="padding: 35px 40px;">
-                        
+
                         <!-- Greeting -->
                         <p style="font-size: 17px; color: #333; margin: 0 0 20px; line-height: 1.5;">
-                            Olá <strong style="color: #E53935;">{{var candidate_name}}</strong>,
+                            Olá <strong style="color: #E53935;">{{var data.name}}
+
+                            </strong>,
                         </p>
-                        
+
                         <p style="font-size: 15px; color: #555; line-height: 1.7; margin: 0 0 25px;">
-                            Obrigado por se candidatar a uma vaga na <strong>AWA Motos</strong>! Recebemos seu currículo e nossa equipe de Recursos Humanos irá analisar seu perfil com atenção.
+                            Obrigado por se candidatar a uma vaga na <strong>AWA Motos</strong>! Recebemos seu currículo
+                            e nossa equipe de Recursos Humanos irá analisar seu perfil com atenção.
                         </p>
-                        
+
                         <!-- Tracking Code Box -->
-                        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background: linear-gradient(135deg, #b73337 0%, #333 100%); border-radius: 12px; margin: 25px 0;">
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%"
+                            style="background: linear-gradient(135deg, #b73337 0%, #333 100%); border-radius: 12px; margin: 25px 0;">
                             <tr>
                                 <td style="padding: 25px; text-align: center;">
-                                    <p style="color: #999; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 10px;">
+                                    <p
+                                        style="color: #999; font-size: 11px; text-transform: uppercase; letter-spacing: 2px; margin: 0 0 10px;">
                                         Seu código de acompanhamento
                                     </p>
-                                    <p style="font-size: 32px; font-weight: 700; color: #E53935; margin: 0; font-family: 'Courier New', monospace; letter-spacing: 3px;">
-                                        {{var tracking_code}}
+                                    <p
+                                        style="font-size: 32px; font-weight: 700; color: #E53935; margin: 0; font-family: 'Courier New', monospace; letter-spacing: 3px;">
+                                        {{var data.tracking_code}}
                                     </p>
                                     <p style="color: #777; font-size: 12px; margin: 15px 0 0;">
                                         Use este código para acompanhar sua candidatura
@@ -82,33 +91,38 @@
                                 </td>
                             </tr>
                         </table>
-                        
+
                         <!-- Position Applied -->
-                        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background: #f8f9fa; border-radius: 8px; margin: 20px 0;">
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%"
+                            style="background: #f8f9fa; border-radius: 8px; margin: 20px 0;">
                             <tr>
                                 <td style="padding: 18px 20px;">
                                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                         <tr>
                                             <td width="40" valign="middle">
-                                                <div style="width: 36px; height: 36px; background: #E53935; border-radius: 8px; text-align: center; line-height: 36px;">
+                                                <div
+                                                    style="width: 36px; height: 36px; background: #E53935; border-radius: 8px; text-align: center; line-height: 36px;">
                                                     <span style="color: #fff; font-size: 16px;">&#128188;</span>
                                                 </div>
                                             </td>
                                             <td style="padding-left: 15px;" valign="middle">
-                                                <span style="color: #999; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Vaga Pretendida</span><br>
-                                                <strong style="color: #333; font-size: 16px;">{{var position}}</strong>
+                                                <span
+                                                    style="color: #999; font-size: 11px; text-transform: uppercase; letter-spacing: 1px;">Vaga
+                                                    Pretendida</span><br>
+                                                <strong style="color: #333; font-size: 16px;">{{var
+                                                    data.position}}</strong>
                                             </td>
                                         </tr>
                                     </table>
                                 </td>
                             </tr>
                         </table>
-                        
+
                         <!-- Timeline Steps -->
                         <h3 style="font-size: 16px; color: #333; margin: 35px 0 20px; font-weight: 600;">
                             &#128197; Próximas Etapas
                         </h3>
-                        
+
                         <table cellpadding="0" cellspacing="0" border="0" width="100%">
                             <!-- Step 1 -->
                             <tr>
@@ -116,12 +130,16 @@
                                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                         <tr>
                                             <td width="45" valign="top">
-                                                <div style="width: 36px; height: 36px; background: #E53935; border-radius: 50%; text-align: center; line-height: 36px; color: #fff; font-weight: 700; font-size: 14px;">1</div>
+                                                <div
+                                                    style="width: 36px; height: 36px; background: #E53935; border-radius: 50%; text-align: center; line-height: 36px; color: #fff; font-weight: 700; font-size: 14px;">
+                                                    1</div>
                                             </td>
                                             <td style="padding-left: 12px; border-left: 2px solid #e0e0e0;">
                                                 <div style="padding-left: 15px;">
-                                                    <strong style="color: #333; font-size: 14px;">Análise do Currículo</strong>
-                                                    <p style="color: #666; font-size: 13px; margin: 5px 0 0; line-height: 1.5;">
+                                                    <strong style="color: #333; font-size: 14px;">Análise do
+                                                        Currículo</strong>
+                                                    <p
+                                                        style="color: #666; font-size: 13px; margin: 5px 0 0; line-height: 1.5;">
                                                         Nossa equipe avaliará seu perfil em até 5 dias úteis.
                                                     </p>
                                                 </div>
@@ -136,12 +154,16 @@
                                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                         <tr>
                                             <td width="45" valign="top">
-                                                <div style="width: 36px; height: 36px; background: #ff9800; border-radius: 50%; text-align: center; line-height: 36px; color: #fff; font-weight: 700; font-size: 14px;">2</div>
+                                                <div
+                                                    style="width: 36px; height: 36px; background: #ff9800; border-radius: 50%; text-align: center; line-height: 36px; color: #fff; font-weight: 700; font-size: 14px;">
+                                                    2</div>
                                             </td>
                                             <td style="padding-left: 12px; border-left: 2px solid #e0e0e0;">
                                                 <div style="padding-left: 15px;">
-                                                    <strong style="color: #333; font-size: 14px;">Contato Inicial</strong>
-                                                    <p style="color: #666; font-size: 13px; margin: 5px 0 0; line-height: 1.5;">
+                                                    <strong style="color: #333; font-size: 14px;">Contato
+                                                        Inicial</strong>
+                                                    <p
+                                                        style="color: #666; font-size: 13px; margin: 5px 0 0; line-height: 1.5;">
                                                         Se selecionado, entraremos em contato por telefone ou email.
                                                     </p>
                                                 </div>
@@ -156,12 +178,15 @@
                                     <table cellpadding="0" cellspacing="0" border="0" width="100%">
                                         <tr>
                                             <td width="45" valign="top">
-                                                <div style="width: 36px; height: 36px; background: #2196f3; border-radius: 50%; text-align: center; line-height: 36px; color: #fff; font-weight: 700; font-size: 14px;">3</div>
+                                                <div
+                                                    style="width: 36px; height: 36px; background: #2196f3; border-radius: 50%; text-align: center; line-height: 36px; color: #fff; font-weight: 700; font-size: 14px;">
+                                                    3</div>
                                             </td>
                                             <td style="padding-left: 12px;">
                                                 <div style="padding-left: 15px;">
                                                     <strong style="color: #333; font-size: 14px;">Entrevista</strong>
-                                                    <p style="color: #666; font-size: 13px; margin: 5px 0 0; line-height: 1.5;">
+                                                    <p
+                                                        style="color: #666; font-size: 13px; margin: 5px 0 0; line-height: 1.5;">
                                                         Agendaremos uma conversa presencial ou por vídeo.
                                                     </p>
                                                 </div>
@@ -171,45 +196,48 @@
                                 </td>
                             </tr>
                         </table>
-                        
+
                         <!-- CTA Button -->
                         <table cellpadding="0" cellspacing="0" border="0" width="100%" style="margin: 30px 0;">
                             <tr>
                                 <td align="center">
-                                    <a href="{{var status_url}}" style="display: inline-block; background: linear-gradient(135deg, #E53935 0%, #C62828 100%); color: #ffffff; padding: 16px 45px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; box-shadow: 0 4px 15px rgba(229, 57, 53, 0.3);">
+                                    <a href="{{var data.status_url}}"
+                                        style="display: inline-block; background: linear-gradient(135deg, #E53935 0%, #C62828 100%); color: #ffffff; padding: 16px 45px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px; box-shadow: 0 4px 15px rgba(229, 57, 53, 0.3);">
                                         &#128269; Acompanhar Candidatura
                                     </a>
                                 </td>
                             </tr>
                         </table>
-                        
+
                         <!-- Tips Box -->
-                        <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background: #fff8e1; border-left: 4px solid #ffc107; border-radius: 0 8px 8px 0; margin: 25px 0;">
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%"
+                            style="background: #fff8e1; border-left: 4px solid #ffc107; border-radius: 0 8px 8px 0; margin: 25px 0;">
                             <tr>
                                 <td style="padding: 18px 20px;">
                                     <p style="color: #f57c00; font-size: 13px; font-weight: 600; margin: 0 0 8px;">
                                         &#128161; Dica importante
                                     </p>
                                     <p style="color: #795548; font-size: 13px; line-height: 1.6; margin: 0;">
-                                        Mantenha seu telefone e email sempre atualizados. Responda rapidamente aos nossos contatos para não perder oportunidades!
+                                        Mantenha seu telefone e email sempre atualizados. Responda rapidamente aos
+                                        nossos contatos para não perder oportunidades!
                                     </p>
                                 </td>
                             </tr>
                         </table>
-                        
+
                         <!-- Closing -->
                         <p style="font-size: 14px; color: #666; margin: 25px 0 0; line-height: 1.6;">
                             Agradecemos seu interesse em fazer parte da nossa equipe!
                         </p>
-                        
+
                         <p style="font-size: 14px; color: #666; margin: 15px 0 0;">
                             Atenciosamente,<br>
                             <strong style="color: #333;">Equipe de RH - AWA Motos</strong>
                         </p>
-                        
+
                     </td>
                 </tr>
-                
+
                 <!-- Footer -->
                 <tr>
                     <td style="background: #b73337; padding: 25px 40px;">
@@ -225,15 +253,18 @@
                                     <table cellpadding="0" cellspacing="0" border="0">
                                         <tr>
                                             <td style="padding: 0 10px;">
-                                                <a href="https://awamotos.com.br" style="color: #999; font-size: 12px; text-decoration: none;">Site</a>
+                                                <a href="https://awamotos.com.br"
+                                                    style="color: #999; font-size: 12px; text-decoration: none;">Site</a>
                                             </td>
                                             <td style="color: #444;">|</td>
                                             <td style="padding: 0 10px;">
-                                                <a href="https://instagram.com/awamotos" style="color: #999; font-size: 12px; text-decoration: none;">Instagram</a>
+                                                <a href="https://instagram.com/awamotos"
+                                                    style="color: #999; font-size: 12px; text-decoration: none;">Instagram</a>
                                             </td>
                                             <td style="color: #444;">|</td>
                                             <td style="padding: 0 10px;">
-                                                <a href="https://facebook.com/awamotos" style="color: #999; font-size: 12px; text-decoration: none;">Facebook</a>
+                                                <a href="https://facebook.com/awamotos"
+                                                    style="color: #999; font-size: 12px; text-decoration: none;">Facebook</a>
                                             </td>
                                         </tr>
                                     </table>
@@ -242,7 +273,7 @@
                         </table>
                     </td>
                 </tr>
-                
+
                 <!-- Copyright -->
                 <tr>
                     <td style="background: #111; padding: 15px 40px; text-align: center;">
@@ -251,9 +282,9 @@
                         </p>
                     </td>
                 </tr>
-                
+
             </table>
-            
+
         </td>
     </tr>
 </table>

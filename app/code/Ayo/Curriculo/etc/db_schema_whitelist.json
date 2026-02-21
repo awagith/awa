@@ -1,0 +1,44 @@
+{
+    "ayo_curriculo_submissions": {
+        "column": {
+            "entity_id": true,
+            "tracking_code": true,
+            "name": true,
+            "email": true,
+            "phone": true,
+            "cep": true,
+            "cpf": true,
+            "cnpj": true,
+            "city": true,
+            "state": true,
+            "position": true,
+            "experience_level": true,
+            "linkedin": true,
+            "portfolio": true,
+            "message": true,
+            "file_path": true,
+            "file_name": true,
+            "work_area": true,
+            "specialties": true,
+            "cnh": true,
+            "availability": true,
+            "contract_type": true,
+            "salary_expectation": true,
+            "referral_source": true,
+            "status": true,
+            "notes": true,
+            "store_id": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "AYO_CURRICULO_SUBMISSIONS_EMAIL": true,
+            "AYO_CURRICULO_SUBMISSIONS_STATUS": true,
+            "AYO_CURRICULO_SUBMISSIONS_CREATED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "AYO_CURRICULO_SUBMISSIONS_TRACKING_CODE": true
+        }
+    }
+}

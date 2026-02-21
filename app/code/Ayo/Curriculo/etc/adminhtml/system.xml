@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
         <tab id="ayo" translate="label" sortOrder="900">
-            <label>AYO</label>
+            <label>Ayo</label>
         </tab>
         <section id="ayo_curriculo" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
             <label>Currículo</label>
@@ -15,11 +16,11 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
                 <field id="recipient_email" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Email de destino</label>
+                    <label>Email de Destino</label>
                     <comment>Se vazio, será usado o email geral da loja.</comment>
                 </field>
                 <field id="sender_email_identity" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Identidade do remetente</label>
+                    <label>Identidade do Remetente</label>
                     <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
                 </field>
                 <field id="copy_to" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -27,8 +28,12 @@
                     <comment>Separe múltiplos emails por vírgula.</comment>
                 </field>
                 <field id="max_file_size_mb" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Tamanho máximo do arquivo (MB)</label>
+                    <label>Tamanho Máximo do Arquivo (MB)</label>
                     <frontend_class>validate-number validate-zero-or-greater</frontend_class>
+                </field>
+                <field id="send_confirmation" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enviar Confirmação ao Candidato</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
         </section>

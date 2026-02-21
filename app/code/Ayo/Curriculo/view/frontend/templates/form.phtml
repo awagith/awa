@@ -568,7 +568,7 @@
                 </div>
             </fieldset>
 
-            <fieldset class="fieldset">
+            <fieldset class="fieldset" data-progress-step="3">
                 <legend class="legend"><span><?= $escaper->escapeHtml(__('Currículo')) ?></span></legend>
                 <?php $fileError = $block->getFieldError('cv_file'); ?>
                 <div class="field cv-file required">
@@ -608,10 +608,20 @@
                                required="required"
                                <?= $block->isPostValueChecked('consent') ? 'checked="checked"' : '' ?>
                                data-validate="{required:true}"
-                               <?= $consentError ? 'aria-invalid="true" aria-describedby="consent_error"' : '' ?> />
+                               <?= $consentError ? 'aria-invalid="true" aria-describedby="consent_note consent_error"' : 'aria-describedby="consent_note"' ?> />
                         <label for="consent">
-                            <?= $escaper->escapeHtml(__('Declaro que as informações são verdadeiras e autorizo o contato para processo seletivo.')) ?>
+                            <?= $escaper->escapeHtml(__('Declaro que as informações são verdadeiras e autorizo o tratamento dos meus dados pessoais para fins de recrutamento e seleção.')) ?>
                         </label>
+                        <div class="note" id="consent_note">
+                            <?= $escaper->escapeHtml(__('Você pode solicitar correção, acesso ou exclusão dos seus dados a qualquer momento.')) ?>
+                            <a href="<?= $escaper->escapeUrl($block->getUrl('privacy-policy-cookie-restriction-mode')) ?>" target="_blank" rel="noopener noreferrer">
+                                <?= $escaper->escapeHtml(__('Política de Privacidade')) ?>
+                            </a>
+                            ·
+                            <a href="<?= $escaper->escapeUrl($block->getUrl('customer-service')) ?>" target="_blank" rel="noopener noreferrer">
+                                <?= $escaper->escapeHtml(__('Canal de Atendimento')) ?>
+                            </a>
+                        </div>
                         <?php if ($consentError): ?>
                             <div class="mage-error" id="consent_error" role="alert"><?= $escaper->escapeHtml($consentError) ?></div>
                         <?php endif; ?>

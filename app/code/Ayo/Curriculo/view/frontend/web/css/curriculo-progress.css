@@ -1,32 +1,42 @@
 /**
  * AWA Motos - Página de Currículo
  * Design profissional e moderno
+ *
+ * TOKENS: herda todas as variáveis de awa-core.css (:root).
+ * NÃO redeclarar :root aqui — usar os tokens oficiais diretamente.
+ *
+ * Mapeamento (valores locais antigos → tokens oficiais):
+ *   --awa-red       → var(--awa-red)          (#b73337)
+ *   --awa-red-dark  → var(--awa-red-dark)     (#8e2629)
+ *   --awa-red-light → var(--awa-red-light)    (rgb(183 51 55 / 16%))
+ *   --awa-success   → var(--awa-success)      (#198754)
+ *   --awa-warning   → var(--awa-warning)      (#e09100)
+ *   --awa-info      → var(--awa-info)         (#0d6efd)
+ *   --awa-dark      → var(--awa-dark)         (#333)
+ *   --awa-gray      → var(--awa-gray-500)
+ *   --awa-light     → var(--awa-gray-100)
+ *   --awa-border    → var(--awa-gray-300)
+ *   --awa-shadow    → var(--awa-shadow)
+ *   --awa-radius    → var(--awa-radius)
+ *   --awa-transition→ var(--awa-transition)
  */
 
 /* ==========================================================================
-   VARIÁVEIS E RESET
+   VARIÁVEIS LOCAIS EXCLUSIVAS DO CURRÍCULO
+   Apenas aliases para tokens que NÃO existem em awa-core.css.
    ========================================================================== */
-:root {
-    --awa-red: #E53935;
-    --awa-red-dark: #C62828;
-    --awa-red-light: #FFEBEE;
-    --awa-success: #4CAF50;
-    --awa-success-dark: #2E7D32;
-    --awa-warning: #FF9800;
-    --awa-info: #2196F3;
-    --awa-dark: #b73337;
-    --awa-gray: #666;
-    --awa-light: #f8f9fa;
-    --awa-border: #e0e0e0;
-    --awa-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    --awa-radius: 12px;
-    --awa-transition: all 0.3s ease;
-}
 
 /* ==========================================================================
    WRAPPER E ESTRUTURA
    ========================================================================== */
 .curriculo-wrapper {
+    /* Aliases locais — mapeiam nomes não-padrão para tokens awa-core.css.
+       Escopados a .curriculo-wrapper para não poluir :root global. */
+    --awa-border: var(--awa-gray-300);
+    --awa-gray: var(--awa-gray-500);
+    --awa-light: var(--awa-gray-100);
+    --awa-success-dark: #2E7D32;
+
     max-width: 900px;
     margin: 0 auto;
     padding: 30px 20px;
@@ -51,7 +61,7 @@
     right: -50%;
     width: 100%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgb(255 255 255 / 10%) 0%, transparent 70%);
     pointer-events: none;
 }
 
@@ -72,7 +82,7 @@
 .curriculo-page-header .header-icon {
     width: 70px;
     height: 70px;
-    background: rgba(255,255,255,0.2);
+    background: rgb(255 255 255 / 20%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -156,11 +166,8 @@
 .curriculo-progress .progress-fill::after {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 30%), transparent);
     animation: shimmer 2s infinite;
 }
 
@@ -315,7 +322,7 @@
     margin-bottom: 20px;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .curriculo-grid {
         grid-template-columns: 1fr;
     }
@@ -377,7 +384,7 @@
 .form.curriculo select:focus,
 .form.curriculo textarea:focus {
     border-color: var(--awa-red);
-    box-shadow: 0 0 0 4px rgba(229, 57, 53, 0.1);
+    box-shadow: 0 0 0 4px rgb(229 57 53 / 10%);
     outline: none;
 }
 
@@ -409,6 +416,20 @@
     color: #888;
     margin-top: 6px;
     padding-left: 2px;
+}
+
+.form.curriculo .field.consent .note {
+    line-height: 1.6;
+}
+
+.form.curriculo .field.consent .note a {
+    color: var(--awa-red);
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.form.curriculo .field.consent .note a:hover {
+    text-decoration-thickness: 2px;
 }
 
 .form.curriculo .mage-error[role="alert"] {
@@ -517,13 +538,13 @@
     border-radius: 10px;
     cursor: pointer;
     transition: var(--awa-transition);
-    box-shadow: 0 4px 15px rgba(229, 57, 53, 0.3);
+    box-shadow: 0 4px 15px rgb(229 57 53 / 30%);
     min-width: 280px;
 }
 
 .form.curriculo .action.submit.primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 25px rgba(229, 57, 53, 0.4);
+    box-shadow: 0 6px 25px rgb(229 57 53 / 40%);
 }
 
 .form.curriculo .action.submit.primary:active {
@@ -558,7 +579,7 @@
     margin: 0 auto 25px;
     font-size: 40px;
     color: #fff;
-    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+    box-shadow: 0 6px 20px rgb(76 175 80 / 40%);
     animation: successBounce 0.6s ease;
 }
 
@@ -665,7 +686,7 @@
 /* ==========================================================================
    RESPONSIVO
    ========================================================================== */
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .curriculo-wrapper {
         padding: 20px 15px;
     }
@@ -735,6 +756,7 @@
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -767,7 +789,7 @@
     margin-top: 8px;
 }
 
-@media (max-width: 640px) {
+@media (width <= 640px) {
     .curriculo-specialties-grid {
         grid-template-columns: 1fr;
     }

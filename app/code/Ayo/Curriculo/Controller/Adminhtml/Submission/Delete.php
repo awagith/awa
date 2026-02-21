@@ -7,9 +7,9 @@ use Ayo\Curriculo\Model\SubmissionFactory;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 
-class SaveStatus extends Action
+class Delete extends Action
 {
-    public const ADMIN_RESOURCE = 'Ayo_Curriculo::submission_update';
+    public const ADMIN_RESOURCE = 'Ayo_Curriculo::submission_delete';
 
     /**
      * @var SubmissionFactory
@@ -27,30 +27,26 @@ class SaveStatus extends Action
     public function execute()
     {
         $id = (int)$this->getRequest()->getParam('id');
-        $status = $this->getRequest()->getParam('status');
-        
-        if (!$id || !$status) {
-            $this->messageManager->addErrorMessage(__('Parâmetros inválidos.'));
+        if ($id <= 0) {
+            $this->messageManager->addErrorMessage(__('Candidatura não encontrada.'));
             return $this->resultRedirectFactory->create()->setPath('*/*/');
         }
 
         try {
             $submission = $this->submissionFactory->create();
             $submission->load($id);
-            
+
             if (!$submission->getId()) {
                 $this->messageManager->addErrorMessage(__('Candidatura não encontrada.'));
                 return $this->resultRedirectFactory->create()->setPath('*/*/');
             }
 
-            $submission->setData('status', $status);
-            $submission->save();
-            
-            $this->messageManager->addSuccessMessage(__('Status atualizado com sucesso.'));
+            $submission->delete();
+            $this->messageManager->addSuccessMessage(__('Candidatura excluída com sucesso.'));
         } catch (\Exception $e) {
-            $this->messageManager->addErrorMessage(__('Erro ao atualizar status. Tente novamente.'));
+            $this->messageManager->addErrorMessage(__('Não foi possível excluir a candidatura.'));
         }
 
-        return $this->resultRedirectFactory->create()->setPath('*/*/view', ['id' => $id]);
+        return $this->resultRedirectFactory->create()->setPath('*/*/');
     }
 }

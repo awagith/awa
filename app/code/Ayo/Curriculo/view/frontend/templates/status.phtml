@@ -1,6 +1,7 @@
 <?php
+declare(strict_types=1);
+
 /** @var \Magento\Framework\View\Element\Template $block */
-/** @var \Magento\Framework\Escaper $escaper */
 ?>
 <style>
 .status-check-container {
@@ -224,12 +225,19 @@
 
 <div class="status-check-container">
     <div class="status-check-intro">
-        <p><?= $escaper->escapeHtml(__('Digite o código de acompanhamento que você recebeu por email para verificar o status da sua candidatura.')) ?></p>
+        <p><?= $block->escapeHtml(__('Digite o código de acompanhamento que você recebeu por email para verificar o status da sua candidatura.')) ?></p>
+        <p class="note" style="margin-top:8px; color:#666; font-size:13px;">
+            <?= $block->escapeHtml(__('Para solicitar correção ou exclusão de dados (LGPD), use nossos canais oficiais:')) ?>
+            <a href="<?= $block->escapeUrl($block->getUrl('privacy-policy-cookie-restriction-mode')) ?>" target="_blank" rel="noopener noreferrer"><?= $block->escapeHtml(__('Política de Privacidade')) ?></a>
+            ·
+            <a href="<?= $block->escapeUrl($block->getUrl('customer-service')) ?>" target="_blank" rel="noopener noreferrer"><?= $block->escapeHtml(__('Central de Atendimento')) ?></a>
+        </p>
     </div>
 
     <div class="status-check-form">
+        <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
         <div class="field">
-            <label for="tracking_code"><?= $escaper->escapeHtml(__('Código de Acompanhamento')) ?></label>
+            <label for="tracking_code"><?= $block->escapeHtml(__('Código de Acompanhamento')) ?></label>
             <input type="text" 
                    id="tracking_code" 
                    name="tracking_code" 
@@ -237,8 +245,20 @@
                    maxlength="20"
                    autocomplete="off" />
         </div>
+        <div class="field">
+            <label for="tracking_email"><?= $block->escapeHtml(__('Email (opcional)')) ?></label>
+            <input type="email"
+                   id="tracking_email"
+                   name="tracking_email"
+                   placeholder="voce@exemplo.com"
+                   maxlength="160"
+                   autocomplete="email" />
+            <div class="note" style="margin-top:6px; color:#666; font-size:13px;">
+                <?= $block->escapeHtml(__('Se você informar o mesmo email usado no envio, mostramos mais detalhes para confirmar sua candidatura.')) ?>
+            </div>
+        </div>
         <button type="button" id="check-status-btn">
-            <?= $escaper->escapeHtml(__('Consultar Status')) ?>
+            <?= $block->escapeHtml(__('Consultar Status')) ?>
         </button>
     </div>
 
@@ -247,8 +267,8 @@
     </div>
 
     <div class="back-link">
-        <a href="<?= $escaper->escapeUrl($block->getUrl('curriculo')) ?>">
-            ← <?= $escaper->escapeHtml(__('Enviar novo currículo')) ?>
+        <a href="<?= $block->escapeUrl($block->getUrl('curriculo')) ?>">
+            ← <?= $block->escapeHtml(__('Enviar novo currículo')) ?>
         </a>
     </div>
 </div>
@@ -257,7 +277,7 @@
 require(['jquery'], function($) {
     'use strict';
 
-    var statusOrder = ['pending', 'reviewing', 'interview', 'approved'];
+    var statusOrder = ['pending', 'reviewing', 'interview', 'approved', 'rejected'];
     
     function getStatusIndex(status) {
         var idx = statusOrder.indexOf(status);
@@ -266,78 +286,113 @@ require(['jquery'], function($) {
 
     function renderTimeline(currentStatus) {
         var currentIdx = getStatusIndex(currentStatus);
-        var html = '<div class="status-timeline"><h4><?= $escaper->escapeJs(__('Etapas do Processo')) ?></h4><div class="timeline-steps">';
-        
+        var $timeline = $('<div/>', {class: 'status-timeline'});
+        $('<h4/>').text('<?= $block->escapeJs(__('Etapas do Processo')) ?>').appendTo($timeline);
+
+        var $stepsWrap = $('<div/>', {class: 'timeline-steps'}).appendTo($timeline);
         var steps = [
-            {status: 'pending', label: '<?= $escaper->escapeJs(__('Recebido')) ?>'},
-            {status: 'reviewing', label: '<?= $escaper->escapeJs(__('Análise')) ?>'},
-            {status: 'interview', label: '<?= $escaper->escapeJs(__('Entrevista')) ?>'},
-            {status: 'approved', label: '<?= $escaper->escapeJs(__('Aprovado')) ?>'}
+            {status: 'pending', label: '<?= $block->escapeJs(__('Recebido')) ?>'},
+            {status: 'reviewing', label: '<?= $block->escapeJs(__('Análise')) ?>'},
+            {status: 'interview', label: '<?= $block->escapeJs(__('Entrevista')) ?>'},
+            {status: 'approved', label: '<?= $block->escapeJs(__('Aprovado')) ?>'},
+            {status: 'rejected', label: '<?= $block->escapeJs(__('Finalizado')) ?>'}
         ];
-        
+
         steps.forEach(function(step, i) {
             var cls = '';
             if (i < currentIdx) cls = 'active';
             else if (i === currentIdx) cls = 'current';
-            
-            html += '<div class="timeline-step ' + cls + '">';
-            html += '<span class="dot">' + (i < currentIdx ? '✓' : (i + 1)) + '</span>';
-            html += '<span class="label">' + step.label + '</span>';
-            html += '</div>';
+
+            var $step = $('<div/>', {class: 'timeline-step ' + cls});
+            $('<span/>', {class: 'dot'}).text(i < currentIdx ? '✓' : (i + 1)).appendTo($step);
+            $('<span/>', {class: 'label'}).text(step.label).appendTo($step);
+            $stepsWrap.append($step);
         });
-        
-        html += '</div></div>';
-        return html;
+
+        return $timeline;
+    }
+
+    function getFormKey() {
+        var val = $('input[name="form_key"]').first().val();
+        return val ? String(val) : '';
+    }
+
+    function normalizeStatus(status) {
+        var allowed = ['pending', 'reviewing', 'interview', 'approved', 'rejected'];
+        status = String(status || '').toLowerCase();
+        return allowed.indexOf(status) >= 0 ? status : 'pending';
     }
 
     $('#check-status-btn').on('click', function() {
         var btn = $(this);
         var code = $('#tracking_code').val().trim().toUpperCase();
+        var email = ($('#tracking_email').val() || '').trim();
         var resultDiv = $('#status-result');
         
         if (!code) {
             resultDiv.removeClass('success').addClass('error show');
-            resultDiv.html('<p><?= $escaper->escapeJs(__('Por favor, informe o código de acompanhamento.')) ?></p>');
+            resultDiv.empty().append($('<p/>').text('<?= $block->escapeJs(__('Por favor, informe o código de acompanhamento.')) ?>'));
             return;
         }
         
-        btn.prop('disabled', true).text('<?= $escaper->escapeJs(__('Consultando...')) ?>');
+        btn.prop('disabled', true).text('<?= $block->escapeJs(__('Consultando...')) ?>');
         
         $.ajax({
-            url: '<?= $escaper->escapeUrl($block->getUrl('curriculo/index/checkStatus')) ?>',
+            url: '<?= $block->escapeUrl($block->getUrl('curriculo/index/checkStatus')) ?>',
             type: 'POST',
-            data: {tracking_code: code},
+            data: {
+                tracking_code: code,
+                tracking_email: email,
+                form_key: getFormKey()
+            },
             dataType: 'json',
             success: function(response) {
-                btn.prop('disabled', false).text('<?= $escaper->escapeJs(__('Consultar Status')) ?>');
+                btn.prop('disabled', false).text('<?= $block->escapeJs(__('Consultar Status')) ?>');
                 
                 if (!response.success) {
                     resultDiv.removeClass('success').addClass('error show');
-                    resultDiv.html('<p>' + response.message + '</p>');
+                    resultDiv.empty().append($('<p/>').text(String(response.message || '')));
                     return;
                 }
-                
-                var d = response.data;
-                var html = '<div class="status-result-header">';
-                html += '<div class="tracking-code">' + d.tracking_code + '</div>';
-                html += '<div class="name">' + d.name + '</div>';
-                html += '</div>';
-                html += '<div class="status-result-body">';
-                html += '<div style="text-align:center"><span class="status-badge ' + d.status + '">' + d.status_label + '</span></div>';
-                html += '<div class="info-grid">';
-                html += '<div class="info-item"><label><?= $escaper->escapeJs(__('Cargo')) ?></label><div class="value">' + d.position + '</div></div>';
-                html += '<div class="info-item"><label><?= $escaper->escapeJs(__('Data de Envio')) ?></label><div class="value">' + d.submitted_at + '</div></div>';
-                html += '</div>';
-                html += renderTimeline(d.status);
-                html += '</div>';
-                
+
+                var d = response.data || {};
+                var safeStatus = normalizeStatus(d.status);
+                var $wrap = $('<div/>');
+
+                var $header = $('<div/>', {class: 'status-result-header'});
+                $('<div/>', {class: 'tracking-code'}).text(String(d.tracking_code || '')).appendTo($header);
+                if (d.display_hint) {
+                    $('<div/>', {class: 'name'}).text(String(d.display_hint)).appendTo($header);
+                }
+                $wrap.append($header);
+
+                var $body = $('<div/>', {class: 'status-result-body'});
+                var $center = $('<div/>', {style: 'text-align:center'});
+                $('<span/>', {class: 'status-badge ' + safeStatus}).text(String(d.status_label || '')).appendTo($center);
+                $body.append($center);
+
+                var $grid = $('<div/>', {class: 'info-grid'});
+                var $cargo = $('<div/>', {class: 'info-item'});
+                $('<label/>').text('<?= $block->escapeJs(__('Cargo')) ?>').appendTo($cargo);
+                $('<div/>', {class: 'value'}).text(String(d.position || '-')).appendTo($cargo);
+                $grid.append($cargo);
+
+                var $dataEnvio = $('<div/>', {class: 'info-item'});
+                $('<label/>').text('<?= $block->escapeJs(__('Data de Envio')) ?>').appendTo($dataEnvio);
+                $('<div/>', {class: 'value'}).text(String(d.submitted_at || '-')).appendTo($dataEnvio);
+                $grid.append($dataEnvio);
+                $body.append($grid);
+
+                $body.append(renderTimeline(safeStatus));
+                $wrap.append($body);
+
                 resultDiv.removeClass('error').addClass('success show');
-                resultDiv.html(html);
+                resultDiv.empty().append($wrap);
             },
             error: function() {
-                btn.prop('disabled', false).text('<?= $escaper->escapeJs(__('Consultar Status')) ?>');
+                btn.prop('disabled', false).text('<?= $block->escapeJs(__('Consultar Status')) ?>');
                 resultDiv.removeClass('success').addClass('error show');
-                resultDiv.html('<p><?= $escaper->escapeJs(__('Erro ao consultar. Tente novamente.')) ?></p>');
+                resultDiv.empty().append($('<p/>').text('<?= $block->escapeJs(__('Erro ao consultar. Tente novamente.')) ?>'));
             }
         });
     });
