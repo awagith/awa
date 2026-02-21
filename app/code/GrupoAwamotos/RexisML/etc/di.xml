@@ -10,6 +10,7 @@
                 <item name="rexis_test_email" xsi:type="object">GrupoAwamotos\RexisML\Console\Command\TestEmailCommand</item>
                 <item name="rexis_test_whatsapp" xsi:type="object">GrupoAwamotos\RexisML\Console\Command\TestWhatsAppCommand</item>
                 <item name="rexis_stats" xsi:type="object">GrupoAwamotos\RexisML\Console\Command\StatsCommand</item>
+                <item name="rexis_cleanup" xsi:type="object">GrupoAwamotos\RexisML\Console\Command\CleanupCommand</item>
             </argument>
         </arguments>
     </type>
@@ -25,6 +26,13 @@
                 type="GrupoAwamotos\RexisML\Model\CustomerClassification"/>
     <preference for="GrupoAwamotos\RexisML\Api\Data\MetricsInterface"
                 type="Magento\Framework\DataObject"/>
+
+    <!-- RecommendationRepository Logger -->
+    <type name="GrupoAwamotos\RexisML\Model\RecommendationRepository">
+        <arguments>
+            <argument name="logger" xsi:type="object">Psr\Log\LoggerInterface</argument>
+        </arguments>
+    </type>
 
     <!-- UI Component Grid Data Source -->
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">

@@ -5,16 +5,13 @@ use Magento\Framework\View\Element\Template;
 
 class CrossSellOpportunities extends Template
 {
-    protected $opportunities;
-
-    public function setOpportunities($opportunities)
-    {
-        $this->opportunities = $opportunities;
-        return $this;
-    }
-
+    /**
+     * Get opportunities data
+     *
+     * @return array
+     */
     public function getOpportunities()
     {
-        return $this->opportunities ?: [];
+        return $this->getData('opportunities') ?: [];
     }
 }

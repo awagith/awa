@@ -322,6 +322,10 @@ $percConversao = !empty($conversion['perc_conversao_cliente']) ? (float)$convers
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
                 Grid
             </a>
+            <button id="rx-sync-btn" class="rx-btn rx-btn-ghost" style="border-color:var(--rx-green);color:var(--rx-green)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m0 0a9 9 0 019-9m-9 9a9 9 0 009 9"/></svg>
+                <span id="rx-sync-label">Sync ERP</span>
+            </button>
             <button class="rx-btn rx-btn-primary" onclick="location.reload()">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
                 Atualizar
@@ -542,179 +546,337 @@ $percConversao = !empty($conversion['perc_conversao_cliente']) ? (float)$convers
 </div>
 
 <!-- ============================================================ -->
-<!-- APEXCHARTS (via RequireJS)                                    -->
+<!-- APEXCHARTS                                                    -->
 <!-- ============================================================ -->
 <script>
-require(['apexcharts'], function(ApexCharts) {
+(function() {
+    var chartData = {
+        tipo: <?= $block->getChartDataJson('tipo_pie') ?>,
+        monthly: <?= $block->getChartDataJson('monthly_line') ?>,
+        rfm: <?= $block->getChartDataJson('rfm_bar') ?>,
+        scores: <?= $block->getChartDataJson('score_histogram') ?>,
+        products: <?= $block->getChartDataJson('top_products') ?>
+    };
 
-    // ---- 1. TIPO PIE (Donut) ----
-    (function() {
-        var data = <?= $block->getChartDataJson('tipo_pie') ?>;
-        if (!data.series || !data.series.length) return;
-        var opts = {
-            series: data.series,
-            chart: { type: 'donut', height: 300, background: 'transparent' },
-            labels: data.labels,
-            colors: ['#ef4444', '#10b981', '#f59e0b', '#6366f1', '#64748b'],
-            legend: { position: 'bottom', labels: { colors: '#94a3b8' } },
-            stroke: { colors: ['#1e293b'] },
-            dataLabels: {
-                enabled: true,
-                style: { fontSize: '13px' },
-                formatter: function(val) { return val.toFixed(1) + '%'; }
-            },
-            plotOptions: {
-                pie: {
-                    donut: {
-                        size: '65%',
-                        labels: {
-                            show: true,
-                            total: {
-                                show: true,
-                                label: 'Total',
-                                color: '#94a3b8',
-                                formatter: function(w) {
-                                    return w.globals.seriesTotals.reduce(function(a,b){return a+b},0).toLocaleString('pt-BR');
+    function showEmpty(el, msg) {
+        el.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#64748b;font-style:italic">' + msg + '</div>';
+    }
+
+    function showError(el, err) {
+        el.innerHTML = '<div style="text-align:center;padding:40px 20px;color:#ef4444;font-size:12px">Erro: ' + err + '</div>';
+        console.error('[RexisML Chart]', err);
+    }
+
+    function initCharts(AC) {
+        // ---- 1. TIPO PIE (Donut) ----
+        try {
+            var el1 = document.querySelector('#chart-tipo');
+            var d1 = chartData.tipo;
+            if (!d1.series || !d1.series.length) { showEmpty(el1, 'Sem dados de tipo'); }
+            else {
+                new AC(el1, {
+                    series: d1.series,
+                    chart: { type: 'donut', height: 300, background: 'transparent' },
+                    labels: d1.labels,
+                    colors: ['#ef4444', '#10b981', '#f59e0b', '#6366f1', '#64748b'],
+                    legend: { position: 'bottom', labels: { colors: '#94a3b8' } },
+                    stroke: { colors: ['#1e293b'] },
+                    dataLabels: {
+                        enabled: true,
+                        style: { fontSize: '13px' },
+                        formatter: function(val) { return val.toFixed(1) + '%'; }
+                    },
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                size: '65%',
+                                labels: {
+                                    show: true,
+                                    total: {
+                                        show: true,
+                                        label: 'Total',
+                                        color: '#94a3b8',
+                                        formatter: function(w) {
+                                            return w.globals.seriesTotals.reduce(function(a,b){return a+b},0).toLocaleString('pt-BR');
+                                        }
+                                    },
+                                    value: { color: '#f8fafc', fontSize: '22px', fontWeight: 700 }
                                 }
-                            },
-                            value: { color: '#f8fafc', fontSize: '22px', fontWeight: 700 }
+                            }
+                        }
+                    },
+                    theme: { mode: 'dark' }
+                }).render();
+            }
+        } catch(e) { showError(document.querySelector('#chart-tipo'), e.message); }
+
+        // ---- 2. MONTHLY EVOLUTION ----
+        try {
+            var el2 = document.querySelector('#chart-monthly');
+            var d2 = chartData.monthly;
+            if (!d2.months || !d2.months.length) {
+                showEmpty(el2, 'Dados de evolucao aparecerao aqui apos mais meses de sync');
+            } else if (d2.fallback) {
+                // Fallback: show churn vs crosssell stacked bar per month
+                new AC(el2, {
+                    series: [
+                        { name: 'Churn', data: d2.churn },
+                        { name: 'Cross-sell', data: d2.crosssell }
+                    ],
+                    chart: { type: 'bar', height: 300, background: 'transparent', foreColor: '#94a3b8',
+                        stacked: true, toolbar: { show: false }
+                    },
+                    colors: ['#ef4444', '#10b981'],
+                    plotOptions: { bar: { borderRadius: 4, columnWidth: '60%' } },
+                    xaxis: { categories: d2.months },
+                    yaxis: { title: { text: 'Recomendacoes', style: { color: '#94a3b8' } }, labels: { style: { colors: '#94a3b8' } } },
+                    grid: { borderColor: '#334155' },
+                    legend: { labels: { colors: '#94a3b8' } },
+                    tooltip: {
+                        theme: 'dark',
+                        y: { formatter: function(v) { return v.toLocaleString('pt-BR') + ' recs'; } }
+                    }
+                }).render();
+            } else {
+                new AC(el2, {
+                    series: [
+                        { name: 'Recomendados', type: 'column', data: d2.recomendados },
+                        { name: 'Convertidos', type: 'column', data: d2.convertidos },
+                        { name: 'Taxa Conv. %', type: 'line', data: d2.taxaConversao }
+                    ],
+                    chart: { height: 300, type: 'line', background: 'transparent', foreColor: '#94a3b8',
+                        toolbar: { show: false }
+                    },
+                    colors: ['#6366f1', '#10b981', '#f59e0b'],
+                    stroke: { width: [0, 0, 3], curve: 'smooth' },
+                    plotOptions: { bar: { borderRadius: 4, columnWidth: '50%' } },
+                    xaxis: { categories: d2.months },
+                    yaxis: [
+                        { title: { text: 'Clientes', style: { color: '#94a3b8' } }, labels: { style: { colors: '#94a3b8' } } },
+                        { opposite: true, title: { text: 'Conversao %', style: { color: '#94a3b8' } }, labels: { style: { colors: '#94a3b8' } } }
+                    ],
+                    grid: { borderColor: '#334155' },
+                    legend: { labels: { colors: '#94a3b8' } },
+                    tooltip: { theme: 'dark' }
+                }).render();
+            }
+        } catch(e) { showError(document.querySelector('#chart-monthly'), e.message); }
+
+        // ---- 3. RFM BAR (Horizontal) ----
+        try {
+            var el3 = document.querySelector('#chart-rfm');
+            var d3 = chartData.rfm;
+            if (!d3.clientes || !d3.clientes.length) { showEmpty(el3, 'Sem dados RFM'); }
+            else {
+                var rfmColors = {
+                    'Champions': '#10b981', 'Loyal': '#3b82f6', 'Novos Clientes': '#8b5cf6',
+                    'Potencial': '#06b6d4', 'Em Risco': '#f59e0b', 'Atenc': '#f97316',
+                    'Nao Pode': '#ef4444', 'Hibernando': '#64748b', 'Perdido': '#6b7280'
+                };
+                var colors3 = d3.categories.map(function(c) {
+                    for (var key in rfmColors) { if (c.indexOf(key) !== -1) return rfmColors[key]; }
+                    return '#64748b';
+                });
+                new AC(el3, {
+                    series: [{ name: 'Clientes', data: d3.clientes }],
+                    chart: { type: 'bar', height: 320, background: 'transparent', foreColor: '#94a3b8',
+                        toolbar: { show: false }
+                    },
+                    plotOptions: { bar: { borderRadius: 6, horizontal: true, distributed: true, barHeight: '70%' } },
+                    colors: colors3,
+                    dataLabels: { enabled: true, style: { colors: ['#f8fafc'], fontSize: '12px' } },
+                    xaxis: { categories: d3.categories },
+                    grid: { borderColor: '#334155' },
+                    legend: { show: false },
+                    tooltip: {
+                        theme: 'dark',
+                        y: {
+                            formatter: function(val, opt) {
+                                var idx = opt.dataPointIndex;
+                                var valor = d3.valores[idx];
+                                return val + ' clientes (R$ ' + valor.toLocaleString('pt-BR', {minimumFractionDigits:2}) + ' medio)';
+                            }
                         }
                     }
-                }
-            },
-            theme: { mode: 'dark' }
-        };
-        new ApexCharts(document.querySelector('#chart-tipo'), opts).render();
-    })();
-
-    // ---- 2. MONTHLY EVOLUTION (Mixed: Bar + Line) ----
-    (function() {
-        var data = <?= $block->getChartDataJson('monthly_line') ?>;
-        if (!data.months || !data.months.length) {
-            document.querySelector('#chart-monthly').innerHTML = '<div style="text-align:center;padding:80px 20px;color:#64748b;font-style:italic">Dados de conversao aparecerao aqui apos pedidos de clientes recomendados serem processados</div>';
-            return;
-        }
-        var opts = {
-            series: [
-                { name: 'Recomendados', type: 'column', data: data.recomendados },
-                { name: 'Convertidos', type: 'column', data: data.convertidos },
-                { name: 'Taxa Conv. %', type: 'line', data: data.taxaConversao }
-            ],
-            chart: { height: 300, type: 'line', background: 'transparent', foreColor: '#94a3b8',
-                toolbar: { show: false }
-            },
-            colors: ['#6366f1', '#10b981', '#f59e0b'],
-            stroke: { width: [0, 0, 3], curve: 'smooth' },
-            plotOptions: { bar: { borderRadius: 4, columnWidth: '50%' } },
-            xaxis: { categories: data.months },
-            yaxis: [
-                { title: { text: 'Clientes', style: { color: '#94a3b8' } }, labels: { style: { colors: '#94a3b8' } } },
-                { opposite: true, title: { text: 'Conversao %', style: { color: '#94a3b8' } }, labels: { style: { colors: '#94a3b8' } } }
-            ],
-            grid: { borderColor: '#334155' },
-            legend: { labels: { colors: '#94a3b8' } },
-            tooltip: { theme: 'dark' }
-        };
-        new ApexCharts(document.querySelector('#chart-monthly'), opts).render();
-    })();
-
-    // ---- 3. RFM BAR (Horizontal) ----
-    (function() {
-        var data = <?= $block->getChartDataJson('rfm_bar') ?>;
-        if (!data.clientes || !data.clientes.length) return;
-        var rfmColors = {
-            'Champions': '#10b981', 'Loyal': '#3b82f6', 'Novos Clientes': '#8b5cf6',
-            'Potencial': '#06b6d4', 'Em Risco': '#f59e0b',
-            'Hibernando': '#64748b', 'Perdido': '#6b7280'
-        };
-        var defaultColor = '#64748b';
-        var colors = data.categories.map(function(c) {
-            for (var key in rfmColors) {
-                if (c.indexOf(key) !== -1) return rfmColors[key];
+                }).render();
             }
-            return defaultColor;
-        });
-        var opts = {
-            series: [{ name: 'Clientes', data: data.clientes }],
-            chart: { type: 'bar', height: 320, background: 'transparent', foreColor: '#94a3b8',
-                toolbar: { show: false }
-            },
-            plotOptions: { bar: { borderRadius: 6, horizontal: true, distributed: true, barHeight: '70%' } },
-            colors: colors,
-            dataLabels: { enabled: true, style: { colors: ['#f8fafc'], fontSize: '12px' } },
-            xaxis: { categories: data.categories },
-            grid: { borderColor: '#334155' },
-            legend: { show: false },
-            tooltip: {
-                theme: 'dark',
-                y: {
-                    formatter: function(val, opts) {
-                        var idx = opts.dataPointIndex;
-                        var valor = data.valores[idx];
-                        return val + ' clientes (R$ ' + valor.toLocaleString('pt-BR', {minimumFractionDigits:2}) + ' medio)';
+        } catch(e) { showError(document.querySelector('#chart-rfm'), e.message); }
+
+        // ---- 4. SCORE HISTOGRAM ----
+        try {
+            var el4 = document.querySelector('#chart-scores');
+            var d4 = chartData.scores;
+            if (!d4.values || !d4.values.length) { showEmpty(el4, 'Sem dados de scores'); }
+            else {
+                var colors4 = d4.categories.map(function(c) {
+                    var pct = parseInt(c);
+                    if (pct >= 70) return '#10b981';
+                    if (pct >= 40) return '#f59e0b';
+                    if (pct >= 20) return '#f97316';
+                    return '#ef4444';
+                });
+                new AC(el4, {
+                    series: [{ name: 'Recomendacoes', data: d4.values }],
+                    chart: { type: 'bar', height: 320, background: 'transparent', foreColor: '#94a3b8',
+                        toolbar: { show: false }
+                    },
+                    plotOptions: { bar: { borderRadius: 4, columnWidth: '80%', distributed: true } },
+                    colors: colors4,
+                    dataLabels: { enabled: true, style: { colors: ['#f8fafc'], fontSize: '11px' } },
+                    xaxis: { categories: d4.categories, labels: { rotate: -45 } },
+                    yaxis: { title: { text: 'Qtd Recomendacoes', style: { color: '#94a3b8' } } },
+                    grid: { borderColor: '#334155' },
+                    legend: { show: false },
+                    tooltip: { theme: 'dark' }
+                }).render();
+            }
+        } catch(e) { showError(document.querySelector('#chart-scores'), e.message); }
+
+        // ---- 5. TOP PRODUCTS (Horizontal Bar) ----
+        try {
+            var el5 = document.querySelector('#chart-products');
+            var d5 = chartData.products;
+            if (!d5.values || !d5.values.length) { showEmpty(el5, 'Sem dados de produtos'); }
+            else {
+                new AC(el5, {
+                    series: [{ name: 'Recomendacoes', data: d5.values }],
+                    chart: { type: 'bar', height: 420, background: 'transparent', foreColor: '#94a3b8',
+                        toolbar: { show: false }
+                    },
+                    plotOptions: { bar: { borderRadius: 4, horizontal: true, distributed: true, barHeight: '70%' } },
+                    colors: d5.colors,
+                    dataLabels: { enabled: true, style: { colors: ['#f8fafc'], fontSize: '11px' } },
+                    xaxis: { categories: d5.products },
+                    grid: { borderColor: '#334155' },
+                    legend: { show: false },
+                    tooltip: {
+                        theme: 'dark',
+                        y: {
+                            formatter: function(val, opt) {
+                                var idx = opt.dataPointIndex;
+                                var pot = d5.potentials[idx];
+                                return val + ' recs (R$ ' + pot.toLocaleString('pt-BR', {minimumFractionDigits:2}) + ' potencial)';
+                            }
+                        }
                     }
-                }
+                }).render();
+            }
+        } catch(e) { showError(document.querySelector('#chart-products'), e.message); }
+    }
+
+    // Load ApexCharts bypassing RequireJS AMD detection
+    // ApexCharts UMD detects define.amd and tries AMD mode which fails in Magento
+    // Solution: temporarily hide window.define, load as global, restore define
+    function loadScript(src, onSuccess, onError) {
+        var _define = window.define;
+        window.define = undefined;
+
+        var s = document.createElement('script');
+        s.src = src;
+        s.onload = function() {
+            window.define = _define;
+            if (window.ApexCharts) {
+                console.log('[RexisML] ApexCharts loaded from: ' + src);
+                onSuccess(window.ApexCharts);
+            } else {
+                console.warn('[RexisML] ApexCharts loaded but not on window from: ' + src);
+                onError();
             }
         };
-        new ApexCharts(document.querySelector('#chart-rfm'), opts).render();
-    })();
+        s.onerror = function() {
+            window.define = _define;
+            console.warn('[RexisML] Failed to load: ' + src);
+            onError();
+        };
+        document.head.appendChild(s);
+    }
 
-    // ---- 4. SCORE HISTOGRAM ----
-    (function() {
-        var data = <?= $block->getChartDataJson('score_histogram') ?>;
-        if (!data.values || !data.values.length) return;
-        var colors = data.categories.map(function(c) {
-            var pct = parseInt(c);
-            if (pct >= 70) return '#10b981';
-            if (pct >= 40) return '#f59e0b';
-            if (pct >= 20) return '#f97316';
-            return '#ef4444';
+    function onFail() {
+        ['#chart-tipo','#chart-monthly','#chart-rfm','#chart-scores','#chart-products'].forEach(function(id) {
+            var el = document.querySelector(id);
+            if (el) showError(el, 'Nao foi possivel carregar a biblioteca de graficos');
         });
-        var opts = {
-            series: [{ name: 'Recomendacoes', data: data.values }],
-            chart: { type: 'bar', height: 320, background: 'transparent', foreColor: '#94a3b8',
-                toolbar: { show: false }
-            },
-            plotOptions: { bar: { borderRadius: 4, columnWidth: '80%', distributed: true } },
-            colors: colors,
-            dataLabels: { enabled: true, style: { colors: ['#f8fafc'], fontSize: '11px' } },
-            xaxis: { categories: data.categories, labels: { rotate: -45 } },
-            yaxis: { title: { text: 'Qtd Recomendacoes', style: { color: '#94a3b8' } } },
-            grid: { borderColor: '#334155' },
-            legend: { show: false },
-            tooltip: { theme: 'dark' }
-        };
-        new ApexCharts(document.querySelector('#chart-scores'), opts).render();
-    })();
+    }
 
-    // ---- 5. TOP PRODUCTS (Horizontal Bar) ----
-    (function() {
-        var data = <?= $block->getChartDataJson('top_products') ?>;
-        if (!data.values || !data.values.length) return;
-        var opts = {
-            series: [{ name: 'Recomendacoes', data: data.values }],
-            chart: { type: 'bar', height: 420, background: 'transparent', foreColor: '#94a3b8',
-                toolbar: { show: false }
-            },
-            plotOptions: { bar: { borderRadius: 4, horizontal: true, distributed: true, barHeight: '70%' } },
-            colors: data.colors,
-            dataLabels: { enabled: true, style: { colors: ['#f8fafc'], fontSize: '11px' } },
-            xaxis: { categories: data.products },
-            grid: { borderColor: '#334155' },
-            legend: { show: false },
-            tooltip: {
-                theme: 'dark',
-                y: {
-                    formatter: function(val, opts) {
-                        var idx = opts.dataPointIndex;
-                        var pot = data.potentials[idx];
-                        return val + ' recs (R$ ' + pot.toLocaleString('pt-BR', {minimumFractionDigits:2}) + ' potencial)';
-                    }
+    // Strategy: local file first (fast), CDN fallback (reliable)
+    var localUrl = '<?= $block->getViewFileUrl('GrupoAwamotos_ERPIntegration::js/apexcharts.min.js') ?>';
+    var cdnUrl = 'https://cdn.jsdelivr.net/npm/apexcharts@3.44.0/dist/apexcharts.min.js';
+
+    loadScript(localUrl, function(AC) {
+        initCharts(AC);
+    }, function() {
+        console.log('[RexisML] Local failed, trying CDN fallback...');
+        loadScript(cdnUrl, function(AC) {
+            initCharts(AC);
+        }, onFail);
+    });
+})();
+</script>
+
+<script>
+// Sync ERP button handler
+(function() {
+    var btn = document.getElementById('rx-sync-btn');
+    var label = document.getElementById('rx-sync-label');
+    if (!btn || !label) return;
+
+    btn.addEventListener('click', function() {
+        if (btn.disabled) return;
+        btn.disabled = true;
+        btn.style.opacity = '0.6';
+        label.textContent = 'Sincronizando...';
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '<?= $block->escapeUrl($block->getUrl('rexisml/dashboard/sync')) ?>');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+        xhr.timeout = 300000; // 5 min
+
+        xhr.onload = function() {
+            try {
+                var resp = JSON.parse(xhr.responseText);
+                if (resp.success) {
+                    var s = resp.stats;
+                    label.textContent = 'Concluido! (' + s.elapsed + 's)';
+                    btn.style.borderColor = '#10b981';
+                    btn.style.color = '#10b981';
+                    // Reload after 2s to refresh KPIs and charts
+                    setTimeout(function() { location.reload(); }, 2000);
+                } else {
+                    label.textContent = 'Erro!';
+                    btn.style.borderColor = '#ef4444';
+                    btn.style.color = '#ef4444';
+                    console.error('[RexisML Sync]', resp.message);
+                    alert('Erro no sync: ' + resp.message);
+                    setTimeout(function() {
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
+                        label.textContent = 'Sync ERP';
+                        btn.style.borderColor = '';
+                        btn.style.color = '';
+                    }, 3000);
                 }
+            } catch (e) {
+                label.textContent = 'Erro!';
+                console.error('[RexisML Sync] Parse error:', e);
+                btn.disabled = false;
+                btn.style.opacity = '1';
             }
         };
-        new ApexCharts(document.querySelector('#chart-products'), opts).render();
-    })();
 
-});
+        xhr.onerror = function() {
+            label.textContent = 'Falhou';
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        };
+
+        xhr.ontimeout = function() {
+            label.textContent = 'Timeout';
+            btn.disabled = false;
+            btn.style.opacity = '1';
+        };
+
+        xhr.send('form_key=' + encodeURIComponent(FORM_KEY));
+    });
+})();
 </script>

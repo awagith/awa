@@ -69,6 +69,22 @@
                         <field id="crosssell_enabled">1</field>
                     </depends>
                 </field>
+                <field id="crosssell_min_score" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Score Mínimo (Cross-sell)</label>
+                    <validate>validate-number validate-number-range number-range-0-1</validate>
+                    <comment>Score mínimo para incluir no alerta (padrão: 0.75)</comment>
+                    <depends>
+                        <field id="crosssell_enabled">1</field>
+                    </depends>
+                </field>
+                <field id="crosssell_min_value" translate="label comment" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Valor Mínimo (Cross-sell)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                    <comment>Valor mínimo previsto em R$ para incluir no alerta (padrão: 300)</comment>
+                    <depends>
+                        <field id="crosssell_enabled">1</field>
+                    </depends>
+                </field>
             </group>
 
             <!-- WhatsApp Integration -->

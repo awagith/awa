@@ -1,0 +1,77 @@
+<?php
+/**
+ * Widget Template - Recomendações (Lista Simples)
+ *
+ * @var $block \GrupoAwamotos\RexisML\Block\Widget\Recommendations
+ */
+$recommendations = $block->getRecommendedProducts();
+
+if (empty($recommendations) && !$block->getShowForGuest()) {
+    return;
+}
+
+$customClass = $block->getCustomClass();
+?>
+
+<div class="rexis-widget-simple <?= $block->escapeHtmlAttr($customClass) ?>">
+    <?php if (empty($recommendations)): ?>
+        <div class="rexis-login-prompt-simple">
+            <p>🔒 <?= __('Faça login para ver recomendações personalizadas.') ?>
+                <a href="<?= $block->escapeUrl($block->getUrl('customer/account/login')) ?>"><?= __('Login') ?></a>
+            </p>
+        </div>
+    <?php else: ?>
+        <div class="rexis-simple-header">
+            <h3 class="rexis-simple-title">
+                🎯 <?= $block->escapeHtml($block->getWidgetTitle()) ?>
+                <span class="rexis-simple-badge">IA</span>
+            </h3>
+        </div>
+        <ul class="rexis-simple-list">
+            <?php foreach ($recommendations as $item): ?>
+                <?php
+                $product = $item['product'];
+                $score = $item['score'] * 100;
+                $classificacao = $item['classificacao'];
+                ?>
+                <li class="rexis-simple-item">
+                    <a href="<?= $block->escapeUrl($product->getProductUrl()) ?>" class="rexis-simple-link">
+                        <img src="<?= $block->escapeUrl($block->getProductImageUrl($product)) ?>"
+                             alt="<?= $block->escapeHtml($product->getName()) ?>"
+                             class="rexis-simple-img" loading="lazy" />
+                        <div class="rexis-simple-info">
+                            <span class="rexis-simple-name"><?= $block->escapeHtml($product->getName()) ?></span>
+                            <span class="rexis-simple-price">
+                                <?= $block->getLayout()->createBlock('Magento\Catalog\Pricing\Render')->render(
+                                    'final_price', $product, ['zone' => 'item_list']
+                                ) ?>
+                            </span>
+                        </div>
+                        <?php if ($score >= 80): ?>
+                            <span class="rexis-simple-score"><?= round($score) ?>%</span>
+                        <?php endif; ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+</div>
+
+<style>
+.rexis-widget-simple { margin: 20px 0; }
+.rexis-login-prompt-simple { padding: 15px; background: #f3f4f6; border-radius: 8px; text-align: center; font-size: 14px; color: #6b7280; }
+.rexis-login-prompt-simple a { color: #667eea; font-weight: 600; }
+.rexis-simple-header { margin-bottom: 15px; }
+.rexis-simple-title { font-size: 18px; font-weight: 700; color: #1f2937; display: flex; align-items: center; gap: 8px; }
+.rexis-simple-badge { display: inline-block; padding: 2px 8px; background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; border-radius: 12px; font-size: 10px; font-weight: 600; }
+.rexis-simple-list { list-style: none; padding: 0; margin: 0; }
+.rexis-simple-item { border-bottom: 1px solid #e5e7eb; }
+.rexis-simple-item:last-child { border-bottom: none; }
+.rexis-simple-link { display: flex; align-items: center; padding: 12px 0; text-decoration: none; gap: 12px; transition: background 0.2s; }
+.rexis-simple-link:hover { background: #f9fafb; }
+.rexis-simple-img { width: 50px; height: 50px; object-fit: contain; border-radius: 6px; flex-shrink: 0; }
+.rexis-simple-info { flex: 1; min-width: 0; }
+.rexis-simple-name { display: block; font-size: 14px; font-weight: 600; color: #1f2937; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rexis-simple-price { font-size: 14px; font-weight: 700; color: #059669; }
+.rexis-simple-score { background: rgba(0,0,0,0.75); color: #fbbf24; padding: 3px 7px; border-radius: 10px; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+</style>

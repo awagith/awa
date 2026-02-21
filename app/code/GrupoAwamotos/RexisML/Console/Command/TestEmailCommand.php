@@ -5,78 +5,87 @@
 namespace GrupoAwamotos\RexisML\Console\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use GrupoAwamotos\RexisML\Helper\EmailNotifier;
-use GrupoAwamotos\RexisML\Model\ResourceModel\DatasetRecomendacao\CollectionFactory;
+use Magento\Framework\App\ResourceConnection;
 
 class TestEmailCommand extends Command
 {
-    protected $emailNotifier;
-    protected $recomendacaoCollectionFactory;
+    private EmailNotifier $emailNotifier;
+    private ResourceConnection $resource;
 
     public function __construct(
         EmailNotifier $emailNotifier,
-        CollectionFactory $recomendacaoCollectionFactory,
+        ResourceConnection $resource,
         ?string $name = null
     ) {
         parent::__construct($name);
         $this->emailNotifier = $emailNotifier;
-        $this->recomendacaoCollectionFactory = $recomendacaoCollectionFactory;
+        $this->resource = $resource;
     }
 
     protected function configure()
     {
         $this->setName('rexis:test-email')
-            ->setDescription('Enviar email de teste de Churn')
-            ->addArgument(
-                'recipient',
-                InputArgument::OPTIONAL,
-                'Email do destinatário (opcional, usa configuração do admin se não fornecido)'
-            );
+            ->setDescription('Enviar email de teste de alerta REXIS ML')
+            ->addOption('type', 't', InputOption::VALUE_OPTIONAL, 'Tipo: churn ou crosssell', 'churn')
+            ->addOption('limit', 'l', InputOption::VALUE_OPTIONAL, 'Quantidade de oportunidades', '5');
 
         parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('<info>REXIS ML - Teste de Email</info>');
+        $type = $input->getOption('type');
+        $limit = (int)$input->getOption('limit');
+
+        $output->writeln('');
+        $output->writeln('<fg=cyan;options=bold>REXIS ML - Teste de Email (' . ucfirst($type) . ')</>');
         $output->writeln('');
 
-        // Buscar algumas oportunidades de Churn para teste
-        $collection = $this->recomendacaoCollectionFactory->create();
-        $collection->addFieldToFilter('classificacao_produto', 'Oportunidade Churn')
-                   ->addFieldToFilter('pred', ['gteq' => 0.85])
-                   ->setOrder('pred', 'DESC')
-                   ->setPageSize(5);
+        $connection = $this->resource->getConnection();
+        $table = $this->resource->getTableName('rexis_dataset_recomendacao');
 
-        if ($collection->getSize() === 0) {
-            $output->writeln('<error>Nenhuma oportunidade de Churn encontrada para teste.</error>');
+        $select = $connection->select()
+            ->from($table)
+            ->where('tipo_recomendacao = ?', $type)
+            ->where('pred >= ?', 0.3)
+            ->order('pred DESC')
+            ->limit($limit);
+
+        $rows = $connection->fetchAll($select);
+
+        if (empty($rows)) {
+            $output->writeln('<error>Nenhuma oportunidade de ' . $type . ' encontrada.</error>');
             $output->writeln('<comment>Execute primeiro: php bin/magento rexis:sync</comment>');
             return Command::FAILURE;
         }
 
-        $output->writeln(sprintf(
-            '<comment>Encontradas %d oportunidades de Churn</comment>',
-            $collection->getSize()
-        ));
-
-        // Enviar email
-        $recipient = $input->getArgument('recipient');
-        if ($recipient) {
-            $output->writeln("<comment>Enviando para: $recipient</comment>");
-            // Temporariamente sobrescrever configuração
-            // Implementação simplificada - em produção, usar TransportBuilder diretamente
+        $output->writeln(sprintf('<comment>Encontradas %d oportunidades de %s</comment>', count($rows), $type));
+        foreach ($rows as $row) {
+            $output->writeln(sprintf(
+                '  Cliente: %s | Produto: %s | Score: %.1f%% | Valor: R$ %s',
+                $row['identificador_cliente'],
+                $row['identificador_produto'],
+                (float)$row['pred'] * 100,
+                number_format((float)$row['previsao_gasto_round_up'], 2, ',', '.')
+            ));
         }
+        $output->writeln('');
 
-        $result = $this->emailNotifier->sendChurnAlert($collection);
+        $output->writeln('<comment>Enviando email...</comment>');
+
+        $result = $type === 'crosssell'
+            ? $this->emailNotifier->sendCrosssellAlert($rows)
+            : $this->emailNotifier->sendChurnAlert($rows);
 
         if ($result) {
-            $output->writeln('<info>✓ Email enviado com sucesso!</info>');
+            $output->writeln('<info>Email enviado com sucesso!</info>');
             return Command::SUCCESS;
         } else {
-            $output->writeln('<error>✗ Falha ao enviar email. Verifique os logs.</error>');
+            $output->writeln('<error>Falha ao enviar email. Verifique os logs.</error>');
             return Command::FAILURE;
         }
     }

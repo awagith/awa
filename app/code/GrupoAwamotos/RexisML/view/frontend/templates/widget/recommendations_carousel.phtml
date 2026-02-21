@@ -1,0 +1,154 @@
+<?php
+/**
+ * Widget Template - Recomendações (Carrossel)
+ *
+ * @var $block \GrupoAwamotos\RexisML\Block\Widget\Recommendations
+ */
+$recommendations = $block->getRecommendedProducts();
+
+if (empty($recommendations) && !$block->getShowForGuest()) {
+    return;
+}
+
+$customClass = $block->getCustomClass();
+$uniqueId = 'rexis-carousel-' . uniqid();
+?>
+
+<div class="rexis-widget-carousel <?= $block->escapeHtmlAttr($customClass) ?>" id="<?= $uniqueId ?>">
+    <?php if (empty($recommendations)): ?>
+        <div class="rexis-login-prompt">
+            <div class="rexis-login-content">
+                <span class="rexis-lock-icon">🔒</span>
+                <h3><?= __('Recomendações Personalizadas') ?></h3>
+                <p><?= __('Faça login para ver produtos selecionados especialmente para você.') ?></p>
+                <a href="<?= $block->escapeUrl($block->getUrl('customer/account/login')) ?>" class="rexis-login-button">
+                    <?= __('Fazer Login') ?>
+                </a>
+            </div>
+        </div>
+    <?php else: ?>
+        <div class="rexis-carousel-header">
+            <h2 class="rexis-carousel-title">
+                🎯 <?= $block->escapeHtml($block->getWidgetTitle()) ?>
+                <span class="rexis-badge">IA</span>
+            </h2>
+            <div class="rexis-carousel-nav">
+                <button type="button" class="rexis-nav-btn rexis-prev" aria-label="<?= __('Anterior') ?>">‹</button>
+                <button type="button" class="rexis-nav-btn rexis-next" aria-label="<?= __('Próximo') ?>">›</button>
+            </div>
+        </div>
+
+        <div class="rexis-carousel-track-wrapper">
+            <div class="rexis-carousel-track">
+                <?php foreach ($recommendations as $item): ?>
+                    <?php
+                    $product = $item['product'];
+                    $score = $item['score'] * 100;
+                    $classificacao = $item['classificacao'];
+                    ?>
+                    <div class="rexis-carousel-slide">
+                        <div class="rexis-carousel-card">
+                            <?php if ($classificacao === 'Oportunidade Churn'): ?>
+                                <span class="rexis-item-badge badge-churn">⭐ Você Amava</span>
+                            <?php elseif ($classificacao === 'Oportunidade Cross-sell' || $classificacao === 'crosssell'): ?>
+                                <span class="rexis-item-badge badge-crosssell">💡 Sugerido</span>
+                            <?php elseif ($classificacao === 'Oportunidade Irregular'): ?>
+                                <span class="rexis-item-badge badge-irregular">🔄 Recorrente</span>
+                            <?php endif; ?>
+
+                            <?php if ($score >= 85): ?>
+                                <span class="rexis-card-score"><?= round($score) ?>%</span>
+                            <?php endif; ?>
+
+                            <a href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
+                                <img src="<?= $block->escapeUrl($block->getProductImageUrl($product)) ?>"
+                                     alt="<?= $block->escapeHtml($product->getName()) ?>"
+                                     class="rexis-card-img" loading="lazy" />
+                            </a>
+                            <div class="rexis-card-details">
+                                <h3 class="rexis-card-name">
+                                    <a href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
+                                        <?= $block->escapeHtml($product->getName()) ?>
+                                    </a>
+                                </h3>
+                                <div class="rexis-card-price">
+                                    <?= $block->getLayout()->createBlock('Magento\Catalog\Pricing\Render')->render(
+                                        'final_price', $product, ['zone' => 'item_list']
+                                    ) ?>
+                                </div>
+                                <button type="button"
+                                        class="action tocart primary rexis-card-cart"
+                                        data-post='<?= $block->escapeHtml(json_encode($block->getAddToCartPostParams($product))) ?>'>
+                                    <span><?= __('Adicionar') ?></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
+
+<style>
+.rexis-widget-carousel { margin: 30px 0; overflow: hidden; }
+.rexis-carousel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.rexis-carousel-title { font-size: 22px; font-weight: 700; color: #1f2937; display: flex; align-items: center; gap: 10px; margin: 0; }
+.rexis-badge { display: inline-block; padding: 3px 10px; background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; border-radius: 14px; font-size: 10px; font-weight: 600; }
+.rexis-carousel-nav { display: flex; gap: 8px; }
+.rexis-nav-btn { width: 36px; height: 36px; border: 2px solid #d1d5db; border-radius: 50%; background: #fff; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #374151; transition: all 0.2s; }
+.rexis-nav-btn:hover { border-color: #667eea; color: #667eea; }
+.rexis-carousel-track-wrapper { overflow: hidden; }
+.rexis-carousel-track { display: flex; transition: transform 0.4s ease; gap: 16px; }
+.rexis-carousel-slide { min-width: calc(25% - 12px); flex-shrink: 0; }
+.rexis-carousel-card { background: #fff; border: 2px solid #e5e7eb; border-radius: 10px; padding: 15px; position: relative; transition: all 0.3s; }
+.rexis-carousel-card:hover { border-color: #667eea; box-shadow: 0 4px 16px rgba(102,126,234,0.2); transform: translateY(-3px); }
+.rexis-item-badge { position: absolute; top: 10px; left: 10px; padding: 4px 10px; border-radius: 14px; font-size: 10px; font-weight: 700; color: #fff; z-index: 2; }
+.badge-churn { background: linear-gradient(135deg, #f093fb, #f5576c); }
+.badge-crosssell { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+.badge-irregular { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+.rexis-card-score { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.75); color: #fbbf24; padding: 3px 7px; border-radius: 10px; font-size: 10px; font-weight: 700; z-index: 2; }
+.rexis-card-img { width: 100%; height: 180px; object-fit: contain; border-radius: 6px; margin-bottom: 10px; }
+.rexis-card-name { font-size: 13px; font-weight: 600; margin: 0 0 8px; min-height: 36px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.rexis-card-name a { color: #1f2937; text-decoration: none; }
+.rexis-card-name a:hover { color: #667eea; }
+.rexis-card-price { font-size: 16px; font-weight: 700; color: #059669; margin: 6px 0; }
+.rexis-card-cart { width: 100%; padding: 8px; background: linear-gradient(135deg, #667eea, #764ba2); border: none; border-radius: 6px; color: #fff; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.3s; }
+.rexis-card-cart:hover { opacity: 0.9; }
+.rexis-login-prompt { background: linear-gradient(135deg, #667eea, #764ba2); padding: 40px; border-radius: 12px; text-align: center; color: #fff; }
+.rexis-lock-icon { font-size: 48px; display: block; margin-bottom: 20px; }
+.rexis-login-content h3 { font-size: 22px; margin: 0 0 15px; color: #fff; }
+.rexis-login-content p { font-size: 14px; margin: 0 0 20px; color: rgba(255,255,255,0.9); }
+.rexis-login-button { display: inline-block; padding: 10px 24px; background: #fff; color: #667eea; text-decoration: none; border-radius: 6px; font-weight: 600; }
+@media (max-width: 992px) { .rexis-carousel-slide { min-width: calc(33.333% - 11px); } }
+@media (max-width: 768px) { .rexis-carousel-slide { min-width: calc(50% - 8px); } }
+@media (max-width: 480px) { .rexis-carousel-slide { min-width: 100%; } }
+</style>
+
+<script>
+require(['jquery'], function($) {
+    var $wrapper = $('#<?= $uniqueId ?>');
+    var $track = $wrapper.find('.rexis-carousel-track');
+    var $slides = $track.children();
+    var pos = 0;
+
+    function getVisible() {
+        var w = $wrapper.width();
+        if (w <= 480) return 1;
+        if (w <= 768) return 2;
+        if (w <= 992) return 3;
+        return 4;
+    }
+
+    function move(dir) {
+        var visible = getVisible();
+        var max = Math.max(0, $slides.length - visible);
+        pos = Math.max(0, Math.min(max, pos + dir));
+        var slideW = $slides.first().outerWidth(true);
+        $track.css('transform', 'translateX(-' + (pos * slideW) + 'px)');
+    }
+
+    $wrapper.find('.rexis-prev').on('click', function() { move(-1); });
+    $wrapper.find('.rexis-next').on('click', function() { move(1); });
+});
+</script>

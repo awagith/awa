@@ -1,79 +1,116 @@
 <?php
 /**
- * Cron para processar alertas automáticos de Churn e Cross-sell
+ * Cron para processar alertas automaticos de Churn e Cross-sell
+ * Executa diariamente as 9h (configurado em crontab.xml)
  */
 namespace GrupoAwamotos\RexisML\Cron;
 
-use GrupoAwamotos\RexisML\Model\ResourceModel\DatasetRecomendacao\CollectionFactory;
 use GrupoAwamotos\RexisML\Helper\EmailNotifier;
 use GrupoAwamotos\RexisML\Helper\WhatsAppNotifier;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Psr\Log\LoggerInterface;
 
 class ProcessAlerts
 {
-    protected $recomendacaoCollectionFactory;
-    protected $emailNotifier;
-    protected $whatsappNotifier;
-    protected $logger;
+    private EmailNotifier $emailNotifier;
+    private WhatsAppNotifier $whatsappNotifier;
+    private ResourceConnection $resource;
+    private ScopeConfigInterface $scopeConfig;
+    private LoggerInterface $logger;
 
     public function __construct(
-        CollectionFactory $recomendacaoCollectionFactory,
         EmailNotifier $emailNotifier,
         WhatsAppNotifier $whatsappNotifier,
+        ResourceConnection $resource,
+        ScopeConfigInterface $scopeConfig,
         LoggerInterface $logger
     ) {
-        $this->recomendacaoCollectionFactory = $recomendacaoCollectionFactory;
         $this->emailNotifier = $emailNotifier;
         $this->whatsappNotifier = $whatsappNotifier;
+        $this->resource = $resource;
+        $this->scopeConfig = $scopeConfig;
         $this->logger = $logger;
     }
 
-    /**
-     * Processar alertas de Churn de alto valor (diário às 9h)
-     */
     public function execute()
     {
         try {
-            $this->logger->info('REXIS ML: Iniciando processamento de alertas automáticos');
+            $this->logger->info('[RexisML] Iniciando processamento de alertas automaticos');
 
-            // 1. Buscar oportunidades de Churn com score alto (>= 0.85) e valor alto (>= R$ 500)
-            $churnCollection = $this->recomendacaoCollectionFactory->create();
-            $churnCollection->addFieldToFilter('classificacao_produto', 'Oportunidade Churn')
-                           ->addFieldToFilter('pred', ['gteq' => 0.85])
-                           ->addFieldToFilter('previsao_gasto_round_up', ['gteq' => 500])
-                           ->setOrder('pred', 'DESC')
-                           ->setPageSize(20);
+            $connection = $this->resource->getConnection();
+            $table = $this->resource->getTableName('rexis_dataset_recomendacao');
 
-            if ($churnCollection->getSize() > 0) {
-                // Enviar email para equipe comercial
-                $this->emailNotifier->sendChurnAlert($churnCollection);
-                $this->logger->info(sprintf(
-                    'REXIS ML: Email de Churn enviado com %d oportunidades',
-                    $churnCollection->getSize()
-                ));
+            // Config thresholds (with fallback defaults)
+            $churnMinScore = (float)($this->scopeConfig->getValue('rexisml/alerts/churn_min_score') ?: 0.85);
+            $churnMinValue = (float)($this->scopeConfig->getValue('rexisml/alerts/churn_min_value') ?: 500);
+            $xsMinScore = (float)($this->scopeConfig->getValue('rexisml/alerts/crosssell_min_score') ?: 0.75);
+            $xsMinValue = (float)($this->scopeConfig->getValue('rexisml/alerts/crosssell_min_value') ?: 300);
+
+            // 1. Churn alerts (email)
+            $churnEnabled = $this->scopeConfig->getValue('rexisml/alerts/churn_enabled');
+            if ($churnEnabled) {
+                $churnRows = $connection->fetchAll(
+                    $connection->select()
+                        ->from($table)
+                        ->where('tipo_recomendacao = ?', 'churn')
+                        ->where('pred >= ?', $churnMinScore)
+                        ->where('previsao_gasto_round_up >= ?', $churnMinValue)
+                        ->order('pred DESC')
+                        ->limit(20)
+                );
+
+                if (!empty($churnRows)) {
+                    $this->emailNotifier->sendChurnAlert($churnRows);
+                    $this->logger->info(sprintf(
+                        '[RexisML] Email de Churn enviado com %d oportunidades',
+                        count($churnRows)
+                    ));
+                }
             }
 
-            // 2. Buscar oportunidades de Cross-sell de alto valor
-            $crosssellCollection = $this->recomendacaoCollectionFactory->create();
-            $crosssellCollection->addFieldToFilter('classificacao_produto', 'Oportunidade Cross-sell')
-                               ->addFieldToFilter('pred', ['gteq' => 0.75])
-                               ->addFieldToFilter('previsao_gasto_round_up', ['gteq' => 300])
-                               ->setOrder('pred', 'DESC')
-                               ->setPageSize(10);
+            // 2. Cross-sell alerts (email + whatsapp)
+            $xsEnabled = $this->scopeConfig->getValue('rexisml/alerts/crosssell_enabled');
+            if ($xsEnabled) {
+                $xsRows = $connection->fetchAll(
+                    $connection->select()
+                        ->from($table)
+                        ->where('tipo_recomendacao = ?', 'crosssell')
+                        ->where('pred >= ?', $xsMinScore)
+                        ->where('previsao_gasto_round_up >= ?', $xsMinValue)
+                        ->order('pred DESC')
+                        ->limit(10)
+                );
 
-            if ($crosssellCollection->getSize() > 0) {
-                // Enviar notificação WhatsApp para vendedores
-                $this->whatsappNotifier->sendCrosssellAlert($crosssellCollection);
-                $this->logger->info(sprintf(
-                    'REXIS ML: WhatsApp de Cross-sell enviado com %d oportunidades',
-                    $crosssellCollection->getSize()
-                ));
+                if (!empty($xsRows)) {
+                    $this->emailNotifier->sendCrosssellAlert($xsRows);
+                    $this->logger->info(sprintf(
+                        '[RexisML] Email de Cross-sell enviado com %d oportunidades',
+                        count($xsRows)
+                    ));
+                }
             }
 
-            $this->logger->info('REXIS ML: Processamento de alertas concluído com sucesso');
+            // 3. WhatsApp alerts (if configured)
+            $whatsappEnabled = $this->scopeConfig->getValue('rexisml/whatsapp/enabled');
+            if ($whatsappEnabled) {
+                $topChurn = $connection->fetchAll(
+                    $connection->select()
+                        ->from($table)
+                        ->where('tipo_recomendacao = ?', 'churn')
+                        ->where('pred >= ?', 0.90)
+                        ->order('previsao_gasto_round_up DESC')
+                        ->limit(5)
+                );
+                if (!empty($topChurn)) {
+                    $this->whatsappNotifier->sendChurnRecovery($topChurn);
+                }
+            }
+
+            $this->logger->info('[RexisML] Processamento de alertas concluido');
 
         } catch (\Exception $e) {
-            $this->logger->error('REXIS ML: Erro ao processar alertas - ' . $e->getMessage());
+            $this->logger->error('[RexisML] Erro ao processar alertas: ' . $e->getMessage());
         }
     }
 }

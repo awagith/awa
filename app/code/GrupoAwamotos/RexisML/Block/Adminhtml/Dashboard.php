@@ -232,22 +232,64 @@ class Dashboard extends Template
 
     private function getMonthlyLineData()
     {
+        // Try metrics table first
         $data = $this->getMonthlyEvolution();
+
+        // If metrics table has >= 2 months, use it
+        if (count($data) >= 2) {
+            $months = [];
+            $recomendados = [];
+            $convertidos = [];
+            $taxaConversao = [];
+            foreach ($data as $row) {
+                $months[] = $row['mes_rexis_code'];
+                $recomendados[] = (int)$row['n_clientes_rec_mes_atual'];
+                $convertidos[] = (int)$row['n_cliente_comprou_mes_atual'];
+                $taxaConversao[] = round((float)$row['perc_conversao_cliente'], 2);
+            }
+            return json_encode([
+                'months' => $months,
+                'recomendados' => $recomendados,
+                'convertidos' => $convertidos,
+                'taxaConversao' => $taxaConversao
+            ]);
+        }
+
+        // Fallback: aggregate recommendations by tipo and month from main table
+        $t = $this->resource->getTableName('rexis_dataset_recomendacao');
+        $sql = "
+            SELECT
+                mes_rexis_code,
+                SUM(CASE WHEN tipo_recomendacao = 'churn' THEN 1 ELSE 0 END) AS churn_count,
+                SUM(CASE WHEN tipo_recomendacao = 'crosssell' THEN 1 ELSE 0 END) AS crosssell_count,
+                COUNT(DISTINCT identificador_cliente) AS unique_clients
+            FROM {$t}
+            GROUP BY mes_rexis_code
+            ORDER BY mes_rexis_code ASC
+            LIMIT 12
+        ";
+        $rows = $this->connection->fetchAll($sql);
+
+        if (empty($rows)) {
+            return json_encode(['months' => [], 'recomendados' => [], 'convertidos' => [], 'taxaConversao' => []]);
+        }
+
         $months = [];
-        $recomendados = [];
-        $convertidos = [];
-        $taxaConversao = [];
-        foreach ($data as $row) {
+        $churn = [];
+        $crosssell = [];
+        $clients = [];
+        foreach ($rows as $row) {
             $months[] = $row['mes_rexis_code'];
-            $recomendados[] = (int)$row['n_clientes_rec_mes_atual'];
-            $convertidos[] = (int)$row['n_cliente_comprou_mes_atual'];
-            $taxaConversao[] = round((float)$row['perc_conversao_cliente'], 2);
+            $churn[] = (int)$row['churn_count'];
+            $crosssell[] = (int)$row['crosssell_count'];
+            $clients[] = (int)$row['unique_clients'];
         }
         return json_encode([
             'months' => $months,
-            'recomendados' => $recomendados,
-            'convertidos' => $convertidos,
-            'taxaConversao' => $taxaConversao
+            'churn' => $churn,
+            'crosssell' => $crosssell,
+            'clients' => $clients,
+            'fallback' => true
         ]);
     }
 

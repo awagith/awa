@@ -18,17 +18,11 @@
                     <option name="all" value="" selected="true">
                         <label translate="true">Todas</label>
                     </option>
-                    <option name="churn" value="Oportunidade Churn">
+                    <option name="churn" value="churn">
                         <label translate="true">Churn (Produtos que o cliente parou de comprar)</label>
                     </option>
-                    <option name="crosssell" value="Oportunidade Cross-sell">
+                    <option name="crosssell" value="crosssell">
                         <label translate="true">Cross-sell (Produtos complementares)</label>
-                    </option>
-                    <option name="irregular" value="Oportunidade Irregular">
-                        <label translate="true">Irregular (Compras recorrentes)</label>
-                    </option>
-                    <option name="occasional" value="Comprador Ocasional">
-                        <label translate="true">Ocasional (Compras esporádicas)</label>
                     </option>
                 </options>
             </parameter>

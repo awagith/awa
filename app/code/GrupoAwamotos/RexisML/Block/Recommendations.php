@@ -141,7 +141,7 @@ class Recommendations extends Template
             if ($classificacao) {
                 $classMap = $this->getClassificationAliases($classificacao);
                 $select->where(
-                    'tipo_recomendacao IN (?) OR classificacao_produto IN (?)',
+                    'tipo_recomendacao IN (?)',
                     $classMap
                 );
             }

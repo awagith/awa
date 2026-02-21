@@ -54,4 +54,29 @@ class DatasetRecomendacao extends AbstractModel
     {
         return $this->getData('valor_monetario');
     }
+
+    public function getTipoRecomendacao()
+    {
+        return $this->getData('tipo_recomendacao');
+    }
+
+    public function getClassificacaoCliente()
+    {
+        return $this->getData('classificacao_cliente');
+    }
+
+    public function getMesRexisCode()
+    {
+        return $this->getData('mes_rexis_code');
+    }
+
+    public function getValorConvertida()
+    {
+        return $this->getData('valor_convertida');
+    }
+
+    public function getQuantidadeConvertida()
+    {
+        return $this->getData('quantidade_convertida');
+    }
 }

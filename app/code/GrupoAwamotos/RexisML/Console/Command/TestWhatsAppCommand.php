@@ -9,21 +9,21 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use GrupoAwamotos\RexisML\Helper\WhatsAppNotifier;
-use GrupoAwamotos\RexisML\Model\ResourceModel\DatasetRecomendacao\CollectionFactory;
+use Magento\Framework\App\ResourceConnection;
 
 class TestWhatsAppCommand extends Command
 {
-    protected $whatsappNotifier;
-    protected $recomendacaoCollectionFactory;
+    private WhatsAppNotifier $whatsappNotifier;
+    private ResourceConnection $resource;
 
     public function __construct(
         WhatsAppNotifier $whatsappNotifier,
-        CollectionFactory $recomendacaoCollectionFactory,
+        ResourceConnection $resource,
         ?string $name = null
     ) {
         parent::__construct($name);
         $this->whatsappNotifier = $whatsappNotifier;
-        $this->recomendacaoCollectionFactory = $recomendacaoCollectionFactory;
+        $this->resource = $resource;
     }
 
     protected function configure()
@@ -33,86 +33,73 @@ class TestWhatsAppCommand extends Command
             ->addArgument(
                 'phone',
                 InputArgument::REQUIRED,
-                'Número de telefone (formato: 5511999998888)'
+                'Numero de telefone (formato: 5511999998888)'
             );
-
         parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('<info>REXIS ML - Teste de WhatsApp</info>');
+        $output->writeln('');
+        $output->writeln('<fg=cyan;options=bold>REXIS ML - Teste de WhatsApp</>');
         $output->writeln('');
 
         $phone = $input->getArgument('phone');
 
-        // Validar formato do número
         if (!preg_match('/^55\d{10,11}$/', $phone)) {
-            $output->writeln('<error>Formato de telefone inválido!</error>');
-            $output->writeln('<comment>Use o formato: 5511999998888 (DDI + DDD + número)</comment>');
+            $output->writeln('<error>Formato de telefone invalido!</error>');
+            $output->writeln('<comment>Use o formato: 5511999998888 (DDI + DDD + numero)</comment>');
             return Command::FAILURE;
         }
 
-        // Buscar algumas oportunidades de Cross-sell para teste
-        $collection = $this->recomendacaoCollectionFactory->create();
-        $collection->addFieldToFilter('classificacao_produto', 'Oportunidade Cross-sell')
-                   ->addFieldToFilter('pred', ['gteq' => 0.75])
-                   ->setOrder('pred', 'DESC')
-                   ->setPageSize(3);
+        $connection = $this->resource->getConnection();
+        $table = $this->resource->getTableName('rexis_dataset_recomendacao');
 
-        if ($collection->getSize() === 0) {
-            $output->writeln('<error>Nenhuma oportunidade de Cross-sell encontrada para teste.</error>');
-            $output->writeln('<comment>Enviando mensagem de teste genérica...</comment>');
+        $rows = $connection->fetchAll(
+            $connection->select()
+                ->from($table)
+                ->where('tipo_recomendacao = ?', 'crosssell')
+                ->where('pred >= ?', 0.03)
+                ->order('pred DESC')
+                ->limit(3)
+        );
 
-            // Enviar mensagem de teste simples
-            $testMessage = "🧪 *REXIS ML - Teste de Integração WhatsApp*\n\n" .
-                          "✅ A integração está funcionando corretamente!\n\n" .
-                          "📊 Sistema de Recomendações Inteligentes\n" .
-                          "🤖 Powered by Machine Learning";
-
-            // Usar método protegido via reflexão para teste
-            // Em produção, criar método público específico para teste
-            $output->writeln("<comment>Enviando para: $phone</comment>");
-            $output->writeln('<info>Mensagem enviada! (modo simulado)</info>');
-
-            return Command::SUCCESS;
+        if (empty($rows)) {
+            $output->writeln('<comment>Nenhuma oportunidade de Cross-sell encontrada.</comment>');
+            $output->writeln('<comment>Enviando mensagem de teste generica...</comment>');
+        } else {
+            $output->writeln(sprintf('<comment>Encontradas %d oportunidades de Cross-sell</comment>', count($rows)));
+            foreach ($rows as $r) {
+                $output->writeln(sprintf(
+                    '  Cliente: %s | Produto: %s | Score: %.1f%% | Valor: R$ %s',
+                    $r['identificador_cliente'],
+                    $r['identificador_produto'],
+                    (float)$r['pred'] * 100,
+                    number_format((float)$r['previsao_gasto_round_up'], 2, ',', '.')
+                ));
+            }
         }
 
-        $output->writeln(sprintf(
-            '<comment>Encontradas %d oportunidades de Cross-sell</comment>',
-            $collection->getSize()
-        ));
+        $output->writeln('');
         $output->writeln("<comment>Enviando para: $phone</comment>");
 
-        // Criar mensagem de teste
-        $message = "🧪 *REXIS ML - Teste de WhatsApp*\n\n";
-        $message .= "📊 *" . $collection->getSize() . " oportunidades detectadas*\n\n";
-
-        foreach ($collection as $item) {
-            $message .= sprintf(
-                "👤 Cliente #%s\n📦 SKU: %s\n💰 R$ %s\n📈 Score: %.1f%%\n\n",
-                $item->getIdentificadorCliente(),
-                $item->getIdentificadorProduto(),
-                number_format($item->getPrevisaoGastoRoundUp(), 2, ',', '.'),
-                $item->getPred() * 100
-            );
-        }
-
-        $message .= "✅ Teste concluído com sucesso!";
-
-        $output->writeln('');
-        $output->writeln('<info>Prévia da mensagem:</info>');
-        $output->writeln('<comment>' . $message . '</comment>');
-        $output->writeln('');
-
-        // Tentar enviar
         try {
-            // Simulação - em produção, implementar método de teste no Helper
-            $output->writeln('<info>✓ Mensagem enviada com sucesso!</info>');
-            $output->writeln('<comment>Verifique o WhatsApp do destinatário.</comment>');
+            if (!empty($rows)) {
+                $this->whatsappNotifier->sendCrosssellAlert($rows);
+                $output->writeln('<info>Mensagem de cross-sell enviada!</info>');
+            } else {
+                // No data — use Z-API testConnection which sends a test message
+                $result = $this->whatsappNotifier->sendTestMessage($phone);
+                if ($result) {
+                    $output->writeln('<info>Mensagem de teste enviada!</info>');
+                } else {
+                    $output->writeln('<error>Falha ao enviar mensagem de teste</error>');
+                    return Command::FAILURE;
+                }
+            }
             return Command::SUCCESS;
         } catch (\Exception $e) {
-            $output->writeln('<error>✗ Erro ao enviar: ' . $e->getMessage() . '</error>');
+            $output->writeln('<error>Erro ao enviar: ' . $e->getMessage() . '</error>');
             return Command::FAILURE;
         }
     }

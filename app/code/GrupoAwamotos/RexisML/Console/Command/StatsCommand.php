@@ -1,6 +1,6 @@
 <?php
 /**
- * Comando CLI para exibir estatísticas do REXIS ML
+ * Comando CLI para exibir estatisticas do REXIS ML
  */
 namespace GrupoAwamotos\RexisML\Console\Command;
 
@@ -8,271 +8,289 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
-use GrupoAwamotos\RexisML\Model\ResourceModel\DatasetRecomendacao\CollectionFactory as RecomendacaoCollectionFactory;
-use GrupoAwamotos\RexisML\Model\ResourceModel\NetworkRules\CollectionFactory as NetworkCollectionFactory;
-use GrupoAwamotos\RexisML\Model\ResourceModel\CustomerClassification\CollectionFactory as RfmCollectionFactory;
-use GrupoAwamotos\RexisML\Model\ResourceModel\MetricasConversao\CollectionFactory as MetricasCollectionFactory;
+use Magento\Framework\App\ResourceConnection;
 
 class StatsCommand extends Command
 {
-    protected $recomendacaoCollectionFactory;
-    protected $networkCollectionFactory;
-    protected $rfmCollectionFactory;
-    protected $metricasCollectionFactory;
+    private ResourceConnection $resource;
 
     public function __construct(
-        RecomendacaoCollectionFactory $recomendacaoCollectionFactory,
-        NetworkCollectionFactory $networkCollectionFactory,
-        RfmCollectionFactory $rfmCollectionFactory,
-        MetricasCollectionFactory $metricasCollectionFactory,
+        ResourceConnection $resource,
         ?string $name = null
     ) {
         parent::__construct($name);
-        $this->recomendacaoCollectionFactory = $recomendacaoCollectionFactory;
-        $this->networkCollectionFactory = $networkCollectionFactory;
-        $this->rfmCollectionFactory = $rfmCollectionFactory;
-        $this->metricasCollectionFactory = $metricasCollectionFactory;
+        $this->resource = $resource;
     }
 
     protected function configure()
     {
         $this->setName('rexis:stats')
-            ->setDescription('Exibir estatísticas do sistema REXIS ML');
-
+            ->setDescription('Exibir estatisticas completas do sistema REXIS ML');
         parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('');
-        $output->writeln('<fg=cyan;options=bold>╔════════════════════════════════════════════╗</>');
-        $output->writeln('<fg=cyan;options=bold>║     REXIS ML - Estatísticas do Sistema    ║</>');
-        $output->writeln('<fg=cyan;options=bold>╚════════════════════════════════════════════╝</>');
-        $output->writeln('');
-
-        // 1. Estatísticas Gerais
-        $this->showGeneralStats($output);
-
-        // 2. Distribuição por Classificação
-        $this->showClassificationDistribution($output);
-
-        // 3. Top Oportunidades de Churn
-        $this->showTopChurn($output);
-
-        // 4. Top Regras de Cross-sell
-        $this->showTopCrosssell($output);
-
-        // 5. Segmentos RFM
-        $this->showRfmSegments($output);
-
-        // 6. Métricas de Conversão
-        $this->showConversionMetrics($output);
+        $conn = $this->resource->getConnection();
 
         $output->writeln('');
-        $output->writeln('<info>Estatísticas geradas em: ' . date('d/m/Y H:i:s') . '</info>');
+        $output->writeln('<fg=cyan;options=bold>+=============================================+</>');
+        $output->writeln('<fg=cyan;options=bold>|     REXIS ML - Estatisticas do Sistema      |</>');
+        $output->writeln('<fg=cyan;options=bold>+=============================================+</>');
+        $output->writeln('');
+
+        $this->showGeneralStats($output, $conn);
+        $this->showTipoDistribution($output, $conn);
+        $this->showTopChurn($output, $conn);
+        $this->showTopCrosssell($output, $conn);
+        $this->showRfmSegments($output, $conn);
+        $this->showConversionMetrics($output, $conn);
+        $this->showScoreDistribution($output, $conn);
+
+        $output->writeln('<info>Gerado em: ' . date('d/m/Y H:i:s') . '</info>');
         $output->writeln('');
 
         return Command::SUCCESS;
     }
 
-    protected function showGeneralStats(OutputInterface $output)
+    private function showGeneralStats(OutputInterface $output, $conn): void
     {
-        $recomendacoes = $this->recomendacaoCollectionFactory->create();
-        $total = $recomendacoes->getSize();
+        $t = $this->resource->getTableName('rexis_dataset_recomendacao');
+        $row = $conn->fetchRow("
+            SELECT
+                COUNT(*) AS total,
+                COUNT(DISTINCT identificador_cliente) AS clientes,
+                COUNT(DISTINCT identificador_produto) AS produtos,
+                AVG(pred) AS score_medio,
+                SUM(previsao_gasto_round_up) AS valor_potencial,
+                SUM(COALESCE(valor_convertida, 0)) AS valor_convertido,
+                MAX(updated_at) AS last_sync
+            FROM {$t}
+        ");
 
-        $recomendacoes->getSelect()->reset(\Magento\Framework\DB\Select::COLUMNS);
-        $recomendacoes->getSelect()->columns([
-            'clientes' => new \Zend_Db_Expr('COUNT(DISTINCT identificador_cliente)'),
-            'produtos' => new \Zend_Db_Expr('COUNT(DISTINCT identificador_produto)'),
-            'score_medio' => new \Zend_Db_Expr('AVG(pred)'),
-            'valor_total' => new \Zend_Db_Expr('SUM(previsao_gasto_round_up)')
-        ]);
-        $stats = $recomendacoes->getFirstItem();
-
-        $output->writeln('<fg=yellow;options=bold>📊 ESTATÍSTICAS GERAIS</>');
+        $output->writeln('<fg=yellow;options=bold>ESTATISTICAS GERAIS</>');
         $output->writeln('');
 
         $table = new Table($output);
-        $table->setHeaders(['Métrica', 'Valor']);
+        $table->setHeaders(['Metrica', 'Valor']);
         $table->setRows([
-            ['Total de Recomendações', number_format($total, 0, ',', '.')],
-            ['Clientes Analisados', number_format($stats->getData('clientes'), 0, ',', '.')],
-            ['Produtos Recomendados', number_format($stats->getData('produtos'), 0, ',', '.')],
-            ['Score Médio ML', number_format($stats->getData('score_medio') * 100, 1) . '%'],
-            ['Valor Potencial', 'R$ ' . number_format($stats->getData('valor_total'), 2, ',', '.')]
+            ['Total Recomendacoes', number_format((int)$row['total'], 0, ',', '.')],
+            ['Clientes Analisados', number_format((int)$row['clientes'], 0, ',', '.')],
+            ['Produtos Recomendados', number_format((int)$row['produtos'], 0, ',', '.')],
+            ['Score Medio ML', number_format((float)$row['score_medio'] * 100, 1) . '%'],
+            ['Valor Potencial', 'R$ ' . number_format((float)$row['valor_potencial'], 2, ',', '.')],
+            ['Valor Convertido', 'R$ ' . number_format((float)$row['valor_convertido'], 2, ',', '.')],
+            ['Ultimo Sync', $row['last_sync'] ? date('d/m/Y H:i', strtotime($row['last_sync'])) : 'Nunca'],
         ]);
         $table->render();
         $output->writeln('');
     }
 
-    protected function showClassificationDistribution(OutputInterface $output)
+    private function showTipoDistribution(OutputInterface $output, $conn): void
     {
-        $output->writeln('<fg=yellow;options=bold>📈 DISTRIBUIÇÃO POR CLASSIFICAÇÃO</>');
-        $output->writeln('');
+        $t = $this->resource->getTableName('rexis_dataset_recomendacao');
+        $rows = $conn->fetchAll("
+            SELECT
+                tipo_recomendacao AS tipo,
+                COUNT(*) AS total,
+                AVG(pred) AS score_medio,
+                SUM(previsao_gasto_round_up) AS valor
+            FROM {$t}
+            GROUP BY tipo_recomendacao
+            ORDER BY total DESC
+        ");
 
-        $collection = $this->recomendacaoCollectionFactory->create();
-        $collection->getSelect()->reset(\Magento\Framework\DB\Select::COLUMNS);
-        $collection->getSelect()->columns([
-            'classificacao_produto',
-            'total' => new \Zend_Db_Expr('COUNT(*)'),
-            'valor_total' => new \Zend_Db_Expr('SUM(previsao_gasto_round_up)'),
-            'score_medio' => new \Zend_Db_Expr('AVG(pred)')
-        ]);
-        $collection->getSelect()->group('classificacao_produto');
-        $collection->getSelect()->order('total DESC');
+        $output->writeln('<fg=yellow;options=bold>DISTRIBUICAO POR TIPO</>');
+        $output->writeln('');
 
         $table = new Table($output);
-        $table->setHeaders(['Classificação', 'Quantidade', 'Valor Total', 'Score Médio']);
-
-        $rows = [];
-        foreach ($collection as $item) {
-            $rows[] = [
-                $item->getData('classificacao_produto'),
-                number_format($item->getData('total'), 0, ',', '.'),
-                'R$ ' . number_format($item->getData('valor_total'), 2, ',', '.'),
-                number_format($item->getData('score_medio') * 100, 1) . '%'
-            ];
+        $table->setHeaders(['Tipo', 'Qtd', 'Score Medio', 'Valor Potencial']);
+        foreach ($rows as $r) {
+            $table->addRow([
+                ucfirst($r['tipo'] ?: 'Sem tipo'),
+                number_format((int)$r['total'], 0, ',', '.'),
+                number_format((float)$r['score_medio'] * 100, 1) . '%',
+                'R$ ' . number_format((float)$r['valor'], 2, ',', '.'),
+            ]);
         }
-        $table->setRows($rows);
         $table->render();
         $output->writeln('');
     }
 
-    protected function showTopChurn(OutputInterface $output)
+    private function showTopChurn(OutputInterface $output, $conn): void
     {
-        $output->writeln('<fg=red;options=bold>🚨 TOP 10 OPORTUNIDADES DE CHURN</>');
+        $t = $this->resource->getTableName('rexis_dataset_recomendacao');
+        $rows = $conn->fetchAll("
+            SELECT identificador_cliente, identificador_produto, pred, previsao_gasto_round_up, recencia
+            FROM {$t}
+            WHERE tipo_recomendacao = 'churn' AND pred >= 0.3
+            ORDER BY pred DESC
+            LIMIT 10
+        ");
+
+        $output->writeln('<fg=red;options=bold>TOP 10 OPORTUNIDADES DE CHURN</>');
         $output->writeln('');
 
-        $collection = $this->recomendacaoCollectionFactory->create();
-        $collection->addFieldToFilter('classificacao_produto', 'Oportunidade Churn')
-                   ->setOrder('pred', 'DESC')
-                   ->setPageSize(10);
-
-        if ($collection->getSize() === 0) {
-            $output->writeln('<comment>Nenhuma oportunidade de churn encontrada.</comment>');
+        if (empty($rows)) {
+            $output->writeln('<comment>  Nenhuma oportunidade encontrada.</comment>');
             $output->writeln('');
             return;
         }
 
         $table = new Table($output);
-        $table->setHeaders(['Cliente', 'Produto', 'Score', 'Valor Previsto', 'Recência']);
-
-        $rows = [];
-        foreach ($collection as $item) {
-            $rows[] = [
-                '#' . $item->getIdentificadorCliente(),
-                $item->getIdentificadorProduto(),
-                number_format($item->getPred() * 100, 1) . '%',
-                'R$ ' . number_format($item->getPrevisaoGastoRoundUp(), 2, ',', '.'),
-                $item->getRecencia() . ' dias'
-            ];
+        $table->setHeaders(['Cliente', 'Produto', 'Score', 'Valor Previsto', 'Recencia']);
+        foreach ($rows as $r) {
+            $table->addRow([
+                '#' . $r['identificador_cliente'],
+                $r['identificador_produto'],
+                number_format((float)$r['pred'] * 100, 1) . '%',
+                'R$ ' . number_format((float)$r['previsao_gasto_round_up'], 2, ',', '.'),
+                $r['recencia'] . ' dias',
+            ]);
         }
-        $table->setRows($rows);
         $table->render();
         $output->writeln('');
     }
 
-    protected function showTopCrosssell(OutputInterface $output)
+    private function showTopCrosssell(OutputInterface $output, $conn): void
     {
-        $output->writeln('<fg=green;options=bold>💡 TOP 10 REGRAS DE CROSS-SELL</>');
+        $t = $this->resource->getTableName('rexis_network_rules');
+        $rows = $conn->fetchAll("
+            SELECT antecedent, consequent, lift, confidence, support
+            FROM {$t}
+            WHERE is_active = 1
+            ORDER BY lift DESC
+            LIMIT 10
+        ");
+
+        $output->writeln('<fg=green;options=bold>TOP 10 REGRAS DE CROSS-SELL (MBA)</>');
         $output->writeln('');
 
-        $collection = $this->networkCollectionFactory->create();
-        $collection->setOrder('lift', 'DESC')
-                   ->setPageSize(10);
-
-        if ($collection->getSize() === 0) {
-            $output->writeln('<comment>Nenhuma regra de cross-sell encontrada.</comment>');
+        if (empty($rows)) {
+            $output->writeln('<comment>  Nenhuma regra encontrada.</comment>');
             $output->writeln('');
             return;
         }
 
         $table = new Table($output);
-        $table->setHeaders(['Produto A', 'Produto B', 'Lift', 'Confidence', 'Support']);
-
-        $rows = [];
-        foreach ($collection as $item) {
-            $rows[] = [
-                $item->getAntecedent(),
-                $item->getConsequent(),
-                number_format($item->getLift(), 2),
-                number_format($item->getConfidence() * 100, 1) . '%',
-                number_format($item->getSupport() * 100, 2) . '%'
-            ];
+        $table->setHeaders(['Comprou (A)', 'Sugestao (B)', 'Lift', 'Confidence', 'Support']);
+        foreach ($rows as $r) {
+            $table->addRow([
+                strlen($r['antecedent']) > 30 ? substr($r['antecedent'], 0, 27) . '...' : $r['antecedent'],
+                strlen($r['consequent']) > 30 ? substr($r['consequent'], 0, 27) . '...' : $r['consequent'],
+                number_format((float)$r['lift'], 2),
+                number_format((float)$r['confidence'] * 100, 1) . '%',
+                number_format((float)$r['support'] * 100, 3) . '%',
+            ]);
         }
-        $table->setRows($rows);
         $table->render();
         $output->writeln('');
     }
 
-    protected function showRfmSegments(OutputInterface $output)
+    private function showRfmSegments(OutputInterface $output, $conn): void
     {
-        $output->writeln('<fg=magenta;options=bold>👥 SEGMENTOS RFM</>');
+        $t = $this->resource->getTableName('rexis_customer_classification');
+        $rows = $conn->fetchAll("
+            SELECT
+                classificacao_cliente,
+                COUNT(*) AS total,
+                AVG(monetary) AS valor_medio,
+                AVG(frequency) AS freq_media,
+                AVG(recency) AS recencia_media
+            FROM {$t}
+            GROUP BY classificacao_cliente
+            ORDER BY total DESC
+        ");
+
+        $output->writeln('<fg=magenta;options=bold>SEGMENTOS RFM</>');
         $output->writeln('');
 
-        $collection = $this->rfmCollectionFactory->create();
-        $collection->getSelect()->reset(\Magento\Framework\DB\Select::COLUMNS);
-        $collection->getSelect()->columns([
-            'classificacao_cliente',
-            'total' => new \Zend_Db_Expr('COUNT(*)'),
-            'valor_total' => new \Zend_Db_Expr('SUM(monetary)')
-        ]);
-        $collection->getSelect()->group('classificacao_cliente');
-        $collection->getSelect()->order('total DESC');
-
-        if ($collection->getSize() === 0) {
-            $output->writeln('<comment>Nenhum segmento RFM encontrado.</comment>');
+        if (empty($rows)) {
+            $output->writeln('<comment>  Nenhum segmento encontrado.</comment>');
             $output->writeln('');
             return;
         }
 
         $table = new Table($output);
-        $table->setHeaders(['Segmento', 'Clientes', 'Valor Total']);
-
-        $rows = [];
-        foreach ($collection as $item) {
-            $rows[] = [
-                $item->getData('classificacao_cliente') ?: 'Não classificado',
-                number_format($item->getData('total'), 0, ',', '.'),
-                'R$ ' . number_format($item->getData('valor_total'), 2, ',', '.')
-            ];
+        $table->setHeaders(['Segmento', 'Clientes', 'Valor Medio', 'Freq Media', 'Recencia Media']);
+        foreach ($rows as $r) {
+            $table->addRow([
+                $r['classificacao_cliente'] ?: 'Nao classificado',
+                number_format((int)$r['total'], 0, ',', '.'),
+                'R$ ' . number_format((float)$r['valor_medio'], 2, ',', '.'),
+                number_format((float)$r['freq_media'], 1),
+                number_format((float)$r['recencia_media'], 0) . ' dias',
+            ]);
         }
-        $table->setRows($rows);
         $table->render();
         $output->writeln('');
     }
 
-    protected function showConversionMetrics(OutputInterface $output)
+    private function showConversionMetrics(OutputInterface $output, $conn): void
     {
-        $output->writeln('<fg=blue;options=bold>📊 MÉTRICAS DE CONVERSÃO</>');
+        $t = $this->resource->getTableName('rexis_metricas_conversao');
+        $rows = $conn->fetchAll("SELECT * FROM {$t} ORDER BY mes_rexis_code DESC LIMIT 3");
+
+        $output->writeln('<fg=blue;options=bold>METRICAS DE CONVERSAO (ultimos 3 meses)</>');
         $output->writeln('');
 
-        $metricas = $this->metricasCollectionFactory->create();
-        $metricas->getSelect()->reset(\Magento\Framework\DB\Select::COLUMNS);
-        $metricas->getSelect()->columns([
-            'total_recomendados' => new \Zend_Db_Expr('SUM(n_clientes_rec_mes_atual)'),
-            'total_compraram' => new \Zend_Db_Expr('SUM(n_cliente_comprou_mes_atual)'),
-            'valor_esperado' => new \Zend_Db_Expr('SUM(valor_esperado_atual)'),
-            'valor_convertido' => new \Zend_Db_Expr('SUM(valor_convertido_atual)')
-        ]);
-        $stats = $metricas->getFirstItem();
-
-        $totalRecomendados = (int)$stats->getData('total_recomendados');
-        $totalCompraram = (int)$stats->getData('total_compraram');
-        $valorEsperado = (float)$stats->getData('valor_esperado');
-        $valorConvertido = (float)$stats->getData('valor_convertido');
-        $taxaConversao = $totalRecomendados > 0 ? ($totalCompraram / $totalRecomendados) * 100 : 0;
+        if (empty($rows)) {
+            $output->writeln('<comment>  Nenhuma metrica encontrada.</comment>');
+            $output->writeln('');
+            return;
+        }
 
         $table = new Table($output);
-        $table->setHeaders(['Métrica', 'Valor']);
-        $table->setRows([
-            ['Clientes Recomendados', number_format($totalRecomendados, 0, ',', '.')],
-            ['Clientes que Compraram', number_format($totalCompraram, 0, ',', '.')],
-            ['Taxa de Conversão', number_format($taxaConversao, 2) . '%'],
-            ['Valor Esperado', 'R$ ' . number_format($valorEsperado, 2, ',', '.')],
-            ['Valor Convertido', 'R$ ' . number_format($valorConvertido, 2, ',', '.')]
-        ]);
+        $table->setHeaders(['Mes', 'Recomendados', 'Compraram', 'Conversao', 'Esperado', 'Convertido']);
+        foreach ($rows as $r) {
+            $table->addRow([
+                $r['mes_rexis_code'],
+                number_format((int)$r['n_clientes_rec_mes_atual'], 0, ',', '.'),
+                number_format((int)$r['n_cliente_comprou_mes_atual'], 0, ',', '.'),
+                number_format((float)$r['perc_conversao_cliente'], 2) . '%',
+                'R$ ' . number_format((float)$r['valor_esperado_atual'], 2, ',', '.'),
+                'R$ ' . number_format((float)$r['valor_convertido_atual'], 2, ',', '.'),
+            ]);
+        }
         $table->render();
+        $output->writeln('');
+    }
+
+    private function showScoreDistribution(OutputInterface $output, $conn): void
+    {
+        $t = $this->resource->getTableName('rexis_dataset_recomendacao');
+        $rows = $conn->fetchAll("
+            SELECT
+                CASE
+                    WHEN pred < 0.2 THEN '0-20%'
+                    WHEN pred < 0.4 THEN '20-40%'
+                    WHEN pred < 0.6 THEN '40-60%'
+                    WHEN pred < 0.8 THEN '60-80%'
+                    ELSE '80-100%'
+                END AS faixa,
+                COUNT(*) AS qtd
+            FROM {$t}
+            GROUP BY faixa
+            ORDER BY MIN(pred) ASC
+        ");
+
+        $output->writeln('<fg=yellow;options=bold>DISTRIBUICAO DE SCORES</>');
+        $output->writeln('');
+
+        $maxQtd = 0;
+        foreach ($rows as $r) { $maxQtd = max($maxQtd, (int)$r['qtd']); }
+
+        foreach ($rows as $r) {
+            $qtd = (int)$r['qtd'];
+            $barLen = $maxQtd > 0 ? (int)round(($qtd / $maxQtd) * 40) : 0;
+            $bar = str_repeat('#', $barLen);
+            $output->writeln(sprintf(
+                '  <fg=cyan>%7s</> %s %s',
+                $r['faixa'],
+                $bar,
+                number_format($qtd, 0, ',', '.')
+            ));
+        }
         $output->writeln('');
     }
 }

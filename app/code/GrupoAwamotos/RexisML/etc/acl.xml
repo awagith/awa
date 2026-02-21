@@ -8,6 +8,7 @@
                     <resource id="GrupoAwamotos_RexisML::dashboard" title="Dashboard" sortOrder="10"/>
                     <resource id="GrupoAwamotos_RexisML::recommendations" title="Recomendações" sortOrder="20"/>
                     <resource id="GrupoAwamotos_RexisML::sync" title="Sincronização" sortOrder="30"/>
+                    <resource id="GrupoAwamotos_RexisML::config" title="Configuração" sortOrder="40"/>
                 </resource>
             </resource>
         </resources>

@@ -40,6 +40,26 @@
                 </settings>
             </filterSelect>
         </filters>
+        <massaction name="listing_massaction" component="Magento_Ui/js/grid/tree-massactions">
+            <action name="delete">
+                <settings>
+                    <confirm>
+                        <message translate="true">Deseja realmente excluir os registros selecionados?</message>
+                        <title translate="true">Excluir</title>
+                    </confirm>
+                    <url path="rexisml/recommendations/massDelete"/>
+                    <type>delete</type>
+                    <label translate="true">Excluir</label>
+                </settings>
+            </action>
+        </massaction>
+        <exportButton name="export_button">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="selectProvider" xsi:type="string">rexisml_recommendations_listing.rexisml_recommendations_listing.rexisml_recommendations_columns.ids</item>
+                </item>
+            </argument>
+        </exportButton>
         <paging name="listing_paging"/>
     </listingToolbar>
 
@@ -58,6 +78,13 @@
             </settings>
         </column>
 
+        <column name="mes_rexis_code" sortOrder="15">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Mes</label>
+            </settings>
+        </column>
+
         <column name="identificador_cliente" sortOrder="20">
             <settings>
                 <filter>text</filter>
@@ -72,7 +99,7 @@
             </settings>
         </column>
 
-        <column name="tipo_recomendacao" sortOrder="40">
+        <column name="tipo_recomendacao" sortOrder="40" class="GrupoAwamotos\RexisML\Ui\Component\Listing\Column\Tipo">
             <settings>
                 <filter>select</filter>
                 <label translate="true">Tipo</label>
@@ -96,7 +123,7 @@
             </settings>
         </column>
 
-        <column name="previsao_gasto_round_up" sortOrder="60">
+        <column name="previsao_gasto_round_up" sortOrder="60" class="GrupoAwamotos\RexisML\Ui\Component\Listing\Column\Currency">
             <settings>
                 <filter>textRange</filter>
                 <label translate="true">Previsao Gasto</label>
@@ -112,7 +139,7 @@
             </settings>
         </column>
 
-        <column name="valor_convertida" sortOrder="80">
+        <column name="valor_convertida" sortOrder="80" class="GrupoAwamotos\RexisML\Ui\Component\Listing\Column\Currency">
             <settings>
                 <filter>textRange</filter>
                 <label translate="true">Valor Convertido</label>

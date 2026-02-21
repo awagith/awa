@@ -11,6 +11,7 @@ use GrupoAwamotos\RexisML\Model\ResourceModel\CustomerClassification\CollectionF
 use GrupoAwamotos\RexisML\Model\ResourceModel\MetricasConversao\CollectionFactory as MetricasCollectionFactory;
 use GrupoAwamotos\RexisML\Model\MetricasConversaoFactory;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Psr\Log\LoggerInterface;
 
 class RecommendationRepository implements RecommendationRepositoryInterface
 {
@@ -19,19 +20,22 @@ class RecommendationRepository implements RecommendationRepositoryInterface
     protected $rfmCollectionFactory;
     protected $metricasCollectionFactory;
     protected $metricasFactory;
+    protected $logger;
 
     public function __construct(
         RecomendacaoCollectionFactory $recomendacaoCollectionFactory,
         NetworkCollectionFactory $networkCollectionFactory,
         RfmCollectionFactory $rfmCollectionFactory,
         MetricasCollectionFactory $metricasCollectionFactory,
-        MetricasConversaoFactory $metricasFactory
+        MetricasConversaoFactory $metricasFactory,
+        LoggerInterface $logger
     ) {
         $this->recomendacaoCollectionFactory = $recomendacaoCollectionFactory;
         $this->networkCollectionFactory = $networkCollectionFactory;
         $this->rfmCollectionFactory = $rfmCollectionFactory;
         $this->metricasCollectionFactory = $metricasCollectionFactory;
         $this->metricasFactory = $metricasFactory;
+        $this->logger = $logger;
     }
 
     /**
@@ -148,6 +152,7 @@ class RecommendationRepository implements RecommendationRepositoryInterface
 
             return true;
         } catch (\Exception $e) {
+            $this->logger->error('[RexisML] registerConversion failed: ' . $e->getMessage());
             return false;
         }
     }
@@ -164,11 +169,11 @@ class RecommendationRepository implements RecommendationRepositoryInterface
         $totalRecomendacoes = $recomendacaoCollection->getSize();
 
         $churnCollection = $this->recomendacaoCollectionFactory->create();
-        $churnCollection->addFieldToFilter('classificacao_produto', 'Oportunidade Churn');
+        $churnCollection->addFieldToFilter('tipo_recomendacao', 'churn');
         $oportunidadesChurn = $churnCollection->getSize();
 
         $crosssellCollection = $this->recomendacaoCollectionFactory->create();
-        $crosssellCollection->addFieldToFilter('classificacao_produto', 'Oportunidade Cross-sell');
+        $crosssellCollection->addFieldToFilter('tipo_recomendacao', 'crosssell');
         $oportunidadesCrosssell = $crosssellCollection->getSize();
 
         // Valor potencial (soma de previsão de gasto)
