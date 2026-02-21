@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * AWA Motos: CE compatibility stub for gift-card renderer actions.
+ * Magento_GiftMessage references this block even when gift-card renderer
+ * is not available, which causes broken-reference log noise.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <block class="Magento\Framework\View\Element\Text" name="checkout.cart.item.renderers.gift-card.actions"/>
+    </body>
+</page>

@@ -24,11 +24,26 @@
 @awa-success: #28a745;
 @awa-danger: #dc3545;
 
+/* Breakpoint variables — padronized AWA, aligned with Bootstrap 4/5 */
+@awa-bp-xl: 1400px;
+@awa-bp-lg: 1200px;
+@awa-bp-md: 992px;
+@awa-bp-sm: 768px;
+@awa-bp-xs: 480px;
+
+/* Derived max-width breakpoints (bp - 1px) */
+@awa-bp-xl-max: (@awa-bp-xl - 1);
+@awa-bp-lg-max: (@awa-bp-lg - 1);
+@awa-bp-md-max: (@awa-bp-md - 1);
+@awa-bp-sm-max: (@awa-bp-sm - 1);
+@awa-bp-xs-max: (@awa-bp-xs - 1);
+
 /* ==========================================================================
    2. PRICE DISPLAY FIX
    Show only final price (including tax) per Brazilian standards
    ========================================================================== */
 .price-box {
+
     .price-excluding-tax,
     .price-wrapper.price-excluding-tax {
         display: none;
@@ -124,6 +139,7 @@ body.awa-price-fixed {
     background: @bkgheader;
     color: @lightcolor;
     font-size: 13px;
+    min-height: 44px; /* WCAG 2.5.8 — minimum touch target */
 
     a {
         color: @lightcolor;
@@ -137,7 +153,30 @@ body.awa-price-fixed {
 
     .top-bar-left,
     .top-bar-right {
-        line-height: 40px;
+        line-height: 44px; /* Unified: WCAG 44px touch target */
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+}
+
+/* Header content flex alignment — overrides legacy float layout */
+.header.content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 15px;
+
+    .block-search {
+        flex-grow: 1;
+        max-width: 600px;
+        min-width: 200px;
+    }
+
+    .minicart-wrapper {
+        flex-shrink: 0;
     }
 }
 
@@ -165,10 +204,25 @@ body.awa-price-fixed {
 /* ==========================================================================
    5. FOOTER IMPROVEMENTS
    Per AYO docs: footer_info, social_block, footer_menu blocks
+   Overrides: _footer.less L13 (.page-footer), L346 (.page_footer)
+   Both selectors used for compatibility with AYO markup variants
    ========================================================================== */
-.page_footer {
+.page_footer,
+.page-footer {
     .border-top-container {
         border-top: 1px solid @awa-border-color;
+    }
+
+    /* Footer columns grid — overrides legacy rowFlex float layout */
+    .footer-container .rowFlex {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 30px 20px;
+
+        > [class*="col-"] {
+            flex: 1 1 220px;
+            min-width: 0;
+        }
     }
 
     .velaFooterMenu {
@@ -182,6 +236,10 @@ body.awa-price-fixed {
         }
 
         .velaFooterLinks {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+
             li {
                 margin-bottom: 8px;
 
@@ -199,26 +257,39 @@ body.awa-price-fixed {
     }
 
     .vela-contactinfo {
+
         .contacinfo-phone,
         .contacinfo-email,
         .contacinfo-address {
             margin-bottom: 10px;
             color: @footer-color;
+            display: flex;
+            align-items: baseline;
+            gap: 5px;
 
             label {
                 font-weight: @headingfontweight;
                 color: @headingcolor;
-                margin-right: 5px;
+                margin-right: 0;
+                flex-shrink: 0;
             }
         }
     }
 }
 
-/* Footer bottom */
-.footer-bottom {
+/* Footer bottom — unified padding, overrides _footer.less L~150 (28px 0 25px) */
+body .page-wrapper .footer-bottom {
     background: @awa-footer-bg-dark;
     color: @lightcolor;
     padding: 15px 0;
+
+    .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
 
     a {
         color: rgba(255, 255, 255, 0.7);
@@ -229,12 +300,67 @@ body.awa-price-fixed {
         }
     }
 
+    .copyright {
+        flex: 1 1 auto;
+    }
+
     .payment-method {
+        flex-shrink: 0;
         text-align: right;
 
         img {
             max-height: 30px;
             margin-left: 5px;
+        }
+    }
+}
+
+/* Footer responsive — tablet */
+@media (max-width: @awa-bp-md-max) {
+    .page_footer,
+    .page-footer {
+        .footer-container .rowFlex {
+            gap: 20px 15px;
+
+            > [class*="col-"] {
+                flex: 1 1 45%;
+            }
+        }
+    }
+
+    body .page-wrapper .footer-bottom .container {
+        justify-content: center;
+        text-align: center;
+    }
+}
+
+/* Footer responsive — mobile */
+@media (max-width: @awa-bp-sm-max) {
+    .page_footer,
+    .page-footer {
+        .footer-container .rowFlex {
+            flex-direction: column;
+            gap: 0;
+
+            > [class*="col-"] {
+                flex: 1 1 100%;
+                border-bottom: 1px solid fade(@awa-border-color, 30%);
+                padding-bottom: 15px;
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    body .page-wrapper .footer-bottom {
+        padding: 15px 0;
+
+        .container {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .payment-method {
+            text-align: center;
         }
     }
 }
@@ -268,16 +394,22 @@ body.awa-price-fixed {
 /* ==========================================================================
    6. MOBILE NAVIGATION FIXES
    Per AYO docs: accordion footer on mobile, toggle nav
+   Overrides: _responsive_themes.less L478+ (mobile rules)
    ========================================================================== */
-@media (max-width: 767px) {
+@media (max-width: @awa-bp-sm-max) {
+
     /* Mobile accordion footer titles */
     .velaFooterMenu .velaFooterTitle {
         cursor: pointer;
         position: relative;
-        padding-right: 20px;
+        padding-right: 30px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
 
         &::after {
-            content: '\f107'; /* fa-angle-down */
+            content: '\f107';
+            /* fa-angle-down */
             font-family: 'FontAwesome';
             position: absolute;
             right: 0;
@@ -299,6 +431,7 @@ body.awa-price-fixed {
 
         .top-bar-right {
             text-align: center;
+            justify-content: center;
         }
     }
 
@@ -325,6 +458,7 @@ body.awa-price-fixed {
             justify-content: space-around;
             margin: 0;
             padding: 0;
+            list-style: none;
 
             li {
                 flex: 1;
@@ -338,6 +472,8 @@ body.awa-price-fixed {
                     font-size: 11px;
                     text-decoration: none;
                     padding: 5px;
+                    min-height: 44px;
+                    justify-content: center;
 
                     .icon {
                         font-size: 20px;
@@ -358,15 +494,25 @@ body.awa-price-fixed {
         padding-bottom: 60px;
     }
 
-    /* Product grid: 2 columns on mobile */
+    /* Product grid: CSS Grid on mobile (2 columns)
+       Replaces legacy flex fallback — awa-components.css also applies grid,
+       this ensures correct layout even before ayo_home5 CSS loads */
     .products-grid .product-items {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
 
         .product-item {
-            width: 50%;
-            padding: 0 5px;
+            width: auto;
+            padding: 0;
         }
+    }
+}
+
+/* Extra-small mobile: single column */
+@media (max-width: @awa-bp-xs-max) {
+    .products-grid .product-items {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -461,6 +607,7 @@ textarea:focus,
 .products-grid,
 .products-list,
 .product-info-main {
+
     .btn-add-to-cart,
     .action.tocart {
         min-height: 44px;
@@ -470,6 +617,7 @@ textarea:focus,
     }
 
     .actions-secondary {
+
         .towishlist,
         .tocompare,
         .quickview-link {
@@ -483,6 +631,7 @@ textarea:focus,
 }
 
 @media (max-width: 767px) {
+
     .action,
     .tocart,
     .towishlist,
@@ -603,7 +752,8 @@ textarea:focus,
         position: relative;
 
         &::before {
-            content: '\f10d'; /* fa-quote-left */
+            content: '\f10d';
+            /* fa-quote-left */
             font-family: 'FontAwesome';
             font-size: 24px;
             color: @awa-brand-primary;
@@ -679,7 +829,52 @@ textarea:focus,
 /* ==========================================================================
    13. CAROUSEL ALIGNMENT FIXES
    Normalize slider/item alignment across breakpoints
+   Overrides: _owl.carousel.less (float:left), _product_item.less L3 (padding:0 15px)
    ========================================================================== */
+.page-wrapper {
+
+    .banner-slider,
+    .banner-slider2 {
+        width: 100%;
+        position: relative;
+        overflow: hidden;
+        min-height: 120px;
+    }
+
+    .banner-slider .wrapper_slider,
+    .banner-slider2 .wrapper_slider {
+        width: 100%;
+    }
+
+    .banner-slider .banner_item_bg,
+    .banner-slider2 .banner_item_bg {
+        margin-top: 0;
+    }
+
+    .banner-slider .banner_item_bg img,
+    .banner-slider2 .banner_item_bg img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .banner-slider .banner-slider,
+    .banner-slider2 .banner-slider {
+        padding: 0;
+        margin: 0;
+    }
+}
+
+@media (min-width: @awa-bp-sm) {
+    .page-wrapper {
+
+        .banner-slider,
+        .banner-slider2 {
+            min-height: 300px;
+        }
+    }
+}
+
 .wrapper_slider {
     width: 100%;
     overflow: hidden;
@@ -719,17 +914,57 @@ textarea:focus,
     }
 }
 
+/* OWL Carousel — Uniform card height & padding normalization
+   Neutralizes _product_item.less padding:0 15px inside carousels,
+   delegating gutter control to OWL JS or awa-fixes.css --awa-owl-item-gutter */
 .owl-carousel {
+    .owl-wrapper,
+    .owl-stage {
+        display: flex;
+        align-items: stretch;
+    }
+
     .owl-item {
+        display: flex;
+        align-items: stretch;
+        flex-direction: column;
+
+        /* Card containers — force full height for equal-height cards */
         .item-product,
         .wp-item,
-        .item {
+        .item,
+        .product_row {
             height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Zero out legacy padding — gutter handled by OWL item padding */
+        .item-product {
+            padding: 0;
+        }
+
+        /* Product info fills remaining space, pushing actions to bottom */
+        .product-item-info {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .product-item-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Push price/actions to bottom of card */
+        .product-item-details .price-box {
+            margin-top: auto;
         }
     }
 }
 
-@media (max-width: 767px) {
+@media (max-width: @awa-bp-sm-max) {
     .wrapper_slider {
         .owl-theme .owl-pagination {
             bottom: 10px;
@@ -744,6 +979,9 @@ textarea:focus,
 /* ==========================================================================
    14. HOME LAYOUT ALIGNMENT FIXES
    Fix columns/items alignment in homepage sections
+   Overrides: _responsive_themes.less L280,333,337,342 (clear:left nth-type)
+   Overrides: _product_item.less L3 (padding: 0 15px)
+   Overrides: _responsive_themes.less L935-937 (category grid clear:left)
    ========================================================================== */
 .cms-homepage_ayo_default,
 .cms-index-index {
@@ -768,6 +1006,7 @@ textarea:focus,
         display: block;
     }
 
+    /* Category special grid — CSS Grid with AWA breakpoints */
     .cat_special {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -792,16 +1031,40 @@ textarea:focus,
         }
     }
 
+    /* ProductTab & CategoryTab — uniform carousel height */
     .categorytab-container,
+    .tab_product,
     .product-grid {
+
         .owl-item .item-product,
-        .owl-item .item-inner {
+        .owl-item .item-inner,
+        .owl-item .product_row {
             height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* CategoryTab nested product rows */
+        .owl-item .product_row .item-product {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
     }
 }
 
-@media (max-width: 1199px) {
+/* Homepage responsive — XL (≥1400px): wider cat_special grid */
+@media (min-width: @awa-bp-xl) {
+    .cms-homepage_ayo_default,
+    .cms-index-index {
+        .cat_special {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+        }
+    }
+}
+
+/* Homepage responsive — laptop (≤1199px) */
+@media (max-width: @awa-bp-lg-max) {
     .cms-homepage_ayo_default,
     .cms-index-index {
         .cat_special {
@@ -810,10 +1073,12 @@ textarea:focus,
     }
 }
 
-@media (max-width: 991px) {
+/* Homepage responsive — tablet (≤991px) */
+@media (max-width: @awa-bp-md-max) {
     .cms-homepage_ayo_default,
     .cms-index-index {
         .banner-slider-top {
+
             .block_slider,
             .block_banner {
                 width: 100%;
@@ -827,7 +1092,8 @@ textarea:focus,
     }
 }
 
-@media (max-width: 575px) {
+/* Homepage responsive — mobile XS (≤479px) */
+@media (max-width: @awa-bp-xs-max) {
     .cms-homepage_ayo_default,
     .cms-index-index {
         .cat_special {
@@ -836,30 +1102,138 @@ textarea:focus,
     }
 }
 
-/* Hardening against legacy float/clear rules in responsive_themes */
+/* ==========================================================================
+   15. ALIGNMENT NORMALIZATION — FLOAT/CLEAR LEGACY OVERRIDES
+   Neutralizes legacy float-based grid from _responsive_themes.less
+   that conflicts with CSS Grid layout in awa-components.css &
+   awa-grid-unified.css (ayo_home5 child theme).
+   ========================================================================== */
+
+/* 15.1 — Global: neutralize nth-child clear:left from _responsive_themes.less
+   L280: @media >=1200px — .products-grid ol > li:nth-of-type(3n+1) { clear: left }
+   L333: @media 640–1199px — .products-grid ol > li:nth-of-type(3n+1) { clear: left }
+   L337: @media 480–639px — .products-grid ol > li:nth-of-type(2n+1) { clear: left }
+   L342: @media 0–479px — .products-grid ol > li:nth-of-type(1n+1) { clear: left }
+   L935-937: @media <=991px — .products-grid .category_page_grid_N :nth-child(2n+1) { clear: left } */
+.products-grid {
+    ol > li {
+        clear: none !important;
+        float: none;
+    }
+
+    .product-items:not(.owl-carousel) {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 20px;
+    }
+
+    /* Zero legacy padding on items — gap handles spacing */
+    .product-items > .product-item,
+    .product-items > li {
+        padding: 0;
+        width: auto;
+        float: none;
+    }
+
+    /* Category page grid variants — unified */
+    .category_page_grid_2,
+    .category_page_grid_3,
+    .category_page_grid_4,
+    .category_page_grid_5 {
+        display: grid;
+        gap: 20px;
+        align-items: stretch;
+
+        .item-product {
+            clear: none !important;
+            float: none;
+            padding: 0;
+            height: 100%;
+            width: auto;
+        }
+    }
+
+    .category_page_grid_2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .category_page_grid_3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .category_page_grid_4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .category_page_grid_5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+    .item-product {
+        height: 100%;
+    }
+}
+
+/* 15.2 — Product grid responsive breakpoints (aligned with AWA standards) */
+@media (min-width: @awa-bp-xl) {
+    .products-grid .product-items:not(.owl-carousel) {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: @awa-bp-xl-max) and (min-width: @awa-bp-md) {
+    .products-grid .product-items:not(.owl-carousel) {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .products-grid {
+        .category_page_grid_5 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    }
+}
+
+@media (max-width: @awa-bp-md-max) and (min-width: @awa-bp-sm) {
+    .products-grid .product-items:not(.owl-carousel) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .products-grid {
+        .category_page_grid_4,
+        .category_page_grid_5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+}
+
+@media (max-width: @awa-bp-sm-max) and (min-width: @awa-bp-xs) {
+    .products-grid .product-items:not(.owl-carousel) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .products-grid {
+        .category_page_grid_3,
+        .category_page_grid_4,
+        .category_page_grid_5 { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    }
+}
+
+@media (max-width: @awa-bp-xs-max) {
+    .products-grid .product-items:not(.owl-carousel) {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .products-grid {
+        .category_page_grid_2,
+        .category_page_grid_3,
+        .category_page_grid_4,
+        .category_page_grid_5 { grid-template-columns: 1fr; gap: 10px; }
+    }
+}
+
+/* 15.3 — Homepage-specific hardening */
 .cms-homepage_ayo_default,
 .cms-index-index {
     .products-grid {
         ol > li,
+        .product-items > li,
         .category_page_grid_3 .item-product,
         .category_page_grid_4 .item-product,
         .category_page_grid_5 .item-product {
             clear: none !important;
         }
-
-        .category_page_grid_2,
-        .category_page_grid_3,
-        .category_page_grid_4,
-        .category_page_grid_5 {
-            align-items: stretch;
-        }
-
-        .item-product {
-            height: 100%;
-        }
     }
 
+    /* Featured categories carousel */
     .section-featured-categories .wrap-category {
+
         .owl-item,
         .owl-item .wp-item {
             display: flex;
@@ -868,6 +1242,44 @@ textarea:focus,
 
         .owl-item .wp-item .item {
             width: 100%;
+        }
+    }
+}
+
+/* 15.4 — Category page-specific hardening
+   Overrides: _responsive_themes.less L935-937 (.category_page_grid_N :nth-child(2n+1) { clear: left }) */
+.catalog-category-view {
+    .products-grid {
+        ol > li {
+            clear: none !important;
+        }
+
+        .category_page_grid_3 .item-product:nth-child(2n+1),
+        .category_page_grid_4 .item-product:nth-child(2n+1),
+        .category_page_grid_5 .item-product:nth-child(2n+1) {
+            clear: none !important;
+        }
+    }
+}
+
+/* 15.5 — Mega menu alignment normalization
+   Overrides: _menu_themes.less float-based submenu columns */
+@media (min-width: @awa-bp-md) {
+    .custommenu.navigation {
+        li.level0.fullwidth > .submenu {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+
+            > .submenu-inner {
+                display: flex;
+                flex-wrap: wrap;
+                width: 100%;
+
+                > li {
+                    float: none;
+                }
+            }
         }
     }
 }

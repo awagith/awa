@@ -1,7 +1,7 @@
 <?php
 /**
- * SearchbyCat + SearchSuiteAutocomplete template override para ayo_home5
- * Inclui dropdown de categorias + autocomplete com fotos de produtos
+ * SearchSuiteAutocomplete template override para ayo_home5
+ * Busca direta sem filtro por categoria no formulário
  */
 
 // @codingStandardsIgnoreFile
@@ -10,43 +10,48 @@
 /** @var $block \Rokanthemes\SearchbyCat\Block\Form */
 /** @var $helper \Magento\Search\Helper\Data */
 $helper = $this->helper('Magento\Search\Helper\Data');
-$categories = $block->getCategories();
-$searchDelay = 500;
+/** @var \Magento\Search\Helper\Data $searchHelper */
+$searchHelper = $helper;
+$searchDelay = 300;
 $searchSuiteUrl = $block->getUrl('rokanthemes_searchsuiteautocomplete/ajax/index');
 ?>
 <div class="block block-search" role="search" aria-label="<?php echo $block->escapeHtmlAttr(__('Busca de produtos')) ?>">
     <div class="block-content">
-        <form class="form minisearch search-content cat-search" id="search_mini_form" action="<?php echo $block->escapeUrl($helper->getResultUrl()) ?>" method="get">
+        <form class="form minisearch search-content" id="search_mini_form" action="<?php echo $block->escapeUrl($searchHelper->getResultUrl()) ?>" method="get">
             <div class="field search">
                 <label class="label" for="search" data-role="minisearch-label">
                     <span><?php echo $block->escapeHtml(__('Buscar')) ?></span>
                 </label>
                 <div class="control">
-                    <div class="field-by-cat-search">
-                        <select name="cat" id="choose_category" aria-label="<?php echo $block->escapeHtmlAttr(__('Filtrar por categoria')) ?>">
-                            <option value=""><?php echo $block->escapeHtml(__('Todas as Categorias')) ?></option>
-                            <?php foreach ($categories as $cat): ?>
-                                <option value="<?php echo (int)$cat->getId() ?>"><?php echo $block->escapeHtml($cat->getName()) ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
                     <input id="search"
+                           data-mage-init='{"quickSearch":{
+                               "formSelector":"#search_mini_form",
+                               "url":"<?php echo $block->escapeUrl($block->getUrl('search/ajax/suggest')); ?>",
+                               "destinationSelector":"#search_autocomplete"
+                           }}'
                            type="search"
-                           name="<?php echo $block->escapeHtmlAttr($helper->getQueryParamName()) ?>"
-                           value="<?php echo $block->escapeHtmlAttr($helper->getEscapedQueryText()) ?>"
+                           name="<?php echo $block->escapeHtmlAttr($searchHelper->getQueryParamName()) ?>"
+                           value="<?php echo $block->escapeHtmlAttr($searchHelper->getEscapedQueryText()) ?>"
                            placeholder="<?php echo $block->escapeHtmlAttr(__('Buscar peças, capacetes, acessórios...')) ?>"
                            class="input-text"
-                           maxlength="<?php echo (int)$helper->getMaxQueryLength() ?>"
+                           minlength="2"
+                           maxlength="<?php echo (int)$searchHelper->getMaxQueryLength() ?>"
                            role="combobox"
                            aria-label="<?php echo $block->escapeHtmlAttr(__('Buscar')) ?>"
                            aria-autocomplete="both"
                            aria-expanded="false"
+                                                     aria-haspopup="listbox"
                            aria-controls="search_autocomplete"
                            autocomplete="off"
                            autocapitalize="off"
                            autocorrect="off"
                            spellcheck="false" />
-                    <div id="search_autocomplete" class="search-autocomplete" style="display:none"></div>
+                                        <div id="search_autocomplete"
+                                                 class="search-autocomplete searchsuite-autocomplete"
+                                                 data-role="search-autocomplete"
+                                                 role="listbox"
+                                                 aria-hidden="true"
+                                                 aria-label="<?php echo $block->escapeHtmlAttr(__('Sugestões de busca')) ?>"></div>
                     <div data-bind="scope: 'searchsuiteautocomplete_form'">
                         <!-- ko template: getTemplate() --><!-- /ko -->
                     </div>
@@ -65,9 +70,6 @@ $searchSuiteUrl = $block->getUrl('rokanthemes_searchsuiteautocomplete/ajax/index
 </div>
 <script type="text/x-magento-init">
 {
-    "#choose_category": {
-        "js/chosen-init": {}
-    },
     "*": {
         "Magento_Ui/js/core/app": {
             "components": {

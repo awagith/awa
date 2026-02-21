@@ -11,6 +11,7 @@
  *
  * @see \Rokanthemes\VerticalMenu\Block\Verticalmenu
  */
+/** @var \Rokanthemes\VerticalMenu\Block\Verticalmenu $block */
 ?>
 <?php
     $_helper = $this->helper('Rokanthemes\VerticalMenu\Helper\Data');
@@ -18,17 +19,24 @@
     $columnsLimit = 0;
     if ($_config['general']['enable']) {
         $limitShow = isset($_config['general']['limit_show']) ? (int)$_config['general']['limit_show'] : 0;
+    $menuId = 'awa-vertical-menu-list-' . uniqid('', false);
 ?>
 <?php $_menu = $block->getVerticalMenuHtml(); ?>
 
-<nav class="navigation verticalmenu side-verticalmenu" aria-label="<?= $escaper->escapeHtmlAttr(__('Product Categories')) ?>">
-    <h2 class="title-category-dropdown">
+<nav class="navigation verticalmenu side-verticalmenu" aria-label="<?= $escaper->escapeHtmlAttr(__('Product Categories')) ?>" data-role="awa-vertical-menu">
+    <h2 class="our_categories title-category-dropdown"
+        data-role="awa-vertical-menu-trigger"
+        aria-controls="<?= $escaper->escapeHtmlAttr($menuId) ?>"
+        aria-expanded="false">
+        <span class="vm-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
         <span><?= $escaper->escapeHtml(__('Categories')) ?></span>
     </h2>
-    <ul class="togge-menu list-category-dropdown" style="display:none;" data-limit-show="<?= (int)$limitShow ?>">
+    <ul id="<?= $escaper->escapeHtmlAttr($menuId) ?>" class="togge-menu list-category-dropdown" data-limit-show="<?= (int)$limitShow ?>">
         <?php echo $_menu; ?>
         <?php
-            $_bgImages = $block->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('vertical_background_images')->toHtml();
+            /** @var \Magento\Cms\Block\Block $_bgBlock */
+            $_bgBlock = $block->getLayout()->createBlock('Magento\Cms\Block\Block');
+            $_bgImages = $_bgBlock ? $_bgBlock->setBlockId('vertical_background_images')->toHtml() : '';
             $_bgImages = trim($_bgImages);
         ?>
         <?php if (!empty($_bgImages)): ?>
@@ -36,7 +44,15 @@
         <?php endif; ?>
         <?php if ($limitShow > 0): ?>
         <li class="expand-category-link">
-            <a href="javascript:void(0);"><?= $escaper->escapeHtml(__('All Categories')) ?></a>
+            <a class="viewall vm-toggle-categories"
+               href="#"
+               role="button"
+               aria-expanded="false"
+               data-show-text="<?= $escaper->escapeHtmlAttr(__('Show More')) ?>"
+               data-hide-text="<?= $escaper->escapeHtmlAttr(__('Show Less')) ?>">
+                <span><?= $escaper->escapeHtml(__('All Categories')) ?></span>
+                <i class="fa fa-angle-down vm-toggle-icon" aria-hidden="true"></i>
+            </a>
         </li>
         <?php endif; ?>
     </ul>
@@ -44,13 +60,133 @@
 
 <script type="text/x-magento-init">
 {
-    ".navigation.verticalmenu.side-verticalmenu": {
+    "[data-role='awa-vertical-menu']": {
         "js/vertical-menu-init": {
-            "limitShow": <?= (int)$limitShow ?>,
-            "overlaySelector": ".shadow_bkg_show"
+            "desktopBreakpoint": 992,
+            "overlaySelector": ".shadow_bkg_show",
+            "limitShow": <?= (int)$limitShow ?>
         }
     }
 }
+</script>
+<script>
+(function () {
+    'use strict';
+
+    function isDesktop() {
+        return window.matchMedia && window.matchMedia('(min-width: 992px)').matches;
+    }
+
+    function syncDesktopState(nav, title, menu) {
+        var shouldBeOpen;
+
+        if (!nav || !title || !menu) {
+            return;
+        }
+
+        if (isDesktop()) {
+            shouldBeOpen = title.classList.contains('active') || menu.classList.contains('menu-open');
+
+            title.classList.toggle('active', shouldBeOpen);
+            title.setAttribute('aria-expanded', shouldBeOpen ? 'true' : 'false');
+            menu.classList.toggle('menu-open', shouldBeOpen);
+            menu.style.display = shouldBeOpen ? 'block' : 'none';
+            return;
+        }
+
+        title.classList.remove('active');
+        title.setAttribute('aria-expanded', 'false');
+        menu.classList.remove('menu-open');
+        menu.style.display = 'none';
+    }
+
+    function initFallbackMenu(nav) {
+        var title;
+        var menu;
+
+        if (!nav || nav.getAttribute('data-awa-fallback-init') === '1') {
+            return;
+        }
+
+        title = nav.querySelector('.title-category-dropdown');
+        menu = nav.querySelector('.togge-menu');
+
+        if (!title || !menu) {
+            return;
+        }
+
+        nav.setAttribute('data-awa-fallback-init', '1');
+        title.setAttribute('role', 'button');
+        title.setAttribute('tabindex', '0');
+
+        title.addEventListener('click', function (event) {
+            var willOpen;
+
+            event.preventDefault();
+            willOpen = !title.classList.contains('active');
+
+            title.classList.toggle('active', willOpen);
+            title.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+            menu.classList.toggle('menu-open', willOpen);
+            menu.style.display = willOpen ? 'block' : 'none';
+        });
+
+        title.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                title.click();
+            }
+        });
+
+        nav.addEventListener('click', function (event) {
+            var toggle = event.target.closest('.open-children-toggle');
+            var parent;
+            var submenu;
+            var willExpand;
+
+            if (!toggle || isDesktop()) {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+
+            parent = toggle.parentElement;
+            submenu = parent ? parent.querySelector(':scope > .submenu, :scope > ul.level0') : null;
+
+            if (!parent || !submenu) {
+                return;
+            }
+
+            willExpand = !parent.classList.contains('_active');
+            parent.classList.toggle('_active', willExpand);
+            toggle.setAttribute('aria-expanded', willExpand ? 'true' : 'false');
+            submenu.style.display = willExpand ? 'block' : 'none';
+        });
+
+        syncDesktopState(nav, title, menu);
+
+        window.addEventListener('resize', function () {
+            syncDesktopState(nav, title, menu);
+        });
+    }
+
+    function initAllFallbackMenus() {
+        var menus = document.querySelectorAll('[data-role="awa-vertical-menu"]');
+
+        if (!menus.length) {
+            return;
+        }
+
+        menus.forEach(initFallbackMenu);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAllFallbackMenus);
+    } else {
+        initAllFallbackMenus();
+    }
+})();
 </script>
 <?php
     }

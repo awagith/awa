@@ -1,13 +1,13 @@
 /* ===========================================
    AWA MOTOS — FIXES (Correções pontuais)
    Tema: AYO/Rokanthemes (Home5)
-   
+
    ARQUIVO 4/4 da camada AWA consolidada.
    Carrega POR ÚLTIMO — após core, layout, components.
-   
+
    CONTEÚDO: Apenas correções de bugs visuais que NÃO são cobertos
    pelos 3 arquivos anteriores. Sem estilos estruturais duplicados.
-   
+
    REGRA: se a correção é estilística (hover, cor, espaçamento),
    pertence a core/layout/components. Se é um BUG VISUAL do tema
    ou do conteúdo CMS, pertence aqui.
@@ -18,6 +18,69 @@
    SVG banners have baked-in text + HTML overlay text = doubling.
    Hide pseudo-elements that create ghost text shadows.
    ============================================================ */
+
+/* ============================================================
+   FIX-A11Y-REDUCED-MOTION (P1)
+   Reduz animações/transições custosas quando usuário prefere menos movimento.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(
+        .owl-carousel,
+        .owl-item,
+        .item-product,
+        .testimonials-slider .item,
+        .testimonials-home .item,
+        .the_blog .post-item,
+        .blog-post-item,
+        .banner-slider,
+        .navigation.custommenu.main-nav > ul > li > a
+    ) {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(
+        .the_blog .post-item:hover,
+        .blog-post-item:hover,
+        .tab_product .list-tab-product .item-product:hover
+    ) {
+        transform: none !important;
+    }
+
+    body #newsletter_pop_up.popup-closing .nl-popup-card {
+        transform: none;
+        opacity: 1;
+        transition: none;
+    }
+}
+
+/* ============================================================
+   FIX-PERF-TOUCH-HOVER (P2)
+   Em dispositivos touch, remove hover transitions pesadas sem perda de UX.
+   ============================================================ */
+@media (hover: none) and (pointer: coarse) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(
+        .the_blog .post-item,
+        .blog-post-item,
+        .testimonials-slider .item,
+        .testimonials-home .item,
+        .tab_product .list-tab-product .item-product
+    ) {
+        transition: none !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(
+        .the_blog .post-item:hover,
+        .blog-post-item:hover,
+        .tab_product .list-tab-product .item-product:hover,
+        .testimonials-slider .item:hover,
+        .testimonials-home .item:hover
+    ) {
+        transform: none !important;
+        box-shadow: var(--awa-shadow) !important;
+    }
+}
+
 body .page-wrapper .ayo-home5-hero-card__title::before,
 body .page-wrapper .ayo-home5-hero-card__title::after,
 body .page-wrapper .ayo-home5-hero-card__eyebrow::before,
@@ -90,7 +153,8 @@ body .page-wrapper .product-item .second-thumb img[src*="placeholder/placeholder
     opacity: 0;
 }
 
-body .page-wrapper .product-item:hover .first-thumb:has(+ .second-thumb img[src*="placeholder/placeholder"]) {
+/* Sem :has(): JS marca o card com .awa-second-thumb-placeholder */
+body .page-wrapper .product-item.awa-second-thumb-placeholder:hover .first-thumb {
     opacity: 1;
 }
 
@@ -179,41 +243,23 @@ body .page-wrapper .ayo-home5-wrapper > .banner-slider {
     margin: 0;
 }
 
-/* Base layout para seções CMS exclusivas da Home5 (Canal StoreSetup) */
-body .page-wrapper .ayo-home5-wrapper {
-    display: block;
-    width: 100%;
-    overflow-x: clip;
-}
-
-body .page-wrapper .ayo-home5-wrapper > .ayo-home5-section {
-    margin: var(--awa-space-8) 0;
-}
-
-body .page-wrapper .ayo-home5-wrapper > .ayo-home5-section:first-of-type {
-    margin-top: 0;
-}
-
-body .page-wrapper .ayo-home5-wrapper > .ayo-home5-section:last-of-type {
-    margin-bottom: 0;
-}
-
-body .page-wrapper .banner-slider .banner-slider {
-    padding: 0;
-    margin: 0;
-}
+/* Layout base do wrapper Home5 foi consolidado em awa-consistency-home5.css (AF-07). */
 
 /* ============================================================
    FIX-10 — VERTICAL MENU HOMEPAGE DISPLAY (P2)
-   Show categories by default on homepage (all breakpoints).
-   Complementa regra desktop-only em awa-layout.css L553.
-   Sem !important — permite que config admin AYO tenha precedência.
+   Desktop deve iniciar colapsado e abrir por clique no título.
    ============================================================ */
-body .page-wrapper .cms-index-index .verticalmenu .togge-menu.list-category-dropdown,
-body .page-wrapper .cms-index-index .side-verticalmenu .togge-menu,
-body .page-wrapper .cms-home .verticalmenu .togge-menu,
-body .page-wrapper .cms-homepage_ayo_home5 .verticalmenu .togge-menu {
-    display: block;
+@media (width >= 992px) {
+    /* Remove duplicate "Todas as Categorias" row injected by navigation-sections on desktop */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .sections.nav-sections.category-dropdown > .section-items > .section-item-title.nav-sections.category-dropdown-item-title {
+        display: none !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        overflow: hidden !important;
+    }
+
 }
 
 body .page-wrapper .cms-index-index .menu_left_home1 .category-dropdown {
@@ -258,20 +304,9 @@ body.cms-homepage_ayo_home5 .page-wrapper .block_notification marquee {
 
 /* ============================================================
    FIX-12 — CLS PREVENTION: ASPECT RATIO RESERVATIONS (P1)
-   Reserve vertical space before images load.
-   NOTE: No `contain:` rules — they break OWL width calculations.
+   Regras de min-height do banner foram movidas para baseline global
+   em ayo_default/web/css/source/_extend.less (fase 1 de unificação).
    ============================================================ */
-body .page-wrapper .banner-slider,
-body .page-wrapper .banner-slider2 {
-    min-height: 120px;
-}
-
-@media (width >= 768px) {
-    body .page-wrapper .banner-slider,
-    body .page-wrapper .banner-slider2 {
-        min-height: 300px;
-    }
-}
 
 body .page-wrapper .ayo-home5-cat-item img,
 body .page-wrapper .banner_mid_1 img {
@@ -655,7 +690,7 @@ body #newsletter_pop_up .nl-popup-urgency {
     margin-bottom: 8px;
     border: 1px solid var(--awa-gray-200);
     border-radius: 8px;
-    background: #f8f5f5;
+    background: var(--awa-gray-100);
     padding: 7px 10px;
     color: var(--awa-gray-700);
     font-size: 12px;
@@ -838,6 +873,44 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
     }
 }
 
+/* ============================================================
+   FIX-29 — TOP NAV DENSITY & MEDIUM DESKTOP TUNING (P2)
+   Melhora leitura do menu horizontal e evita aperto no topo.
+   ============================================================ */
+@media (width >= 1200px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul {
+        gap: 2px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a {
+        min-height: 48px;
+        padding: 0 16px;
+        font-size: 17px;
+        letter-spacing: 0.01em;
+    }
+}
+
+@media (width >= 992px) and (width <= 1199px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: thin;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li {
+        flex: 0 0 auto;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a {
+        min-height: 46px;
+        padding: 0 12px;
+        font-size: 14px;
+        letter-spacing: 0.01em;
+    }
+
+}
+
 @media (width <= 767px) {
     body #newsletter_pop_up.newsletterpopup {
         padding: 10px;
@@ -940,6 +1013,7 @@ body .page-wrapper .testimonials-home .item {
     display: flex; /* LB-05: equal-height para testimonial cards */
     flex-direction: column;
     height: 100%;
+    contain: layout paint;
 }
 
 /* LB-05: conteúdo do testimonial empurra rodapé ao fundo */
@@ -981,6 +1055,7 @@ body .page-wrapper .blog-post-item {
     display: flex; /* LB-05: equal-height para blog cards fora de OWL */
     flex-direction: column;
     height: 100%;
+    contain: layout paint;
 }
 
 /* LB-05: conteúdo interno flex-grow para empurrar rodapé ao fundo */
@@ -1018,11 +1093,13 @@ body .page-wrapper .hot-deal-tab-slider {
 }
 
 body .page-wrapper .countdown_block {
-    background: linear-gradient(135deg, var(--awa-dark) 0%, var(--footer-bg-secondary) 100%); /* R11-06: token */
+    position: relative;
+    top: 0;
+    background: linear-gradient(135deg, var(--awa-dark) 0%, var(--footer-bg-secondary) 100%);
     color: #fff;
     padding: 15px 20px;
     text-align: center;
-    border-radius: var(--awa-radius-sm) var(--awa-radius-sm) 0 0; /* R13: era 8px hardcoded */
+    border-radius: var(--awa-radius-sm) var(--awa-radius-sm) 0 0;
 }
 
 body .page-wrapper .title_countdown {
@@ -1161,154 +1238,377 @@ body .page-wrapper .owl-carousel {
     --awa-owl-item-gutter: 16px;
 }
 
-/* Compatível com OWL v2 (.owl-stage*) e v1 (.owl-wrapper*) */
-body .page-wrapper .owl-carousel .owl-stage,
-body .page-wrapper .owl-carousel .owl-wrapper {
+/* Compatível com OWL v2 (.owl-stage*) e v1 (.owl-wrapper*)
+   Escopo: homepage Home5 para evitar efeito colateral em módulos de outras páginas. */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel .owl-stage,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel .owl-wrapper {
     align-items: stretch;
 }
 
-body .page-wrapper .owl-carousel .owl-stage-outer,
-body .page-wrapper .owl-carousel .owl-wrapper-outer {
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel .owl-stage-outer,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel .owl-wrapper-outer {
     margin-left: calc(var(--awa-owl-item-gutter) / -2);
     margin-right: calc(var(--awa-owl-item-gutter) / -2);
 }
 
-body .page-wrapper .owl-carousel .owl-item {
-    float: left !important; /* OWL v1/v2: evita empilhamento vertical */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel .owl-item {
     clear: none !important;
-    flex: 0 0 auto;
-    min-width: 0;
-    box-sizing: border-box;
     padding-left: calc(var(--awa-owl-item-gutter) / 2);
     padding-right: calc(var(--awa-owl-item-gutter) / 2);
+
+    /* R26: removidos float/flex/min-width/box-sizing — já definidos em
+       awa-components.css ~L700 e awa-grid-unified.css §4.
+       Só padding (gutter) e clear são exclusivos deste bloco. */
 }
 
 /* Evita espaçamento duplo quando OWL injeta margin inline */
-body .page-wrapper .owl-carousel .owl-item[style*="margin-right"],
-body .page-wrapper .owl-carousel .owl-item[style*="margin-right:"] {
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel .owl-item[style*="margin-right"],
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel .owl-item[style*="margin-right:"] {
     margin-right: 0 !important;
 }
 
-body .page-wrapper .owl-carousel .owl-item > * {
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel .owl-item > * {
     width: 100%;
     min-width: 0;
+    height: 100%;
+}
+
+/* Garante que wrappers intermediários propaguem altura até o card */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel .owl-item .item,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel .owl-item .item-inner,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel .owl-item .product_row {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Hero/Banner full-bleed */
-body .page-wrapper .ayo-home5-hero-layout__main .owl-carousel,
-body .page-wrapper .banner-slider .owl-carousel,
-body .page-wrapper .homeslider-container .owl-carousel {
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-hero-layout__main .owl-carousel,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .banner-slider .owl-carousel,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .homeslider-container .owl-carousel {
     --awa-owl-item-gutter: 0px;
 }
 
-/* Logos e parceiros ganham mais respiro em desktop */
-body .page-wrapper .brand-slider .owl-carousel,
-body .page-wrapper .brand-logo .owl-carousel,
-body .page-wrapper .partner-slider .owl-carousel,
-body .page-wrapper .manufacturer-slider .owl-carousel {
-    --awa-owl-item-gutter: 20px;
-}
-
-/* Testimonials/blog com leitura melhor em cards */
-body .page-wrapper .testimonials-slider .owl-carousel,
-body .page-wrapper .testimonials-home .owl-carousel,
-body .page-wrapper .the_blog .owl-carousel {
+/* Logos, parceiros, testimonials e blog: gutter ampliado em desktop */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
     --awa-owl-item-gutter: 20px;
 }
 
 @media (width <= 1199px) {
-    body .page-wrapper .owl-carousel {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
         --awa-owl-item-gutter: 14px;
     }
 
-    body .page-wrapper .brand-slider .owl-carousel,
-    body .page-wrapper .brand-logo .owl-carousel,
-    body .page-wrapper .partner-slider .owl-carousel,
-    body .page-wrapper .manufacturer-slider .owl-carousel,
-    body .page-wrapper .testimonials-slider .owl-carousel,
-    body .page-wrapper .testimonials-home .owl-carousel,
-    body .page-wrapper .the_blog .owl-carousel {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
         --awa-owl-item-gutter: 16px;
     }
 }
 
 @media (width <= 991px) {
-    body .page-wrapper .owl-carousel {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
         --awa-owl-item-gutter: 12px;
     }
 
-    body .page-wrapper .brand-slider .owl-carousel,
-    body .page-wrapper .brand-logo .owl-carousel,
-    body .page-wrapper .partner-slider .owl-carousel,
-    body .page-wrapper .manufacturer-slider .owl-carousel,
-    body .page-wrapper .testimonials-slider .owl-carousel,
-    body .page-wrapper .testimonials-home .owl-carousel,
-    body .page-wrapper .the_blog .owl-carousel {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
         --awa-owl-item-gutter: 14px;
     }
 }
 
 @media (width <= 767px) {
-    body .page-wrapper .owl-carousel {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
         --awa-owl-item-gutter: 10px;
     }
 
-    body .page-wrapper .brand-slider .owl-carousel,
-    body .page-wrapper .brand-logo .owl-carousel,
-    body .page-wrapper .partner-slider .owl-carousel,
-    body .page-wrapper .manufacturer-slider .owl-carousel,
-    body .page-wrapper .testimonials-slider .owl-carousel,
-    body .page-wrapper .testimonials-home .owl-carousel,
-    body .page-wrapper .the_blog .owl-carousel {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
         --awa-owl-item-gutter: 12px;
     }
 }
 
 @media (width <= 480px) {
-    body .page-wrapper .owl-carousel {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
         --awa-owl-item-gutter: 8px;
     }
 
-    body .page-wrapper .brand-slider .owl-carousel,
-    body .page-wrapper .brand-logo .owl-carousel,
-    body .page-wrapper .partner-slider .owl-carousel,
-    body .page-wrapper .manufacturer-slider .owl-carousel,
-    body .page-wrapper .testimonials-slider .owl-carousel,
-    body .page-wrapper .testimonials-home .owl-carousel,
-    body .page-wrapper .the_blog .owl-carousel {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
         --awa-owl-item-gutter: 10px;
     }
 }
 
 @media (width <= 375px) {
-    body .page-wrapper .owl-carousel {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
         --awa-owl-item-gutter: 6px;
     }
 
-    body .page-wrapper .brand-slider .owl-carousel,
-    body .page-wrapper .brand-logo .owl-carousel,
-    body .page-wrapper .partner-slider .owl-carousel,
-    body .page-wrapper .manufacturer-slider .owl-carousel,
-    body .page-wrapper .testimonials-slider .owl-carousel,
-    body .page-wrapper .testimonials-home .owl-carousel,
-    body .page-wrapper .the_blog .owl-carousel {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
         --awa-owl-item-gutter: 8px;
     }
 }
 
 @media (width <= 320px) {
-    body .page-wrapper .owl-carousel {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
         --awa-owl-item-gutter: 4px;
     }
 
-    body .page-wrapper .brand-slider .owl-carousel,
-    body .page-wrapper .brand-logo .owl-carousel,
-    body .page-wrapper .partner-slider .owl-carousel,
-    body .page-wrapper .manufacturer-slider .owl-carousel,
-    body .page-wrapper .testimonials-slider .owl-carousel,
-    body .page-wrapper .testimonials-home .owl-carousel,
-    body .page-wrapper .the_blog .owl-carousel {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
         --awa-owl-item-gutter: 6px;
+    }
+}
+
+/* ============================================================
+   FIX-24 — HOMEPAGE CMS LAYOUT (P1)
+   FAQ + selos + seções de grade (Coleções/Lançamentos).
+   Escopado apenas à homepage para não afetar o Ayo base.
+   R20: seletores consolidados com :is() (38 blocos).
+        Wrapper simplificado — width/max-width/padding/box-sizing
+        delegados ao AF-07 (awa-consistency-home5.css).
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper {
+    margin-top: var(--awa-space-6);
+}
+
+/* R19: section margin removido — definido em awa-consistency-home5.css (space-6) */
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > .ayo-home5-section.container {
+    width: 100%;
+    max-width: none;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* FIX-53 — HERO CTA STRIP: ocultar conforme solicitação do cliente */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip {
+    display: none !important;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .benefits-bar {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    margin: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .benefits-bar__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--awa-gray-700);
+    font-size: 15px;
+    line-height: 1.45;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .benefits-bar__icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px 18px;
+    padding: 14px 16px;
+    border: 1px solid var(--awa-gray-200);
+    border-radius: var(--awa-control-radius);
+    background: #fff;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals img {
+    display: block;
+    width: auto;
+    height: 34px;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals img:first-child {
+    height: 22px;
+    max-width: 220px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals .microcopy {
+    width: 100%;
+    margin-top: 2px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--awa-gray-700);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals .microcopy a {
+    color: var(--awa-red-dark);
+    text-decoration: underline;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .trust-badges-homepage {
+    padding: 18px 16px;
+    border-radius: var(--awa-control-radius);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .trust-badges-grid {
+    gap: 14px 18px;
+}
+
+/* Quando o bloco de selos principal já existe, evita duplicidade visual (sem :has()) */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5).awa-has-security-seals .page-wrapper .ayo-home5-section--trust-badges {
+    display: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-heading {
+    margin: 0 0 var(--awa-space-4);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-label {
+    display: inline-block;
+    color: var(--awa-red-dark);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-heading h2 {
+    margin: 6px 0 0;
+    font-size: clamp(1.6rem, 1.15rem + 1.1vw, 2.1rem);
+    line-height: 1.2;
+    color: var(--awa-dark);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-divider {
+    display: block;
+    width: 64px;
+    height: 2px;
+    margin-top: 12px;
+    background: var(--awa-red);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-product-grid {
+    margin-top: var(--awa-space-4);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-product-grid:empty {
+    display: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-product-grid .note-msg {
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px dashed var(--awa-gray-300);
+    border-radius: var(--awa-control-radius);
+    background: var(--awa-gray-100);
+    color: var(--awa-gray-700);
+}
+
+/* Sem :has(): JS aplica .awa-is-empty na seção quando não há itens */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-section.awa-is-empty {
+    display: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .aw-home-faq {
+    background: #fff;
+    border: 1px solid var(--awa-gray-200);
+    border-radius: var(--awa-control-radius);
+    padding: clamp(16px, 2vw, 24px);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .aw-home-faq__title {
+    margin: 0;
+    font-size: clamp(1.4rem, 1rem + 1vw, 1.9rem);
+    line-height: 1.2;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .aw-home-faq__subtitle {
+    margin: 8px 0 0;
+    color: var(--awa-gray-600);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .aw-home-faq__items {
+    display: grid;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .aw-home-faq__item {
+    border: 1px solid var(--awa-gray-200);
+    border-radius: var(--awa-control-radius);
+    background: var(--awa-gray-100);
+    overflow: hidden;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .aw-home-faq__item > summary {
+    position: relative;
+    list-style: none;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--awa-dark);
+    padding: 12px 38px 12px 14px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .aw-home-faq__item > summary::-webkit-details-marker {
+    display: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .aw-home-faq__item > summary::after {
+    content: "+";
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--awa-red);
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 1;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .aw-home-faq__item[open] > summary::after {
+    content: "−";
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .aw-home-faq__answer {
+    padding: 0 14px 14px;
+    color: var(--awa-gray-700);
+    line-height: 1.6;
+}
+
+/* Padding/widht da Home5 agora são governados por --awa-home-inline-padding (awa-consistency-home5.css). */
+
+@media (width <= 767px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > :is(.ayo-home5-section, .section) {
+        margin: var(--awa-space-5) 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .benefits-bar {
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .benefits-bar__item {
+        width: 100%;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals {
+        padding: 12px;
+        gap: 10px 12px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals img {
+        height: 30px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals img:first-child {
+        height: 20px;
+        max-width: 180px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .trust-badge-item {
+        flex: 1 1 calc(50% - 9px);
+        min-width: 120px;
+    }
+}
+
+@media (width <= 480px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals .microcopy {
+        font-size: 12px;
     }
 }
 
@@ -1323,4 +1623,1857 @@ a[data-action="add-to-wishlist"],
 .product-addto-links .towishlist,
 .product-addto-links .tocompare {
     display: none !important;
+}
+
+/* ============================================================
+   FIX-25 — HOME5 UX/CSS STABILIZATION (P1)
+   Targeted to homepage classes only.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav {
+    margin-top: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--awa-gray-200);
+    border-bottom: 1px solid var(--awa-gray-200);
+    background: #fff;
+    list-style: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li {
+    position: relative;
+    float: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 50px;
+    padding: 0 18px;
+    color: var(--awa-dark);
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li.active > a,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li.current > a,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li:hover > a,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li:focus-within > a {
+    background: var(--awa-red);
+    color: #fff;
+}
+
+/* Home5 layout real: benefits block root é .velaServicesInner (sem wrapper .velaServices). */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .velaServicesInner.velaServicesInner--home5 {
+    width: 100%;
+    margin: 0;
+    min-width: 0;
+}
+
+@media (width >= 992px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .velaServicesInner.velaServicesInner--home5 {
+        grid-column: 1 / -1;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-banner {
+        grid-column: 1 / 2;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-deals {
+        grid-column: 2 / 3;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
+        border: 1px solid var(--awa-gray-200) !important; /* R28 — Bug #2: vence themes5.css !important hardcoded #e6e6e6 */
+        border-top: 0 !important; /* R28 — Bug #2 */
+        border-radius: 0 0 var(--awa-radius-sm) var(--awa-radius-sm);
+        background: #fff;
+        box-shadow: var(--awa-shadow-dropdown);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 52px;
+        margin: 0;
+        padding: 0 16px;
+        border-radius: var(--awa-radius-sm) var(--awa-radius-sm) 0 0;
+        background: var(--awa-red);
+        color: #fff;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu .ui-menu-item.level0 > a {
+        display: flex;
+        align-items: center;
+        min-height: 46px;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--awa-gray-200);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu .expand-category-link > a {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 10px 14px;
+        background: var(--awa-gray-100);
+        color: var(--awa-red-dark);
+        font-weight: 600;
+        text-decoration: none;
+    }
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 12px;
+    margin: 0 !important;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
+    flex: 0 0 calc(20% - 12px);
+    max-width: calc(20% - 12px);
+    float: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* Responsive: tablet landscape → 3 colunas */
+@media (width <= 1199px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
+        flex: 0 0 calc(33.333% - 12px);
+        max-width: calc(33.333% - 12px);
+    }
+}
+
+/* Responsive: tablet portrait → 2 colunas */
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
+        flex: 0 0 calc(50% - 12px);
+        max-width: calc(50% - 12px);
+    }
+}
+
+/* Responsive: mobile → 1 coluna */
+@media (width <= 480px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"]::before {
+    display: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxService {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+    min-height: 92px;
+    height: 100%;
+    padding: 14px 12px;
+    border: 1px solid var(--awa-gray-200);
+    border-radius: var(--awa-radius-sm);
+    background: #fff;
+    text-align: start;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage {
+    width: 48px;
+    height: 48px;
+    margin: 0;
+    flex: 0 0 48px;
+    border-radius: 50%;
+    background: rgb(183 51 55 / 10%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: none;
+    mask: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage::before {
+    font-family: FontAwesome, sans-serif;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--awa-red);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage.boxServiceImage1::before { content: "\f0d1"; }
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage.boxServiceImage2::before { content: "\f09d"; }
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage.boxServiceImage3::before { content: "\f058"; }
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage.boxServiceImage4::before { content: "\f0f1"; }
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage.boxServiceImage5::before { content: "\f021"; }
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceContent {
+    padding: 0;
+    min-width: 0;
+    width: 100%;
+    flex: 1 1 auto;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceTitle {
+    margin: 0 0 3px;
+    color: var(--awa-dark);
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 700;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceDesc {
+    color: var(--awa-gray-700);
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceDesc a {
+    color: inherit;
+    text-decoration: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceDesc a:hover {
+    color: var(--awa-red);
+    text-decoration: underline;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0;
+    overflow: hidden;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss .countdown_block {
+    display: grid;
+    place-items: center center;
+    gap: 8px;
+    margin: 0;
+    padding: 14px 16px;
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    float: none !important;
+    width: 100% !important;
+    max-width: none !important;
+    z-index: 1;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss .super-deal-countdown,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss .time_circles {
+    width: 100%;
+    justify-content: center;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss > .row {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    clear: both;
+}
+
+/* R30: .owl-stage flex, .owl-item height:auto e .product_row flex removidos —
+   redundantes com awa-components.css OWL CAROUSEL section (global) e
+   awa-grid-unified.css §3 (.product_row flex-column inside OWL) */
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .vc_tta-tabs-container {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .tabs > li {
+    float: none;
+    margin: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .tabs > li > a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--awa-gray-200);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--awa-dark);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .tabs > li.active > a,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .tabs > li:hover > a {
+    background: var(--awa-red);
+    border-color: var(--awa-red);
+    color: #fff !important;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .tab_container {
+    width: 100%;
+    min-width: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .productTabContent:not(.owl-carousel) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .productTabContent:not(.owl-carousel) .product_row {
+    display: contents;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .item-product-parent {
+    margin: 0;
+    padding: 0 10px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .item-product.listview {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    height: 100%;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .item-product.listview .product-thumb,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .item-product.listview .product-info {
+    width: 100%;
+    float: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .rokan-product-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .block_cat > .row {
+    display: grid;
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
+    gap: 20px;
+    margin: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .block_cat > .row > [class*="col-"] {
+    float: none;
+    width: auto;
+    max-width: 100%;
+    padding: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li {
+    float: none;
+    margin: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li > a {
+    display: flex;
+    align-items: center;
+    min-height: 42px;
+    padding: 0 12px;
+    border: 1px solid var(--awa-gray-200);
+    border-radius: var(--awa-radius-sm);
+    background: #fff;
+    color: var(--awa-dark);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li.active > a,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li:hover > a {
+    background: var(--awa-red);
+    border-color: var(--awa-red);
+    color: #fff !important;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tab_container {
+    width: 100%;
+    min-width: 0;
+}
+
+/* ============================================================
+   FIX-30 — CATEGORYTAB2 SCROLL-SNAP + FADE INDICATORS (MOBILE)
+   Scroll horizontal c/ snap + gradiente de fade nas bordas.
+   ============================================================ */
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 {
+        overflow: visible;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 8px;
+        padding-bottom: var(--awa-space-2);
+        mask-image: linear-gradient(to right, transparent 0, #000 8px, #000 calc(100% - 24px), transparent 100%);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2::-webkit-scrollbar {
+        display: none;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li {
+        scroll-snap-align: start;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li > a {
+        white-space: nowrap;
+        font-size: var(--awa-text-sm);
+        min-height: 38px;
+        padding: 0 var(--awa-space-3);
+    }
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo {
+    margin: var(--awa-space-6) 0 0;
+    padding: clamp(18px, 2.2vw, 28px);
+    border: 1px solid var(--awa-gray-200);
+    border-radius: var(--awa-radius);
+    background: #fff;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo > h2 {
+    margin: 0 0 18px;
+    text-align: center;
+    font-size: clamp(22px, 1.3vw + 14px, 28px);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .item-testimo {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    gap: 14px;
+    align-items: center;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .author-test-link a {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .info-testimonial {
+    text-align: left;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .viewall {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: var(--awa-red);
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background var(--awa-transition-fast), transform var(--awa-transition-fast);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .viewall:hover {
+    background: var(--awa-red-dark);
+    transform: translateY(-1px);
+}
+
+/* ============================================================
+   FIX-29 — TESTIMONIAL CARDS: UNIFORM HEIGHT + TEXT CLAMPING
+   Garante altura uniforme nos cards do carrossel de depoimentos,
+   limita texto a 4 linhas c/ ellipsis, normaliza tipografia.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .testimo-slider .owl-stage {
+    display: flex;
+    align-items: stretch;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .testimo-slider .owl-item {
+    display: flex;
+    flex-direction: column;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .testimo-slider .owl-item > .item-testimo {
+    flex: 1 1 auto;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .testimonialContent {
+    min-height: 80px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .testimonialContent .desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.6;
+    font-size: var(--awa-text-sm);
+    color: var(--awa-gray-600);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .author-test-info h3 {
+    margin: 0;
+    font-size: var(--awa-text-base);
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .author-test-info span {
+    font-size: var(--awa-text-xs);
+    color: var(--awa-gray-500);
+}
+
+/* ============================================================
+   FIX-31 — SECTION HEADINGS NORMALIZATION
+   Normaliza .rokan-product-heading para consistencia visual
+   com .ayo-home5-heading (tamanho, peso, espacamento).
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .rokan-product-heading {
+    margin-bottom: clamp(var(--awa-space-4), 2vw, var(--awa-space-6));
+    text-align: center;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .rokan-product-heading h2 {
+    font-size: clamp(1.4rem, 1vw + 1rem, 1.75rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.25;
+    margin: 0 0 var(--awa-space-2);
+    color: var(--awa-dark);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .rokan-product-heading .sup-title {
+    font-size: var(--awa-text-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--awa-red);
+    margin-bottom: var(--awa-space-1);
+    display: block;
+}
+
+/* ============================================================
+   FIX-32 — LOAD MORE / VIEW ALL BUTTON CENTER + SIZING
+   Centraliza e padroniza os botoes "Carregar Mais" /
+   "Ver Todos" nas secoes de produto da homepage.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product .viewall,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .products-grid + .viewall {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 160px;
+    min-height: var(--awa-btn-height);
+    padding: 0 var(--awa-space-6);
+    border-radius: var(--awa-radius-full);
+    background: var(--awa-red);
+    color: #fff;
+    font-size: var(--awa-text-sm);
+    font-weight: 600;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+    margin: var(--awa-space-6) auto 0;
+    transition: background var(--awa-transition-fast), transform var(--awa-transition-fast);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product .viewall:hover,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .products-grid + .viewall:hover {
+    background: var(--awa-red-dark);
+    transform: translateY(-1px);
+}
+
+/* Container do viewall precisa de text-align center */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product > .viewall,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .common-tab-system-fixed > .viewall {
+    text-align: center;
+    width: 100%;
+}
+
+/* ============================================================
+   FIX-33 — NEWSLETTER POPUP RESPONSIVE
+   Max-width, border-radius e ajustes mobile para o popup
+   de newsletter ("GANHE 10% OFF").
+   ============================================================ */
+body .page-wrapper .newsletter-popup,
+body .page-wrapper .modals-wrapper .modal-popup.newsletter-popup-modal .modal-inner-wrap {
+    max-width: min(90vw, 520px);
+    border-radius: var(--awa-radius);
+    overflow: hidden;
+}
+
+@media (width <= 480px) {
+    body .page-wrapper .newsletter-popup,
+    body .page-wrapper .modals-wrapper .modal-popup.newsletter-popup-modal .modal-inner-wrap {
+        max-width: calc(100vw - var(--awa-space-6));
+        padding: var(--awa-space-5);
+    }
+
+    body .page-wrapper .newsletter-popup h2,
+    body .page-wrapper .newsletter-popup .popup-title {
+        font-size: clamp(1.1rem, 4.5vw, 1.4rem);
+    }
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer {
+    margin-top: var(--awa-space-7);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-bottom .footer-bottom-inner .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-bottom .footer-bottom-inner .row > [class*="col-"] {
+    float: none;
+    width: auto;
+    max-width: 100%;
+    padding: 0;
+    flex: 1 1 320px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px 20px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .footer-title {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    color: var(--footer-text-bright);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .payment-methods-wrapper,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .security-seals-wrapper {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .payment-methods-img {
+    max-height: 30px;
+    width: auto;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .seals {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .security-seal-item svg {
+    width: auto;
+    max-width: 120px;
+    min-width: 0;
+    height: 28px;
+}
+
+body .page-wrapper .action.primary,
+body .page-wrapper button.primary,
+body .page-wrapper .item-product .action.tocart,
+body .page-wrapper .item-product .btn-add-to-cart,
+body .page-wrapper .product-item .action.tocart {
+    background: var(--awa-red);
+    border-color: var(--awa-red);
+    color: #fff;
+}
+
+body .page-wrapper .action.primary:hover,
+body .page-wrapper button.primary:hover,
+body .page-wrapper .item-product .action.tocart:hover,
+body .page-wrapper .item-product .btn-add-to-cart:hover,
+body .page-wrapper .product-item .action.tocart:hover {
+    background: var(--awa-red-dark);
+    border-color: var(--awa-red-dark);
+    color: #fff;
+}
+
+body .page-wrapper .action.primary:focus-visible,
+body .page-wrapper button.primary:focus-visible,
+body .page-wrapper .item-product .action.tocart:focus-visible,
+body .page-wrapper .item-product .btn-add-to-cart:focus-visible,
+body .page-wrapper .product-item .action.tocart:focus-visible {
+    background: var(--awa-red-dark);
+    border-color: var(--awa-red-dark);
+    color: #fff;
+    outline: 2px solid var(--awa-red);
+    outline-offset: 2px;
+}
+
+body .page-wrapper .action.primary:active,
+body .page-wrapper button.primary:active,
+body .page-wrapper .item-product .action.tocart:active,
+body .page-wrapper .item-product .btn-add-to-cart:active,
+body .page-wrapper .product-item .action.tocart:active {
+    background: #8e2629;
+    border-color: #8e2629;
+    color: #fff;
+    transform: scale(0.97);
+}
+
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .velaServicesInner.velaServicesInner--home5,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-banner,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-deals {
+        grid-column: auto;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: thin;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li {
+        flex: 0 0 auto;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a {
+        min-height: 46px;
+        padding: 0 14px;
+        font-size: 14px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 46px;
+        margin: 0;
+        padding: 0 14px;
+        border-radius: var(--awa-radius-sm);
+        background: var(--awa-red);
+        color: #fff;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
+        display: none;
+        margin-top: 8px;
+        border: 1px solid var(--awa-gray-200);
+        border-radius: var(--awa-radius-sm);
+        background: #fff;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown.active + ul.togge-menu.list-category-dropdown {
+        display: block;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .productTabContent:not(.owl-carousel) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .block_cat > .row {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        white-space: nowrap;
+        scrollbar-width: thin;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li {
+        flex: 0 0 auto;
+    }
+}
+
+@media (width <= 767px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxService {
+        justify-content: center;
+        text-align: center;
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px 10px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .item-product-parent {
+        padding: 0 6px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .item-testimo {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .info-testimonial {
+        text-align: center;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-bottom .footer-bottom-inner .row {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods {
+        justify-content: center;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .payment-methods-wrapper,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .security-seals-wrapper {
+        justify-content: center;
+    }
+}
+
+@media (width <= 480px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
+        grid-template-columns: 1fr;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .productTabContent:not(.owl-carousel) {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ============================================================
+   FIX-26 — HOME5 MEDIUM VIEWPORT STABILIZATION (P1)
+   Neutraliza regras legadas de 80px no menu e melhora leitura 992-1199.
+   ============================================================ */
+@media (width >= 992px) and (width <= 1199px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 {
+        width: auto;
+        max-width: 100%;
+        min-width: 0;
+        flex: 0 0 25%;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_primary {
+        width: auto;
+        max-width: none;
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown {
+        font-size: inherit;
+        cursor: default;
+    }
+}
+
+/* ============================================================
+   FIX-27 — VERTICAL MENU MOBILE TOGGLES (P1)
+   Alinha com recomendação do template Ayo para abertura de submenu no mobile.
+   ============================================================ */
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent {
+        position: relative;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent > a {
+        padding-right: 44px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .open-children-toggle {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 40px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 3;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .open-children-toggle::before {
+        content: "+";
+        font-size: 18px;
+        line-height: 1;
+        color: var(--awa-gray-700);
+        font-weight: 700;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .open-children-toggle:focus-visible {
+        outline: 2px solid var(--awa-red);
+        outline-offset: -2px;
+        border-radius: 2px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent._active > .open-children-toggle::before {
+        content: "−";
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent > ul.level0 {
+        display: none;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent._active > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent._active > ul.level0 {
+        display: block;
+    }
+}
+
+/* FIX-26b — MEDIUM VIEWPORT EXTRAS (992-1199px) */
+@media (width >= 992px) and (width <= 1199px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxService {
+        min-height: 104px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss .countdown_block {
+        padding: 12px 10px;
+    }
+}
+
+/* ============================================================
+   FIX-27 — TRUST & OFFERS GRID STABILITY (P1)
+   Escopo: top-home-content--trust-and-offers (Home5).
+   Usa classes de estrutura no template para evitar ambiguidades
+   entre wrappers CMS e blocos Rokanthemes.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers {
+    margin-top: var(--awa-space-4);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--awa-space-4);
+    align-items: start;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > * {
+    min-width: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-banner,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-deals {
+    margin-top: 0;
+}
+
+@media (width >= 992px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--awa-space-5);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .velaServicesInner.velaServicesInner--home5 {
+        grid-column: 1 / -1;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-banner {
+        grid-column: 1 / 2;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-deals {
+        grid-column: 2 / 3;
+    }
+
+    /* FIX-28 descontinuado: desktop usa modelo overlay (FIX-53) para evitar desalinhamento/cascata conflitante. */
+}
+
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers {
+        margin-top: var(--awa-space-3);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid {
+        gap: var(--awa-space-3);
+    }
+}
+
+/* ============================================================
+   FIX-30 — MAIN NAV GLYPH/ICON SANITIZATION (P1)
+   Remove ícones/font-glyph quebrados no menu horizontal Home5
+   sem afetar o menu vertical nem submenus internos.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a > .menu-thumb-icon,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a > img.menu-thumb-icon,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a > em.menu-thumb-icon {
+    display: none !important;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a > em.menu-thumb-icon::before,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a > em.menu-thumb-icon::after {
+    content: none !important;
+    display: none !important;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a > .cat-label {
+    display: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a::before,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* ============================================================
+   FIX-31 — MAIN NAV INTERACTION REFINEMENT (P2)
+   Evita overlay de toggle no desktop/médio e melhora foco visível.
+   ============================================================ */
+@media (width >= 992px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > .open-children-toggle {
+        display: none !important;
+    }
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a:focus-visible {
+    outline: 2px solid var(--awa-red);
+    outline-offset: 2px;
+}
+
+/* ============================================================
+   FIX-32 — MAIN NAV MEDIUM-DESKTOP SCROLL UX (P2)
+   Melhora rolagem horizontal e legibilidade entre 992-1199px.
+   ============================================================ */
+@media (width >= 992px) and (width <= 1199px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
+        scroll-snap-type: x proximity;
+        scrollbar-gutter: stable both-edges;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li {
+        scroll-snap-align: start;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > a {
+        line-height: 1.15;
+        font-weight: 700;
+        text-rendering: optimizelegibility;
+    }
+}
+
+/* ============================================================
+   FIX-33 — MAIN NAV KEYBOARD/SUBMENU REFINEMENT (P2)
+   Garante abertura por teclado e estabiliza dropdown no topo.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
+    margin-top: 0;
+    border-top: 2px solid var(--awa-red);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li:focus-within > .submenu,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li:focus-within > .groupmenu {
+    display: block;
+}
+
+/* ============================================================
+   FIX-34 — SUBMENU ALIGNMENT & VIEWPORT CONTAINMENT (P2)
+   Evita corte lateral de dropdown e melhora legibilidade desktop.
+   ============================================================ */
+@media (width >= 1200px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
+        max-width: min(92vw, var(--awa-container));
+        overflow-x: clip;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li:nth-last-child(-n+2) > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li:nth-last-child(-n+2) > .groupmenu {
+        left: auto;
+        right: 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) .subchildmenu > li > a {
+        line-height: 1.35;
+        padding-top: 7px;
+        padding-bottom: 7px;
+    }
+}
+
+/* ============================================================
+   FIX-35 — MAIN NAV RESPONSIVE TOUCH TUNING (P2)
+   Melhora hit-area, snapping e estabilidade visual até 991px.
+   ============================================================ */
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
+        scroll-padding-inline: 8px;
+        padding-inline: 4px;
+        gap: 4px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > a {
+        min-height: 48px;
+        padding-inline: 16px;
+        border-radius: 8px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > a:active {
+        transform: translateY(0.5px);
+    }
+}
+
+/* ============================================================
+   FIX-36 — TOP RHYTHM ALIGNMENT (P2)
+   Harmoniza espaçamento entre header-nav, main-nav e primeiro bloco.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav {
+    margin-bottom: clamp(8px, 1.1vw, 14px);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > .top-home-content.top-home-content--trust-and-offers {
+    margin-top: clamp(8px, 1vw, 14px);
+}
+
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav {
+        margin-bottom: 8px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > .top-home-content.top-home-content--trust-and-offers {
+        margin-top: 6px;
+    }
+}
+
+/* ============================================================
+   FIX-37 — SUBMENU RESPONSIVE CONTAINMENT (P2)
+   Evita dropdown muito alto/corte em telas desktop médias.
+   ============================================================ */
+@media (width >= 992px) and (width <= 1366px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
+        max-height: min(70vh, 560px);
+        overscroll-behavior: contain;
+    }
+}
+
+/* ============================================================
+   FIX-38 — NAV/SUBMENU INTERACTION CONSISTENCY (P2)
+   Uniformiza hover/foco/transições para leitura e acessibilidade.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a {
+    transition: background-color var(--awa-transition-fast), color var(--awa-transition-fast), box-shadow var(--awa-transition-fast);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a:hover,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a:focus-visible {
+    box-shadow: inset 0 -2px 0 var(--awa-red);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .subchildmenu > li > a,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu li > a {
+    transition: background-color var(--awa-transition-fast), color var(--awa-transition-fast);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .subchildmenu > li > a:focus-visible,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu li > a:focus-visible {
+    outline: 2px solid var(--awa-red);
+    outline-offset: -2px;
+    background: rgb(183 51 55 / 8%);
+}
+
+/* ============================================================
+   FIX-39 — NAV ACCESSIBILITY HARDENING (P2)
+   Reduced motion, alto contraste e rolagem horizontal consistente.
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu li > a {
+        transition: none;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
+        scroll-snap-type: none;
+    }
+}
+
+@media (forced-colors: active) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a:focus-visible,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu li > a:focus-visible {
+        outline: 2px solid CanvasText;
+        outline-offset: 2px;
+        forced-color-adjust: none;
+        background: Canvas;
+        color: CanvasText;
+    }
+}
+
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul::-webkit-scrollbar-thumb {
+        background: rgb(0 0 0 / 18%);
+        border-radius: 999px;
+    }
+}
+
+/* ============================================================
+   FIX-40 — SMALL-SCREEN NAV MICRO-REFINEMENT (P2)
+   Ajusta densidade tipográfica e hit-area em telas pequenas.
+   ============================================================ */
+@media (width <= 575px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul {
+        padding-inline: 2px;
+        gap: 3px;
+        scroll-padding-inline: 6px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a {
+        min-height: 46px;
+        padding-inline: 14px;
+        font-size: 13px;
+        letter-spacing: 0.01em;
+    }
+}
+
+@media (width <= 375px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a {
+        min-height: 44px;
+        padding-inline: 12px;
+        border-radius: 6px;
+        font-size: 12px;
+    }
+}
+
+/* ============================================================
+   FIX-41 — MAIN NAV LOCAL TOKENS (P2)
+   Centraliza parâmetros de altura/espaçamento para manutenção.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) {
+    --awa-main-nav-link-min-h: 48px;
+    --awa-main-nav-link-pad-x: 16px;
+    --awa-main-nav-link-radius: 8px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a.level-top {
+    min-height: var(--awa-main-nav-link-min-h);
+    padding-inline: var(--awa-main-nav-link-pad-x);
+    border-radius: var(--awa-main-nav-link-radius);
+}
+
+@media (width <= 575px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) {
+        --awa-main-nav-link-min-h: 46px;
+        --awa-main-nav-link-pad-x: 14px;
+    }
+}
+
+@media (width <= 375px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) {
+        --awa-main-nav-link-min-h: 44px;
+        --awa-main-nav-link-pad-x: 12px;
+        --awa-main-nav-link-radius: 6px;
+    }
+}
+
+/* ============================================================
+   FIX-42 — SUBMENU LAYERING STABILITY (P2)
+   Evita conflitos de sobreposição em header/nav e dropdown.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary {
+    position: relative;
+    z-index: 6;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
+    z-index: 10030;
+}
+
+/* ============================================================
+   FIX-43 — OVERFLOW CLIP FALLBACK (P3)
+   Fallback para navegadores sem suporte pleno a overflow: clip.
+   ============================================================ */
+@supports not (overflow: clip) {
+    @media (width >= 1200px) {
+        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
+        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
+            overflow-x: hidden;
+        }
+    }
+}
+
+/* ============================================================
+   FIX-44 — SAFE AREA SUPPORT ON SMALL SCREENS (P3)
+   Evita clipping nas bordas em devices com notch/gestures.
+   ============================================================ */
+@media (width <= 575px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul {
+        padding-inline: max(2px, env(safe-area-inset-left)) max(2px, env(safe-area-inset-right));
+    }
+}
+
+/* ============================================================
+   FIX-45 — MAIN NAV ACTIVE STATE VIA ARIA-CURRENT (P2)
+   Consistência do estado ativo com base em aria-current="page".
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a[aria-current="page"] {
+    background: var(--awa-red);
+    color: #fff;
+    box-shadow: inset 0 -2px 0 var(--awa-red-dark);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a[aria-current="page"]:focus-visible {
+    outline: 2px solid var(--awa-red);
+    outline-offset: 2px;
+}
+
+/* ============================================================
+   FIX-46 — DESKTOP SUBMENU SCROLLBAR TUNING (P3)
+   Scrollbar consistente para submenu/groupmenu no desktop.
+   ============================================================ */
+@media (width >= 992px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(0 0 0 / 25%) transparent;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .submenu::-webkit-scrollbar,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .submenu::-webkit-scrollbar-thumb,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu::-webkit-scrollbar-thumb {
+        border-radius: 999px;
+        background: rgb(0 0 0 / 25%);
+    }
+}
+
+/* ============================================================
+   FIX-47 — SUBMENU ACTIVE/HOVER CONSISTENCY (P2)
+   Harmoniza contraste e destaque de estado ativo em subníveis.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu li > a:not([aria-current="page"]):hover {
+    background: rgb(183 51 55 / 8%);
+    color: var(--awa-red-dark);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu li.active > a,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu li.current > a,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu li > a[aria-current="page"] {
+    background: rgb(183 51 55 / 12%);
+    color: var(--awa-red-dark);
+    font-weight: 600;
+}
+
+/* ============================================================
+   FIX-48 — SUBMENU LEVEL SPACING REFINEMENT (P3)
+   Melhora ritmo vertical/horizontal de links em subníveis.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu .subchildmenu > li > a {
+    min-height: 34px;
+    padding-inline: 12px;
+    line-height: 1.35;
+}
+
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu .subchildmenu > li > a {
+        min-height: 40px;
+        padding-inline: 14px;
+    }
+}
+
+/* ============================================================
+   FIX-49 — SUBMENU DEPTH VISUAL HIERARCHY (P2)
+   Diferencia níveis 1/2/3 para leitura e escaneabilidade.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu .subchildmenu > li.level1 > a {
+    font-weight: 600;
+    letter-spacing: 0.005em;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu .subchildmenu > li.level2 > a {
+    font-weight: 500;
+    padding-inline-start: 14px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu .subchildmenu > li.level3 > a {
+    font-weight: 500;
+    opacity: 0.95;
+    padding-inline-start: 18px;
+}
+
+/* ============================================================
+   FIX-50 — PARENT ACTIVE STATE PROPAGATION (P2)
+   Mantém item pai destacado quando um descendente está ativo.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li.awa-has-current-descendant > a.level-top,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li.active > a.level-top,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li.current > a.level-top {
+    background: var(--awa-red);
+    color: #fff;
+    box-shadow: inset 0 -2px 0 var(--awa-red-dark);
+}
+
+@media (pointer: coarse) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu .subchildmenu > li > a {
+        min-height: 42px;
+        -webkit-tap-highlight-color: rgb(183 51 55 / 20%);
+    }
+}
+
+/* FIX-51 removido: o destaque de ativo agora é unificado (classes + estados nativos). */
+
+/* ============================================================
+   FIX-52 — LONG TEXT RESILIENCE IN SUBMENU (P3)
+   Evita overflow e quebra feia para rótulos longos.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu li > a {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: normal;
+    hyphens: auto;
+}
+
+@media (width >= 992px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu .subchildmenu > li > a {
+        max-width: min(360px, 40vw);
+    }
+}
+
+/* R28 — Bug #3: Neutraliza padding-left:18px de themes5.css no hover.
+   transform:translateX(5px) em awa-layout.css é o efeito hover canônico. */
+@media (width >= 992px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5)
+    .page-wrapper .verticalmenu.side-verticalmenu li.level0 > a:hover {
+        padding-left: 15px;
+    }
+}
+
+/* ============================================================
+   FIX-34 — VERTICAL MENU SUBMENU FLYOUT (P1)
+   Garante que submenus do menu vertical apareçam ao hover no desktop.
+   Define estado-base (hidden) e hover (visible) com especificidade
+   alta o suficiente para vencer regras do módulo Rokanthemes.
+   ============================================================ */
+@media (width >= 992px) {
+    /* Estado-base: submenu oculto, posicionado para flyout à direita */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0 > .submenu {
+        display: block;
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        left: 100%;
+        top: 0;
+        min-width: 220px;
+        z-index: 10000;
+        pointer-events: none;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+        border-radius: 0 var(--awa-radius-sm) var(--awa-radius-sm) var(--awa-radius-sm);
+        box-shadow: var(--awa-shadow-dropdown);
+        background: #fff;
+    }
+
+    /* Hover: submenu visível */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0:hover > .submenu {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Sub-submenu: mesma lógica para níveis aninhados */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .submenu li:hover > .submenu {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Submenu classic/staticwidth/fullwidth — posição à direita */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.fullwidth > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.staticwidth > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.classic > .submenu {
+        left: 100% !important;
+        top: 0;
+    }
+
+    /* Submenu level0 min-height — alinha submenu completo ao item pai */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul li.level0 .level0.submenu {
+        min-height: 100%;
+        height: auto;
+    }
+
+    /* Sub-submenu arrow indicator on classic menu parent items */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .subchildmenu > li.parent > a::after {
+        content: '\e606';
+        font-family: simple-line-icons, sans-serif;
+        font-size: 10px;
+        margin-left: auto;
+        padding-left: 8px;
+    }
+}
+
+/* ============================================================
+   FIX-35 — VERTICAL MENU TITLE HAMBURGER ICON + EXPAND BUTTON
+   Restaura ícone hamburger no título e estiliza botão "Ver Todas".
+   Alinha com padrão do template Ayo (our_categories + vm-toggle-categories).
+   ============================================================ */
+
+/* Hamburger icon no título */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > h2.our_categories .vm-icon {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > h2.our_categories .vm-icon .fa-bars {
+    font-size: 16px;
+    color: inherit;
+}
+
+/* Botão "Ver Todas / Show More" — dentro de <li.expand-category-link> no <ul> */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link > .vm-toggle-categories {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 10px 20px;
+    font-size: var(--awa-text-sm);
+    font-weight: 600;
+    color: var(--awa-red-dark);
+    background: var(--awa-gray-100);
+    border: 1px solid var(--awa-gray-200);
+    border-top: 0;
+    border-radius: 0 0 var(--awa-radius-sm) var(--awa-radius-sm);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link > .vm-toggle-categories:hover {
+    background: var(--awa-gray-200);
+    color: var(--awa-red);
+}
+
+/* Remove pseudo-ícones herdados do tema legado no item "Todas as Categorias" */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link > .vm-toggle-categories::before,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link > .vm-toggle-categories::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* Rotate arrow icon when expanded */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link > .vm-toggle-categories .vm-toggle-icon {
+    transition: transform 0.3s ease;
+    font-size: 12px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link > .vm-toggle-categories.expanding .vm-toggle-icon {
+    transform: rotate(180deg);
+}
+
+/* ============================================================
+   FIX-53 — HOME5 DESKTOP: VERTICAL MENU OVERLAY PANEL (P1)
+   Evita "faixa branca" no topo: lista de categorias deve abrir
+   em dropdown absoluto (não em fluxo), como no template Ayo.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .sections.nav-sections.category-dropdown > .section-items > .section-item-title.nav-sections.category-dropdown-item-title {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    overflow: hidden !important;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .sections.nav-sections.category-dropdown .section-item-content.category-dropdown-item-content {
+    margin: 0 !important;
+    padding-top: 0 !important;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
+    margin: 0 !important;
+    padding: 0 !important;
+    list-style: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block > .vertical-menu-before,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block > .vertical-menu-after {
+    display: none !important;
+    height: 0 !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+@media (width >= 992px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block > .vertical-menu-before:empty,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block > .vertical-menu-after:empty {
+        display: none !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 {
+        position: relative;
+        z-index: 1006;
+        overflow: visible;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .sections.nav-sections.category-dropdown,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .sections.nav-sections.category-dropdown > .section-items,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .sections.nav-sections.category-dropdown .section-item-content.category-dropdown-item-content {
+        overflow: visible;
+        height: auto;
+        min-height: 0;
+        max-height: none;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu {
+        position: relative;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        width: 100%;
+        max-height: min(72vh, 640px);
+        overflow: auto;
+        z-index: 1008;
+        display: none !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown.menu-open,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > .title-category-dropdown.active + ul.togge-menu.list-category-dropdown {
+        display: block !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link {
+        position: sticky;
+        bottom: 0;
+        z-index: 2;
+        border-top: 1px solid var(--awa-gray-200);
+        background: #fff;
+    }
+
+    /* Keep promo block in document flow to avoid overlapping category rows. */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-bg-img {
+        position: static !important;
+        left: auto !important;
+        bottom: auto !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        padding: 8px 12px;
+        border-top: 1px solid var(--awa-gray-200);
+        background: #fff;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-bg-img img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 4px;
+    }
+}
+
+/* ============================================================
+   FIX-55 — HOME5 DESKTOP OVERLAY + GRID/BASELINE POLISH (P1)
+   ============================================================ */
+@media (width >= 992px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav {
+        margin: 0;
+        padding: 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > .title-category-dropdown {
+        min-height: 48px;
+        padding-inline: 16px;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        overflow-x: hidden;
+        box-sizing: border-box;
+        scrollbar-width: thin;
+        scrollbar-color: rgb(0 0 0 / 18%) transparent;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown::-webkit-scrollbar-thumb {
+        border-radius: 999px;
+        background: rgb(0 0 0 / 18%);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li {
+        margin: 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a {
+        min-height: 44px;
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        line-height: 1.25;
+        border-bottom: 1px solid var(--awa-gray-200);
+        transition: background-color var(--awa-transition-fast), color var(--awa-transition-fast);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li:last-child > a {
+        border-bottom: 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a:hover {
+        background: var(--awa-gray-100);
+        color: var(--awa-red-dark);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a .cat-label {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        margin-left: auto;
+        min-height: 16px;
+        padding: 2px 6px;
+        border-radius: 999px;
+        font-size: 9px;
+        line-height: 1;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        background: var(--awa-red);
+        color: #fff;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a .cat-label:empty {
+        display: none !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .title-category-dropdown,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a.level-top {
+        min-height: 48px;
+        line-height: 1.2;
+        padding-block: 12px;
+        display: flex;
+        align-items: center;
+    }
+}
+
+/* ============================================================
+   FIX-54 — MOBILE: GARANTIR VISIBILIDADE DO NAV-TOGGLE (P1)
+   Remove conflito de sobreposição com menu_left_home1 no ≤767px.
+   ============================================================ */
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav {
+        position: relative;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav .menu_left_home1 {
+        display: none;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav .menu_primary {
+        display: none !important;
+    }
+
+    body .page-wrapper .header-control.header-nav .nav-toggle,
+    body .page-wrapper .header-control.header-nav .action.nav-toggle {
+        display: flex !important;
+        position: absolute !important;
+        top: -74px !important;
+        left: 12px !important;
+        width: 42px !important;
+        height: 42px !important;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--awa-red) !important;
+        border-radius: var(--awa-radius-sm);
+        background: #fff !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        z-index: 10030 !important;
+    }
+
+    /* Avoid floating close icon when drawer is closed (hybrid tablet state). */
+    body:not(.nav-open) .page-wrapper .awa-nav-close {
+        display: none !important;
+    }
+
+    body.nav-open .page-wrapper .awa-nav-close,
+    .nav-open body .page-wrapper .awa-nav-close {
+        display: flex !important;
+    }
+
+    /* Reserve space for the hamburger icon so search text does not overlap it. */
+    body .page-wrapper .header .top-search .block-search input#search,
+    body .page-wrapper .header .top-search .block-search input.input-text {
+        padding-left: 52px !important;
+    }
+
+    body .page-wrapper .header-control.header-nav .nav-toggle::before,
+    body .page-wrapper .header-control.header-nav .action.nav-toggle::before {
+        content: "\2630";
+        font-family: inherit;
+        font-size: 20px;
+        line-height: 1;
+        color: var(--awa-red);
+    }
 }

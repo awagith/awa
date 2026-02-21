@@ -44,26 +44,26 @@
 			        </div>    
 		    	</div>
 		    </div>
-		    <div class="header-control header-nav cms_home_1">
+		    <div class="header-control header-nav header-nav-global cms_home_1">
 		    	<div class="container">
 		    		<div class="row">
 						<span data-action="toggle-nav" class="action nav-toggle"><span><?= $escaper->escapeHtml(__('Toggle Nav')) ?></span></span>
-						<div class="col-lg-2 col-md-3 col-xs-6 hidden-sm menu_left_home1">
+							<div class="col-lg-2 col-md-3 col-sm-2 col-xs-6 menu_left_home1">
 							<?php echo $this->getChildHtml("menu.vertical")?>
 							<?php echo $this->getChildHtml("navigation-sections")?>
 							<?php echo $this->getChildHtml("top.navigation.sections")?>
 						</div>
-						<div class="col-lg-6 col-md-7 col-sm-12 menu_primary hidden-xs">
+							<div class="col-lg-7 col-md-7 col-sm-10 menu_primary hidden-xs">
 							<div class="header-wrapper-sticky<?php echo (!$this->helper('Rokanthemes\Themeoption\Helper\Themeconfig')->isEnableStickyHeader()) ? '' : ' enabled-header-sticky'; ?>">
 								<div class="container-header-sticky">
-									<div class="logo-sticky"><a href="<?php echo $block->escapeUrl($block->getUrl(''));?>" title="<?php echo $block->escapeHtmlAttr(__('Logo'));?>"><img src="<?php echo ($this->helper('Rokanthemes\Themeoption\Helper\Themeconfig')->getStickyLogoHeader() != '') ? $block->escapeUrl($this->helper('Rokanthemes\Themeoption\Helper\Themeconfig')->getStickyLogoHeader()) : $block->escapeUrl($this->getViewFileUrl('images/logo_sticky.png'));?>" alt="<?php echo $block->escapeHtmlAttr(__('Logo'));?>" width="180" height="40" loading="lazy"/></a></div>
+									<div class="logo-sticky"><a href="<?php echo $this->escapeUrl($this->getUrl(''));?>" title="<?php echo $this->escapeHtmlAttr(__('Logo'));?>"><img src="<?php echo ($this->helper('Rokanthemes\Themeoption\Helper\Themeconfig')->getStickyLogoHeader() != '') ? $this->escapeUrl($this->helper('Rokanthemes\Themeoption\Helper\Themeconfig')->getStickyLogoHeader()) : $this->escapeUrl($this->getViewFileUrl('images/logo_sticky.png'));?>" alt="<?php echo $this->escapeHtmlAttr(__('Logo'));?>" width="180" height="40" loading="lazy"/></a></div>
 									<div class="top-menu top-menu-sticky">
 									  <?php echo $this->getChildHtml("custom.topnav"); ?>
 									</div>
 								</div>
 							</div>
 						</div>	
-						<div class="col-lg-3 col-md-2 hidden-sm hidden-xs box_language">
+						<div class="col-lg-2 col-md-2 hidden-sm hidden-xs box_language">
 							<div class="top-header">
 								<?php echo $this->getChildHtml("store_language"); ?>
 								<?php echo $this->getChildHtml("currency"); ?>

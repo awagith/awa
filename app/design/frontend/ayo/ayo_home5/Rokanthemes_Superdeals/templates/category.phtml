@@ -1,10 +1,10 @@
-<?php 
+<?php
 	use Magento\Framework\App\Action\Action;
 	$templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
 	$category_load = $block->getCategory();
 	$rows = 1;
-	$enabled= $block->getConfig('enabled');
-	$items = $block->getConfig('items');
+	$enabled = $block->getConfig('enabled');
+	$items = (int)$block->getConfig('items');
 	$speed = $block->getConfig('speed');
 	$qty = $block->getConfig('qty');
 	$showCart = $block->getConfig('addtocart');
@@ -13,7 +13,21 @@
 	$show_navigation = $block->getConfig('navigation');
 	$show_pagination = $block->getConfig('pagination');
 	$auto = $block->getConfig('auto');
-	if($enabled && $category_load && strtotime($block->getConfig('end_date')) >= strtotime($block->getCurrentTime())){
+
+	/* Fallback robusto:
+	   - O módulo original não expõe superdeals/configuration/items no admin.
+	   - Quando vazio, usa limit_products (já existente) com teto desktop seguro. */
+	$limitProducts = (int)$block->getConfig('limit_products');
+	$desktopItems = $items > 0 ? $items : $limitProducts;
+	if ($desktopItems <= 0) {
+		$desktopItems = 4;
+	}
+	$desktopItems = min($desktopItems, 4);
+	$desktopSmallItems = min($desktopItems, 3);
+	$tabletItems = min($desktopItems, 2);
+	$mobileItems = 1;
+
+	if ($enabled && $category_load && strtotime($block->getConfig('end_date')) >= strtotime($block->getCurrentTime())) {
 		$image = 'category_image_primary_small';
 ?>
 <?php if($this->getConfig('title')){?>
@@ -160,11 +174,11 @@
 			"countdownSelector": ".super-deal-countdown",
 			"owl": {
 				"lazyLoad": true,
-				"items": <?php echo (int)$items ?: 6; ?>,
-				"itemsDesktop": [1366, 5],
-				"itemsDesktopSmall": [1199, 4],
-				"itemsTablet": [991, 3],
-				"itemsMobile": [680, 2],
+				"items": <?php echo (int)$desktopItems; ?>,
+				"itemsDesktop": [1366, <?php echo (int)$desktopItems; ?>],
+				"itemsDesktopSmall": [1199, <?php echo (int)$desktopSmallItems; ?>],
+				"itemsTablet": [991, <?php echo (int)$tabletItems; ?>],
+				"itemsMobile": [680, <?php echo (int)$mobileItems; ?>],
 				"navigation": <?php echo ($show_navigation) ? 'true' : 'false'; ?>,
 				"pagination": <?php echo ($show_pagination) ? 'true' : 'false'; ?>,
 				"autoPlay": <?php echo ($auto) ? 'true' : 'false'; ?>

@@ -1,3 +1,769 @@
+// =============================================================================
+// AWA Motos — Homepage Layout Alignment & Responsiveness Fixes
+// Theme: ayo/ayo_home5
+// =============================================================================
+
+// ---------------------------------------------------------------------------
+// 2. Banner Slider + Sidebar Menu — alinhamento horizontal
+// ---------------------------------------------------------------------------
+.cms-index-index {
+    .banner-slider.banner-slider--home5 {
+        margin-bottom: 20px;
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    // Sidebar categorias
+    .home-side-menu {
+        border-radius: 5px;
+        overflow: hidden;
+        height: 100%;
+
+        .verticalmenu.navigation.side-verticalmenu {
+            height: 100%;
+
+            >ul {
+                height: 100%;
+            }
+        }
+    }
+
+    // Alinhar coluna sidebar + banner no mesmo row
+    .row-banner-home5 {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+
+        >.col-menu-side {
+            display: flex;
+        }
+
+        >.col-banner-main {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// 3. Notification / Info Bar — alinhamento
+// ---------------------------------------------------------------------------
+.cms-index-index {
+    .notification-home5-inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        margin-top: 6px;
+        margin-bottom: 18px;
+        text-align: center;
+        width: 100%;
+
+        .notification-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// 4. Super Deals / Countdown Section — alinhamento cards
+// ---------------------------------------------------------------------------
+.cms-index-index {
+
+    .superdeals-container,
+    .block-superdeals {
+        .products-grid {
+            .product-items {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: stretch;
+
+                .product-item {
+                    display: flex;
+                    flex-direction: column;
+
+                    .product-item-info {
+                        display: flex;
+                        flex-direction: column;
+                        flex: 1;
+                        height: 100%;
+                    }
+
+                    .product-item-details {
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                    }
+
+                    .product-item-name {
+                        min-height: 40px;
+                        overflow: hidden;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// 5. Product Tabs Section — alturas iguais entre tabs
+// ---------------------------------------------------------------------------
+.cms-index-index {
+    .block-product-tab {
+        .products-grid {
+            .product-items {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: stretch;
+                margin-left: -10px;
+                margin-right: -10px;
+
+                .product-item {
+                    display: flex;
+                    flex-direction: column;
+                    padding-left: 10px;
+                    padding-right: 10px;
+                    margin-bottom: 20px;
+
+                    .product-item-info {
+                        display: flex;
+                        flex-direction: column;
+                        height: 100%;
+                        border: 1px solid #eee;
+                        border-radius: 4px;
+                        overflow: hidden;
+                        transition: box-shadow 0.2s ease;
+
+                        &:hover {
+                            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+                        }
+                    }
+
+                    .product-item-details {
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+                        padding: 10px;
+                    }
+
+                    .product-item-name {
+                        flex: 1;
+                        min-height: 40px;
+                        overflow: hidden;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
+                        line-height: 1.4;
+                    }
+
+                    .product-item-actions {
+                        margin-top: auto;
+                        padding-top: 8px;
+                    }
+
+                    .product-image-container {
+                        width: 100% !important;
+                    }
+
+                    .product-image-wrapper {
+                        padding-bottom: 100% !important;
+                        position: relative;
+                        overflow: hidden;
+
+                        img {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            object-fit: contain;
+                        }
+                    }
+                }
+            }
+
+            // Tabs header alignment
+            .tab-header {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                margin-bottom: 20px;
+                border-bottom: 2px solid #eee;
+
+                li {
+                    a {
+                        padding: 8px 16px;
+                        font-size: 14px;
+                        font-weight: 600;
+                        border-radius: 3px 3px 0 0;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// 6. Bestseller / Category Tabs — grid alignment
+// ---------------------------------------------------------------------------
+.cms-index-index {
+
+    .block-bestseller-product,
+    .block-category-tab,
+    .block-categorytab {
+        .products-grid .product-items {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+
+            .product-item {
+                display: flex;
+                flex-direction: column;
+
+                .product-item-info {
+                    display: flex;
+                    flex-direction: column;
+                    height: 100%;
+                }
+
+                .product-item-details {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .product-item-name {
+                    min-height: 40px;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    overflow: hidden;
+                }
+
+                .product-item-actions {
+                    margin-top: auto;
+                }
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// 7. Testimonials Section — alinhamento cards
+// ---------------------------------------------------------------------------
+.cms-index-index {
+
+    .block-testimonial,
+    .testimonials-container {
+        .testimonial-items {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+            gap: 20px;
+        }
+
+        .testimonial-item {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-width: 280px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 6px;
+            background: #fff;
+
+            .testimonial-content {
+                flex: 1;
+                font-size: 14px;
+                line-height: 1.6;
+                color: #555;
+                margin-bottom: 15px;
+            }
+
+            .testimonial-author {
+                margin-top: auto;
+                font-weight: 600;
+                font-size: 14px;
+            }
+
+            .testimonial-role {
+                font-size: 12px;
+                color: #999;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// 8. FAQ Section — consistência
+// ---------------------------------------------------------------------------
+.cms-index-index {
+
+    .faq-section,
+    .block-faq-home {
+        .faq-item {
+            border-bottom: 1px solid #eee;
+            padding: 12px 0;
+
+            .faq-question {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 15px;
+                line-height: 1.5;
+                padding-right: 30px;
+                position: relative;
+            }
+
+            .faq-answer {
+                padding-top: 10px;
+                font-size: 14px;
+                line-height: 1.6;
+                color: #555;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// 9. Footer — equalize columns
+// ---------------------------------------------------------------------------
+.page-footer {
+
+    .footer-columns,
+    .footer.content .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+
+        >[class*="col-"] {
+            margin-bottom: 20px;
+        }
+    }
+
+    .footer-bottom {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        padding: 15px 0;
+
+        .payment-icons,
+        .security-badges {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// 10. Header / Top Bar — alinhamento
+// ---------------------------------------------------------------------------
+.cms-index-index {
+    .top-header {
+        .header-top-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .top-info-list {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+
+            li {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 12px;
+                white-space: nowrap;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// 11. Search Bar — alinhamento na homepage
+// ---------------------------------------------------------------------------
+.cms-index-index {
+    .header-container .header-content .header {
+        .block-search {
+            display: flex;
+            align-items: center;
+
+            .control {
+                width: 100%;
+            }
+
+            input[type="text"] {
+                width: 100%;
+                box-sizing: border-box;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// 12. Vertical Menu Submenu — overflow fix
+// ---------------------------------------------------------------------------
+.verticalmenu.navigation.side-verticalmenu {
+    position: relative;
+
+    .submenu {
+        z-index: 100;
+    }
+
+    >ul>li {
+        &.has-sub {
+            position: static;
+
+            >.submenu {
+                left: 100%;
+                top: 0;
+                min-width: 220px;
+                max-height: 80vh;
+                overflow-y: auto;
+            }
+        }
+    }
+
+    // Fullwidth submenu
+    .fullwidth-sub {
+        left: 100% !important;
+        top: 0;
+        width: auto;
+        max-width: calc(100vw - 300px);
+    }
+}
+
+// R29: Section 13 removed — redundant with awa-components.css OWL CAROUSEL section
+// (global .owl-stage flex + .owl-item flex already defined there)
+
+// ---------------------------------------------------------------------------
+// 14. Container global — consistência largura
+// ---------------------------------------------------------------------------
+.cms-index-index {
+    .page-main {
+        max-width: 1280px;
+        margin-left: auto;
+        margin-right: auto;
+        padding-left: 20px;
+        padding-right: 20px;
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    .sections-container,
+    .homepage-section {
+        margin-bottom: 30px;
+        overflow: hidden;
+    }
+}
+
+// =============================================================================
+// RESPONSIVE BREAKPOINTS
+// =============================================================================
+
+// ---------------------------------------------------------------------------
+// Tablet landscape (max-width: 1199px)
+// ---------------------------------------------------------------------------
+@media (max-width: 1199px) {
+    .velaServicesInner.velaServicesInner--home5 {
+        .rowFlex>[class*="col-"] {
+            flex: 0 0 33.333%;
+            max-width: 33.333%;
+        }
+    }
+
+    .cms-index-index {
+
+        .block-product-tab,
+        .block-bestseller-product,
+        .block-category-tab,
+        .block-categorytab {
+            .products-grid .product-items .product-item {
+                width: 33.333%;
+                flex: 0 0 33.333%;
+            }
+        }
+    }
+
+    .verticalmenu.navigation.side-verticalmenu {
+        >ul>li.has-sub>.submenu {
+            max-width: calc(100vw - 280px);
+        }
+
+        .fullwidth-sub {
+            max-width: calc(100vw - 280px);
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Tablet portrait (max-width: 991px)
+// ---------------------------------------------------------------------------
+@media (max-width: 991px) {
+    .velaServicesInner.velaServicesInner--home5 {
+        .rowFlex>[class*="col-"] {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+    }
+
+    .cms-index-index {
+        .row-banner-home5 {
+            >.col-menu-side {
+                display: none;
+            }
+
+            >.col-banner-main {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+
+        .block-product-tab,
+        .block-bestseller-product,
+        .block-category-tab,
+        .block-categorytab {
+            .products-grid .product-items .product-item {
+                width: 50%;
+                flex: 0 0 50%;
+            }
+        }
+
+        .notification-home5-inner {
+            flex-direction: column;
+            gap: 8px;
+        }
+    }
+
+    .page-footer {
+
+        .footer-columns,
+        .footer.content .row {
+            >[class*="col-"] {
+                flex: 0 0 50%;
+                max-width: 50%;
+            }
+        }
+
+        .footer-bottom {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Mobile landscape (max-width: 767px)
+// ---------------------------------------------------------------------------
+@media (max-width: 767px) {
+    .velaServicesInner.velaServicesInner--home5 {
+        .rowFlex>[class*="col-"] {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+
+        .boxService {
+            min-height: 70px;
+            padding: 8px 10px;
+
+            .iconService {
+                width: 28px;
+                height: 28px;
+            }
+
+            .contentService {
+                .titleService {
+                    font-size: 12px;
+                }
+
+                .descService {
+                    font-size: 10px;
+                }
+            }
+        }
+    }
+
+    .cms-index-index {
+        .top-header .header-top-inner {
+            justify-content: center;
+        }
+
+        .top-header .top-info-list {
+            justify-content: center;
+
+            li {
+                font-size: 11px;
+            }
+        }
+
+        .page-main {
+            padding-left: 15px;
+            padding-right: 15px;
+        }
+
+        .block-product-tab,
+        .block-bestseller-product,
+        .block-category-tab,
+        .block-categorytab {
+            .products-grid .product-items .product-item {
+                width: 50%;
+                flex: 0 0 50%;
+            }
+        }
+
+        .superdeals-container,
+        .block-superdeals {
+            .products-grid .product-items .product-item {
+                width: 50%;
+                flex: 0 0 50%;
+            }
+        }
+    }
+
+    .page-footer {
+
+        .footer-columns,
+        .footer.content .row {
+            >[class*="col-"] {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Mobile portrait (max-width: 480px)
+// ---------------------------------------------------------------------------
+@media (max-width: 480px) {
+    .velaServicesInner.velaServicesInner--home5 {
+        .rowFlex>[class*="col-"] {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+
+    .cms-index-index {
+
+        .block-product-tab,
+        .block-bestseller-product,
+        .block-category-tab,
+        .block-categorytab {
+            .products-grid .product-items {
+                margin-left: -5px;
+                margin-right: -5px;
+
+                .product-item {
+                    width: 50%;
+                    flex: 0 0 50%;
+                    padding-left: 5px;
+                    padding-right: 5px;
+                    margin-bottom: 10px;
+
+                    .product-item-details {
+                        padding: 8px;
+                    }
+
+                    .product-item-name {
+                        font-size: 12px;
+                        min-height: 32px;
+                    }
+                }
+            }
+        }
+
+        .superdeals-container,
+        .block-superdeals {
+            .products-grid .product-items .product-item {
+                width: 100%;
+                flex: 0 0 100%;
+            }
+        }
+
+        .sections-container,
+        .homepage-section {
+            margin-bottom: 20px;
+        }
+    }
+
+    .cms-index-index {
+
+        .block-testimonial,
+        .testimonials-container {
+            .testimonial-items {
+                flex-direction: column;
+            }
+
+            .testimonial-item {
+                min-width: unset;
+            }
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Small mobile (max-width: 360px)
+// ---------------------------------------------------------------------------
+@media (max-width: 360px) {
+    .cms-index-index {
+        .page-main {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .top-header .top-info-list li {
+            font-size: 10px;
+        }
+    }
+
+    .velaServicesInner.velaServicesInner--home5 {
+        .boxService {
+            min-height: 60px;
+            padding: 6px 8px;
+
+            .contentService {
+                .titleService {
+                    font-size: 11px;
+                }
+
+                .descService {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+// =============================================================================
+// FIM — AWA Motos Homepage Fixes
+// =============================================================================
+
+// Garante variáveis legadas (@linkshover, @lightcolor, etc.) em todas as cadeias de compilação.
 @import '_variables_themes.less';
 
 .action.primary,
@@ -11,15 +777,13 @@ button.primary,
     color: @lightcolor;
 }
 
+// R41: :focus removidos — :focus-visible cobre teclado; awa-core.css *:focus:not(:focus-visible){outline:none} suprime mouse
 .action.primary:hover,
 button.action.primary:hover,
 button.primary:hover,
 .actions-toolbar .primary .action:hover,
 .item-product .product-info-cart button.action.tocart.primary:hover,
 .products-grid .product-item .action.tocart.primary:hover,
-.action.primary:focus,
-button.action.primary:focus,
-button.primary:focus,
 .action.primary:focus-visible,
 button.action.primary:focus-visible,
 button.primary:focus-visible {
@@ -52,7 +816,7 @@ button.primary:focus-visible,
 .action.secondary,
 button.action.secondary,
 .actions-toolbar .secondary .action,
-.cart.table-wrapper .actions-toolbar > .action,
+.cart.table-wrapper .actions-toolbar>.action,
 .cart.table-wrapper .action-gift,
 .action_button .button {
     background: #f4f4f4;
@@ -60,14 +824,13 @@ button.action.secondary,
     color: @secondaryColor;
 }
 
+// R42: :focus removidos — mesma razão de R41
 .action.secondary:hover,
 button.action.secondary:hover,
 .actions-toolbar .secondary .action:hover,
-.cart.table-wrapper .actions-toolbar > .action:hover,
+.cart.table-wrapper .actions-toolbar>.action:hover,
 .cart.table-wrapper .action-gift:hover,
 .action_button .button:hover,
-.action.secondary:focus,
-button.action.secondary:focus,
 .action.secondary:focus-visible,
 button.action.secondary:focus-visible {
     background: @linkshover;
@@ -78,7 +841,7 @@ button.action.secondary:focus-visible {
 .action.secondary:focus-visible,
 button.action.secondary:focus-visible,
 .actions-toolbar .secondary .action:focus-visible,
-.cart.table-wrapper .actions-toolbar > .action:focus-visible,
+.cart.table-wrapper .actions-toolbar>.action:focus-visible,
 .cart.table-wrapper .action-gift:focus-visible,
 .action_button .button:focus-visible {
     outline: 2px solid darken(@linkshover, 10%);
@@ -96,16 +859,13 @@ button.action.secondary:focus-visible,
     color: @secondaryColor;
 }
 
+// R43: :focus removidos — mesma razão de R41
 .product-addto-links .action.towishlist:hover,
 .product-addto-links .action.tocompare:hover,
 .product-social-extra .action.towishlist:hover,
 .product-social-extra .action.tocompare:hover,
 .actions-secondary .towishlist:hover,
 .actions-secondary .tocompare:hover,
-.product-addto-links .action.towishlist:focus,
-.product-addto-links .action.tocompare:focus,
-.product-social-extra .action.towishlist:focus,
-.product-social-extra .action.tocompare:focus,
 .product-addto-links .action.towishlist:focus-visible,
 .product-addto-links .action.tocompare:focus-visible,
 .product-social-extra .action.towishlist:focus-visible,
@@ -179,7 +939,7 @@ a[href]:focus-visible {
 [data-switch],
 .awa-whatsapp-float,
 #back-top.awa-backtotop-legacy,
-.fixed-right .fixed-right-ul li > a,
+.fixed-right .fixed-right-ul li>a,
 .fixed-right .fixed-right-ul li.scroll-top {
     display: inline-flex;
     align-items: center;
@@ -187,9 +947,9 @@ a[href]:focus-visible {
     text-align: center;
 }
 
-.fixed-right .fixed-right-ul li.shopping-cart > a,
+.fixed-right .fixed-right-ul li.shopping-cart>a,
 .fixed-right .fixed-right-ul li.scroll-top,
-.fixed-right .fixed-right-ul li.my-account > a,
+.fixed-right .fixed-right-ul li.my-account>a,
 .fixed-right .fixed-right-ul li a[href*="checkout/cart"],
 .fixed-right .fixed-right-ul li a[href*="customer/account"] {
     color: @lightcolor !important;
@@ -212,6 +972,7 @@ a[href]:focus-visible {
 
 .products-grid,
 .products-list {
+
     .product-item-photo,
     .product-thumb {
         .product-image-container {
@@ -243,7 +1004,7 @@ a[href]:focus-visible {
     }
 
     .header-container .header-content .header {
-        .menu_primary .custommenu.navigation li.level0 > .level-top {
+        .menu_primary .custommenu.navigation li.level0>.level-top {
             font-size: 15px;
             font-weight: 600;
             letter-spacing: 0.2px;
@@ -362,7 +1123,7 @@ a[href]:focus-visible {
         row-gap: 8px;
     }
 
-    .rowFlex > [class*="col-"] {
+    .rowFlex>[class*="col-"] {
         flex: 0 0 20%;
         max-width: 20%;
         padding-left: 8px;
@@ -425,6 +1186,22 @@ a[href]:focus-visible {
         }
     }
 
+    // Tablet landscape — 3 colunas (sobrescreve base 20% que cascata acima)
+    @media (max-width: 1199px) {
+        .rowFlex>[class*="col-"] {
+            flex: 0 0 33.333%;
+            max-width: 33.333%;
+        }
+    }
+
+    // Tablet portrait — 2 colunas
+    @media (max-width: 991px) {
+        .rowFlex>[class*="col-"] {
+            flex: 0 0 50%;
+            max-width: 50%;
+        }
+    }
+
     @media (max-width: 767px) {
         .rowFlex {
             display: flex;
@@ -432,7 +1209,7 @@ a[href]:focus-visible {
             row-gap: 14px;
         }
 
-        .rowFlex > [class*="col-"] {
+        .rowFlex>[class*="col-"] {
             flex: 0 0 50%;
             max-width: 50%;
         }
@@ -464,14 +1241,118 @@ a[href]:focus-visible {
     }
 
     @media (max-width: 480px) {
-        .rowFlex > [class*="col-"] {
+        .rowFlex>[class*="col-"] {
             flex: 0 0 100%;
             max-width: 100%;
         }
     }
 }
 
-body .page-wrapper .velaServicesInner.velaServicesInner--home5 > .velaContent {
+body .page-wrapper .velaServicesInner.velaServicesInner--home5>.velaContent {
     width: 100%;
     max-width: 100%;
+}
+
+// ---------------------------------------------------------------------------
+// 15. AWA Home Final Alignment Override (stability pass)
+// ---------------------------------------------------------------------------
+.cms-index-index {
+    .row-banner-home5 {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+
+        >[class*="col-"] {
+            display: flex;
+        }
+    }
+
+    .products-grid .product-items {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+    }
+
+    .products-grid .product-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .products-grid .product-item .product-item-info {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        width: 100%;
+    }
+
+    .products-grid .product-item .product-item-details {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .products-grid .product-item .product-item-actions {
+        margin-top: auto;
+    }
+
+    .block-testimonial .testimonial-items,
+    .testimonials-container .testimonial-items {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+    }
+
+    .block-testimonial .testimonial-item,
+    .testimonials-container .testimonial-item {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .notification-home5-inner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .page-footer .footer-columns,
+    .page-footer .footer.content .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 991px) {
+    .cms-index-index {
+        .row-banner-home5>.col-menu-side {
+            display: none;
+        }
+
+        .row-banner-home5>.col-banner-main {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        .products-grid .product-item {
+            width: 50%;
+            flex: 0 0 50%;
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .cms-index-index {
+        .products-grid .product-item {
+            width: 100%;
+            flex: 0 0 100%;
+        }
+
+        .page-main {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+    }
 }

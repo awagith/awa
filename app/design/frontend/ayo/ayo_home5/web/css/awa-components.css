@@ -1,9 +1,9 @@
 /* ===========================================
    AWA MOTOS — COMPONENTS (Produtos + Carrossel + Páginas)
    Tema: AYO/Rokanthemes (Home5)
-   
+
    ARQUIVO 3/4 da camada AWA consolidada.
-   
+
    CONTEÚDO:
    - Product grid (responsivo, 4→1 colunas)
    - Product cards: .item-product (AYO) + .product-item (Magento)
@@ -16,7 +16,7 @@
    - Página de produto (detail)
    - Carrinho, checkout, conta
    - Ações secundárias (quickview, wishlist, compare)
-   
+
    ESPECIFICIDADE:
    body .page-wrapper sem !important (exceto inline overrides do Magento).
 =========================================== */
@@ -78,8 +78,8 @@ body .page-wrapper .block-products-list .product-items:not(.owl-carousel) {
     }
 }
 
-/* Mobile XS: 1 coluna ≤479px (padrão AYO) */
-@media (width <= 479px) {
+/* Mobile XS: 1 coluna ≤480px (padrão AYO) */
+@media (width <= 480px) {
     body .page-wrapper .products-grid .product-items:not(.owl-carousel),
     body .page-wrapper .products.list .product-items:not(.owl-carousel),
     body .page-wrapper .widget-product-grid .product-items:not(.owl-carousel),
@@ -561,12 +561,13 @@ body .page-wrapper .item-product:focus-within .quickview-link { /* R14: a11y tec
 
 /* ============================================================
    BADGES (Novo, Promoção, Desconto)
+   R36: removidos .discount-badge e .sale-percent — seletores
+   órfãos sem nenhum elemento correspondente no DOM do tema.
+   Classes ativas do Rokanthemes: .product-label, .sticker, .hot-onsale
    ============================================================ */
 body .page-wrapper .item-product .product-label,
 body .page-wrapper .item-product .sticker,
-body .page-wrapper .item-product .hot-onsale,
-body .page-wrapper .product-item .discount-badge,
-body .page-wrapper .product-item .sale-percent {
+body .page-wrapper .item-product .hot-onsale {
     position: absolute;
     top: var(--awa-space-3);
     left: var(--awa-space-3);
@@ -579,16 +580,7 @@ body .page-wrapper .product-item .sale-percent {
     z-index: 5;
 }
 
-body .page-wrapper .product-item .discount-badge,
-body .page-wrapper .product-item .sale-percent {
-    left: auto;
-    right: var(--awa-space-3);
-    border-radius: var(--awa-radius-full);
-    padding: var(--awa-space-1) var(--awa-space-3);
-    font-size: var(--awa-text-xs);
-    background: var(--awa-red);
-    color: var(--awa-text-on-danger);
-}
+/* R36: bloco .discount-badge / .sale-percent removido — CSS morto */
 
 body .page-wrapper .item-product .product-label.new,
 body .page-wrapper .item-product .sticker.new {
@@ -701,8 +693,8 @@ body .page-wrapper .owl-carousel .owl-item {
     display: flex;
     flex-direction: column;
     height: auto;
-    float: left !important; /* OWL v1 compatibility: keep items in horizontal flow */
-    min-width: 0; /* OWL-FIX-01: prevent flex children from expanding beyond owl-item */
+
+    /* R31: float/min-width moved to awa-grid-unified.css §4 — canonical location */
 
     /* R18-11: box-sizing removed — redundant with global * rule in awa-core.css */
 }
@@ -752,6 +744,54 @@ body .page-wrapper .owl-carousel .item-product,
 body .page-wrapper .owl-carousel .product-item {
     height: 100%;
     margin: 0;
+    min-width: 0;
+    width: 100%;
+}
+
+/* ============================================================
+   HOME5 — ALINHAMENTO RESPONSIVO (grid/colunas/cards/carrosséis)
+   Patch mínimo para evitar desalinhamento e overflow horizontal.
+   ============================================================ */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(
+    .products-grid,
+    .product-items,
+    .product-grid,
+    .tab_product,
+    .categorytab-container,
+    .hot-deal,
+    .owl-carousel,
+    .owl-carousel .owl-stage-outer,
+    .owl-carousel .owl-stage,
+    .owl-carousel .owl-item,
+    .item-product,
+    .product-item,
+    .product-item-info
+) {
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel .owl-stage {
+    display: flex;
+    align-items: stretch;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel .owl-item {
+    min-width: 0;
+}
+
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(
+        .products-grid,
+        .product-items,
+        .product-grid,
+        .tab_product,
+        .categorytab-container,
+        .hot-deal
+    ) {
+        overflow-x: clip;
+    }
 }
 
 /* OWL-FIX-04: responsive images inside owl-carousel items */
@@ -944,6 +984,12 @@ body .page-wrapper .velaServicesInner {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: var(--awa-space-5);
     justify-content: center;
+}
+
+/* FIX: Home5 usa layout flex interno via _extend.less → não aplicar grid genérico */
+body .page-wrapper .velaServicesInner.velaServicesInner--home5 {
+    display: block;
+    grid-template-columns: none;
 }
 
 body .page-wrapper .velaServicesInner .boxService,
@@ -1872,8 +1918,26 @@ body .page-wrapper .search-autocomplete li:hover {
     background: var(--awa-gray-100);
 }
 
+/* R20-05: harmoniza ativo (teclado/mouse/provider) */
+body .page-wrapper .search-autocomplete li[aria-selected="true"],
+body .page-wrapper .search-autocomplete li.selected,
+body .page-wrapper .search-autocomplete li.active,
+body .page-wrapper .search-autocomplete li.awa-ac-active,
+body .page-wrapper .search-autocomplete [role="option"][aria-selected="true"],
+body .page-wrapper .search-autocomplete [role="option"].selected,
+body .page-wrapper .search-autocomplete [role="option"].active,
+body .page-wrapper .search-autocomplete [role="option"].awa-ac-active {
+    background: var(--awa-gray-100);
+}
+
 /* R13: focus-visible para navegação por teclado (WCAG 2.4.7) */
 body .page-wrapper .search-autocomplete li:focus-visible {
+    outline: 2px solid var(--awa-red);
+    outline-offset: -2px;
+    background: var(--awa-gray-100);
+}
+
+body .page-wrapper .search-autocomplete [role="option"]:focus-visible {
     outline: 2px solid var(--awa-red);
     outline-offset: -2px;
     background: var(--awa-gray-100);
@@ -2022,8 +2086,8 @@ body .page-wrapper .product.info.detailed .data.item.title > span:focus-visible 
         position: static;
         flex-direction: row;
         justify-content: flex-end;
-        padding: 0 12px 8px;
-        gap: 6px;
+        padding: 0 var(--awa-space-3) var(--awa-space-2);
+        gap: var(--awa-space-2);
     }
 
     body .page-wrapper .item-product .quickview-link {
@@ -2204,7 +2268,7 @@ body .page-wrapper .cat_special {
     }
 }
 
-@media (width <= 479px) {
+@media (width <= 480px) {
     body .page-wrapper .cat_special {
         grid-template-columns: 1fr;
     }
@@ -2228,9 +2292,9 @@ body .page-wrapper .cat_special {
    OWL NAV ARROWS RESPONSIVO — MOBILE
    ============================================================ */
 
-/* OWL-FIX-06: hide nav arrows on mobile (≤479px) — rely on swipe + dots.
-   Arrows at 44px each overlap too much on 320–479px screens. */
-@media (width <= 479px) {
+/* OWL-FIX-06: hide nav arrows on mobile (≤480px) — rely on swipe + dots.
+   Arrows at 44px each overlap too much on 320–480px screens. */
+@media (width <= 480px) {
     body .page-wrapper .owl-carousel .owl-nav {
         display: none;
     }
@@ -2523,4 +2587,21 @@ body .page-wrapper .trust-badge-item span {
     font-size: 0.8125rem;
     color: var(--awa-gray-600, #585e63);
     font-weight: 500;
+}
+
+/* ============================================================
+   TOUCH DEVICES — Desabilitar hover transform em product cards
+   Evita "stuck hover" em telas touch onde hover persiste após tap.
+   ============================================================ */
+@media (hover: none) and (pointer: coarse) {
+    body .page-wrapper .item-product:hover,
+    body .page-wrapper .product-item:hover {
+        transform: none;
+        box-shadow: var(--awa-shadow);
+    }
+
+    body .page-wrapper .item-product:hover .product-thumb img,
+    body .page-wrapper .product-item:hover .product-image-photo {
+        transform: none;
+    }
 }

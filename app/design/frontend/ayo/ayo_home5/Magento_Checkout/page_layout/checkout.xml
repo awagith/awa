@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * AWA Motos: Checkout page layout compatibility containers.
+ * The checkout layout extends "empty", while several default/theme updates
+ * still reference standard containers. These compatibility containers are
+ * non-rendered and only prevent broken-reference noise in logs.
+ */
+-->
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_layout.xsd">
+    <update handle="empty"/>
+    <referenceContainer name="page.wrapper">
+        <container name="checkout.header.container" as="checkout_header_container" label="Checkout Page Header Container" htmlTag="header" htmlClass="page-header" before="main.content">
+            <container name="checkout.header.wrapper" label="Checkout Page Header" as="checkout_header_wrapper" htmlTag="div" htmlClass="header content"/>
+        </container>
+
+        <container name="header.container" as="header_container_compat" before="-"/>
+        <container name="page.top" as="page_top_compat" after="checkout.header.container"/>
+        <container name="sidebar.additional" as="sidebar_additional_compat" after="page.top"/>
+        <container name="footer-container" as="footer_container_compat" after="sidebar.additional"/>
+    </referenceContainer>
+    <move element="logo" destination="checkout.header.wrapper"/>
+</layout>

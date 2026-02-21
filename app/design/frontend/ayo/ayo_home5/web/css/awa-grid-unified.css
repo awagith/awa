@@ -88,7 +88,7 @@ body .page-wrapper .products-grid .product-grid > li {
     }
 }
 
-@media (width <= 479px) {
+@media (width <= 480px) {
     body .page-wrapper .products-grid .product-grid,
     body .page-wrapper .products-grid ul.product-grid {
         grid-template-columns: 1fr;
@@ -139,7 +139,7 @@ body .page-wrapper .category_page_grid_5 { grid-template-columns: repeat(5, 1fr)
     }
 }
 
-@media (width <= 479px) {
+@media (width <= 480px) {
     body .page-wrapper .category_page_grid_2,
     body .page-wrapper .category_page_grid_3,
     body .page-wrapper .category_page_grid_4,
@@ -252,7 +252,7 @@ body.catalog-category-view .page-wrapper .owl:not(.owl-carousel) > .product_row 
     }
 }
 
-@media (width <= 479px) {
+@media (width <= 480px) {
     body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row {
         grid-template-columns: 1fr;
     }
@@ -541,10 +541,7 @@ body .page-wrapper .owl-carousel .owl-wrapper {
 }
 
 body .page-wrapper .owl-carousel .owl-item {
-    float: left;
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: column;
+    flex: 0 0 auto; /* R22: display/flex-direction/float redundantes — awa-components.css L700 */
 }
 
 /* Garantir que owl-wrapper-outer corta overflow corretamente */
@@ -558,6 +555,8 @@ body .page-wrapper .owl-carousel .owl-wrapper-outer {
    §5 — SEÇÕES DA HOMEPAGE: ESPAÇAMENTO CONSISTENTE
    Garantir que cada seção de produto na home tenha margin/padding
    padronizado para ritmo visual uniforme.
+   R21: space-8 → space-6 (24px) — alinhado com awa-consistency-home5.css
+        AF-07/R19 e FIX-24/R20 que usam space-6 para seções.
    ============================================================ */
 body .page-wrapper .rokan-featuredproduct,
 body .page-wrapper .rokan-bestseller,
@@ -568,7 +567,7 @@ body .page-wrapper .rokan-onsaleproduct,
 body .page-wrapper .categorytab-container,
 body .page-wrapper .list-tab-product,
 body .page-wrapper .hot-deal {
-    margin-bottom: var(--awa-space-8);
+    margin-bottom: var(--awa-space-6);
 }
 
 /* Títulos de seção — espaçamento consistente */
@@ -595,15 +594,11 @@ body .page-wrapper .list-tab-product .tab_content {
 
 /* ============================================================
    §7 — PRODUCT-INFO CONSISTÊNCIA
-   Garantir que a área de info (nome, preço, botão) dentro de
-   cards AYO em carrosséis tenha o mesmo padding/alinhamento
-   que os cards de grid estático.
+   Padding extra para cards OWL. display/flex-direction/flex-grow
+   e product-info-cart margin-top já vêm de awa-components.css L170-181.
    ============================================================ */
 body .page-wrapper .owl-carousel .item-product .product-info {
-    padding: var(--awa-space-3) var(--awa-space-4) var(--awa-space-4);
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    padding: var(--awa-space-3) var(--awa-space-4) var(--awa-space-4); /* R23: display/flex-direction/flex-grow redundantes removidos — awa-components.css L170 */
 }
 
 body .page-wrapper .owl-carousel .item-product .product-info .product-name {
@@ -611,9 +606,7 @@ body .page-wrapper .owl-carousel .item-product .product-info .product-name {
     margin-bottom: var(--awa-space-2);
 }
 
-body .page-wrapper .owl-carousel .item-product .product-info-cart {
-    margin-top: auto;
-}
+/* R23: .product-info-cart margin-top:auto removido — awa-components.css L178 */
 
 /* ============================================================
    §8 — IMAGE CONTAINER UNIFORMIDADE
@@ -633,15 +626,10 @@ body .page-wrapper .owl-carousel .item-product .product-thumb img {
     object-fit: contain;
 }
 
-/* ============================================================
-   §9 — cat_special CSS Grid (fix do bug 3fr)
-   O LESS original usa repeat(3, 3fr) — corrigir para 1fr.
-   ============================================================ */
-@media (width <= 767px) {
-    body .page-wrapper .cat_special {
-        grid-template-columns: repeat(3, 1fr);
-    }
-}
+/* R24: §9 removido — awa-components.css L2181 já define cat_special
+   cascade completa (7→5→4→3→2→1 colunas).
+   Regra (width<=767px)→3col aqui SOBRESCREVIA os breakpoints
+   680px→2col e 480px→1col, forçando 3 colunas em mobile. */
 
 /* ============================================================
    §10 — LIST VIEW (produtos em lista)
@@ -676,7 +664,7 @@ body .page-wrapper .products-list .product-list .item-product .product-info {
     min-width: 0;
 }
 
-@media (width <= 479px) {
+@media (width <= 480px) {
     body .page-wrapper .products-list .product-list .item-product {
         flex-direction: column;
     }
@@ -731,7 +719,7 @@ body .page-wrapper .product-grid[data-view-mode="5"] {
     }
 }
 
-@media (width <= 479px) {
+@media (width <= 480px) {
     body .page-wrapper .product-grid[data-view-mode="2"],
     body .page-wrapper .product-grid[data-view-mode="3"],
     body .page-wrapper .product-grid[data-view-mode="4"],
@@ -741,32 +729,13 @@ body .page-wrapper .product-grid[data-view-mode="5"] {
 }
 
 /* ============================================================
-   §12 — CONTENÇÃO SEGURA
-   Evitar que badges/actions vazem para fora dos cards.
+   §12 — REMOVIDO (R25)
+   A transition em awa-components.css ~L117 já inclui transform,
+   box-shadow e border-color (comentário BUG-10 no arquivo).
+   A regra que existia aqui era 100% redundante — o seletor base
+   body .page-wrapper .item-product já cobre .owl-carousel .item-product
+   por herança de especificidade.
    ============================================================ */
-body .page-wrapper .owl-carousel .item-product {
-    position: relative;
-    overflow: visible;
-    isolation: isolate;
-    border-radius: var(--awa-radius);
-    border: 1px solid var(--awa-gray-200);
-    background: #fff;
-    transition: transform var(--awa-transition),
-                box-shadow var(--awa-transition),
-                border-color var(--awa-transition);
-}
-
-body .page-wrapper .owl-carousel .item-product:hover {
-    border-color: var(--awa-gray-300);
-    box-shadow: var(--awa-shadow-hover);
-    transform: translateY(-4px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-    body .page-wrapper .owl-carousel .item-product:hover {
-        transform: none;
-    }
-}
 
 /* ============================================================
    §13 — OWL NAVIGATION PADRONIZADA

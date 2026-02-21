@@ -2,6 +2,9 @@
  * awa-institutional.css
  * Estilos para páginas CMS institucionais — AWA Motos
  * Escopo: .awa-inst (wrapper de conteúdo) + .contact-index-index (página de contato)
+ *
+ * TOKENIZADO: todas as cores usam var(--awa-*) de awa-core.css.
+ * Nenhuma cor hardcoded fora de #fff (branco puro).
  */
 
 /* ============================================================
@@ -10,52 +13,52 @@
 .cms-page-view .awa-inst {
     max-width: 920px;
     margin: 0 auto;
-    padding: 0 1rem 2rem;
+    padding: 0 var(--awa-space-4) var(--awa-space-7);
     line-height: 1.75;
-    color: #333;
+    color: var(--awa-gray-800);
     font-size: 1rem;
 }
 
 .cms-page-view .awa-inst h1 {
     font-size: 2rem;
-    color: #222;
-    margin: 0 0 1rem;
+    color: var(--awa-gray-900);
+    margin: 0 0 var(--awa-space-4);
     line-height: 1.3;
 }
 
 .cms-page-view .awa-inst h2 {
     font-size: 1.35rem;
-    color: #333;
-    margin: 2.5rem 0 1rem;
-    padding-bottom: .5rem;
-    border-bottom: 2px solid #ff9300;
+    color: var(--awa-gray-800);
+    margin: var(--awa-space-8) 0 var(--awa-space-4);
+    padding-bottom: var(--awa-space-2);
+    border-bottom: 2px solid var(--awa-red);
 }
 
 .cms-page-view .awa-inst h3 {
     font-size: 1.1rem;
-    color: #444;
-    margin: 1.5rem 0 .75rem;
+    color: var(--awa-gray-700);
+    margin: var(--awa-space-5) 0 var(--awa-space-3);
 }
 
 .cms-page-view .awa-inst a {
-    color: #ff9300;
+    color: var(--awa-red);
     text-decoration: underline;
 }
 
 .cms-page-view .awa-inst a:hover,
-.cms-page-view .awa-inst a:focus {
-    color: #cc7600;
+.cms-page-view .awa-inst a:focus-visible { /* R39a: :focus → :focus-visible (FP-2) */
+    color: var(--awa-red-dark);
 }
 
 /* ============================================================
    RESUMO NO TOPO
    ============================================================ */
 .awa-inst .awa-summary {
-    background: #f9f9f9;
-    border-left: 4px solid #ff9300;
-    padding: 1.25rem 1.5rem;
-    border-radius: 0 8px 8px 0;
-    margin-bottom: 2rem;
+    background: var(--awa-gray-100);
+    border-left: 4px solid var(--awa-red);
+    padding: var(--awa-space-5) var(--awa-space-5);
+    border-radius: 0 var(--awa-radius-sm) var(--awa-radius-sm) 0;
+    margin-bottom: var(--awa-space-7);
 }
 
 /* ============================================================
@@ -64,19 +67,19 @@
 .awa-inst .awa-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.25rem;
-    margin: 1.5rem 0;
+    gap: var(--awa-space-5);
+    margin: var(--awa-space-5) 0;
 }
 
 .awa-inst .awa-card {
-    background: #f8f8f8;
-    border-radius: 8px;
-    padding: 1.25rem;
-    border-left: 4px solid #ff9300;
+    background: var(--awa-gray-100);
+    border-radius: var(--awa-radius-sm);
+    padding: var(--awa-space-5);
+    border-left: 4px solid var(--awa-red);
 }
 
 .awa-inst .awa-card h3 {
-    color: #ff9300;
+    color: var(--awa-red);
     margin-top: 0;
     font-size: 1.05rem;
 }
@@ -87,7 +90,7 @@
 }
 
 .awa-inst .awa-card li {
-    margin-bottom: .4rem;
+    margin-bottom: var(--awa-space-1);
 }
 
 /* ============================================================
@@ -97,15 +100,15 @@
     counter-reset: step;
     list-style: none;
     padding: 0;
-    margin: 1.5rem 0;
+    margin: var(--awa-space-5) 0;
 }
 
 .awa-inst .awa-steps li {
     counter-increment: step;
-    padding: .75rem 0 .75rem 3.25rem;
+    padding: var(--awa-space-3) 0 var(--awa-space-3) 3.25rem;
     position: relative;
-    border-left: 2px solid #e5e5e5;
-    margin-left: 1rem;
+    border-left: 2px solid var(--awa-gray-300);
+    margin-left: var(--awa-space-4);
 }
 
 .awa-inst .awa-steps li::before {
@@ -115,9 +118,9 @@
     top: .65rem;
     width: 2rem;
     height: 2rem;
-    background: #ff9300;
+    background: var(--awa-red);
     color: #fff;
-    border-radius: 50%;
+    border-radius: var(--awa-radius-full);
     text-align: center;
     line-height: 2rem;
     font-weight: 700;
@@ -128,12 +131,12 @@
    CTA BOX
    ============================================================ */
 .awa-inst .awa-cta {
-    background: linear-gradient(135deg, #ff9300, #ff7800);
+    background: linear-gradient(135deg, var(--awa-red), var(--awa-red-dark));
     color: #fff;
-    padding: 2rem;
-    border-radius: 8px;
+    padding: var(--awa-space-7);
+    border-radius: var(--awa-radius-sm);
     text-align: center;
-    margin: 2rem 0;
+    margin: var(--awa-space-7) 0;
 }
 
 .awa-inst .awa-cta h3 {
@@ -146,18 +149,18 @@
 .awa-inst .awa-cta a.awa-btn {
     display: inline-block;
     background: #fff;
-    color: #ff9300;
-    padding: .75rem 2rem;
-    border-radius: 4px;
+    color: var(--awa-red);
+    padding: var(--awa-space-3) var(--awa-space-7);
+    border-radius: var(--awa-radius-sm);
     text-decoration: none;
     font-weight: 700;
-    margin-top: .5rem;
-    transition: background .2s, color .2s;
+    margin-top: var(--awa-space-2);
+    transition: background var(--awa-transition-fast), color var(--awa-transition-fast); /* R39b: token (FP-1) */
 }
 
 .awa-inst .awa-cta a.awa-btn:hover,
-.awa-inst .awa-cta a.awa-btn:focus {
-    background: #333;
+.awa-inst .awa-cta a.awa-btn:focus-visible { /* R39c: :focus → :focus-visible (FP-2) */
+    background: var(--awa-gray-800);
     color: #fff;
 }
 
@@ -167,18 +170,21 @@
 .awa-inst .awa-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1rem 0;
+    margin: var(--awa-space-4) 0;
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .awa-inst .awa-table th,
 .awa-inst .awa-table td {
-    padding: .75rem;
-    border: 1px solid #ddd;
+    padding: var(--awa-space-3);
+    border: 1px solid var(--awa-gray-300);
     text-align: left;
 }
 
 .awa-inst .awa-table th {
-    background: #f5f5f5;
+    background: var(--awa-gray-100);
     font-weight: 600;
 }
 
@@ -186,44 +192,44 @@
    DESTAQUE / INFO
    ============================================================ */
 .awa-inst .awa-info {
-    background: #fff3e0;
-    border-radius: 6px;
-    padding: 1rem 1.25rem;
-    margin: 1rem 0;
+    background: var(--awa-red-extra-light);
+    border-radius: var(--awa-radius-sm);
+    padding: var(--awa-space-4) var(--awa-space-5);
+    margin: var(--awa-space-4) 0;
 }
 
 /* ============================================================
    SEÇÃO B2B
    ============================================================ */
 .awa-inst .awa-b2b {
-    background: linear-gradient(135deg, #fff3e0, #fff);
-    padding: 1.5rem;
-    border-radius: 8px;
-    border-left: 4px solid #ff9300;
-    margin: 1.5rem 0;
+    background: linear-gradient(135deg, var(--awa-red-extra-light), #fff);
+    padding: var(--awa-space-5);
+    border-radius: var(--awa-radius-sm);
+    border-left: 4px solid var(--awa-red);
+    margin: var(--awa-space-5) 0;
 }
 
 /* ============================================================
    FAQ
    ============================================================ */
 .awa-inst .awa-faq-category {
-    margin-top: 2rem;
+    margin-top: var(--awa-space-7);
 }
 
 .awa-inst .awa-faq-item {
-    border-bottom: 1px solid #eee;
-    padding: 1rem 0;
+    border-bottom: 1px solid var(--awa-gray-200);
+    padding: var(--awa-space-4) 0;
 }
 
 .awa-inst .awa-faq-item h3 {
     margin-top: 0;
-    color: #333;
+    color: var(--awa-gray-800);
     font-size: 1rem;
 }
 
 .awa-inst .awa-faq-item p {
-    margin: .5rem 0 0;
-    color: #555;
+    margin: var(--awa-space-2) 0 0;
+    color: var(--awa-gray-500);
 }
 
 /* ============================================================
@@ -232,28 +238,28 @@
 .awa-inst .awa-hub {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 1rem;
-    margin: 1.5rem 0;
+    gap: var(--awa-space-4);
+    margin: var(--awa-space-5) 0;
 }
 
 .awa-inst .awa-hub a {
     display: block;
-    background: #f8f8f8;
-    padding: 1rem;
-    border-radius: 6px;
+    background: var(--awa-gray-100);
+    padding: var(--awa-space-4);
+    border-radius: var(--awa-radius-sm);
     text-decoration: none;
-    color: #333;
-    border: 1px solid #e5e5e5;
+    color: var(--awa-gray-800);
+    border: 1px solid var(--awa-gray-300);
     text-align: center;
     font-weight: 600;
-    transition: border-color .2s, box-shadow .2s;
+    transition: border-color var(--awa-transition-fast), box-shadow var(--awa-transition-fast); /* R39d: token (FP-1) */
 }
 
 .awa-inst .awa-hub a:hover,
-.awa-inst .awa-hub a:focus {
-    border-color: #ff9300;
-    box-shadow: 0 2px 8px rgba(255,147,0,.15);
-    color: #ff9300;
+.awa-inst .awa-hub a:focus-visible { /* R39e: :focus → :focus-visible (FP-2) */
+    border-color: var(--awa-red);
+    box-shadow: 0 2px 8px var(--awa-red-light);
+    color: var(--awa-red);
 }
 
 /* ============================================================
@@ -262,20 +268,20 @@
 .awa-inst .awa-rights {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem;
-    margin: 1.5rem 0;
+    gap: var(--awa-space-4);
+    margin: var(--awa-space-5) 0;
 }
 
 .awa-inst .awa-right {
     background: #fff;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-    padding: 1rem;
+    border: 1px solid var(--awa-gray-300);
+    border-radius: var(--awa-radius-sm);
+    padding: var(--awa-space-4);
 }
 
 .awa-inst .awa-right h4 {
-    color: #ff9300;
-    margin: 0 0 .5rem;
+    color: var(--awa-red);
+    margin: 0 0 var(--awa-space-2);
     font-size: 1rem;
 }
 
@@ -284,40 +290,47 @@
    ============================================================ */
 .contact-index-index .awa-contact-header {
     max-width: 920px;
-    margin: 0 auto 2rem;
+    margin: 0 auto var(--awa-space-7);
 }
 
 .contact-index-index .awa-contact-channels {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin: 1.5rem 0;
+    gap: var(--awa-space-4);
+    margin: var(--awa-space-5) 0;
 }
 
 .contact-index-index .awa-contact-channel {
-    background: #f8f8f8;
-    padding: 1.25rem 1rem;
-    border-radius: 8px;
+    background: var(--awa-gray-100);
+    padding: var(--awa-space-5) var(--awa-space-4);
+    border-radius: var(--awa-radius-sm);
     text-align: center;
 }
 
 .contact-index-index .awa-contact-channel strong {
     display: block;
-    margin-bottom: .5rem;
-    color: #ff9300;
+    margin-bottom: var(--awa-space-2);
+    color: var(--awa-red);
 }
 
 .contact-index-index .awa-contact-channel a {
-    color: #ff9300;
+    color: var(--awa-red);
     text-decoration: underline;
+}
+
+.contact-index-index .contact-index-index .col-main,
+.contact-index-index .contact-index-index .col-lg-4,
+.contact-index-index .contact-index-index .col-md-4,
+.contact-index-index .contact-index-index .col-sm-4 {
+    min-width: 0;
 }
 
 /* ============================================================
    RESPONSIVO
    ============================================================ */
-@media (max-width: 768px) {
+@media (width <= 768px) { /* R39f: 767→768 alinhado ao padrão do projeto (FP-3) */
     .cms-page-view .awa-inst {
-        padding: 0 .75rem 1.5rem;
+        padding: 0 var(--awa-space-3) var(--awa-space-5);
     }
 
     .cms-page-view .awa-inst h1 {
@@ -338,12 +351,27 @@
         grid-template-columns: 1fr;
     }
 
+    .contact-index-index .contact-index-index .col-main,
+    .contact-index-index .contact-index-index .col-lg-4,
+    .contact-index-index .contact-index-index .col-md-4,
+    .contact-index-index .contact-index-index .col-sm-4 {
+        width: 100%;
+        max-width: 100%;
+        flex: 0 0 100%;
+        float: none;
+    }
+
+    .contact-index-index .contact-info,
+    .contact-index-index .form.contact {
+        overflow-wrap: anywhere;
+    }
+
     .awa-inst .awa-table {
         font-size: .9rem;
     }
 
     .awa-inst .awa-table th,
     .awa-inst .awa-table td {
-        padding: .5rem;
+        padding: var(--awa-space-2);
     }
 }

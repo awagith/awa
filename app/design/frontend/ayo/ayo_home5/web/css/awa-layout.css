@@ -1,7 +1,7 @@
 /* ===========================================
    AWA MOTOS — LAYOUT (Header + Footer + Nav)
    Tema: AYO/Rokanthemes (Home5)
-   
+
    ARQUIVO 2/4 da camada AWA consolidada.
 
    CONTEÚDO:
@@ -14,7 +14,7 @@
    - Footer (CSS Grid, ÚNICA arquitetura)
    - Newsletter, pagamento, segurança, copyright
    - WhatsApp float, back-to-top
-   
+
    ESPECIFICIDADE:
    body .page-wrapper para superar Magento/AYO LESS.
    !important APENAS para bullets/markers override e inline JS.
@@ -531,60 +531,9 @@ body .page-wrapper h2.title-category-dropdown.active::after {
     transform: rotate(180deg);
 }
 
-/* Desktop: submenu flyout */
-@media (width >= 992px) {
-    body .page-wrapper .verticalmenu.side-verticalmenu li.level0:hover > .submenu {
-        visibility: visible;
-        opacity: 1;
-    }
+/* Desktop: submenu flyout — movido para awa-fixes.css FIX-34 (especificidade alta + pointer-events + transition) */
 
-    body .page-wrapper .verticalmenu.side-verticalmenu li.level0.fullwidth > .submenu,
-    body .page-wrapper .verticalmenu.side-verticalmenu li.level0.staticwidth > .submenu,
-    body .page-wrapper .verticalmenu.side-verticalmenu li.level0.classic > .submenu {
-        left: 100% !important;
-        top: 0;
-        z-index: 10000;
-    }
-
-    body .page-wrapper .verticalmenu.side-verticalmenu li.level0 > .submenu {
-        border-radius: 0 var(--awa-radius-sm) var(--awa-radius-sm) var(--awa-radius-sm); /* R12-16 */
-        box-shadow: var(--awa-shadow-dropdown); /* R13: token */
-        min-width: 220px;
-    }
-
-    body .page-wrapper .verticalmenu.side-verticalmenu .submenu li:hover > .submenu {
-        visibility: visible;
-        opacity: 1;
-    }
-}
-
-/* Homepage: menu vertical aberto por padrão */
-@media (width >= 992px) {
-    .cms-index-index .verticalmenu.side-verticalmenu .togge-menu,
-    .cms-index-index .verticalmenu .togge-menu.list-category-dropdown {
-        display: block;
-    }
-
-    .cms-index-index .menu_left_home1 {
-        position: relative;
-        z-index: 9999;
-    }
-
-    .cms-index-index .verticalmenu.side-verticalmenu > ul {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: #fff;
-        border: 1px solid var(--awa-gray-200);
-        border-top: 0;
-        border-radius: 0 0 var(--awa-radius-sm) var(--awa-radius-sm); /* R12-16 */
-        box-shadow: var(--awa-shadow-dropdown); /* R13: token */
-        z-index: 9998;
-        max-height: 480px;
-        overflow: visible;
-    }
-}
+/* Homepage: menu vertical aberto — movido para awa-fixes.css FIX-10 + ≥992px/≥1200px blocks */
 
 /* Mobile: menu vertical colapsável */
 @media (width <= 991px) {
@@ -598,6 +547,11 @@ body .page-wrapper h2.title-category-dropdown.active::after {
     display: none !important;
 }
 
+/* Keep mobile close button hidden outside mobile breakpoints */
+body .page-wrapper .awa-nav-close {
+    display: none;
+}
+
 /* Show on tablets for category dropdown */
 @media (width <= 991px) {
     .category-dropdown #close-menu {
@@ -605,25 +559,15 @@ body .page-wrapper h2.title-category-dropdown.active::after {
     }
 }
 
-/* Bug 1.2 — Hide sidebar on SM */
+/* Bug 1.2 — Medium desktop (992-1199): manter sidebar sem compressão rígida */
 @media (width >= 992px) and (width <= 1199px) {
     body .page-wrapper .menu_left_home1 {
-        width: 80px;
+        width: auto;
+        min-width: 0;
     }
 
     body .page-wrapper .menu_left_home1 .title-category-dropdown {
-        font-size: 0;
-    }
-}
-
-@media (width >= 768px) and (width <= 991px) {
-    body .page-wrapper .header-nav .menu_left_home1 {
-        display: none;
-    }
-
-    body .page-wrapper .header-nav .menu_primary {
-        width: 100%;
-        max-width: 100%;
+        font-size: inherit;
     }
 }
 
@@ -633,14 +577,17 @@ body .page-wrapper h2.title-category-dropdown.active::after {
         display: none;
     }
 
-    body .page-wrapper .header-nav .box_language:has(.top-header:empty) {
+    /* Sem :has(): classes aplicadas via JS (awa-master-fix.js → applyHasFallback) */
+    body .page-wrapper .header-nav .box_language.awa-is-empty {
         display: none;
     }
 
-    body .page-wrapper .header-nav .box_language:has(.top-header:empty) ~ .menu_primary,
-    body .page-wrapper .header-nav .row:has(.box_language .top-header:empty) .menu_primary {
+    body .page-wrapper .header-nav .box_language.awa-is-empty ~ .menu_primary,
+    body .page-wrapper .header-nav .row.awa-box-language-empty .menu_primary {
         width: 83.3333%;
-        max-width: 83.3333%;
+            max-width: 83.3333%; /* Retained for clarity */
+            flex: 0 0 83.3333%;
+            flex-basis: 83.3333%;
     }
 }
 
@@ -730,6 +677,7 @@ body .page-wrapper .action.nav-toggle {
         display: flex;
         align-items: center;
         justify-content: center;
+        top: auto; /* R33 — neutraliza top:-62px órfão do LESS */
         width: 44px;
         height: 44px;
         background: transparent;
@@ -1103,47 +1051,13 @@ body .page-wrapper .action.nav-toggle {
     }
 }
 
-/* ============================================================
-   SIDEBAR — ALINHAMENTO
-   ============================================================ */
-@media (width >= 769px) {
-    body .page-wrapper .columns .sidebar-main {
-        flex-shrink: 0;
-        width: 240px;
-        margin-right: 30px;
-    }
-
-    body .page-wrapper .columns .column.main {
-        flex-grow: 1;
-        min-width: 0;
-    }
-
-    body .page-wrapper .columns {
-        display: flex;
-        flex-wrap: nowrap;
-        align-items: flex-start;
-    }
-
-    /* Em layout 2 colunas à esquerda, mantém sidebar antes do conteúdo principal */
-    body.page-layout-2columns-left .page-wrapper .columns.layout-2-col > [class*="col-sm-3"] {
-        order: 1;
-    }
-
-    body.page-layout-2columns-left .page-wrapper .columns.layout-2-col > .col-main {
-        order: 2;
-    }
-}
-
-@media (width <= 768px) {
-    body .page-wrapper .columns {
-        display: block;
-    }
-
-    body .page-wrapper .columns .sidebar-main {
-        width: 100%;
-        margin-bottom: 20px;
-    }
-}
+/* R34: Seção SIDEBAR — ALINHAMENTO removida (CSS morto).
+   Motivo: regras genéricas (.sidebar-main) nunca casavam com o DOM real
+   (que usa .sidebar-main-1). Layout de sidebar já coberto por:
+   - awa-consistency.css L305-325 (sidebar ordering, seletores .sidebar-main-1)
+   - awa-consistency.css L490-510 (responsive margins reset)
+   - awa-grid-unified.css L153-260 (CSS Grid para categorias 2-col)
+   ~46 linhas removidas — 0 impacto visual. */
 
 /* Mobile filters overlay */
 @media (width <= 991px) {
@@ -1178,7 +1092,7 @@ body .page-wrapper footer.page-footer {
     background: var(--footer-bg);
     color: var(--footer-text);
     font-family: var(--awa-font);
-    margin-top: 60px;
+    margin-top: var(--footer-space-xl);
     font-size: var(--footer-font-size-base);
     line-height: 1.6;
 }
@@ -1346,7 +1260,7 @@ body .page-wrapper .page-footer .contact-info li {
     display: flex;
     align-items: flex-start;
     gap: var(--footer-space-sm);
-    margin-bottom: 18px;
+    margin-bottom: var(--footer-space-md);
 }
 
 body .page-wrapper .footer-contact svg,
@@ -1602,7 +1516,7 @@ body .page-wrapper .aw-footer-legal a:hover {
 }
 
 body .page-wrapper .aw-footer-legal .legal-links {
-    margin-top: 8px;
+    margin-top: var(--awa-space-2);
 }
 
 body .page-wrapper .aw-footer-legal .legal-links a {
@@ -1786,6 +1700,15 @@ body .page-wrapper .footer.content .block-static-block {
         grid-template-columns: repeat(2, 1fr);
         text-align: center;
         padding: var(--footer-space-lg) var(--footer-space-md);
+    }
+
+    /* Links do footer: manter alinhados à esquerda dentro da coluna centralizada */
+    body .page-wrapper .page-footer ul,
+    body .page-wrapper .footer.content ul,
+    body .page-wrapper .footer.content .links,
+    body .page-wrapper .page-footer .velaFooterLinks {
+        text-align: left;
+        display: inline-block;
     }
 
     body .page-wrapper .page-footer .block-title,
@@ -1985,6 +1908,27 @@ body .page-wrapper .footer-newsletter input:focus-visible {
     outline-offset: 2px;
 }
 
+/* Menu inferior móvel (fixed-bottom) — foco visível dedicado */
+body .page-wrapper nav.fixed-bottom .mobile-bottom-link a:focus-visible,
+body .page-wrapper nav.fixed-bottom .mobile-bottom-link .toggle-nav-footer:focus-visible {
+    outline: 2px solid var(--awa-red);
+    outline-offset: 2px;
+    border-radius: var(--awa-radius-sm);
+    background: rgb(183 51 55 / 10%);
+}
+
+/* Form validation A11Y — foco visível em campos inválidos */
+body .page-wrapper form input[aria-invalid="true"]:focus-visible,
+body .page-wrapper form select[aria-invalid="true"]:focus-visible,
+body .page-wrapper form textarea[aria-invalid="true"]:focus-visible,
+body .page-wrapper form input.mage-error:focus-visible,
+body .page-wrapper form select.mage-error:focus-visible,
+body .page-wrapper form textarea.mage-error:focus-visible {
+    outline: 2px solid var(--awa-red);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px rgb(183 51 55 / 15%);
+}
+
 /* --- AYO Footer Classes (velaBlock / velaFooterLinks / contacinfo-logo) --- */
 body .page-wrapper .page-footer .velaBlock {
     min-width: 0;
@@ -2015,7 +1959,7 @@ body .page-wrapper .page-footer .velaFooterLinks a:hover {
 }
 
 body .page-wrapper .page-footer .contacinfo-logo {
-    margin-bottom: 16px;
+    margin-bottom: var(--awa-space-4);
 }
 
 body .page-wrapper .page-footer .contacinfo-logo img {

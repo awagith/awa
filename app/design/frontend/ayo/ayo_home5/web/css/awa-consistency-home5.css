@@ -234,8 +234,7 @@
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold {
-    display: grid;
-    gap: var(--awa-space-4);
+    display: block;
     width: 100%;
     max-width: var(--awa-container);
     margin-left: auto;
@@ -263,20 +262,6 @@
     width: 100%;
     max-width: none;
     margin: 0;
-}
-
-@media (width >= 992px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold {
-        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold .banner-slider {
-        grid-column: 1;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold .awa-hero-cta-strip {
-        grid-column: 2;
-    }
 }
 
 /* Trust + offers: banner e hot deal alinhados em colunas no desktop */
@@ -838,14 +823,6 @@
 }
 
 /* ===========================================
-   AF-03: rowFlex.flexJustifyCenter — força coluna
-   única para evitar desalinhamento mobile
-=========================================== */
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .rowFlex.flexJustifyCenter {
-    grid-template-columns: 1fr;
-}
-
-/* ===========================================
    AF-01: product names — line-clamp global
    para TODOS os cards da homepage (hot-deal,
    categorytab, onsale, bestseller, carrosséis).
@@ -1002,122 +979,115 @@
 }
 
 /* ===========================================
-   AF-10: HOME5 ALIGNMENT SYSTEM
-   Normalização de colunas/containers e responsividade
-   sem quebrar widgets legados Rokanthemes.
-
-   Problema resolvido: .page-main (padding 20px) +
-   .container internos (padding 20px) = 40px de padding
-   duplo. O token --awa-home-inline-padding unifica
-   o padding inline e elimina desalinhamento entre
-   .page-main (15px em ≤1199px) e containers (20px).
+   HOME5 — SUPER DEALS LAYOUT RECOVERY
+   Corrige cascata de fixes globais que transformavam
+   o countdown em painel escuro full-width.
 =========================================== */
-
-/* Token centralizado — fonte única para padding inline da homepage */
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper {
-    --awa-home-inline-padding: 20px;
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers > .container {
+    gap: var(--awa-space-4);
 }
 
-/* .page-main na homepage: zera padding inline (seções internas controlam via token) */
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page-main {
-    padding-left: 0;
-    padding-right: 0;
+@media (width >= 992px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers > .container {
+        grid-template-columns: minmax(0, 0.74fr) minmax(0, 1.26fr);
+        align-items: start;
+    }
 }
 
-/* Aplica o token em todos os wrappers-chave da homepage */
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container {
-    padding-left: var(--awa-home-inline-padding);
-    padding-right: var(--awa-home-inline-padding);
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
 }
 
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold {
-    padding-left: var(--awa-home-inline-padding);
-    padding-right: var(--awa-home-inline-padding);
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss {
+    display: block !important;
+    position: relative;
+    overflow: visible;
+    padding: 12px 12px 12px;
 }
 
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .block_notification > .container {
-    padding-left: var(--awa-home-inline-padding);
-    padding-right: var(--awa-home-inline-padding);
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss .countdown_block {
+    position: static !important;
+    top: auto !important;
+    right: auto !important;
+    left: auto !important;
+    width: 100% !important;
+    max-width: none !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin: 0 0 12px !important;
+    padding: 0 !important;
+    text-align: right;
+    background: transparent !important;
+    border-radius: 0 !important;
+    z-index: 1;
 }
 
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product > .container {
-    padding-left: var(--awa-home-inline-padding);
-    padding-right: var(--awa-home-inline-padding);
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper {
-    padding-inline: var(--awa-home-inline-padding);
-}
-
-/* Full-bleed: usa o token negado para manter alinhamento perfeito com o container pai */
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold .awa-mobile-quick-nav {
-    margin-left: calc(-1 * var(--awa-home-inline-padding));
-    margin-right: calc(-1 * var(--awa-home-inline-padding));
-}
-
-/* Hero CTA strip: largura relativa ao token */
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip {
-    width: calc(100% - 2 * var(--awa-home-inline-padding));
-}
-
-/* Container-duplo: neutralizar quando Rokanthemes injeta .container dentro de outro */
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container .container {
-    max-width: none;
-    padding-left: 0;
-    padding-right: 0;
-}
-
-/* Row/col normalização: converte .row flutuante restante dentro de .container para CSS Grid */
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: var(--awa-grid-gap, 24px);
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal .countdown_block .title_countdown {
+    display: block;
     margin: 0;
+    line-height: 1.2;
+    font-size: 16px;
+    font-weight: 500;
+    color: #222;
 }
 
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > [class*="col-"] {
-    float: none;
-    width: auto;
-    max-width: 100%;
-    padding: 0;
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal .countdown_block .super-deal-countdown {
+    display: inline-block;
+    width: auto !important;
+    padding: 13px 20px;
+    border-radius: 4px;
+    background: #8e2629;
 }
 
-/* Col-span mapping: converte col-md-{N} do Bootstrap 3 para grid-column */
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-3 { grid-column: span 3; }
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-4 { grid-column: span 4; }
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-5 { grid-column: span 5; }
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-6 { grid-column: span 6; }
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-7 { grid-column: span 7; }
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-8 { grid-column: span 8; }
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-9 { grid-column: span 9; }
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > .col-md-12 { grid-column: span 12; }
-
-/* ======================== AF-10 RESPONSIVO ======================== */
-
-@media (width <= 991px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper {
-        --awa-home-inline-padding: 15px;
-    }
-
-    /* Colunas colapsam para full-width em tablet */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row {
-        grid-template-columns: 1fr;
-        gap: var(--awa-grid-gap, 20px);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container > .row > [class*="col-"] {
-        grid-column: auto;
-    }
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal .countdown_block .super-deal-countdown .time_circles {
+    display: inline-flex;
+    width: auto !important;
+    gap: 0;
 }
 
-@media (width <= 480px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper {
-        --awa-home-inline-padding: 12px;
-    }
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal .countdown_block .super-deal-countdown .time_circles > div {
+    width: auto !important;
+    min-width: 63px;
+    min-height: 0;
+    padding: 5px;
+    background: transparent;
+    border-radius: 0;
 }
 
-@media (width <= 320px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper {
-        --awa-home-inline-padding: 10px;
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal .countdown_block .super-deal-countdown .time_circles > div .number {
+    color: #fff;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal .countdown_block .super-deal-countdown .time_circles > div .text {
+    color: #ffe8c9;
+}
+
+@media (width <= 767px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss .countdown_block {
+        position: static !important;
+        width: 100% !important;
+        margin: 0 0 10px !important;
+        padding: 0 !important;
+        text-align: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal .countdown_block .title_countdown {
+        display: block;
+        margin: 0;
+        line-height: 1.2;
+        flex: 1 0 100%;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal .countdown_block .super-deal-countdown,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal .countdown_block .super-deal-countdown .time_circles {
+        width: 100% !important;
+        justify-content: center;
     }
 }

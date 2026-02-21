@@ -1,16 +1,5 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $this */
-$quickNavItems = [
-	['url' => 'capacetes.html', 'label' => __('Capacetes'), 'icon' => 'fa-shield'],
-	['url' => 'pneus.html', 'label' => __('Pneus'), 'icon' => 'fa-circle-o'],
-	['url' => 'pecas.html', 'label' => __('Peças'), 'icon' => 'fa-cog'],
-	['url' => 'acessorios.html', 'label' => __('Acessórios'), 'icon' => 'fa-wrench'],
-	['url' => 'baterias.html', 'label' => __('Baterias'), 'icon' => 'fa-battery-three-quarters'],
-	['url' => 'oleo-fluidos.html', 'label' => __('Óleo'), 'icon' => 'fa-tint'],
-	['url' => 'kit-relacao.html', 'label' => __('Kit Relação'), 'icon' => 'fa-chain'],
-	['url' => 'lampadas.html', 'label' => __('Lâmpadas'), 'icon' => 'fa-lightbulb-o']
-];
-
 $layout = $this->getLayout();
 
 $renderCmsBlock = static function (string $blockId) use ($layout): string {
@@ -56,24 +45,21 @@ if ($hotDealBlock) {
 // ProductTab legacy é mantido via outros blocos/widgets da Home para evitar
 // conflito de tipagem em ambientes com stubs incompletos da extensão.
 $productTabHtml = '';
+
+if ($benefitsHtml !== '' && strpos($benefitsHtml, 'velaServicesInner--home5') === false) {
+	$patchedBenefitsHtml = preg_replace(
+		'/class=(["\'])velaServicesInner\b([^"\']*)\1/',
+		'class=$1velaServicesInner$2 velaServicesInner--home5$1',
+		$benefitsHtml,
+		1
+	);
+	if (is_string($patchedBenefitsHtml) && $patchedBenefitsHtml !== '') {
+		$benefitsHtml = $patchedBenefitsHtml;
+	}
+}
 ?>
 
 <div class="top-home-content top-home-content--above-fold">
-	<nav class="awa-mobile-quick-nav" aria-label="<?php echo $this->escapeHtmlAttr(__('Categorias em destaque')); ?>">
-		<ul class="quick-nav-wrapper" role="list">
-			<?php foreach ($quickNavItems as $item): ?>
-				<li class="quick-nav-item">
-					<a href="<?php echo $this->escapeUrl($this->getUrl($item['url'])); ?>" class="quick-nav-link">
-						<span class="icon" aria-hidden="true">
-							<i class="fa <?php echo $this->escapeHtmlAttr($item['icon']); ?>"></i>
-						</span>
-						<span class="label"><?php echo $this->escapeHtml($item['label']); ?></span>
-					</a>
-				</li>
-			<?php endforeach; ?>
-		</ul>
-	</nav>
-
 	<?php if ($heroSliderHtml !== ''): ?>
 		<div class="banner-slider banner-slider2">
 			<?php echo $heroSliderHtml; ?>
@@ -83,40 +69,28 @@ $productTabHtml = '';
 			<?php echo $heroFallbackHtml; ?>
 		</div>
 	<?php endif; ?>
-
-	<div class="awa-hero-cta-strip" role="region" aria-label="<?php echo $this->escapeHtmlAttr(__('Acesso B2B')); ?>">
-		<a href="<?php echo $this->escapeUrl($this->getUrl('customer/account/login')); ?>" class="action primary awa-hero-cta-main">
-			<?php echo $this->escapeHtml(__('Entrar para ver preço (B2B)')); ?>
-		</a>
-		<p class="awa-hero-cta-helper"><?php echo $this->escapeHtml(__('Para atacado/revenda: veja preço por grupo e solicite cotação em minutos.')); ?></p>
-		<p class="awa-hero-cta-note">
-			<a href="<?php echo $this->escapeUrl($this->getUrl('b2b/register')); ?>" class="awa-hero-cta-link">
-				<?php echo $this->escapeHtml(__('Ainda não é cliente B2B? Solicitar cadastro')); ?>
-			</a>
-		</p>
-	</div>
 </div>
 
 <?php if ($benefitsHtml !== '' || $bannerMidHtml !== '' || $hotDealHtml !== ''): ?>
-<div class="top-home-content top-home-content--trust-and-offers">
-	<div class="container">
+<section class="top-home-content top-home-content--trust-and-offers" aria-label="<?php echo $this->escapeHtmlAttr(__('Confiança e ofertas')); ?>">
+	<div class="container top-home-content__trust-offers-grid" data-role="trust-offers-grid">
 		<?php if ($benefitsHtml !== ''): ?>
 			<?php echo $benefitsHtml; ?>
 		<?php endif; ?>
 
 		<?php if ($bannerMidHtml !== ''): ?>
-			<div class="banner_mid_1">
+			<div class="banner_mid_1 top-home-content__trust-offers-banner" data-role="trust-offers-banner">
 				<?php echo $bannerMidHtml; ?>
 			</div>
 		<?php endif; ?>
 
 		<?php if ($hotDealHtml !== ''): ?>
-			<div class="hot-deal">
+			<div class="hot-deal top-home-content__trust-offers-deals" data-role="trust-offers-deals">
 				<?php echo $hotDealHtml; ?>
 			</div>
 		<?php endif; ?>
 	</div>
-</div>
+</section>
 <?php endif; ?>
 
 <?php if ($b2bPromoHtml !== ''): ?>

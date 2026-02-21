@@ -15,7 +15,7 @@
                 <container name="columns" htmlTag="div" htmlClass="columns layout layout-2-col row">
                     <container name="main" label="Main Content Container" htmlTag="div" htmlClass="col-main col-xs-12 col-sm-9 col-md-9 col-lg-10" before="-"/>
                     <container name="col.left.sidebar" label="Col Left Sidebar" htmlTag="div" htmlClass="col-xs-12 col-sm-3 col-md-3 col-lg-2">
-                        <container name="div.sidebar.main" htmlTag="div" htmlClass="sidebar sidebar-main-1" before="main">
+                        <container name="div.sidebar.main" htmlTag="div" htmlClass="sidebar sidebar-main-1">
                             <container name="sidebar.main" as="sidebar_main" label="Sidebar Main"/>
                         </container>
                         <container name="div.sidebar.additional" htmlTag="div" htmlClass="sidebar sidebar-additional1" after="div.sidebar.main">
@@ -29,10 +29,9 @@
         </container>
     </container>
     <referenceContainer name="page.wrapper">
-        <container name="header.container" as="header_container" label="Page Header Container"  htmlTag="header" htmlClass="header-container header header-default" before="main.content"/>
+        <container name="header.container" as="header_container" label="Page Header Container" htmlTag="header" htmlClass="header-container header header-default" before="main.content"/>
         <container name="slideshow.container" as="slideshow_container" label="Slideshow Container" after="header.container"/>
         <container name="page.top" as="page_top" label="After Page Header" after="header.container"/>
-        <container name="footer-container" as="footer" before="before.body.end" label="Page Footer Container" htmlTag="footer" htmlClass="page-footer footer default" />
+        <container name="footer-container" as="footer" before="before.body.end" label="Page Footer Container" htmlTag="footer" htmlClass="page-footer footer default"/>
     </referenceContainer>
-   
 </layout>

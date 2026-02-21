@@ -15,7 +15,7 @@
             <container name="main.content" htmlTag="main" htmlId="maincontent" htmlClass="page-main container">
                 <container name="columns" htmlTag="div" htmlClass="columns layout layout-2-col row">
                     <container name="col.left.sidebar" label="Col Left Sidebar" htmlTag="div" htmlClass="col-xs-12 col-sm-3 col-md-3 col-lg-2">
-                        <container name="div.sidebar.main" htmlTag="div" htmlClass="sidebar sidebar-main-1" before="main">
+                        <container name="div.sidebar.main" htmlTag="div" htmlClass="sidebar sidebar-main-1">
                             <container name="sidebar.main" as="sidebar_main" label="Sidebar Main"/>
                         </container>
                         <container name="div.sidebar.additional" htmlTag="div" htmlClass="sidebar sidebar-additional1" after="div.sidebar.main">

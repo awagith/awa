@@ -1,89 +1,139 @@
 <?php
 /**
- * AWA Motos - Slideshow Template
- * Atualizado com acessibilidade, performance e <picture> responsivo
- * Eliminado HTML duplicado desktop/mobile: usa <picture><source> + <img>
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * AWA SlideBanner Fix — 2026-02-10
+ * - singleItem:true for hero banners (always 1 slide)
+ * - autoHeight:true for SVG/mixed aspect ratios
+ * - afterInit callback to trigger text animations
+ * - touchDrag/mouseDrag for mobile swipe
+ *
+ * @var \Rokanthemes\SlideBanner\Block\Slider $block
  */
 
 // @codingStandardsIgnoreFile
-if ($banners = $block->getBannerCollection()):
+if($banners = $block->getBannerCollection()):
     $slider = $block->getSlider();
     $sliderId = $block->getSliderId();
-    $sliderSettings = $slider->getSliderSetting();
-    $totalSlides = is_countable($banners) ? count($banners) : 0;
-    $sliderConfig = ['lazyLoad' => true, 'singleItem' => true];
+    $settings = $slider->getSliderSetting();
+    $owlConfig = [
+        'singleItem' => true,
+        'autoHeight' => true,
+        'lazyLoad' => true,
+        'touchDrag' => true,
+        'mouseDrag' => true,
+        'transitionStyle' => 'fade',
+    ];
     $booleanKeys = ['autoPlay', 'navigation', 'stopOnHover', 'pagination', 'scrollPerPage'];
 
-    foreach ($sliderSettings as $key => $value) {
+    foreach ($settings as $key => $value) {
         if (in_array($key, $booleanKeys, true)) {
-            $sliderConfig[$key] = ((int)$value) !== 0;
+            $owlConfig[$key] = ((int) $value) === 1;
             continue;
         }
 
         if (is_string($value)) {
             $trimmed = trim($value);
 
-            if (preg_match('/^\[.*\]$/', $trimmed)) {
-                $decoded = json_decode($trimmed, true);
-                if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
-                    $sliderConfig[$key] = $decoded;
-                    continue;
-                }
-            }
-
             if (is_numeric($trimmed)) {
-                $sliderConfig[$key] = (strpos($trimmed, '.') !== false) ? (float)$trimmed : (int)$trimmed;
+                $owlConfig[$key] = (strpos($trimmed, '.') !== false) ? (float) $trimmed : (int) $trimmed;
                 continue;
             }
         }
 
-        $sliderConfig[$key] = $value;
+        $owlConfig[$key] = $value;
     }
 ?>
-
-<!-- Slider unificado com <picture> responsivo -->
-<div class="wrapper_slider slider_<?php echo $sliderId; ?>"
-     role="region"
-     aria-label="<?php echo $block->escapeHtml(__('Apresentação de slides promocional')); ?>"
-     aria-roledescription="carousel"
-     aria-live="off">
-    <div class="owl" role="list">
-        <?php
-        $slideIndex = 0;
-        foreach ($banners as $banner):
-            if ($banner->getSlideStatus() == '2') { continue; }
-            $slideIndex++;
-            $slideAlt = $banner->getSlideText() ?: ($banner->getSlideTitle() ?: __('Slide %1', $slideIndex));
-        ?>
-        <div class="banner_item" role="listitem" aria-label="<?php echo $block->escapeHtml(__('Slide %1 de %2', $slideIndex, $totalSlides)); ?>">
-            <?php
-                $isFirst = ($slideIndex === 1);
-                $desktopSrc = $banner->getSlideImage();
-                $mobileSrc = $banner->getSlideImageMobile();
-                $html = $block->getPictureElement($desktopSrc, $mobileSrc, $slideAlt, $isFirst);
-                if ($link = $banner->getSlideLink()) {
-                    $html = '<a href="' . $block->escapeUrl($link) . '" title="' . $block->escapeHtml($slideAlt) . '">' . $html . '</a>';
-                }
-                echo $html;
-            ?>
-        </div>
-        <?php endforeach; ?>
+<div class="wrapper_slider hidden-xs slider_<?php echo (int)$sliderId; ?>">
+    <div class="owl">
+        <?php foreach($banners as $banner){ if($banner->getSlideStatus() == '2'){ continue; }	?>
+            <div class="banner_item">
+                <div class="banner_item_bg">
+                    <?php
+                    $slideAlt = $banner->getSlideText() ?: ($banner->getSlideTitle() ?: "");
+                    $html = $block->getImageElement($banner->getSlideImage(), $slideAlt);
+                    if($link = $banner->getSlideLink())
+                        $html = '<a href="'. $block->escapeUrl($link) .'">' . $html . '</a>' ;
+                    echo $html;
+                    ?>
+                </div>
+                <div class="text-banner">
+                    <?php if($text = $banner->getSlideText()){
+                        echo $block->getContentText($text);
+                    }
+                    ?>
+                </div>
+            </div>
+        <?php } ?>
     </div>
 </div>
+<div class="wrapper_slider visible-xs slider_<?php echo (int)$sliderId; ?>_mobile">
+    <div class="owl">
+        <?php foreach($banners as $banner){  if($banner->getSlideStatus() == '2'){ continue; }	?>
+            <div class="banner_item">
+                <div class="banner_item_bg">
+                    <?php
+                    $slideAlt = $banner->getSlideText() ?: ($banner->getSlideTitle() ?: "");
+                    $html = $block->getImageElementMobile($banner->getSlideImageMobile(), $slideAlt);
+                    if($link = $banner->getSlideLink())
+                        $html = '<a href="'. $block->escapeUrl($link) .'">' . $html . '</a>' ;
+                    echo $html;
+                    ?>
+                </div>
+                <div class="text-banner">
+                    <?php if($text = $banner->getSlideText()){
+                        echo $block->getContentText($text);
+                    }
+                    ?>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+</div>
+<script>
+    require([
+        'jquery',
+        'mage/mage',
+        'rokanthemes/owl'
+    ], function ($) {
+        'use strict';
 
-<script type="text/x-magento-init">
-{
-    ".slider_<?php echo $block->escapeJsQuote($sliderId); ?>": {
-        "js/slide-banner-init": {
-            "owl": <?php echo json_encode($sliderConfig, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>,
-            "labels": {
-                "prev": "<?php echo $block->escapeJsQuote(__('Slide anterior')); ?>",
-                "next": "<?php echo $block->escapeJsQuote(__('Próximo slide')); ?>",
-                "pagination": "<?php echo $block->escapeJsQuote(__('Indicadores de slides')); ?>",
-                "goTo": "<?php echo $block->escapeJsQuote(__('Ir para slide')); ?>"
-            }
+        // Text animation helper
+        function doAnimations(elems) {
+            var animEndEv = 'webkitAnimationEnd animationend';
+            elems.each(function () {
+                var $this = $(this),
+                    $animationType = $this.data('animation');
+                if ($animationType) {
+                    $this.addClass($animationType).one(animEndEv, function () {
+                        $this.removeClass($animationType);
+                    });
+                }
+            });
         }
-    }
-}
+
+        // Build owl config from PHP settings with sane hero defaults
+        var owlConfig = $.extend(true, {}, <?php echo json_encode($owlConfig, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>, {
+            afterInit: function(elem) {
+                var $firstSlide = elem.find('.owl-item').eq(0);
+                doAnimations($firstSlide.find('.text-banner').find("[data-animation ^= 'animated']"));
+            },
+            afterMove: function(elem) {
+                var $currentSlide = elem.find('.owl-item').eq(this.currentItem);
+                doAnimations($currentSlide.find('.text-banner').find("[data-animation ^= 'animated']"));
+            }
+        });
+
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            owlConfig.autoPlay = false;
+        }
+
+        // Initialize desktop slider
+        $(".slider_<?php echo (int)$sliderId; ?> .owl").owlCarousel(owlConfig);
+
+        // Initialize mobile slider (same config — singleItem handles sizing)
+        $(".slider_<?php echo (int)$sliderId; ?>_mobile .owl").owlCarousel(owlConfig);
+    });
 </script>
 <?php endif; ?>

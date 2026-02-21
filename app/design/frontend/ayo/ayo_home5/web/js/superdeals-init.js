@@ -24,11 +24,11 @@ define([
         var countdownConfig = config.countdown || {};
         var carouselOptions = {
             lazyLoad: resolveBoolean(owlConfig.lazyLoad, true),
-            items: parseInt(owlConfig.items, 10) || 6,
-            itemsDesktop: owlConfig.itemsDesktop || [1366, 5],
-            itemsDesktopSmall: owlConfig.itemsDesktopSmall || [1199, 4],
-            itemsTablet: owlConfig.itemsTablet || [991, 3],
-            itemsMobile: owlConfig.itemsMobile || [680, 2],
+            items: parseInt(owlConfig.items, 10) || 4,
+            itemsDesktop: owlConfig.itemsDesktop || [1366, 4],
+            itemsDesktopSmall: owlConfig.itemsDesktopSmall || [1199, 3],
+            itemsTablet: owlConfig.itemsTablet || [991, 2],
+            itemsMobile: owlConfig.itemsMobile || [680, 1],
             navigation: resolveBoolean(owlConfig.navigation, true),
             pagination: resolveBoolean(owlConfig.pagination, false),
             autoPlay: resolveBoolean(owlConfig.autoPlay, false),

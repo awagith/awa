@@ -53,21 +53,21 @@
     --awa-gray-800: #333;
     --awa-gray-900: #212529;
 
-    /* Cores semânticas (normalizadas para identidade da marca) */
-    --awa-success: #b73337;
-    --awa-success-light: #f7e9ea;
-    --awa-warning: #b73337;
-    --awa-warning-light: #f7e9ea;
+    /* Cores semânticas — diferenciadas para UX clara */
+    --awa-success: #198754;
+    --awa-success-light: #e8f5e9;
+    --awa-warning: #e09100;
+    --awa-warning-light: #fff8e1;
     --awa-danger: #8e2629;
     --awa-danger-light: #f7e9ea;
-    --awa-info: #b73337;
-    --awa-info-light: #f7e9ea;
+    --awa-info: #0d6efd;
+    --awa-info-light: #e3f2fd;
 
     /* Cores semânticas — texto (R12-14) */
-    --awa-success-text: #8e2629;
+    --awa-success-text: #0f5132;
     --awa-danger-text: #8e2629;
-    --awa-info-text: #8e2629;
-    --awa-warning-text: #8e2629;
+    --awa-info-text: #084298;
+    --awa-warning-text: #664d03;
 
     /* Contraste semântico */
     --awa-text-on-primary: #fff;

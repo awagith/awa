@@ -328,6 +328,13 @@ body.page-layout-2columns-right .page-wrapper .columns.layout.layout-2-col > .co
 /* ===========================================
    HEADER TOP-ACCOUNT / SIDEBAR
 =========================================== */
+body .page-wrapper .top-header {
+    /* Tokens locais: reduz duplicação entre breakpoints */
+    --awa-top-account-links-gap: var(--awa-space-2);
+    --awa-top-account-link-min-height: 34px;
+    --awa-top-account-link-padding-inline: var(--awa-space-3);
+}
+
 body .page-wrapper .top-header .top-bar-right,
 body .page-wrapper .top-header .top-info,
 body .page-wrapper .top-header .top-account {
@@ -336,7 +343,7 @@ body .page-wrapper .top-header .top-account {
 }
 
 body .page-wrapper .top-header .top-account ul.header.links {
-    gap: var(--awa-space-2);
+    gap: var(--awa-top-account-links-gap);
 }
 
 body .page-wrapper .top-header .top-account ul.header.links li {
@@ -350,8 +357,8 @@ body .page-wrapper .top-header .top-account ul.header.links li > a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 34px;
-    padding: 0 var(--awa-space-3);
+    min-height: var(--awa-top-account-link-min-height);
+    padding: 0 var(--awa-top-account-link-padding-inline);
     border: 0;
     border-radius: var(--awa-control-radius);
     color: var(--awa-gray-700);
@@ -456,6 +463,12 @@ body.checkout-cart-index .page-wrapper .cart-empty a {
         --awa-page-section-gap: var(--awa-space-5);
     }
 
+    body .page-wrapper .top-header {
+        --awa-top-account-links-gap: var(--awa-space-1);
+        --awa-top-account-link-min-height: 32px;
+        --awa-top-account-link-padding-inline: var(--awa-space-2);
+    }
+
     body .page-wrapper .columns.layout.layout-2-col {
         column-gap: var(--awa-space-4);
     }
@@ -469,14 +482,8 @@ body.checkout-cart-index .page-wrapper .cart-empty a {
     }
 
     body .page-wrapper .top-header .top-account ul.header.links {
-        gap: var(--awa-space-1);
         flex-wrap: wrap;
         justify-content: flex-end;
-    }
-
-    body .page-wrapper .top-header .top-account ul.header.links li > a {
-        min-height: 32px;
-        padding: 0 var(--awa-space-2);
     }
 
     body.page-layout-2columns-left .page-wrapper .columns.layout.layout-2-col > .sidebar-main-1,
@@ -557,4 +564,172 @@ body.checkout-cart-index .page-wrapper .cart-empty a {
     }
 }
 
+/* ===========================================
+   BREADCRUMBS — OVERFLOW MOBILE
+   Nomes de categorias longos podem causar scroll horizontal.
+   Solução: flex-wrap + text-overflow em itens individuais.
+=========================================== */
+body .page-wrapper .breadcrumbs {
+    overflow: hidden;
+}
 
+body .page-wrapper .breadcrumbs .items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--awa-space-1);
+    align-items: center;
+    padding: var(--awa-space-2) 0;
+    list-style: none;
+    margin: 0;
+}
+
+body .page-wrapper .breadcrumbs .items li {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+}
+
+body .page-wrapper .breadcrumbs .items li a,
+body .page-wrapper .breadcrumbs .items li strong {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 220px;
+}
+
+@media (width <= 480px) {
+    body .page-wrapper .breadcrumbs .items li a,
+    body .page-wrapper .breadcrumbs .items li strong {
+        max-width: 140px;
+        font-size: var(--awa-text-xs);
+    }
+}
+
+/* ===========================================
+   TOOLBAR MOBILE (< 480px)
+   Toolbar de categoria/listagem empilha em mobile pequeno.
+=========================================== */
+@media (width <= 480px) {
+    body .page-wrapper .page-products .toolbar-products {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--awa-space-2);
+    }
+
+    body .page-wrapper .toolbar-products .toolbar-amount {
+        text-align: center;
+        font-size: var(--awa-text-xs);
+    }
+
+    body .page-wrapper .toolbar-products .sorter {
+        display: flex;
+        align-items: center;
+        gap: var(--awa-space-2);
+        justify-content: center;
+    }
+
+    body .page-wrapper .toolbar-products .modes {
+        display: none;
+    }
+
+    body .page-wrapper .toolbar-products .limiter {
+        display: none;
+    }
+}
+
+/* ===========================================
+   PAGINAÇÃO — STYLING CONSISTENTE
+   Magento usa .pages .items.pages-items com .item como LI.
+=========================================== */
+body .page-wrapper .pages {
+    margin-top: var(--awa-space-6);
+    text-align: center;
+}
+
+body .page-wrapper .pages .items.pages-items {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: var(--awa-space-1);
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+body .page-wrapper .pages .items.pages-items .item {
+    display: inline-flex;
+}
+
+body .page-wrapper .pages .items.pages-items .item a,
+body .page-wrapper .pages .items.pages-items .item strong {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 var(--awa-space-2);
+    border-radius: var(--awa-radius-sm);
+    border: 1px solid var(--awa-gray-200);
+    background: #fff;
+    color: var(--awa-gray-700);
+    font-size: var(--awa-text-sm);
+    text-decoration: none;
+    transition: background var(--awa-transition),
+                color var(--awa-transition),
+                border-color var(--awa-transition);
+}
+
+body .page-wrapper .pages .items.pages-items .item a:hover {
+    background: var(--awa-gray-100);
+    border-color: var(--awa-gray-300);
+    color: var(--awa-dark);
+}
+
+body .page-wrapper .pages .items.pages-items .item.current strong {
+    background: var(--awa-red);
+    color: #fff;
+    border-color: var(--awa-red);
+    font-weight: 700;
+}
+
+body .page-wrapper .pages .items.pages-items .item .action.next,
+body .page-wrapper .pages .items.pages-items .item .action.previous {
+    font-size: 0;
+    position: relative;
+}
+
+body .page-wrapper .pages .items.pages-items .item .action.next::before {
+    content: "\f105";
+    font-family: FontAwesome, 'Font Awesome 5 Free', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+body .page-wrapper .pages .items.pages-items .item .action.previous::before {
+    content: "\f104";
+    font-family: FontAwesome, 'Font Awesome 5 Free', sans-serif;
+    font-size: 14px;
+    font-weight: 900;
+}
+
+@media (width <= 480px) {
+    body .page-wrapper .pages .items.pages-items .item a,
+    body .page-wrapper .pages .items.pages-items .item strong {
+        min-width: 32px;
+        height: 32px;
+        font-size: var(--awa-text-xs);
+    }
+}
+
+/* ===========================================
+   OWL CAROUSEL CONTAINMENT (Performance)
+   Reduz reflows em carrosséis com CSS containment.
+=========================================== */
+body .page-wrapper .owl-carousel {
+    contain: layout style;
+}
+
+body .page-wrapper .owl-carousel .owl-wrapper-outer,
+body .page-wrapper .owl-carousel .owl-stage-outer {
+    contain: layout style paint;
+}
