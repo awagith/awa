@@ -5,40 +5,36 @@ namespace GrupoAwamotos\ERPIntegration\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer;
-use GrupoAwamotos\ERPIntegration\Api\OrderSyncInterface;
-use GrupoAwamotos\ERPIntegration\Model\Queue\OrderSyncPublisher;
 use GrupoAwamotos\ERPIntegration\Helper\Data as Helper;
+use GrupoAwamotos\ERPIntegration\Model\ResourceModel\SyncLog as SyncLogResource;
 use Psr\Log\LoggerInterface;
 
 /**
- * Observer for order placement
+ * Observer for order placement - PULL mode
  *
- * Sends orders to ERP either synchronously or via message queue.
- * Queue mode (default): More resilient, non-blocking for checkout
- * Sync mode: Immediate feedback but can slow checkout if ERP is slow
+ * In PULL mode, the ERP fetches orders via REST API (GET /V1/erp/orders/pending).
+ * This observer only logs the order for tracking. No INSERT into ERP database.
+ * The ERP SQL user (Consulta) has SELECT-only permission.
  */
 class OrderPlaceAfter implements ObserverInterface
 {
-    private OrderSyncInterface $orderSync;
-    private OrderSyncPublisher $queuePublisher;
     private Helper $helper;
+    private SyncLogResource $syncLogResource;
     private LoggerInterface $logger;
 
     public function __construct(
-        OrderSyncInterface $orderSync,
-        OrderSyncPublisher $queuePublisher,
         Helper $helper,
+        SyncLogResource $syncLogResource,
         LoggerInterface $logger
     ) {
-        $this->orderSync = $orderSync;
-        $this->queuePublisher = $queuePublisher;
         $this->helper = $helper;
+        $this->syncLogResource = $syncLogResource;
         $this->logger = $logger;
     }
 
     public function execute(Observer $observer): void
     {
-        if (!$this->helper->isOrderSyncEnabled() || !$this->helper->sendOrderOnPlace()) {
+        if (!$this->helper->isOrderSyncEnabled()) {
             return;
         }
 
@@ -48,76 +44,33 @@ class OrderPlaceAfter implements ObserverInterface
                 return;
             }
 
-            // Check if async mode is enabled (default: true for resilience)
-            if ($this->helper->isOrderQueueEnabled()) {
-                // Async mode: publish to queue
-                $this->publishToQueue($order);
-            } else {
-                // Sync mode: send directly (legacy behavior)
-                $this->sendDirectly($order);
-            }
-        } catch (\Exception $e) {
-            // Never fail the order placement due to ERP sync issues
-            $this->logger->error('[ERP] Observer OrderPlaceAfter error: ' . $e->getMessage(), [
-                'order_id' => $order ? $order->getEntityId() : null,
-                'increment_id' => $order ? $order->getIncrementId() : null,
-            ]);
-        }
-    }
+            // Log that order is available for ERP pull
+            $this->syncLogResource->addLog(
+                'order_pull',
+                'export',
+                'pending',
+                sprintf(
+                    'Pedido %s disponível para ERP via API Pull. Cliente: %s',
+                    $order->getIncrementId(),
+                    $order->getCustomerTaxvat() ?: $order->getCustomerEmail()
+                ),
+                null,
+                (int) $order->getEntityId()
+            );
 
-    /**
-     * Publish order to message queue for async processing
-     */
-    private function publishToQueue($order): void
-    {
-        $published = $this->queuePublisher->publish($order);
+            $order->addCommentToStatusHistory(
+                __('Pedido disponível para sincronização com ERP via API.')
+            );
 
-        if ($published) {
-            $this->logger->info('[ERP] Order queued for ERP sync', [
+            $this->logger->info('[ERP] Order available for ERP pull', [
                 'order_id' => $order->getEntityId(),
                 'increment_id' => $order->getIncrementId(),
             ]);
-
-            // Add comment to order
-            $order->addCommentToStatusHistory(
-                __('Pedido enviado para fila de sincronização com ERP.')
-            );
-        } else {
-            // Queue failed, try direct sync as fallback
-            $this->logger->warning('[ERP] Queue failed, trying direct sync as fallback', [
-                'order_id' => $order->getEntityId(),
+        } catch (\Exception $e) {
+            // Never fail the order placement due to ERP logging issues
+            $this->logger->error('[ERP] Observer OrderPlaceAfter error: ' . $e->getMessage(), [
+                'order_id' => isset($order) ? $order->getEntityId() : null,
             ]);
-            $this->sendDirectly($order);
-        }
-    }
-
-    /**
-     * Send order directly to ERP (synchronous)
-     */
-    private function sendDirectly($order): void
-    {
-        $result = $this->orderSync->sendOrder($order);
-
-        if ($result['success']) {
-            $order->addCommentToStatusHistory(
-                __('Pedido enviado ao ERP. ID ERP: %1', $result['erp_order_id'])
-            );
-            $this->logger->info('[ERP] Order sent to ERP synchronously', [
-                'order_id' => $order->getEntityId(),
-                'erp_order_id' => $result['erp_order_id'],
-            ]);
-        } else {
-            $this->logger->warning('[ERP] Order not sent to ERP: ' . $result['message'], [
-                'order_id' => $order->getEntityId(),
-            ]);
-
-            // If direct sync fails, try queue as fallback
-            if ($this->helper->isOrderQueueEnabled()) {
-                $this->logger->info('[ERP] Direct sync failed, queueing for retry', [
-                    'order_id' => $order->getEntityId(),
-                ]);
-                $this->queuePublisher->publish($order);
-            }
         }
     }
 }

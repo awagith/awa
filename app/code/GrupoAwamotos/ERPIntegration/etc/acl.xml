@@ -23,6 +23,7 @@
                     <resource id="GrupoAwamotos_ERPIntegration::forecast" title="Sales Forecast" sortOrder="50"/>
                     <resource id="GrupoAwamotos_ERPIntegration::goals" title="Sales Goals" sortOrder="55"/>
                     <resource id="GrupoAwamotos_ERPIntegration::image_sync" title="Image Sync API" sortOrder="60"/>
+                    <resource id="GrupoAwamotos_ERPIntegration::order_pull" title="Order Pull API (ERP)" sortOrder="70"/>
                 </resource>
             </resource>
         </resources>

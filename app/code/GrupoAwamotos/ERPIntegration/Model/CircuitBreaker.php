@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace GrupoAwamotos\ERPIntegration\Model;
 
 use Magento\Framework\App\CacheInterface;
+use Magento\Framework\Phrase;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -212,10 +213,9 @@ class CircuitBreaker
             }
 
             throw new CircuitBreakerOpenException(
-                sprintf(
-                    'Circuit breaker is open for service "%s". Retry in %d seconds.',
-                    $this->serviceName,
-                    $this->getTimeUntilHalfOpen()
+                new Phrase(
+                    'Circuit breaker is open for service "%1". Retry in %2 seconds.',
+                    [$this->serviceName, $this->getTimeUntilHalfOpen()]
                 )
             );
         }

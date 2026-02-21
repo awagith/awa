@@ -22,6 +22,10 @@
     <preference for="GrupoAwamotos\ERPIntegration\Api\CategorySyncInterface"
                 type="GrupoAwamotos\ERPIntegration\Model\CategorySync"/>
 
+    <!-- Order Pull API (for ERP SECTRA) -->
+    <preference for="GrupoAwamotos\ERPIntegration\Api\OrderPullInterface"
+                type="GrupoAwamotos\ERPIntegration\Model\Api\OrderPullManagement"/>
+
     <!-- Smart Suggestions API Interfaces -->
     <preference for="GrupoAwamotos\ERPIntegration\Api\SuggestedCartInterface"
                 type="GrupoAwamotos\ERPIntegration\Model\Api\SuggestedCartManagement"/>
@@ -142,6 +146,14 @@
         <arguments>
             <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
             <argument name="stockValidator" xsi:type="object">GrupoAwamotos\ERPIntegration\Model\Validator\StockValidator</argument>
+        </arguments>
+    </type>
+
+    <!-- Order Pull API -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\Api\OrderPullManagement">
+        <arguments>
+            <argument name="regionFactory" xsi:type="object">Magento\Directory\Model\RegionFactory</argument>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
         </arguments>
     </type>
 

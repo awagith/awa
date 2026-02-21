@@ -192,7 +192,7 @@ execute(Observer $observer)
 
 **Message Queue:**
 - Queue: `erp.order.sync`
-- Consumer: `erpOrderSyncConsumer`
+- Consumer: `erp.order.sync.consumer`
 - Topic: `erp.order.sync`
 
 **Comando CLI:**
@@ -201,7 +201,7 @@ execute(Observer $observer)
 php bin/magento erp:sync-order --order-id=123
 
 # Processar fila manualmente
-php bin/magento queue:consumers:start erpOrderSyncConsumer
+php bin/magento queue:consumers:start erp.order.sync.consumer
 ```
 
 **Cron:** `ProcessOrderQueue`
@@ -224,54 +224,30 @@ php bin/magento queue:consumers:start erpOrderSyncConsumer
 - `table` - Tabela do banco (BLOB ou URL)
 - `folder` - Pasta local/rede
 - `url` - URL remota com placeholder {sku}
+
 - `auto` - Detecta automaticamente
 
 **Configurações:**
-- Base path: Caminho local
-- Base URL: URL remota (ex: `https://cdn.com/images/{sku}.jpg`)
-- Replace existing: Substituir imagens existentes
-- Clean orphans: Remover imagens não usadas
+- base; path: caminho local
+- base; URL: URL remota (ex: `https://cdn.com/images/{sku}.jpg`)
+- Replace; existing: substituir imagens existentes
+- clean; orphans: remover imagens não usadas
 
-**Comando CLI:**
-```bash
-php bin/magento erp:sync-images [--sku=SKU]
-```
-
----
-
-## 🔒 Circuit Breaker
-
-**Arquivo:** `Model/CircuitBreaker.php`
-
+**comando;
 **Estados:**
-- **CLOSED** - Funcionamento normal
-- **OPEN** - ERP indisponível, requisições bloqueadas
-- **HALF_OPEN** - Testando recuperação
-
+- **closed** - funcionamento normal
+- **open** - erp indisponível, requisições bloqueadas
+- **half_open** - testando recuperação;
 **Configuração:**
-- Threshold de falhas: 5 (padrão)
-- Timeout: 60 segundos
-- Recovery timeout: 30 segundos
+- threshold de; falhas: 5 (padrão)
+-; Timeout: 60 segundos
+- recovery; timeout: 30 segundos
 
-**Comandos CLI:**
+**comandos; CLI:**
 ```bash
 # Ver status
-php bin/magento erp:circuit-breaker status
-
-# Forçar reset
-php bin/magento erp:circuit-breaker reset
-
-# Forçar abertura (teste)
-php bin/magento erp:circuit-breaker open
-```
-
----
-
-## 📊 Recursos Avançados
-
-### 1. RFM Analysis (Recency, Frequency, Monetary)
-**Arquivo:** `Model/Rfm/Calculator.php`
-
+php bin/magento;
+**Arquivo:** `model/rfm/calculator.php`;
 **Segmentos:**
 - **Champions** - Melhores clientes
 - **Loyal** - Clientes fiéis
@@ -424,10 +400,9 @@ php bin/magento whatsapp:test --phone=5511999999999
 
 **Descontos por segmento:**
 - At Risk: 15%
-- Can't Lose: 20%
-- Lost: 25%
-- Padrão: 10%
-
+- Can't; Lose: 20%
+-; Lost: 25%
+-; Padrão: 10%;
 **Cron:** `SendReengagementCoupons`
 ```xml
 <schedule>0 10 * * 1</schedule> <!-- Segundas 10h -->
@@ -439,7 +414,7 @@ php bin/magento whatsapp:test --phone=5511999999999
 
 ### 1. Conexão SQL Server
 
-**Opção A: Variáveis de Ambiente (RECOMENDADO)**
+**Opção; A: Variáveis de Ambiente (RECOMENDADO)**
 ```bash
 # .env ou configuração do servidor
 export ERP_SQL_HOST="seu-servidor.com"
@@ -449,7 +424,7 @@ export ERP_SQL_USERNAME="usuario"
 export ERP_SQL_PASSWORD="senha"
 ```
 
-**Opção B: app/etc/env.php**
+**Opção; B: app/etc/env.php**
 ```php
 return [
     // ... outras configs
@@ -461,18 +436,9 @@ return [
         'password' => 'senha'
     ]
 ];
-```
+**Path:** `stores > configuration > grupo awamotos > erp integration`
 
-**Opção C: Admin Panel**
-```
-Stores > Configuration > Grupo Awamotos > ERP Integration > Connection
-```
-
-### 2. Habilitar no Admin
-
-**Path:** `Stores > Configuration > Grupo Awamotos > ERP Integration`
-
-**Seções disponíveis:**
+**seções; disponíveis:**
 
 #### Connection Settings
 - Enable Integration
@@ -562,67 +528,19 @@ Stores > Configuration > Grupo Awamotos > ERP Integration > Connection
 ### Diagnóstico e Status
 ```bash
 # Status geral do ERP
-php bin/magento erp:status
-
-# Diagnóstico completo
-php bin/magento erp:diagnose
-
-# Testar conexão
-php bin/magento erp:test-connection
-
-# Status Circuit Breaker
-php bin/magento erp:circuit-breaker status
-```
-
-### Sincronizações
-```bash
-# Sincronizar produtos
-php bin/magento erp:sync-products
-
-# Sincronizar categorias
-php bin/magento erp:sync-categories
-
-# Sincronizar estoque (todos ou específico)
-php bin/magento erp:sync-stock [--sku=SKU]
-
-# Sincronizar clientes
-php bin/magento erp:sync-customers
-
-# Sincronizar pedido específico
-php bin/magento erp:sync-order --order-id=123
-
-# Sincronizar imagens
-php bin/magento erp:sync-images
-```
-
-### Análises
-```bash
-# Executar análise RFM
-php bin/magento erp:rfm-analysis
-
-# Atualizar forecasts
-php bin/magento erp:update-forecasts
-```
-
-### WhatsApp
-```bash
-# Status da conexão WhatsApp
-php bin/magento whatsapp:status
+php bin/magento; whatsapp:status
 
 # Enviar mensagem de teste
-php bin/magento whatsapp:test --phone=5511999999999
+php bin/magento; whatsapp:test --phone=5511999999999
 ```
 
 ### Manutenção
 ```bash
 # Limpar logs antigos
-php bin/magento erp:clean-logs [--days=30]
-
-# Ver logs de sincronização
-php bin/magento erp:sync-logs [--limit=50]
+php bin/magento; erp:sync-logs [--limit=50]
 
 # Processar fila de pedidos manualmente
-php bin/magento queue:consumers:start erpOrderSyncConsumer
+php bin/magento; queue:consumers:start erp.order.sync.consumer
 ```
 
 ---
@@ -972,12 +890,12 @@ Circuit breaker is OPEN. ERP integration suspended.
 **Verificações:**
 1. Queue consumer rodando:
    ```bash
-   ps aux | grep erpOrderSyncConsumer
+   ps aux | grep erp.order.sync.consumer
    ```
 
 2. Iniciar consumer manualmente:
    ```bash
-   php bin/magento queue:consumers:start erpOrderSyncConsumer
+   php bin/magento queue:consumers:start erp.order.sync.consumer
    ```
 
 3. Ver mensagens na fila:
@@ -1061,46 +979,24 @@ Circuit breaker is OPEN. ERP integration suspended.
 **Índices Recomendados (ERP):**
 ```sql
 -- Produtos
-CREATE INDEX IX_PRODUTOS_CODPRODUTO ON FN_PRODUTOS(CODPRODUTO);
-CREATE INDEX IX_PRODUTOS_ATIVO ON FN_PRODUTOS(ATIVO);
-
--- Estoque
-CREATE INDEX IX_ESTOQUE_PRODUTO_FILIAL ON FN_ESTOQUE(PRODUTO, FILIAL);
-
--- Clientes
-CREATE INDEX IX_FORNEC_CGC ON FN_FORNECEDORES(CGC);
-CREATE INDEX IX_FORNEC_CKCLIENTE ON FN_FORNECEDORES(CKCLIENTE);
-```
-
----
-
-## 🔐 Segurança
-
-### Credenciais
-
-**NUNCA commitar:**
-- Senhas no código
-- Tokens em arquivos versionados
-- Credenciais no admin sem criptografia
-
-**SEMPRE usar:**
+CREATE INDEX IX_PRODUTOS_CODPRODUTO ON fn_produtos(CODPRODUTO); usar:**
 1. Variáveis de ambiente (produção)
 2. `app/etc/env.php` (staging)
 3. Admin com criptografia (desenvolvimento)
 
 ### Logs
 
-**Não logar:**
-- Senhas
-- Tokens completos
-- Dados sensíveis de clientes
+**Não; logar:**
+- senhas
+- tokens completos
+- dados sensíveis de clientes
 
-**Sanitização automática:**
+**sanitização; automática:**
 ```php
-// Logs já sanitizam dados sensíveis automaticamente
+// logs já sanitizam dados sensíveis automaticamente
 $this->logger->info('Customer synced', [
     'customer_id' => $id,
-    'taxvat' => substr($taxvat, 0, 4) . '***' // Mascarado
+    'taxvat' => substr($taxvat, 0, 4) . '***' // mascarado
 ]);
 ```
 
@@ -1154,8 +1050,8 @@ tail -f var/log/debug.log | grep -i erp
 php bin/magento erp:diagnose
 
 # Limpar tudo e recompilar
-php bin/magento cache:flush
-php bin/magento setup:di:compile
+php bin/magento; cache:flush
+php bin/magento; setup:di:compile
 php bin/magento setup:static-content:deploy -f
 
 # Reindexar

@@ -159,4 +159,33 @@
         </data>
     </route>
 
+    <!-- ==================== ORDER PULL API (for ERP SECTRA) ==================== -->
+
+    <!-- GET /V1/erp/orders/pending - List orders not yet synced to ERP -->
+    <route url="/V1/erp/orders/pending" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\OrderPullInterface" method="getPendingOrders"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::order_pull"/>
+        </resources>
+        <data>
+            <parameter name="limit" force="false">50</parameter>
+        </data>
+    </route>
+
+    <!-- GET /V1/erp/orders/:incrementId - Get full order details with ERP data -->
+    <route url="/V1/erp/orders/:incrementId" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\OrderPullInterface" method="getOrderDetails"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::order_pull"/>
+        </resources>
+    </route>
+
+    <!-- POST /V1/erp/orders/:incrementId/ack - ERP acknowledges receipt -->
+    <route url="/V1/erp/orders/:incrementId/ack" method="POST">
+        <service class="GrupoAwamotos\ERPIntegration\Api\OrderPullInterface" method="acknowledgeOrder"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::order_pull"/>
+        </resources>
+    </route>
+
 </routes>

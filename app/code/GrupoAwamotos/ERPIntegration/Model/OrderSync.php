@@ -81,6 +81,7 @@ class OrderSync implements OrderSyncInterface
             'message' => '',
             'items_synced' => 0,
             'execution_time' => 0,
+            'retryable' => true,
         ];
 
         try {
@@ -113,6 +114,9 @@ class OrderSync implements OrderSyncInterface
                 return $result;
             }
 
+            // Fetch customer commercial data from ERP (VENDEDOR, CONDPAGTO, FATORPRECO, etc.)
+            $erpCustomerData = $this->getErpCustomerOrderData($erpClientCode);
+
             $items = $this->getValidOrderItems($order);
             if (empty($items)) {
                 $result['message'] = 'Pedido sem itens válidos para sincronizar.';
@@ -131,7 +135,7 @@ class OrderSync implements OrderSyncInterface
             $this->connection->beginTransaction();
 
             try {
-                $erpOrderId = $this->insertOrderHeader($order, $erpClientCode);
+                $erpOrderId = $this->insertOrderHeader($order, $erpClientCode, $erpCustomerData);
 
                 if ($erpOrderId <= 0) {
                     throw new \RuntimeException('Não foi possível obter o ID do pedido criado no ERP.');
@@ -172,9 +176,43 @@ class OrderSync implements OrderSyncInterface
                     (int) $order->getEntityId()
                 );
             } catch (\Exception $e) {
-                $this->connection->rollback();
+                try {
+                    $this->connection->rollback();
+                } catch (\Exception $rollbackEx) {
+                    $this->logger->debug('[ERP] Rollback after error: ' . $rollbackEx->getMessage());
+                }
                 throw $e;
             }
+        } catch (\PDOException $e) {
+            $msg = $e->getMessage();
+            $isPermissionDenied = stripos($msg, 'permission') !== false
+                || (stripos($msg, 'INSERT') !== false && stripos($msg, 'denied') !== false);
+
+            if ($isPermissionDenied) {
+                $result['message'] = 'Usuário SQL sem permissão de INSERT. '
+                    . 'O ERP opera em modo PULL — pedidos são obtidos via API REST (GET /V1/erp/orders/pending).';
+                $result['retryable'] = false;
+
+                $this->logger->warning('[ERP] INSERT permission denied - PULL mode active', [
+                    'order_id' => $order->getIncrementId(),
+                ]);
+            } else {
+                $result['message'] = 'Erro de banco ao enviar pedido ao ERP: ' . $msg;
+
+                $this->logger->error('[ERP] Order sync PDO error', [
+                    'order_id' => $order->getIncrementId(),
+                    'error' => $msg,
+                ]);
+            }
+
+            $this->syncLogResource->addLog(
+                'order',
+                'export',
+                'error',
+                $result['message'],
+                null,
+                (int) $order->getEntityId()
+            );
         } catch (\Exception $e) {
             $result['message'] = 'Erro ao enviar pedido ao ERP: ' . $e->getMessage();
 
@@ -449,6 +487,59 @@ class OrderSync implements OrderSyncInterface
 
     // ==================== Private Methods ====================
 
+    /**
+     * Fetch customer commercial data from ERP for order enrichment
+     * Returns VENDPREF, CONDPAGTO, FATORPRECO, CONTATO_NOME, TRANSPPREF, TPFATOR, PERCFATOR
+     */
+    private function getErpCustomerOrderData(int $erpClientCode): array
+    {
+        if ($erpClientCode <= 0) {
+            return [];
+        }
+
+        try {
+            $sql = "SELECT f.CONDPAGTO, f.FATORPRECO, f.TRANSPPREF, f.VENDPREF,
+                           f.TPFATOR, f.PERCFATOR,
+                           c.NOME AS CONTATO_NOME
+                    FROM FN_FORNECEDORES f
+                    LEFT JOIN FN_CONTATO c ON c.FORNECEDOR = f.CODIGO AND c.PRINCIPAL = 'S'
+                    WHERE f.CODIGO = :code AND f.CKCLIENTE = 'S'";
+
+            $result = $this->connection->fetchOne($sql, [':code' => $erpClientCode]);
+
+            if ($result) {
+                $this->logger->debug('[ERP] Customer order data fetched', [
+                    'client_code' => $erpClientCode,
+                    'vendedor' => $result['VENDPREF'] ?? 0,
+                    'condpagto' => $result['CONDPAGTO'] ?? 0,
+                    'fatorpreco' => $result['FATORPRECO'] ?? 0,
+                    'contato' => $result['CONTATO_NOME'] ?? '',
+                    'tpfator' => $result['TPFATOR'] ?? '',
+                    'percfator' => $result['PERCFATOR'] ?? 0,
+                ]);
+                return $result;
+            }
+        } catch (\Exception $e) {
+            $this->logger->warning('[ERP] Failed to fetch customer order data: ' . $e->getMessage());
+        }
+
+        return [];
+    }
+
+    /**
+     * Fetch product unit (UNDVENDA) from ERP for a given SKU
+     */
+    private function getErpProductUnit(string $sku): string
+    {
+        try {
+            $sql = "SELECT UNDVENDA FROM MT_MATERIAL WHERE CODIGO = :sku";
+            $result = $this->connection->fetchOne($sql, [':sku' => $sku]);
+            return $result ? (string) ($result['UNDVENDA'] ?? 'PC') : 'PC';
+        } catch (\Exception $e) {
+            return 'PC';
+        }
+    }
+
     private function resolveErpClientCode(OrderInterface $order): int
     {
         $taxvat = $order->getCustomerTaxvat();
@@ -488,22 +579,35 @@ class OrderSync implements OrderSyncInterface
         return $validItems;
     }
 
-    private function insertOrderHeader(OrderInterface $order, int $erpClientCode): int
+    private function insertOrderHeader(OrderInterface $order, int $erpClientCode, array $erpCustomerData = []): int
     {
         $filial = $this->helper->getStockFilial();
         $shipping = $order->getShippingAddress();
+
+        // Resolve customer commercial data from ERP
+        $vendedor = (int) ($erpCustomerData['VENDPREF'] ?? 0);
+        $condPagto = (int) ($erpCustomerData['CONDPAGTO'] ?? 0);
+        $fatorPreco = (int) ($erpCustomerData['FATORPRECO'] ?? 0);
+        $contato = (string) ($erpCustomerData['CONTATO_NOME'] ?? '');
+        $transportadora = (int) ($erpCustomerData['TRANSPPREF'] ?? 0);
+        $tipoFator = (string) ($erpCustomerData['TPFATOR'] ?? '');
+        $percFator = (float) ($erpCustomerData['PERCFATOR'] ?? 0);
 
         // Usar INSERT simples + SCOPE_IDENTITY() para compatibilidade com todos os drivers
         // (OUTPUT INSERTED não funciona com dblib/FreeTDS)
         $orderSql = "INSERT INTO VE_PEDIDO (
                         FILIAL, DTPEDIDO, CLIENTE, VENDEDOR, STATUS,
+                        CONDPAGTO, FATORPRECO, CONTATO, TRANSPORTADOR,
+                        TPFATOR, PERCFATOR,
                         VLRBRUTO, VLRDESCONTO, VLRTOTAL, VLRFRETE,
                         PEDIDOWEB, PEDIDOCLI,
                         ENTENDERECO, ENTBAIRRO, ENTCIDADE, ENTCEP, ENTUF,
                         USERNAME1, USERDATE1
                      )
                      VALUES (
-                        :filial, GETDATE(), :cliente, :vendedor, 'A',
+                        :filial, GETDATE(), :cliente, :vendedor, 'W',
+                        :condpagto, :fatorpreco, :contato, :transportador,
+                        :tpfator, :percfator,
                         :vlrbruto, :vlrdesconto, :vlrtotal, :vlrfrete,
                         :pedidoweb, :pedidocli,
                         :entendereco, :entbairro, :entcidade, :entcep, :entuf,
@@ -513,7 +617,13 @@ class OrderSync implements OrderSyncInterface
         $params = [
             ':filial' => $filial,
             ':cliente' => $erpClientCode,
-            ':vendedor' => 0,
+            ':vendedor' => $vendedor,
+            ':condpagto' => $condPagto,
+            ':fatorpreco' => $fatorPreco,
+            ':contato' => $contato,
+            ':transportador' => $transportadora,
+            ':tpfator' => $tipoFator,
+            ':percfator' => $percFator,
             ':vlrbruto' => (float) $order->getSubtotal(),
             ':vlrdesconto' => abs((float) $order->getDiscountAmount()),
             ':vlrtotal' => (float) $order->getGrandTotal(),
@@ -552,18 +662,21 @@ class OrderSync implements OrderSyncInterface
         $itemsSynced = 0;
 
         $itemSql = "INSERT INTO VE_PEDIDOITENS (
-                        PEDIDO, MATERIAL, QTDE, VLRUNITARIO, VLRTOTAL,
+                        PEDIDO, MATERIAL, QTDE, UNIDADE, VLRUNITARIO, VLRTOTAL,
                         VLRDESCONTO, VLRBRUTO
                     ) VALUES (
-                        :pedido, :material, :qtde, :vlrunitario, :vlrtotal,
+                        :pedido, :material, :qtde, :unidade, :vlrunitario, :vlrtotal,
                         :vlrdesconto, :vlrbruto
                     )";
 
         foreach ($items as $item) {
+            $unidade = $this->getErpProductUnit($item->getSku());
+
             $this->connection->execute($itemSql, [
                 ':pedido' => $erpOrderId,
                 ':material' => $item->getSku(),
                 ':qtde' => (float) $item->getQtyOrdered(),
+                ':unidade' => $unidade,
                 ':vlrunitario' => (float) $item->getPrice(),
                 ':vlrtotal' => (float) $item->getRowTotal(),
                 ':vlrdesconto' => abs((float) $item->getDiscountAmount()),
