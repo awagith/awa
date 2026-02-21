@@ -748,8 +748,9 @@ class CustomerSync implements CustomerSyncInterface
             $name = $contato ?: $razao ?: 'Cliente';
         }
 
-        // Remove caracteres de controle
-        $name = preg_replace('/[\x00-\x1F\x7F]/u', '', $name);
+        // Sanitiza: remove chars que Magento rejeita na validação de nome
+        // Magento aceita apenas letras (incluindo acentuadas), espaços, hífens, pontos e apóstrofos
+        $name = $this->sanitizeNameForMagento($name);
 
         $parts = preg_split('/\s+/', $name, 2);
 
@@ -758,7 +759,9 @@ class CustomerSync implements CustomerSyncInterface
 
         // Se só tem uma palavra, tenta a razão social como fallback para o sobrenome
         if ($lastname === '' && $isPJ) {
-            $fallback = ($name === $fantasia && $razao !== '' && $razao !== $fantasia) ? $razao : '';
+            $fallback = ($name === $this->sanitizeNameForMagento($fantasia)
+                && $razao !== '' && $razao !== $fantasia)
+                ? $this->sanitizeNameForMagento($razao) : '';
             if ($fallback !== '') {
                 $fallbackParts = preg_split('/\s+/', $fallback, 2);
                 $lastname = trim($fallbackParts[1] ?? $fallbackParts[0] ?? '');
@@ -777,6 +780,24 @@ class CustomerSync implements CustomerSyncInterface
             'firstname' => mb_substr($firstname, 0, 255),
             'lastname' => mb_substr($lastname, 0, 255),
         ];
+    }
+
+    /**
+     * Sanitize name to pass Magento's built-in validation
+     *
+     * Magento rejects names with numbers and most special characters.
+     * ERP company names often contain numbers (e.g. "EMPRESA 123 LTDA").
+     * We strip invalid chars and collapse whitespace.
+     */
+    private function sanitizeNameForMagento(string $name): string
+    {
+        // Remove control characters
+        $name = preg_replace('/[\x00-\x1F\x7F]/u', '', $name);
+        // Remove characters Magento rejects: keep letters (including accented), spaces, hyphens, dots, apostrophes
+        $name = preg_replace('/[^a-zA-Z\x{00C0}-\x{024F}\s\-.\' ]/u', '', $name);
+        // Collapse multiple spaces
+        $name = preg_replace('/\s+/', ' ', $name);
+        return trim($name);
     }
 
     private function normalizeEmail(string $email): string

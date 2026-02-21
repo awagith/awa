@@ -93,8 +93,8 @@
         <job name="grupoawamotos_erp_process_order_queue"
              instance="GrupoAwamotos\ERPIntegration\Cron\ProcessOrderQueue"
              method="execute">
-            <!-- Run every minute to process pending orders in queue -->
-            <schedule>* * * * *</schedule>
+            <!-- Run every 2 minutes to process pending orders in queue (prevents overlap/missed) -->
+            <schedule>*/2 * * * *</schedule>
         </job>
     </group>
 </config>
