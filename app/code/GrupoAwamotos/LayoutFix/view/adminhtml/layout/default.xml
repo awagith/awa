@@ -2,12 +2,16 @@
 <!--
 /**
  * GrupoAwamotos LayoutFix
- * Ensures notification.messages stays in the same container as 'user'
- * (header.inner.right) to prevent "Broken reference" reorder errors.
+ * Keeps notification.messages aligned with 'user' container in admin header
+ * to prevent "Broken reference" reorder errors in admin.
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
+        <!--
+            Mirror Magento_Backend default target to avoid parent mismatch when
+            other modules/themes also move "user" inside header.inner.right.
+        -->
         <move element="notification.messages" destination="header.inner.right" after="user"/>
     </body>
 </page>

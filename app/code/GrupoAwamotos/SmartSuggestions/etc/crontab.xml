@@ -8,5 +8,11 @@
         <job name="smart_suggestions_generate" instance="GrupoAwamotos\SmartSuggestions\Cron\GenerateSuggestions" method="execute">
             <config_path>smart_suggestions/cron/suggestions_schedule</config_path>
         </job>
+        <job name="smart_suggestions_process_whatsapp" instance="GrupoAwamotos\SmartSuggestions\Cron\ProcessWhatsappQueue" method="execute">
+            <schedule>*/15 8-18 * * *</schedule>
+        </job>
+        <job name="smart_suggestions_update_forecasts" instance="GrupoAwamotos\SmartSuggestions\Cron\UpdateForecasts" method="execute">
+            <schedule>0 23 * * *</schedule>
+        </job>
     </group>
 </config>

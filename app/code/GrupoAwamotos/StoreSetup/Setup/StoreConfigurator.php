@@ -395,16 +395,16 @@ HTML;
         return <<<HTML
 <style>
 .atacado-page { max-width: 900px; margin: 0 auto; }
-.atacado-page h1 { color: #ff9300; margin-bottom: 1.5rem; }
-.atacado-page h2 { color: #333; border-bottom: 2px solid #ff9300; padding-bottom: 0.5rem; margin-top: 2rem; }
+.atacado-page h1 { color: #b73337; margin-bottom: 1.5rem; }
+.atacado-page h2 { color: #333; border-bottom: 2px solid #b73337; padding-bottom: 0.5rem; margin-top: 2rem; }
 .atacado-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
-.atacado-card { background: #f8f8f8; border-radius: 8px; padding: 1.5rem; border-left: 4px solid #ff9300; }
-.atacado-card h3 { color: #ff9300; margin-bottom: 0.75rem; font-size: 1.1rem; }
+.atacado-card { background: #f8f8f8; border-radius: 8px; padding: 1.5rem; border-left: 4px solid #b73337; }
+.atacado-card h3 { color: #b73337; margin-bottom: 0.75rem; font-size: 1.1rem; }
 .atacado-card ul { margin: 0; padding-left: 1.2rem; }
 .atacado-card li { margin-bottom: 0.5rem; }
-.atacado-cta { background: linear-gradient(135deg, #ff9300, #ff7800); color: #fff; padding: 2rem; border-radius: 8px; text-align: center; margin: 2rem 0; }
+.atacado-cta { background: linear-gradient(135deg, #b73337, #8e2629); color: #fff; padding: 2rem; border-radius: 8px; text-align: center; margin: 2rem 0; }
 .atacado-cta h3 { color: #fff; margin-bottom: 1rem; }
-.atacado-cta a { display: inline-block; background: #fff; color: #ff9300; padding: 0.75rem 2rem; border-radius: 4px; text-decoration: none; font-weight: bold; }
+.atacado-cta a { display: inline-block; background: #fff; color: #b73337; padding: 0.75rem 2rem; border-radius: 4px; text-decoration: none; font-weight: bold; }
 .atacado-cta a:hover { background: #333; color: #fff; }
 </style>
 <div class="cms-page atacado-page">
@@ -489,13 +489,13 @@ HTML;
 <style>
 .lgpd-page { max-width: 900px; margin: 0 auto; line-height: 1.7; }
 .lgpd-page h1 { color: #333; margin-bottom: 1.5rem; }
-.lgpd-page h2 { color: #444; border-bottom: 2px solid #ff9300; padding-bottom: 0.5rem; margin-top: 2rem; }
-.lgpd-card { background: #f8f8f8; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #ff9300; }
+.lgpd-page h2 { color: #444; border-bottom: 2px solid #b73337; padding-bottom: 0.5rem; margin-top: 2rem; }
+.lgpd-card { background: #f8f8f8; border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; border-left: 4px solid #b73337; }
 .lgpd-rights { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
 .lgpd-right { background: #fff; border: 1px solid #e5e5e5; border-radius: 8px; padding: 1rem; }
-.lgpd-right h4 { color: #ff9300; margin-bottom: 0.5rem; font-size: 1rem; }
+.lgpd-right h4 { color: #b73337; margin-bottom: 0.5rem; font-size: 1rem; }
 .lgpd-cta { background: #333; color: #fff; padding: 1.5rem; border-radius: 8px; text-align: center; margin: 2rem 0; }
-.lgpd-cta a { display: inline-block; background: #ff9300; color: #fff; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: bold; }
+.lgpd-cta a { display: inline-block; background: #b73337; color: #fff; padding: 0.75rem 1.5rem; border-radius: 4px; text-decoration: none; font-weight: bold; }
 </style>
 <div class="cms-page lgpd-page">
   <h1>Seus Direitos - Lei Geral de Proteção de Dados (LGPD)</h1>
@@ -638,15 +638,15 @@ HTML;
 <style>
 .shipping-page { max-width: 900px; margin: 0 auto; }
 .shipping-page h1 { color: #333; }
-.shipping-page h2 { color: #444; margin-top: 2rem; border-bottom: 2px solid #ff9300; padding-bottom: 0.5rem; }
+.shipping-page h2 { color: #444; margin-top: 2rem; border-bottom: 2px solid #b73337; padding-bottom: 0.5rem; }
 .shipping-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
 .shipping-card { background: #f8f8f8; border-radius: 8px; padding: 1.5rem; text-align: center; }
-.shipping-card h3 { color: #ff9300; margin-bottom: 0.5rem; }
+.shipping-card h3 { color: #b73337; margin-bottom: 0.5rem; }
 .shipping-card .price { font-size: 1.5rem; font-weight: bold; color: #333; }
 .shipping-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
 .shipping-table th, .shipping-table td { padding: 0.75rem; border: 1px solid #ddd; text-align: left; }
 .shipping-table th { background: #f5f5f5; }
-.shipping-b2b { background: linear-gradient(135deg, #fff3e0, #fff); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #ff9300; margin: 1.5rem 0; }
+.shipping-b2b { background: linear-gradient(135deg, #fbe9e9, #fff); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #b73337; margin: 1.5rem 0; }
 </style>
 <div class="cms-page shipping-page">
   <h1>Frete e Entrega</h1>
@@ -767,20 +767,20 @@ HTML;
         return <<<HTML
 <style>
 .descontos-page { max-width: 900px; margin: 0 auto; }
-.descontos-page h1 { color: #ff9300; }
+.descontos-page h1 { color: #b73337; }
 .descontos-page h2 { color: #333; margin-top: 2rem; }
 .descontos-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
 .desconto-card { background: #fff; border: 2px solid #e5e5e5; border-radius: 12px; padding: 1.5rem; text-align: center; transition: all 0.3s ease; }
-.desconto-card:hover { border-color: #ff9300; box-shadow: 0 8px 25px rgba(255, 147, 0, 0.15); transform: translateY(-5px); }
-.desconto-card.destaque { border-color: #ff9300; background: linear-gradient(135deg, #fff9f0, #fff); }
+.desconto-card:hover { border-color: #b73337; box-shadow: 0 8px 25px rgba(183, 51, 55, 0.15); transform: translateY(-5px); }
+.desconto-card.destaque { border-color: #b73337; background: linear-gradient(135deg, #fbe9e9, #fff); }
 .desconto-card h3 { margin-bottom: 0.5rem; }
-.desconto-percent { font-size: 3rem; font-weight: bold; color: #ff9300; line-height: 1; }
+.desconto-percent { font-size: 3rem; font-weight: bold; color: #b73337; line-height: 1; }
 .desconto-percent span { font-size: 1.5rem; }
 .desconto-features { text-align: left; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #eee; }
 .desconto-features li { margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative; }
 .desconto-features li::before { content: "✓"; position: absolute; left: 0; color: #4caf50; font-weight: bold; }
 .desconto-cta { background: #333; color: #fff; padding: 2rem; border-radius: 8px; text-align: center; margin: 2rem 0; }
-.desconto-cta a { display: inline-block; background: #ff9300; color: #fff; padding: 1rem 2rem; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 1.1rem; }
+.desconto-cta a { display: inline-block; background: #b73337; color: #fff; padding: 1rem 2rem; border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 1.1rem; }
 .desconto-note { background: #f5f5f5; padding: 1rem; border-radius: 4px; font-size: 0.9rem; color: #666; }
 </style>
 <div class="cms-page descontos-page">

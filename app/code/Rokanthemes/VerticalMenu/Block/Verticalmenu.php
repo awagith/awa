@@ -120,6 +120,15 @@ class Verticalmenu extends \Magento\Framework\View\Element\Template
                 $content = substr($content, 4);
             if(substr($content, strlen($content) - 5) == '</ul>')
                 $content = substr($content, 0, -5);
+            $content = trim($content);
+
+            if ($content === '') {
+                continue;
+            }
+
+            if (!preg_match('/<li\b/i', $content)) {
+                $content = '<li class="vertical-menu-custom-block">'.$content.'</li>';
+            }
 
             $html .= $content;
         }

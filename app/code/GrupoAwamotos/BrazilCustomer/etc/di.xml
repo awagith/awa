@@ -1,4 +1,25 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <!-- Módulo BrazilCustomer - configuração básica -->
+
+    <!-- Plugin: persist Brazil fields from checkout shipping step -->
+    <type name="Magento\Checkout\Model\ShippingInformationManagement">
+        <plugin name="grupoawamotos_brazil_save_checkout_fields"
+                type="GrupoAwamotos\BrazilCustomer\Plugin\Checkout\SaveBrazilFieldsPlugin"
+                sortOrder="10"/>
+    </type>
+
+    <!-- Plugin: persist Brazil fields on customer registration -->
+    <type name="Magento\Customer\Api\AccountManagementInterface">
+        <plugin name="grupoawamotos_brazil_save_registration_fields"
+                type="GrupoAwamotos\BrazilCustomer\Plugin\Customer\SaveBrazilFieldsOnCreatePlugin"
+                sortOrder="10"/>
+    </type>
+
+    <!-- Plugin: persist Brazil fields on account edit -->
+    <type name="Magento\Customer\Controller\Account\EditPost">
+        <plugin name="grupoawamotos_brazil_save_edit_fields"
+                type="GrupoAwamotos\BrazilCustomer\Plugin\Customer\SaveBrazilFieldsOnEditPlugin"
+                sortOrder="10"/>
+    </type>
+
 </config>

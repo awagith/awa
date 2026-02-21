@@ -7,10 +7,17 @@
                 sortOrder="10"/>
     </type>
 
-    <!-- Fix: Prevent InvalidArgumentException for non-Mview indexer action classes -->
+    <!-- Fix: prevent InvalidArgumentException for non-mview indexer action classes -->
     <type name="Magento\Framework\Mview\ActionFactory">
         <plugin name="grupoawamotos_catalogfix_mview_action_factory_guard"
                 type="GrupoAwamotos\CatalogFix\Plugin\MviewActionFactoryPlugin"
+                sortOrder="10"/>
+    </type>
+
+    <!-- Fix: add unmapped_type to position sort to prevent OpenSearch 400 errors -->
+    <type name="Magento\Elasticsearch\SearchAdapter\Query\Builder\Sort\Position">
+        <plugin name="grupoawamotos_catalogfix_position_sort_unmapped"
+                type="GrupoAwamotos\CatalogFix\Plugin\PositionSortUnmappedPlugin"
                 sortOrder="10"/>
     </type>
 </config>
