@@ -81,7 +81,7 @@ class OrderApprovalService
     public function createApprovalRequest(int $orderId, int $requiredLevel = OrderApproval::LEVEL_MANAGER): OrderApproval
     {
         $order = $this->orderRepository->get($orderId);
-        
+
         $approval = $this->approvalFactory->create();
         $approval->setData([
             'order_id' => $orderId,
@@ -92,18 +92,18 @@ class OrderApprovalService
             'order_total' => $order->getGrandTotal(),
             'created_at' => date('Y-m-d H:i:s')
         ]);
-        
+
         $this->approvalResource->save($approval);
-        
+
         // Put order on hold
         $order->hold();
         $order->addCommentToStatusHistory(
             __('Pedido aguardando aprovação B2B. Nível requerido: %1', $this->getLevelName($requiredLevel))
         );
         $this->orderRepository->save($order);
-        
+
         $this->logger->info("B2B Order Approval created for order #$orderId, required level: $requiredLevel");
-        
+
         return $approval;
     }
 
@@ -120,19 +120,19 @@ class OrderApprovalService
     {
         $approval = $this->approvalFactory->create();
         $this->approvalResource->load($approval, $approvalId);
-        
+
         if (!$approval->getId()) {
             throw new LocalizedException(__('Solicitação de aprovação não encontrada.'));
         }
-        
+
         if ($approval->getData('status') !== OrderApproval::STATUS_PENDING) {
             throw new LocalizedException(__('Esta solicitação já foi processada.'));
         }
-        
+
         $currentLevel = (int) $approval->getData('current_level');
         $requiredLevel = (int) $approval->getData('required_level');
         $nextLevel = $approval->getNextLevel($currentLevel);
-        
+
         // Record this approval
         $history = json_decode($approval->getData('approval_history') ?: '[]', true);
         $history[] = [
@@ -143,7 +143,7 @@ class OrderApprovalService
             'date' => date('Y-m-d H:i:s')
         ];
         $approval->setData('approval_history', json_encode($history));
-        
+
         if ($nextLevel && $nextLevel <= $requiredLevel) {
             // Move to next level
             $approval->setData('current_level', $nextLevel);
@@ -152,13 +152,13 @@ class OrderApprovalService
             // Fully approved
             $approval->setData('status', OrderApproval::STATUS_APPROVED);
             $approval->setData('approved_at', date('Y-m-d H:i:s'));
-            
+
             // Release order from hold
             $this->releaseOrder((int) $approval->getData('order_id'));
         }
-        
+
         $this->approvalResource->save($approval);
-        
+
         return true;
     }
 
@@ -175,11 +175,11 @@ class OrderApprovalService
     {
         $approval = $this->approvalFactory->create();
         $this->approvalResource->load($approval, $approvalId);
-        
+
         if (!$approval->getId()) {
             throw new LocalizedException(__('Solicitação de aprovação não encontrada.'));
         }
-        
+
         $history = json_decode($approval->getData('approval_history') ?: '[]', true);
         $history[] = [
             'level' => $approval->getData('current_level'),
@@ -188,17 +188,17 @@ class OrderApprovalService
             'comment' => $reason,
             'date' => date('Y-m-d H:i:s')
         ];
-        
+
         $approval->setData('approval_history', json_encode($history));
         $approval->setData('status', OrderApproval::STATUS_REJECTED);
         $approval->setData('rejection_reason', $reason);
         $approval->setData('updated_at', date('Y-m-d H:i:s'));
-        
+
         $this->approvalResource->save($approval);
-        
+
         // Cancel the order
         $this->cancelOrder((int) $approval->getData('order_id'), $reason);
-        
+
         return true;
     }
 
@@ -214,11 +214,11 @@ class OrderApprovalService
         $collection = $this->collectionFactory->create();
         $collection->filterPending()
                    ->filterByLevel($approverLevel);
-        
+
         if ($customerId) {
             $collection->filterByCustomer($customerId);
         }
-        
+
         return $collection;
     }
 
@@ -232,7 +232,7 @@ class OrderApprovalService
     {
         $collection = $this->collectionFactory->create();
         $collection->addFieldToFilter('order_id', $orderId);
-        
+
         $approval = $collection->getFirstItem();
         return $approval->getId() ? $approval : null;
     }
@@ -245,15 +245,18 @@ class OrderApprovalService
      */
     public function determineRequiredLevel(float $orderTotal): int
     {
-        // Configurable thresholds
-        if ($orderTotal >= 50000) {
+        $thresholdDirector = $this->b2bHelper->getThresholdDirector();
+        $thresholdFinance = $this->b2bHelper->getThresholdFinance();
+        $thresholdManager = $this->b2bHelper->getThresholdManager();
+
+        if ($thresholdDirector > 0 && $orderTotal >= $thresholdDirector) {
             return OrderApproval::LEVEL_DIRECTOR;
-        } elseif ($orderTotal >= 10000) {
+        } elseif ($thresholdFinance > 0 && $orderTotal >= $thresholdFinance) {
             return OrderApproval::LEVEL_FINANCE;
-        } elseif ($orderTotal >= 2000) {
+        } elseif ($thresholdManager > 0 && $orderTotal >= $thresholdManager) {
             return OrderApproval::LEVEL_MANAGER;
         }
-        
+
         return OrderApproval::LEVEL_BUYER; // Auto-approved
     }
 
@@ -305,6 +308,6 @@ class OrderApprovalService
     private function getLevelName(int $level): string
     {
         $levels = OrderApproval::getLevels();
-        return $levels[$level] ?? __('Desconhecido');
+        return (string) ($levels[$level] ?? __('Desconhecido'));
     }
 }

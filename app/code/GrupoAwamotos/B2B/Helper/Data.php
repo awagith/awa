@@ -12,6 +12,7 @@ use Magento\Framework\App\ObjectManager;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Store\Model\ScopeInterface;
+use GrupoAwamotos\B2B\Helper\Config as B2BConfig;
 
 class Data extends AbstractHelper
 {
@@ -24,9 +25,15 @@ class Data extends AbstractHelper
     const XML_PATH_REQUIRE_APPROVAL = 'grupoawamotos_b2b/customer_approval/require_approval';
     const XML_PATH_QUOTE_ENABLED = 'grupoawamotos_b2b/quote_request/enabled';
     const XML_PATH_QUOTE_EXPIRY = 'grupoawamotos_b2b/quote_request/expiry_days';
-    
+
+    // Order Approval
+    const XML_PATH_ORDER_APPROVAL_ENABLED = 'grupoawamotos_b2b/order_approval/enabled';
+    const XML_PATH_THRESHOLD_MANAGER = 'grupoawamotos_b2b/order_approval/threshold_manager';
+    const XML_PATH_THRESHOLD_FINANCE = 'grupoawamotos_b2b/order_approval/threshold_finance';
+    const XML_PATH_THRESHOLD_DIRECTOR = 'grupoawamotos_b2b/order_approval/threshold_director';
+
     /**
-     * B2B Customer Groups
+     * B2B Customer Groups (fallback defaults)
      */
     const GROUP_B2B_ATACADO = 4;
     const GROUP_B2B_VIP = 5;
@@ -44,22 +51,24 @@ class Data extends AbstractHelper
     private $customerRepository;
 
     /**
-     * @var array
+     * @var B2BConfig
      */
-    private $b2bGroups = [
-        self::GROUP_B2B_ATACADO,
-        self::GROUP_B2B_VIP,
-        self::GROUP_B2B_REVENDEDOR,
-        self::GROUP_B2B_PENDENTE
-    ];
+    private $b2bConfig;
+
+    /**
+     * @var array|null
+     */
+    private $b2bGroupsCache = null;
 
     public function __construct(
         Context $context,
         CustomerSession $customerSession,
-        ?CustomerRepositoryInterface $customerRepository = null
+        ?CustomerRepositoryInterface $customerRepository = null,
+        ?B2BConfig $b2bConfig = null
     ) {
         $this->customerSession = $customerSession;
         $this->customerRepository = $customerRepository;
+        $this->b2bConfig = $b2bConfig ?? ObjectManager::getInstance()->get(B2BConfig::class);
         parent::__construct($context);
     }
 
@@ -156,6 +165,50 @@ class Data extends AbstractHelper
     }
 
     /**
+     * Check if order approval is enabled
+     */
+    public function isOrderApprovalEnabled(): bool
+    {
+        return $this->isEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PATH_ORDER_APPROVAL_ENABLED,
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    /**
+     * Get order approval threshold for Manager level
+     */
+    public function getThresholdManager(): float
+    {
+        return (float)($this->scopeConfig->getValue(
+            self::XML_PATH_THRESHOLD_MANAGER,
+            ScopeInterface::SCOPE_STORE
+        ) ?: 2000);
+    }
+
+    /**
+     * Get order approval threshold for Finance level
+     */
+    public function getThresholdFinance(): float
+    {
+        return (float)($this->scopeConfig->getValue(
+            self::XML_PATH_THRESHOLD_FINANCE,
+            ScopeInterface::SCOPE_STORE
+        ) ?: 10000);
+    }
+
+    /**
+     * Get order approval threshold for Director level
+     */
+    public function getThresholdDirector(): float
+    {
+        return (float)($this->scopeConfig->getValue(
+            self::XML_PATH_THRESHOLD_DIRECTOR,
+            ScopeInterface::SCOPE_STORE
+        ) ?: 50000);
+    }
+
+    /**
      * Check if current customer is B2B
      *
      * @return bool
@@ -167,7 +220,7 @@ class Data extends AbstractHelper
         }
 
         $groupId = (int)$this->customerSession->getCustomerGroupId();
-        return in_array($groupId, $this->b2bGroups);
+        return in_array($groupId, $this->getB2BGroupIds());
     }
 
     /**
@@ -185,7 +238,7 @@ class Data extends AbstractHelper
 
             $customer = $this->customerRepository->getById($customerId);
             $groupId = (int)$customer->getGroupId();
-            return in_array($groupId, $this->b2bGroups);
+            return in_array($groupId, $this->getB2BGroupIds());
         } catch (\Exception $e) {
             return false;
         }
@@ -245,31 +298,77 @@ class Data extends AbstractHelper
     }
 
     /**
-     * Get discount percentage for customer group
+     * Get discount percentage for customer group (reads from admin config)
      *
      * @param int $groupId
      * @return float
      */
     public function getGroupDiscount(int $groupId): float
     {
-        $discounts = [
-            self::GROUP_B2B_ATACADO => 15.0,
-            self::GROUP_B2B_VIP => 20.0,
-            self::GROUP_B2B_REVENDEDOR => 10.0,
-            self::GROUP_B2B_PENDENTE => 0.0
-        ];
+        $wholesaleId = $this->b2bConfig->getWholesaleGroupId() ?: self::GROUP_B2B_ATACADO;
+        $vipId = $this->b2bConfig->getVipGroupId() ?: self::GROUP_B2B_VIP;
+        $pendingId = $this->getPendingGroupId();
 
-        return $discounts[$groupId] ?? 0.0;
+        if ($groupId === $wholesaleId) {
+            return $this->b2bConfig->getWholesaleDiscount() ?: 15.0;
+        }
+        if ($groupId === $vipId) {
+            return $this->b2bConfig->getVipDiscount() ?: 20.0;
+        }
+        if ($groupId === $pendingId) {
+            return 0.0;
+        }
+
+        // Revendedor or other B2B groups: fallback 10%
+        return in_array($groupId, $this->getB2BGroupIds()) ? 10.0 : 0.0;
     }
 
     /**
-     * Get all B2B group IDs
+     * Get all B2B group IDs (reads from admin config with fallback)
      *
      * @return array
      */
     public function getB2BGroupIds(): array
     {
-        return $this->b2bGroups;
+        if ($this->b2bGroupsCache !== null) {
+            return $this->b2bGroupsCache;
+        }
+
+        $groups = [];
+        $wholesaleId = $this->b2bConfig->getWholesaleGroupId();
+        $vipId = $this->b2bConfig->getVipGroupId();
+        $defaultId = $this->b2bConfig->getDefaultB2BGroupId();
+
+        if ($wholesaleId) $groups[] = $wholesaleId;
+        if ($vipId) $groups[] = $vipId;
+        if ($defaultId && !in_array($defaultId, $groups)) $groups[] = $defaultId;
+
+        // Always include pending group
+        $pendingId = $this->getPendingGroupId();
+        if ($pendingId && !in_array($pendingId, $groups)) $groups[] = $pendingId;
+
+        // Fallback to hardcoded if no config set
+        if (empty($groups)) {
+            $groups = [
+                self::GROUP_B2B_ATACADO,
+                self::GROUP_B2B_VIP,
+                self::GROUP_B2B_REVENDEDOR,
+                self::GROUP_B2B_PENDENTE
+            ];
+        }
+
+        $this->b2bGroupsCache = array_unique(array_map('intval', $groups));
+        return $this->b2bGroupsCache;
+    }
+
+    /**
+     * Get pending group ID
+     *
+     * @return int
+     */
+    public function getPendingGroupId(): int
+    {
+        return self::GROUP_B2B_PENDENTE;
     }
 
     /**
@@ -280,7 +379,7 @@ class Data extends AbstractHelper
      */
     public function isB2BGroup(int $groupId): bool
     {
-        return in_array($groupId, $this->b2bGroups);
+        return in_array($groupId, $this->getB2BGroupIds());
     }
 
     /**
@@ -292,8 +391,8 @@ class Data extends AbstractHelper
     public function getGroupIdByCode(string $code): ?int
     {
         $mapping = [
-            'b2b_atacado' => self::GROUP_B2B_ATACADO,
-            'b2b_vip' => self::GROUP_B2B_VIP,
+            'b2b_atacado' => $this->b2bConfig->getWholesaleGroupId() ?: self::GROUP_B2B_ATACADO,
+            'b2b_vip' => $this->b2bConfig->getVipGroupId() ?: self::GROUP_B2B_VIP,
             'b2b_revendedor' => self::GROUP_B2B_REVENDEDOR,
             'b2b_pendente' => self::GROUP_B2B_PENDENTE,
         ];

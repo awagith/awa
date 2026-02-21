@@ -133,13 +133,7 @@ class RestrictedProductCollectionPlugin
      */
     private function getGroupNameById(int $groupId): ?string
     {
-        $groupMap = [
-            4 => 'B2B Atacado',
-            5 => 'B2B VIP',
-            6 => 'B2B Revendedor',
-            7 => 'B2B Pendente'
-        ];
-
-        return $groupMap[$groupId] ?? null;
+        $name = $this->b2bHelper->getB2BGroupName($groupId);
+        return $name !== 'Cliente' ? $name : null;
     }
 }

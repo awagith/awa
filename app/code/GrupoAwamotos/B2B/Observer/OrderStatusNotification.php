@@ -12,6 +12,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use GrupoAwamotos\B2B\Model\Notification\WhatsAppService;
+use GrupoAwamotos\B2B\Helper\Data as B2BHelper;
 use Psr\Log\LoggerInterface;
 
 class OrderStatusNotification implements ObserverInterface
@@ -19,6 +20,7 @@ class OrderStatusNotification implements ObserverInterface
     private ScopeConfigInterface $scopeConfig;
     private WhatsAppService $whatsAppService;
     private CustomerRepositoryInterface $customerRepository;
+    private B2BHelper $b2bHelper;
     private LoggerInterface $logger;
     private array $notifiedOrders = [];
 
@@ -26,11 +28,13 @@ class OrderStatusNotification implements ObserverInterface
         ScopeConfigInterface $scopeConfig,
         WhatsAppService $whatsAppService,
         CustomerRepositoryInterface $customerRepository,
+        B2BHelper $b2bHelper,
         LoggerInterface $logger
     ) {
         $this->scopeConfig = $scopeConfig;
         $this->whatsAppService = $whatsAppService;
         $this->customerRepository = $customerRepository;
+        $this->b2bHelper = $b2bHelper;
         $this->logger = $logger;
     }
 
@@ -65,9 +69,7 @@ class OrderStatusNotification implements ObserverInterface
 
             // Verifica se é cliente B2B
             $customer = $this->customerRepository->getById($order->getCustomerId());
-            $b2bGroups = [4, 5, 6, 7];
-
-            if (!in_array($customer->getGroupId(), $b2bGroups)) {
+            if (!$this->b2bHelper->isB2BGroup((int) $customer->getGroupId())) {
                 return;
             }
 

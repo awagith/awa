@@ -15,11 +15,6 @@ use Magento\Framework\Serialize\Serializer\Json;
 class ShippingViewModel implements ArgumentInterface
 {
     /**
-     * B2B Customer Group IDs
-     */
-    private const B2B_GROUP_IDS = [4, 5, 6];
-
-    /**
      * @var CustomerSession
      */
     private $customerSession;
@@ -50,18 +45,13 @@ class ShippingViewModel implements ArgumentInterface
     }
 
     /**
-     * Check if customer is B2B
+     * Check if customer is B2B (delegates to CarrierService)
      *
      * @return bool
      */
     public function isB2BCustomer(): bool
     {
-        if (!$this->customerSession->isLoggedIn()) {
-            return false;
-        }
-
-        $groupId = (int)$this->customerSession->getCustomerGroupId();
-        return in_array($groupId, self::B2B_GROUP_IDS);
+        return $this->carrierService->isB2BCustomer();
     }
 
     /**

@@ -10,14 +10,20 @@ namespace GrupoAwamotos\B2B\Block\Header;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use GrupoAwamotos\B2B\Helper\Data as B2BHelper;
+use GrupoAwamotos\B2B\Helper\Config as B2BConfig;
 
 class StatusPanel extends Template
 {
     private CustomerSession $customerSession;
     private B2BHelper $b2bHelper;
+    private B2BConfig $b2bConfig;
     private PriceCurrencyInterface $priceCurrency;
+    private ResourceConnection $resourceConnection;
+    private CustomerRepositoryInterface $customerRepository;
 
     protected $_template = 'GrupoAwamotos_B2B::header/status-panel.phtml';
 
@@ -26,11 +32,17 @@ class StatusPanel extends Template
         CustomerSession $customerSession,
         B2BHelper $b2bHelper,
         PriceCurrencyInterface $priceCurrency,
+        B2BConfig $b2bConfig,
+        ResourceConnection $resourceConnection,
+        CustomerRepositoryInterface $customerRepository,
         array $data = []
     ) {
         $this->customerSession = $customerSession;
         $this->b2bHelper = $b2bHelper;
+        $this->b2bConfig = $b2bConfig;
         $this->priceCurrency = $priceCurrency;
+        $this->resourceConnection = $resourceConnection;
+        $this->customerRepository = $customerRepository;
         parent::__construct($context, $data);
     }
 
@@ -85,34 +97,38 @@ class StatusPanel extends Template
     }
 
     /**
-     * Get company name from customer attribute
+     * Get company name from b2b_razao_social custom attribute
      */
     private function getCompanyName(): string
     {
-        $customer = $this->customerSession->getCustomer();
-        if ($customer) {
-            // Try different possible attribute names
-            $company = $customer->getData('company')
-                ?? $customer->getData('empresa')
-                ?? $customer->getData('razao_social')
-                ?? '';
-            return (string) $company;
+        try {
+            $customerId = $this->customerSession->getCustomerId();
+            if ($customerId) {
+                $customer = $this->customerRepository->getById($customerId);
+                $attr = $customer->getCustomAttribute('b2b_razao_social');
+                if ($attr && $attr->getValue()) {
+                    return (string) $attr->getValue();
+                }
+                // Fallback to other attribute names
+                foreach (['razao_social', 'company', 'empresa'] as $attrCode) {
+                    $fallback = $customer->getCustomAttribute($attrCode);
+                    if ($fallback && $fallback->getValue()) {
+                        return (string) $fallback->getValue();
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            // silently fail
         }
         return '';
     }
 
     /**
-     * Get customer group name
+     * Get customer group name (uses Helper for consistent naming)
      */
     private function getGroupName(int $groupId): string
     {
-        $groupNames = [
-            4 => 'Atacado',
-            5 => 'VIP',
-            6 => 'Revendedor',
-            7 => 'Distribuidor',
-        ];
-        return $groupNames[$groupId] ?? 'B2B';
+        return $this->b2bHelper->getB2BGroupName($groupId);
     }
 
     /**
@@ -120,53 +136,79 @@ class StatusPanel extends Template
      */
     private function getGroupBadge(int $groupId): array
     {
-        $badges = [
-            4 => ['color' => '#2563eb', 'icon' => 'building', 'label' => 'Atacado'],
-            5 => ['color' => '#7c3aed', 'icon' => 'crown', 'label' => 'VIP'],
-            6 => ['color' => '#059669', 'icon' => 'store', 'label' => 'Revendedor'],
-            7 => ['color' => '#dc2626', 'icon' => 'truck', 'label' => 'Distribuidor'],
-        ];
-        return $badges[$groupId] ?? ['color' => '#6b7280', 'icon' => 'briefcase', 'label' => 'B2B'];
+        $wholesaleId = $this->b2bConfig->getWholesaleGroupId() ?: B2BHelper::GROUP_B2B_ATACADO;
+        $vipId = $this->b2bConfig->getVipGroupId() ?: B2BHelper::GROUP_B2B_VIP;
+        $pendingId = B2BHelper::GROUP_B2B_PENDENTE;
+
+        if ($groupId === $wholesaleId) {
+            return ['color' => '#2563eb', 'icon' => 'building', 'label' => 'Atacado'];
+        }
+        if ($groupId === $vipId) {
+            return ['color' => '#7c3aed', 'icon' => 'crown', 'label' => 'VIP'];
+        }
+        if ($groupId === $pendingId) {
+            return ['color' => '#f59e0b', 'icon' => 'clock-o', 'label' => 'Pendente'];
+        }
+
+        // Other B2B groups (Revendedor, etc.)
+        return ['color' => '#059669', 'icon' => 'store', 'label' => $this->getGroupName($groupId)];
     }
 
     /**
-     * Get discount percentage for customer group
+     * Get discount percentage for customer group (reads from admin config)
      */
     private function getDiscountPercentage(int $groupId): int
     {
-        $discountMap = [
-            4 => 15,  // Atacado
-            5 => 25,  // VIP
-            6 => 10,  // Revendedor
-            7 => 20,  // Distribuidor
-        ];
-        return $discountMap[$groupId] ?? 0;
+        return (int) $this->b2bHelper->getGroupDiscount($groupId);
     }
 
     /**
-     * Get credit limit for B2B customer
+     * Get credit limit from grupoawamotos_b2b_credit_limit table
      */
     private function getCreditLimit(): float
     {
-        $customer = $this->customerSession->getCustomer();
-        if ($customer) {
-            $limit = $customer->getData('credit_limit') ?? $customer->getData('limite_credito') ?? 0;
-            return (float) $limit;
+        $customerId = $this->customerSession->getCustomerId();
+        if (!$customerId) {
+            return 0.0;
         }
-        return 0.0;
+
+        try {
+            $connection = $this->resourceConnection->getConnection();
+            $tableName = $this->resourceConnection->getTableName('grupoawamotos_b2b_credit_limit');
+            $select = $connection->select()
+                ->from($tableName, ['credit_limit'])
+                ->where('customer_id = ?', (int) $customerId);
+            $result = $connection->fetchOne($select);
+            return $result !== false ? (float) $result : 0.0;
+        } catch (\Exception $e) {
+            return 0.0;
+        }
     }
 
     /**
-     * Get available credit
+     * Get available credit (credit_limit - used_credit)
      */
     private function getAvailableCredit(): float
     {
-        $customer = $this->customerSession->getCustomer();
-        if ($customer) {
-            $available = $customer->getData('credit_available') ?? $customer->getData('credito_disponivel') ?? 0;
-            return (float) $available;
+        $customerId = $this->customerSession->getCustomerId();
+        if (!$customerId) {
+            return 0.0;
         }
-        return $this->getCreditLimit();
+
+        try {
+            $connection = $this->resourceConnection->getConnection();
+            $tableName = $this->resourceConnection->getTableName('grupoawamotos_b2b_credit_limit');
+            $select = $connection->select()
+                ->from($tableName, ['credit_limit', 'used_credit'])
+                ->where('customer_id = ?', (int) $customerId);
+            $row = $connection->fetchRow($select);
+            if ($row) {
+                return (float) $row['credit_limit'] - (float) $row['used_credit'];
+            }
+        } catch (\Exception $e) {
+            // silently fail
+        }
+        return 0.0;
     }
 
     /**

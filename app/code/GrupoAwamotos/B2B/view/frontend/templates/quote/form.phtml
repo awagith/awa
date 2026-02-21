@@ -5,7 +5,7 @@
  * @var \GrupoAwamotos\B2B\Block\Quote\Form $block
  */
 ?>
-<div class="b2b-quote-form-container">
+<div class="b2b-quote-form-container b2b-page-shell">
     <div class="page-title-wrapper">
         <h1 class="page-title">
             <span class="base"><?= $block->escapeHtml(__('Solicitar Cotação')) ?></span>
@@ -190,85 +190,3 @@
         </div>
     <?php endif; ?>
 </div>
-
-<style>
-    .b2b-quote-wrapper {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 30px;
-        margin-top: 20px;
-    }
-    
-    @media (max-width: 768px) {
-        .b2b-quote-wrapper {
-            grid-template-columns: 1fr;
-        }
-    }
-    
-    .b2b-quote-items,
-    .b2b-quote-form {
-        background: #f9f9f9;
-        padding: 20px;
-        border-radius: 8px;
-    }
-    
-    .b2b-quote-items h2,
-    .b2b-quote-form h2 {
-        font-size: 1.3rem;
-        margin-bottom: 15px;
-        padding-bottom: 10px;
-        border-bottom: 2px solid #e0e0e0;
-    }
-    
-    .b2b-quote-items table {
-        width: 100%;
-    }
-    
-    .b2b-quote-items .note {
-        margin-top: 10px;
-        color: #666;
-    }
-    
-    .b2b-quote-info {
-        background: #e3f2fd;
-        padding: 15px;
-        border-radius: 4px;
-        margin: 20px 0;
-        border-left: 4px solid #1976d2;
-    }
-    
-    .b2b-quote-info p {
-        margin: 0;
-        color: #1565c0;
-    }
-    
-    .b2b-quote-form .field {
-        margin-bottom: 15px;
-    }
-    
-    .b2b-quote-form .field.required .label:after {
-        content: '*';
-        color: #e74c3c;
-        margin-left: 3px;
-    }
-    
-    .actions-toolbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 20px;
-        padding-top: 20px;
-        border-top: 1px solid #e0e0e0;
-    }
-    
-    .action.primary.submit {
-        background: #1976d2;
-        border-color: #1976d2;
-        padding: 12px 30px;
-        font-size: 1.1rem;
-    }
-    
-    .action.primary.submit:hover {
-        background: #1565c0;
-    }
-</style>

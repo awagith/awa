@@ -13,14 +13,10 @@ use GrupoAwamotos\B2B\Model\ResourceModel\Carrier as CarrierResource;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use GrupoAwamotos\B2B\Helper\Data as B2BHelper;
 
 class CarrierService
 {
-    /**
-     * B2B Customer Group IDs
-     */
-    private const B2B_GROUP_IDS = [4, 5, 6]; // B2B Atacado, VIP, Revendedor
-
     /**
      * @var CarrierCollectionFactory
      */
@@ -42,21 +38,29 @@ class CarrierService
     private $customerSession;
 
     /**
+     * @var B2BHelper
+     */
+    private $b2bHelper;
+
+    /**
      * @param CarrierCollectionFactory $carrierCollectionFactory
      * @param CarrierFactory $carrierFactory
      * @param CarrierResource $carrierResource
      * @param CustomerSession $customerSession
+     * @param B2BHelper $b2bHelper
      */
     public function __construct(
         CarrierCollectionFactory $carrierCollectionFactory,
         CarrierFactory $carrierFactory,
         CarrierResource $carrierResource,
-        CustomerSession $customerSession
+        CustomerSession $customerSession,
+        B2BHelper $b2bHelper
     ) {
         $this->carrierCollectionFactory = $carrierCollectionFactory;
         $this->carrierFactory = $carrierFactory;
         $this->carrierResource = $carrierResource;
         $this->customerSession = $customerSession;
+        $this->b2bHelper = $b2bHelper;
     }
 
     /**
@@ -66,12 +70,7 @@ class CarrierService
      */
     public function isB2BCustomer(): bool
     {
-        if (!$this->customerSession->isLoggedIn()) {
-            return false;
-        }
-
-        $groupId = (int)$this->customerSession->getCustomerGroupId();
-        return in_array($groupId, self::B2B_GROUP_IDS);
+        return $this->b2bHelper->isB2BCustomer();
     }
 
     /**

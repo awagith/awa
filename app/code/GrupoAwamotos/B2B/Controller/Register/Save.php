@@ -24,6 +24,7 @@ use Magento\Framework\Encryption\EncryptorInterface;
 use Magento\Framework\Math\Random;
 use Magento\Framework\Mail\Template\TransportBuilder;
 use GrupoAwamotos\B2B\Helper\CnpjValidator;
+use GrupoAwamotos\B2B\Helper\Data as B2BHelper;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
 use Magento\Framework\Exception\LocalizedException;
@@ -230,7 +231,7 @@ class Save implements HttpPostActionInterface
             $customer->setEmail($data['email']);
             $customer->setFirstname($data['firstname']);
             $customer->setLastname($data['lastname']);
-            $customer->setGroupId(7); // B2B Pendente
+            $customer->setGroupId(B2BHelper::GROUP_B2B_PENDENTE);
             $customer->setStoreId($this->storeManager->getStore()->getId());
             $customer->setWebsiteId($this->storeManager->getStore()->getWebsiteId());
 

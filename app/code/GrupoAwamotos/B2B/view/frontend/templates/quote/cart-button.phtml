@@ -7,7 +7,9 @@
  */
 ?>
 <?php if ($block->shouldDisplay()): ?>
-<div id="b2b-cart-quote-wrapper" style="display:none;">
+<div id="b2b-cart-quote-wrapper"
+     class="b2b-cart-quote-wrapper"
+     data-mage-init='{"GrupoAwamotos_B2B/js/quote/cart-button":{"targets":[".cart-summary",".checkout-methods-items","#cart-totals"],"fallbackTarget":".column.main","retryDelay":180,"maxAttempts":20}}'>
     <div class="b2b-cart-quote-box">
         <div class="b2b-quote-header">
             <span class="b2b-quote-icon">🏢</span>
@@ -21,93 +23,4 @@
         </a>
     </div>
 </div>
-
-<script>
-require(['jquery', 'domReady!'], function($) {
-    var wrapper = $('#b2b-cart-quote-wrapper');
-    var quoteBox = wrapper.find('.b2b-cart-quote-box');
-    
-    // Try to insert into cart summary
-    var targets = ['.cart-summary', '.checkout-methods-items', '#cart-totals'];
-    var inserted = false;
-    
-    for (var i = 0; i < targets.length && !inserted; i++) {
-        var $target = $(targets[i]).first();
-        if ($target.length) {
-            $target.after(quoteBox);
-            inserted = true;
-        }
-    }
-    
-    // If no target found, show at end of content
-    if (!inserted) {
-        quoteBox.appendTo('.column.main');
-    }
-    
-    quoteBox.show();
-    wrapper.remove();
-});
-</script>
-
-<style>
-.b2b-cart-quote-box {
-    background: linear-gradient(135deg, #b73337 0%, #8e2629 100%);
-    border-radius: 10px;
-    padding: 20px;
-    margin-top: 20px;
-    color: #fff;
-    text-align: center;
-}
-
-.b2b-quote-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.b2b-quote-icon {
-    font-size: 24px;
-}
-
-.b2b-quote-title {
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.b2b-quote-desc {
-    font-size: 14px;
-    color: rgba(255,255,255,0.8);
-    margin: 0 0 15px;
-    line-height: 1.5;
-}
-
-.b2b-quote-btn {
-    display: inline-block;
-    background: linear-gradient(135deg, #fff, #f5f5f5) !important;
-    border: none !important;
-    padding: 12px 30px !important;
-    font-size: 14px !important;
-    font-weight: 600 !important;
-    border-radius: 6px !important;
-    color: #b73337 !important;
-    text-decoration: none !important;
-    text-transform: uppercase !important;
-    letter-spacing: 0.5px !important;
-    transition: all 0.3s ease !important;
-}
-
-.b2b-quote-btn:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3) !important;
-    background: #fff !important;
-}
-
-@media (max-width: 768px) {
-    .b2b-cart-quote-box {
-        padding: 15px;
-    }
-}
-</style>
 <?php endif; ?>

@@ -70,15 +70,7 @@ class DiscountBadge extends Template
     public function getDiscountPercentage(): int
     {
         $customerGroupId = (int) $this->customerSession->getCustomerGroupId();
-        
-        // Discount map based on customer group
-        $discountMap = [
-            4 => 15,  // B2B Atacado
-            5 => 20,  // B2B VIP
-            6 => 10,  // B2B Revendedor
-        ];
-        
-        return $discountMap[$customerGroupId] ?? 0;
+        return (int) $this->b2bHelper->getGroupDiscount($customerGroupId);
     }
 
     /**
@@ -89,14 +81,7 @@ class DiscountBadge extends Template
     public function getGroupName(): string
     {
         $customerGroupId = (int) $this->customerSession->getCustomerGroupId();
-        
-        $groupNames = [
-            4 => 'Atacado',
-            5 => 'VIP',
-            6 => 'Revendedor',
-        ];
-        
-        return $groupNames[$customerGroupId] ?? 'B2B';
+        return $this->b2bHelper->getB2BGroupName($customerGroupId);
     }
 
     /**

@@ -8,7 +8,8 @@
 $viewModel = $block->getData('view_model');
 $lists = $viewModel->getCustomerLists();
 ?>
-<div class="b2b-shoppinglist-index">
+<div class="b2b-shoppinglist-index b2b-page-shell"
+     data-mage-init='<?= /* @noEscape */ json_encode(['GrupoAwamotos_B2B/js/shoppinglist/index' => new \stdClass()]) ?>'>
     <div class="block-title">
         <strong><?= $block->escapeHtml(__('Minhas Listas de Compras')) ?></strong>
     </div>
@@ -89,8 +90,7 @@ $lists = $viewModel->getCustomerLists();
                         </a>
                         <a href="<?= $block->escapeUrl($block->getDeleteUrl((int) $list->getId())) ?>"
                            class="action delete"
-                           data-confirm="<?= $block->escapeHtmlAttr(__('Tem certeza que deseja excluir esta lista?')) ?>"
-                           onclick="return confirm(this.dataset.confirm);">
+                           data-confirm="<?= $block->escapeHtmlAttr(__('Tem certeza que deseja excluir esta lista?')) ?>">
                             <span><?= $block->escapeHtml(__('Excluir')) ?></span>
                         </a>
                     </div>
@@ -99,50 +99,3 @@ $lists = $viewModel->getCustomerLists();
         </div>
     <?php endif; ?>
 </div>
-
-<style>
-    .b2b-shoppinglist-index .block-title { margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #e0e0e0; }
-    .b2b-shoppinglist-index .block-title strong { font-size: 1.4rem; }
-    .shoppinglist-actions-top { margin-bottom: 20px; }
-    .shoppinglist-create-form { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-bottom: 24px; }
-    .shoppinglist-create-form .field { margin-bottom: 12px; }
-    .shoppinglist-create-form .label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 4px; }
-    .shoppinglist-create-form input[type="text"],
-    .shoppinglist-create-form textarea { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px; }
-    .shoppinglist-create-form .actions { display: flex; gap: 10px; margin-top: 12px; }
-    .shoppinglist-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-    .shoppinglist-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px; transition: box-shadow 0.2s; }
-    .shoppinglist-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
-    .card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
-    .card-header .list-name { margin: 0; font-size: 16px; }
-    .card-header .list-name a { color: #1f2937; text-decoration: none; }
-    .card-header .list-name a:hover { color: #0066FF; }
-    .default-badge { background: #dbeafe; color: #1d4ed8; font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
-    .list-description { color: #6b7280; font-size: 13px; margin: 0 0 12px; line-height: 1.4; }
-    .card-meta { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-top: 1px solid #f3f4f6; border-bottom: 1px solid #f3f4f6; margin-bottom: 12px; }
-    .card-meta .item-count { font-size: 13px; color: #6b7280; }
-    .card-meta .list-total { font-size: 15px; font-weight: 600; color: #059669; }
-    .card-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-    .card-actions .action { padding: 6px 14px; border-radius: 6px; font-size: 13px; text-decoration: none; cursor: pointer; border: 1px solid #d1d5db; color: #374151; background: #fff; }
-    .card-actions .action:hover { background: #f3f4f6; }
-    .card-actions .action.primary { background: #0066FF; color: #fff; border-color: #0066FF; }
-    .card-actions .action.primary:hover { background: #0052CC; }
-    .card-actions .action.delete { color: #b91c1c; border-color: #fecaca; }
-    .card-actions .action.delete:hover { background: #fef2f2; }
-    @media (max-width: 768px) { .shoppinglist-grid { grid-template-columns: 1fr; } }
-</style>
-
-<script>
-require(['jquery'], function($) {
-    'use strict';
-    $('#btn-create-list').on('click', function() {
-        $('#create-list-form').slideDown(200);
-        $(this).hide();
-        $('#list-name').focus();
-    });
-    $('#btn-cancel-create').on('click', function() {
-        $('#create-list-form').slideUp(200);
-        $('#btn-create-list').show();
-    });
-});
-</script>

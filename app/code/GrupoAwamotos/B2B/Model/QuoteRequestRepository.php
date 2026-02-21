@@ -11,13 +11,17 @@ use GrupoAwamotos\B2B\Api\QuoteRequestRepositoryInterface;
 use GrupoAwamotos\B2B\Helper\Config;
 use GrupoAwamotos\B2B\Model\ResourceModel\QuoteRequest as QuoteRequestResource;
 use GrupoAwamotos\B2B\Model\ResourceModel\QuoteRequest\CollectionFactory;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Framework\Api\SearchResultsInterfaceFactory;
 use Magento\Framework\Exception\CouldNotDeleteException;
 use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Stdlib\DateTime\DateTime;
+use Magento\Quote\Api\CartManagementInterface;
+use Magento\Quote\Api\CartRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
 class QuoteRequestRepository implements QuoteRequestRepositoryInterface
@@ -62,6 +66,21 @@ class QuoteRequestRepository implements QuoteRequestRepositoryInterface
      */
     private $logger;
 
+    /**
+     * @var CartManagementInterface
+     */
+    private $cartManagement;
+
+    /**
+     * @var CartRepositoryInterface
+     */
+    private $cartRepository;
+
+    /**
+     * @var ProductRepositoryInterface
+     */
+    private $productRepository;
+
     public function __construct(
         QuoteRequestFactory $quoteRequestFactory,
         QuoteRequestResource $resource,
@@ -70,7 +89,10 @@ class QuoteRequestRepository implements QuoteRequestRepositoryInterface
         CheckoutSession $checkoutSession,
         Config $config,
         DateTime $dateTime,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        CartManagementInterface $cartManagement,
+        CartRepositoryInterface $cartRepository,
+        ProductRepositoryInterface $productRepository
     ) {
         $this->quoteRequestFactory = $quoteRequestFactory;
         $this->resource = $resource;
@@ -80,6 +102,9 @@ class QuoteRequestRepository implements QuoteRequestRepositoryInterface
         $this->config = $config;
         $this->dateTime = $dateTime;
         $this->logger = $logger;
+        $this->cartManagement = $cartManagement;
+        $this->cartRepository = $cartRepository;
+        $this->productRepository = $productRepository;
     }
 
     /**
@@ -273,14 +298,88 @@ class QuoteRequestRepository implements QuoteRequestRepositoryInterface
      */
     public function convertToOrder(int $requestId): int
     {
-        // Implementação simplificada - pode ser expandida
         $quoteRequest = $this->getById($requestId);
-        
-        // Marcar como convertido
-        $quoteRequest->setStatus(QuoteRequestInterface::STATUS_CONVERTED);
-        $this->save($quoteRequest);
-        
-        // Retornar 0 - implementação real criaria o pedido
-        return 0;
+
+        if (!in_array($quoteRequest->getStatus(), [
+            QuoteRequestInterface::STATUS_QUOTED,
+            QuoteRequestInterface::STATUS_ACCEPTED
+        ])) {
+            throw new LocalizedException(
+                __('Apenas cotações respondidas ou aceitas podem ser convertidas em pedido.')
+            );
+        }
+
+        $customerId = $quoteRequest->getCustomerId();
+        if (!$customerId) {
+            throw new LocalizedException(__('Cliente não identificado na cotação.'));
+        }
+
+        try {
+            // Create a new cart for the customer
+            $cartId = $this->cartManagement->createEmptyCartForCustomer($customerId);
+            $cart = $this->cartRepository->get($cartId);
+
+            // Add quoted items to the cart
+            $items = $quoteRequest->getItems();
+            foreach ($items as $item) {
+                $productId = $item['product_id'] ?? null;
+                if (!$productId) {
+                    continue;
+                }
+
+                try {
+                    $product = $this->productRepository->getById((int) $productId);
+                    $request = new \Magento\Framework\DataObject([
+                        'qty' => $item['qty'] ?? 1
+                    ]);
+                    $cart->addProduct($product, $request);
+                } catch (\Exception $e) {
+                    $this->logger->warning(
+                        sprintf('B2B convertToOrder: produto %d ignorado - %s', $productId, $e->getMessage())
+                    );
+                }
+            }
+
+            if (!$cart->hasItems()) {
+                throw new LocalizedException(__('Nenhum produto da cotação pôde ser adicionado ao carrinho.'));
+            }
+
+            // Apply quoted prices using custom price
+            foreach ($cart->getAllItems() as $cartItem) {
+                $sku = $cartItem->getSku();
+                foreach ($items as $item) {
+                    if (($item['sku'] ?? '') === $sku && isset($item['quoted_price'])) {
+                        $cartItem->setCustomPrice((float) $item['quoted_price']);
+                        $cartItem->setOriginalCustomPrice((float) $item['quoted_price']);
+                        $cartItem->getProduct()->setIsSuperMode(true);
+                    }
+                }
+            }
+
+            $cart->collectTotals();
+            $this->cartRepository->save($cart);
+
+            // Load this cart into the checkout session so the customer can complete checkout
+            $this->checkoutSession->setQuoteId($cartId);
+
+            // Update quote request status
+            $quoteRequest->setStatus(QuoteRequestInterface::STATUS_CONVERTED);
+            $this->save($quoteRequest);
+
+            $this->logger->info(
+                sprintf('B2B: Cotação #%d convertida em carrinho #%d para cliente #%d',
+                    $requestId, $cartId, $customerId)
+            );
+
+            return (int) $cartId;
+
+        } catch (LocalizedException $e) {
+            throw $e;
+        } catch (\Exception $e) {
+            $this->logger->error('B2B convertToOrder error: ' . $e->getMessage());
+            throw new CouldNotSaveException(
+                __('Erro ao converter cotação em pedido: %1', $e->getMessage())
+            );
+        }
     }
 }

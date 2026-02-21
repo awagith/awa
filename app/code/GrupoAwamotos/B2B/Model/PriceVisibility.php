@@ -59,7 +59,7 @@ class PriceVisibility implements PriceVisibilityInterface
         CustomerSession $customerSession,
         CustomerRepositoryInterface $customerRepository,
         UrlInterface $urlBuilder,
-        SyncLogResource $syncLogResource
+        ?SyncLogResource $syncLogResource = null
     ) {
         $this->config = $config;
         $this->customerSession = $customerSession;
@@ -294,7 +294,7 @@ class PriceVisibility implements PriceVisibilityInterface
             $erpCode = ($attr && $attr->getValue()) ? $attr->getValue() : null;
 
             // Fallback: entity_map table
-            if ($erpCode === null) {
+            if ($erpCode === null && $this->syncLogResource !== null) {
                 $erpCode = $this->syncLogResource->getErpCodeByMagentoId('customer', $customerId);
             }
 

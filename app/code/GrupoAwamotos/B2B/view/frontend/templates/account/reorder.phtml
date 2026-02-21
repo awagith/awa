@@ -2,7 +2,8 @@
 /** @var \GrupoAwamotos\B2B\Block\Account\Reorder $block */
 $orders = $block->getRecentOrders(10);
 ?>
-<div class="b2b-reorder-page">
+<div class="b2b-reorder-page b2b-page-shell"
+     data-mage-init='<?= /* @noEscape */ json_encode(['GrupoAwamotos_B2B/js/account/reorder' => new \stdClass()]) ?>'>
     <div class="b2b-section-header">
         <h1><?= __('Repetir Pedido') ?></h1>
         <p class="section-subtitle"><?= __('Selecione um pedido anterior para adicionar os produtos ao carrinho com preços atualizados do seu grupo.') ?></p>
@@ -31,7 +32,12 @@ $orders = $block->getRecentOrders(10);
                 <table class="reorder-items">
                     <thead>
                         <tr>
-                            <th class="col-select"><input type="checkbox" checked onchange="toggleAllItems(this, <?= (int)$order->getId() ?>)" /></th>
+                            <th class="col-select">
+                                <input type="checkbox"
+                                       checked
+                                       class="js-reorder-toggle-all"
+                                       data-order-id="<?= (int) $order->getId() ?>" />
+                            </th>
                             <th><?= __('Produto') ?></th>
                             <th><?= __('SKU') ?></th>
                             <th><?= __('Qtd') ?></th>
@@ -43,7 +49,8 @@ $orders = $block->getRecentOrders(10);
                         <tr>
                             <td class="col-select">
                                 <input type="checkbox" name="items[]" value="<?= (int)$item->getItemId() ?>" checked
-                                       class="reorder-item-check-<?= (int)$order->getId() ?>" />
+                                       class="js-reorder-item-check"
+                                       data-order-id="<?= (int) $order->getId() ?>" />
                             </td>
                             <td data-th="<?= __('Produto') ?>"><?= $block->escapeHtml($item->getName()) ?></td>
                             <td data-th="<?= __('SKU') ?>"><?= $block->escapeHtml($item->getSku()) ?></td>
@@ -67,32 +74,3 @@ $orders = $block->getRecentOrders(10);
         <p class="empty-message"><?= __('Nenhum pedido encontrado para reordenar.') ?></p>
     <?php endif; ?>
 </div>
-
-<script>
-function toggleAllItems(checkbox, orderId) {
-    var items = document.querySelectorAll('.reorder-item-check-' + orderId);
-    items.forEach(function(item) { item.checked = checkbox.checked; });
-}
-</script>
-
-<style>
-.b2b-reorder-page .section-subtitle { color: #666; font-size: 14px; margin-top: 4px; }
-.reorder-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; margin-bottom: 16px; overflow: hidden; }
-.reorder-card__header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; background: #fafafa; border-bottom: 1px solid #eee; }
-.reorder-card__info { display: flex; align-items: center; gap: 12px; }
-.reorder-card__info strong { font-size: 15px; }
-.reorder-card__date { color: #999; font-size: 13px; }
-.reorder-card__total { font-size: 18px; font-weight: 700; color: #1976d2; }
-.reorder-items { width: 100%; border-collapse: collapse; }
-.reorder-items th { text-align: left; padding: 8px 20px; font-size: 12px; text-transform: uppercase; color: #999; border-bottom: 1px solid #eee; }
-.reorder-items td { padding: 10px 20px; border-bottom: 1px solid #f5f5f5; font-size: 14px; }
-.col-select { width: 40px; text-align: center; }
-.reorder-card__actions { display: flex; align-items: center; gap: 12px; padding: 16px 20px; background: #fafafa; border-top: 1px solid #eee; }
-.btn-reorder { background: #1976d2; color: #fff; border: none; padding: 10px 24px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600; }
-.btn-reorder:hover { background: #1565c0; }
-.reorder-note { font-size: 12px; color: #999; }
-.reorder-status--complete { background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 8px; font-size: 11px; }
-.reorder-status--processing { background: #e3f2fd; color: #1565c0; padding: 2px 8px; border-radius: 8px; font-size: 11px; }
-.reorder-status--closed { background: #f5f5f5; color: #666; padding: 2px 8px; border-radius: 8px; font-size: 11px; }
-.empty-message { color: #999; text-align: center; padding: 40px; }
-</style>

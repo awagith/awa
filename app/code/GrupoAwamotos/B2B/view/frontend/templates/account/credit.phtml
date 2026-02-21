@@ -4,7 +4,7 @@ $credit = $block->getCreditLimit();
 $transactions = $block->getTransactions();
 $usagePercent = $block->getUsagePercent();
 ?>
-<div class="b2b-credit-page">
+<div class="b2b-credit-page b2b-page-shell">
     <div class="b2b-section-header">
         <h1><?= __('Meu Crédito B2B') ?></h1>
     </div>
@@ -82,34 +82,3 @@ $usagePercent = $block->getUsagePercent();
         <?php endif; ?>
     </div>
 </div>
-
-<style>
-.credit-summary-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
-.credit-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px; text-align: center; }
-.credit-card__label { display: block; font-size: 13px; color: #666; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-.credit-card__value { display: block; font-size: 28px; font-weight: 700; }
-.credit-card--limit .credit-card__value { color: #333; }
-.credit-card--used .credit-card__value { color: #e53935; }
-.credit-card--available .credit-card__value { color: #2e7d32; }
-.credit-usage-bar { margin-bottom: 32px; }
-.credit-usage-bar__label { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; color: #666; }
-.credit-usage-bar__track { height: 10px; background: #e0e0e0; border-radius: 5px; overflow: hidden; }
-.credit-usage-bar__fill { height: 100%; background: #1976d2; border-radius: 5px; transition: width 0.6s ease; }
-.credit-usage-bar__fill--warning { background: #e53935; }
-.credit-transactions h2 { margin-bottom: 16px; font-size: 18px; }
-.table-credit-transactions { width: 100%; border-collapse: collapse; }
-.table-credit-transactions th { text-align: left; padding: 10px 12px; background: #f5f5f5; border-bottom: 2px solid #ddd; font-size: 13px; text-transform: uppercase; }
-.table-credit-transactions td { padding: 10px 12px; border-bottom: 1px solid #eee; font-size: 14px; }
-.txn-positive { color: #2e7d32; font-weight: 600; }
-.txn-negative { color: #e53935; font-weight: 600; }
-.txn-type { font-size: 12px; padding: 2px 8px; border-radius: 12px; background: #f0f0f0; }
-.txn-type--charge { background: #fce4ec; color: #c62828; }
-.txn-type--refund { background: #e8f5e9; color: #2e7d32; }
-.txn-type--adjustment { background: #fff3e0; color: #e65100; }
-.txn-type--payment { background: #e3f2fd; color: #1565c0; }
-.empty-message { color: #999; text-align: center; padding: 40px; }
-@media (max-width: 768px) {
-    .credit-summary-cards { grid-template-columns: 1fr; }
-    .credit-card__value { font-size: 22px; }
-}
-</style>

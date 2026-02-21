@@ -202,13 +202,13 @@
     justify-content: center;
     gap: 8px;
     width: 100%;
-    height: var(--awa-control-height);
-    min-height: var(--awa-control-height);
+    height: var(--awa-control-height, 44px);
+    min-height: var(--awa-control-height, 44px);
     padding: 0 20px;
-    background: var(--awa-btn-bg);
-    color: var(--awa-btn-text) !important;
+    background: var(--awa-btn-bg, #b73337);
+    color: var(--awa-btn-text, #fff) !important;
     border: none;
-    border-radius: var(--awa-control-radius);
+    border-radius: var(--awa-control-radius, 3px);
     font-size: 1em;
     font-weight: 700;
     cursor: pointer;

@@ -3,8 +3,16 @@
 $pendingApprovals = $block->getPendingApprovals();
 $myApprovals = $block->getMyApprovals();
 $canApprove = $block->canApprove();
+$approvalWidgetConfig = [
+    'actionUrl' => $block->getActionUrl(),
+    'messages' => [
+        'rejectReasonPrompt' => (string) __('Motivo da rejeição:'),
+        'processError' => (string) __('Erro ao processar. Tente novamente.'),
+    ],
+];
 ?>
-<div class="b2b-approval-page">
+<div class="b2b-approval-page b2b-page-shell"
+     data-mage-init='<?= /* @noEscape */ json_encode(['GrupoAwamotos_B2B/js/account/approval-actions' => $approvalWidgetConfig]) ?>'>
     <div class="b2b-section-header">
         <h1><?= __('Aprovações de Pedidos') ?></h1>
         <?php if ($canApprove): ?>
@@ -47,11 +55,13 @@ $canApprove = $block->canApprove();
                     </td>
                     <td data-th="<?= __('Ações') ?>" class="approval-actions">
                         <button type="button" class="btn-approve"
-                                onclick="b2bApprovalAction(<?= (int)$approval->getId() ?>, 'approve')">
+                                data-action="approve"
+                                data-approval-id="<?= (int) $approval->getId() ?>">
                             <?= __('Aprovar') ?>
                         </button>
                         <button type="button" class="btn-reject"
-                                onclick="b2bApprovalAction(<?= (int)$approval->getId() ?>, 'reject')">
+                                data-action="reject"
+                                data-approval-id="<?= (int) $approval->getId() ?>">
                             <?= __('Rejeitar') ?>
                         </button>
                     </td>
@@ -105,56 +115,3 @@ $canApprove = $block->canApprove();
         <?php endif; ?>
     </div>
 </div>
-
-<script>
-function b2bApprovalAction(approvalId, action) {
-    var comment = '';
-    if (action === 'reject') {
-        comment = prompt('<?= __('Motivo da rejeição:') ?>');
-        if (comment === null) return;
-    }
-
-    fetch('<?= $block->escapeJs($block->getActionUrl()) ?>', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: new URLSearchParams({
-            approval_id: approvalId,
-            action: action,
-            comment: comment,
-            reason: comment,
-            form_key: window.FORM_KEY || ''
-        })
-    })
-    .then(r => r.json())
-    .then(data => {
-        alert(data.message);
-        if (data.success) location.reload();
-    })
-    .catch(() => alert('<?= __('Erro ao processar. Tente novamente.') ?>'));
-}
-</script>
-
-<style>
-.b2b-approval-page .b2b-section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-.badge--approver { background: #e3f2fd; color: #1565c0; padding: 4px 12px; border-radius: 12px; font-size: 12px; }
-.approval-section { margin-bottom: 32px; }
-.approval-section h2 { font-size: 18px; margin-bottom: 16px; }
-.approval-section .count { color: #e53935; }
-.table-approvals, .table-my-approvals { width: 100%; border-collapse: collapse; }
-.table-approvals th, .table-my-approvals th { text-align: left; padding: 10px 12px; background: #f5f5f5; border-bottom: 2px solid #ddd; font-size: 13px; text-transform: uppercase; }
-.table-approvals td, .table-my-approvals td { padding: 10px 12px; border-bottom: 1px solid #eee; }
-.approval-actions { display: flex; gap: 6px; }
-.btn-approve { background: #2e7d32; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
-.btn-approve:hover { background: #1b5e20; }
-.btn-reject { background: #e53935; color: #fff; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-size: 13px; }
-.btn-reject:hover { background: #c62828; }
-.approval-status { font-size: 12px; padding: 2px 10px; border-radius: 12px; }
-.approval-status--pending { background: #fff3e0; color: #e65100; }
-.approval-status--approved { background: #e8f5e9; color: #2e7d32; }
-.approval-status--rejected { background: #fce4ec; color: #c62828; }
-.approval-status--cancelled { background: #f5f5f5; color: #999; }
-.empty-message { color: #999; text-align: center; padding: 40px; }
-</style>

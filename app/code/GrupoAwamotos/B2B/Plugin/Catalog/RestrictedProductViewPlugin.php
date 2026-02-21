@@ -169,14 +169,10 @@ class RestrictedProductViewPlugin
             return true;
         }
 
-        // Map group IDs to option values
-        $groupMap = [
-            4 => 'B2B Atacado',
-            5 => 'B2B VIP', 
-            6 => 'B2B Revendedor'
-        ];
-
-        $customerGroupName = $groupMap[$customerGroupId] ?? '';
+        $customerGroupName = $this->b2bHelper->getB2BGroupName($customerGroupId);
+        if ($customerGroupName === 'Cliente') {
+            $customerGroupName = '';
+        }
 
         foreach ($allowedGroups as $group) {
             $group = trim($group);

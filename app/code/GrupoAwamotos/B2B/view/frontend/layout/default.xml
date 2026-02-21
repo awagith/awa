@@ -11,6 +11,7 @@
         <css src="GrupoAwamotos_B2B::css/b2b-header.css"/>
         <css src="GrupoAwamotos_B2B::css/header-status-panel.css"/>
         <css src="GrupoAwamotos_B2B::css/login-to-cart.css"/>
+        <css src="GrupoAwamotos_B2B::css/b2b-marketing.css"/>
     </head>
     <body>
         <!-- B2B Status Panel in Header (using Ayo theme's toki_header) -->

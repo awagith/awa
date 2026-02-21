@@ -1,0 +1,326 @@
+{
+    "grupoawamotos_b2b_quote_request": {
+        "column": {
+            "request_id": true,
+            "customer_id": true,
+            "customer_email": true,
+            "customer_name": true,
+            "company_name": true,
+            "cnpj": true,
+            "phone": true,
+            "status": true,
+            "items_json": true,
+            "message": true,
+            "admin_notes": true,
+            "quoted_total": true,
+            "quote_id": true,
+            "order_id": true,
+            "expires_at": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_B2B_QUOTE_REQUEST_STATUS": true,
+            "GRUPOAWAMOTOS_B2B_QUOTE_REQUEST_CUSTOMER_EMAIL": true,
+            "GRUPOAWAMOTOS_B2B_QUOTE_REQUEST_CREATED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GRUPOAWAMOTOS_B2B_QUOTE_REQUEST_CSTR_ID_CSTR_ENTT_ENTT_ID": true
+        }
+    },
+    "grupoawamotos_b2b_quote_request_item": {
+        "column": {
+            "item_id": true,
+            "request_id": true,
+            "product_id": true,
+            "sku": true,
+            "name": true,
+            "qty": true,
+            "original_price": true,
+            "quoted_price": true,
+            "options_json": true,
+            "notes": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_B2B_QUOTE_REQUEST_ITEM_REQUEST_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_CC66C0191FBE53F26CEFF841DDF27006": true,
+            "GRUPOAWAMOTOS_B2B_QUOTE_REQUEST_ITEM_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true
+        }
+    },
+    "grupoawamotos_b2b_customer_approval_log": {
+        "column": {
+            "log_id": true,
+            "customer_id": true,
+            "action": true,
+            "old_status": true,
+            "new_status": true,
+            "admin_user_id": true,
+            "comment": true,
+            "created_at": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_B2B_CUSTOMER_APPROVAL_LOG_CUSTOMER_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GRUPOAWAMOTOS_B2B_CSTR_APPROVAL_LOG_CSTR_ID_CSTR_ENTT_ENTT_ID": true
+        }
+    },
+    "grupoawamotos_b2b_credit_limit": {
+        "column": {
+            "entity_id": true,
+            "customer_id": true,
+            "credit_limit": true,
+            "used_credit": true,
+            "currency_code": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GRUPOAWAMOTOS_B2B_CREDIT_LIMIT_CSTR_ID_CSTR_ENTT_ENTT_ID": true,
+            "GRUPOAWAMOTOS_B2B_CREDIT_LIMIT_CUSTOMER_ID": true
+        }
+    },
+    "grupoawamotos_b2b_order_approval": {
+        "column": {
+            "approval_id": true,
+            "order_id": true,
+            "customer_id": true,
+            "status": true,
+            "current_level": true,
+            "required_level": true,
+            "order_total": true,
+            "approval_history": true,
+            "rejection_reason": true,
+            "created_at": true,
+            "updated_at": true,
+            "approved_at": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_B2B_ORDER_APPROVAL_STATUS": true,
+            "GRUPOAWAMOTOS_B2B_ORDER_APPROVAL_CURRENT_LEVEL": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GRUPOAWAMOTOS_B2B_ORDER_APPROVAL_ORDER_ID_SALES_ORDER_ENTITY_ID": true,
+            "GRUPOAWAMOTOS_B2B_ORDER_APPROVAL_CSTR_ID_CSTR_ENTT_ENTT_ID": true
+        }
+    },
+    "grupoawamotos_b2b_shopping_list": {
+        "column": {
+            "list_id": true,
+            "customer_id": true,
+            "name": true,
+            "description": true,
+            "is_default": true,
+            "is_active": true,
+            "is_recurring": true,
+            "recurring_interval": true,
+            "next_order_date": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_B2B_SHOPPING_LIST_CUSTOMER_ID": true,
+            "GRUPOAWAMOTOS_B2B_SHOPPING_LIST_IS_RECURRING_NEXT_ORDER_DATE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GRUPOAWAMOTOS_B2B_SHOPPING_LIST_CSTR_ID_CSTR_ENTT_ENTT_ID": true
+        }
+    },
+    "grupoawamotos_b2b_shopping_list_item": {
+        "column": {
+            "item_id": true,
+            "list_id": true,
+            "product_id": true,
+            "sku": true,
+            "qty": true,
+            "options_json": true,
+            "notes": true,
+            "added_at": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_B2B_SHOPPING_LIST_ITEM_LIST_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_C2281CE26FCFB706576BAF9802F79B8C": true,
+            "GRUPOAWAMOTOS_B2B_SHOPPING_LIST_ITEM_PRD_ID_CAT_PRD_ENTT_ENTT_ID": true
+        }
+    },
+    "grupoawamotos_b2b_credit_transaction": {
+        "column": {
+            "transaction_id": true,
+            "customer_id": true,
+            "type": true,
+            "amount": true,
+            "balance_after": true,
+            "order_id": true,
+            "reference": true,
+            "comment": true,
+            "admin_user_id": true,
+            "created_at": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_B2B_CREDIT_TRANSACTION_CUSTOMER_ID": true,
+            "GRUPOAWAMOTOS_B2B_CREDIT_TRANSACTION_ORDER_ID": true,
+            "GRUPOAWAMOTOS_B2B_CREDIT_TRANSACTION_TYPE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GRUPOAWAMOTOS_B2B_CREDIT_TRANSACTION_CSTR_ID_CSTR_ENTT_ENTT_ID": true
+        }
+    },
+    "grupoawamotos_b2b_company": {
+        "column": {
+            "company_id": true,
+            "cnpj": true,
+            "razao_social": true,
+            "nome_fantasia": true,
+            "inscricao_estadual": true,
+            "email": true,
+            "phone": true,
+            "admin_customer_id": true,
+            "is_active": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GRUPOAWAMOTOS_B2B_COMPANY_CNPJ": true,
+            "GRUPOAWAMOTOS_B2B_COMPANY_ADM_CSTR_ID_CSTR_ENTT_ENTT_ID": true
+        }
+    },
+    "grupoawamotos_b2b_company_user": {
+        "column": {
+            "user_id": true,
+            "company_id": true,
+            "customer_id": true,
+            "role": true,
+            "is_active": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_2D2A515B47C338067D231B8F1746A0A8": true,
+            "GRUPOAWAMOTOS_B2B_COMPANY_USR_CSTR_ID_CSTR_ENTT_ENTT_ID": true,
+            "GRUPOAWAMOTOS_B2B_COMPANY_USER_COMPANY_ID_CUSTOMER_ID": true
+        }
+    },
+    "grupoawamotos_b2b_carrier": {
+        "column": {
+            "carrier_id": true,
+            "code": true,
+            "name": true,
+            "logo": true,
+            "phone": true,
+            "website": true,
+            "description": true,
+            "delivery_time": true,
+            "is_active": true,
+            "sort_order": true,
+            "created_at": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_B2B_CARRIER_IS_ACTIVE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GRUPOAWAMOTOS_B2B_CARRIER_CODE": true
+        }
+    },
+    "grupoawamotos_b2b_attendants": {
+        "column": {
+            "attendant_id": true,
+            "name": true,
+            "email": true,
+            "phone": true,
+            "whatsapp": true,
+            "department": true,
+            "is_active": true,
+            "customer_count": true,
+            "max_customers": true,
+            "admin_user_id": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_B2B_ATTENDANTS_DEPARTMENT_IS_ACTIVE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GRUPOAWAMOTOS_B2B_ATTENDANTS_EMAIL": true
+        }
+    },
+    "grupoawamotos_b2b_customer_attendant": {
+        "column": {
+            "id": true,
+            "customer_id": true,
+            "attendant_id": true,
+            "assigned_at": true,
+            "notes": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_B2B_CUSTOMER_ATTENDANT_ATTENDANT_ID": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GRUPOAWAMOTOS_B2B_CUSTOMER_ATTENDANT_CUSTOMER_ID": true,
+            "FK_C3BE08EB1B9C2765CE6B0FF6C92F68BD": true
+        }
+    },
+    "grupoawamotos_b2b_attendant_log": {
+        "column": {
+            "log_id": true,
+            "customer_id": true,
+            "attendant_id": true,
+            "previous_attendant_id": true,
+            "action": true,
+            "reason": true,
+            "admin_user_id": true,
+            "created_at": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_B2B_ATTENDANT_LOG_CUSTOMER_ID": true,
+            "GRUPOAWAMOTOS_B2B_ATTENDANT_LOG_ATTENDANT_ID": true,
+            "GRUPOAWAMOTOS_B2B_ATTENDANT_LOG_CREATED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "grupoawamotos_b2b_notifications": {
+        "column": {
+            "notification_id": true,
+            "type": true,
+            "event": true,
+            "recipient": true,
+            "recipient_name": true,
+            "message": true,
+            "status": true,
+            "external_id": true,
+            "error_message": true,
+            "entity_type": true,
+            "entity_id": true,
+            "sent_at": true,
+            "delivered_at": true,
+            "read_at": true,
+            "created_at": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_B2B_NOTIFICATIONS_TYPE_STATUS": true,
+            "GRUPOAWAMOTOS_B2B_NOTIFICATIONS_EVENT": true,
+            "GRUPOAWAMOTOS_B2B_NOTIFICATIONS_ENTITY_TYPE_ENTITY_ID": true,
+            "GRUPOAWAMOTOS_B2B_NOTIFICATIONS_CREATED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}

@@ -52,9 +52,7 @@ class OrderNotification implements ObserverInterface
 
             // Verifica se é cliente B2B
             $customer = $this->customerRepository->getById($order->getCustomerId());
-            $b2bGroups = [4, 5, 6, 7]; // Atacado, VIP, Revendedor, Pendente
-
-            if (!in_array($customer->getGroupId(), $b2bGroups)) {
+            if (!$this->b2bHelper->isB2BGroup((int) $customer->getGroupId())) {
                 return;
             }
 

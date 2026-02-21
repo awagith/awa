@@ -65,22 +65,24 @@ class ErpRegistrationCheckObserver implements ObserverInterface
             // Check if CNPJ exists in ERP
             $erpCustomer = $this->erpIntegration->findErpCustomerByCnpj($cnpj);
 
-            if ($erpCustomer) {
+            if ($erpCustomer && !empty($erpCustomer['CODIGO'])) {
+                $erpCode = $erpCustomer['CODIGO'];
+
                 $this->logger->info(sprintf(
                     'ErpRegistrationCheckObserver: Found ERP customer %s for CNPJ',
-                    $erpCustomer['CODIGO'] ?? 'unknown'
+                    $erpCode
                 ));
 
                 // Link customer to ERP
                 $this->erpIntegration->linkCustomerToErp(
                     (int) $customer->getId(),
-                    $erpCustomer['CODIGO']
+                    $erpCode
                 );
 
                 // Sync addresses from ERP if available
                 $this->erpIntegration->syncAddressesFromErp(
                     (int) $customer->getId(),
-                    $erpCustomer['CODIGO']
+                    $erpCode
                 );
 
                 // Update customer with ERP data
@@ -129,18 +131,18 @@ class ErpRegistrationCheckObserver implements ObserverInterface
 
         // Update razao social if available
         if (!empty($erpData['RAZAO_SOCIAL'])) {
-            $razaoAttribute = $customer->getCustomAttribute('razao_social');
+            $razaoAttribute = $customer->getCustomAttribute('b2b_razao_social');
             if (!$razaoAttribute || empty($razaoAttribute->getValue())) {
-                $customer->setCustomAttribute('razao_social', $erpData['RAZAO_SOCIAL']);
+                $customer->setCustomAttribute('b2b_razao_social', $erpData['RAZAO_SOCIAL']);
                 $updated = true;
             }
         }
 
         // Update inscricao estadual if available
         if (!empty($erpData['INSCRICAO_ESTADUAL'])) {
-            $ieAttribute = $customer->getCustomAttribute('inscricao_estadual');
+            $ieAttribute = $customer->getCustomAttribute('b2b_inscricao_estadual');
             if (!$ieAttribute || empty($ieAttribute->getValue())) {
-                $customer->setCustomAttribute('inscricao_estadual', $erpData['INSCRICAO_ESTADUAL']);
+                $customer->setCustomAttribute('b2b_inscricao_estadual', $erpData['INSCRICAO_ESTADUAL']);
                 $updated = true;
             }
         }

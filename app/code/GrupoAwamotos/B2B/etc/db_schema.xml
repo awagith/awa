@@ -440,5 +440,117 @@
             <column name="is_active"/>
         </index>
     </table>
-    
+
+    <!-- Tabela de Atendentes B2B (migrada de Schema Patch) -->
+    <table name="grupoawamotos_b2b_attendants" resource="default" engine="innodb" comment="Atendentes B2B">
+        <column xsi:type="int" name="attendant_id" unsigned="true" nullable="false" identity="true" comment="ID do Atendente"/>
+        <column xsi:type="varchar" name="name" length="255" nullable="false" comment="Nome do Atendente"/>
+        <column xsi:type="varchar" name="email" length="255" nullable="false" comment="Email"/>
+        <column xsi:type="varchar" name="phone" length="50" nullable="true" comment="Telefone"/>
+        <column xsi:type="varchar" name="whatsapp" length="50" nullable="true" comment="WhatsApp"/>
+        <column xsi:type="varchar" name="department" length="50" nullable="false" default="sales" comment="Departamento"/>
+        <column xsi:type="smallint" name="is_active" nullable="false" default="1" comment="Ativo"/>
+        <column xsi:type="int" name="customer_count" nullable="false" default="0" comment="Quantidade de Clientes"/>
+        <column xsi:type="int" name="max_customers" nullable="false" default="100" comment="Máximo de Clientes"/>
+        <column xsi:type="int" name="admin_user_id" unsigned="true" nullable="true" comment="ID do Usuário Admin"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Data de Criação"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Data de Atualização"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="attendant_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="GRUPOAWAMOTOS_B2B_ATTENDANTS_EMAIL">
+            <column name="email"/>
+        </constraint>
+        <index referenceId="GRUPOAWAMOTOS_B2B_ATTENDANTS_DEPT_ACTIVE" indexType="btree">
+            <column name="department"/>
+            <column name="is_active"/>
+        </index>
+    </table>
+
+    <!-- Relacionamento Cliente-Atendente -->
+    <table name="grupoawamotos_b2b_customer_attendant" resource="default" engine="innodb" comment="Relacionamento Cliente-Atendente B2B">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="int" name="customer_id" unsigned="true" nullable="false" comment="ID do Cliente"/>
+        <column xsi:type="int" name="attendant_id" unsigned="true" nullable="false" comment="ID do Atendente"/>
+        <column xsi:type="timestamp" name="assigned_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Data de Atribuição"/>
+        <column xsi:type="text" name="notes" nullable="true" comment="Observações"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="GRUPOAWAMOTOS_B2B_CUST_ATTENDANT_CUSTOMER_ID">
+            <column name="customer_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="GRUPOAWAMOTOS_B2B_CUST_ATTENDANT_ATTENDANT_ID"
+                    table="grupoawamotos_b2b_customer_attendant" column="attendant_id"
+                    referenceTable="grupoawamotos_b2b_attendants" referenceColumn="attendant_id"
+                    onDelete="CASCADE"/>
+        <index referenceId="GRUPOAWAMOTOS_B2B_CUST_ATTENDANT_ATT_ID" indexType="btree">
+            <column name="attendant_id"/>
+        </index>
+    </table>
+
+    <!-- Log de Atendimento -->
+    <table name="grupoawamotos_b2b_attendant_log" resource="default" engine="innodb" comment="Log de Atendimento B2B">
+        <column xsi:type="int" name="log_id" unsigned="true" nullable="false" identity="true" comment="ID do Log"/>
+        <column xsi:type="int" name="customer_id" unsigned="true" nullable="false" comment="ID do Cliente"/>
+        <column xsi:type="int" name="attendant_id" unsigned="true" nullable="false" comment="ID do Atendente"/>
+        <column xsi:type="int" name="previous_attendant_id" unsigned="true" nullable="true" comment="ID do Atendente Anterior"/>
+        <column xsi:type="varchar" name="action" length="50" nullable="false" comment="Ação"/>
+        <column xsi:type="varchar" name="reason" length="500" nullable="true" comment="Motivo"/>
+        <column xsi:type="int" name="admin_user_id" unsigned="true" nullable="true" comment="Admin que realizou a ação"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Data"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="log_id"/>
+        </constraint>
+        <index referenceId="GRUPOAWAMOTOS_B2B_ATT_LOG_CUSTOMER_ID" indexType="btree">
+            <column name="customer_id"/>
+        </index>
+        <index referenceId="GRUPOAWAMOTOS_B2B_ATT_LOG_ATTENDANT_ID" indexType="btree">
+            <column name="attendant_id"/>
+        </index>
+        <index referenceId="GRUPOAWAMOTOS_B2B_ATT_LOG_CREATED_AT" indexType="btree">
+            <column name="created_at"/>
+        </index>
+    </table>
+
+    <!-- Notificações B2B -->
+    <table name="grupoawamotos_b2b_notifications" resource="default" engine="innodb" comment="Notificações B2B">
+        <column xsi:type="int" name="notification_id" unsigned="true" nullable="false" identity="true" comment="ID da Notificação"/>
+        <column xsi:type="varchar" name="type" length="50" nullable="false" comment="Tipo (whatsapp, email, sms, push)"/>
+        <column xsi:type="varchar" name="event" length="100" nullable="false" comment="Evento"/>
+        <column xsi:type="varchar" name="recipient" length="255" nullable="false" comment="Destinatário"/>
+        <column xsi:type="varchar" name="recipient_name" length="255" nullable="true" comment="Nome do Destinatário"/>
+        <column xsi:type="text" name="message" nullable="false" comment="Mensagem"/>
+        <column xsi:type="varchar" name="status" length="20" nullable="false" default="pending" comment="Status"/>
+        <column xsi:type="varchar" name="external_id" length="255" nullable="true" comment="ID Externo"/>
+        <column xsi:type="text" name="error_message" nullable="true" comment="Mensagem de Erro"/>
+        <column xsi:type="varchar" name="entity_type" length="50" nullable="true" comment="Tipo de Entidade"/>
+        <column xsi:type="int" name="entity_id" unsigned="true" nullable="true" comment="ID da Entidade"/>
+        <column xsi:type="timestamp" name="sent_at" nullable="true" comment="Data de Envio"/>
+        <column xsi:type="timestamp" name="delivered_at" nullable="true" comment="Data de Entrega"/>
+        <column xsi:type="timestamp" name="read_at" nullable="true" comment="Data de Leitura"/>
+        <column xsi:type="timestamp" name="created_at" nullable="false" default="CURRENT_TIMESTAMP" comment="Data de Criação"/>
+
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="notification_id"/>
+        </constraint>
+        <index referenceId="GRUPOAWAMOTOS_B2B_NOTIF_TYPE_STATUS" indexType="btree">
+            <column name="type"/>
+            <column name="status"/>
+        </index>
+        <index referenceId="GRUPOAWAMOTOS_B2B_NOTIF_EVENT" indexType="btree">
+            <column name="event"/>
+        </index>
+        <index referenceId="GRUPOAWAMOTOS_B2B_NOTIF_ENTITY" indexType="btree">
+            <column name="entity_type"/>
+            <column name="entity_id"/>
+        </index>
+        <index referenceId="GRUPOAWAMOTOS_B2B_NOTIF_CREATED_AT" indexType="btree">
+            <column name="created_at"/>
+        </index>
+    </table>
+
 </schema>

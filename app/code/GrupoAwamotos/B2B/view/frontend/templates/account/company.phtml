@@ -4,8 +4,17 @@ $company = $block->getCompany();
 $users = $block->getCompanyUsers();
 $isAdmin = $block->isCompanyAdmin();
 $roles = $block->getRoles();
+$companyManagerConfig = [
+    'manageUrl' => $block->getManageUserUrl(),
+    'messages' => [
+        'emailRequired' => (string) __('Informe o e-mail.'),
+        'confirmRemove' => (string) __('Remover este usuário da empresa?'),
+        'requestError' => (string) __('Erro. Tente novamente.'),
+    ],
+];
 ?>
-<div class="b2b-company-page">
+<div class="b2b-company-page b2b-page-shell"
+     data-mage-init='<?= /* @noEscape */ json_encode(['GrupoAwamotos_B2B/js/account/company-manager' => $companyManagerConfig]) ?>'>
     <div class="b2b-section-header">
         <h1><?= __('Minha Empresa') ?></h1>
         <?php if ($isAdmin): ?>
@@ -51,7 +60,7 @@ $roles = $block->getRoles();
         <div class="company-users-header">
             <h2><?= __('Usuários da Empresa') ?> <span class="count">(<?= count($users) ?>)</span></h2>
             <?php if ($isAdmin): ?>
-                <button type="button" class="btn-add-user" onclick="document.getElementById('add-user-form').classList.toggle('hidden')">
+                <button type="button" class="btn-add-user" data-action="toggle-add-user">
                     <?= __('+ Adicionar Usuário') ?>
                 </button>
             <?php endif; ?>
@@ -66,7 +75,7 @@ $roles = $block->getRoles();
                         <option value="<?= $block->escapeHtmlAttr($roleCode) ?>"><?= $block->escapeHtml($roleLabel) ?></option>
                     <?php endforeach; ?>
                 </select>
-                <button type="button" class="btn-save" onclick="addCompanyUser()">
+                <button type="button" class="btn-save" data-action="add-user">
                     <?= __('Adicionar') ?>
                 </button>
             </div>
@@ -102,7 +111,8 @@ $roles = $block->getRoles();
                     </td>
                     <?php if ($isAdmin): ?>
                     <td data-th="<?= __('Ações') ?>" class="user-actions">
-                        <select onchange="updateUserRole(<?= (int)$user['customer_id'] ?>, this.value)" class="select select-sm">
+                        <select class="select select-sm js-user-role"
+                                data-customer-id="<?= (int) $user['customer_id'] ?>">
                             <?php foreach ($roles as $roleCode => $roleLabel): ?>
                                 <option value="<?= $block->escapeHtmlAttr($roleCode) ?>" <?= $user['role'] === $roleCode ? 'selected' : '' ?>>
                                     <?= $block->escapeHtml($roleLabel) ?>
@@ -110,7 +120,8 @@ $roles = $block->getRoles();
                             <?php endforeach; ?>
                         </select>
                         <button type="button" class="btn-remove"
-                                onclick="removeCompanyUser(<?= (int)$user['customer_id'] ?>)">
+                                data-action="remove-user"
+                                data-customer-id="<?= (int) $user['customer_id'] ?>">
                             <?= __('Remover') ?>
                         </button>
                     </td>
@@ -124,81 +135,3 @@ $roles = $block->getRoles();
         <p class="empty-message"><?= __('Nenhuma empresa vinculada à sua conta. Entre em contato com o suporte.') ?></p>
     <?php endif; ?>
 </div>
-
-<script>
-var manageUrl = '<?= $block->escapeJs($block->getManageUserUrl()) ?>';
-
-function addCompanyUser() {
-    var email = document.getElementById('new-user-email').value;
-    var role = document.getElementById('new-user-role').value;
-    if (!email) { alert('<?= __('Informe o e-mail.') ?>'); return; }
-
-    manageUserAction('add', 0, role, { email: email });
-}
-
-function updateUserRole(customerId, role) {
-    manageUserAction('update_role', customerId, role);
-}
-
-function removeCompanyUser(customerId) {
-    if (!confirm('<?= __('Remover este usuário da empresa?') ?>')) return;
-    manageUserAction('remove', customerId);
-}
-
-function manageUserAction(action, customerId, role, extra) {
-    var params = {
-        action: action,
-        customer_id: customerId,
-        role: role || '',
-        form_key: window.FORM_KEY || ''
-    };
-    if (extra) Object.assign(params, extra);
-
-    fetch(manageUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-Requested-With': 'XMLHttpRequest' },
-        body: new URLSearchParams(params)
-    })
-    .then(r => r.json())
-    .then(data => { alert(data.message); if (data.success) location.reload(); })
-    .catch(() => alert('<?= __('Erro. Tente novamente.') ?>'));
-}
-</script>
-
-<style>
-.b2b-company-page .b2b-section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-.badge--admin { background: #f3e5f5; color: #7b1fa2; padding: 4px 12px; border-radius: 12px; font-size: 12px; }
-.company-info-grid { margin-bottom: 32px; }
-.company-info-card { background: #fff; border: 1px solid #e0e0e0; border-radius: 8px; padding: 24px; }
-.company-info-card h3 { margin-bottom: 16px; font-size: 16px; }
-.company-details { display: grid; grid-template-columns: 180px 1fr; gap: 8px 16px; }
-.company-details dt { font-weight: 600; color: #666; font-size: 13px; }
-.company-details dd { font-size: 14px; margin: 0; }
-.company-users-section { margin-bottom: 32px; }
-.company-users-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-.company-users-header h2 { font-size: 18px; margin: 0; }
-.count { color: #666; font-weight: 400; }
-.btn-add-user { background: #1976d2; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 13px; }
-.add-user-form { background: #f5f5f5; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
-.add-user-form.hidden { display: none; }
-.form-row { display: flex; gap: 8px; align-items: center; }
-.form-row .input-text { flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; }
-.form-row .select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; }
-.btn-save { background: #2e7d32; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; }
-.form-note { font-size: 12px; color: #999; margin-top: 8px; }
-.table-company-users { width: 100%; border-collapse: collapse; }
-.table-company-users th { text-align: left; padding: 10px 12px; background: #f5f5f5; border-bottom: 2px solid #ddd; font-size: 13px; text-transform: uppercase; }
-.table-company-users td { padding: 10px 12px; border-bottom: 1px solid #eee; }
-.role-badge { font-size: 12px; padding: 2px 10px; border-radius: 12px; }
-.role-badge--admin { background: #f3e5f5; color: #7b1fa2; }
-.role-badge--manager { background: #e3f2fd; color: #1565c0; }
-.role-badge--buyer { background: #f5f5f5; color: #666; }
-.status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
-.status-dot--active { background: #4caf50; }
-.status-dot--inactive { background: #999; }
-.user-actions { display: flex; gap: 6px; align-items: center; }
-.select-sm { padding: 4px 8px; font-size: 12px; border: 1px solid #ddd; border-radius: 4px; }
-.btn-remove { background: #e53935; color: #fff; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-.empty-message { color: #999; text-align: center; padding: 40px; }
-@media (max-width: 768px) { .company-details { grid-template-columns: 1fr; } .form-row { flex-direction: column; } }
-</style>

@@ -5,7 +5,7 @@
  * @var \GrupoAwamotos\B2B\Block\Quote\History $block
  */
 ?>
-<div class="b2b-quote-history">
+<div class="b2b-quote-history b2b-page-shell">
     <div class="block-title">
         <strong><?= $block->escapeHtml(__('Minhas Cotações')) ?></strong>
     </div>
@@ -99,57 +99,3 @@
         </div>
     <?php endif; ?>
 </div>
-
-<style>
-    .b2b-quote-history .block-title {
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #e0e0e0;
-    }
-    
-    .b2b-quote-history .block-title strong {
-        font-size: 1.4rem;
-    }
-    
-    .quote-status {
-        display: inline-block;
-        padding: 4px 12px;
-        border-radius: 4px;
-        font-size: 0.85rem;
-        font-weight: 600;
-    }
-    
-    .quote-status.status-success {
-        background: #e8f5e9;
-        color: #2e7d32;
-    }
-    
-    .quote-status.status-pending {
-        background: #fff3e0;
-        color: #e65100;
-    }
-    
-    .quote-status.status-failed {
-        background: #ffebee;
-        color: #c62828;
-    }
-    
-    .quote-status.status-complete {
-        background: #e3f2fd;
-        color: #1565c0;
-    }
-    
-    .no-value {
-        color: #999;
-        font-style: italic;
-    }
-    
-    .expired {
-        color: #c62828;
-        font-weight: 600;
-    }
-    
-    .table-quote-history .col.actions .action {
-        margin-right: 10px;
-    }
-</style>

@@ -166,14 +166,7 @@ class Dashboard extends Template
     {
         $customer = $this->getCustomer();
         if ($customer) {
-            $groupId = $customer->getGroupId();
-            $groupNames = [
-                4 => 'B2B Atacado',
-                5 => 'B2B VIP',
-                6 => 'B2B Revendedor',
-                7 => 'B2B Pendente'
-            ];
-            return $groupNames[$groupId] ?? 'Cliente';
+            return $this->b2bHelper->getB2BGroupName((int) $customer->getGroupId());
         }
         return 'Cliente';
     }
@@ -187,13 +180,7 @@ class Dashboard extends Template
     {
         $customer = $this->getCustomer();
         if ($customer && $this->isApproved()) {
-            $groupId = $customer->getGroupId();
-            $discounts = [
-                4 => 15, // Atacado
-                5 => 20, // VIP
-                6 => 10, // Revendedor
-            ];
-            return $discounts[$groupId] ?? 0;
+            return $this->b2bHelper->getGroupDiscount((int) $customer->getGroupId());
         }
         return 0;
     }
