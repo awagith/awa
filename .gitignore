@@ -82,5 +82,8 @@ dummy-opensearch/
 # Ignore vscode AI rules
 .github/instructions/codacy.instructions.md
 
+# Redis
+dump.rdb
+
 # MCP config with secrets
 .vscode/mcp.json
