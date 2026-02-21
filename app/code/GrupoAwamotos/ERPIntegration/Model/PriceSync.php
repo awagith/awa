@@ -8,6 +8,7 @@ use GrupoAwamotos\ERPIntegration\Api\ConnectionInterface;
 use GrupoAwamotos\ERPIntegration\Helper\Data as Helper;
 use GrupoAwamotos\ERPIntegration\Model\ResourceModel\SyncLog as SyncLogResource;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Model\ResourceModel\Product\Action as ProductAction;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Psr\Log\LoggerInterface;
 
@@ -27,6 +28,7 @@ class PriceSync implements PriceSyncInterface
     private ConnectionInterface $connection;
     private Helper $helper;
     private ProductRepositoryInterface $productRepository;
+    private ProductAction $productAction;
     private SearchCriteriaBuilder $searchCriteriaBuilder;
     private SyncLogResource $syncLogResource;
     private LoggerInterface $logger;
@@ -37,7 +39,8 @@ class PriceSync implements PriceSyncInterface
         ProductRepositoryInterface $productRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         SyncLogResource $syncLogResource,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ProductAction $productAction
     ) {
         $this->connection = $connection;
         $this->helper = $helper;
@@ -45,6 +48,7 @@ class PriceSync implements PriceSyncInterface
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->syncLogResource = $syncLogResource;
         $this->logger = $logger;
+        $this->productAction = $productAction;
     }
 
     public function getPriceBySku(string $sku): ?array
@@ -307,19 +311,23 @@ class PriceSync implements PriceSyncInterface
                     }
 
                     try {
-                        $product->setPrice($newPrice);
+                        $attrData = ['price' => $newPrice];
 
                         $cost = (float) ($priceRow['VLRCUSTO'] ?? 0);
                         if ($cost > 0) {
-                            $product->setCustomAttribute('cost', $cost);
+                            $attrData['cost'] = $cost;
                         }
 
                         $maxPrice = (float) ($priceRow['VLRVDMAX'] ?? 0);
                         if ($maxPrice > $newPrice * 1.05) {
-                            $product->setCustomAttribute('msrp', $maxPrice);
+                            $attrData['msrp'] = $maxPrice;
                         }
 
-                        $this->productRepository->save($product);
+                        $this->productAction->updateAttributes(
+                            [$product->getId()],
+                            $attrData,
+                            0  // admin store (global scope)
+                        );
                         $result['updated']++;
                     } catch (\Exception $e) {
                         $result['errors']++;

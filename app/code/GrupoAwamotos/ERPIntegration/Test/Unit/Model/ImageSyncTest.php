@@ -9,11 +9,15 @@ use GrupoAwamotos\ERPIntegration\Helper\Data as Helper;
 use GrupoAwamotos\ERPIntegration\Model\ResourceModel\SyncLog as SyncLogResource;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
+use Magento\Catalog\Api\Data\ProductAttributeMediaGalleryEntryInterfaceFactory;
 use Magento\Catalog\Model\Product\Gallery\Processor as GalleryProcessor;
 use Magento\Catalog\Api\ProductAttributeMediaGalleryManagementInterface;
+use Magento\Framework\Api\Data\ImageContentInterfaceFactory;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Filesystem\Io\File as IoFile;
+use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\ObjectManagerInterface;
 use Psr\Log\LoggerInterface;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -30,9 +34,16 @@ class ImageSyncTest extends TestCase
     private IoFile|MockObject $ioFile;
     private SyncLogResource|MockObject $syncLogResource;
     private LoggerInterface|MockObject $logger;
+    private ProductAttributeMediaGalleryEntryInterfaceFactory|MockObject $galleryEntryFactory;
+    private ImageContentInterfaceFactory|MockObject $imageContentFactory;
 
     protected function setUp(): void
     {
+        // Initialize ObjectManager mock so ImageSync constructor doesn't crash
+        // (it calls ObjectManager::getInstance() unconditionally on line 65)
+        $objectManagerMock = $this->createMock(ObjectManagerInterface::class);
+        ObjectManager::setInstance($objectManagerMock);
+
         $this->connection = $this->createMock(ConnectionInterface::class);
         $this->helper = $this->createMock(Helper::class);
         $this->productRepository = $this->createMock(ProductRepositoryInterface::class);
@@ -42,6 +53,8 @@ class ImageSyncTest extends TestCase
         $this->ioFile = $this->createMock(IoFile::class);
         $this->syncLogResource = $this->createMock(SyncLogResource::class);
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->galleryEntryFactory = $this->createMock(ProductAttributeMediaGalleryEntryInterfaceFactory::class);
+        $this->imageContentFactory = $this->createMock(ImageContentInterfaceFactory::class);
 
         // Default helper behavior
         $this->helper->method('isImageSyncEnabled')->willReturn(true);
@@ -68,7 +81,9 @@ class ImageSyncTest extends TestCase
             $this->filesystem,
             $this->ioFile,
             $this->syncLogResource,
-            $this->logger
+            $this->logger,
+            $this->galleryEntryFactory,
+            $this->imageContentFactory
         );
     }
 
@@ -88,7 +103,9 @@ class ImageSyncTest extends TestCase
             $this->filesystem,
             $this->ioFile,
             $this->syncLogResource,
-            $this->logger
+            $this->logger,
+            $this->galleryEntryFactory,
+            $this->imageContentFactory
         );
 
         // Should not query database
@@ -187,7 +204,9 @@ class ImageSyncTest extends TestCase
             $this->filesystem,
             $this->ioFile,
             $this->syncLogResource,
-            $this->logger
+            $this->logger,
+            $this->galleryEntryFactory,
+            $this->imageContentFactory
         );
 
         // Mock table query
@@ -201,7 +220,8 @@ class ImageSyncTest extends TestCase
 
         $this->assertCount(2, $result);
         $this->assertEquals('/path/image1.jpg', $result[0]['path']);
-        $this->assertEquals('Image 1', $result[0]['label']);
+        // PR_MEDIDAIMAGEM passes null for labelCol, so label is always empty string
+        $this->assertEquals('', $result[0]['label']);
         $this->assertTrue($result[0]['is_main']);
     }
 
@@ -222,7 +242,9 @@ class ImageSyncTest extends TestCase
             $this->filesystem,
             $this->ioFile,
             $this->syncLogResource,
-            $this->logger
+            $this->logger,
+            $this->galleryEntryFactory,
+            $this->imageContentFactory
         );
 
         // Note: This will actually try to call get_headers which we can't easily mock
@@ -250,7 +272,9 @@ class ImageSyncTest extends TestCase
             $this->filesystem,
             $this->ioFile,
             $this->syncLogResource,
-            $this->logger
+            $this->logger,
+            $this->galleryEntryFactory,
+            $this->imageContentFactory
         );
 
         // Table query returns images
@@ -281,7 +305,9 @@ class ImageSyncTest extends TestCase
             $this->filesystem,
             $this->ioFile,
             $this->syncLogResource,
-            $this->logger
+            $this->logger,
+            $this->galleryEntryFactory,
+            $this->imageContentFactory
         );
 
         // Table query returns empty (triggers fallback to folder)
@@ -421,7 +447,9 @@ class ImageSyncTest extends TestCase
         // Setup: Products with images in ERP
         $this->connection->method('query')
             ->willReturnCallback(function ($sql) {
-                if (strpos($sql, 'DISTINCT m.CODIGO') !== false) {
+                if (strpos($sql, 'DISTINCT CODIGO') !== false
+                    || strpos($sql, 'DISTINCT d.CHAVE') !== false
+                ) {
                     return [['CODIGO' => 'SKU-001']];
                 }
                 return [['IMAGEM' => 'test.jpg', 'DESCRICAO' => '', 'ORDEM' => 1, 'PRINCIPAL' => 'S']];

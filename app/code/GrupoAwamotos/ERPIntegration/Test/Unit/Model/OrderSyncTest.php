@@ -187,7 +187,8 @@ class OrderSyncTest extends TestCase
         $result = $this->orderSync->sendOrder($order);
 
         $this->assertFalse($result['success']);
-        $this->assertStringContainsString('Erro ao enviar pedido', $result['message']);
+        // PDOException is caught by specific catch block with 'Erro de banco' prefix
+        $this->assertStringContainsString('enviar pedido ao ERP', $result['message']);
     }
 
     public function testSendOrderSkipsChildItems(): void

@@ -112,14 +112,23 @@ class OrderSyncConsumer
                     $orderId
                 );
             } else {
-                // Sync failed, requeue for retry
-                $this->logger->warning('[ERP Queue Consumer] Order sync failed, requeuing', [
-                    'order_id' => $orderId,
-                    'increment_id' => $incrementId,
-                    'error' => $result['message'],
-                ]);
+                // Check if error is retryable (e.g. permission denied is NOT retryable)
+                $retryable = $result['retryable'] ?? true;
 
-                $this->publisher->publishForRetry($message, $result['message']);
+                if ($retryable) {
+                    $this->logger->warning('[ERP Queue Consumer] Order sync failed, requeuing', [
+                        'order_id' => $orderId,
+                        'increment_id' => $incrementId,
+                        'error' => $result['message'],
+                    ]);
+                    $this->publisher->publishForRetry($message, $result['message']);
+                } else {
+                    $this->logger->error('[ERP Queue Consumer] Non-retryable error, discarding', [
+                        'order_id' => $orderId,
+                        'increment_id' => $incrementId,
+                        'error' => $result['message'],
+                    ]);
+                }
             }
         } catch (CircuitBreakerOpenException $e) {
             $this->logger->warning('[ERP Queue Consumer] Circuit breaker triggered, requeuing', [

@@ -13,6 +13,7 @@ use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\Framework\App\CacheInterface;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Psr\Log\LoggerInterface;
 use PHPUnit\Framework\TestCase;
@@ -29,6 +30,7 @@ class StockSyncTest extends TestCase
     private StockValidator|MockObject $stockValidator;
     private CacheInterface|MockObject $cache;
     private LoggerInterface|MockObject $logger;
+    private ResourceConnection|MockObject $resourceConnection;
 
     protected function setUp(): void
     {
@@ -40,6 +42,15 @@ class StockSyncTest extends TestCase
         $this->stockValidator = $this->createMock(StockValidator::class);
         $this->cache = $this->createMock(CacheInterface::class);
         $this->logger = $this->createMock(LoggerInterface::class);
+        $this->resourceConnection = $this->createMock(ResourceConnection::class);
+
+        // Configure ResourceConnection mock so loadExistingSkus() works
+        $dbAdapter = $this->createMock(\Magento\Framework\DB\Adapter\AdapterInterface::class);
+        // Return common test SKUs as existing in catalog_product_entity
+        $dbAdapter->method('fetchCol')->willReturn(['SKU-001', 'SKU-002']);
+        $this->resourceConnection->method('getConnection')->willReturn($dbAdapter);
+        $this->resourceConnection->method('getTableName')
+            ->willReturnArgument(0);
 
         // Default helper behavior: single branch
         $this->helper->method('getStockFilial')->willReturn(1);
@@ -72,7 +83,8 @@ class StockSyncTest extends TestCase
             $this->syncLogResource,
             $this->stockValidator,
             $this->cache,
-            $this->logger
+            $this->logger,
+            $this->resourceConnection
         );
     }
 
@@ -127,7 +139,8 @@ class StockSyncTest extends TestCase
             $this->syncLogResource,
             $stockValidator,
             $cache,
-            $logger
+            $logger,
+            $this->resourceConnection
         );
 
         $result = $stockSync->getStockBySku('TEST-SKU');
@@ -171,7 +184,8 @@ class StockSyncTest extends TestCase
             $this->syncLogResource,
             $this->stockValidator,
             $this->cache,
-            $this->logger
+            $this->logger,
+            $this->resourceConnection
         );
 
         $this->cache->method('load')->willReturn(false);
@@ -211,7 +225,8 @@ class StockSyncTest extends TestCase
             $this->syncLogResource,
             $this->stockValidator,
             $this->cache,
-            $this->logger
+            $this->logger,
+            $this->resourceConnection
         );
 
         $this->cache->method('load')->willReturn(false);
@@ -247,7 +262,8 @@ class StockSyncTest extends TestCase
             $this->syncLogResource,
             $this->stockValidator,
             $this->cache,
-            $this->logger
+            $this->logger,
+            $this->resourceConnection
         );
 
         $this->cache->method('load')->willReturn(false);
@@ -283,7 +299,8 @@ class StockSyncTest extends TestCase
             $this->syncLogResource,
             $this->stockValidator,
             $this->cache,
-            $this->logger
+            $this->logger,
+            $this->resourceConnection
         );
 
         $this->cache->method('load')->willReturn(false);
@@ -369,6 +386,25 @@ class StockSyncTest extends TestCase
 
     public function testSyncAllCountsNotFoundProductsCorrectly(): void
     {
+        // Need a separate StockSync instance where SKU-002 is NOT in the SKU cache
+        $resourceConn = $this->createMock(ResourceConnection::class);
+        $dbAdapter = $this->createMock(\Magento\Framework\DB\Adapter\AdapterInterface::class);
+        $dbAdapter->method('fetchCol')->willReturn(['SKU-001']); // Only SKU-001 exists
+        $resourceConn->method('getConnection')->willReturn($dbAdapter);
+        $resourceConn->method('getTableName')->willReturnArgument(0);
+
+        $stockSync = new StockSync(
+            $this->connection,
+            $this->helper,
+            $this->productRepository,
+            $this->stockRegistry,
+            $this->syncLogResource,
+            $this->stockValidator,
+            $this->cache,
+            $this->logger,
+            $resourceConn
+        );
+
         $erpData = [
             ['MATERIAL' => 'SKU-001', 'QTDE' => 10.0, 'VLRMEDIA' => 25.00],
             ['MATERIAL' => 'SKU-002', 'QTDE' => 5.0, 'VLRMEDIA' => 15.00],
@@ -389,9 +425,7 @@ class StockSyncTest extends TestCase
         $stockItem->method('getQty')->willReturn(5.0);
         $this->stockRegistry->method('getStockItemBySku')->willReturn($stockItem);
 
-        $result = $this->stockSync->syncAll();
-
-        // SKU-002 should be counted as not_found, NOT as error
+        $result = $stockSync->syncAll();
         $this->assertEquals(1, $result['not_found']);
         $this->assertEquals(0, $result['errors']);
         $this->assertEquals(1, $result['updated']);
@@ -548,7 +582,8 @@ class StockSyncTest extends TestCase
             $this->syncLogResource,
             $this->stockValidator,
             $this->cache,
-            $this->logger
+            $this->logger,
+            $this->resourceConnection
         );
 
         $this->cache->method('load')->willReturn(false);

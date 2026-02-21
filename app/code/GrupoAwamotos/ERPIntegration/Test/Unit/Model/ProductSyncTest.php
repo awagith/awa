@@ -15,6 +15,7 @@ use Magento\Catalog\Api\Data\ProductInterfaceFactory;
 use Magento\Catalog\Model\Product;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Store\Api\Data\StoreInterface;
+use Magento\Catalog\Api\CategoryLinkManagementInterface;
 use Magento\Framework\App\State as AppState;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Psr\Log\LoggerInterface;
@@ -33,6 +34,7 @@ class ProductSyncTest extends TestCase
     private ProductValidator|MockObject $productValidator;
     private LoggerInterface|MockObject $logger;
     private AppState|MockObject $appState;
+    private CategoryLinkManagementInterface|MockObject $categoryLinkManagement;
 
     protected function setUp(): void
     {
@@ -45,6 +47,7 @@ class ProductSyncTest extends TestCase
         $this->productValidator = $this->createMock(ProductValidator::class);
         $this->logger = $this->createMock(LoggerInterface::class);
         $this->appState = $this->createMock(AppState::class);
+        $this->categoryLinkManagement = $this->createMock(CategoryLinkManagementInterface::class);
         $this->productValidator->method('validate')->willReturn(ValidationResult::success());
 
         // Setup common mocks
@@ -63,9 +66,9 @@ class ProductSyncTest extends TestCase
             $this->storeManager,
             $this->syncLogResource,
             $this->productValidator,
-            $this->logger
-            ,
-            $this->appState
+            $this->logger,
+            $this->appState,
+            $this->categoryLinkManagement
         );
     }
 
