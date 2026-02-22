@@ -21,6 +21,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class StoreConfigurator
 {
+    private const CMS_HOMEPAGE_IDENTIFIER = 'home';
+    private const CMS_HOMEPAGE_HOME5_IDENTIFIER = 'homepage_ayo_home5';
+
     private State $appState;
     private BlockFactory $blockFactory;
     private PageFactory $pageFactory;
@@ -170,40 +173,76 @@ class StoreConfigurator
     {
         $page = $this->pageFactory->create();
         $page->setStoreId(0);
-        $page->load('home', 'identifier');
+        $page->load(self::CMS_HOMEPAGE_IDENTIFIER, 'identifier');
 
-        $pageContent = $this->getHomepageContent();
+        $seedPageContent = $this->getHomepageContent();
+        $effectivePageContentForAlias = $seedPageContent;
 
         try {
             if ($page->getId()) {
-                $page->setTitle('Home Page');
-                $page->setIdentifier('home');
-                $page->setContent($pageContent);
-                $page->setIsActive(true);
-                $page->setPageLayout('1column');
-                $page->setStores([0]);
+                $currentContent = (string) $page->getContent();
+                if (trim($currentContent) !== '') {
+                    $effectivePageContentForAlias = $currentContent;
+                }
+
+                $output->writeln(sprintf(' - Página %s já existe (não alterada)', self::CMS_HOMEPAGE_IDENTIFIER));
             } else {
                 $page->setData([
                     'title' => 'Home Page',
-                    'identifier' => 'home',
-                    'content' => $pageContent,
+                    'identifier' => self::CMS_HOMEPAGE_IDENTIFIER,
+                    'content' => $seedPageContent,
                     'is_active' => 1,
                     'page_layout' => '1column'
                 ]);
                 $page->setStores([0]);
+
+                $page->save();
+                $output->writeln(sprintf(' - Página %s criada', self::CMS_HOMEPAGE_IDENTIFIER));
             }
 
-            $page->save();
-            $output->writeln(' - Página inicial criada/atualizada');
+            $this->ensureHome5HomepageAlias($output, $effectivePageContentForAlias);
         } catch (\Throwable $exception) {
             $output->writeln(sprintf('<error>   ✗ Erro na página inicial: %s</error>', $exception->getMessage()));
+        }
+    }
+
+    /**
+     * Garante que exista uma CMS Page com identifier `homepage_ayo_home5`.
+     *
+     * Importante: se a página já existir (conteúdo editado no Admin), não sobrescrevemos.
+     */
+    private function ensureHome5HomepageAlias(OutputInterface $output, string $pageContent): void
+    {
+        $page = $this->pageFactory->create();
+        $page->setStoreId(0);
+        $page->load(self::CMS_HOMEPAGE_HOME5_IDENTIFIER, 'identifier');
+
+        if ($page->getId()) {
+            $output->writeln(sprintf(' - Página %s já existe (não alterada)', self::CMS_HOMEPAGE_HOME5_IDENTIFIER));
+            return;
+        }
+
+        try {
+            $page->setData([
+                'title' => 'Homepage Ayo Home 5',
+                'identifier' => self::CMS_HOMEPAGE_HOME5_IDENTIFIER,
+                'content' => $pageContent,
+                'is_active' => 1,
+                'page_layout' => '1column'
+            ]);
+            $page->setStores([0]);
+            $page->save();
+
+            $output->writeln(sprintf(' - Página %s criada (alias da %s)', self::CMS_HOMEPAGE_HOME5_IDENTIFIER, self::CMS_HOMEPAGE_IDENTIFIER));
+        } catch (\Throwable $exception) {
+            $output->writeln(sprintf('<error>   ✗ Erro ao criar página %s: %s</error>', self::CMS_HOMEPAGE_HOME5_IDENTIFIER, $exception->getMessage()));
         }
     }
 
     private function configureHomepage(OutputInterface $output): void
     {
         try {
-            $this->configWriter->save('web/default/cms_home_page', 'home');
+            $this->configWriter->save('web/default/cms_home_page', self::CMS_HOMEPAGE_HOME5_IDENTIFIER);
             $output->writeln(' - Homepage padrão configurada');
         } catch (\Throwable $exception) {
             $output->writeln(sprintf('<error>   ✗ Erro ao configurar homepage: %s</error>', $exception->getMessage()));
@@ -499,7 +538,7 @@ HTML;
 </style>
 <div class="cms-page lgpd-page">
   <h1>Seus Direitos - Lei Geral de Proteção de Dados (LGPD)</h1>
-  
+
   <div class="lgpd-card">
     <p><strong>O Grupo Awamotos está comprometido com a proteção dos seus dados pessoais.</strong> Esta página explica seus direitos conforme a Lei nº 13.709/2018 (LGPD) e como você pode exercê-los.</p>
   </div>
@@ -587,7 +626,7 @@ HTML;
   <h2>3. Cadastro e Conta</h2>
   <h3>3.1 Pessoa Física</h3>
   <p>Ao criar uma conta, você declara ser maior de 18 anos e fornecer informações verdadeiras.</p>
-  
+
   <h3>3.2 Pessoa Jurídica (B2B)</h3>
   <p>Para cadastro empresarial, é necessário:</p>
   <ul>
@@ -1346,7 +1385,7 @@ HTML;
     private function getCategoryDefinitions(): array
     {
         // Categorias principais para menu de navegação AWA Motos
-        // As categorias reais já existem no banco (importadas). 
+        // As categorias reais já existem no banco (importadas).
         // Este método garante que categorias essenciais estejam sempre presentes.
         return [
             ['name' => 'Retrovisores', 'url_key' => 'retrovisores'],
@@ -1779,7 +1818,7 @@ HTML;
                     </div>
                 </div>
             </div>
-            
+
             <!-- Contato B2B Dedicado -->
             <div class="aw-footer-b2b-contact" aria-labelledby="b2b-contact-title">
                 <h5 id="b2b-contact-title" class="b2b-contact-title">Central de Atacado</h5>
@@ -1799,7 +1838,7 @@ HTML;
             </div>
         </div>
     </div>
-    
+
     <!-- Indicadores de Confiança B2B -->
     <div class="aw-footer-trust-b2b" aria-label="Indicadores de confiança">
         <div class="trust-item">
@@ -1819,14 +1858,14 @@ HTML;
             <span class="trust-label">Satisfação</span>
         </div>
     </div>
-    
+
     <!-- Skip link para acessibilidade -->
     <a href="#maincontent" class="skip-to-main sr-only sr-only-focusable">Voltar ao conteúdo principal</a>
-    
+
     <div class="aw-footer-legal" aria-label="Informações legais" role="contentinfo">
         <div class="legal-info">
             <small>
-                © 2025–2026 {{config path="general/store_information/name"}} 
+                © 2025–2026 {{config path="general/store_information/name"}}
                 <span class="legal-separator" aria-hidden="true">·</span>
                 <span class="legal-item">CNPJ: {{config path="general/store_information/merchant_vat_number"}}</span>
                 <span class="legal-separator" aria-hidden="true">·</span>
@@ -1840,7 +1879,7 @@ HTML;
             <a href="{{store url='shipping'}}">Política de Frete</a>
         </nav>
     </div>
-    
+
     <!--
         Schema.org Organization REMOVIDO daqui.
         O JSON-LD Organization é renderizado por:
@@ -2199,7 +2238,7 @@ HTML;
 
     private function getHomepageContent(): string
     {
-        // Canal A (top-home.phtml via layout) já renderiza: slider, block_top, 
+        // Canal A (top-home.phtml via layout) já renderiza: slider, block_top,
         // banner_mid, hot-deal, product tabs, notification e grids de intenção.
         // Aqui incluímos APENAS seções exclusivas AWA que não duplicam o Canal A.
         return <<<'HTML'
@@ -2301,7 +2340,7 @@ HTML;
 HTML;
         }
 
-    
+
 
     private function ensurePlaceholderBanners(OutputInterface $output): void
     {
