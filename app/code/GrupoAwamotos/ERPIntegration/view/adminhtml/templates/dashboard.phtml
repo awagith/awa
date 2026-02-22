@@ -32,11 +32,49 @@ $syncUrls = $block->getSyncUrlsJson();
             <p>Análise RFM, Projeções de Vendas e Monitoramento de Integração</p>
         </div>
         <div class="erp-header-actions">
+            <button type="button" class="action-default erp-guide-toggle" id="erp-guide-toggle" title="Abrir Guia Rápido">
+                <span>📖 Guia</span>
+            </button>
             <button type="button" class="action-secondary erp-refresh-btn" id="erp-refresh-status" title="Atualizar Status">
                 <span>Atualizar</span>
             </button>
             <span class="erp-date"><?= date('d/m/Y H:i') ?></span>
         </div>
+    </div>
+
+    <!-- Quick Guide (collapsible) -->
+    <div class="erp-guide-panel" id="erp-guide-panel" style="display:none">
+        <div class="erp-guide-close">
+            <button type="button" id="erp-guide-close">&times;</button>
+        </div>
+        <h3>📖 Guia Rápido — Como usar este Dashboard</h3>
+        <div class="erp-guide-grid">
+            <div class="erp-guide-item">
+                <strong>🔗 Status da Integração</strong>
+                <p>Mostra se o ERP (sistema de gestão) está conectado. Verde = OK. Vermelho = fora do ar. Se estiver vermelho, avise o setor de TI.</p>
+            </div>
+            <div class="erp-guide-item">
+                <strong>🔄 Circuit Breaker</strong>
+                <p>Proteção automática contra falhas. <em>Closed</em> = tudo normal. <em>Open</em> = conexão pausada (aguarde ou clique "Resetar"). <em>Half-Open</em> = testando reconexão.</p>
+            </div>
+            <div class="erp-guide-item">
+                <strong>📊 Sync (Produtos, Estoque, Clientes, Pedidos, Preços)</strong>
+                <p>Cada card mostra quando foi a última sincronização com o ERP. <em>OK</em> = sucesso. <em>ERRO</em> = verifique "Erros Recentes" abaixo. O campo 24h mostra quantas vezes funcionou/falhou no dia.</p>
+            </div>
+            <div class="erp-guide-item">
+                <strong>💰 Banner de Vendas (faixa escura)</strong>
+                <p><em>Realizado</em> = vendas confirmadas do mês. <em>Projeção</em> = estimativa de fechamento baseada no ritmo atual. <em>Para Atingir Meta</em> = quanto precisa vender por dia até o fim do mês.</p>
+            </div>
+            <div class="erp-guide-item">
+                <strong>👥 Segmentos RFM (Champions, Fiéis, Em Risco, Perdidos)</strong>
+                <p>Classifica clientes por Recência (última compra), Frequência (qtd. pedidos) e valor Monetário. Cada segmento tem uma ação sugerida — siga as orientações na caixa de cada grupo.</p>
+            </div>
+            <div class="erp-guide-item">
+                <strong>📈 Projeção Próximo Mês</strong>
+                <p>Estimativa calculada com média dos últimos 3 meses, ajuste sazonal e tendência de crescimento. O "Nível de Confiança" indica a precisão da previsão (70% = boa, acima de 80% = muito boa).</p>
+            </div>
+        </div>
+        <p class="erp-guide-footer">💡 <strong>Dica:</strong> Passe o mouse sobre os ícones <span class="erp-help-icon-demo">?</span> para ver explicações rápidas de cada métrica.</p>
     </div>
 
     <!-- Integration Status Section -->
@@ -167,15 +205,39 @@ $syncUrls = $block->getSyncUrlsJson();
         <?php if (!empty($recentErrors)): ?>
         <div class="erp-errors-section">
             <div class="erp-errors-header">
-                <h3>Erros Recentes</h3>
+                <h3>Erros Recentes <span class="erp-help-icon" title="Erros de sincronização com o ERP nas últimas 24 horas. Cada erro mostra o tipo, responsável e ação sugerida.">?</span></h3>
                 <a href="<?= $block->escapeUrl($block->getUrl('erpintegration/log/index')) ?>" class="action-default">Ver Todos os Logs</a>
             </div>
             <div class="erp-errors-list">
-                <?php foreach ($recentErrors as $error): ?>
+                <?php foreach ($recentErrors as $error):
+                    $errorType = strtoupper($error['entity_type'] ?? '');
+                    $errorTeam = match(true) {
+                        in_array($errorType, ['CATEGORY', 'STOCK', 'PRODUCT']) => 'TI',
+                        $errorType === 'ORDER' => 'Comercial/TI',
+                        $errorType === 'PRICE' => 'Comercial',
+                        $errorType === 'CUSTOMER' => 'Comercial',
+                        default => 'TI',
+                    };
+                    $errorAction = match(true) {
+                        in_array($errorType, ['CATEGORY', 'PRODUCT']) => 'Verificar cadastro no ERP SECTRA e re-sincronizar',
+                        $errorType === 'STOCK' => 'Checar saldos no ERP e rodar sync de estoque',
+                        $errorType === 'ORDER' => 'Verificar pedido no ERP e conferir dados do cliente',
+                        $errorType === 'PRICE' => 'Conferir tabela de preços no ERP e re-sincronizar',
+                        $errorType === 'CUSTOMER' => 'Validar dados do cliente (CNPJ/CPF) no ERP',
+                        default => 'Verificar logs detalhados e contatar TI',
+                    };
+                    $severityClass = in_array($errorType, ['ORDER', 'STOCK']) ? 'erp-severity-high' : 'erp-severity-medium';
+                ?>
                 <div class="erp-error-item">
-                    <span class="erp-error-type"><?= $block->escapeHtml($error['entity_type']) ?></span>
-                    <span class="erp-error-message"><?= $block->escapeHtml(substr($error['message'], 0, 100)) ?></span>
-                    <span class="erp-error-time"><?= $block->escapeHtml($block->formatRelativeTime($error['created_at'])) ?></span>
+                    <div class="erp-error-top">
+                        <span class="erp-error-type"><?= $block->escapeHtml($error['entity_type']) ?></span>
+                        <span class="erp-error-severity <?= $severityClass ?>"><?= $block->escapeHtml($errorTeam) ?></span>
+                        <span class="erp-error-message"><?= $block->escapeHtml(substr($error['message'], 0, 100)) ?></span>
+                        <span class="erp-error-time"><?= $block->escapeHtml($block->formatRelativeTime($error['created_at'])) ?></span>
+                    </div>
+                    <div class="erp-error-action-hint">
+                        <span>👉 <strong>Ação:</strong> <?= $block->escapeHtml($errorAction) ?></span>
+                    </div>
                 </div>
                 <?php endforeach; ?>
             </div>
@@ -235,7 +297,7 @@ $syncUrls = $block->getSyncUrlsJson();
             <div class="erp-kpi-icon">👥</div>
             <div class="erp-kpi-content">
                 <div class="erp-kpi-value"><?= $block->formatNumber($stats['customers']['clientes'] ?? 0) ?></div>
-                <div class="erp-kpi-label">Clientes no ERP</div>
+                <div class="erp-kpi-label">Clientes no ERP <span class="erp-help-icon" title="Total de clientes cadastrados no ERP SECTRA que possuem pelo menos 1 pedido nos últimos 24 meses.">?</span></div>
                 <div class="erp-kpi-detail"><?= $block->formatNumber($stats['recent']['clientes_ativos'] ?? 0) ?> ativos (30d)</div>
             </div>
         </div>
@@ -244,8 +306,8 @@ $syncUrls = $block->getSyncUrlsJson();
             <div class="erp-kpi-icon">📦</div>
             <div class="erp-kpi-content">
                 <div class="erp-kpi-value"><?= $block->formatNumber($stats['recent']['pedidos'] ?? 0) ?></div>
-                <div class="erp-kpi-label">Pedidos (30 dias)</div>
-                <div class="erp-kpi-detail">Ticket: <?= $block->formatPrice($stats['orders']['ticket_medio'] ?? 0) ?></div>
+                <div class="erp-kpi-label">Pedidos (30 dias) <span class="erp-help-icon" title="Quantidade de pedidos realizados nos últimos 30 dias no ERP. Inclui todos os status exceto cancelados.">?</span></div>
+                <div class="erp-kpi-detail">Ticket: <?= $block->formatPrice($stats['orders']['ticket_medio'] ?? 0) ?> <span class="erp-help-icon" title="Ticket Médio = valor total de vendas dividido pelo número de pedidos. Quanto maior, melhor.">?</span></div>
             </div>
         </div>
 
@@ -253,7 +315,7 @@ $syncUrls = $block->getSyncUrlsJson();
             <div class="erp-kpi-icon">💰</div>
             <div class="erp-kpi-content">
                 <div class="erp-kpi-value"><?= $block->formatPrice($stats['recent']['valor'] ?? 0) ?></div>
-                <div class="erp-kpi-label">Faturamento (30 dias)</div>
+                <div class="erp-kpi-label">Faturamento (30 dias) <span class="erp-help-icon" title="Valor total faturado nos últimos 30 dias. Dados vindos diretamente do ERP SECTRA (tabela VE_PEDIDO).">?</span></div>
                 <div class="erp-kpi-detail">Total: <?= $block->formatPrice($stats['orders']['valor_total'] ?? 0) ?></div>
             </div>
         </div>
@@ -262,7 +324,7 @@ $syncUrls = $block->getSyncUrlsJson();
             <div class="erp-kpi-icon">⚠️</div>
             <div class="erp-kpi-content">
                 <div class="erp-kpi-value"><?= count($atRiskCustomers) ?></div>
-                <div class="erp-kpi-label">Clientes em Risco</div>
+                <div class="erp-kpi-label">Clientes em Risco <span class="erp-help-icon" title="Clientes classificados como 'Em Risco' ou 'Não Pode Perder' pela análise RFM. São clientes que já compraram bastante mas pararam — precisam de contato comercial urgente.">?</span></div>
                 <div class="erp-kpi-detail">Precisam de atenção urgente</div>
             </div>
         </div>
@@ -295,18 +357,34 @@ $syncUrls = $block->getSyncUrlsJson();
     <?php if (!empty($rfmStats)): ?>
     <div class="erp-rfm-overview">
         <div class="erp-section-header">
-            <h3>Análise de Segmentos de Clientes</h3>
+            <h3>Análise de Segmentos de Clientes <span class="erp-help-icon" title="Segmentação RFM: classifica clientes por Recência (quando foi a última compra), Frequência (quantas vezes comprou) e valor Monetário (quanto gastou). Baseado nos últimos 24 meses de dados do ERP.">?</span></h3>
         </div>
         <div class="erp-rfm-grid">
             <?php
             $prioritySegments = ['champions', 'loyal', 'at_risk', 'cant_lose', 'lost'];
+            $segmentIcons = [
+                'champions' => '🏆',
+                'loyal' => '💎',
+                'at_risk' => '⚠️',
+                'cant_lose' => '🚨',
+                'lost' => '💤',
+            ];
+            $segmentUrgency = [
+                'champions' => '',
+                'loyal' => '',
+                'at_risk' => 'erp-rfm-urgent',
+                'cant_lose' => 'erp-rfm-critical',
+                'lost' => 'erp-rfm-lost',
+            ];
             foreach ($prioritySegments as $segKey):
                 $seg = $rfmStats[$segKey] ?? null;
                 if (!$seg || $seg['count'] == 0) continue;
+                $icon = $segmentIcons[$segKey] ?? '👥';
+                $urgencyClass = $segmentUrgency[$segKey] ?? '';
             ?>
-            <div class="erp-rfm-card" style="border-left-color: <?= $block->escapeHtmlAttr($seg['color']) ?>">
+            <div class="erp-rfm-card <?= $urgencyClass ?>" style="border-left-color: <?= $block->escapeHtmlAttr($seg['color']) ?>">
                 <div class="erp-rfm-header">
-                    <span class="erp-rfm-name"><?= $block->escapeHtml($seg['label']) ?></span>
+                    <span class="erp-rfm-name"><?= $icon ?> <?= $block->escapeHtml($seg['label']) ?></span>
                     <span class="erp-rfm-count"><?= (int)$seg['count'] ?> clientes</span>
                 </div>
                 <div class="erp-rfm-stats">
@@ -323,8 +401,9 @@ $syncUrls = $block->getSyncUrlsJson();
                         <span class="erp-rfm-stat-label">da Base</span>
                     </div>
                 </div>
-                <div class="erp-rfm-action">
-                    <span class="erp-action-text"><?= $block->escapeHtml($seg['action']) ?></span>
+                <div class="erp-rfm-cta" style="background-color: <?= $block->escapeHtmlAttr($seg['color']) ?>20; border-color: <?= $block->escapeHtmlAttr($seg['color']) ?>">
+                    <span class="erp-rfm-cta-icon"><?= $icon ?></span>
+                    <span class="erp-rfm-cta-text"><?= $block->escapeHtml($seg['action']) ?></span>
                 </div>
             </div>
             <?php endforeach; ?>
@@ -459,30 +538,30 @@ $syncUrls = $block->getSyncUrlsJson();
             <div class="erp-next-month-projection">
                 <div class="erp-nm-main">
                     <span class="erp-nm-value"><?= $block->formatPrice($nextMonth['projection'] ?? 0) ?></span>
-                    <span class="erp-nm-label">Projeção</span>
+                    <span class="erp-nm-label">Projeção <span class="erp-help-icon" title="Estimativa calculada com base na Média Ponderada dos últimos 3 meses + Tendência Linear + Ajuste Sazonal, usando simulação Monte Carlo de 1000 cenários.">?</span></span>
                 </div>
                 <div class="erp-nm-details">
                     <div class="erp-nm-detail">
-                        <span class="erp-nm-detail-label">Base (média 3 meses)</span>
+                        <span class="erp-nm-detail-label">Base (média 3 meses) <span class="erp-help-icon" title="Média ponderada dos 3 últimos meses. O mês mais recente tem peso maior (3x), o anterior peso médio (2x), e o mais antigo peso menor (1x).">?</span></span>
                         <span class="erp-nm-detail-value"><?= $block->formatPrice($nextMonth['base_value'] ?? 0) ?></span>
                     </div>
                     <div class="erp-nm-detail">
-                        <span class="erp-nm-detail-label">Fator Sazonal</span>
+                        <span class="erp-nm-detail-label">Fator Sazonal <span class="erp-help-icon" title="Ajuste baseado no padrão histórico deste mês. Ex: 1.15 significa que historicamente este mês vende 15% acima da média. 0.85 significa 15% abaixo.">?</span></span>
                         <span class="erp-nm-detail-value"><?= number_format($nextMonth['seasonal_factor'] ?? 1, 2) ?>x</span>
                     </div>
                     <div class="erp-nm-detail">
-                        <span class="erp-nm-detail-label">Taxa de Crescimento</span>
+                        <span class="erp-nm-detail-label">Taxa de Crescimento <span class="erp-help-icon" title="Tendência de crescimento ou queda baseada na regressão linear dos últimos 12 meses. Positivo = crescendo, negativo = retraindo.">?</span></span>
                         <span class="erp-nm-detail-value"><?= $block->formatPercentage(($nextMonth['growth_rate'] ?? 0) * 100) ?></span>
                     </div>
                     <div class="erp-nm-detail">
-                        <span class="erp-nm-detail-label">Faixa Esperada</span>
+                        <span class="erp-nm-detail-label">Faixa Esperada <span class="erp-help-icon" title="Intervalo entre o cenário pessimista e otimista. A projeção real deve cair dentro desta faixa na maioria das vezes.">?</span></span>
                         <span class="erp-nm-detail-value">
                             <?= $block->formatPrice($nextMonth['range_min'] ?? 0) ?> - <?= $block->formatPrice($nextMonth['range_max'] ?? 0) ?>
                         </span>
                     </div>
                 </div>
                 <div class="erp-nm-confidence">
-                    <span>Nível de Confiança: <?= (int)(($nextMonth['confidence_level'] ?? 0.7) * 100) ?>%</span>
+                    <span>Nível de Confiança: <?= (int)(($nextMonth['confidence_level'] ?? 0.7) * 100) ?>% <span class="erp-help-icon" title="Quanto mais estáveis as vendas nos últimos meses, maior a confiança. Abaixo de 60% = muita variação, previsão incerta. 60-80% = razoável. Acima de 80% = alta confiança.">?</span></span>
                 </div>
             </div>
         </div>
@@ -500,6 +579,17 @@ require(['jquery'], function($) {
     'use strict';
 
     var syncUrls = <?= /* @noEscape */ $syncUrls ?>;
+
+    // Quick Guide Toggle
+    $('#erp-guide-toggle').on('click', function() {
+        var $panel = $('#erp-guide-panel');
+        $panel.slideToggle(300);
+        $(this).toggleClass('active');
+    });
+    $('#erp-guide-close').on('click', function() {
+        $('#erp-guide-panel').slideUp(300);
+        $('#erp-guide-toggle').removeClass('active');
+    });
 
     // Integration Status Actions
     initIntegrationActions();
@@ -1746,5 +1836,229 @@ require(['jquery'], function($) {
     .erp-sync-body {
         grid-template-columns: 1fr;
     }
+}
+
+/* ========================================
+   UX Improvements — Help Icons & Tooltips
+   ======================================== */
+.erp-help-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    background: #6366f1;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: help;
+    margin-left: 4px;
+    vertical-align: middle;
+    position: relative;
+    transition: background 0.2s;
+}
+.erp-help-icon:hover {
+    background: #4f46e5;
+    transform: scale(1.15);
+}
+.erp-help-icon-demo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    background: #6366f1;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 700;
+    vertical-align: middle;
+}
+
+/* ========================================
+   Quick Guide Panel
+   ======================================== */
+.erp-guide-toggle {
+    background: #6366f1 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 6px !important;
+    padding: 6px 14px !important;
+    font-size: 13px !important;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.erp-guide-toggle:hover,
+.erp-guide-toggle.active {
+    background: #4f46e5 !important;
+    transform: translateY(-1px);
+}
+.erp-guide-panel {
+    background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
+    border: 1px solid #c7d2fe;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    position: relative;
+}
+.erp-guide-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+}
+.erp-guide-close button {
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: #6366f1;
+    cursor: pointer;
+    padding: 0 6px;
+    line-height: 1;
+}
+.erp-guide-close button:hover {
+    color: #4338ca;
+}
+.erp-guide-panel h3 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    color: #312e81;
+}
+.erp-guide-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.erp-guide-item {
+    background: #fff;
+    border-radius: 8px;
+    padding: 14px;
+    border: 1px solid #e0e7ff;
+}
+.erp-guide-item strong {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 14px;
+    color: #312e81;
+}
+.erp-guide-item p {
+    margin: 0;
+    font-size: 12.5px;
+    color: #475569;
+    line-height: 1.5;
+}
+.erp-guide-footer {
+    margin: 0;
+    font-size: 13px;
+    color: #475569;
+    text-align: center;
+    padding-top: 8px;
+    border-top: 1px solid #c7d2fe;
+}
+@media (max-width: 992px) {
+    .erp-guide-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+@media (max-width: 600px) {
+    .erp-guide-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ========================================
+   Error Section — Severity & Actions
+   ======================================== */
+.erp-error-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 10px 14px;
+    border-bottom: 1px solid #f1f5f9;
+}
+.erp-error-item:last-child {
+    border-bottom: none;
+}
+.erp-error-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.erp-error-severity {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.erp-severity-high {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+.erp-severity-medium {
+    background: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fde68a;
+}
+.erp-error-action-hint {
+    padding: 6px 12px;
+    background: #f8fafc;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #475569;
+    margin-top: 2px;
+    border-left: 3px solid #6366f1;
+}
+.erp-error-action-hint strong {
+    color: #312e81;
+}
+
+/* ========================================
+   RFM Segments — CTA & Urgency
+   ======================================== */
+.erp-rfm-cta {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid;
+    margin-top: 8px;
+    font-size: 13px;
+    line-height: 1.5;
+}
+.erp-rfm-cta-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+.erp-rfm-cta-text {
+    color: #1e293b;
+    font-weight: 500;
+}
+.erp-rfm-card.erp-rfm-urgent {
+    animation: erp-pulse-border 2s ease-in-out infinite;
+    box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+.erp-rfm-card.erp-rfm-critical {
+    animation: erp-pulse-border-red 2s ease-in-out infinite;
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+.erp-rfm-card.erp-rfm-lost {
+    opacity: 0.8;
+}
+@keyframes erp-pulse-border {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.15); }
+    50% { box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3); }
+}
+@keyframes erp-pulse-border-red {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.15); }
+    50% { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.3); }
 }
 </style>
