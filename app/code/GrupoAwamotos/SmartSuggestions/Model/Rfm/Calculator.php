@@ -4,30 +4,46 @@ declare(strict_types=1);
 namespace GrupoAwamotos\SmartSuggestions\Model\Rfm;
 
 use GrupoAwamotos\SmartSuggestions\Api\RfmCalculatorInterface;
-use GrupoAwamotos\ERPIntegration\Api\ConnectionInterface;
+use GrupoAwamotos\ERPIntegration\Model\Rfm\Calculator as ErpRfmCalculator;
 use Psr\Log\LoggerInterface;
 
 /**
- * RFM Calculator
+ * RFM Calculator — Adapter/Delegate
  *
- * Calculates Recency, Frequency, Monetary scores for customer segmentation
- * R = Days since last purchase (lower is better)
- * F = Number of orders (higher is better)
- * M = Total revenue (higher is better)
+ * Delegates all RFM computation to ERPIntegration\Model\Rfm\Calculator
+ * and adapts the output format for SmartSuggestions consumers.
+ *
+ * This eliminates the duplicate ERP query that existed when both modules
+ * computed RFM independently against SECTRA.
  */
 class Calculator implements RfmCalculatorInterface
 {
-    private const ANALYSIS_PERIOD_MONTHS = 24;
+    /**
+     * Segment name mapping: ERPIntegration (snake_case) → SmartSuggestions (Title Case)
+     */
+    private const SEGMENT_MAP = [
+        'champions'          => 'Champions',
+        'loyal'              => 'Loyal',
+        'potential_loyalist' => 'Potential Loyalist',
+        'new_customers'      => 'New Customers',
+        'promising'          => 'Promising',
+        'need_attention'     => 'Need Attention',
+        'at_risk'            => 'At Risk',
+        'cant_lose'          => "Can't Lose",
+        'about_to_sleep'     => 'Hibernating',
+        'hibernating'        => 'Hibernating',
+        'lost'               => 'Lost',
+    ];
 
-    private ConnectionInterface $connection;
+    private ErpRfmCalculator $erpCalculator;
     private LoggerInterface $logger;
     private ?array $cachedResults = null;
 
     public function __construct(
-        ConnectionInterface $connection,
+        ErpRfmCalculator $erpCalculator,
         LoggerInterface $logger
     ) {
-        $this->connection = $connection;
+        $this->erpCalculator = $erpCalculator;
         $this->logger = $logger;
     }
 
@@ -41,63 +57,22 @@ class Calculator implements RfmCalculatorInterface
         }
 
         try {
-            // Get raw RFM data from ERP
-            $rawData = $this->getRawRfmData();
+            $erpCustomers = $this->erpCalculator->calculateForAllCustomers();
 
-            if (empty($rawData)) {
+            if (empty($erpCustomers)) {
                 return [];
             }
 
-            // Extract values for quintile calculation
-            $recencyValues = array_column($rawData, 'recency');
-            $frequencyValues = array_column($rawData, 'frequency');
-            $monetaryValues = array_column($rawData, 'monetary');
-
-            // Calculate quintiles
-            $rQuintiles = $this->calculateQuintiles($recencyValues);
-            $fQuintiles = $this->calculateQuintiles($frequencyValues);
-            $mQuintiles = $this->calculateQuintiles($monetaryValues);
-
-            // Assign scores to each customer
-            $scoredCustomers = [];
-            foreach ($rawData as $customer) {
-                // For recency, lower is better, so we invert the score
-                $rScore = 6 - $this->getQuintileScore((float)$customer['recency'], $rQuintiles);
-                $fScore = $this->getQuintileScore((float)$customer['frequency'], $fQuintiles);
-                $mScore = $this->getQuintileScore((float)$customer['monetary'], $mQuintiles);
-
-                $segment = $this->determineSegment($rScore, $fScore, $mScore);
-
-                $scoredCustomers[] = [
-                    'customer_id' => (int)$customer['customer_id'],
-                    'customer_name' => $customer['customer_name'],
-                    'trade_name' => $customer['trade_name'],
-                    'cnpj' => $customer['cnpj'],
-                    'city' => $customer['city'],
-                    'state' => $customer['state'],
-                    'recency_days' => (int)$customer['recency'],
-                    'frequency' => (int)$customer['frequency'],
-                    'monetary' => (float)$customer['monetary'],
-                    'r_score' => $rScore,
-                    'f_score' => $fScore,
-                    'm_score' => $mScore,
-                    'rfm_score' => "{$rScore}{$fScore}{$mScore}",
-                    'rfm_total' => $rScore + $fScore + $mScore,
-                    'segment' => $segment,
-                    'last_purchase' => $customer['last_purchase'] ?? null
-                ];
-            }
+            $result = array_map([$this, 'adaptCustomerData'], $erpCustomers);
 
             // Sort by RFM total score descending
-            usort($scoredCustomers, function ($a, $b) {
-                return $b['rfm_total'] <=> $a['rfm_total'];
-            });
+            usort($result, fn(array $a, array $b) => $b['rfm_total'] <=> $a['rfm_total']);
 
-            $this->cachedResults = $scoredCustomers;
-            return $scoredCustomers;
+            $this->cachedResults = $result;
+            return $result;
 
         } catch (\Exception $e) {
-            $this->logger->error('RFM Calculation Error: ' . $e->getMessage());
+            $this->logger->error('[SmartSuggestions RFM] Error delegating to ERP Calculator: ' . $e->getMessage());
             return [];
         }
     }
@@ -107,15 +82,13 @@ class Calculator implements RfmCalculatorInterface
      */
     public function calculateForCustomer(int $customerId): ?array
     {
-        $allCustomers = $this->calculateAll();
+        $erpData = $this->erpCalculator->getCustomerRfm($customerId);
 
-        foreach ($allCustomers as $customer) {
-            if ($customer['customer_id'] === $customerId) {
-                return $customer;
-            }
+        if ($erpData === null) {
+            return null;
         }
 
-        return null;
+        return $this->adaptCustomerData($erpData);
     }
 
     /**
@@ -312,123 +285,39 @@ class Calculator implements RfmCalculatorInterface
     }
 
     /**
-     * Get raw RFM data from ERP
+     * Adapt ERP customer data to SmartSuggestions format
+     *
+     * Maps field names and segment naming conventions from ERPIntegration
+     * output to the format expected by SmartSuggestions consumers.
+     *
+     * @param array $erpCustomer Raw data from ERPIntegration Calculator
+     * @return array Adapted data for SmartSuggestions consumers
      */
-    private function getRawRfmData(): array
+    private function adaptCustomerData(array $erpCustomer): array
     {
-        $sql = "
-            SELECT
-                f.CODIGO as customer_id,
-                f.RAZAO as customer_name,
-                f.FANTASIA as trade_name,
-                f.CGC as cnpj,
-                f.CIDADE as city,
-                f.UF as state,
-                DATEDIFF(DAY, MAX(p.DTPEDIDO), GETDATE()) as recency,
-                COUNT(DISTINCT p.CODIGO) as frequency,
-                SUM(i.VLRTOTAL) as monetary,
-                MAX(p.DTPEDIDO) as last_purchase
-            FROM FN_FORNECEDORES f
-            INNER JOIN VE_PEDIDO p ON f.CODIGO = p.CLIENTE
-            INNER JOIN VE_PEDIDOITENS i ON p.CODIGO = i.PEDIDO
-            WHERE f.CKCLIENTE = 'S'
-              AND p.STATUS NOT IN ('C', 'X')
-              AND p.DTPEDIDO >= DATEADD(MONTH, -" . self::ANALYSIS_PERIOD_MONTHS . ", GETDATE())
-            GROUP BY f.CODIGO, f.RAZAO, f.FANTASIA, f.CGC, f.CIDADE, f.UF
-            HAVING COUNT(DISTINCT p.CODIGO) > 0
-        ";
-
-        return $this->connection->query($sql);
-    }
-
-    /**
-     * Calculate quintile boundaries for a set of values
-     */
-    private function calculateQuintiles(array $values): array
-    {
-        sort($values);
-        $count = count($values);
-
-        if ($count === 0) {
-            return ['q1' => 0, 'q2' => 0, 'q3' => 0, 'q4' => 0];
-        }
+        $erpSegment = $erpCustomer['segment'] ?? '';
+        $segment = self::SEGMENT_MAP[$erpSegment] ?? 'Other';
 
         return [
-            'q1' => $values[(int)($count * 0.2)] ?? 0,
-            'q2' => $values[(int)($count * 0.4)] ?? 0,
-            'q3' => $values[(int)($count * 0.6)] ?? 0,
-            'q4' => $values[(int)($count * 0.8)] ?? 0
+            'customer_id' => (int)($erpCustomer['customer_id'] ?? 0),
+            'customer_name' => $erpCustomer['customer_name'] ?? '',
+            'trade_name' => $erpCustomer['trade_name'] ?? '',
+            'cnpj' => $erpCustomer['cnpj'] ?? '',
+            'city' => $erpCustomer['city'] ?? '',
+            'state' => $erpCustomer['state'] ?? '',
+            'email' => $erpCustomer['email'] ?? '',
+            'phone' => $erpCustomer['phone'] ?? '',
+            'recency_days' => (int)($erpCustomer['recency'] ?? 0),
+            'frequency' => (int)($erpCustomer['frequency'] ?? 0),
+            'monetary' => (float)($erpCustomer['monetary'] ?? 0),
+            'r_score' => (int)($erpCustomer['r_score'] ?? 0),
+            'f_score' => (int)($erpCustomer['f_score'] ?? 0),
+            'm_score' => (int)($erpCustomer['m_score'] ?? 0),
+            'rfm_score' => (string)($erpCustomer['rfm_score'] ?? ''),
+            'rfm_total' => (int)($erpCustomer['total_score'] ?? 0),
+            'segment' => $segment,
+            'last_purchase' => $erpCustomer['last_purchase'] ?? null,
         ];
-    }
-
-    /**
-     * Get quintile score (1-5) for a value
-     */
-    private function getQuintileScore(float $value, array $quintiles): int
-    {
-        if ($value <= $quintiles['q1']) return 1;
-        if ($value <= $quintiles['q2']) return 2;
-        if ($value <= $quintiles['q3']) return 3;
-        if ($value <= $quintiles['q4']) return 4;
-        return 5;
-    }
-
-    /**
-     * Determine customer segment based on RFM scores
-     */
-    private function determineSegment(int $r, int $f, int $m): string
-    {
-        // Champions: High R, High F, High M
-        if ($r >= 4 && $f >= 4 && $m >= 4) {
-            return 'Champions';
-        }
-
-        // Loyal: Good R, Good F, Good M
-        if ($r >= 3 && $f >= 3 && $m >= 3) {
-            return 'Loyal';
-        }
-
-        // Potential Loyalist: High R, Medium F/M
-        if ($r >= 4 && ($f >= 2 || $m >= 2)) {
-            return 'Potential Loyalist';
-        }
-
-        // New Customers: High R, Low F
-        if ($r >= 4 && $f <= 2) {
-            return 'New Customers';
-        }
-
-        // Promising: Medium-High R, Low-Medium F/M
-        if ($r >= 3 && $f <= 3 && $m <= 3) {
-            return 'Promising';
-        }
-
-        // Need Attention: Medium R, Medium F, Medium M
-        if ($r >= 2 && $r <= 3 && $f >= 2 && $m >= 2) {
-            return 'Need Attention';
-        }
-
-        // Can't Lose: Low R but High F and M (valuable customers leaving)
-        if ($r <= 2 && $f >= 4 && $m >= 4) {
-            return "Can't Lose";
-        }
-
-        // At Risk: Low R, Medium-High F/M
-        if ($r <= 2 && ($f >= 3 || $m >= 3)) {
-            return 'At Risk';
-        }
-
-        // Hibernating: Low R, Low-Medium F/M
-        if ($r <= 2 && $f >= 2 && $m >= 2) {
-            return 'Hibernating';
-        }
-
-        // Lost: Low R, Low F, Low M
-        if ($r <= 2 && $f <= 2) {
-            return 'Lost';
-        }
-
-        return 'Other';
     }
 
     /**
