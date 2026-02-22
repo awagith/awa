@@ -12,6 +12,7 @@
             Mirror Magento_Backend default target to avoid parent mismatch when
             other modules/themes also move "user" inside header.inner.right.
         -->
+        <move element="user" destination="header.inner.right" before="-"/>
         <move element="notification.messages" destination="header.inner.right" after="user"/>
     </body>
 </page>
