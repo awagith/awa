@@ -6,13 +6,12 @@ namespace GrupoAwamotos\ERPIntegration\Block\Adminhtml;
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
 use GrupoAwamotos\ERPIntegration\Api\ConnectionInterface;
+use GrupoAwamotos\ERPIntegration\Api\DashboardStatsProviderInterface;
 use GrupoAwamotos\ERPIntegration\Helper\Data as Helper;
 use GrupoAwamotos\ERPIntegration\Model\Rfm\Calculator as RfmCalculator;
 use GrupoAwamotos\ERPIntegration\Model\Forecast\SalesProjection;
 use GrupoAwamotos\ERPIntegration\Model\CircuitBreaker;
 use GrupoAwamotos\ERPIntegration\Model\ResourceModel\SyncLog;
-use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
-use Magento\Framework\App\CacheInterface;
 
 /**
  * Admin Block - ERP Dashboard
@@ -24,40 +23,34 @@ class Dashboard extends Template
     protected $_template = 'GrupoAwamotos_ERPIntegration::dashboard.phtml';
 
     private ConnectionInterface $connection;
+    private DashboardStatsProviderInterface $statsProvider;
     private Helper $helper;
-    private CustomerCollectionFactory $customerCollectionFactory;
     private RfmCalculator $rfmCalculator;
     private SalesProjection $salesProjection;
     private CircuitBreaker $circuitBreaker;
     private SyncLog $syncLogResource;
-    private CacheInterface $cache;
     private ?array $stats = null;
     private ?array $connectionStatus = null;
-
-    private const STATS_CACHE_KEY = 'erp_dashboard_stats';
-    private const STATS_CACHE_TTL = 300; // 5 minutes
 
     public function __construct(
         Context $context,
         ConnectionInterface $connection,
+        DashboardStatsProviderInterface $statsProvider,
         Helper $helper,
-        CustomerCollectionFactory $customerCollectionFactory,
         RfmCalculator $rfmCalculator,
         SalesProjection $salesProjection,
         CircuitBreaker $circuitBreaker,
         SyncLog $syncLogResource,
-        CacheInterface $cache,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->connection = $connection;
+        $this->statsProvider = $statsProvider;
         $this->helper = $helper;
-        $this->customerCollectionFactory = $customerCollectionFactory;
         $this->rfmCalculator = $rfmCalculator;
         $this->salesProjection = $salesProjection;
         $this->circuitBreaker = $circuitBreaker;
         $this->syncLogResource = $syncLogResource;
-        $this->cache = $cache;
     }
 
     /**
@@ -69,7 +62,7 @@ class Dashboard extends Template
     }
 
     /**
-     * Get ERP statistics
+     * Get ERP statistics (delegated to StatsProvider)
      */
     public function getStats(): array
     {
@@ -81,118 +74,8 @@ class Dashboard extends Template
             return [];
         }
 
-        $cached = $this->cache->load(self::STATS_CACHE_KEY);
-        if ($cached) {
-            $this->stats = json_decode($cached, true);
-            return $this->stats;
-        }
-
-        try {
-            // Get customer stats
-            $customerStats = $this->connection->fetchOne("
-                SELECT
-                    COUNT(*) as total_fornecedores,
-                    SUM(CASE WHEN CKCLIENTE = 'S' THEN 1 ELSE 0 END) as total_clientes,
-                    SUM(CASE WHEN CKCLIENTE <> 'S' OR CKCLIENTE IS NULL THEN 1 ELSE 0 END) as total_fornecedores_only
-                FROM FN_FORNECEDORES
-            ");
-
-            // Get order stats
-            $orderStats = $this->connection->fetchOne("
-                SELECT
-                    COUNT(DISTINCT p.CODIGO) as total_pedidos,
-                    COUNT(DISTINCT p.CLIENTE) as clientes_com_pedidos,
-                    SUM(i.VLRTOTAL) as valor_total,
-                    AVG(i.VLRTOTAL) as ticket_medio
-                FROM VE_PEDIDO p
-                INNER JOIN VE_PEDIDOITENS i ON p.CODIGO = i.PEDIDO
-                WHERE p.STATUS NOT IN ('C', 'X')
-            ");
-
-            // Get order stats for last 30 days
-            $recentStats = $this->connection->fetchOne("
-                SELECT
-                    COUNT(DISTINCT p.CODIGO) as pedidos_30_dias,
-                    SUM(i.VLRTOTAL) as valor_30_dias,
-                    COUNT(DISTINCT p.CLIENTE) as clientes_ativos
-                FROM VE_PEDIDO p
-                INNER JOIN VE_PEDIDOITENS i ON p.CODIGO = i.PEDIDO
-                WHERE p.STATUS NOT IN ('C', 'X')
-                AND p.DTPEDIDO >= DATEADD(day, -30, GETDATE())
-            ");
-
-            // Get top customers
-            $topCustomers = $this->connection->query("
-                SELECT TOP 10
-                    f.CODIGO,
-                    f.RAZAO,
-                    f.FANTASIA,
-                    f.CGC,
-                    f.CIDADE,
-                    f.UF,
-                    COUNT(DISTINCT p.CODIGO) as total_pedidos,
-                    SUM(i.VLRTOTAL) as valor_total
-                FROM FN_FORNECEDORES f
-                INNER JOIN VE_PEDIDO p ON f.CODIGO = p.CLIENTE
-                INNER JOIN VE_PEDIDOITENS i ON p.CODIGO = i.PEDIDO
-                WHERE p.STATUS NOT IN ('C', 'X')
-                AND f.CKCLIENTE = 'S'
-                GROUP BY f.CODIGO, f.RAZAO, f.FANTASIA, f.CGC, f.CIDADE, f.UF
-                ORDER BY SUM(i.VLRTOTAL) DESC
-            ");
-
-            // Get top products (last 30 days)
-            $topProducts = $this->connection->query("
-                SELECT TOP 10
-                    i.MATERIAL as sku,
-                    i.DESCRICAO as nome,
-                    COUNT(DISTINCT i.PEDIDO) as total_pedidos,
-                    SUM(i.QTDE) as quantidade_total,
-                    SUM(i.VLRTOTAL) as valor_total
-                FROM VE_PEDIDOITENS i
-                INNER JOIN VE_PEDIDO p ON i.PEDIDO = p.CODIGO
-                WHERE p.STATUS NOT IN ('C', 'X')
-                AND p.DTPEDIDO >= DATEADD(day, -30, GETDATE())
-                GROUP BY i.MATERIAL, i.DESCRICAO
-                ORDER BY SUM(i.QTDE) DESC
-            ");
-
-            // Get Magento customer count
-            $magentoCustomers = $this->customerCollectionFactory->create()->getSize();
-
-            $this->stats = [
-                'customers' => [
-                    'total_erp' => (int)($customerStats['total_fornecedores'] ?? 0),
-                    'clientes' => (int)($customerStats['total_clientes'] ?? 0),
-                    'fornecedores' => (int)($customerStats['total_fornecedores_only'] ?? 0),
-                    'magento' => $magentoCustomers,
-                    'com_pedidos' => (int)($orderStats['clientes_com_pedidos'] ?? 0),
-                ],
-                'orders' => [
-                    'total' => (int)($orderStats['total_pedidos'] ?? 0),
-                    'valor_total' => (float)($orderStats['valor_total'] ?? 0),
-                    'ticket_medio' => (float)($orderStats['ticket_medio'] ?? 0),
-                ],
-                'recent' => [
-                    'pedidos' => (int)($recentStats['pedidos_30_dias'] ?? 0),
-                    'valor' => (float)($recentStats['valor_30_dias'] ?? 0),
-                    'clientes_ativos' => (int)($recentStats['clientes_ativos'] ?? 0),
-                ],
-                'top_customers' => $topCustomers,
-                'top_products' => $topProducts,
-            ];
-
-            $this->cache->save(
-                json_encode($this->stats),
-                self::STATS_CACHE_KEY,
-                ['erp_dashboard'],
-                self::STATS_CACHE_TTL
-            );
-
-            return $this->stats;
-        } catch (\Exception $e) {
-            return ['error' => $e->getMessage()];
-        }
+        $this->stats = $this->statsProvider->getAggregatedStats();
+        return $this->stats;
     }
 
     /**

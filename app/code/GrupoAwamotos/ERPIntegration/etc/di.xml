@@ -21,6 +21,8 @@
                 type="GrupoAwamotos\ERPIntegration\Model\ImageUpload"/>
     <preference for="GrupoAwamotos\ERPIntegration\Api\CategorySyncInterface"
                 type="GrupoAwamotos\ERPIntegration\Model\CategorySync"/>
+    <preference for="GrupoAwamotos\ERPIntegration\Api\DashboardStatsProviderInterface"
+                type="GrupoAwamotos\ERPIntegration\Model\Dashboard\StatsProvider"/>
 
     <!-- Order Pull API (for ERP SECTRA) -->
     <preference for="GrupoAwamotos\ERPIntegration\Api\OrderPullInterface"
@@ -75,6 +77,13 @@
 
     <!-- Sales Projection -->
     <type name="GrupoAwamotos\ERPIntegration\Model\Forecast\SalesProjection">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Dashboard Stats Provider -->
+    <type name="GrupoAwamotos\ERPIntegration\Model\Dashboard\StatsProvider">
         <arguments>
             <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
         </arguments>
