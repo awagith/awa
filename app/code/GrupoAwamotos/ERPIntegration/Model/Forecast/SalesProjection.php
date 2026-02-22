@@ -398,22 +398,76 @@ class SalesProjection
 
     /**
      * Calculate seasonality index for each month
+     *
+     * Uses detrended data to avoid growth bias.
+     * With rapid growth, raw value/average produces misleading factors (e.g. 0.03x).
+     * Instead, we divide each month's actual value by its trend-line value,
+     * producing a ratio close to 1.0 that purely reflects seasonality.
      */
     private function calculateSeasonalityIndex(array $monthlyData): array
     {
-        if (count($monthlyData) < 12) {
+        $count = count($monthlyData);
+
+        // Need at least 6 months for meaningful seasonality
+        if ($count < 6) {
             return array_fill(1, 12, 1.0);
         }
 
-        $avgValue = array_sum(array_column($monthlyData, 'value')) / count($monthlyData);
-        $index = [];
+        // Step 1: Detrend using linear regression
+        $values = array_column($monthlyData, 'value');
+        $n = count($values);
+        $sumX = 0;
+        $sumY = 0;
+        $sumXY = 0;
+        $sumX2 = 0;
 
-        foreach ($monthlyData as $data) {
-            $month = (int)substr($data['month'], 5, 2);
-            $index[$month] = $avgValue > 0 ? $data['value'] / $avgValue : 1;
+        for ($i = 0; $i < $n; $i++) {
+            $sumX += $i;
+            $sumY += $values[$i];
+            $sumXY += $i * $values[$i];
+            $sumX2 += $i * $i;
         }
 
-        // Fill missing months
+        $denominator = ($n * $sumX2 - $sumX * $sumX);
+        if ($denominator == 0) {
+            return array_fill(1, 12, 1.0);
+        }
+
+        $slope = ($n * $sumXY - $sumX * $sumY) / $denominator;
+        $intercept = ($sumY - $slope * $sumX) / $n;
+
+        // Step 2: Calculate detrended ratios per calendar month
+        $monthRatios = [];
+        $monthCounts = [];
+
+        foreach ($monthlyData as $i => $data) {
+            $month = (int)substr($data['month'], 5, 2);
+            $trendValue = $intercept + $slope * $i;
+
+            // Skip if trend value is zero or negative (no meaningful ratio)
+            if ($trendValue <= 0) {
+                continue;
+            }
+
+            $ratio = $data['value'] / $trendValue;
+
+            if (!isset($monthRatios[$month])) {
+                $monthRatios[$month] = 0.0;
+                $monthCounts[$month] = 0;
+            }
+            $monthRatios[$month] += $ratio;
+            $monthCounts[$month]++;
+        }
+
+        // Step 3: Average ratios and clamp extreme values
+        $index = [];
+        foreach ($monthRatios as $month => $totalRatio) {
+            $avgRatio = $monthCounts[$month] > 0 ? $totalRatio / $monthCounts[$month] : 1.0;
+            // Clamp between 0.5 and 2.0 to avoid extreme distortions
+            $index[$month] = max(0.5, min(2.0, $avgRatio));
+        }
+
+        // Fill missing months with neutral factor
         for ($i = 1; $i <= 12; $i++) {
             if (!isset($index[$i])) {
                 $index[$i] = 1.0;

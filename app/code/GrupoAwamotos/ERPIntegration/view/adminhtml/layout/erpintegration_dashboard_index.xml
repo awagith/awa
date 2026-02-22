@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance";
+      xsi:nonamespaceschemalocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="GrupoAwamotos_ERPIntegration::css/admin-erp.css"/>
+        <css src="GrupoAwamotos_ERPIntegration::css/erp-dashboard.css"/>
     </head>
     <body>
-        <referenceContainer name="content">
+        <referencecontainer name="content">
             <block class="GrupoAwamotos\ERPIntegration\Block\Adminhtml\Dashboard"
                    name="erp.dashboard"
                    template="GrupoAwamotos_ERPIntegration::dashboard.phtml"/>
-        </referenceContainer>
+        </referencecontainer>
     </body>
 </page>

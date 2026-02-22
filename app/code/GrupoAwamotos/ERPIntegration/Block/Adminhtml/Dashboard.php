@@ -12,6 +12,7 @@ use GrupoAwamotos\ERPIntegration\Model\Forecast\SalesProjection;
 use GrupoAwamotos\ERPIntegration\Model\CircuitBreaker;
 use GrupoAwamotos\ERPIntegration\Model\ResourceModel\SyncLog;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
+use Magento\Framework\App\CacheInterface;
 
 /**
  * Admin Block - ERP Dashboard
@@ -29,8 +30,12 @@ class Dashboard extends Template
     private SalesProjection $salesProjection;
     private CircuitBreaker $circuitBreaker;
     private SyncLog $syncLogResource;
+    private CacheInterface $cache;
     private ?array $stats = null;
     private ?array $connectionStatus = null;
+
+    private const STATS_CACHE_KEY = 'erp_dashboard_stats';
+    private const STATS_CACHE_TTL = 300; // 5 minutes
 
     public function __construct(
         Context $context,
@@ -41,6 +46,7 @@ class Dashboard extends Template
         SalesProjection $salesProjection,
         CircuitBreaker $circuitBreaker,
         SyncLog $syncLogResource,
+        CacheInterface $cache,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -51,6 +57,7 @@ class Dashboard extends Template
         $this->salesProjection = $salesProjection;
         $this->circuitBreaker = $circuitBreaker;
         $this->syncLogResource = $syncLogResource;
+        $this->cache = $cache;
     }
 
     /**
@@ -72,6 +79,12 @@ class Dashboard extends Template
 
         if (!$this->isEnabled()) {
             return [];
+        }
+
+        $cached = $this->cache->load(self::STATS_CACHE_KEY);
+        if ($cached) {
+            $this->stats = json_decode($cached, true);
+            return $this->stats;
         }
 
         try {
@@ -128,7 +141,7 @@ class Dashboard extends Template
                 ORDER BY SUM(i.VLRTOTAL) DESC
             ");
 
-            // Get top products
+            // Get top products (last 30 days)
             $topProducts = $this->connection->query("
                 SELECT TOP 10
                     i.MATERIAL as sku,
@@ -139,6 +152,7 @@ class Dashboard extends Template
                 FROM VE_PEDIDOITENS i
                 INNER JOIN VE_PEDIDO p ON i.PEDIDO = p.CODIGO
                 WHERE p.STATUS NOT IN ('C', 'X')
+                AND p.DTPEDIDO >= DATEADD(day, -30, GETDATE())
                 GROUP BY i.MATERIAL, i.DESCRICAO
                 ORDER BY SUM(i.QTDE) DESC
             ");
@@ -167,6 +181,13 @@ class Dashboard extends Template
                 'top_customers' => $topCustomers,
                 'top_products' => $topProducts,
             ];
+
+            $this->cache->save(
+                json_encode($this->stats),
+                self::STATS_CACHE_KEY,
+                ['erp_dashboard'],
+                self::STATS_CACHE_TTL
+            );
 
             return $this->stats;
         } catch (\Exception $e) {
@@ -330,6 +351,20 @@ class Dashboard extends Template
             'critical' => 'message-error',
             default => 'message-notice',
         };
+    }
+
+    /**
+     * Get current month label in Portuguese (e.g. "FEVEREIRO/2026")
+     */
+    public function getCurrentMonthLabel(): string
+    {
+        $months = [
+            1 => 'JANEIRO', 2 => 'FEVEREIRO', 3 => 'MARÇO', 4 => 'ABRIL',
+            5 => 'MAIO', 6 => 'JUNHO', 7 => 'JULHO', 8 => 'AGOSTO',
+            9 => 'SETEMBRO', 10 => 'OUTUBRO', 11 => 'NOVEMBRO', 12 => 'DEZEMBRO',
+        ];
+
+        return ($months[(int)date('n')] ?? '') . '/' . date('Y');
     }
 
     /**
