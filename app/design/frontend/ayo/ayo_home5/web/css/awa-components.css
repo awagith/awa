@@ -2595,7 +2595,7 @@ body .page-wrapper .cat_special {
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 40px;
+        font-size: var(--awa-text-5xl); /* BP-40: era 40px */
         margin-bottom: var(--awa-space-3);
         box-shadow: var(--awa-shadow-sm);
         transition: box-shadow var(--awa-transition);

@@ -209,6 +209,7 @@
     --awa-text-xs: 12px;
     --awa-text-sm: 13px;
     --awa-text-base: 14px;
+    --awa-text-base-plus: 15px; /* BP-39: countdown titles, benefits bar, sidebar icons */
     --awa-text-md: 16px;
     --awa-text-lg: 18px;
     --awa-text-xl: 20px;
@@ -216,6 +217,7 @@
     --awa-text-2xl: 24px;
     --awa-text-3xl: 28px;
     --awa-text-4xl: 32px;
+    --awa-text-5xl: 40px; /* BP-40: display headings, category circle icons */
 
     /* Altura padrão de inputs e botões */
     --awa-input-height: 48px;

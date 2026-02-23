@@ -613,7 +613,7 @@ body #newsletter_pop_up .nl-popup-hero-discount {
 
 body #newsletter_pop_up .nl-popup-hero-off {
     margin-top: var(--awa-space-1); /* BP-19: era 4px */
-    font-size: 40px;
+    font-size: var(--awa-text-5xl); /* BP-40: era 40px */
     line-height: var(--awa-leading-none);
     font-weight: var(--awa-weight-extrabold);
     letter-spacing: 4px;
@@ -1104,7 +1104,7 @@ body .page-wrapper .countdown_block {
 
 body .page-wrapper .title_countdown {
     font-weight: var(--awa-weight-semibold);
-    font-size: 15px;
+    font-size: var(--awa-text-base-plus); /* BP-39: era 15px */
     margin-bottom: var(--awa-space-2); /* BP-19: era 8px */
 }
 
@@ -1393,7 +1393,7 @@ body .page-wrapper .owl-carousel {
     align-items: center;
     gap: var(--awa-space-2); /* BP-17: era 8px */
     color: var(--awa-gray-700);
-    font-size: 15px;
+    font-size: var(--awa-text-base-plus); /* BP-39: era 15px */
     line-height: var(--awa-leading-comfortable);
 }
 
