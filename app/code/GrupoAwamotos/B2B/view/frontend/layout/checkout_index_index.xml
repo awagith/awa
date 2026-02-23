@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Checkout Payment Layout - Register B2B Credit Payment Method Renderer
+ * Checkout Layout - B2B PO Number Field
+ * P0-1: Purchase Order Number field before payment methods
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      layout="checkout"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="checkout.root">
@@ -20,17 +20,11 @@
                                             <item name="children" xsi:type="array">
                                                 <item name="payment" xsi:type="array">
                                                     <item name="children" xsi:type="array">
-                                                        <item name="renders" xsi:type="array">
-                                                            <item name="children" xsi:type="array">
-                                                                <item name="b2b-credit-payments" xsi:type="array">
-                                                                    <item name="component" xsi:type="string">GrupoAwamotos_B2B/js/view/payment/b2b-credit</item>
-                                                                    <item name="methods" xsi:type="array">
-                                                                        <item name="b2b_credit" xsi:type="array">
-                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
-                                                                        </item>
-                                                                    </item>
-                                                                </item>
-                                                            </item>
+                                                        <!-- P0-1: campo po number antes da area de pagamentos -->
+                                                        <item name="beforeMethods" xsi:type="array">
+                                                            <item name="component" xsi:type="string">GrupoAwamotos_B2B/js/view/checkout/po-number</item>
+                                                            <item name="displayArea" xsi:type="string">beforeMethods</item>
+                                                            <item name="sortOrder" xsi:type="string">5</item>
                                                         </item>
                                                     </item>
                                                 </item>

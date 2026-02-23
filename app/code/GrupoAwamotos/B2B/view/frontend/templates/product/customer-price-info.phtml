@@ -47,20 +47,20 @@ if (!$priceData && !$tierData) {
                 <line x1="12" y1="22.08" x2="12" y2="12"/>
             </svg>
         </span>
-        <span class="b2b-tier-title"><?= $block->escapeHtml(__('Volume Discounts')) ?></span>
+        <span class="b2b-tier-title"><?= $block->escapeHtml(__('Descontos por Volume')) ?></span>
     </div>
     <table class="b2b-tier-table">
         <thead>
             <tr>
-                <th><?= $block->escapeHtml(__('Quantity')) ?></th>
-                <th><?= $block->escapeHtml(__('Unit Price')) ?></th>
-                <th><?= $block->escapeHtml(__('Savings')) ?></th>
+                <th><?= $block->escapeHtml(__('Quantidade')) ?></th>
+                <th><?= $block->escapeHtml(__('Preço Unitário')) ?></th>
+                <th><?= $block->escapeHtml(__('Economia')) ?></th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($tierData as $tier): ?>
             <tr>
-                <td class="b2b-tier-qty"><?= $block->escapeHtml(__('%1+ units', $tier['qty'])) ?></td>
+                <td class="b2b-tier-qty"><?= $block->escapeHtml(__('%1+ unidades', $tier['qty'])) ?></td>
                 <td class="b2b-tier-price"><?= /* @noEscape */ $block->formatPrice($tier['price']) ?></td>
                 <td class="b2b-tier-savings">
                     <span class="b2b-savings-badge">-<?= $block->escapeHtml((string) $tier['savings_pct']) ?>%</span>

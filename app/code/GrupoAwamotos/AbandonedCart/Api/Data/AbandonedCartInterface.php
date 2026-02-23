@@ -33,7 +33,7 @@ interface AbandonedCartInterface
     public const STATUS_EXPIRED = 'expired';
 
     public function getEntityId(): ?int;
-    public function setEntityId(int $id): self;
+    public function setEntityId($id);
 
     public function getQuoteId(): ?int;
     public function setQuoteId(int $quoteId): self;

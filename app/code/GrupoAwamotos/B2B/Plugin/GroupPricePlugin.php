@@ -156,6 +156,9 @@ class GroupPricePlugin
 
         try {
             $customerId = (int) $this->customerSession->getCustomerId();
+            if ($customerId <= 0) {
+                return null;
+            }
             $customer = $this->customerRepository->getById($customerId);
 
             // Primary: erp_code attribute (definitive, single value)
@@ -186,6 +189,9 @@ class GroupPricePlugin
 
         try {
             $customerId = $this->customerSession->getCustomerId();
+            if ($customerId <= 0) {
+                return null;
+            }
             $customer = $this->customerRepository->getById($customerId);
             $attr = $customer->getCustomAttribute('b2b_approval_status');
             $this->approvalStatusCache = $attr ? $attr->getValue() : null;

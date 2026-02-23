@@ -82,8 +82,8 @@ class ProductSync implements ProductSyncInterface
 
         $result = $this->connection->fetchOne($sql, []);
 
-        // Suporta ambos os cases de coluna (total ou TOTAL) dependendo do driver
-        return $result ? (int) ($result['total'] ?? $result['TOTAL'] ?? 0) : 0;
+        // fetchOne() returns a scalar (first column of first row)
+        return $result ? (int) $result : 0;
     }
 
     public function getErpProducts(int $limit = 0, int $offset = 0): array

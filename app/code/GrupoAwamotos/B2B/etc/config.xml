@@ -74,6 +74,18 @@
                 <rate_limit_max_requests>20</rate_limit_max_requests>
                 <rate_limit_window_seconds>60</rate_limit_window_seconds>
             </cnpj_lookup>
+            <checkout>
+                <terms_enabled>1</terms_enabled>
+                <terms_checkbox_text>Li e aceito os Termos de Venda B2B</terms_checkbox_text>
+                <terms_content>Termos e Condicoes B2B AWA Motos</terms_content>
+                <terms_warning_title>Aceite os Termos</terms_warning_title>
+                <terms_warning_content>Voce precisa aceitar os Termos de Venda B2B.</terms_warning_content>
+                <po_number_enabled>1</po_number_enabled>
+                <po_number_required>0</po_number_required>
+                <delivery_date_enabled>0</delivery_date_enabled>
+                <order_notes_enabled>1</order_notes_enabled>
+            </checkout>
+
         </grupoawamotos_b2b>
         <payment>
             <b2b_credit>

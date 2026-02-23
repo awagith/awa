@@ -69,23 +69,25 @@ define([
                     if (cpf.length !== 11) return false;
                     if (/^(\d)\1{10}$/.test(cpf)) return false;
 
-                    var sum = 0, remainder;
-                    
-                    for (var i = 1; i <= 9; i++) {
-                        sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+                    // Calcula primeiro dígito verificador
+                    var sum = 0;
+                    for (var i = 0; i < 9; i++) {
+                        sum += parseInt(cpf.charAt(i)) * (10 - i);
                     }
-                    remainder = (sum * 10) % 11;
-                    if (remainder === 10 || remainder === 11) remainder = 0;
-                    if (remainder !== parseInt(cpf.substring(9, 10))) return false;
+                    var remainder = sum % 11;
+                    var digit1 = (remainder < 2) ? 0 : 11 - remainder;
+                    
+                    if (parseInt(cpf.charAt(9)) !== digit1) return false;
 
+                    // Calcula segundo dígito verificador
                     sum = 0;
-                    for (var i = 1; i <= 10; i++) {
-                        sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+                    for (var i = 0; i < 10; i++) {
+                        sum += parseInt(cpf.charAt(i)) * (11 - i);
                     }
-                    remainder = (sum * 10) % 11;
-                    if (remainder === 10 || remainder === 11) remainder = 0;
+                    remainder = sum % 11;
+                    var digit2 = (remainder < 2) ? 0 : 11 - remainder;
                     
-                    return remainder === parseInt(cpf.substring(10, 11));
+                    return parseInt(cpf.charAt(10)) === digit2;
                 },
                 $.mage.__('CPF inválido. Verifique os números digitados.')
             );
@@ -101,33 +103,27 @@ define([
                     if (cnpj.length !== 14) return false;
                     if (/^(\d)\1{13}$/.test(cnpj)) return false;
 
-                    var length = cnpj.length - 2;
-                    var numbers = cnpj.substring(0, length);
-                    var digits = cnpj.substring(length);
+                    // Calcula primeiro dígito verificador
+                    var weights1 = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
                     var sum = 0;
-                    var pos = length - 7;
-
-                    for (var i = length; i >= 1; i--) {
-                        sum += numbers.charAt(length - i) * pos--;
-                        if (pos < 2) pos = 9;
+                    for (var i = 0; i < 12; i++) {
+                        sum += parseInt(cnpj.charAt(i)) * weights1[i];
                     }
+                    var remainder = sum % 11;
+                    var digit1 = (remainder < 2) ? 0 : 11 - remainder;
                     
-                    var result = sum % 11 < 2 ? 0 : 11 - sum % 11;
-                    if (result !== parseInt(digits.charAt(0))) return false;
+                    if (parseInt(cnpj.charAt(12)) !== digit1) return false;
 
-                    length = length + 1;
-                    numbers = cnpj.substring(0, length);
+                    // Calcula segundo dígito verificador
+                    var weights2 = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
                     sum = 0;
-                    pos = length - 7;
-
-                    for (var i = length; i >= 1; i--) {
-                        sum += numbers.charAt(length - i) * pos--;
-                        if (pos < 2) pos = 9;
+                    for (var i = 0; i < 13; i++) {
+                        sum += parseInt(cnpj.charAt(i)) * weights2[i];
                     }
+                    remainder = sum % 11;
+                    var digit2 = (remainder < 2) ? 0 : 11 - remainder;
                     
-                    result = sum % 11 < 2 ? 0 : 11 - sum % 11;
-                    
-                    return result === parseInt(digits.charAt(1));
+                    return parseInt(cnpj.charAt(13)) === digit2;
                 },
                 $.mage.__('CNPJ inválido. Verifique os números digitados.')
             );

@@ -33,7 +33,7 @@ class ProcessAlerts
         $this->logger = $logger;
     }
 
-    public function execute()
+    public function execute(): void
     {
         try {
             $this->logger->info('[RexisML] Iniciando processamento de alertas automaticos');

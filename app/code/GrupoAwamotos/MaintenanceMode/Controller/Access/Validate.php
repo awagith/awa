@@ -98,9 +98,9 @@ class Validate implements HttpPostActionInterface
                 'message' => __('Formulário inválido. Tente novamente.')
             ]);
         }
-        
+
         $submittedCode = trim((string)$this->request->getParam('code'));
-        
+
         if (empty($submittedCode)) {
             return $resultJson->setData([
                 'success' => false,
@@ -110,10 +110,10 @@ class Validate implements HttpPostActionInterface
 
         // Get secret code from config
         $secretCode = $this->scopeConfig->getValue(
-            'grupoawamotos_maintenance/general/secret_code',
+            'grupoawamotos_maintenance/general/secret_key',
             ScopeInterface::SCOPE_STORE
         );
-        
+
         if (empty($secretCode)) {
             return $resultJson->setData([
                 'success' => false,
@@ -129,28 +129,28 @@ class Validate implements HttpPostActionInterface
                     'grupoawamotos_maintenance/general/cookie_duration',
                     ScopeInterface::SCOPE_STORE
                 ) ?: 72;
-                
+
                 // Set bypass cookie (same format as Observer)
                 $cookieMetadata = $this->cookieMetadataFactory
                     ->createPublicCookieMetadata()
                     ->setDuration($cookieDuration * 3600)
                     ->setPath('/')
                     ->setHttpOnly(true);
-                
+
                 $this->cookieManager->setPublicCookie(
                     self::BYPASS_COOKIE_NAME,
                     hash('sha256', $secretCode . '_awamotos_access'),
                     $cookieMetadata
                 );
-                
+
                 $this->logger->info('MaintenanceMode: Bypass access granted via secret code');
-                
+
                 return $resultJson->setData([
                     'success' => true,
                     'message' => __('Acesso concedido! Redirecionando...'),
                     'redirect' => '/'
                 ]);
-                
+
             } catch (\Exception $e) {
                 $this->logger->error('MaintenanceMode Cookie Error: ' . $e->getMessage());
                 return $resultJson->setData([

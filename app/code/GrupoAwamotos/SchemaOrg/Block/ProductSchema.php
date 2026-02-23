@@ -101,7 +101,8 @@ class ProductSchema extends Template
         }
 
         // Preço e disponibilidade
-        $stockItem = $product->getExtensionAttributes()->getStockItem();
+        $extensionAttributes = $product->getExtensionAttributes();
+        $stockItem = $extensionAttributes ? $extensionAttributes->getStockItem() : null;
         $inStock = $stockItem && $stockItem->getIsInStock();
         
         $schema['offers'] = [

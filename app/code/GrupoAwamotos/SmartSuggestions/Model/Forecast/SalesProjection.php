@@ -144,6 +144,9 @@ class SalesProjection implements ForecastServiceInterface
 
             // Calculate base value (average of last 3 months)
             $lastThree = array_slice($history, -3);
+            if (empty($lastThree)) {
+                return [];
+            }
             $baseValue = array_sum(array_column($lastThree, 'total')) / count($lastThree);
 
             // Calculate seasonal index

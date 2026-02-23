@@ -9,6 +9,7 @@ namespace GrupoAwamotos\B2B\Plugin\Catalog;
 use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Customer\Model\Session as CustomerSession;
 use GrupoAwamotos\B2B\Helper\Data as B2BHelper;
+use Psr\Log\LoggerInterface;
 
 class RestrictedProductCollectionPlugin
 {
@@ -23,16 +24,23 @@ class RestrictedProductCollectionPlugin
     private $b2bHelper;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var bool
      */
     private $filterApplied = false;
 
     public function __construct(
         CustomerSession $customerSession,
-        B2BHelper $b2bHelper
+        B2BHelper $b2bHelper,
+        ?LoggerInterface $logger = null
     ) {
         $this->customerSession = $customerSession;
         $this->b2bHelper = $b2bHelper;
+        $this->logger = $logger;
     }
 
     /**
@@ -99,6 +107,9 @@ class RestrictedProductCollectionPlugin
         } catch (\Exception $e) {
             // Silently fail if attributes don't exist or filter fails
             // This prevents breaking the site if B2B attributes are not set up
+            if ($this->logger) {
+                $this->logger->warning('[B2B] RestrictedProductCollectionPlugin: ' . $e->getMessage());
+            }
         }
     }
 
@@ -112,7 +123,7 @@ class RestrictedProductCollectionPlugin
     private function filterByCustomerGroup(Collection $collection, int $customerGroupId): void
     {
         $groupName = $this->getGroupNameById($customerGroupId);
-        
+
         if (!$groupName) {
             return;
         }
@@ -121,7 +132,7 @@ class RestrictedProductCollectionPlugin
         // 1. b2b_customer_groups is empty (available to all)
         // 2. b2b_customer_groups contains the customer's group
         // 3. b2b_customer_groups contains "Todos os Grupos B2B"
-        
+
         // This is complex with EAV, so we'll do post-filtering in afterLoad if needed
     }
 

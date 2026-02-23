@@ -189,13 +189,21 @@ class OrderSync implements OrderSyncInterface
                 || (stripos($msg, 'INSERT') !== false && stripos($msg, 'denied') !== false);
 
             if ($isPermissionDenied) {
-                $result['message'] = 'Usuário SQL sem permissão de INSERT. '
-                    . 'O ERP opera em modo PULL — pedidos são obtidos via API REST (GET /V1/erp/orders/pending).';
+                $result['message'] = 'Modo PULL ativo — pedidos são obtidos pelo ERP via API REST (GET /V1/erp/orders/pending).';
                 $result['retryable'] = false;
 
-                $this->logger->warning('[ERP] INSERT permission denied - PULL mode active', [
+                $this->logger->info('[ERP] PULL mode active - order available via REST API', [
                     'order_id' => $order->getIncrementId(),
                 ]);
+
+                $this->syncLogResource->addLog(
+                    'order',
+                    'export',
+                    'info',
+                    $result['message'],
+                    null,
+                    (int) $order->getEntityId()
+                );
             } else {
                 $result['message'] = 'Erro de banco ao enviar pedido ao ERP: ' . $msg;
 
@@ -203,16 +211,16 @@ class OrderSync implements OrderSyncInterface
                     'order_id' => $order->getIncrementId(),
                     'error' => $msg,
                 ]);
-            }
 
-            $this->syncLogResource->addLog(
-                'order',
-                'export',
-                'error',
-                $result['message'],
-                null,
-                (int) $order->getEntityId()
-            );
+                $this->syncLogResource->addLog(
+                    'order',
+                    'export',
+                    'error',
+                    $result['message'],
+                    null,
+                    (int) $order->getEntityId()
+                );
+            }
         } catch (\Exception $e) {
             $result['message'] = 'Erro ao enviar pedido ao ERP: ' . $e->getMessage();
 

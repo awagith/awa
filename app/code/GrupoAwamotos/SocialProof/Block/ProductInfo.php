@@ -71,7 +71,8 @@ class ProductInfo extends Template
             return false;
         }
 
-        $stockItem = $product->getExtensionAttributes()->getStockItem();
+        $extensionAttributes = $product->getExtensionAttributes();
+        $stockItem = $extensionAttributes ? $extensionAttributes->getStockItem() : null;
         if (!$stockItem) {
             return false;
         }
@@ -92,7 +93,8 @@ class ProductInfo extends Template
             return 0;
         }
 
-        $stockItem = $product->getExtensionAttributes()->getStockItem();
+        $extensionAttributes = $product->getExtensionAttributes();
+        $stockItem = $extensionAttributes ? $extensionAttributes->getStockItem() : null;
         return $stockItem ? (int)$stockItem->getQty() : 0;
     }
 }

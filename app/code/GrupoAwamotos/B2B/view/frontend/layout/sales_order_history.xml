@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Sales Order History Layout Override
+ * P1-2: Add CSV Export link for B2B customers
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="GrupoAwamotos\B2B\Block\Order\ExportLink"
+                   name="b2b.order.export.link"
+                   template="GrupoAwamotos_B2B::order/export-link.phtml"
+                   before="sales.order.history"/>
+        </referenceContainer>
+    </body>
+</page>

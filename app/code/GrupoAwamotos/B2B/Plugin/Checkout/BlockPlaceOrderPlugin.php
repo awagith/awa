@@ -17,6 +17,7 @@ use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\AddressInterface;
 use Magento\Quote\Api\Data\PaymentInterface;
+use Psr\Log\LoggerInterface;
 
 class BlockPlaceOrderPlugin
 {
@@ -50,13 +51,19 @@ class BlockPlaceOrderPlugin
      */
     private $syncLogResource;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     public function __construct(
         PriceVisibilityInterface $priceVisibility,
         Config $config,
         CartRepositoryInterface $cartRepository,
         CustomerSession $customerSession,
         CustomerRepositoryInterface $customerRepository,
-        SyncLogResource $syncLogResource
+        SyncLogResource $syncLogResource,
+        ?LoggerInterface $logger = null
     ) {
         $this->priceVisibility = $priceVisibility;
         $this->config = $config;
@@ -64,6 +71,7 @@ class BlockPlaceOrderPlugin
         $this->customerSession = $customerSession;
         $this->customerRepository = $customerRepository;
         $this->syncLogResource = $syncLogResource;
+        $this->logger = $logger;
     }
 
     /**
@@ -120,6 +128,9 @@ class BlockPlaceOrderPlugin
                     throw $e;
                 } catch (\Exception $e) {
                     // If we can't load the quote, allow the order to proceed
+                    if ($this->logger) {
+                        $this->logger->debug('[B2B] Exception: ' . $e->getMessage(), ['exception' => $e]);
+                    }
                 }
             }
         }

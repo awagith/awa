@@ -8,8 +8,7 @@
              module="GrupoAwamotos_Fitment"
              sortOrder="50"
              parent="Magento_Catalog::catalog"
-             resource="GrupoAwamotos_Fitment::fitment"
-             action=""/>
+             resource="GrupoAwamotos_Fitment::fitment"/>
 
         <add id="GrupoAwamotos_Fitment::brand"
              title="Marcas de Motos"

@@ -627,34 +627,41 @@
     display: none;
 }
 
-/* Tier Pricing (Volume Discounts) */
+/* Tier Pricing (Volume Discounts) - P0-2 Enhanced */
 .b2b-tier-pricing {
     margin-top: 16px;
-    padding: 16px;
-    background: #f0fdf4;
+    padding: clamp(12px, 3vw, 20px);
+    background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
     border: 1px solid #bbf7d0;
-    border-radius: 10px;
+    border-radius: var(--awa-radius-md, 10px);
+    box-shadow: 0 2px 8px rgb(21 128 61 / 8%);
 }
 
 .b2b-tier-heading {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
+    gap: 10px;
+    margin-bottom: 14px;
     color: #166534;
 }
 
 .b2b-tier-icon {
     display: flex;
     align-items: center;
+    justify-content: center;
     flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    background: #dcfce7;
+    border-radius: 50%;
+    padding: 6px;
 }
 
 .b2b-tier-title {
-    font-size: 14px;
+    font-size: clamp(13px, 2.5vw, 15px);
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
 }
 
 .b2b-tier-table {
@@ -962,5 +969,281 @@
 
     .b2b-cart-quote-box {
         padding: 15px;
+    }
+}
+
+/* ===========================================================================
+   My Company Portal - P1-3
+   =========================================================================== */
+.b2b-company-page .b2b-section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.b2b-company-page .b2b-section-header h1 {
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 700;
+    color: var(--awa-text-primary, #1f2937);
+    margin: 0;
+}
+
+.company-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.company-info-card {
+    background: #fff;
+    border: 1px solid var(--awa-border, #e5e7eb);
+    border-radius: var(--awa-radius-md, 10px);
+    padding: 20px;
+    box-shadow: 0 1px 3px rgb(0 0 0 / 5%);
+}
+
+.company-info-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--awa-red, #d00);
+    margin: 0 0 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--awa-red-extra-light, #fee2e2);
+}
+
+.company-details {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    gap: 8px 12px;
+}
+
+.company-details dt {
+    font-weight: 600;
+    color: var(--awa-text-secondary, #6b7280);
+    font-size: 13px;
+}
+
+.company-details dd {
+    margin: 0;
+    color: var(--awa-text-primary, #1f2937);
+    font-size: 14px;
+}
+
+.company-users-section {
+    background: #fff;
+    border: 1px solid var(--awa-border, #e5e7eb);
+    border-radius: var(--awa-radius-md, 10px);
+    padding: 20px;
+}
+
+.company-users-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.company-users-header h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--awa-text-primary, #1f2937);
+    margin: 0;
+}
+
+.company-users-header .count {
+    font-weight: 400;
+    color: var(--awa-text-secondary, #6b7280);
+}
+
+.btn-add-user {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--awa-red, #d00);
+    color: #fff;
+    border: none;
+    border-radius: var(--awa-radius-sm, 4px);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-add-user:hover {
+    background: var(--awa-red-dark, #b91c1c);
+}
+
+.add-user-form {
+    background: var(--awa-bg-light, #f9fafb);
+    border-radius: var(--awa-radius-sm, 4px);
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.add-user-form.hidden {
+    display: none;
+}
+
+.add-user-form .form-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.add-user-form .input-text,
+.add-user-form .select {
+    flex: 1;
+    min-width: 150px;
+    padding: 10px 12px;
+    border: 1px solid var(--awa-border, #d1d5db);
+    border-radius: var(--awa-radius-sm, 4px);
+    font-size: 14px;
+}
+
+.add-user-form .btn-save {
+    padding: 10px 20px;
+    background: var(--awa-green, #15803d);
+    color: #fff;
+    border: none;
+    border-radius: var(--awa-radius-sm, 4px);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.add-user-form .form-note {
+    font-size: 12px;
+    color: var(--awa-text-secondary, #6b7280);
+    margin: 10px 0 0;
+}
+
+.table-company-users {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table-company-users th {
+    text-align: left;
+    padding: 12px;
+    border-bottom: 2px solid var(--awa-border, #e5e7eb);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--awa-text-secondary, #6b7280);
+    letter-spacing: 0.04em;
+}
+
+.table-company-users td {
+    padding: 12px;
+    border-bottom: 1px solid var(--awa-border-light, #f3f4f6);
+    font-size: 14px;
+}
+
+.table-company-users tr:hover td {
+    background: var(--awa-bg-light, #f9fafb);
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.role-badge--admin {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.role-badge--approver {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.role-badge--buyer {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.role-badge--viewer {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.status-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.status-dot--active {
+    background: var(--awa-green, #22c55e);
+}
+
+.status-dot--inactive {
+    background: var(--awa-text-secondary, #9ca3af);
+}
+
+.user-actions .select-sm {
+    padding: 6px 8px;
+    font-size: 12px;
+    min-width: 100px;
+}
+
+.user-actions .btn-remove {
+    padding: 6px 12px;
+    background: transparent;
+    color: var(--awa-danger, #dc2626);
+    border: 1px solid var(--awa-danger, #dc2626);
+    border-radius: var(--awa-radius-sm, 4px);
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.user-actions .btn-remove:hover {
+    background: var(--awa-danger, #dc2626);
+    color: #fff;
+}
+
+@media (width <= 768px) {
+    .company-users-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .table-company-users thead {
+        display: none;
+    }
+
+    .table-company-users tr {
+        display: block;
+        margin-bottom: 16px;
+        border: 1px solid var(--awa-border, #e5e7eb);
+        border-radius: var(--awa-radius-sm, 4px);
+        padding: 12px;
+    }
+
+    .table-company-users td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px dashed var(--awa-border-light, #f3f4f6);
+    }
+
+    .table-company-users td::before {
+        content: attr(data-th);
+        font-weight: 600;
+        color: var(--awa-text-secondary, #6b7280);
+    }
+
+    .table-company-users td:last-child {
+        border-bottom: none;
     }
 }

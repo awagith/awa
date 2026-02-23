@@ -1,0 +1,78 @@
+/**
+ * PO Number Component for Checkout
+ * P0-1: Campo para número de pedido de compra (Purchase Order)
+ *
+ * @module GrupoAwamotos_B2B/js/view/checkout/po-number
+ */
+define([
+    'uiComponent',
+    'ko',
+    'jquery',
+    'Magento_Customer/js/model/customer',
+    'GrupoAwamotos_B2B/js/model/checkout/po-number-storage'
+], function (Component, ko, $, customer, poNumberStorage) {
+    'use strict';
+
+    return Component.extend({
+        defaults: {
+            template: 'GrupoAwamotos_B2B/checkout/po-number',
+            poNumber: '',
+            isVisible: true
+        },
+
+        /**
+         * Initialize component
+         */
+        initialize: function () {
+            this._super();
+
+            // Observable for PO Number
+            this.poNumber = ko.observable('');
+
+            // Check if B2B customer - show only for logged in customers with company
+            this.isVisible = ko.computed(function () {
+                // Sempre mostrar para clientes logados
+                return customer.isLoggedIn();
+            }, this);
+
+            // Subscribe to changes and save to storage
+            this.poNumber.subscribe(function (value) {
+                poNumberStorage.setPoNumber(value);
+            });
+
+            return this;
+        },
+
+        /**
+         * Get component label
+         * @returns {string}
+         */
+        getLabel: function () {
+            return 'Número do Pedido de Compra (PO)';
+        },
+
+        /**
+         * Get placeholder text
+         * @returns {string}
+         */
+        getPlaceholder: function () {
+            return 'Ex: PO-2026-00123';
+        },
+
+        /**
+         * Get help text
+         * @returns {string}
+         */
+        getHelpText: function () {
+            return 'Opcional. Informe o número do seu pedido de compra interno para referência.';
+        },
+
+        /**
+         * Check if field is visible
+         * @returns {boolean}
+         */
+        isFieldVisible: function () {
+            return this.isVisible();
+        }
+    });
+});

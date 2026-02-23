@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Sales Order Grid - Add B2B PO Number Column
+ * P0-1: Purchase Order Number column in admin order grid
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <columns name="sales_order_columns">
+        <column name="b2b_po_number" class="Magento\Ui\Component\Listing\Columns\Column">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Número PO (B2B)</label>
+                <sortOrder>85</sortOrder>
+                <visible>true</visible>
+            </settings>
+        </column>
+    </columns>
+</listing>

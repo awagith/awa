@@ -20,10 +20,10 @@ use Magento\Store\Model\StoreManagerInterface;
 
 class Product extends Template
 {
-    protected $registry;
-    protected $priceHelper;
-    protected $reviewFactory;
-    protected $storeManager;
+    protected Registry $registry;
+    protected PriceHelper $priceHelper;
+    protected ReviewFactory $reviewFactory;
+    protected StoreManagerInterface $storeManager;
 
     public function __construct(
         Context $context,

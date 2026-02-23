@@ -43,7 +43,7 @@ class AutoCreateQuoteObserver implements ObserverInterface
         $this->logger = $logger;
     }
 
-    public function execute(Observer $observer)
+    public function execute(Observer $observer): void
     {
         try {
             /** @var \Magento\Sales\Model\Order $order */
@@ -128,7 +128,7 @@ class AutoCreateQuoteObserver implements ObserverInterface
                 return (string)$erpAttr->getValue();
             }
         } catch (\Exception $e) {
-            // ignore
+            $this->logger->debug('[RexisML AutoQuote] Erro ao resolver ERP code: ' . $e->getMessage());
         }
 
         try {

@@ -6,6 +6,7 @@ namespace GrupoAwamotos\MaintenanceMode\Plugin;
 use Magento\Framework\App\FrontControllerInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
@@ -20,6 +21,7 @@ class MaintenancePlugin
     private const CONFIG_PATH = 'grupoawamotos_maintenance/';
 
     private ScopeConfigInterface $scopeConfig;
+    private DeploymentConfig $deploymentConfig;
     private RemoteAddress $remoteAddress;
     private ResponseInterface $response;
     private CookieManagerInterface $cookieManager;
@@ -28,6 +30,7 @@ class MaintenancePlugin
 
     public function __construct(
         ScopeConfigInterface $scopeConfig,
+        DeploymentConfig $deploymentConfig,
         RemoteAddress $remoteAddress,
         ResponseInterface $response,
         CookieManagerInterface $cookieManager,
@@ -35,6 +38,7 @@ class MaintenancePlugin
         StoreManagerInterface $storeManager
     ) {
         $this->scopeConfig = $scopeConfig;
+        $this->deploymentConfig = $deploymentConfig;
         $this->remoteAddress = $remoteAddress;
         $this->response = $response;
         $this->cookieManager = $cookieManager;
@@ -145,35 +149,51 @@ class MaintenancePlugin
 
     private function isAllowedRoute(RequestInterface $request): bool
     {
-        $currentRoute = $request->getModuleName();
-        $currentAction = $request->getFullActionName();
-        
-        // Rotas de sistema sempre permitidas
-        $systemRoutes = ['admin', 'adminhtml', 'maintenance'];
-        if (in_array($currentRoute, $systemRoutes)) {
+        // Usar pathInfo porque getModuleName()/getFullActionName() são null
+        // no estágio do FrontController (antes do routing)
+        $pathInfo = trim((string) $request->getPathInfo(), '/');
+        $firstSegment = explode('/', $pathInfo)[0] ?? '';
+
+        // Admin: comparar com o frontName real do backend (env.php)
+        $adminFrontName = $this->getAdminFrontName();
+        if ($firstSegment === $adminFrontName) {
             return true;
         }
 
-        // Permitir controllers deste módulo
-        if (strpos($currentAction, 'maintenance_') === 0) {
+        // Rotas do módulo de manutenção sempre permitidas
+        if ($firstSegment === 'maintenance') {
             return true;
         }
 
-        // Rotas configuradas pelo admin
+        // Rotas configuradas pelo admin (newsletter, contact, etc.)
         $allowedRoutes = $this->getConfig('general/allowed_routes', '');
-        if (empty($allowedRoutes)) {
-            return false;
+        if (!empty($allowedRoutes)) {
+            $routesArray = array_map('trim', explode(',', $allowedRoutes));
+            if (in_array($firstSegment, $routesArray, true)) {
+                return true;
+            }
         }
 
-        $routesArray = array_map('trim', explode(',', $allowedRoutes));
-        return in_array($currentRoute, $routesArray);
+        return false;
+    }
+
+    /**
+     * Retorna o frontName do admin configurado em env.php
+     */
+    private function getAdminFrontName(): string
+    {
+        try {
+            return (string) $this->deploymentConfig->get('backend/frontName', 'admin');
+        } catch (\Exception $e) {
+            return 'admin';
+        }
     }
 
     private function isAllowedCmsPage(RequestInterface $request): bool
     {
         $currentPath = trim($request->getPathInfo(), '/');
         $allowedPages = $this->getConfig('general/allowed_cms_pages', '');
-        
+
         if (empty($allowedPages)) {
             return false;
         }
@@ -224,10 +244,10 @@ class MaintenancePlugin
         // URLs
         $baseUrl = $this->storeManager->getStore()->getBaseUrl();
         $mediaUrl = $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA);
-        
+
         // Build CSS de fundo
         $backgroundCss = $this->buildBackgroundCss($bgType, $bgColor, $bgGradient);
-        
+
         // URLs de mídia
         $logoUrl = $logo ? $mediaUrl . 'maintenance/' . $logo : '';
 
@@ -241,6 +261,7 @@ class MaintenancePlugin
 
         $icon = $isComingSoon ? '🚀' : '🔧';
         $httpCode = $isComingSoon ? 200 : 503;
+        $accessFormHtml = $this->getAccessFormHtml();
 
         $html = <<<HTML
 <!DOCTYPE html>
@@ -288,6 +309,13 @@ class MaintenancePlugin
         .social-links a { display: inline-flex; align-items: center; justify-content: center; width: 55px; height: 55px; background: rgba(255,255,255,0.15); border-radius: 50%; font-size: 26px; transition: all 0.3s; }
         .social-links a:hover { background: rgba(255,255,255,0.3); transform: translateY(-5px); }
         .contact-info { margin-top: 40px; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.2); }
+        .access-form { margin-top: 30px; padding: 20px; background: rgba(255,255,255,0.08); border-radius: 12px; }
+        .access-form p { font-size: 0.85rem; opacity: 0.7; margin-bottom: 10px; }
+        .access-form form { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+        .access-form input[type="text"] { padding: 10px 16px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50px; background: rgba(255,255,255,0.1); color: inherit; font-size: 0.9rem; min-width: 200px; text-align: center; }
+        .access-form input[type="text"]::placeholder { color: rgba(255,255,255,0.5); }
+        .access-form button { padding: 10px 24px; background: rgba(255,255,255,0.2); color: inherit; border: 1px solid rgba(255,255,255,0.3); border-radius: 50px; font-size: 0.9rem; cursor: pointer; transition: all 0.3s; }
+        .access-form button:hover { background: rgba(255,255,255,0.3); }
         @media (max-width: 600px) { .content h1 { font-size: 1.8rem; } .countdown-value { font-size: 2rem; } }
         {$customCss}
     </style>
@@ -301,6 +329,7 @@ class MaintenancePlugin
         {$newsletterHtml}
         {$socialHtml}
         {$contactHtml}
+        {$accessFormHtml}
     </div>
     {$countdownScript}
 </body>
@@ -362,6 +391,19 @@ HTML;
         if ($email) $contacts[] = '✉️ <a href="mailto:' . htmlspecialchars($email) . '">' . htmlspecialchars($email) . '</a>';
         if ($contacts) $html .= '<p>' . implode(' | ', $contacts) . '</p>';
         return $html . '</div>';
+    }
+
+    private function getAccessFormHtml(): string
+    {
+        return <<<HTML
+<div class="access-form">
+    <p>Acesso autorizado?</p>
+    <form onsubmit="event.preventDefault();var c=document.getElementById('awa_code').value;if(c){window.location.href=window.location.pathname+'?preview='+encodeURIComponent(c);}">
+        <input type="text" id="awa_code" placeholder="Código de acesso" autocomplete="off">
+        <button type="submit">Entrar</button>
+    </form>
+</div>
+HTML;
     }
 
     private function getCountdownScript(string $targetDate): string

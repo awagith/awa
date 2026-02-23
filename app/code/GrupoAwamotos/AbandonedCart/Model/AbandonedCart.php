@@ -22,7 +22,7 @@ class AbandonedCart extends AbstractModel implements AbandonedCartInterface
         return $this->getData(self::ENTITY_ID) ? (int) $this->getData(self::ENTITY_ID) : null;
     }
 
-    public function setEntityId($id): self
+    public function setEntityId($id)
     {
         return $this->setData(self::ENTITY_ID, $id);
     }

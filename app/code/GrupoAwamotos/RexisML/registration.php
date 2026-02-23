@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Módulo RexisML - Integração com Power BI
  * Sistema de Recomendações e Market Basket Analysis

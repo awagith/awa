@@ -25,5 +25,12 @@
             </argument>
         </arguments>
     </virtualType>
+
+    <!-- plugin para validar CNPJ ao criar pedido no admin -->
+    <type name="Magento\Sales\Model\AdminOrder\Create">
+        <plugin name="grupoawamotos_b2b_validate_address_cnpj"
+                type="GrupoAwamotos\B2B\Plugin\AdminOrder\ValidateAddressCnpjOnCreateOrderPlugin"
+                sortOrder="10"/>
+    </type>
     
 </config>

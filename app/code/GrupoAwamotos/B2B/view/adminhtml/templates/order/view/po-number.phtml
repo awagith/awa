@@ -1,0 +1,61 @@
+<?php
+/**
+ * Template to display PO Number in admin order view
+ * P0-1: Purchase Order Number
+ *
+ * @var \GrupoAwamotos\B2B\Block\Adminhtml\Order\View\PoNumber $block
+ */
+
+declare(strict_types=1);
+
+if (!$block->hasPoNumber()) {
+    return;
+}
+
+$poNumber = $block->escapeHtml($block->getPoNumber());
+?>
+
+<div class="admin__page-section-item b2b-po-number-section">
+    <div class="admin__page-section-item-title">
+        <strong class="title"><?= $block->escapeHtml($block->getTitle()) ?></strong>
+    </div>
+    <div class="admin__page-section-item-content">
+        <table class="admin__table-secondary">
+            <tbody>
+                <tr>
+                    <th><?= $block->escapeHtml(__('Número do PO')) ?>:</th>
+                    <td>
+                        <span class="b2b-po-number-value">
+                            <strong><?= $poNumber ?></strong>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .b2b-po-number-section {
+        margin-top: 15px;
+        border-top: 1px solid #e3e3e3;
+        padding-top: 15px;
+    }
+
+    .b2b-po-number-section .title {
+        color: #303030;
+        font-size: 1.4rem;
+        font-weight: 600;
+    }
+
+    .b2b-po-number-value {
+        display: inline-flex;
+        align-items: center;
+        padding: 4px 10px;
+        background: #f5f5f5;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 1.3rem;
+    }
+</style>

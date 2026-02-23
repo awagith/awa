@@ -11,6 +11,14 @@ var config = {
         }
     },
     config: {
-        mixins: {}
+        mixins: {
+            // P0-1: Inject PO Number into payment data
+            'Magento_Checkout/js/action/set-payment-information': {
+                'GrupoAwamotos_B2B/js/model/payment/po-number-assigner': true
+            },
+            'Magento_Checkout/js/action/set-payment-information-extended': {
+                'GrupoAwamotos_B2B/js/model/payment/po-number-assigner': true
+            }
+        }
     }
 };
