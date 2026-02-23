@@ -3,9 +3,10 @@
 # fix-xml-case.sh — Reverte corrupção de formatador XML em arquivos Magento
 #
 # Problema: Extensões do VS Code (Gemini, Qwen, webvalidator) convertem
-# tags XML do Magento para lowercase e adicionam ";" em xmlns.
-# Magento layout XML é CASE-SENSITIVE:
+# tags XML do Magento para lowercase e adicionam ";" em xmlns e atributos.
+# Magento layout/DI XML é CASE-SENSITIVE:
 #   referenceBlock ≠ referenceblock (lowercase = erro fatal)
+#   virtualType ≠ virtualtype (lowercase = schema violation)
 #
 # Uso:
 #   ./bin/fix-xml-case.sh              # corrige todos os XMLs customizados
@@ -34,6 +35,9 @@ log() { echo -e "${GREEN}[XML-FIX]${NC} $*"; }
 warn() { echo -e "${YELLOW}[XML-FIX]${NC} $*"; }
 err() { echo -e "${RED}[XML-FIX]${NC} $*" >&2; }
 
+# All corruption patterns to detect
+CORRUPTION_PATTERN='nonamespaceschemalocation|<referenceblock |<\/referenceblock>|<referencecontainer |<\/referencecontainer>|<virtualtype |<\/virtualtype>|<argument [^>]*";|<item [^>]*";|<column;|xmlns:xsi="[^"]*";'
+
 fix_file() {
     local file="$1"
     local changed=false
@@ -43,7 +47,7 @@ fix_file() {
     [[ "$file" != *.xml ]] && return 0
 
     # Check for corruption patterns
-    if grep -qE 'nonamespaceschemalocation|referenceblock|referencecontainer|xmlns:xsi=.*";' "$file" 2>/dev/null; then
+    if grep -qiE "$CORRUPTION_PATTERN" "$file" 2>/dev/null; then
         if $CHECK_ONLY; then
             err "CORRUPTED: $file"
             return 1
@@ -52,13 +56,13 @@ fix_file() {
         # Remove immutable flag if set
         chattr -i "$file" 2>/dev/null || true
 
-        # Fix semicolons in xmlns URIs
+        # ── Fix xmlns semicolons ──────────────────────────────────────
         sed -i 's/xmlns:xsi="http:\/\/www.w3.org\/2001\/XMLSchema-instance";/xmlns:xsi="http:\/\/www.w3.org\/2001\/XMLSchema-instance"/g' "$file"
 
-        # Fix noNamespaceSchemaLocation (case-sensitive attribute)
+        # ── Fix noNamespaceSchemaLocation casing ──────────────────────
         sed -i 's/xsi:nonamespaceschemalocation=/xsi:noNamespaceSchemaLocation=/g' "$file"
 
-        # Fix Magento layout tags (case-sensitive)
+        # ── Fix layout XML tags (case-sensitive) ──────────────────────
         sed -i 's/<referenceblock /<referenceBlock /g' "$file"
         sed -i 's/<\/referenceblock>/<\/referenceBlock>/g' "$file"
         sed -i 's/<referenceblock\//<referenceBlock\//g' "$file"
@@ -66,8 +70,23 @@ fix_file() {
         sed -i 's/<referencecontainer /<referenceContainer /g' "$file"
         sed -i 's/<\/referencecontainer>/<\/referenceContainer>/g' "$file"
 
-        # Fix page tag semicolons
+        # ── Fix DI XML tags (case-sensitive) ──────────────────────────
+        sed -i 's/<virtualtype /<virtualType /g' "$file"
+        sed -i 's/<\/virtualtype>/<\/virtualType>/g' "$file"
+
+        # ── Fix semicolons in attribute values ────────────────────────
+        # Pattern: name="value"; xsi:type → name="value" xsi:type
+        sed -i 's/\(name="[^"]*"\); \(xsi:type\)/\1 \2/g' "$file"
+
+        # Pattern: <column; → <column
+        sed -i 's/<column;/<column/g' "$file"
+
+        # Pattern: <page; → <page
         sed -i 's/<page;/<page/g' "$file"
+
+        # ── Fix semicolons after any attribute before xsi:type ────────
+        # Catches: name="handlers"; xsi:type  →  name="handlers" xsi:type
+        sed -i 's/"; xsi:type/" xsi:type/g' "$file"
 
         # Restore immutable flag
         chattr +i "$file" 2>/dev/null || true
