@@ -55,7 +55,7 @@ body .page-wrapper .top-bar-left .separator,
 body .page-wrapper .top-left-static .separator {
     color: var(--awa-gray-300);
     font-size: 6px;
-    line-height: 1;
+    line-height: var(--awa-leading-none);
     user-select: none;
     margin: 0 -6px;
 }
@@ -224,7 +224,7 @@ body .page-wrapper .block-search input.input-text {
     border: none;
     border-radius: 0;
     font-size: var(--awa-text-md); /* 15px ≈ 16px md */
-    line-height: 1.4;
+    line-height: var(--awa-leading-normal);
     outline: none;
     background: transparent;
     color: var(--awa-dark);
@@ -281,9 +281,9 @@ body .page-wrapper .block-search button[type="submit"]::before {
     font-family: FontAwesome, sans-serif;
     font-size: var(--awa-text-md);
     color: var(--awa-text-on-danger);
-    font-weight: 400;
+    font-weight: var(--awa-weight-normal);
     display: inline-block;
-    line-height: 1;
+    line-height: var(--awa-leading-none);
     -webkit-font-smoothing: antialiased;
 }
 
@@ -337,7 +337,7 @@ body .page-wrapper .minicart-wrapper .counter.qty {
     background: var(--awa-red);
     color: var(--awa-text-on-danger);
     font-size: var(--awa-text-xs); /* 11px ≈ xs */
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     min-width: 20px;
     height: 20px;
     border-radius: var(--awa-radius-full); /* R13: era 10px hardcoded */
@@ -345,7 +345,7 @@ body .page-wrapper .minicart-wrapper .counter.qty {
     align-items: center;
     justify-content: center;
     padding: 0 5px;
-    line-height: 1;
+    line-height: var(--awa-leading-none);
 }
 
 body .page-wrapper .minicart-wrapper .counter.qty.empty {
@@ -403,9 +403,9 @@ body .page-wrapper .custommenu > ul > li > a {
     color: var(--awa-text-on-dark);
     text-decoration: none;
     font-size: var(--awa-text-sm);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: var(--awa-tracking-wide);
     transition: background var(--awa-transition-fast); /* R12-03 */
     white-space: nowrap;
 }
@@ -440,7 +440,7 @@ body .page-wrapper .navigation:not(.verticalmenu) ul ul li a {
     padding: var(--awa-space-3) var(--awa-space-5);
     color: var(--awa-dark);
     font-size: var(--awa-text-sm);
-    font-weight: 500;
+    font-weight: var(--awa-weight-medium);
     text-transform: none;
     transition: background var(--awa-transition-fast), color var(--awa-transition-fast); /* R13: era 'all' */
 }
@@ -1094,7 +1094,7 @@ body .page-wrapper footer.page-footer {
     font-family: var(--awa-font);
     margin-top: var(--footer-space-xl);
     font-size: var(--footer-font-size-base);
-    line-height: 1.6;
+    line-height: var(--awa-leading-loose);
 }
 
 /* Footer links — melhorar contraste (WCAG AA: 4.5:1 mínimo) */
@@ -1124,9 +1124,9 @@ body .page-wrapper .page-footer .velaFooterTitle,
 body .page-wrapper .footer-container h5 {
     color: var(--footer-text-bright);
     font-size: var(--footer-font-size-heading);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: var(--awa-tracking-wider);
     margin: 0 0 var(--footer-space-md);
     padding-bottom: var(--footer-space-sm);
     border-bottom: 2px solid var(--footer-accent);
@@ -1296,7 +1296,7 @@ body .page-wrapper .footer-newsletter .title,
 body .page-wrapper .page-footer .newsletter .title {
     color: var(--awa-text-on-danger);
     font-size: var(--awa-text-lg);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     border: none;
     margin: 0;
     padding: 0;
@@ -1332,9 +1332,9 @@ body .page-wrapper .page-footer .newsletter button {
     color: var(--awa-text-on-dark);
     border: none;
     border-radius: 0 var(--footer-radius) var(--footer-radius) 0;
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     font-size: var(--awa-text-base);
-    letter-spacing: 0.5px;
+    letter-spacing: var(--awa-tracking-wide);
     cursor: pointer;
     transition: background var(--footer-transition);
     text-transform: uppercase;
@@ -1410,7 +1410,7 @@ body .page-wrapper .footer-bottom .payment-methods span,
 body .page-wrapper .footer-bottom .security-seals span {
     font-size: var(--footer-font-size-small);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: var(--awa-tracking-wider);
     color: var(--footer-text);
 }
 
@@ -1539,7 +1539,7 @@ body .page-wrapper .aw-footer-highlight {
 body .page-wrapper .aw-footer-highlight__title {
     color: var(--awa-text-on-dark);
     font-size: var(--awa-text-md); /* 15px ≈ 16px md */
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     margin-bottom: var(--awa-space-1);
 }
 
@@ -1587,9 +1587,9 @@ body .page-wrapper .aw-footer-trust-b2b .trust-item {
 body .page-wrapper .aw-footer-trust-b2b .trust-number {
     display: block;
     font-size: var(--awa-text-2xl);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     color: var(--awa-text-on-dark);
-    line-height: 1.2;
+    line-height: var(--awa-leading-compact);
 }
 
 body .page-wrapper .aw-footer-trust-b2b .trust-label {
@@ -1597,7 +1597,7 @@ body .page-wrapper .aw-footer-trust-b2b .trust-label {
     font-size: var(--awa-text-xs);
     color: var(--awa-gray-500, #999); /* R10-16: token */
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: var(--awa-tracking-wide);
     margin-top: var(--awa-space-1); /* BP-19: era 4px */
 }
 
@@ -1613,7 +1613,7 @@ body .page-wrapper .aw-footer-b2b-contact {
 body .page-wrapper .aw-footer-b2b-contact .b2b-contact-title {
     color: var(--awa-text-on-dark);
     font-size: var(--awa-text-base);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     margin-bottom: var(--awa-space-3);
     text-transform: uppercase;
 }
@@ -1882,7 +1882,7 @@ body .page-wrapper .footer.content .block-static-block {
     body .page-wrapper .page-footer h4,
     body .page-wrapper .page-footer .velaFooterTitle {
         font-size: var(--awa-text-base);
-        letter-spacing: 0.5px;
+        letter-spacing: var(--awa-tracking-wide);
     }
 
     body .page-wrapper .footer-social a,

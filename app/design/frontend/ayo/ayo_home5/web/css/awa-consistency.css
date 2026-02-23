@@ -71,17 +71,17 @@ body .page-wrapper .page-title-wrapper .page-title,
 body .page-wrapper .page-title-wrapper .base {
     margin: 0;
     font-size: clamp(24px, 2vw, 32px);
-    line-height: 1.2;
-    font-weight: 700;
-    letter-spacing: -0.01em;
+    line-height: var(--awa-leading-compact);
+    font-weight: var(--awa-weight-bold);
+    letter-spacing: var(--awa-tracking-tighter);
     color: var(--awa-dark);
 }
 
 body .page-wrapper .block .block-title strong,
 body .page-wrapper .block .title strong {
     font-size: var(--awa-text-lg);
-    font-weight: 700;
-    line-height: 1.3;
+    font-weight: var(--awa-weight-bold);
+    line-height: var(--awa-leading-base);
     color: var(--awa-dark);
 }
 
@@ -102,8 +102,8 @@ body .page-wrapper .btn-primary {
     min-height: var(--awa-btn-height);
     border-radius: var(--awa-control-radius);
     font-size: var(--awa-text-sm);
-    line-height: 1;
-    letter-spacing: 0.02em;
+    line-height: var(--awa-leading-none);
+    letter-spacing: var(--awa-tracking-normal);
     text-transform: uppercase;
 }
 
@@ -120,9 +120,9 @@ body .page-wrapper .btn-secondary {
     background: var(--awa-bg-surface); /* BP-12 */
     color: var(--awa-red);
     font-size: var(--awa-text-sm);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     text-transform: uppercase;
-    letter-spacing: 0.02em;
+    letter-spacing: var(--awa-tracking-normal);
     transition: border-color var(--awa-transition-fast),
                 color var(--awa-transition-fast),
                 background var(--awa-transition-fast);
@@ -160,7 +160,7 @@ body .page-wrapper select {
 body .page-wrapper .field .label,
 body .page-wrapper .fieldset > .legend {
     font-size: var(--awa-text-sm);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     color: var(--awa-dark);
 }
 
@@ -295,10 +295,10 @@ body.catalog-category-view .page-wrapper .sidebar-main-1 .filter-options-item:la
 
 body.catalog-category-view .page-wrapper .sidebar-main-1 .filter-options-title {
     font-size: var(--awa-text-sm);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     color: var(--awa-dark);
     text-transform: uppercase;
-    letter-spacing: 0.02em;
+    letter-spacing: var(--awa-tracking-normal);
 }
 
 body.page-layout-2columns-left .page-wrapper .columns.layout.layout-2-col > .sidebar-main-1,
@@ -348,7 +348,7 @@ body .page-wrapper .top-header .top-account ul.header.links {
 
 body .page-wrapper .top-header .top-account ul.header.links li {
     margin: 0;
-    line-height: 1;
+    line-height: var(--awa-leading-none);
     display: inline-flex;
     align-items: center;
 }
@@ -363,7 +363,7 @@ body .page-wrapper .top-header .top-account ul.header.links li > a {
     border-radius: var(--awa-control-radius);
     color: var(--awa-gray-700);
     font-size: var(--awa-text-xs);
-    line-height: 1.2;
+    line-height: var(--awa-leading-compact);
     text-decoration: none;
     transition: color var(--awa-transition-fast), background var(--awa-transition-fast);
 }
@@ -451,7 +451,7 @@ body.checkout-cart-index .page-wrapper .cart-empty p {
 }
 
 body.checkout-cart-index .page-wrapper .cart-empty a {
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
 }
 
 
@@ -689,7 +689,7 @@ body .page-wrapper .pages .items.pages-items .item.current strong {
     background: var(--awa-red);
     color: var(--awa-text-on-primary);
     border-color: var(--awa-red);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
 }
 
 body .page-wrapper .pages .items.pages-items .item .action.next,
@@ -702,14 +702,14 @@ body .page-wrapper .pages .items.pages-items .item .action.next::before {
     content: "\f105";
     font-family: FontAwesome, 'Font Awesome 5 Free', sans-serif;
     font-size: var(--awa-text-base);
-    font-weight: 900;
+    font-weight: var(--awa-weight-black);
 }
 
 body .page-wrapper .pages .items.pages-items .item .action.previous::before {
     content: "\f104";
     font-family: FontAwesome, 'Font Awesome 5 Free', sans-serif;
     font-size: var(--awa-text-base);
-    font-weight: 900;
+    font-weight: var(--awa-weight-black);
 }
 
 @media (width <= 480px) {

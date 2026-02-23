@@ -77,8 +77,8 @@
     max-width: var(--awa-container);
     margin-left: auto;
     margin-right: auto;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: var(--awa-space-5); /* BP-20: era 20px */
+    padding-right: var(--awa-space-5); /* BP-20: era 20px */
     box-sizing: border-box;
 }
 
@@ -261,8 +261,8 @@
     max-width: var(--awa-container);
     margin-left: auto;
     margin-right: auto;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: var(--awa-space-5); /* BP-20: era 20px */
+    padding-right: var(--awa-space-5); /* BP-20: era 20px */
     box-sizing: border-box;
     align-items: start;
 }
@@ -445,7 +445,7 @@
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--intent-grids .awa-intent-heading h2 {
     margin: 0;
     font-size: clamp(1.25rem, 1rem + .8vw, 1.7rem);
-    line-height: 1.2;
+    line-height: var(--awa-leading-compact);
     color: var(--awa-text-primary, #222);
 }
 
@@ -501,7 +501,7 @@
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .rokan-product-heading h2,
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .rokan-product-heading h2 span {
     font-size: clamp(24px, 2vw + 14px, 26px);
-    line-height: 1.2;
+    line-height: var(--awa-leading-compact);
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product {
@@ -518,7 +518,7 @@
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product .title-product,
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product .product-name {
     margin: 0 0 8px;
-    line-height: 1.35;
+    line-height: var(--awa-leading-cozy);
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product .title-product a,
@@ -550,7 +550,7 @@
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .vc_tta-tabs-container .tabs li a {
     font-size: var(--awa-text-md);
     line-height: 34px;
-    padding-bottom: 8px;
+    padding-bottom: var(--awa-space-2); /* BP-20: era 8px */
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .row {
@@ -711,7 +711,7 @@
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .tab_product .box-title,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .hot-deal .rokan-product-heading h2 {
         margin-bottom: var(--awa-space-4);
-        line-height: 1.25;
+        line-height: var(--awa-leading-snug);
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product {
@@ -761,13 +761,13 @@
 @media (width <= 390px) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content > .container,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .block_notification > .container {
-        padding-left: 12px;
-        padding-right: 12px;
+        padding-left: var(--awa-space-3); /* BP-20: era 12px */
+        padding-right: var(--awa-space-3); /* BP-20: era 12px */
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold {
-        padding-left: 12px;
-        padding-right: 12px;
+        padding-left: var(--awa-space-3); /* BP-20: era 12px */
+        padding-right: var(--awa-space-3); /* BP-20: era 12px */
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--above-fold .awa-mobile-quick-nav {
@@ -835,7 +835,7 @@
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .tab_product .box-title,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .hot-deal .rokan-product-heading h2 {
         font-size: clamp(17px, 6vw, 20px);
-        line-height: 1.2;
+        line-height: var(--awa-leading-compact);
         margin-bottom: var(--awa-space-2);
     }
 
@@ -886,7 +886,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     min-height: 2.8em;
-    line-height: 1.4;
+    line-height: var(--awa-leading-normal);
 }
 
 /* ===========================================
@@ -946,7 +946,7 @@
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper {
     max-width: var(--awa-container);
     margin-inline: auto;
-    padding-inline: 20px;
+    padding-inline: var(--awa-space-5); /* BP-21: era 20px */
     box-sizing: border-box;
 }
 
@@ -1014,7 +1014,7 @@
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper {
-        padding-inline: 12px;
+        padding-inline: var(--awa-space-3); /* BP-21: era 12px */
     }
 }
 
@@ -1065,9 +1065,9 @@
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal.top-home-content__trust-offers-deals .countdown_block .title_countdown {
     display: block;
     margin: 0;
-    line-height: 1.2;
+    line-height: var(--awa-leading-compact);
     font-size: var(--awa-text-md);
-    font-weight: 500;
+    font-weight: var(--awa-weight-medium);
     color: var(--awa-dark); /* BP-15: era #222 hardcoded */
 }
 
@@ -1117,7 +1117,7 @@
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal.top-home-content__trust-offers-deals .countdown_block .title_countdown {
         display: block;
         margin: 0;
-        line-height: 1.2;
+        line-height: var(--awa-leading-compact);
         flex: 1 0 100%;
     }
 
@@ -1135,12 +1135,12 @@
 
 /* --- Espaçamento vertical entre seções --- */
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section {
-    padding-block: 48px;
+    padding-block: var(--awa-space-9); /* BP-21: era 48px */
     position: relative;
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section--compact {
-    padding-block: 16px;
+    padding-block: var(--awa-space-4); /* BP-21: era 16px */
 }
 
 /* Divider sutil entre seções (exceto a primeira) */
@@ -1169,11 +1169,11 @@
 /* --- Headings unificados --- */
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-intent-heading h2 {
     font-size: 1.5rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
+    font-weight: var(--awa-weight-bold);
+    letter-spacing: var(--awa-tracking-normal);
     color: var(--awa-heading, #1a1a2e);
-    margin: 0 0 24px;
-    padding-bottom: 12px;
+    margin: 0 0 var(--awa-space-6); /* BP-20: era 0 0 24px */
+    padding-bottom: var(--awa-space-3); /* BP-20: era 12px */
     border-bottom: 2px solid var(--awa-accent, #c00);
     display: inline-block;
 }
@@ -1217,7 +1217,7 @@
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-trust-badges-wrap .trust-badge-item span {
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     color: var(--awa-heading, #1a1a2e);
 }
 
@@ -1242,7 +1242,7 @@
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-faq-quick-wrap details summary {
     padding: var(--awa-space-4) var(--awa-space-5); /* BP-18: era 16px 20px */
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     font-size: 0.9375rem;
     cursor: pointer;
     list-style: none;
@@ -1261,7 +1261,7 @@
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-faq-quick-wrap details summary::after {
     content: '+';
     font-size: 1.25rem;
-    font-weight: 300;
+    font-weight: var(--awa-weight-light);
     color: var(--awa-accent, #c00);
     flex-shrink: 0;
     transition: transform var(--awa-transition-fast); /* BP-08: era 0.2s ease hardcoded */
@@ -1274,7 +1274,7 @@
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-faq-quick-wrap details > :not(summary) {
     padding: 0 20px 16px;
     font-size: 0.875rem;
-    line-height: 1.6;
+    line-height: var(--awa-leading-loose);
     color: #555;
 }
 
@@ -1331,13 +1331,13 @@
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-intent-heading h2 {
         font-size: 1.15rem;
         margin-bottom: var(--awa-space-4); /* BP-19: era 16px */
-        padding-bottom: 8px;
+        padding-bottom: var(--awa-space-2); /* BP-20: era 8px */
     }
 }
 
 @media (width <= 480px) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section {
-        padding-block: 20px;
+        padding-block: var(--awa-space-5); /* BP-21: era 20px */
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section--compact {

@@ -356,8 +356,8 @@ body .page-wrapper .item-product .product-item-link,
 body .page-wrapper .product-item .product-item-name,
 body .page-wrapper .product-item .product-item-link {
     font-size: var(--awa-text-base);
-    font-weight: 600;
-    line-height: 1.4;
+    font-weight: var(--awa-weight-semibold);
+    line-height: var(--awa-leading-normal);
     color: var(--awa-dark);
     text-decoration: none;
     display: -webkit-box;
@@ -408,7 +408,7 @@ body .page-wrapper .item-product .price-box {
 body .page-wrapper .item-product .price-box .price,
 body .page-wrapper .product-item .price {
     font-size: clamp(15px, 1vw + 10px, 20px); /* R14: clamp() substitui 2 media queries */
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     color: var(--awa-red);
 }
 
@@ -417,7 +417,7 @@ body .page-wrapper .product-item .old-price .price {
     font-size: var(--awa-text-base);
     color: var(--awa-gray-500);
     text-decoration: line-through;
-    font-weight: 400;
+    font-weight: var(--awa-weight-normal);
 }
 
 body .page-wrapper .item-product .old-price {
@@ -509,9 +509,9 @@ body .page-wrapper .product-item .action.tocart {
     border: none;
     border-radius: var(--awa-radius-sm);
     font-size: var(--awa-text-sm);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: var(--awa-tracking-wide);
     cursor: pointer;
     transition: background var(--awa-transition), box-shadow var(--awa-transition);
     text-align: center;
@@ -519,7 +519,7 @@ body .page-wrapper .product-item .action.tocart {
     position: static;
     float: none;
     margin: 0;
-    line-height: 1.4;
+    line-height: var(--awa-leading-normal);
 }
 
 body .page-wrapper .item-product .action.tocart:hover,
@@ -626,7 +626,7 @@ body .page-wrapper .item-product .quickview-link {
     padding: var(--awa-space-2) var(--awa-space-4);
     border-radius: var(--awa-radius-full);
     font-size: var(--awa-text-xs); /* 11px ≈ xs */
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     text-transform: uppercase;
     opacity: 0;
     transition: opacity var(--awa-transition), transform var(--awa-transition);
@@ -657,9 +657,9 @@ body .page-wrapper .item-product .hot-onsale {
     left: var(--awa-space-3);
     padding: var(--awa-space-1) var(--awa-space-3);
     font-size: var(--awa-text-xs); /* 11px badges */
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: var(--awa-tracking-wide);
     border-radius: var(--awa-radius-sm);
     z-index: 5;
 }
@@ -720,8 +720,8 @@ body .page-wrapper .item-deal-product:hover {
 
 body .page-wrapper .item-deal-product .title-product a {
     font-size: var(--awa-text-base);
-    font-weight: 600;
-    line-height: 1.4;
+    font-weight: var(--awa-weight-semibold);
+    line-height: var(--awa-leading-normal);
     color: var(--awa-dark);
     text-decoration: none;
     display: -webkit-box;
@@ -737,7 +737,7 @@ body .page-wrapper .item-deal-product .title-product a:hover {
 
 body .page-wrapper .item-deal-product .info-price-deal .price {
     font-size: var(--awa-text-xl);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     color: var(--awa-red);
 }
 
@@ -745,7 +745,7 @@ body .page-wrapper .item-deal-product .info-price-deal .old-price .price {
     font-size: var(--awa-text-base);
     color: var(--awa-gray-500);
     text-decoration: line-through;
-    font-weight: 400;
+    font-weight: var(--awa-weight-normal);
 }
 
 body .page-wrapper .item-deal-product .price-wrapper.price-excluding-tax {
@@ -987,7 +987,7 @@ body .page-wrapper .tab_product,
 body .page-wrapper .list-tab-product {
     max-width: var(--awa-container);
     margin-inline: auto;
-    padding-inline: 20px;
+    padding-inline: var(--awa-space-5); /* BP-21: era 20px */
     box-sizing: border-box;
     margin-bottom: var(--awa-space-8);
 }
@@ -1023,9 +1023,9 @@ body .page-wrapper .the_blog .block-title {
     text-align: center;
     margin-bottom: var(--awa-space-7);
     font-size: var(--awa-text-2xl);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: var(--awa-tracking-wider);
     color: var(--awa-dark);
     position: relative;
     padding-bottom: var(--awa-space-4);
@@ -1043,7 +1043,7 @@ body .page-wrapper .block-products-list .block-title::after {
     width: 60px;
     height: 3px;
     background: var(--awa-red);
-    border-radius: 2px;
+    border-radius: var(--awa-radius-2xs);
 }
 
 /* Homepage flex layout */
@@ -1130,7 +1130,7 @@ body .page-wrapper .ayo-home5-hero-card__content {
 body .page-wrapper .ayo-home5-hero-card__title,
 body .page-wrapper .ayo-home5-hero-card strong {
     color: var(--awa-text-on-dark);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
 }
 
 /* ============================================================
@@ -1181,8 +1181,8 @@ body .page-wrapper .time_circles > div {
 
 body .page-wrapper .time_circles > div .number {
     font-size: var(--awa-text-xl);
-    font-weight: 700;
-    line-height: 1.2;
+    font-weight: var(--awa-weight-bold);
+    line-height: var(--awa-leading-compact);
 }
 
 body .page-wrapper .time_circles > div .text {
@@ -1196,10 +1196,10 @@ body .page-wrapper .time_circles > div .text {
    ============================================================ */
 body .page-wrapper .page-title-wrapper.product h1.page-title {
     font-size: clamp(18px, 2vw + 10px, 28px); /* BUG-09: era 28px fixo, causava salto abrupto nos breakpoints */
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     color: var(--awa-dark);
     margin-bottom: var(--awa-space-4);
-    line-height: 1.3;
+    line-height: var(--awa-leading-base);
 }
 
 body .page-wrapper .product-info-main .product.attribute.sku {
@@ -1219,7 +1219,7 @@ body .page-wrapper .product-info-main .product-reviews-summary {
 
 body .page-wrapper .product-info-main .price-box .price {
     font-size: clamp(20px, 2vw + 12px, 32px); /* R14: clamp() substitui 3 media queries */
-    font-weight: 800;
+    font-weight: var(--awa-weight-extrabold);
     color: var(--awa-red);
 }
 
@@ -1247,7 +1247,7 @@ body .page-wrapper .product-info-main .stock {
     padding: var(--awa-space-2) var(--awa-space-4);
     border-radius: var(--awa-radius-full);
     font-size: var(--awa-text-sm);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     margin-bottom: var(--awa-space-5);
 }
 
@@ -1268,7 +1268,7 @@ body .page-wrapper .product-info-main .price-box .save-percent {
     background: var(--awa-success);
     color: var(--awa-text-on-success);
     font-size: var(--awa-text-xs);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     padding: var(--awa-space-1) var(--awa-space-3);
     border-radius: var(--awa-radius-full);
     margin-inline-start: var(--awa-space-2); /* R18-08: logical property */
@@ -1281,7 +1281,7 @@ body .page-wrapper .product.info.detailed .data.item.title > span {
     display: block;
     padding: var(--awa-space-4) var(--awa-space-6);
     font-size: var(--awa-text-base);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     text-transform: uppercase;
     border-bottom: 2px solid transparent;
     transition: border-bottom-color var(--awa-transition-fast), color var(--awa-transition-fast); /* R13: era 'all' */
@@ -1332,7 +1332,7 @@ body .page-wrapper .product-info-main .field.qty .input-text.qty {
     text-align: center;
     border: none;
     font-size: var(--awa-text-md);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     appearance: textfield;
 }
 
@@ -1346,7 +1346,7 @@ body .page-wrapper .product-info-main .box-tocart .action.tocart {
     height: 50px;
     min-width: 200px;
     font-size: var(--awa-text-md);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     border-radius: var(--awa-radius-sm);
 }
 
@@ -1365,7 +1365,7 @@ body .page-wrapper .block.related .block-title strong,
 body .page-wrapper .block.upsell .block-title strong,
 body .page-wrapper .block.crosssell .block-title strong {
     font-size: var(--awa-text-xl);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     text-transform: uppercase;
 }
 
@@ -1517,7 +1517,7 @@ body .page-wrapper .sidebar .block-content.filter-content .filter-options-item {
 
 body .page-wrapper .sidebar .filter-options-title {
     font-size: var(--awa-text-base);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     text-transform: uppercase;
     cursor: pointer;
 }
@@ -1575,7 +1575,7 @@ body .page-wrapper .category-image img {
         border: none;
         border-radius: var(--awa-radius-sm);
         font-size: var(--awa-text-base);
-        font-weight: 600;
+        font-weight: var(--awa-weight-semibold);
         cursor: pointer;
         margin-bottom: var(--awa-space-4);
         transition: background var(--awa-transition-fast);
@@ -1622,7 +1622,7 @@ body .page-wrapper .block-minicart {
 
 body .page-wrapper .block-minicart .block-title {
     font-size: var(--awa-text-md);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     text-transform: uppercase;
     margin-bottom: var(--awa-space-4);
     padding-bottom: var(--awa-space-3);
@@ -1653,9 +1653,9 @@ body .page-wrapper .block-minicart .product-image-container {
 
 body .page-wrapper .block-minicart .product-item-name a {
     font-size: var(--awa-text-sm);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     color: var(--awa-dark);
-    line-height: 1.4;
+    line-height: var(--awa-leading-normal);
 }
 
 body .page-wrapper .block-minicart .product-item-name a:hover {
@@ -1664,7 +1664,7 @@ body .page-wrapper .block-minicart .product-item-name a:hover {
 
 body .page-wrapper .block-minicart .minicart-price .price {
     font-size: var(--awa-text-base);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     color: var(--awa-red);
 }
 
@@ -1697,7 +1697,7 @@ body .page-wrapper .block-minicart .subtotal {
     padding: var(--awa-space-4) 0;
     display: flex;
     justify-content: space-between;
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
 }
 
 body .page-wrapper .block-minicart .subtotal .price {
@@ -1711,7 +1711,7 @@ body .page-wrapper .block-minicart .actions .action.viewcart {
     padding: var(--awa-space-3);
     border: 1px solid var(--awa-gray-200);
     border-radius: var(--awa-radius-sm);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     font-size: var(--awa-text-sm);
     margin-bottom: var(--awa-space-2);
     transition: border-color var(--awa-transition-fast), background var(--awa-transition-fast);
@@ -1754,7 +1754,7 @@ body .page-wrapper .cart.table-wrapper .product-item-photo {
 
 body .page-wrapper .cart.table-wrapper .product-item-name a {
     font-size: var(--awa-text-md);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     color: var(--awa-dark);
     text-decoration: none;
 }
@@ -1766,7 +1766,7 @@ body .page-wrapper .cart.table-wrapper .product-item-name a:hover {
 body .page-wrapper .cart.table-wrapper .col.price .price,
 body .page-wrapper .cart.table-wrapper .col.subtotal .price {
     font-size: var(--awa-text-md);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     color: var(--awa-dark);
 }
 
@@ -1778,18 +1778,18 @@ body .page-wrapper .cart-summary {
 
 body .page-wrapper .cart-summary .summary.title {
     font-size: var(--awa-text-xl);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     margin-bottom: var(--awa-space-5);
     text-transform: uppercase;
 }
 
 body .page-wrapper .cart-summary .totals .mark {
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
 }
 
 body .page-wrapper .cart-summary .grand.totals .amount .price {
     font-size: var(--awa-text-2xl);
-    font-weight: 800;
+    font-weight: var(--awa-weight-extrabold);
     color: var(--awa-red);
 }
 
@@ -1797,7 +1797,7 @@ body .page-wrapper .cart-summary .checkout-methods-items .action.primary.checkou
     width: 100%;
     padding: var(--awa-space-4) var(--awa-space-6);
     font-size: var(--awa-text-md);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     border-radius: var(--awa-radius-sm);
 }
 
@@ -1819,7 +1819,7 @@ body .page-wrapper .checkout-container .opc-sidebar .opc-block-summary {
 
 body .page-wrapper .opc-block-summary .table-totals .grand.totals .price {
     font-size: var(--awa-text-xl);
-    font-weight: 800;
+    font-weight: var(--awa-weight-extrabold);
     color: var(--awa-red);
 }
 
@@ -1831,7 +1831,7 @@ body .page-wrapper .checkout-container .action.primary.action-save-address {
 /* Success page */
 body .page-wrapper .checkout-success .page-title {
     font-size: var(--awa-text-3xl);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     color: var(--awa-success);
     margin-bottom: var(--awa-space-5);
 }
@@ -1841,7 +1841,7 @@ body .page-wrapper .checkout-success .page-title {
    ============================================================ */
 body .page-wrapper .account .page-title-wrapper .page-title {
     font-size: var(--awa-text-2xl);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
 }
 
 body .page-wrapper .account .column.main .block {
@@ -1850,7 +1850,7 @@ body .page-wrapper .account .column.main .block {
 
 body .page-wrapper .account .column.main .block-title {
     font-size: var(--awa-text-md);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     text-transform: uppercase;
     padding-bottom: var(--awa-space-3);
     border-bottom: 2px solid var(--awa-gray-200);
@@ -1864,7 +1864,7 @@ body .page-wrapper .account .table-wrapper .data.table {
 
 body .page-wrapper .account .table-wrapper .data.table th {
     background: var(--awa-gray-100);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     font-size: var(--awa-text-sm);
     text-transform: uppercase;
     padding: var(--awa-space-3) var(--awa-space-4);
@@ -1949,13 +1949,13 @@ body .page-wrapper .cms-page-view .column.main {
 
 body .page-wrapper .cms-page-view .column.main h2 {
     font-size: var(--awa-text-xl);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     margin: var(--awa-space-7) 0 var(--awa-space-4);
 }
 
 body .page-wrapper .cms-page-view .column.main h3 {
     font-size: var(--awa-text-lg);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     margin: var(--awa-space-6) 0 var(--awa-space-3);
 }
 
@@ -1966,7 +1966,7 @@ body .page-wrapper .cms-page-view .column.main p {
 
 body .page-wrapper .cms-page-view .column.main ul,
 body .page-wrapper .cms-page-view .column.main ol {
-    padding-inline-start: 20px; /* R18-07: logical property */
+    padding-inline-start: var(--awa-space-5); /* BP-21: era 20px (R18-07: logical property) */
     margin-bottom: var(--awa-space-4); /* BP-19: era 16px */
 }
 
@@ -2087,7 +2087,7 @@ body .page-wrapper .tab_product .tab-title-item {
     border: 2px solid var(--awa-gray-200);
     border-radius: var(--awa-radius-full);
     font-size: var(--awa-text-sm);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     color: var(--awa-gray-700);
     cursor: pointer;
     transition: background var(--awa-transition), border-color var(--awa-transition), color var(--awa-transition); /* R13: era 'all' */
@@ -2531,8 +2531,8 @@ body .page-wrapper .cat_special {
 
     .awa-mobile-quick-nav .quick-nav-link .label {
         font-size: 11px;
-        font-weight: 600;
-        line-height: 1.2;
+        font-weight: var(--awa-weight-semibold);
+        line-height: var(--awa-leading-compact);
     }
 }
 
@@ -2550,7 +2550,7 @@ body .page-wrapper .cat_special {
 
     .awa-visual-cat-grid .block-title strong {
         font-size: var(--awa-text-xl);
-        font-weight: 700;
+        font-weight: var(--awa-weight-bold);
         margin-bottom: var(--awa-space-5);
         display: block;
         color: var(--awa-gray-900);
@@ -2603,7 +2603,7 @@ body .page-wrapper .cat_special {
     }
 
     .visual-cat-item .cat-name {
-        font-weight: 600;
+        font-weight: var(--awa-weight-semibold);
         font-size: var(--awa-text-base);
     }
 }
@@ -2670,7 +2670,7 @@ body .page-wrapper .trust-badge-item img {
 body .page-wrapper .trust-badge-item span {
     font-size: 0.8125rem;
     color: var(--awa-gray-600, #585e63);
-    font-weight: 500;
+    font-weight: var(--awa-weight-medium);
 }
 
 /* ============================================================

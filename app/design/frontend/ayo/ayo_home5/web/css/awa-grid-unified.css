@@ -752,14 +752,14 @@ body .page-wrapper .owl-carousel .owl-buttons .owl-next {
                 color var(--awa-transition),
                 border-color var(--awa-transition);
     font-size: 0;
-    line-height: 1;
+    line-height: var(--awa-leading-none);
 }
 
 body .page-wrapper .owl-carousel .owl-buttons .owl-prev::before,
 body .page-wrapper .owl-carousel .owl-buttons .owl-next::before {
     font-family: FontAwesome, 'Font Awesome 5 Free', sans-serif;
     font-size: var(--awa-text-base);
-    font-weight: 900;
+    font-weight: var(--awa-weight-black);
 }
 
 body .page-wrapper .owl-carousel .owl-buttons .owl-prev::before {

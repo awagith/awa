@@ -115,7 +115,7 @@ body .page-wrapper button.action {
     align-items: center;
     justify-content: center;
     gap: var(--awa-space-2);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
 }
 
 body .page-wrapper .footer-bottom .footer-bottom-inner {
@@ -215,7 +215,7 @@ body .page-wrapper .fixed-right .fixed-right-ul li.scroll-top:focus-visible {
 body .page-wrapper .fixed-right .fixed-right-ul li em,
 body .page-wrapper .fixed-right .fixed-right-ul li i {
     font-size: 15px;
-    line-height: 1;
+    line-height: var(--awa-leading-none);
 }
 
 body .page-wrapper #back-top.awa-backtotop-legacy {
@@ -243,7 +243,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy i {
     width: 100%;
     height: 100%;
     background: transparent;
-    line-height: 1;
+    line-height: var(--awa-leading-none);
     font-size: 0;
 }
 
@@ -280,7 +280,7 @@ body .page-wrapper li.link.wishlist > a {
     border-radius: var(--awa-control-radius);
     border: 1px solid transparent;
     font-size: var(--awa-text-sm);
-    line-height: 1.2;
+    line-height: var(--awa-leading-compact);
     white-space: nowrap;
     transition: color var(--awa-transition-fast), border-color var(--awa-transition-fast), background var(--awa-transition-fast);
 }
@@ -307,7 +307,7 @@ body .page-wrapper .link.wishlist .counter.qty {
     padding: 0 var(--awa-space-1);
     border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
     font-size: 11px;
-    line-height: 1;
+    line-height: var(--awa-leading-none);
 }
 
 /* Busca direta (sem filtro de categoria) — refinamento visual */
@@ -418,8 +418,8 @@ body .page-wrapper .block-products-list .product-items:not(.owl-carousel) {
 
 @media (width <= 768px) {
     body .page-wrapper .page-main > .columns {
-        padding-left: 12px;
-        padding-right: 12px;
+        padding-left: var(--awa-space-3); /* BP-20: era 12px */
+        padding-right: var(--awa-space-3); /* BP-20: era 12px */
     }
 }
 
@@ -454,7 +454,7 @@ body .page-wrapper :is(.item-product, .product-item, .blog-post-item, .the_blog 
 =========================================== */
 body .page-wrapper :is(.action.primary, .action.secondary, .action.tocart, button.action) {
     min-height: 44px;
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     transition: transform var(--awa-transition-fast), box-shadow var(--awa-transition-fast), background-color var(--awa-transition-fast), color var(--awa-transition-fast), border-color var(--awa-transition-fast);
 }
 
@@ -484,7 +484,7 @@ body .page-wrapper :is(.action.primary, .action.secondary, .action.tocart, butto
 =========================================== */
 body .page-wrapper :is(input[type="text"], input[type="email"], input[type="password"], input[type="tel"], input[type="number"], input[type="search"], select, textarea) {
     min-height: 42px;
-    line-height: 1.35;
+    line-height: var(--awa-leading-cozy);
     color: var(--awa-dark);
     border-color: var(--awa-gray-300);
 }
@@ -503,8 +503,8 @@ body .page-wrapper :is(input[type="text"], input[type="email"], input[type="pass
 
 body .page-wrapper .field .label,
 body .page-wrapper .fieldset > .legend {
-    letter-spacing: 0.01em;
-    font-weight: 600;
+    letter-spacing: var(--awa-tracking-tight);
+    font-weight: var(--awa-weight-semibold);
 }
 
 body .page-wrapper .field .note,
@@ -512,7 +512,7 @@ body .page-wrapper .field .control .note,
 body .page-wrapper .field-error,
 body .page-wrapper .mage-error {
     font-size: var(--awa-text-xs);
-    line-height: 1.45;
+    line-height: var(--awa-leading-comfortable);
 }
 
 /* ===========================================
@@ -553,17 +553,17 @@ body .page-wrapper .block-title {
    Refino de hierarquia visual e escaneabilidade.
 =========================================== */
 body .page-wrapper :is(h1, .page-title, .product.name a, .product-item-name a) {
-    line-height: 1.25;
-    letter-spacing: 0.01em;
+    line-height: var(--awa-leading-snug);
+    letter-spacing: var(--awa-tracking-tight);
 }
 
 body .page-wrapper :is(h2, h3, .block-title strong, .widget-title) {
-    line-height: 1.3;
+    line-height: var(--awa-leading-base);
     letter-spacing: 0.008em;
 }
 
 body .page-wrapper :is(.product-item-details .price-box, .product-info-price .price-box, .old-price, .special-price, .normal-price) {
-    line-height: 1.25;
+    line-height: var(--awa-leading-snug);
 }
 
 body.catalog-category-view .page-wrapper .toolbar.toolbar-products {
@@ -625,7 +625,7 @@ body .page-wrapper :is(.message.notice, .message.warning, .message.success, .mes
    Melhora legibilidade e destaque dos badges sobre imagem.
 =========================================== */
 body .page-wrapper :is(.item-product, .product-item) :is(.product-label, .sticker, .hot-onsale) {
-    line-height: 1.3;
+    line-height: var(--awa-leading-base);
     min-height: 22px;
     display: inline-flex;
     align-items: center;
@@ -644,7 +644,7 @@ body .page-wrapper :is(.item-product, .product-item) :is(.product-label.discount
 
 /* PDP badges — mesmo tratamento */
 body.catalog-product-view .page-wrapper .product.media :is(.product-label, .sticker) {
-    line-height: 1.3;
+    line-height: var(--awa-leading-base);
     min-height: 26px;
     display: inline-flex;
     align-items: center;
@@ -662,7 +662,7 @@ body .page-wrapper .swatch-option:focus-visible {
 
 body .page-wrapper .swatch-option.text {
     font-size: var(--awa-text-xs);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -677,13 +677,13 @@ body .page-wrapper :is(.item-product, .product-item) .rating-summary {
 }
 
 body .page-wrapper :is(.item-product, .product-item) .rating-summary .rating-result {
-    line-height: 1;
+    line-height: var(--awa-leading-none);
 }
 
 /* Review count link — discreto */
 body .page-wrapper :is(.item-product, .product-item) .reviews-actions {
     font-size: var(--awa-text-xs);
-    line-height: 1;
+    line-height: var(--awa-leading-none);
 }
 
 /* PDP rating — um pouco maior para hierarquia visual */
@@ -716,7 +716,7 @@ body.checkout-cart-index .page-wrapper .cart.table-wrapper .input-text.qty {
     border: 1px solid var(--awa-gray-300);
     border-radius: var(--awa-radius-sm);
     font-size: var(--awa-text-base);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     appearance: textfield;
 }
 
@@ -733,7 +733,7 @@ body.checkout-cart-index .page-wrapper .cart.table-wrapper .input-text.qty:focus
 
 /* Update cart button — visibilidade */
 body.checkout-cart-index .page-wrapper .cart.main.actions .action.update {
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
 }
 
 /* Cart summary — divisor entre totais */
@@ -750,7 +750,7 @@ body.checkout-cart-index .page-wrapper .cart-summary .totals:last-child {
 
 /* Checkout steps — número do step mais claro */
 body .page-wrapper .opc-progress-bar-item._active .opc-progress-bar-item-element {
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
 }
 
 /* Checkout shipping/payment blocks */
@@ -781,7 +781,7 @@ body .page-wrapper .account .column.main .box-title {
 }
 
 body .page-wrapper .account .column.main .box-title > span {
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     font-size: var(--awa-text-base);
 }
 
@@ -790,7 +790,7 @@ body .page-wrapper .account .column.main .box-actions a,
 body .page-wrapper .account .column.main .action.edit,
 body .page-wrapper .account .column.main .action.change-password {
     font-size: var(--awa-text-sm);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     color: var(--awa-red);
     text-decoration: none;
 }
@@ -876,14 +876,14 @@ body .page-wrapper .login-container {
 /* Nome do produto — espaçamento inferior */
 body.catalog-product-view .page-wrapper .page-title-wrapper .page-title {
     margin-bottom: var(--awa-space-3);
-    line-height: 1.25;
-    letter-spacing: -0.01em;
+    line-height: var(--awa-leading-snug);
+    letter-spacing: var(--awa-tracking-tighter);
 }
 
 /* Tabs — conteúdo interno com padding consistente */
 body.catalog-product-view .page-wrapper .product.data.items > .item.content {
     padding: var(--awa-space-5) var(--awa-space-4);
-    line-height: 1.6;
+    line-height: var(--awa-leading-loose);
 }
 
 /* Tabela de atributos / informações adicionais — zebra */
@@ -900,7 +900,7 @@ body.catalog-product-view .page-wrapper .additional-attributes td {
 
 body.catalog-product-view .page-wrapper .additional-attributes th {
     color: var(--awa-gray-500);
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     white-space: nowrap;
 }
 
@@ -962,7 +962,7 @@ body .page-wrapper .breadcrumbs .items .item a:hover {
 /* Último item (current) — mais discreto */
 body .page-wrapper .breadcrumbs .items .item strong {
     color: var(--awa-gray-500);
-    font-weight: 400;
+    font-weight: var(--awa-weight-normal);
 }
 
 /* Truncamento do item longo */
@@ -1010,10 +1010,10 @@ body .page-wrapper .sidebar-main .filter-options-content .item a:hover {
 
 /* Filter title — peso e tamanho */
 body .page-wrapper .sidebar-main .filter-options-title {
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     font-size: var(--awa-text-sm);
     color: var(--awa-gray-800);
-    letter-spacing: 0.01em;
+    letter-spacing: var(--awa-tracking-tight);
 }
 
 /* Active filter state — chip com remoção */
@@ -1031,7 +1031,7 @@ body .page-wrapper .sidebar-main .filter-current .item {
 body .page-wrapper .sidebar-main .filter-current .action.remove {
     color: var(--awa-gray-400);
     font-size: 0.7rem;
-    line-height: 1;
+    line-height: var(--awa-leading-none);
     transition: color var(--awa-transition-fast);
 }
 
@@ -1110,7 +1110,7 @@ body .page-wrapper .messages .message {
     padding: var(--awa-space-3) var(--awa-space-4);
     border-radius: var(--awa-radius-sm);
     font-size: var(--awa-text-sm);
-    line-height: 1.5;
+    line-height: var(--awa-leading-relaxed);
 }
 
 /* Ícone + texto — alinhamento flex */
@@ -1156,7 +1156,7 @@ body .page-wrapper .messages .message-info {
 
 /* Link dentro de mensagem — destaque */
 body .page-wrapper .messages .message a {
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     text-decoration: underline;
     text-underline-offset: 2px;
 }
@@ -1174,10 +1174,10 @@ body .page-wrapper .messages .message a:hover {
 /* Cabeçalho da tabela */
 body .page-wrapper table thead th {
     background: var(--awa-gray-50);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     font-size: var(--awa-text-sm);
     color: var(--awa-gray-700);
-    letter-spacing: 0.02em;
+    letter-spacing: var(--awa-tracking-normal);
     text-transform: none;
     border-bottom: 2px solid var(--awa-gray-200);
 }
@@ -1208,7 +1208,7 @@ body .page-wrapper table tbody tr:last-child td {
 
 /* Caption — caso exista */
 body .page-wrapper table caption {
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     font-size: var(--awa-text-base);
     text-align: left;
     padding-bottom: var(--awa-space-3);
@@ -1259,9 +1259,9 @@ body .page-wrapper .modal-popup .action-close:focus-visible {
 
 /* Modal title — hierarquia visual */
 body .page-wrapper .modal-popup .modal-title {
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     font-size: var(--awa-text-lg);
-    line-height: 1.3;
+    line-height: var(--awa-leading-base);
     color: var(--awa-dark);
 }
 
@@ -1333,7 +1333,7 @@ body .page-wrapper .footer .block.newsletter .actions .action.subscribe {
     min-height: var(--awa-input-height);
     border-radius: 0 var(--awa-radius-sm) var(--awa-radius-sm) 0;
     padding: 0 var(--awa-space-5);
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     white-space: nowrap;
 }
 
@@ -1344,7 +1344,7 @@ body .page-wrapper .footer .block.newsletter .actions .action.subscribe:focus-vi
 
 /* Newsletter title — discreto */
 body .page-wrapper .footer .block.newsletter .title {
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     font-size: var(--awa-text-base);
     margin-bottom: var(--awa-space-3);
 }
@@ -1383,7 +1383,7 @@ body .page-wrapper .footer .block.newsletter .description {
 
 /* Contagem de resultados — destaque */
 body .page-wrapper .search.results .search.found strong {
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     color: var(--awa-dark);
 }
 
@@ -1393,7 +1393,7 @@ body .page-wrapper .search.results .message.notice {
     padding: var(--awa-space-10) var(--awa-space-5);
     color: var(--awa-gray-500);
     font-size: var(--awa-text-base);
-    line-height: 1.6;
+    line-height: var(--awa-leading-loose);
 }
 
 /* Search term highlight — realce sutil no texto */
@@ -1402,8 +1402,8 @@ body .page-wrapper .search.results .product-item-description .highlight {
     background: rgb(183 51 55 / 10%);
     color: var(--awa-red-dark);
     padding: 0 2px;
-    border-radius: 2px;
-    font-weight: 600;
+    border-radius: var(--awa-radius-2xs);
+    font-weight: var(--awa-weight-semibold);
 }
 
 /* Related search terms */
@@ -1517,7 +1517,7 @@ body .page-wrapper .table-comparison .action.delete:focus-visible {
 
 /* Compare — product name link */
 body .page-wrapper .table-comparison .product-item-name a {
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     font-size: var(--awa-text-base);
     color: var(--awa-dark);
 }
