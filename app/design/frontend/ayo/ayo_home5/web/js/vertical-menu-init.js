@@ -72,13 +72,16 @@ define([
         var $title = $nav.find('.title-category-dropdown');
         var $expandLink = $nav.find('.vm-toggle-categories');
         var $items = $nav.find('.ui-menu-item.level0');
+        var menuUid = $nav.attr('id') || $title.attr('aria-controls') || ('awa-vertical-' + Math.random().toString(36).slice(2));
+        var safeUid = String(menuUid).replace(/[^a-zA-Z0-9_-]/g, '');
         var overlaySelector = (config && config.overlaySelector) || '.shadow_bkg_show';
         var desktopBreakpoint = parseInt(config && config.desktopBreakpoint, 10) || 992;
         var defaultLimit = parseInt(config && config.limitShow, 10) || 0;
         var limitItemShow = parseInt($toggleMenu.attr('data-limit-show'), 10) || defaultLimit;
         var $rootVerticalMenus;
         var rokanWidgetEnabled = false;
-        var resizeNamespace = '.awaVerticalMenuResize';
+        var resizeNamespace = '.awaVerticalMenuResize-' + safeUid;
+        var overlayClickNamespace = '.awaVerticalMenuOverlay-' + safeUid;
 
         if (!$nav.length || $nav.data('awaVerticalMenuInit')) {
             return;
@@ -258,13 +261,16 @@ define([
 
             $expandLink.closest('.expand-category-link').show();
             $expandLink.show().off('click.awaVerticalMenu').on('click.awaVerticalMenu', function (event) {
-                var isExpanding;
                 var $link = $(this);
+                var $expandContainer = $link.closest('.expand-category-link');
+                var $hiddenItems = $nav.find('.ui-menu-item.level0.orther-link');
+                var isExpanding;
 
                 event.preventDefault();
 
                 isExpanding = !$link.hasClass('expanding');
-                $link.toggleClass('expanding');
+                $expandContainer.toggleClass('expanding', isExpanding);
+                $link.toggleClass('expanding', isExpanding);
 
                 /* Toggle text if data attributes are present */
                 if ($link.data('show-text') && $link.data('hide-text')) {
@@ -275,7 +281,12 @@ define([
 
                 $link.attr('aria-expanded', isExpanding ? 'true' : 'false');
                 $link.find('> span').attr('aria-expanded', isExpanding ? 'true' : 'false');
-                $nav.find('.ui-menu-item.level0.orther-link').fadeToggle(200);
+
+                if (isExpanding) {
+                    $hiddenItems.stop(true, true).fadeIn(180);
+                } else {
+                    $hiddenItems.stop(true, true).fadeOut(180);
+                }
             });
         } else {
             $expandLink.closest('.expand-category-link').hide();
@@ -290,7 +301,7 @@ define([
 
         $expandLink.find('> span').attr('aria-expanded', 'false');
 
-        $(overlaySelector).off('click.awaVerticalMenu').on('click.awaVerticalMenu', function () {
+        $(overlaySelector).off('click' + overlayClickNamespace).on('click' + overlayClickNamespace, function () {
             if (isDesktopViewport()) {
                 return;
             }
@@ -302,6 +313,11 @@ define([
             ensureMobileSubmenuToggles();
             syncMenuState();
         }, 120));
+
+        $nav.off('remove.awaVerticalMenuCleanup').on('remove.awaVerticalMenuCleanup', function () {
+            $(window).off('resize' + resizeNamespace);
+            $(overlaySelector).off('click' + overlayClickNamespace);
+        });
 
         syncMenuState();
     };

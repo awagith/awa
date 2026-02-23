@@ -441,8 +441,15 @@
     font-weight: 500;
 }
 
-.erp-badge-info { background: #e3f2fd; color: #1565c0; }
-.erp-badge-success { background: #e8f5e9; color: #2e7d32; }
+.erp-badge-info {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.erp-badge-success {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
 
 .erp-empty-message {
     padding: 30px;
@@ -712,11 +719,6 @@
     text-transform: uppercase;
 }
 
-.erp-badge-success {
-    background: #e8f5e9;
-    color: #2e7d32;
-}
-
 .erp-badge-error {
     background: #ffebee;
     color: #c62828;
@@ -912,10 +914,10 @@
     padding: 15px 20px;
     border-radius: 8px;
     box-shadow: 0 4px 20px rgb(0 0 0 / 15%);
-    animation: slideIn 0.3s ease;
+    animation: slide-in 0.3s ease;
 }
 
-@keyframes slideIn {
+@keyframes slide-in {
     from {
         transform: translateX(100%);
         opacity: 0;

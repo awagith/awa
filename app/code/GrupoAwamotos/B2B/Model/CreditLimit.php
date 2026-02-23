@@ -121,6 +121,52 @@ class CreditLimit extends AbstractModel
     }
 
     /**
+     * Default payment terms available for all B2B customers
+     */
+    public const DEFAULT_PAYMENT_TERMS = ['a_vista', '30', '60', '90'];
+
+    /**
+     * Human-readable labels for payment terms
+     *
+     * @return array<string, string>
+     */
+    public static function getPaymentTermLabels(): array
+    {
+        return [
+            'a_vista' => (string) __('À Vista'),
+            '30'      => (string) __('30 dias'),
+            '60'      => (string) __('60 dias'),
+            '90'      => (string) __('90 dias'),
+        ];
+    }
+
+    /**
+     * Get allowed payment terms for this customer
+     *
+     * @return string[]
+     */
+    public function getPaymentTerms(): array
+    {
+        $raw = $this->getData('payment_terms');
+        if (empty($raw)) {
+            return self::DEFAULT_PAYMENT_TERMS;
+        }
+        $decoded = json_decode($raw, true);
+        return is_array($decoded) && count($decoded) > 0 ? $decoded : self::DEFAULT_PAYMENT_TERMS;
+    }
+
+    /**
+     * Set allowed payment terms
+     *
+     * @param string[] $terms
+     * @return $this
+     */
+    public function setPaymentTerms(array $terms): self
+    {
+        return $this->setData('payment_terms', json_encode(array_values($terms)));
+    }
+
+    /**
      * Get created at
      *
      * @return string|null

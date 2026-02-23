@@ -6,9 +6,9 @@ namespace GrupoAwamotos\StoreSetup\Setup\Patch\Data;
 
 use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\View\Design\Theme\ThemeProviderInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
-use Magento\Theme\Model\ResourceModel\Theme\CollectionFactory as ThemeCollectionFactory;
 
 class ConfigureAyoHome5Parity implements DataPatchInterface
 {
@@ -18,7 +18,7 @@ class ConfigureAyoHome5Parity implements DataPatchInterface
     public function __construct(
         private readonly ModuleDataSetupInterface $moduleDataSetup,
         private readonly WriterInterface $configWriter,
-        private readonly ThemeCollectionFactory $themeCollectionFactory
+        private readonly ThemeProviderInterface $themeProvider
     ) {
     }
 
@@ -60,11 +60,9 @@ class ConfigureAyoHome5Parity implements DataPatchInterface
 
     private function resolveThemeId(): ?int
     {
-        $collection = $this->themeCollectionFactory->create();
-        $collection->addFieldToFilter('theme_path', self::THEME_FULL_PATH);
-        $theme = $collection->getFirstItem();
+        $theme = $this->themeProvider->getThemeByFullPath(self::THEME_FULL_PATH);
 
-        if (!$theme->getId()) {
+        if ($theme === null || !$theme->getId()) {
             return null;
         }
 

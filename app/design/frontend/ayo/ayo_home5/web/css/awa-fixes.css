@@ -1849,14 +1849,14 @@ a[data-action="add-to-wishlist"],
     text-decoration: underline;
 }
 
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss {
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss {
     display: flex !important;
     flex-direction: column;
     gap: 0;
     overflow: hidden;
 }
 
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss .countdown_block {
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss .countdown_block {
     display: grid;
     place-items: center center;
     gap: 8px;
@@ -1872,13 +1872,13 @@ a[data-action="add-to-wishlist"],
     z-index: 1;
 }
 
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss .super-deal-countdown,
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss .time_circles {
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss .super-deal-countdown,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss .time_circles {
     width: 100%;
     justify-content: center;
 }
 
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss > .row {
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss > .row {
     margin-left: 0;
     margin-right: 0;
     width: 100%;
@@ -2573,7 +2573,7 @@ body .page-wrapper .product-item .action.tocart:active {
         min-height: 104px;
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal .hot-deal-tab-slider.hot-deal-tab-slider-customcss .countdown_block {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss .countdown_block {
         padding: 12px 10px;
     }
 }

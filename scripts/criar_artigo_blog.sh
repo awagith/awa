@@ -2,7 +2,7 @@
 # Script para criar artigo demo no blog
 # Artigo: "Guia Completo: Como Escolher o Capacete Ideal"
 
-PROJECT_ROOT="/home/jessessh/htdocs/srv1113343.hstgr.cloud"
+PROJECT_ROOT="/home/user/htdocs/srv1113343.hstgr.cloud"
 cd "$PROJECT_ROOT" || exit 1
 
 echo "╔═══════════════════════════════════════════════════════════════╗"

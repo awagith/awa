@@ -921,7 +921,10 @@ HTML;
 
     private function createCategories(OutputInterface $output): void
     {
-        $rootCategoryId = (int)$this->storeManager->getStore()->getRootCategoryId();
+        $store = $this->storeManager->getStore();
+        $rootCategoryId = (int)$this->storeManager
+            ->getGroup((string)$store->getStoreGroupId())
+            ->getRootCategoryId();
 
         foreach ($this->getCategoryDefinitions() as $categoryData) {
             $collection = $this->categoryCollectionFactory->create();
@@ -1352,7 +1355,7 @@ HTML;
         </p>
     </div>
     <div>
-        <img class="card__media" loading="lazy" src="{{media url="wysiwyg/hero/awamotos-hero.webp"}}" alt="Peças e acessórios para motos" width="600" height="400" />
+        <img class="card__media" loading="eager" fetchpriority="high" src="{{media url="wysiwyg/hero/awamotos-hero.webp"}}" alt="Peças e acessórios para motos" width="600" height="400" />
     </div>
 </section>
 HTML;

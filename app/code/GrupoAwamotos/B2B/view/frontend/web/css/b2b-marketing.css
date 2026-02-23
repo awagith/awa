@@ -1,7 +1,7 @@
 .b2b-suggestion-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgb(0 0 0 / 60%);
     z-index: 9999;
     display: flex;
     align-items: center;
@@ -60,15 +60,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 8px 24px rgba(183, 51, 55, 0.2);
-    animation: iconPulse 2s ease-in-out infinite;
+    box-shadow: 0 8px 24px rgb(183 51 55 / 20%);
+    animation: icon-pulse 2s ease-in-out infinite;
 }
 
 .b2b-suggestion-icon svg {
-    filter: drop-shadow(0 4px 8px rgba(183, 51, 55, 0.3));
+    filter: drop-shadow(0 4px 8px rgb(183 51 55 / 30%));
 }
 
-@keyframes iconPulse {
+@keyframes icon-pulse {
     0%, 100% { transform: scale(1); }
     50% { transform: scale(1.05); }
 }
@@ -128,7 +128,7 @@
     font-weight: 700;
     font-size: 14px;
     flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 2px 8px rgb(16 185 129 / 30%);
 }
 
 .b2b-suggestion-actions {
@@ -153,7 +153,7 @@
 
 .b2b-register-btn:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(183, 51, 55, 0.4) !important;
+    box-shadow: 0 6px 20px rgb(183 51 55 / 40%) !important;
     background: linear-gradient(135deg, #8e2629 0%, #6d1d1f 100%) !important;
 }
 
@@ -197,7 +197,7 @@
 .b2b-register-widget .b2b-btn-primary:hover {
     background: linear-gradient(135deg, #8e2629, #6d1d1f);
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(183, 51, 55, 0.4);
+    box-shadow: 0 4px 15px rgb(183 51 55 / 40%);
 }
 
 .b2b-register-widget .b2b-btn-secondary {
@@ -210,7 +210,7 @@
     background: #b73337;
     color: #fff;
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(183, 51, 55, 0.4);
+    box-shadow: 0 4px 15px rgb(183 51 55 / 40%);
 }
 
 .b2b-register-widget .b2b-icon {
@@ -265,7 +265,7 @@
 
 .b2b-promo-subtitle {
     font-size: 18px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgb(255 255 255 / 80%);
     margin: 0 0 25px;
 }
 
@@ -280,20 +280,20 @@
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgb(255 255 255 / 10%);
     padding: 12px 15px;
     border-radius: 8px;
     transition: background 0.3s;
 }
 
 .b2b-benefit-item:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgb(255 255 255 / 15%);
 }
 
 .b2b-benefit-item .benefit-icon {
     width: 40px;
     height: 40px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgb(255 255 255 / 20%);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -306,7 +306,10 @@
     color: #fff;
 }
 
-.b2b-benefit-item .icon-percent::before { content: '%'; font-weight: 700; }
+.b2b-benefit-item .icon-percent::before {
+    content: '%';
+    font-weight: 700;
+}
 .b2b-benefit-item .icon-credit-card::before { content: '💳'; }
 .b2b-benefit-item .icon-file-text::before { content: '📋'; }
 .b2b-benefit-item .icon-truck::before { content: '🚚'; }
@@ -324,7 +327,7 @@
 
 .b2b-benefit-item .benefit-content span {
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.7);
+    color: rgb(255 255 255 / 70%);
 }
 
 .b2b-promo-actions {
@@ -345,29 +348,29 @@
     text-transform: uppercase !important;
     letter-spacing: 1px !important;
     transition: transform 0.3s, box-shadow 0.3s !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+    box-shadow: 0 4px 15px rgb(0 0 0 / 20%) !important;
 }
 
 .b2b-promo-actions .b2b-register-btn:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 6px 20px rgb(255 255 255 / 30%) !important;
     background: #fff !important;
 }
 
 .b2b-promo-actions .promo-note {
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgb(255 255 255 / 60%);
 }
 
 .b2b-quote-btn {
-    border-color: rgba(255, 255, 255, 0.55) !important;
+    border-color: rgb(255 255 255 / 55%) !important;
     color: #fff !important;
     background: transparent !important;
 }
 
 .b2b-quote-btn:hover {
     border-color: #fff !important;
-    background: rgba(255, 255, 255, 0.12) !important;
+    background: rgb(255 255 255 / 12%) !important;
 }
 
 .b2b-quick-rules {
@@ -380,7 +383,7 @@
 
 .b2b-quick-rules li {
     font-size: 12px;
-    color: rgba(255, 255, 255, 0.85);
+    color: rgb(255 255 255 / 85%);
 }
 
 .b2b-quick-rules li::before {
@@ -403,7 +406,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 40px rgb(0 0 0 / 30%);
     animation: pulse-badge 2s infinite;
 }
 
@@ -480,7 +483,7 @@
 .b2b-compact-btn:hover {
     background: #fff !important;
     transform: translateY(-2px) !important;
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 4px 12px rgb(255 255 255 / 30%) !important;
 }
 
 .b2b-login-cta {
@@ -516,7 +519,7 @@
 .b2b-login-content p {
     margin: 0 0 15px;
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgb(255 255 255 / 80%);
     line-height: 1.5;
 }
 
@@ -540,13 +543,13 @@
 
 .b2b-cta-btn:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 4px 15px rgb(255 255 255 / 30%) !important;
     background: linear-gradient(135deg, #8e2629, #6d1d1f) !important;
 }
 
 .b2b-info-link {
     background: transparent !important;
-    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    border: 1px solid rgb(255 255 255 / 30%) !important;
     padding: 12px 24px !important;
     font-size: 14px !important;
     border-radius: 6px !important;
@@ -556,8 +559,8 @@
 }
 
 .b2b-info-link:hover {
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-color: rgba(255, 255, 255, 0.5) !important;
+    background: rgb(255 255 255 / 10%) !important;
+    border-color: rgb(255 255 255 / 50%) !important;
 }
 
 .b2b-customer-price-info {
@@ -624,6 +627,96 @@
     display: none;
 }
 
+/* Tier Pricing (Volume Discounts) */
+.b2b-tier-pricing {
+    margin-top: 16px;
+    padding: 16px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 10px;
+}
+
+.b2b-tier-heading {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    color: #166534;
+}
+
+.b2b-tier-icon {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.b2b-tier-title {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.b2b-tier-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.b2b-tier-table th {
+    text-align: left;
+    padding: 6px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #6b7280;
+    border-bottom: 2px solid #bbf7d0;
+    letter-spacing: 0.04em;
+}
+
+.b2b-tier-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #dcfce7;
+}
+
+.b2b-tier-table tr:last-child td {
+    border-bottom: none;
+}
+
+.b2b-tier-table tr:hover td {
+    background: rgb(21 128 61 / 6%);
+}
+
+.b2b-tier-qty {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.b2b-tier-price {
+    font-weight: 700;
+    color: #15803d;
+}
+
+.b2b-tier-savings {
+    text-align: right;
+}
+
+.b2b-tier-savings .b2b-savings-badge {
+    font-size: 11px;
+}
+
+@media (width <= 480px) {
+    .b2b-tier-pricing {
+        padding: 12px;
+    }
+
+    .b2b-tier-table th,
+    .b2b-tier-table td {
+        padding: 6px;
+        font-size: 12px;
+    }
+}
+
 .b2b-quote-button-container {
     margin-top: 15px;
     padding-top: 15px;
@@ -649,8 +742,97 @@
 .b2b-quote-button:hover {
     background: #e65100 !important;
     border-color: #e65100 !important;
+}
+
+/* ===========================================================================
+   B2B Checkout – Credit Payment Styles
+   =========================================================================== */
+.b2b-credit-badge {
+    background: #1976d2;
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.b2b-payment-terms {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.b2b-payment-terms .label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.b2b-payment-terms .select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fff;
+    color: #1f2937;
+}
+
+.b2b-payment-terms .select:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 2px rgb(25 118 210 / 15%);
+    outline: none;
+}
+
+.b2b-payment-terms--single {
+    margin-top: 12px;
+    font-size: 13px;
+    color: #4b5563;
+}
+
+.b2b-payment-terms--single .label {
+    display: inline;
+    margin-right: 4px;
+}
+
+.b2b-credit-info {
+    background: #f5f9ff;
+    border: 1px solid #d0e3f7;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 12px 0;
+}
+
+.b2b-credit-info .credit-summary {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 8px;
+}
+
+.b2b-credit-info .credit-item .label {
+    color: #666;
+    font-size: 13px;
+}
+
+.b2b-credit-info .credit-item .value {
+    font-weight: 600;
+    font-size: 15px;
+    display: block;
+}
+
+.b2b-credit-info .credit-item .value.available {
+    color: #2e7d32;
+}
+
+.b2b-credit-info .credit-note {
+    color: #999;
+    font-size: 12px;
+    margin: 0;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(255, 111, 0, 0.4);
+    box-shadow: 0 4px 12px rgb(255 111 0 / 40%);
 }
 
 .b2b-quote-button-container .b2b-quote-icon {
@@ -695,7 +877,7 @@
 
 .b2b-quote-desc {
     font-size: 14px;
-    color: rgba(255, 255, 255, 0.8);
+    color: rgb(255 255 255 / 80%);
     margin: 0 0 15px;
     line-height: 1.5;
 }
@@ -717,11 +899,11 @@
 
 .b2b-cart-quote-box .b2b-quote-btn:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 4px 15px rgb(255 255 255 / 30%) !important;
     background: #fff !important;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .b2b-promo-banner {
         padding: 25px;
     }

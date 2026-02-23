@@ -132,6 +132,64 @@ class CustomerPriceInfo extends Template
     }
 
     /**
+     * Get tier pricing data (volume discounts) for the current product
+     *
+     * Uses Magento's native tier price system, filtered by customer group.
+     * Calculates savings relative to the customer's effective price (ERP or base).
+     *
+     * @return array<int, array{qty: int, price: float, savings_pct: float}>|null
+     */
+    public function getTierPricingData(): ?array
+    {
+        $product = $this->registry->registry('current_product');
+        if (!$product) {
+            return null;
+        }
+
+        try {
+            /** @var \Magento\Catalog\Pricing\Price\TierPrice $tierPriceModel */
+            $tierPriceModel = $product->getPriceInfo()->getPrice('tier_price');
+            $tierPriceList = $tierPriceModel->getTierPriceList();
+
+            if (empty($tierPriceList)) {
+                return null;
+            }
+
+            // Effective unit price: ERP customer price or Magento final price
+            $priceData = $this->getCustomerPriceData();
+            $effectivePrice = $priceData !== null
+                ? $priceData['customer_price']
+                : (float) $product->getPriceInfo()->getPrice('final_price')->getValue();
+
+            if ($effectivePrice <= 0.01) {
+                return null;
+            }
+
+            $tiers = [];
+            foreach ($tierPriceList as $tierInfo) {
+                $tierQty = (int) $tierInfo['price_qty'];
+                /** @var \Magento\Framework\Pricing\Amount\AmountInterface $amount */
+                $amount = $tierInfo['price'];
+                $tierValue = (float) $amount->getValue();
+
+                $savingsPct = (($effectivePrice - $tierValue) / $effectivePrice) * 100;
+
+                if ($tierValue > 0 && $savingsPct >= 0.1) {
+                    $tiers[] = [
+                        'qty' => $tierQty,
+                        'price' => $tierValue,
+                        'savings_pct' => round($savingsPct, 1),
+                    ];
+                }
+            }
+
+            return !empty($tiers) ? $tiers : null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
      * Format price in BRL
      */
     public function formatPrice(float $price): string

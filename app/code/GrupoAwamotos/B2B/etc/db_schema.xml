@@ -6,8 +6,8 @@
 -->
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
-    
-    <!-- Tabela de Solicitação de Cotação -->
+
+    <!-- tabela de solicitação de cotação -->
     <table name="grupoawamotos_b2b_quote_request" resource="default" engine="innodb"
            comment="B2B Quote Requests">
         <column xsi:type="int" name="request_id" unsigned="true" nullable="false" identity="true"
@@ -44,7 +44,7 @@
                 comment="Created At"/>
         <column xsi:type="datetime" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true"
                 comment="Updated At"/>
-        
+
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="request_id"/>
         </constraint>
@@ -62,8 +62,8 @@
             <column name="created_at"/>
         </index>
     </table>
-    
-    <!-- Itens da Solicitação de Cotação -->
+
+    <!-- itens da solicitação de cotação -->
     <table name="grupoawamotos_b2b_quote_request_item" resource="default" engine="innodb"
            comment="B2B Quote Request Items">
         <column xsi:type="int" name="item_id" unsigned="true" nullable="false" identity="true"
@@ -86,7 +86,7 @@
                 comment="Product Options JSON"/>
         <column xsi:type="text" name="notes" nullable="true"
                 comment="Item Notes"/>
-        
+
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="item_id"/>
         </constraint>
@@ -102,8 +102,8 @@
             <column name="request_id"/>
         </index>
     </table>
-    
-    <!-- Log de Aprovação de Clientes -->
+
+    <!-- log de aprovação de clientes -->
     <table name="grupoawamotos_b2b_customer_approval_log" resource="default" engine="innodb"
            comment="B2B Customer Approval Log">
         <column xsi:type="int" name="log_id" unsigned="true" nullable="false" identity="true"
@@ -122,7 +122,7 @@
                 comment="Comment"/>
         <column xsi:type="datetime" name="created_at" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
-        
+
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="log_id"/>
         </constraint>
@@ -134,8 +134,8 @@
             <column name="customer_id"/>
         </index>
     </table>
-    
-    <!-- Limite de Crédito do Cliente B2B -->
+
+    <!-- limite de crédito do cliente b2b -->
     <table name="grupoawamotos_b2b_credit_limit" resource="default" engine="innodb"
            comment="B2B Customer Credit Limits">
         <column xsi:type="int" name="entity_id" unsigned="true" nullable="false" identity="true"
@@ -148,11 +148,13 @@
                 comment="Used Credit Amount"/>
         <column xsi:type="varchar" name="currency_code" nullable="false" length="3" default="BRL"
                 comment="Currency Code"/>
+        <column xsi:type="varchar" name="payment_terms" nullable="true" length="255"
+                comment="Allowed Payment Terms JSON array"/>
         <column xsi:type="datetime" name="created_at" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
         <column xsi:type="datetime" name="updated_at" nullable="false" default="CURRENT_TIMESTAMP" on_update="true"
                 comment="Updated At"/>
-        
+
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id"/>
         </constraint>
@@ -164,8 +166,8 @@
             <column name="customer_id"/>
         </constraint>
     </table>
-    
-    <!-- Aprovação de Pedidos B2B -->
+
+    <!-- aprovação de pedidos b2b -->
     <table name="grupoawamotos_b2b_order_approval" resource="default" engine="innodb"
            comment="B2B Order Approval Workflow">
         <column xsi:type="int" name="approval_id" unsigned="true" nullable="false" identity="true"
@@ -192,7 +194,7 @@
                 comment="Updated At"/>
         <column xsi:type="datetime" name="approved_at" nullable="true"
                 comment="Final Approval Date"/>
-        
+
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="approval_id"/>
         </constraint>
@@ -211,8 +213,8 @@
             <column name="current_level"/>
         </index>
     </table>
-    
-    <!-- Listas de Compras Recorrentes -->
+
+    <!-- listas de compras recorrentes -->
     <table name="grupoawamotos_b2b_shopping_list" resource="default" engine="innodb"
            comment="B2B Recurring Shopping Lists">
         <column xsi:type="int" name="list_id" unsigned="true" nullable="false" identity="true"
@@ -253,8 +255,8 @@
             <column name="next_order_date"/>
         </index>
     </table>
-    
-    <!-- Itens das Listas de Compras -->
+
+    <!-- itens das listas de compras -->
     <table name="grupoawamotos_b2b_shopping_list_item" resource="default" engine="innodb"
            comment="B2B Shopping List Items">
         <column xsi:type="int" name="item_id" unsigned="true" nullable="false" identity="true"
@@ -273,7 +275,7 @@
                 comment="Item Notes"/>
         <column xsi:type="datetime" name="added_at" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Added At"/>
-        
+
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="item_id"/>
         </constraint>
@@ -289,9 +291,9 @@
             <column name="list_id"/>
         </index>
     </table>
-    
-    
-    <!-- Log de Transações de Crédito -->
+
+
+    <!-- log de transações de crédito -->
     <table name="grupoawamotos_b2b_credit_transaction" resource="default" engine="innodb"
            comment="B2B Credit Transaction Log">
         <column xsi:type="int" name="transaction_id" unsigned="true" nullable="false" identity="true"
@@ -333,7 +335,7 @@
         </index>
     </table>
 
-    <!-- Empresa B2B -->
+    <!-- empresa b2b -->
     <table name="grupoawamotos_b2b_company" resource="default" engine="innodb"
            comment="B2B Company Entity">
         <column xsi:type="int" name="company_id" unsigned="true" nullable="false" identity="true"
@@ -371,7 +373,7 @@
                     onDelete="SET NULL"/>
     </table>
 
-    <!-- Usuários da Empresa B2B -->
+    <!-- usuários da empresa b2b -->
     <table name="grupoawamotos_b2b_company_user" resource="default" engine="innodb"
            comment="B2B Company Users">
         <column xsi:type="int" name="user_id" unsigned="true" nullable="false" identity="true"
@@ -404,7 +406,7 @@
         </constraint>
     </table>
 
-    <!-- Transportadoras B2B (existing) -->
+    <!-- transportadoras b2b (existing) -->
     <table name="grupoawamotos_b2b_carrier" resource="default" engine="innodb"
            comment="B2B Available Carriers">
         <column xsi:type="int" name="carrier_id" unsigned="true" nullable="false" identity="true"
@@ -429,7 +431,7 @@
                 comment="Sort Order"/>
         <column xsi:type="datetime" name="created_at" nullable="false" default="CURRENT_TIMESTAMP"
                 comment="Created At"/>
-        
+
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="carrier_id"/>
         </constraint>
@@ -441,7 +443,7 @@
         </index>
     </table>
 
-    <!-- Tabela de Atendentes B2B (migrada de Schema Patch) -->
+    <!-- tabela de atendentes b2b (migrada de schema patch) -->
     <table name="grupoawamotos_b2b_attendants" resource="default" engine="innodb" comment="Atendentes B2B">
         <column xsi:type="int" name="attendant_id" unsigned="true" nullable="false" identity="true" comment="ID do Atendente"/>
         <column xsi:type="varchar" name="name" length="255" nullable="false" comment="Nome do Atendente"/>
@@ -468,7 +470,7 @@
         </index>
     </table>
 
-    <!-- Relacionamento Cliente-Atendente -->
+    <!-- relacionamento cliente-atendente -->
     <table name="grupoawamotos_b2b_customer_attendant" resource="default" engine="innodb" comment="Relacionamento Cliente-Atendente B2B">
         <column xsi:type="int" name="id" unsigned="true" nullable="false" identity="true" comment="ID"/>
         <column xsi:type="int" name="customer_id" unsigned="true" nullable="false" comment="ID do Cliente"/>
@@ -491,7 +493,7 @@
         </index>
     </table>
 
-    <!-- Log de Atendimento -->
+    <!-- log de atendimento -->
     <table name="grupoawamotos_b2b_attendant_log" resource="default" engine="innodb" comment="Log de Atendimento B2B">
         <column xsi:type="int" name="log_id" unsigned="true" nullable="false" identity="true" comment="ID do Log"/>
         <column xsi:type="int" name="customer_id" unsigned="true" nullable="false" comment="ID do Cliente"/>
@@ -516,7 +518,7 @@
         </index>
     </table>
 
-    <!-- Notificações B2B -->
+    <!-- notificações b2b -->
     <table name="grupoawamotos_b2b_notifications" resource="default" engine="innodb" comment="Notificações B2B">
         <column xsi:type="int" name="notification_id" unsigned="true" nullable="false" identity="true" comment="ID da Notificação"/>
         <column xsi:type="varchar" name="type" length="50" nullable="false" comment="Tipo (whatsapp, email, sms, push)"/>

@@ -13,8 +13,8 @@
     "lighthouse": "lhci autorun",
     "lighthouse:ci": "lhci autorun --config=.lighthouserc.js",
     "validate": "./scripts/build-optimize.sh",
-    "lint:css": "stylelint \"app/design/frontend/ayo/ayo_home5/web/css/{awa-core.css,awa-layout.css,awa-components.css,awa-fixes.css,awa-grid-unified.css,awa-consistency.css,awa-checkout-home5.css}\"",
-    "lint:css:fix": "stylelint \"app/design/frontend/ayo/ayo_home5/web/css/{awa-core.css,awa-layout.css,awa-components.css,awa-fixes.css,awa-grid-unified.css,awa-consistency.css,awa-checkout-home5.css}\" --fix"
+    "lint:css": "stylelint \"app/design/frontend/ayo/ayo_home5/web/css/{awa-core.css,awa-layout.css,awa-components.css,awa-fixes.css,awa-grid-unified.css,awa-consistency.css,awa-consistency-home5.css,awa-checkout-home5.css}\"",
+    "lint:css:fix": "stylelint \"app/design/frontend/ayo/ayo_home5/web/css/{awa-core.css,awa-layout.css,awa-components.css,awa-fixes.css,awa-grid-unified.css,awa-consistency.css,awa-consistency-home5.css,awa-checkout-home5.css}\" --fix"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",

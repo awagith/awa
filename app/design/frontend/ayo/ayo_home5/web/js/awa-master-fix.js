@@ -1088,6 +1088,92 @@
         });
     }
 
+    /**
+     * Fallback de imagem (sem Service Worker):
+     * Se uma thumb em /media/catalog/product/cache/<hash>/... falhar (404),
+     * troca automaticamente para /media/catalog/product/... para evitar imagem quebrada.
+     *
+     * Motivação: quando o cache de imagens do Magento está ausente/corrompido,
+     * o frontend passa a requisitar URLs de cache que retornam 404.
+     */
+    var _awaImgCacheFallbackInstalled = false;
+    function initProductImageCacheFallback(roots) {
+        if (_awaImgCacheFallbackInstalled) {
+            return;
+        }
+        _awaImgCacheFallbackInstalled = true;
+
+        var cachePrefixRe = /\/media\/catalog\/product\/cache\/[^/]+\//i;
+
+        function toOriginalCatalogUrl(src) {
+            if (!src) return null;
+            var url;
+            try {
+                url = new URL(src, window.location.origin);
+            } catch (e) {
+                return null;
+            }
+
+            if (url.origin !== window.location.origin) {
+                return null;
+            }
+
+            if (!cachePrefixRe.test(url.pathname)) {
+                return null;
+            }
+
+            url.pathname = url.pathname.replace(cachePrefixRe, '/media/catalog/product/');
+            return url.toString();
+        }
+
+        function swapToFallback(img) {
+            if (!img || img.tagName !== 'IMG') return false;
+            if (img.dataset && img.dataset.awaCacheFallbackTried === '1') return false;
+
+            var current = img.currentSrc || img.getAttribute('src') || '';
+            var fallback = toOriginalCatalogUrl(current);
+            if (!fallback) return false;
+
+            if (img.dataset) {
+                img.dataset.awaCacheFallbackTried = '1';
+            }
+
+            // Evitar que o browser continue tentando srcset com URLs /cache/
+            img.removeAttribute('srcset');
+            img.removeAttribute('sizes');
+
+            img.src = fallback;
+            return true;
+        }
+
+        // Captura erros de imagem (não fazem bubble, por isso use capture=true)
+        document.addEventListener('error', function (event) {
+            var target = event && event.target;
+            if (!target || target.tagName !== 'IMG') return;
+
+            swapToFallback(target);
+        }, true);
+
+        // Pass inicial: se alguma imagem já falhou antes do listener,
+        // tenta recuperar olhando para naturalWidth.
+        var searchRoots = roots && roots.length
+            ? roots
+            : [getPageWrapper()];
+
+        searchRoots.forEach(function (root) {
+            if (!root || !root.querySelectorAll) return;
+            root.querySelectorAll('img').forEach(function (img) {
+                try {
+                    if (img.complete && img.naturalWidth === 0) {
+                        swapToFallback(img);
+                    }
+                } catch (e) {
+                    // Ignorar
+                }
+            });
+        });
+    }
+
     function fixNavToggleLabel() {
         var toggles = document.querySelectorAll('.nav-toggle, .action.nav-toggle');
         if (!toggles.length) return;
@@ -2746,6 +2832,7 @@
         safeRun(fixVerticalMenuToggles, 'fixVerticalMenuToggles');
         safeRun(fixSocialShareAlts, 'fixSocialShareAlts');
         safeRun(hideEmptyImages, 'hideEmptyImages');
+        safeRun(initProductImageCacheFallback, 'initProductImageCacheFallback');
         safeRun(fixNavToggleLabel, 'fixNavToggleLabel');
         safeRun(fixReviewCount, 'fixReviewCount');
         safeRun(addSkipToMain, 'addSkipToMain');

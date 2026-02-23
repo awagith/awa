@@ -1,0 +1,119 @@
+{
+    "smart_suggestions_history": {
+        "column": {
+            "history_id": true,
+            "erp_customer_id": true,
+            "customer_name": true,
+            "customer_phone": true,
+            "customer_cnpj": true,
+            "suggestion_data": true,
+            "total_value": true,
+            "products_count": true,
+            "status": true,
+            "channel": true,
+            "whatsapp_message_id": true,
+            "error_message": true,
+            "converted_order_id": true,
+            "conversion_value": true,
+            "admin_user_id": true,
+            "notes": true,
+            "created_at": true,
+            "sent_at": true,
+            "converted_at": true
+        },
+        "index": {
+            "SMART_SUGGESTIONS_HISTORY_ERP_CUSTOMER_ID": true,
+            "SMART_SUGGESTIONS_HISTORY_STATUS": true,
+            "SMART_SUGGESTIONS_HISTORY_CHANNEL": true,
+            "SMART_SUGGESTIONS_HISTORY_CREATED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    },
+    "smart_suggestions_rfm_cache": {
+        "column": {
+            "rfm_id": true,
+            "erp_customer_id": true,
+            "customer_name": true,
+            "customer_cnpj": true,
+            "customer_phone": true,
+            "customer_city": true,
+            "customer_uf": true,
+            "recency_days": true,
+            "frequency": true,
+            "monetary": true,
+            "r_score": true,
+            "f_score": true,
+            "m_score": true,
+            "rfm_score": true,
+            "segment": true,
+            "avg_ticket": true,
+            "avg_days_between_orders": true,
+            "last_order_date": true,
+            "first_order_date": true,
+            "calculated_at": true
+        },
+        "index": {
+            "SMART_SUGGESTIONS_RFM_CACHE_SEGMENT": true,
+            "SMART_SUGGESTIONS_RFM_CACHE_RFM_SCORE": true,
+            "SMART_SUGGESTIONS_RFM_CACHE_RECENCY_DAYS": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "SMART_SUGGESTIONS_RFM_CACHE_ERP_CUSTOMER_ID": true
+        }
+    },
+    "smart_suggestions_whatsapp_queue": {
+        "column": {
+            "queue_id": true,
+            "history_id": true,
+            "erp_customer_id": true,
+            "phone": true,
+            "message_type": true,
+            "message_content": true,
+            "status": true,
+            "whatsapp_message_id": true,
+            "error_message": true,
+            "retry_count": true,
+            "scheduled_at": true,
+            "sent_at": true,
+            "delivered_at": true,
+            "read_at": true,
+            "created_at": true
+        },
+        "index": {
+            "SMART_SUGGESTIONS_WHATSAPP_QUEUE_STATUS": true,
+            "SMART_SUGGESTIONS_WHATSAPP_QUEUE_SCHEDULED_AT": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "SMART_SUGGESTIONS_WHATSAPP_QUEUE_HISTORY_ID": true
+        }
+    },
+    "smart_suggestions_sales_forecast": {
+        "column": {
+            "forecast_id": true,
+            "period_type": true,
+            "period_date": true,
+            "actual_sales": true,
+            "projected_sales": true,
+            "projection_low": true,
+            "projection_high": true,
+            "target": true,
+            "orders_count": true,
+            "avg_ticket": true,
+            "seasonal_index": true,
+            "trend_factor": true,
+            "confidence": true,
+            "calculated_at": true
+        },
+        "index": {
+            "SMART_SUGGESTIONS_SALES_FORECAST_PERIOD_DATE": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "SMART_SUGGESTIONS_SALES_FORECAST_PERIOD": true
+        }
+    }
+}

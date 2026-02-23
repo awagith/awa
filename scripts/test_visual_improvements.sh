@@ -2,7 +2,7 @@
 # Script de Testes - Melhorias Visuais
 # Valida todas as funcionalidades implementadas
 
-PROJECT_ROOT="/home/jessessh/htdocs/srv1113343.hstgr.cloud"
+PROJECT_ROOT="/home/user/htdocs/srv1113343.hstgr.cloud"
 SITE_URL="https://srv1113343.hstgr.cloud"
 cd "$PROJECT_ROOT" || exit 1
 
@@ -98,7 +98,7 @@ echo ""
 
 # Testar módulos ativos
 echo -n "🔍 Testando: Módulos GrupoAwamotos ativos... "
-MODULE_COUNT=$(php bin/magento module:status | grep -c "GrupoAwamotos")
+MODULE_COUNT=$(bin/magento-www module:status | grep -c "GrupoAwamotos")
 if [ "$MODULE_COUNT" -ge 8 ]; then
     echo -e "${GREEN}✅ PASSOU${NC} ($MODULE_COUNT módulos)"
     ((PASSED++))
@@ -109,7 +109,7 @@ fi
 
 # Testar cache
 echo -n "🔍 Testando: Cache Magento... "
-CACHE_ENABLED=$(php bin/magento cache:status | grep -c ": 1$")
+CACHE_ENABLED=$(bin/magento-www cache:status | grep -c ": 1$")
 if [ "$CACHE_ENABLED" -ge 10 ]; then
     echo -e "${GREEN}✅ PASSOU${NC} ($CACHE_ENABLED caches ativos)"
     ((PASSED++))

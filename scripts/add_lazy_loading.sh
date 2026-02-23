@@ -6,8 +6,8 @@
 # Data: 05/12/2025
 ##############################################################################
 
-THEME_PATH="/home/jessessh/htdocs/srv1113343.hstgr.cloud/app/design/frontend/Rokanthemes/ayo"
-BACKUP_PATH="/home/jessessh/htdocs/srv1113343.hstgr.cloud/var/backups/templates_$(date +%Y%m%d_%H%M%S)"
+THEME_PATH="/home/user/htdocs/srv1113343.hstgr.cloud/app/design/frontend/Rokanthemes/ayo"
+BACKUP_PATH="/home/user/htdocs/srv1113343.hstgr.cloud/var/backups/templates_$(date +%Y%m%d_%H%M%S)"
 
 echo "🔍 Iniciando adição de lazy loading..."
 echo ""
@@ -40,6 +40,6 @@ echo "📊 Estatísticas:"
 grep -r 'loading="lazy"' "$THEME_PATH" --include="*.phtml" | wc -l | xargs echo "   Total de imagens com lazy loading:"
 echo ""
 echo "♻️  Próximos passos:"
-echo "   1. php bin/magento cache:flush"
-echo "   2. php bin/magento setup:static-content:deploy pt_BR -f"
+echo "   1. bin/magento-www cache:flush"
+echo "   2. bin/magento-www setup:static-content:deploy pt_BR -f"
 echo ""

@@ -2,7 +2,7 @@
 # SEO Setup - Link Building & Indexação
 # Fase 4 - Dia 20 do ROADMAP
 
-PROJECT_ROOT="/home/jessessh/htdocs/srv1113343.hstgr.cloud"
+PROJECT_ROOT="/home/user/htdocs/srv1113343.hstgr.cloud"
 cd "$PROJECT_ROOT" || exit 1
 
 echo "╔═══════════════════════════════════════════════════════════════╗"
@@ -12,9 +12,9 @@ echo ""
 
 # 1. Gerar/Atualizar Sitemap XML
 echo "📄 [1/5] Gerando sitemap.xml..."
-php bin/magento config:set sitemap/generate/enabled 1
-php bin/magento config:set sitemap/generate/frequency D
-php bin/magento sitemap:generate
+bin/magento-www config:set sitemap/generate/enabled 1
+bin/magento-www config:set sitemap/generate/frequency D
+bin/magento-www sitemap:generate
 
 if [ -f "pub/sitemap.xml" ]; then
     echo "   ✅ Sitemap gerado: pub/sitemap.xml"
@@ -61,7 +61,7 @@ cat > relatorios/GOOGLE_SEARCH_CONSOLE_SETUP.md << 'EOF'
 ### Método 1: Arquivo HTML (Recomendado)
 ```bash
 # Baixar arquivo de verificação do GSC
-cd /home/jessessh/htdocs/srv1113343.hstgr.cloud/pub
+cd /home/user/htdocs/srv1113343.hstgr.cloud/pub
 wget "URL_DO_ARQUIVO_GOOGLE" -O google123abc.html
 # Clicar "Verificar" no GSC
 ```
@@ -207,17 +207,17 @@ echo ""
 echo "⚙️  [5/5] Aplicando configurações SEO finais..."
 
 # Meta robots
-php bin/magento config:set design/head/default_robots "INDEX,FOLLOW"
+bin/magento-www config:set design/head/default_robots "INDEX,FOLLOW"
 
 # Canonical URLs
-php bin/magento config:set catalog/seo/product_canonical_tag 1
-php bin/magento config:set catalog/seo/category_canonical_tag 1
+bin/magento-www config:set catalog/seo/product_canonical_tag 1
+bin/magento-www config:set catalog/seo/category_canonical_tag 1
 
 # URL rewrites
-php bin/magento config:set catalog/seo/save_rewrites_history 1
+bin/magento-www config:set catalog/seo/save_rewrites_history 1
 
 # Open Graph
-php bin/magento config:set web/seo/use_rewrites 1
+bin/magento-www config:set web/seo/use_rewrites 1
 
 echo "   ✅ Configurações SEO aplicadas"
 echo ""

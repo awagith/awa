@@ -77,6 +77,7 @@
             "credit_limit": true,
             "used_credit": true,
             "currency_code": true,
+            "payment_terms": true,
             "created_at": true,
             "updated_at": true
         },

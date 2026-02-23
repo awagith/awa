@@ -424,9 +424,9 @@ class SalesProjection implements ForecastServiceInterface
      */
     private function normalRandom(): float
     {
-        $u1 = mt_rand() / mt_getrandmax();
-        $u2 = mt_rand() / mt_getrandmax();
-        return sqrt(-2 * log(max($u1, 0.0001))) * cos(2 * M_PI * $u2);
+        $u1 = \random_int(1, PHP_INT_MAX) / PHP_INT_MAX;
+        $u2 = \random_int(1, PHP_INT_MAX) / PHP_INT_MAX;
+        return \sqrt(-2 * \log(\max($u1, 0.0001))) * \cos(2 * M_PI * $u2);
     }
 
     /**

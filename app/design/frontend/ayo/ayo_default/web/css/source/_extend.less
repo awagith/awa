@@ -9,6 +9,184 @@
 /* Import theme variables/mixins so _extend.less works in both themes.less and styles-m.less */
 @import '_variables_themes.less';
 
+/* ======================================================================
+   AWA override — Lote 2 (responsive safe overrides)
+   Escopo: PLP, PDP, Checkout, Customer/B2B Account
+   ====================================================================== */
+
+/* PLP ------------------------------------------------------------------- */
+@media (max-width: 767px) {
+    .catalog-category-view {
+        .toolbar-products {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 12px;
+
+            .modes,
+            .sorter,
+            .toolbar-amount {
+                float: none;
+                margin: 0;
+            }
+
+            .toolbar-amount {
+                width: 100%;
+                order: 3;
+            }
+        }
+
+        .products-grid {
+            .product-item,
+            .item-product {
+                height: 100%;
+
+                .product-item-info,
+                .item-product-content {
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                }
+            }
+        }
+    }
+}
+
+/* PDP ------------------------------------------------------------------- */
+@media (max-width: 991px) {
+    .catalog-product-view {
+        .product.media,
+        .product-info-main,
+        .product-info-main .product-info-price,
+        .product-info-main .box-tocart {
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .column.main,
+        .product-info-main {
+            overflow-x: hidden;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .catalog-product-view {
+        .box-tocart {
+            .actions {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .action.tocart,
+            .action.buy,
+            button.tocart {
+                width: 100%;
+                min-width: 0;
+            }
+        }
+    }
+}
+
+/* CHECKOUT -------------------------------------------------------------- */
+.checkout-index-index {
+    .opc-wrapper,
+    .opc-sidebar,
+    .checkout-container,
+    .form,
+    .fieldset,
+    .field,
+    input,
+    select,
+    textarea {
+        box-sizing: border-box;
+    }
+
+    .checkout-container {
+        .opc-wrapper,
+        .opc-sidebar {
+            padding-left: 12px;
+            padding-right: 12px;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+    .checkout-index-index {
+        .checkout-container {
+            margin-left: 0;
+            margin-right: 0;
+
+            .opc-wrapper,
+            .opc-sidebar {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+
+        .field {
+            max-width: 100%;
+            min-width: 0;
+        }
+    }
+}
+
+/* CUSTOMER ACCOUNT / B2B ------------------------------------------------ */
+.customer-account-index,
+.customer-account-edit,
+.customer-address-index,
+.customer-address-form,
+.sales-order-history,
+.sales-order-view,
+.b2b-account,
+.company-account,
+.company-role-index,
+.company-users-index {
+    .table-wrapper,
+    .data.table,
+    .block-content,
+    .fieldset,
+    form {
+        max-width: 100%;
+    }
+
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+@media (max-width: 767px) {
+    .customer-account-index,
+    .customer-account-edit,
+    .customer-address-index,
+    .customer-address-form,
+    .sales-order-history,
+    .sales-order-view,
+    .b2b-account,
+    .company-account,
+    .company-role-index,
+    .company-users-index {
+        .form {
+            .label,
+            label {
+                display: block;
+                margin-bottom: 6px;
+                line-height: 1.4;
+            }
+
+            .control,
+            input,
+            select,
+            textarea {
+                width: 100%;
+                min-width: 0;
+            }
+        }
+    }
+}
+
 /* ==========================================================================
    1. BRAND VARIABLES
    Override AYO defaults with AWA Motos brand palette
@@ -1262,7 +1440,99 @@ textarea:focus,
     }
 }
 
-/* 15.5 — Mega menu alignment normalization
+/* 15.5 — AWA override (Lote 1): grid não-carousel com gap consistente + stretch */
+.products-grid {
+    .product-items:not(.owl-carousel),
+    .product-grid:not(.owl-carousel),
+    .category_page_grid_2:not(.owl-carousel),
+    .category_page_grid_3:not(.owl-carousel),
+    .category_page_grid_4:not(.owl-carousel),
+    .category_page_grid_5:not(.owl-carousel) {
+        align-items: stretch;
+    }
+
+    .product-items:not(.owl-carousel) > .product-item,
+    .product-items:not(.owl-carousel) > li,
+    .product-grid:not(.owl-carousel) > .item-product,
+    .product-grid:not(.owl-carousel) > li,
+    .category_page_grid_2:not(.owl-carousel) > .item-product,
+    .category_page_grid_3:not(.owl-carousel) > .item-product,
+    .category_page_grid_4:not(.owl-carousel) > .item-product,
+    .category_page_grid_5:not(.owl-carousel) > .item-product {
+        display: flex;
+        align-items: stretch;
+        height: 100%;
+        min-width: 0;
+    }
+
+    .product-item-info,
+    .item-product {
+        min-width: 0;
+        width: 100%;
+    }
+}
+
+@media (min-width: @awa-bp-xl) {
+    .products-grid {
+        .product-items:not(.owl-carousel),
+        .category_page_grid_2,
+        .category_page_grid_3,
+        .category_page_grid_4,
+        .category_page_grid_5 {
+            gap: 20px;
+        }
+    }
+}
+
+@media (max-width: @awa-bp-xl-max) and (min-width: @awa-bp-md) {
+    .products-grid {
+        .product-items:not(.owl-carousel),
+        .category_page_grid_2,
+        .category_page_grid_3,
+        .category_page_grid_4,
+        .category_page_grid_5 {
+            gap: 16px;
+        }
+    }
+}
+
+@media (max-width: @awa-bp-md-max) and (min-width: @awa-bp-sm) {
+    .products-grid {
+        .product-items:not(.owl-carousel),
+        .category_page_grid_2,
+        .category_page_grid_3,
+        .category_page_grid_4,
+        .category_page_grid_5 {
+            gap: 14px;
+        }
+    }
+}
+
+@media (max-width: @awa-bp-sm-max) and (min-width: @awa-bp-xs) {
+    .products-grid {
+        .product-items:not(.owl-carousel),
+        .category_page_grid_2,
+        .category_page_grid_3,
+        .category_page_grid_4,
+        .category_page_grid_5 {
+            gap: 12px;
+        }
+    }
+}
+
+@media (max-width: @awa-bp-xs-max) {
+    .products-grid {
+        .product-items:not(.owl-carousel),
+        .category_page_grid_2,
+        .category_page_grid_3,
+        .category_page_grid_4,
+        .category_page_grid_5 {
+            gap: 10px;
+        }
+    }
+}
+
+/* 15.6 — Mega menu alignment normalization
    Overrides: _menu_themes.less float-based submenu columns */
 @media (min-width: @awa-bp-md) {
     .custommenu.navigation {
@@ -1280,6 +1550,155 @@ textarea:focus,
                     float: none;
                 }
             }
+        }
+    }
+}
+
+/* ==========================================================================
+   16. TOP HOME TRUST OFFERS — BANNER + DEALS
+   Requested scope:
+   - banner_mid_1 top-home-content__trust-offers-banner
+   - hot-deal top-home-content__trust-offers-deals
+   Best practices:
+   - stable container sizing
+   - fluid image/media behavior
+   - consistent spacing and touch-safe interactions
+   ========================================================================== */
+
+/* Trust offers banner block */
+.banner_mid_1.top-home-content__trust-offers-banner,
+.top-home-content__trust-offers-banner {
+    width: 100%;
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+        margin-left: -10px;
+        margin-right: -10px;
+
+        > [class*="col-"] {
+            padding-left: 10px;
+            padding-right: 10px;
+            min-width: 0;
+        }
+    }
+
+    a,
+    picture,
+    img {
+        display: block;
+        width: 100%;
+    }
+
+    a {
+        height: 100%;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    img {
+        height: auto;
+        border-radius: 4px;
+    }
+}
+
+/* Trust offers deals block */
+.hot-deal.top-home-content__trust-offers-deals,
+.top-home-content__trust-offers-deals {
+    width: 100%;
+
+    .hot-deal-tab-slider,
+    .woocommerce-hot-deal,
+    .item-product,
+    .product-item-info {
+        min-width: 0;
+    }
+
+    .hot-deal-tab-slider.hot-deal-tab-slider-customcss {
+        padding-left: 12px;
+        padding-right: 12px;
+        border-radius: 6px;
+    }
+
+    .hot-deal-image,
+    .hot-deal-image a,
+    .hot-deal-image img {
+        display: block;
+        width: 100%;
+    }
+
+    .hot-deal-image img {
+        height: auto;
+    }
+
+    .countdown_block {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 8px;
+        line-height: 1.2;
+    }
+
+    .super-deal-countdown .time_circles > div {
+        min-width: 54px;
+        min-height: 54px;
+    }
+}
+
+@media (max-width: @awa-bp-md-max) {
+    .banner_mid_1.top-home-content__trust-offers-banner,
+    .top-home-content__trust-offers-banner {
+        .row > [class*="col-"] {
+            width: 100%;
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
+
+        .row > [class*="col-"]:not(:last-child) {
+            margin-bottom: 15px;
+        }
+    }
+
+    .hot-deal.top-home-content__trust-offers-deals,
+    .top-home-content__trust-offers-deals {
+        .countdown_block {
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+        }
+    }
+}
+
+@media (max-width: @awa-bp-sm-max) {
+    .hot-deal.top-home-content__trust-offers-deals,
+    .top-home-content__trust-offers-deals {
+        .hot-deal-tab-slider.hot-deal-tab-slider-customcss {
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .countdown_block {
+            gap: 6px;
+        }
+
+        .super-deal-countdown .time_circles > div {
+            min-width: 48px;
+            min-height: 48px;
+            padding: 8px;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .banner_mid_1.top-home-content__trust-offers-banner,
+    .top-home-content__trust-offers-banner,
+    .hot-deal.top-home-content__trust-offers-deals,
+    .top-home-content__trust-offers-deals {
+        * {
+            animation: none !important;
+            transition: none !important;
         }
     }
 }

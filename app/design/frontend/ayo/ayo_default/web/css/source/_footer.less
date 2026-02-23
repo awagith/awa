@@ -25,21 +25,8 @@
                     color: @primarycolor;
                     font-size: 14px;
                     position: relative;
-
-        @media (max-width: 767px) {
-            .footer-bottom {
-                padding: 20px 0;
-                .copyright {
-                    line-height: 1.4;
-                    margin-bottom: 10px;
-                }
-                .payment-method {
-                    text-align: left;
-                }
-            }
-        }
                     &:hover {
-                        color: @linkshover;                 
+                        color: @linkshover;
                     }
                 }
                 p {
@@ -89,7 +76,7 @@
         margin-top: -7px;
     }
     label {
-        display: none;  
+        display: none;
     }
     > form {
         display: inline-block;
@@ -127,7 +114,7 @@
     button.action i{
         display: none;
     }
-    button.action, 
+    button.action,
     button.action:hover {
         background: @linkshover;
         color: @lightcolor;
@@ -434,7 +421,7 @@
     color: #71737a;
     font-family: 'Lato' ,sans-serif;
 }
-.creative { 
+.creative {
     font-weight: bold;
     color: #2f3034;
  }
@@ -456,7 +443,7 @@
     -moz-transition: all 300ms ease;
     -ms-transition: all 300ms ease;
     -o-transition: all 300ms ease;
-     transition: all 300ms ease; 
+     transition: all 300ms ease;
 }
 .form-newletter {
     position: relative;
@@ -477,4 +464,51 @@
     text-transform: capitalize;
     letter-spacing: -1px;
     margin: 0 0 25px;
+}
+
+/* ======================================================================
+   AWA override — Lote 1 (mobile footer bottom)
+   Mantém desktop intacto e centraliza/empilha no mobile.
+   ====================================================================== */
+@media (max-width: 767px) {
+    .footer-bottom {
+        padding: 20px 0;
+
+        .container,
+        .footer-bottom-inner,
+        .row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 12px;
+        }
+
+        .row > [class*="col-"] {
+            width: 100%;
+            max-width: 100%;
+            float: none;
+            text-align: center;
+        }
+
+        .copyright,
+        .payment-method,
+        .footer-payment,
+        .payment {
+            float: none;
+            display: block;
+            margin: 0;
+            text-align: center;
+        }
+
+        .copyright {
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .payment-method {
+            text-align: center;
+        }
+    }
 }

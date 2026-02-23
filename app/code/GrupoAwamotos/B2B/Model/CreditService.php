@@ -58,6 +58,58 @@ class CreditService
     }
 
     /**
+     * Get available payment terms for a customer
+     *
+     * Returns an array of term objects with value/label pairs.
+     *
+     * @param int $customerId
+     * @return array<int, array{value: string, label: string}>
+     */
+    public function getAvailablePaymentTerms(int $customerId): array
+    {
+        $credit = $this->getCreditLimit($customerId);
+        $allowedTerms = $credit->getPaymentTerms();
+        $labels = CreditLimit::getPaymentTermLabels();
+
+        $result = [];
+        foreach ($allowedTerms as $term) {
+            $result[] = [
+                'value' => $term,
+                'label' => $labels[$term] ?? $term,
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Set allowed payment terms for a customer (admin action)
+     *
+     * @param int      $customerId
+     * @param string[] $terms
+     * @param int|null $adminId
+     * @return CreditLimit
+     */
+    public function setPaymentTerms(int $customerId, array $terms, ?int $adminId = null): CreditLimit
+    {
+        $valid = array_keys(CreditLimit::getPaymentTermLabels());
+        $terms = array_values(array_intersect($terms, $valid));
+
+        $credit = $this->getCreditLimit($customerId);
+        $credit->setPaymentTerms($terms);
+        $this->creditResource->save($credit);
+
+        $this->logger->info(sprintf(
+            'B2B Payment terms updated: customer=%d terms=[%s] admin=%s',
+            $customerId,
+            implode(',', $terms),
+            $adminId ?? 'system'
+        ));
+
+        return $credit;
+    }
+
+    /**
      * Get or create credit limit for customer
      */
     public function getCreditLimit(int $customerId): CreditLimit

@@ -52,6 +52,11 @@ class CreditPayment extends AbstractMethod
     protected $_canRefundInvoicePartial = true;
 
     /**
+     * Allowed payment term keys
+     */
+    private const VALID_TERMS = ['a_vista', '30', '60', '90'];
+
+    /**
      * @var CreditService
      */
     private CreditService $creditService;
@@ -60,6 +65,31 @@ class CreditPayment extends AbstractMethod
      * @var B2BHelper
      */
     private B2BHelper $b2bHelper;
+
+    /**
+     * Assign data from checkout to payment info.
+     *
+     * Stores the selected payment term (30/60/90/a_vista) as additional information.
+     *
+     * @param \Magento\Framework\DataObject $data
+     * @return $this
+     */
+    public function assignData(\Magento\Framework\DataObject $data): self
+    {
+        parent::assignData($data);
+
+        $additionalData = $data->getData('additional_data') ?? $data->getData('additional_information') ?? [];
+        $term = $additionalData['payment_term'] ?? 'a_vista';
+
+        // Validate term
+        if (!in_array($term, self::VALID_TERMS, true)) {
+            $term = 'a_vista';
+        }
+
+        $this->getInfoInstance()->setAdditionalInformation('payment_term', $term);
+
+        return $this;
+    }
 
     public function __construct(
         Context $context,

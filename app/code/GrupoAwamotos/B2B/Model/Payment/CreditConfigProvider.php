@@ -112,6 +112,7 @@ class CreditConfigProvider implements ConfigProviderInterface
                         'used_formatted' => $this->priceCurrency->format($used, false),
                         'available_formatted' => $this->priceCurrency->format($available, false),
                     ],
+                    'payment_terms' => $this->creditService->getAvailablePaymentTerms($customerId),
                 ],
             ],
         ];

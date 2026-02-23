@@ -1052,7 +1052,7 @@ body .page-wrapper .ayo-home5-hero-card strong {
 /* ============================================================
    HOT DEAL / COUNTDOWN
    ============================================================ */
-body .page-wrapper .hot-deal,
+body .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals),
 body .page-wrapper .deal-section,
 body .page-wrapper .super-deal-section {
     max-width: var(--awa-container);
@@ -1060,7 +1060,7 @@ body .page-wrapper .super-deal-section {
     padding: var(--awa-space-7) var(--awa-space-5);
 }
 
-body .page-wrapper .hot-deal .countdown_block,
+body .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .countdown_block,
 body .page-wrapper .deal-section .countdown_block {
     display: flex;
     flex-flow: row wrap;
@@ -1070,7 +1070,7 @@ body .page-wrapper .deal-section .countdown_block {
 }
 
 body .page-wrapper .super-deal-countdown,
-body .page-wrapper .hot-deal .super-deal-countdown {
+body .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .super-deal-countdown {
     display: flex;
     flex-direction: row;
     gap: var(--awa-space-2);

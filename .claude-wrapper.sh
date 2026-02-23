@@ -11,7 +11,7 @@ set -euo pipefail
 # - Force Claude Code to store ALL config/state under the project (writable).
 # - Use a writable temp directory.
 
-PROJECT_ROOT="/home/jessessh/htdocs/srv1113343.hstgr.cloud"
+PROJECT_ROOT="/home/user/htdocs/srv1113343.hstgr.cloud"
 CLAUDE_STATE_DIR="$PROJECT_ROOT/var/.claude-state"
 CLAUDE_TMP_DIR="$PROJECT_ROOT/var/.claude-tmp"
 

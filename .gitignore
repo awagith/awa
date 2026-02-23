@@ -87,3 +87,10 @@ dump.rdb
 
 # MCP config with secrets
 .vscode/mcp.json
+
+# MCP debug tools
+.mcp-debug-tools/
+
+# PHPUnit cache
+.phpunit.cache/
+**/.phpunit.cache/

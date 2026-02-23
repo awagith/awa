@@ -19,7 +19,7 @@
         $limitShow = isset($_config['general']['limit_show']) ? (int)$_config['general']['limit_show'] : 0;
         $menuId = 'awa-vertical-menu-list-' . uniqid('', false);
 ?>
-<?php $_menu = $block->getVerticalMenuHtml(); ?>
+<?php $_menu = $this->getVerticalMenuHtml(); ?>
 
 <nav class="navigation verticalmenu side-verticalmenu"
      aria-label="<?= $escaper->escapeHtmlAttr(__('Product Categories')) ?>"
@@ -38,7 +38,7 @@
         <?php echo $_menu; ?>
         <?php
             /** @var \Magento\Cms\Block\Block $_bgBlock */
-            $_bgBlock = $block->getLayout()->createBlock('Magento\Cms\Block\Block');
+            $_bgBlock = $this->getLayout()->createBlock('Magento\Cms\Block\Block');
             $_bgImages = $_bgBlock ? $_bgBlock->setBlockId('vertical_background_images')->toHtml() : '';
             $_bgImages = trim($_bgImages);
         ?>
@@ -94,7 +94,9 @@
         var title;
         var menu;
 
-        if (!nav || nav.getAttribute('data-awa-fallback-init') === '1') {
+        if (!nav ||
+            nav.getAttribute('data-awa-fallback-init') === '1' ||
+            nav.getAttribute('data-awa-verticalmenu-owner') === 'vertical-menu-init') {
             return;
         }
 

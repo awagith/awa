@@ -7,3 +7,7 @@ generated/**
 # que geram falsos positivos no stylelint sem o parser postcss-less.
 # Mantemos lint apenas para CSS puro.
 **/*.less
+
+# Evita parser CSS em arquivos JavaScript/RequireJS por scanners externos.
+**/*.js
+**/requirejs-config.js

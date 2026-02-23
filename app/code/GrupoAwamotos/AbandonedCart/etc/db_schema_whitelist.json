@@ -1,0 +1,39 @@
+{
+    "grupoawamotos_abandoned_cart": {
+        "column": {
+            "entity_id": true,
+            "quote_id": true,
+            "customer_id": true,
+            "customer_email": true,
+            "customer_name": true,
+            "store_id": true,
+            "cart_value": true,
+            "items_count": true,
+            "abandoned_at": true,
+            "email_1_sent": true,
+            "email_1_sent_at": true,
+            "email_2_sent": true,
+            "email_2_sent_at": true,
+            "email_3_sent": true,
+            "email_3_sent_at": true,
+            "recovered": true,
+            "recovered_at": true,
+            "coupon_code": true,
+            "status": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "index": {
+            "GRUPOAWAMOTOS_ABANDONED_CART_CUSTOMER_EMAIL": true,
+            "GRUPOAWAMOTOS_ABANDONED_CART_CUSTOMER_ID": true,
+            "GRUPOAWAMOTOS_ABANDONED_CART_STORE_ID": true,
+            "GRUPOAWAMOTOS_ABANDONED_CART_STATUS": true,
+            "GRUPOAWAMOTOS_ABANDONED_CART_ABANDONED_AT": true,
+            "GRUPOAWAMOTOS_ABANDONED_CART_RECOVERED": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "GRUPOAWAMOTOS_ABANDONED_CART_QUOTE_ID": true
+        }
+    }
+}

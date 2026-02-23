@@ -52,6 +52,13 @@ define([
         var $submitButton = $root.find('#quickorder-submit');
         var $submitButtonText = $submitButton.find('span');
 
+        // CSV elements
+        var $csvZone = $root.find('#quickorder-csv-zone');
+        var $dropzone = $root.find('#csv-dropzone');
+        var $fileInput = $root.find('#csv-file-input');
+        var $csvStatus = $root.find('#csv-status');
+        var $csvDownloadSample = $root.find('#csv-download-sample');
+
         var rowIndex = 0;
 
         function buttonText(text) {
@@ -83,6 +90,143 @@ define([
 
         function clearStatuses() {
             $rowsContainer.find('.quickorder-row').removeClass('has-error');
+        }
+
+        /**
+         * Parse CSV text into array of {sku, qty} objects
+         * Supports: SKU,QTY and SKU;QTY formats
+         * First line is skipped if it looks like a header
+         */
+        function parseCSV(text) {
+            var lines = text.split(/\r?\n/);
+            var items = [];
+            var separator = ',';
+
+            // Detect separator from first non-empty line
+            for (var s = 0; s < lines.length; s++) {
+                var trimmed = $.trim(lines[s]);
+                if (trimmed) {
+                    if (trimmed.indexOf(';') > -1 && trimmed.indexOf(',') === -1) {
+                        separator = ';';
+                    }
+                    break;
+                }
+            }
+
+            $.each(lines, function (index, line) {
+                line = $.trim(line);
+                if (!line) {
+                    return;
+                }
+
+                var parts = line.split(separator);
+                var sku = $.trim(parts[0] || '').replace(/^["']|["']$/g, '');
+                var qtyStr = $.trim(parts[1] || '').replace(/^["']|["']$/g, '');
+
+                // Skip header row
+                if (index === 0 && sku && isNaN(parseInt(qtyStr, 10)) &&
+                    /^(sku|codigo|código|produto|product|item)/i.test(sku)) {
+                    return;
+                }
+
+                if (!sku) {
+                    return;
+                }
+
+                var qty = parseInt(qtyStr, 10);
+                if (isNaN(qty) || qty < 1) {
+                    qty = 1;
+                }
+
+                items.push({ sku: sku, qty: qty });
+            });
+
+            return items;
+        }
+
+        /**
+         * Clear existing rows and populate from parsed CSV items
+         */
+        function populateFromCSV(items) {
+            // Remove all existing rows
+            $rowsContainer.find('.quickorder-row').remove();
+            rowIndex = 0;
+
+            if (!items.length) {
+                showAlert(messages.csvEmpty || $t('O arquivo CSV não contém produtos válidos.'));
+                for (var i = 0; i < initialRows; i++) {
+                    addRow();
+                }
+                return;
+            }
+
+            // Create rows for each CSV item
+            $.each(items, function (idx, item) {
+                addRow();
+                var $row = $rowsContainer.find('.quickorder-row').last();
+                $row.find('.sku-input').val(item.sku);
+                $row.find('.qty-input').val(item.qty);
+            });
+
+            // Add a few extra empty rows
+            addRow();
+            addRow();
+
+            var msg = (messages.csvLoaded || $t('%1 produto(s) carregado(s) do CSV.'))
+                .replace('%1', items.length);
+            $csvStatus.text(msg).addClass('csv-status--success').show();
+
+            setTimeout(function () {
+                $csvStatus.removeClass('csv-status--success').fadeOut();
+            }, 5000);
+        }
+
+        /**
+         * Handle file from input or drag-drop
+         */
+        function handleCSVFile(file) {
+            if (!file) {
+                return;
+            }
+
+            // Validate file type
+            var name = (file.name || '').toLowerCase();
+            if (name.indexOf('.csv') === -1 && file.type.indexOf('csv') === -1 && file.type !== 'text/plain') {
+                showAlert(messages.csvInvalidFile || $t('Selecione um arquivo .csv válido.'));
+                return;
+            }
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var text = e.target.result;
+                var items = parseCSV(text);
+                populateFromCSV(items);
+            };
+            reader.onerror = function () {
+                showAlert(messages.csvInvalidFile || $t('Erro ao ler o arquivo.'));
+            };
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        /**
+         * Generate and download a sample CSV file
+         */
+        function downloadSampleCSV() {
+            var csvContent = 'SKU,Quantidade\n';
+            csvContent += 'BAG-CG160-001,2\n';
+            csvContent += 'RET-TITAN-003,1\n';
+            csvContent += 'BAU-45L-PRETO,3\n';
+
+            var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            var url = URL.createObjectURL(blob);
+            var link = document.createElement('a');
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'modelo-pedido-rapido.csv');
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
         }
 
         function renderSuccessList(added, message) {
@@ -225,6 +369,55 @@ define([
 
         $root.on('click', '#quickorder-submit', function () {
             submitQuickOrder();
+        });
+
+        // === CSV Upload: Drag & Drop ===
+        $dropzone.on('dragover dragenter', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).addClass('csv-dropzone--active');
+        });
+
+        $dropzone.on('dragleave drop', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            $(this).removeClass('csv-dropzone--active');
+        });
+
+        $dropzone.on('drop', function (e) {
+            var files = e.originalEvent.dataTransfer && e.originalEvent.dataTransfer.files;
+            if (files && files.length) {
+                handleCSVFile(files[0]);
+            }
+        });
+
+        // Click on dropzone opens file dialog
+        $dropzone.on('click', function () {
+            $fileInput.trigger('click');
+        });
+
+        // Keyboard accessibility: Enter/Space opens file dialog
+        $dropzone.on('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                $fileInput.trigger('click');
+            }
+        });
+
+        // File input change
+        $fileInput.on('change', function () {
+            var files = this.files;
+            if (files && files.length) {
+                handleCSVFile(files[0]);
+                // Reset input so same file can be re-uploaded
+                $(this).val('');
+            }
+        });
+
+        // Download sample CSV
+        $csvDownloadSample.on('click', function (e) {
+            e.preventDefault();
+            downloadSampleCSV();
         });
 
         for (var i = 0; i < initialRows; i += 1) {

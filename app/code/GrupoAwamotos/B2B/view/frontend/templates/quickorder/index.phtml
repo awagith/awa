@@ -16,6 +16,11 @@ $quickOrderConfig = [
         'requestError' => (string) __('Erro ao processar pedido. Tente novamente.'),
         'removeRow' => (string) __('Remover'),
         'skuPlaceholder' => (string) __('Ex: SKU-001'),
+        'csvDropHint' => (string) __('Arraste um arquivo CSV aqui ou clique para selecionar'),
+        'csvFormatHint' => (string) __('Formato: SKU, Quantidade (uma linha por produto)'),
+        'csvLoaded' => (string) __('%1 produto(s) carregado(s) do CSV.'),
+        'csvEmpty' => (string) __('O arquivo CSV não contém produtos válidos.'),
+        'csvInvalidFile' => (string) __('Selecione um arquivo .csv válido.'),
     ],
 ];
 ?>
@@ -26,6 +31,30 @@ $quickOrderConfig = [
         <p class="quickorder-description">
             <?= $block->escapeHtml(__('Adicione produtos rapidamente informando o SKU e a quantidade desejada.')) ?>
         </p>
+    </div>
+
+    <!-- CSV Upload Zone -->
+    <div class="quickorder-csv-zone" id="quickorder-csv-zone">
+        <div class="csv-dropzone" id="csv-dropzone" role="button" tabindex="0"
+             aria-label="<?= $block->escapeHtmlAttr(__('Importar produtos via CSV')) ?>">
+            <div class="csv-dropzone__icon" aria-hidden="true">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="12" y1="18" x2="12" y2="12"/>
+                    <polyline points="9 15 12 12 15 15"/>
+                </svg>
+            </div>
+            <p class="csv-dropzone__text"><?= $block->escapeHtml(__('Arraste um arquivo CSV aqui ou clique para selecionar')) ?></p>
+            <p class="csv-dropzone__hint"><?= $block->escapeHtml(__('Formato: SKU, Quantidade (uma linha por produto)')) ?></p>
+            <input type="file" id="csv-file-input" accept=".csv,text/csv" class="csv-dropzone__input" aria-hidden="true" />
+        </div>
+        <div class="csv-actions">
+            <a href="#" id="csv-download-sample" class="csv-sample-link">
+                <span><?= $block->escapeHtml(__('Baixar modelo CSV')) ?></span>
+            </a>
+            <span class="csv-status" id="csv-status" role="status" aria-live="polite"></span>
+        </div>
     </div>
 
     <div class="quickorder-form-container" id="quickorder-container">

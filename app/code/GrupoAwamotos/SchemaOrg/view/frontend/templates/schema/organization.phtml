@@ -1,0 +1,16 @@
+<?php
+/**
+ * Schema/Organization fallback template.
+ *
+ * This template exists because a legacy CMS block directive references
+ * "GrupoAwamotos_SchemaOrg::schema/organization.phtml" (with the schema/ prefix).
+ * The canonical template is at templates/organization.phtml (no subdirectory).
+ *
+ * On the homepage, Organization JSON-LD is already rendered by awa-seo-head.phtml,
+ * so this returns empty to avoid duplication.
+ * On other pages, the layout-XML block (grupoawamotos.schema.organization) handles it.
+ *
+ * @var $block \Magento\Framework\View\Element\Template
+ */
+
+// This is a no-op fallback; the actual schema is rendered via layout XML.

@@ -508,9 +508,9 @@ class SalesProjection
 
         for ($i = 0; $i < $iterations; $i++) {
             // Generate random variation using Box-Muller transform
-            $u1 = mt_rand() / mt_getrandmax();
-            $u2 = mt_rand() / mt_getrandmax();
-            $z = sqrt(-2 * log($u1)) * cos(2 * M_PI * $u2);
+            $u1 = \random_int(1, PHP_INT_MAX) / PHP_INT_MAX;
+            $u2 = \random_int(1, PHP_INT_MAX) / PHP_INT_MAX;
+            $z = \sqrt(-2 * \log($u1)) * \cos(2 * M_PI * $u2);
 
             $results[] = $actual + $projected + ($z * $stdDev);
         }

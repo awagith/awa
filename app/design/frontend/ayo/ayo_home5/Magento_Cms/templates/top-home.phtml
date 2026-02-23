@@ -27,6 +27,8 @@ $notificationHtml = $renderCmsBlock('notification_home5');
 $bestSellersHtml = $renderCmsBlock('category1_home5');
 $popularCategoriesHtml = $renderCmsBlock('category2_home5');
 $launchesHtml = $renderCmsBlock('home_new_products');
+$trustBadgesHtml = $renderCmsBlock('trust_badges_homepage');
+$faqQuickHtml = $renderCmsBlock('home_faq_quick');
 
 /** @var \GrupoAwamotos\B2B\Block\PromoBlock|null $b2bPromoBlock */
 $b2bPromoBlock = $layout->createBlock('GrupoAwamotos\\B2B\\Block\\PromoBlock');
@@ -42,9 +44,7 @@ if ($hotDealBlock) {
 	$hotDealHtml = trim((string)$hotDealBlock->setTemplate('Rokanthemes_Superdeals::category.phtml')->toHtml());
 }
 
-// ProductTab legacy é mantido via outros blocos/widgets da Home para evitar
-// conflito de tipagem em ambientes com stubs incompletos da extensão.
-$productTabHtml = '';
+
 
 if ($benefitsHtml !== '' && strpos($benefitsHtml, 'velaServicesInner--home5') === false) {
 	$patchedBenefitsHtml = preg_replace(
@@ -59,6 +59,7 @@ if ($benefitsHtml !== '' && strpos($benefitsHtml, 'velaServicesInner--home5') ==
 }
 ?>
 
+<!-- ① Hero Slider (above-the-fold) -->
 <div class="top-home-content top-home-content--above-fold">
 	<?php if ($heroSliderHtml !== ''): ?>
 		<div class="banner-slider banner-slider2">
@@ -71,8 +72,9 @@ if ($benefitsHtml !== '' && strpos($benefitsHtml, 'velaServicesInner--home5') ==
 	<?php endif; ?>
 </div>
 
+<!-- ② Benefits + Banners + Super Deals -->
 <?php if ($benefitsHtml !== '' || $bannerMidHtml !== '' || $hotDealHtml !== ''): ?>
-<section class="top-home-content top-home-content--trust-and-offers" aria-label="<?php echo $this->escapeHtmlAttr(__('Confiança e ofertas')); ?>">
+<section class="top-home-content top-home-content--trust-and-offers awa-home-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Confiança e ofertas')); ?>">
 	<div class="container top-home-content__trust-offers-grid" data-role="trust-offers-grid">
 		<?php if ($benefitsHtml !== ''): ?>
 			<?php echo $benefitsHtml; ?>
@@ -93,24 +95,9 @@ if ($benefitsHtml !== '' && strpos($benefitsHtml, 'velaServicesInner--home5') ==
 </section>
 <?php endif; ?>
 
-<?php if ($b2bPromoHtml !== ''): ?>
-<div class="top-home-content top-home-content--b2b-promo">
-	<div class="container">
-		<?php echo $b2bPromoHtml; ?>
-	</div>
-</div>
-<?php endif; ?>
-
-<?php if ($productTabHtml !== ''): ?>
-<div class="tab_product">
-	<div class="container">
-		<?php echo $productTabHtml; ?>
-	</div>
-</div>
-<?php endif; ?>
-
+<!-- ③ Notification Ticker (transição ofertas → catálogo) -->
 <?php if ($notificationHtml !== ''): ?>
-<div class="block_notification">
+<div class="block_notification awa-home-section awa-home-section--compact">
 	<div class="container">
 		<div class="awa-ticker-wrap" aria-label="<?php echo $this->escapeHtmlAttr(__('Notificações')); ?>">
 			<div class="awa-ticker-content">
@@ -121,25 +108,65 @@ if ($benefitsHtml !== '' && strpos($benefitsHtml, 'velaServicesInner--home5') ==
 </div>
 <?php endif; ?>
 
-<?php if ($bestSellersHtml !== '' || $launchesHtml !== '' || $popularCategoriesHtml !== ''): ?>
-<div class="top-home-content top-home-content--intent-grids">
+<!-- ④ Mais Vendidos -->
+<?php if ($bestSellersHtml !== ''): ?>
+<section class="top-home-content top-home-content--bestsellers awa-home-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Mais Vendidos')); ?>">
 	<div class="container">
-		<?php if ($bestSellersHtml !== ''): ?>
-			<?php echo $bestSellersHtml; ?>
-		<?php endif; ?>
+		<?php echo $bestSellersHtml; ?>
+	</div>
+</section>
+<?php endif; ?>
 
-		<?php if ($launchesHtml !== ''): ?>
-			<div class="ayo-home5-launches">
-				<header class="awa-intent-heading" aria-label="<?php echo $this->escapeHtmlAttr(__('Lançamentos')); ?>">
-					<h2><?php echo $this->escapeHtml(__('Lançamentos')); ?></h2>
-				</header>
-				<?php echo $launchesHtml; ?>
+<!-- ⑤ B2B / Atacado (após mais vendidos — público B2C já viu o catálogo) -->
+<?php if ($b2bPromoHtml !== ''): ?>
+<section class="top-home-content top-home-content--b2b-promo awa-home-section awa-home-section--highlight" aria-label="<?php echo $this->escapeHtmlAttr(__('Atacado e Revenda')); ?>">
+	<div class="container">
+		<?php echo $b2bPromoHtml; ?>
+	</div>
+</section>
+<?php endif; ?>
+
+<!-- ⑥ Lançamentos / Novidades -->
+<?php if ($launchesHtml !== ''): ?>
+<section class="top-home-content top-home-content--launches awa-home-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Lançamentos')); ?>">
+	<div class="container">
+		<div class="ayo-home5-launches">
+			<header class="awa-intent-heading">
+				<h2><?php echo $this->escapeHtml(__('Novidades')); ?></h2>
+			</header>
+			<?php echo $launchesHtml; ?>
+		</div>
+	</div>
+</section>
+<?php endif; ?>
+
+<!-- ⑦ Categorias Populares -->
+<?php if ($popularCategoriesHtml !== ''): ?>
+<section class="top-home-content top-home-content--popular-categories awa-home-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Categorias Populares')); ?>">
+	<div class="container">
+		<?php echo $popularCategoriesHtml; ?>
+	</div>
+</section>
+<?php endif; ?>
+
+<!-- ⑧ Trust Badges + FAQ (fechamento com confiança) -->
+<?php if ($trustBadgesHtml !== '' || $faqQuickHtml !== ''): ?>
+<section class="top-home-content top-home-content--trust-close awa-home-section awa-home-section--highlight" aria-label="<?php echo $this->escapeHtmlAttr(__('Confiança e Perguntas Frequentes')); ?>">
+	<div class="container">
+		<?php if ($trustBadgesHtml !== ''): ?>
+			<div class="awa-trust-badges-wrap">
+				<?php echo $trustBadgesHtml; ?>
 			</div>
 		<?php endif; ?>
 
-		<?php if ($popularCategoriesHtml !== ''): ?>
-			<?php echo $popularCategoriesHtml; ?>
+		<?php if ($faqQuickHtml !== ''): ?>
+			<div class="awa-faq-quick-wrap">
+				<header class="awa-intent-heading">
+					<h2><?php echo $this->escapeHtml(__('Perguntas Frequentes')); ?></h2>
+				</header>
+				<?php echo $faqQuickHtml; ?>
+			</div>
 		<?php endif; ?>
 	</div>
-</div>
+</section>
 <?php endif; ?>
