@@ -4,6 +4,7 @@
         <arguments>
             <argument name="commands" xsi:type="array">
                 <item name="grupoawamotos_store_setup" xsi:type="object">GrupoAwamotos\StoreSetup\Console\Command\StoreSetupCommand</item>
+                <item name="awa_theme_apply_defaults" xsi:type="object">GrupoAwamotos\StoreSetup\Console\Command\ApplyAyoDefaultsCommand</item>
             </argument>
         </arguments>
     </type>
