@@ -1095,6 +1095,8 @@ body .page-wrapper footer.page-footer {
     margin-top: var(--footer-space-xl);
     font-size: var(--footer-font-size-base);
     line-height: var(--awa-leading-loose);
+    content-visibility: auto; /* BP-34: footer always below-fold — defer rendering */
+    contain-intrinsic-size: auto 400px;
 }
 
 /* Footer links — melhorar contraste (WCAG AA: 4.5:1 mínimo) */
@@ -1861,7 +1863,7 @@ body .page-wrapper .footer.content .block-static-block {
     }
 
     body .page-wrapper .page-footer .copyright p {
-        font-size: 11px;
+        font-size: var(--awa-text-2xs); /* BP-30: era 11px */
     }
 
     /* VB-08: reduzir margin-top do footer em mobile */

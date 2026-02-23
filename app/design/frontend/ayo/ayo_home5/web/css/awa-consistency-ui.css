@@ -306,7 +306,7 @@ body .page-wrapper .link.wishlist .counter.qty {
     justify-content: center;
     padding: 0 var(--awa-space-1);
     border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
-    font-size: 11px;
+    font-size: var(--awa-text-2xs); /* BP-30: era 11px */
     line-height: var(--awa-leading-none);
 }
 
@@ -1571,4 +1571,10 @@ body .page-wrapper .sidebar-main,
 body .page-wrapper .minicart-items-wrapper,
 body .page-wrapper .block-search .search-autocomplete {
     overscroll-behavior: contain;
+}
+
+/* BP-33: stacking context isolation para modais/overlays */
+body .page-wrapper .modal-popup .modal-inner-wrap,
+body .page-wrapper .modal-slide .modal-inner-wrap {
+    isolation: isolate;
 }

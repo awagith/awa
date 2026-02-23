@@ -173,7 +173,6 @@
     margin: var(--awa-space-4) 0;
     display: block;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 .awa-inst .awa-table th,

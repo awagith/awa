@@ -202,6 +202,8 @@
     --awa-tracking-wider: 1px;
 
     /* Tipografia — escala de tamanhos */
+    --awa-text-3xs: 10px;  /* BP-30: badges mínimos, counters, superscript */
+    --awa-text-2xs: 11px;  /* BP-30: labels, badges, captions extra-pequenos */
     --awa-text-xs: 12px;
     --awa-text-sm: 13px;
     --awa-text-base: 14px;
@@ -403,6 +405,7 @@ body .page-wrapper .page-main {
     max-width: var(--awa-container);
     margin: 0 auto;
     padding: 0 20px;
+    isolation: isolate; /* BP-33: stacking context — conter z-index de conteúdo */
 }
 
 /* Seções full-width (slider, banners, nav background) mantêm 100% */
@@ -410,6 +413,7 @@ body .page-wrapper .nav-sections,
 body .page-wrapper .page-footer,
 body .page-wrapper .page-header {
     max-width: 100%;
+    isolation: isolate; /* BP-33: cada seção é um stacking context independente */
 }
 
 /* ===========================================
@@ -1027,6 +1031,30 @@ body .page-wrapper *:focus:not(:focus-visible) {
 }
 
 /* ===========================================
+   TOUCH DEVICES — Hover safety net (BP-32)
+   Previne "stuck hover" em telas touch onde
+   :hover fires on tap e persiste visualmente.
+   Chrome 108+, Safari 17+, Firefox 113+ (~96%)
+=========================================== */
+@media (hover: none) and (pointer: coarse) {
+    /* Cancelar transforms de hover em TODOS os interativos */
+    body .page-wrapper a:hover,
+    body .page-wrapper button:hover,
+    body .page-wrapper [role="button"]:hover,
+    body .page-wrapper .action:hover,
+    body .page-wrapper .swatch-option:hover {
+        transform: none;
+    }
+
+    /* Box-shadow hover → shadow base (evita "glow" preso) */
+    body .page-wrapper a:hover,
+    body .page-wrapper button:hover,
+    body .page-wrapper [role="button"]:hover {
+        box-shadow: var(--awa-shadow);
+    }
+}
+
+/* ===========================================
    HIGH CONTRAST
 =========================================== */
 @media (prefers-contrast: more), (forced-colors: active) {
@@ -1043,6 +1071,35 @@ body .page-wrapper *:focus:not(:focus-visible) {
         --awa-gray-700: #222;
         --awa-shadow: 0 2px 8px rgb(0 0 0 / 20%);
         --awa-shadow-hover: 0 8px 25px rgb(0 0 0 / 25%);
+    }
+}
+
+/* ===========================================
+   REDUCED TRANSPARENCY (BP-31)
+   Chrome 118+, Safari 17.5+ — degrada silenciosamente
+=========================================== */
+@media (prefers-reduced-transparency: reduce) {
+    :root {
+        /* Substituir semi-transparências por sólidos */
+        --awa-red-light: color-mix(in srgb, var(--awa-red) 16%, var(--awa-bg-surface));
+        --awa-red-extra-light: color-mix(in srgb, var(--awa-red) 8%, var(--awa-bg-surface));
+        --awa-success-light: color-mix(in srgb, var(--awa-success) 12%, var(--awa-bg-surface));
+        --awa-info-light: color-mix(in srgb, var(--awa-info) 12%, var(--awa-bg-surface));
+        --awa-warning-light: color-mix(in srgb, var(--awa-warning) 12%, var(--awa-bg-surface));
+        --awa-danger-light: color-mix(in srgb, var(--awa-danger) 12%, var(--awa-bg-surface));
+    }
+
+    /* Backdrop blur → sólido */
+    body .page-wrapper .awa-quickview-overlay {
+        backdrop-filter: none;
+        background: var(--awa-bg-surface);
+    }
+
+    /* Muted text → garante contraste mínimo */
+    body .page-wrapper [class*="muted"],
+    body .page-wrapper .price-label,
+    body .page-wrapper .old-price .price {
+        opacity: 1;
     }
 }
 

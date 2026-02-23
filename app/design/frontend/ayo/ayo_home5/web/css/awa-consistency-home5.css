@@ -1226,6 +1226,8 @@
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-faq-quick-wrap {
     max-width: 800px;
     margin: 0 auto;
+    content-visibility: auto; /* BP-34: FAQ always below-fold */
+    contain-intrinsic-size: auto 300px;
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-faq-quick-wrap details {
