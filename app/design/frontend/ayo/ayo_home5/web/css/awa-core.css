@@ -317,6 +317,17 @@ a:hover {
     color: var(--awa-red-dark);
 }
 
+/* BP-27: touch-action: manipulation — remove 300ms tap delay em interativos */
+a,
+button,
+[role="button"],
+input,
+select,
+textarea,
+summary {
+    touch-action: manipulation;
+}
+
 /* Focus visible global — acessibilidade */
 a:focus-visible,
 button:focus-visible,
@@ -563,7 +574,7 @@ body .page-wrapper input:-webkit-autofill:focus,
 body .page-wrapper textarea:-webkit-autofill,
 body .page-wrapper select:-webkit-autofill {
     -webkit-text-fill-color: var(--awa-dark);
-    box-shadow: 0 0 0 1000px #fff inset;
+    box-shadow: 0 0 0 1000px var(--awa-bg-surface) inset;
     transition: background-color 5000s ease-in-out 0s;
 }
 

@@ -472,7 +472,7 @@ body .page-wrapper :is(.action.primary, .action.secondary, .action.tocart, butto
 
 body .page-wrapper :is(.action.primary, .action.secondary, .action.tocart, button.action)[disabled],
 body .page-wrapper :is(.action.primary, .action.secondary, .action.tocart, button.action).disabled {
-    opacity: .55;
+    opacity: 0.55;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
@@ -498,7 +498,7 @@ body .page-wrapper textarea {
 
 body .page-wrapper :is(input[type="text"], input[type="email"], input[type="password"], input[type="tel"], input[type="number"], input[type="search"], textarea)::placeholder {
     color: var(--awa-gray-500);
-    opacity: .95;
+    opacity: 0.95;
 }
 
 body .page-wrapper .field .label,
@@ -521,7 +521,7 @@ body .page-wrapper .mage-error {
 =========================================== */
 body .page-wrapper a {
     text-underline-offset: 2px;
-    text-decoration-thickness: .08em;
+    text-decoration-thickness: 0.08em;
     transition: color var(--awa-transition-fast), text-decoration-color var(--awa-transition-fast);
 }
 

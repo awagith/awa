@@ -698,6 +698,7 @@
         gap: var(--awa-space-2);
         overflow-x: auto;
         overscroll-behavior-x: contain;
+        touch-action: pan-x pinch-zoom; /* BP-27: melhor scroll horizontal touch */
         padding-bottom: var(--awa-space-1);
         scroll-snap-type: x mandatory;
     }

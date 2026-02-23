@@ -1464,7 +1464,7 @@ body .page-wrapper .owl-carousel {
     font-size: var(--awa-text-xs);
     font-weight: var(--awa-weight-bold);
     text-transform: uppercase;
-    letter-spacing: .08em;
+    letter-spacing: 0.08em;
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-heading h2 {
@@ -2039,6 +2039,7 @@ a[data-action="add-to-wishlist"],
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
+        touch-action: pan-x pinch-zoom; /* BP-27: melhor scroll horizontal touch */
         scrollbar-width: none;
         gap: var(--awa-space-2); /* BP-17: era 8px */
         padding-bottom: var(--awa-space-2);
@@ -2686,6 +2687,7 @@ body .page-wrapper .product-item .action.tocart:active {
         scroll-snap-type: x proximity;
         scrollbar-gutter: stable both-edges;
         -webkit-overflow-scrolling: touch;
+        touch-action: pan-x pinch-zoom; /* BP-27: melhor scroll horizontal touch */
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li {
