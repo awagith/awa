@@ -22,9 +22,18 @@
                                                     <item name="children" xsi:type="array">
                                                         <!-- P0-1: campo po number antes da area de pagamentos -->
                                                         <item name="beforeMethods" xsi:type="array">
-                                                            <item name="component" xsi:type="string">GrupoAwamotos_B2B/js/view/checkout/po-number</item>
-                                                            <item name="displayArea" xsi:type="string">beforeMethods</item>
-                                                            <item name="sortOrder" xsi:type="string">5</item>
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="b2b-po-number" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">GrupoAwamotos_B2B/js/view/checkout/po-number</item>
+                                                                    <item name="displayArea" xsi:type="string">beforeMethods</item>
+                                                                    <item name="sortOrder" xsi:type="string">5</item>
+                                                                </item>
+                                                                <item name="b2b-terms" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">GrupoAwamotos_B2B/js/view/checkout/b2b-terms</item>
+                                                                    <item name="displayArea" xsi:type="string">beforeMethods</item>
+                                                                    <item name="sortOrder" xsi:type="string">10</item>
+                                                                </item>
+                                                            </item>
                                                         </item>
                                                     </item>
                                                 </item>

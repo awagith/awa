@@ -4,60 +4,59 @@
  * DI Configuration for B2B Module
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-
-    <!-- Carrinho: ocultar preços e totais via plugins -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Carrinho: ocultar preços e totais via plugins -->
     <type name="Magento\Quote\Api\CartTotalRepositoryInterface">
         <plugin name="grupoawamotos_b2b_hide_cart_totals"
                 type="GrupoAwamotos\B2B\Plugin\Checkout\HideCartTotalsPlugin"
-                sortOrder="10"/>
+                sortorder="10"/>
     </type>
 
     <type name="Magento\Checkout\Block\Cart\Item\Renderer">
         <plugin name="grupoawamotos_b2b_hide_cart_item_price"
                 type="GrupoAwamotos\B2B\Plugin\Checkout\HideCartItemPricePlugin"
-                sortOrder="10"/>
+                sortorder="10"/>
     </type>
 
     <type name="Magento\Checkout\CustomerData\Cart">
         <plugin name="grupoawamotos_b2b_hide_minicart_price"
                 type="GrupoAwamotos\B2B\Plugin\Checkout\HideMiniCartPricePlugin"
-                sortOrder="10"/>
+                sortorder="10"/>
     </type>
 
     <type name="Magento\Checkout\Model\DefaultConfigProvider">
         <plugin name="grupoawamotos_b2b_hide_checkout_price"
                 type="GrupoAwamotos\B2B\Plugin\Checkout\HideCheckoutPricePlugin"
-                sortOrder="10"/>
+                sortorder="10"/>
     </type>
 
     <!-- customer session proxy para performance -->
     <type name="GrupoAwamotos\B2B\Model\PriceVisibility">
         <arguments>
-            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>
-        </arguments>
-    </type>
-
-    <!-- B2B: bloquear placeorder para usuários não autorizados (global scope para cobrir rest api) -->
+            <argument name="customerSession"; B2B: bloquear placeorder para usuários não autorizados (global scope para cobrir rest api) -->
     <type name="Magento\Checkout\Api\PaymentInformationManagementInterface">
         <plugin name="grupoawamotos_b2b_block_place_order"
                 type="GrupoAwamotos\B2B\Plugin\Checkout\BlockPlaceOrderPlugin"
-                sortOrder="10"/>
+                sortorder="10"/>
     </type>
 
     <type name="Magento\Checkout\Api\GuestPaymentInformationManagementInterface">
         <plugin name="grupoawamotos_b2b_block_guest_place_order"
                 type="GrupoAwamotos\B2B\Plugin\Checkout\BlockGuestPlaceOrderPlugin"
-                sortOrder="10"/>
+                sortorder="10"/>
     </type>
 
-    <!-- plugin para validar CNPJ ao salvar customer -->
+    <!-- plugin para validar cnpj ao salvar customer -->
     <type name="Magento\Customer\Api\CustomerRepositoryInterface">
         <plugin name="grupoawamotos_b2b_validate_cnpj_on_save"
                 type="GrupoAwamotos\B2B\Plugin\Customer\ValidateCnpjOnSavePlugin"
-                sortOrder="10"/>
+                sortorder="10"/>
     </type>
 
-    
+    <!-- b2b checkout configproviders -->
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="object">magento\customer\model\session\proxy</argument>
+        </arguments>
+    </type>
+
 </config>
