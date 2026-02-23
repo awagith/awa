@@ -89,6 +89,13 @@
         </arguments>
     </type>
 
+    <!-- Dashboard Block -->
+    <type name="GrupoAwamotos\ERPIntegration\Block\Adminhtml\Dashboard">
+        <arguments>
+            <argument name="logger" xsi:type="object">GrupoAwamotos\ERPIntegration\Logger\VirtualLogger</argument>
+        </arguments>
+    </type>
+
     <!-- Goals Manager -->
     <type name="GrupoAwamotos\ERPIntegration\Model\Goals\Manager">
         <arguments>

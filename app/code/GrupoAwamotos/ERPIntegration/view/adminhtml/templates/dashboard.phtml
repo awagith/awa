@@ -38,7 +38,7 @@ $syncUrls = $block->getSyncUrlsJson();
             <button type="button" class="action-secondary erp-refresh-btn" id="erp-refresh-status" title="Atualizar Status">
                 <span>Atualizar</span>
             </button>
-            <span class="erp-date"><?= date('d/m/Y H:i') ?></span>
+            <span class="erp-date"><?= $block->escapeHtml(date('d/m/Y H:i')) ?></span>
         </div>
     </div>
 
@@ -162,7 +162,7 @@ $syncUrls = $block->getSyncUrlsJson();
             <?php foreach ($syncStatus as $type => $sync): ?>
             <div class="erp-sync-card <?= $sync['enabled'] ? '' : 'disabled' ?> <?= $sync['last_status'] === 'error' ? 'has-error' : '' ?>">
                 <div class="erp-sync-header">
-                    <span class="erp-sync-icon"><?= /* @noEscape */ $sync['icon'] ?></span>
+                    <span class="erp-sync-icon"><?= $block->escapeHtml($sync['icon']) ?></span>
                     <span class="erp-sync-name"><?= $block->escapeHtml($sync['label']) ?></span>
                     <?php if (!$sync['enabled']): ?>
                     <span class="erp-sync-badge erp-badge-disabled">Desativado</span>

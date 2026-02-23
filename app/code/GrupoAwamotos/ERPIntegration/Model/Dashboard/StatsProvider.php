@@ -77,6 +77,8 @@ class StatsProvider implements DashboardStatsProviderInterface
      */
     public function getRecentOrderStats(int $days = 30): array
     {
+        $days = \max(1, \min($days, 365));
+
         $row = $this->connection->fetchOne("
             SELECT
                 COUNT(DISTINCT p.CODIGO) as pedidos_30_dias,
@@ -100,6 +102,8 @@ class StatsProvider implements DashboardStatsProviderInterface
      */
     public function getTopCustomers(int $limit = 10): array
     {
+        $limit = \max(1, \min($limit, 100));
+
         return $this->connection->query("
             SELECT TOP " . (int)$limit . "
                 f.CODIGO,
@@ -125,6 +129,9 @@ class StatsProvider implements DashboardStatsProviderInterface
      */
     public function getTopProducts(int $limit = 10, int $days = 30): array
     {
+        $limit = \max(1, \min($limit, 100));
+        $days = \max(1, \min($days, 365));
+
         return $this->connection->query("
             SELECT TOP " . (int)$limit . "
                 i.MATERIAL as sku,
@@ -152,6 +159,8 @@ class StatsProvider implements DashboardStatsProviderInterface
             if (is_array($decoded)) {
                 return $decoded;
             }
+            $this->logger->warning('[ERP Dashboard] Corrupted cache removed for key: ' . self::STATS_CACHE_KEY);
+            $this->cache->remove(self::STATS_CACHE_KEY);
         }
 
         try {

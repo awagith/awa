@@ -23,18 +23,24 @@ define([
         var syncUrls  = config.syncUrls || {};
         var dailySalesData = config.dailySalesData || [];
         var rfmData = config.rfmData || [];
-        var autoRefreshMs = config.autoRefreshMs || 300000; // default 5 min
+        var AUTO_REFRESH_DEFAULT_MS = 300000;
+        var RELOAD_DELAY_MS = 1500;
+        var SLIDE_TOGGLE_SPEED = 300;
+        var COUNTDOWN_RELOAD_DELAY_MS = 1000;
+        var COUNTDOWN_SHOW_THRESHOLD_SEC = 60;
+
+        var autoRefreshMs = config.autoRefreshMs || AUTO_REFRESH_DEFAULT_MS;
 
         // ──────────────────────────────────────────────
         // Quick Guide Panel
         // ──────────────────────────────────────────────
         $dashboard.on('click', '#erp-guide-toggle', function () {
             var $panel = $dashboard.find('#erp-guide-panel');
-            $panel.slideToggle(300);
+            $panel.slideToggle(SLIDE_TOGGLE_SPEED);
             $(this).toggleClass('active');
         });
         $dashboard.on('click', '#erp-guide-close', function () {
-            $dashboard.find('#erp-guide-panel').slideUp(300);
+            $dashboard.find('#erp-guide-panel').slideUp(SLIDE_TOGGLE_SPEED);
             $dashboard.find('#erp-guide-toggle').removeClass('active');
         });
 
@@ -76,7 +82,7 @@ define([
                 success: function (response) {
                     if (response.success) {
                         showNotification('success', response.message || 'Operação concluída');
-                        setTimeout(function () { location.reload(); }, 1500);
+                        setTimeout(function () { location.reload(); }, RELOAD_DELAY_MS);
                     } else {
                         showNotification('error', response.message || 'Erro na operação');
                     }
@@ -148,7 +154,7 @@ define([
                 if (seconds <= 0) {
                     clearInterval(interval);
                     $value.text('Pronto');
-                    setTimeout(function () { location.reload(); }, 1000);
+                    setTimeout(function () { location.reload(); }, COUNTDOWN_RELOAD_DELAY_MS);
                 } else {
                     $value.text(seconds + 's');
                 }
@@ -168,7 +174,7 @@ define([
                 remainingSec--;
                 if (remainingSec <= 0) {
                     location.reload();
-                } else if (remainingSec <= 60) {
+                } else if (remainingSec <= COUNTDOWN_SHOW_THRESHOLD_SEC) {
                     var min = Math.floor(remainingSec / 60);
                     var sec = remainingSec % 60;
                     $refreshTimer.text(

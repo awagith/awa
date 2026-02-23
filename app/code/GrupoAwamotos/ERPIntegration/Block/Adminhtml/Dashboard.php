@@ -12,6 +12,7 @@ use GrupoAwamotos\ERPIntegration\Model\Rfm\Calculator as RfmCalculator;
 use GrupoAwamotos\ERPIntegration\Model\Forecast\SalesProjection;
 use GrupoAwamotos\ERPIntegration\Model\CircuitBreaker;
 use GrupoAwamotos\ERPIntegration\Model\ResourceModel\SyncLog;
+use Psr\Log\LoggerInterface;
 
 /**
  * Admin Block - ERP Dashboard
@@ -29,6 +30,7 @@ class Dashboard extends Template
     private SalesProjection $salesProjection;
     private CircuitBreaker $circuitBreaker;
     private SyncLog $syncLogResource;
+    private LoggerInterface $logger;
     private ?array $stats = null;
     private ?array $connectionStatus = null;
 
@@ -41,6 +43,7 @@ class Dashboard extends Template
         SalesProjection $salesProjection,
         CircuitBreaker $circuitBreaker,
         SyncLog $syncLogResource,
+        LoggerInterface $logger,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -51,6 +54,7 @@ class Dashboard extends Template
         $this->salesProjection = $salesProjection;
         $this->circuitBreaker = $circuitBreaker;
         $this->syncLogResource = $syncLogResource;
+        $this->logger = $logger;
     }
 
     /**
@@ -118,6 +122,7 @@ class Dashboard extends Template
         try {
             return $this->rfmCalculator->getSegmentStats();
         } catch (\Exception $e) {
+            $this->logger->error('[ERP Dashboard] getRfmSegmentStats failed: ' . $e->getMessage());
             return [];
         }
     }
@@ -130,6 +135,7 @@ class Dashboard extends Template
         try {
             return $this->rfmCalculator->getAtRiskCustomers($limit);
         } catch (\Exception $e) {
+            $this->logger->error('[ERP Dashboard] getAtRiskCustomers failed: ' . $e->getMessage());
             return [];
         }
     }
@@ -142,6 +148,7 @@ class Dashboard extends Template
         try {
             return $this->rfmCalculator->getTopCustomers($limit);
         } catch (\Exception $e) {
+            $this->logger->error('[ERP Dashboard] getTopCustomers failed: ' . $e->getMessage());
             return [];
         }
     }
@@ -154,6 +161,7 @@ class Dashboard extends Template
         try {
             return $this->salesProjection->getCurrentMonthProjection();
         } catch (\Exception $e) {
+            $this->logger->error('[ERP Dashboard] getSalesProjection failed: ' . $e->getMessage());
             return [];
         }
     }
@@ -166,6 +174,7 @@ class Dashboard extends Template
         try {
             return $this->salesProjection->getNextMonthProjection();
         } catch (\Exception $e) {
+            $this->logger->error('[ERP Dashboard] getNextMonthProjection failed: ' . $e->getMessage());
             return [];
         }
     }
@@ -179,6 +188,7 @@ class Dashboard extends Template
             $data = $this->salesProjection->getDailySalesChart(30, 7);
             return json_encode($data);
         } catch (\Exception $e) {
+            $this->logger->error('[ERP Dashboard] getDailySalesChartJson failed: ' . $e->getMessage());
             return '[]';
         }
     }
@@ -192,6 +202,7 @@ class Dashboard extends Template
             $data = $this->salesProjection->getLast12MonthsSales();
             return json_encode($data);
         } catch (\Exception $e) {
+            $this->logger->error('[ERP Dashboard] getMonthlySalesChartJson failed: ' . $e->getMessage());
             return '[]';
         }
     }
@@ -218,6 +229,7 @@ class Dashboard extends Template
 
             return json_encode($chartData);
         } catch (\Exception $e) {
+            $this->logger->error('[ERP Dashboard] getRfmChartJson failed: ' . $e->getMessage());
             return '[]';
         }
     }
@@ -294,6 +306,7 @@ class Dashboard extends Template
                 $status['message'] = $testResult['error'] ?? 'Falha na conexão';
             }
         } catch (\Exception $e) {
+            $this->logger->error('[ERP Dashboard] getConnectionStatus failed: ' . $e->getMessage());
             $status['message'] = $e->getMessage();
         }
 
