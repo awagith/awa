@@ -370,6 +370,7 @@ class ProductSuggestion
                 'entity_id' => $product->getId(),
                 'name' => $product->getName(),
                 'url_key' => $product->getUrlKey(),
+                'product_url' => $product->getProductUrl(),
                 'price' => $product->getPrice(),
                 'final_price' => $product->getFinalPrice(),
                 'image' => $thumbnailUrl ?: $imageUrl,

@@ -247,45 +247,45 @@
                 </field>
 
                 <field id="timeout" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>timeout (segundos)</label>
+                    <label>Timeout (segundos)</label>
                     <validate>validate-number validate-greater-than-zero</validate>
-                    <comment>tempo máximo de espera por consulta</comment>
+                    <comment>Tempo máximo de espera por consulta</comment>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
                 </field>
 
                 <field id="require_active_status" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>exigir situação ativa</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
-                    <comment>se habilitado, cnpj com situação diferente de ativa será considerado irregular</comment>
+                    <label>Exigir Situação Ativa</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Se habilitado, CNPJ com situação diferente de ATIVA será considerado irregular</comment>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
                 </field>
 
                 <field id="allow_local_fallback" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>permitir fallback local em falha da api</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
-                    <comment>quando a api cair, segue com validação local do cnpj</comment>
+                    <label>Permitir Fallback Local em Falha da API</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Quando a API cair, segue com validação local do CNPJ</comment>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
                 </field>
 
                 <field id="cache_enabled" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>habilitar cache de consulta</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
-                    <comment>reduz chamadas repetidas para o mesmo cnpj</comment>
+                    <label>Habilitar Cache de Consulta</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Reduz chamadas repetidas para o mesmo CNPJ</comment>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
                 </field>
 
                 <field id="cache_ttl" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>ttl do cache (segundos)</label>
+                    <label>TTL do Cache (segundos)</label>
                     <validate>validate-number validate-greater-than-zero</validate>
-                    <comment>tempo de vida das respostas em cache (ex.: 86400 = 24h)</comment>
+                    <comment>Tempo de vida das respostas em cache (ex.: 86400 = 24h)</comment>
                     <depends>
                         <field id="enabled">1</field>
                         <field id="cache_enabled">1</field>
@@ -293,18 +293,18 @@
                 </field>
 
                 <field id="rate_limit_enabled" translate="label comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>habilitar rate limit de consulta</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
-                    <comment>limita requisições por ip para evitar abuso e bloqueio da api</comment>
+                    <label>Habilitar Rate Limit de Consulta</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Limita requisições por IP para evitar abuso e bloqueio da API</comment>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
                 </field>
 
                 <field id="rate_limit_max_requests" translate="label comment" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>máx. requisições por janela</label>
+                    <label>Máx. Requisições por Janela</label>
                     <validate>validate-number validate-greater-than-zero</validate>
-                    <comment>quantidade de consultas permitidas por ip dentro da janela</comment>
+                    <comment>Quantidade de consultas permitidas por IP dentro da janela</comment>
                     <depends>
                         <field id="enabled">1</field>
                         <field id="rate_limit_enabled">1</field>
@@ -312,9 +312,9 @@
                 </field>
 
                 <field id="rate_limit_window_seconds" translate="label comment" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>janela do rate limit (segundos)</label>
+                    <label>Janela do Rate Limit (segundos)</label>
                     <validate>validate-number validate-greater-than-zero</validate>
-                    <comment>duração da janela usada para contagem de requisições</comment>
+                    <comment>Duração da janela usada para contagem de requisições</comment>
                     <depends>
                         <field id="enabled">1</field>
                         <field id="rate_limit_enabled">1</field>
@@ -361,105 +361,105 @@
                 </field>
             </group>
 
-            <!-- sistema de crédito -->
+            <!-- Sistema de Crédito -->
             <group id="credit" translate="label" type="text" sortOrder="62" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>sistema de crédito</label>
-                <comment><![CDATA[configure limites de crédito e pagamento por faturamento para clientes b2b]]></comment>
+                <label>Sistema de Crédito</label>
+                <comment><![CDATA[Configure limites de crédito e pagamento por faturamento para clientes B2B]]></comment>
 
                 <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>habilitar sistema de crédito</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
-                    <comment>permite pagamento via crédito b2b no checkout</comment>
+                    <label>Habilitar Sistema de Crédito</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Permite pagamento via crédito B2B no checkout</comment>
                 </field>
 
                 <field id="default_limit" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>limite padrão (r$)</label>
+                    <label>Limite Padrão (R$)</label>
                     <validate>validate-number</validate>
-                    <comment>limite de crédito padrão para novos clientes aprovados. 0 = sem crédito inicial</comment>
+                    <comment>Limite de crédito padrão para novos clientes aprovados. 0 = sem crédito inicial</comment>
                     <depends><field id="enabled">1</field></depends>
                 </field>
 
                 <field id="auto_debit" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>débito automático no pedido</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
-                    <comment>debita automaticamente o crédito quando o pedido é faturado</comment>
+                    <label>Débito Automático no Pedido</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Debita automaticamente o crédito quando o pedido é faturado</comment>
                     <depends><field id="enabled">1</field></depends>
                 </field>
 
                 <field id="allow_partial" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>permitir pagamento parcial</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <label>Permitir Pagamento Parcial</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>permite que o cliente use crédito parcial + outro meio de pagamento</comment>
                     <depends><field id="enabled">1</field></depends>
                 </field>
 
                 <field id="payment_title" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>título no checkout</label>
-                    <comment>nome do método de pagamento exibido no checkout</comment>
+                    <label>Título no Checkout</label>
+                    <comment>Nome do método de pagamento exibido no checkout</comment>
                     <depends><field id="enabled">1</field></depends>
                 </field>
             </group>
 
-            <!-- aprovação de pedidos -->
+            <!-- Aprovação de Pedidos -->
             <group id="order_approval" translate="label" type="text" sortOrder="63" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>aprovação de pedidos</label>
-                <comment><![CDATA[configure o fluxo de aprovação para pedidos b2b acima de determinados valores]]></comment>
+                <label>Aprovação de Pedidos</label>
+                <comment><![CDATA[Configure o fluxo de aprovação para pedidos B2B acima de determinados valores]]></comment>
 
                 <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>habilitar aprovação de pedidos</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
-                    <comment>pedidos acima dos limites configurados entram em aprovação</comment>
+                    <label>Habilitar Aprovação de Pedidos</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Pedidos acima dos limites configurados entram em aprovação</comment>
                 </field>
 
                 <field id="threshold_manager" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>limite para gerente (r$)</label>
+                    <label>Limite para Gerente (R$)</label>
                     <validate>validate-number</validate>
-                    <comment>pedidos acima deste valor precisam de aprovação do gerente</comment>
+                    <comment>Pedidos acima deste valor precisam de aprovação do gerente</comment>
                     <depends><field id="enabled">1</field></depends>
                 </field>
 
                 <field id="threshold_finance" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>limite para financeiro (r$)</label>
+                    <label>Limite para Financeiro (R$)</label>
                     <validate>validate-number</validate>
-                    <comment>pedidos acima deste valor precisam de aprovação do financeiro</comment>
+                    <comment>Pedidos acima deste valor precisam de aprovação do financeiro</comment>
                     <depends><field id="enabled">1</field></depends>
                 </field>
 
                 <field id="threshold_director" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>limite para diretor (r$)</label>
+                    <label>Limite para Diretor (R$)</label>
                     <validate>validate-number</validate>
-                    <comment>pedidos acima deste valor precisam de aprovação do diretor</comment>
+                    <comment>Pedidos acima deste valor precisam de aprovação do diretor</comment>
                     <depends><field id="enabled">1</field></depends>
                 </field>
 
                 <field id="notify_approver" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>notificar aprovador</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <label>Notificar Aprovador</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends><field id="enabled">1</field></depends>
                 </field>
 
                 <field id="auto_cancel_days" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>cancelar automaticamente após (dias)</label>
+                    <label>Cancelar Automaticamente Após (dias)</label>
                     <validate>validate-number</validate>
-                    <comment>pedidos pendentes há mais de x dias são cancelados. 0 = desabilitado</comment>
+                    <comment>Pedidos pendentes há mais de X dias são cancelados. 0 = desabilitado</comment>
                     <depends><field id="enabled">1</field></depends>
                 </field>
             </group>
 
-            <!-- whatsapp notifications -->
+            <!-- Notificações WhatsApp -->
             <group id="whatsapp" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>notificações whatsapp</label>
-                <comment><![CDATA[configure o envio de notificações via whatsapp para equipe e clientes b2b]]></comment>
+                <label>Notificações WhatsApp</label>
+                <comment><![CDATA[Configure o envio de notificações via WhatsApp para equipe e clientes B2B]]></comment>
 
                 <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>habilitar whatsapp</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <label>Habilitar WhatsApp</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>ativa notificações via whatsapp</comment>
                 </field>
 
                 <field id="provider" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>provedor de api</label>
-                    <source_model>grupoawamotos\b2b\model\config\source\whatsappprovider</source_model>
+                    <source_model>GrupoAwamotos\B2B\Model\Config\Source\WhatsAppProvider</source_model>
                     <comment>escolha o provedor de api do whatsapp</comment>
                     <depends>
                         <field id="enabled">1</field>
@@ -484,7 +484,7 @@
 
                 <field id="api_key" translate="label comment" type="obscure" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>token / api key</label>
-                    <backend_model>magento\config\model\config\backend\encrypted</backend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                     <comment>token de autenticação da api</comment>
                     <depends>
                         <field id="enabled">1</field>
@@ -525,7 +525,7 @@
 
                 <field id="notify_new_registration" translate="label" type="select" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>notificar novo cadastro b2b</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
@@ -533,7 +533,7 @@
 
                 <field id="notify_new_order" translate="label" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>notificar novo pedido</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
@@ -541,7 +541,7 @@
 
                 <field id="notify_new_quote" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>notificar nova cotação</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
@@ -549,7 +549,7 @@
 
                 <field id="notify_customer_approved" translate="label" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>notificar cliente aprovado (whatsapp)</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>envia whatsapp ao cliente quando aprovado</comment>
                     <depends>
                         <field id="enabled">1</field>
@@ -558,7 +558,7 @@
 
                 <field id="notify_order_status" translate="label" type="select" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>notificar atualização de pedido</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>envia whatsapp ao cliente quando status do pedido muda</comment>
                     <depends>
                         <field id="enabled">1</field>
@@ -566,20 +566,20 @@
                 </field>
             </group>
 
-            <!-- gestão de atendentes -->
+            <!-- Gestão de Atendentes -->
             <group id="attendants" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>gestão de atendentes</label>
-                <comment><![CDATA[configure a distribuição de clientes entre a equipe de teleatendimento]]></comment>
+                <label>Gestão de Atendentes</label>
+                <comment><![CDATA[Configure a distribuição de clientes entre a equipe de teleatendimento]]></comment>
 
                 <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>habilitar gestão de atendentes</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <label>Habilitar Gestão de Atendentes</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>ativa o sistema de distribuição de clientes por atendente</comment>
                 </field>
 
                 <field id="auto_assign" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>atribuição automática</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>atribui novos clientes automaticamente ao atendente com menos clientes</comment>
                     <depends>
                         <field id="enabled">1</field>
@@ -597,7 +597,7 @@
 
                 <field id="notify_attendant_new_customer" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>notificar atendente (novo cliente)</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>envia notificação ao atendente quando recebe novo cliente</comment>
                     <depends>
                         <field id="enabled">1</field>
@@ -606,7 +606,7 @@
 
                 <field id="notify_attendant_new_order" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>notificar atendente (novo pedido)</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>envia notificação ao atendente quando seu cliente faz pedido</comment>
                     <depends>
                         <field id="enabled">1</field>
@@ -615,7 +615,7 @@
 
                 <field id="show_attendant_info" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>mostrar info do atendente ao cliente</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>exibe nome e contato do atendente no dashboard do cliente</comment>
                     <depends>
                         <field id="enabled">1</field>
@@ -623,18 +623,18 @@
                 </field>
             </group>
 
-            <!-- notificações por email -->
+            <!-- Notificações por E-mail -->
             <group id="email_notifications" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>notificações por e-mail</label>
+                <label>Notificações por E-mail</label>
 
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>habilitar notificações por e-mail</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <label>Habilitar Notificações por E-mail</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
 
                 <field id="notify_new_registration" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>e-mail: novo cadastro b2b</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
@@ -642,7 +642,7 @@
 
                 <field id="notify_customer_approved" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>e-mail: cliente aprovado</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
@@ -650,7 +650,7 @@
 
                 <field id="notify_customer_rejected" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>e-mail: cliente rejeitado</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
@@ -658,7 +658,7 @@
 
                 <field id="notify_quote_response" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>e-mail: cotação respondida</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
@@ -666,7 +666,7 @@
 
                 <field id="notify_order_status" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>e-mail: atualização de pedido</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
@@ -674,7 +674,7 @@
 
                 <field id="copy_to_attendant" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>cópia para atendente responsável</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>envia cópia dos e-mails para o atendente do cliente</comment>
                     <depends>
                         <field id="enabled">1</field>
@@ -682,14 +682,14 @@
                 </field>
             </group>
 
-            <!-- checkout b2b -->
+            <!-- Checkout B2B -->
             <group id="checkout" translate="label" type="text" sortOrder="95" showInDefault="1" showInWebsite="1" showInStore="1">
-                <label>checkout b2b</label>
-                <comment><![CDATA[configurações específicas do checkout para clientes b2b]]></comment>
+                <label>Checkout B2B</label>
+                <comment><![CDATA[Configurações específicas do checkout para clientes B2B]]></comment>
 
                 <field id="terms_enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>habilitar termos e condições b2b</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <label>Habilitar Termos e Condições B2B</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>exibe checkbox de aceite de termos específicos para clientes empresariais</comment>
                 </field>
 
@@ -727,13 +727,13 @@
 
                 <field id="po_number_enabled" translate="label comment" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>campo po number</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>permite clientes b2b informarem número de pedido de compra interno</comment>
                 </field>
 
                 <field id="po_number_required" translate="label comment" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>po number obrigatório</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="po_number_enabled">1</field>
                     </depends>
@@ -741,13 +741,13 @@
 
                 <field id="delivery_date_enabled" translate="label comment" type="select" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>data de entrega desejada</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>permite cliente especificar data preferida de entrega</comment>
                 </field>
 
                 <field id="order_notes_enabled" translate="label comment" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>observações do pedido</label>
-                    <source_model>magento\config\model\config\source\yesno</source_model>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>campo para instruções especiais de entrega ou notas</comment>
                 </field>
             </group>

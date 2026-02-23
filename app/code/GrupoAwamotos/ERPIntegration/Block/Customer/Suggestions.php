@@ -240,8 +240,12 @@ class Suggestions extends Template
      */
     public function getProductUrl(array $product): string
     {
+        if (!empty($product['magento']['product_url'])) {
+            return $product['magento']['product_url'];
+        }
+
         if (!empty($product['magento']['url_key'])) {
-            return $this->getUrl($product['magento']['url_key'] . '.html');
+            return $this->getBaseUrl() . $product['magento']['url_key'] . '.html';
         }
 
         // Search by SKU

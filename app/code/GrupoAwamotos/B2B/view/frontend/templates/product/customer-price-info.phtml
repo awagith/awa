@@ -11,31 +11,15 @@ if (!$priceData && !$tierData) {
 }
 ?>
 <?php if ($priceData):
-    $customerPrice = $priceData['customer_price'];
-    $basePrice = $priceData['base_price'];
-    $savingsPct = $priceData['savings_pct'];
     $listName = $priceData['price_list_name'];
 ?>
+<?php if ($listName): ?>
 <div class="b2b-customer-price-info">
-    <div class="b2b-price-comparison">
-        <div class="b2b-your-price">
-            <span class="b2b-price-label"><?= $block->escapeHtml(__('Seu preço:')) ?></span>
-            <span class="b2b-price-value"><?= /* @noEscape */ $block->formatPrice($customerPrice) ?></span>
-        </div>
-        <?php if ($savingsPct > 0): ?>
-            <div class="b2b-base-price">
-                <span class="b2b-price-label"><?= $block->escapeHtml(__('Preço base:')) ?></span>
-                <span class="b2b-price-value-old"><?= /* @noEscape */ $block->formatPrice($basePrice) ?></span>
-                <span class="b2b-savings-badge">-<?= $block->escapeHtml((string) $savingsPct) ?>%</span>
-            </div>
-        <?php endif; ?>
+    <div class="b2b-price-list-info">
+        <span class="b2b-list-label"><?= $block->escapeHtml(__('Tabela: %1', $listName)) ?></span>
     </div>
-    <?php if ($listName): ?>
-        <div class="b2b-price-list-info">
-            <span class="b2b-list-label"><?= $block->escapeHtml(__('Tabela: %1', $listName)) ?></span>
-        </div>
-    <?php endif; ?>
 </div>
+<?php endif; ?>
 <?php endif; ?>
 <?php if ($tierData): ?>
 <div class="b2b-tier-pricing">

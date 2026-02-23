@@ -5,12 +5,23 @@
  * @var \GrupoAwamotos\ERPIntegration\Block\Customer\Suggestions $block
  */
 
-if (!$block->isEnabled() || !$block->isLoggedIn()) {
+if (!$block->isEnabled()) {
+    if ($block->isSuggestedCartPage()) {
+        echo '<div class="erp-suggestions-wrapper"><div class="erp-empty-state"><h3>Carrinho Sugerido</h3><p>Este recurso está temporariamente indisponível. Tente novamente mais tarde.</p></div></div>';
+    }
+    return;
+}
+
+if (!$block->isLoggedIn()) {
     return;
 }
 
 $customerCode = $block->getErpCustomerCode();
 if (!$customerCode) {
+    if ($block->isSuggestedCartPage()) {
+        echo '<div class="erp-suggestions-wrapper"><div class="erp-empty-state"><h3>Carrinho Sugerido</h3><p>Não foi possível identificar seu cadastro no sistema ERP. Verifique se seu CNPJ está correto no cadastro ou entre em contato com nosso atendimento.</p><a href="' . $block->escapeUrl($block->getUrl('customer/account')) . '" class="erp-btn erp-btn-primary">Voltar para Minha Conta</a></div></div>';
+        echo '<style>.erp-empty-state{background:#fff;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.06);padding:40px;text-align:center;margin:20px 0}.erp-empty-state h3{font-size:22px;color:#1a1a2e;margin-bottom:15px}.erp-empty-state p{color:#666;font-size:15px;margin-bottom:25px;max-width:500px;margin-left:auto;margin-right:auto}.erp-empty-state .erp-btn{display:inline-block;padding:12px 24px;font-size:14px;font-weight:600;text-decoration:none;border-radius:8px;background:#b73337;color:#fff}</style>';
+    }
     return;
 }
 
@@ -22,6 +33,14 @@ $lastOrders = $block->getLastOrders(5);
 // Check for errors
 if (isset($suggestedCart['error'])) {
     $suggestedCart = [];
+}
+
+// Count total items across all sections
+$totalSuggestedItems = 0;
+if (!empty($suggestedCart['sections'])) {
+    foreach ($suggestedCart['sections'] as $sec) {
+        $totalSuggestedItems += count($sec['items'] ?? []);
+    }
 }
 ?>
 
@@ -315,6 +334,12 @@ if (isset($suggestedCart['error'])) {
                 </button>
             </div>
         </div>
+    </div>
+    <?php elseif ($block->isSuggestedCartPage()): ?>
+    <div class="erp-empty-state">
+        <h3>Nenhuma Sugestão Disponível</h3>
+        <p>Ainda não temos sugestões personalizadas para você. Isso pode acontecer se você ainda não realizou compras suficientes ou se os produtos sugeridos estão temporariamente indisponíveis.</p>
+        <a href="<?= $block->escapeUrl($block->getUrl('catalogsearch/result', ['q' => ''])) ?>" class="erp-btn erp-btn-primary">Explorar Produtos</a>
     </div>
     <?php endif; ?>
 
@@ -650,8 +675,8 @@ require(['jquery'], function($) {
             var totalQty = item.total_qty || item.quantidade_total || 0;
             var daysSince = item.days_since_last || '';
             var lastDate = item.last_order_date || item.ultima_compra || '';
-            var hasUrl = item.magento && item.magento.url_key;
-            var url = hasUrl ? '/' + item.magento.url_key + '.html' : '#';
+            var hasUrl = item.magento && (item.magento.product_url || item.magento.url_key);
+            var url = (item.magento && item.magento.product_url) ? item.magento.product_url : (hasUrl ? '/' + item.magento.url_key + '.html' : '#');
             var inStore = item.available_in_store;
 
             var html = '<div class="erp-fh-item' + (!inStore ? ' erp-fh-item-unavailable' : '') + '">';

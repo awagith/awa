@@ -109,13 +109,6 @@ class CustomerPriceInfo extends Template
                 ? (($basePrice - $customerPrice) / $basePrice) * 100
                 : 0;
 
-            // Only show comparison box when customer actually gets a discount.
-            // If ERP price >= base price, the Magento price box already shows the
-            // correct ERP price (via GroupPricePlugin) — no need for redundant display.
-            if ($savingsPct < 0.1) {
-                return null;
-            }
-
             $listName = $this->customerPriceProvider->getCustomerPriceListName($erpCode);
 
             $this->priceData = [

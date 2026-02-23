@@ -141,10 +141,6 @@ $privacyPolicyUrl = $block->escapeUrl($block->getUrl('privacy-policy-cookie-rest
                                     <span class="info-label">Atividade Principal</span>
                                     <span id="cnpj-atividade" class="info-value"></span>
                                 </div>
-                                <div class="company-info-item">
-                                    <span class="info-label">Porte</span>
-                                    <span id="cnpj-porte" class="info-value"></span>
-                                </div>
                                 <div class="company-info-item" id="cnpj-rf-telefone-row" style="display:none;">
                                     <span class="info-label">Telefone (Receita Federal)</span>
                                     <span id="cnpj-rf-telefone" class="info-value info-value-muted"></span>
@@ -575,14 +571,11 @@ require(['jquery', 'mage/url', 'domReady!'], function($, urlBuilder) {
                     if (response.atividade_principal) {
                         $('#cnpj-atividade').text(response.atividade_principal);
                     }
-                    if (response.porte) {
-                        $('#cnpj-porte').text(response.porte);
-                    }
-                    // CNAE profile badge
-                    if (response.cnae_profile && response.cnae_profile_label) {
+                    // CNAE profile badge (only show for direct and adjacent)
+                    if (response.cnae_profile && response.cnae_profile_label && response.cnae_profile !== 'off_profile') {
                         var $badge = $('#cnae-profile-badge');
                         $badge.text(response.cnae_profile_label)
-                              .removeClass('cnae-direct cnae-adjacent cnae-off_profile')
+                              .removeClass('cnae-direct cnae-adjacent')
                               .addClass('cnae-' + response.cnae_profile)
                               .show();
                     } else {
