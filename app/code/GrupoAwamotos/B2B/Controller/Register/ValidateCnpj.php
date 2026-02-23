@@ -6,6 +6,7 @@ declare(strict_types=1);
 
 namespace GrupoAwamotos\B2B\Controller\Register;
 
+use GrupoAwamotos\B2B\Model\CnaeClassifier;
 use GrupoAwamotos\B2B\Model\Cnpj\RequestRateLimiter;
 use GrupoAwamotos\B2B\Model\ErpIntegration;
 use Magento\Framework\App\Action\HttpPostActionInterface;
@@ -24,6 +25,7 @@ class ValidateCnpj implements HttpPostActionInterface
     private RemoteAddress $remoteAddress;
     private CustomerCollectionFactory $customerCollectionFactory;
     private ErpIntegration $erpIntegration;
+    private CnaeClassifier $cnaeClassifier;
 
     public function __construct(
         RequestInterface $request,
@@ -32,7 +34,8 @@ class ValidateCnpj implements HttpPostActionInterface
         RequestRateLimiter $requestRateLimiter,
         RemoteAddress $remoteAddress,
         CustomerCollectionFactory $customerCollectionFactory,
-        ErpIntegration $erpIntegration
+        ErpIntegration $erpIntegration,
+        CnaeClassifier $cnaeClassifier
     ) {
         $this->request = $request;
         $this->jsonFactory = $jsonFactory;
@@ -41,6 +44,7 @@ class ValidateCnpj implements HttpPostActionInterface
         $this->remoteAddress = $remoteAddress;
         $this->customerCollectionFactory = $customerCollectionFactory;
         $this->erpIntegration = $erpIntegration;
+        $this->cnaeClassifier = $cnaeClassifier;
     }
 
     public function execute()
@@ -128,6 +132,9 @@ class ValidateCnpj implements HttpPostActionInterface
         // Consulta ERP para verificar email cadastrado
         $erpData = $this->getErpData($cnpj);
 
+        // Classificação CNAE
+        $cnaeData = $this->getCnaeData($apiData);
+
         return $result->setData([
             'success' => true,
             'source' => $apiData['source'] ?? 'api',
@@ -151,7 +158,37 @@ class ValidateCnpj implements HttpPostActionInterface
             'erp_email_full' => $erpData['email_full'],
             'erp_codigo' => $erpData['codigo'],
             'erp_razao' => $erpData['razao'],
+            'cnae_code' => $cnaeData['code'],
+            'cnae_profile' => $cnaeData['profile'],
+            'cnae_profile_label' => $cnaeData['label'],
         ]);
+    }
+
+    /**
+     * Classify CNAE from API data
+     */
+    private function getCnaeData(array $apiData): array
+    {
+        $default = ['code' => '', 'profile' => '', 'label' => ''];
+
+        if (!$this->cnaeClassifier->isEnabled() || !isset($apiData['data'])) {
+            return $default;
+        }
+
+        $rawData = $apiData['data'];
+        $cnaeCode = $this->cnaeClassifier->extractCnaeCode($rawData);
+
+        if (empty($cnaeCode)) {
+            return $default;
+        }
+
+        $profile = $this->cnaeClassifier->classify($cnaeCode);
+
+        return [
+            'code' => $cnaeCode,
+            'profile' => $profile,
+            'label' => $this->cnaeClassifier->getProfileLabel($profile),
+        ];
     }
 
     /**

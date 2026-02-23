@@ -133,6 +133,7 @@ $privacyPolicyUrl = $block->escapeUrl($block->getUrl('privacy-policy-cookie-rest
                         <div class="company-info-card">
                             <div class="company-info-header">
                                 <span class="company-info-badge" id="cnpj-source-badge">Dados da Receita Federal</span>
+                                <span id="cnae-profile-badge" class="cnae-profile-badge" style="display:none;"></span>
                                 <span id="cnpj-situacao" class="cnpj-situacao"></span>
                             </div>
                             <div class="company-info-grid">
@@ -577,6 +578,17 @@ require(['jquery', 'mage/url', 'domReady!'], function($, urlBuilder) {
                     if (response.porte) {
                         $('#cnpj-porte').text(response.porte);
                     }
+                    // CNAE profile badge
+                    if (response.cnae_profile && response.cnae_profile_label) {
+                        var $badge = $('#cnae-profile-badge');
+                        $badge.text(response.cnae_profile_label)
+                              .removeClass('cnae-direct cnae-adjacent cnae-off_profile')
+                              .addClass('cnae-' + response.cnae_profile)
+                              .show();
+                    } else {
+                        $('#cnae-profile-badge').hide();
+                    }
+
                     $('#cnpj-company-data').slideDown(300);
 
                     // ERP email verification

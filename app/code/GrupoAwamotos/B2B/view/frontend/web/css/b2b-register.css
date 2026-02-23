@@ -563,6 +563,30 @@ html body .page-wrapper .b2b-register-page .message.info {
     border-radius: 20px;
 }
 
+.b2b-register-page .cnae-profile-badge {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 10px;
+    border-radius: 20px;
+}
+
+.b2b-register-page .cnae-profile-badge.cnae-direct {
+    color: #166534;
+    background: #dcfce7;
+}
+
+.b2b-register-page .cnae-profile-badge.cnae-adjacent {
+    color: #92400e;
+    background: #fef3c7;
+}
+
+.b2b-register-page .cnae-profile-badge.cnae-off_profile {
+    color: #991b1b;
+    background: #fee2e2;
+}
+
 .b2b-register-page .company-info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
