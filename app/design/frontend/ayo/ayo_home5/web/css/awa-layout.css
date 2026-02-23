@@ -1928,7 +1928,7 @@ body .page-wrapper form select.mage-error:focus-visible,
 body .page-wrapper form textarea.mage-error:focus-visible {
     outline: 2px solid var(--awa-red);
     outline-offset: 2px;
-    box-shadow: 0 0 0 3px rgb(183 51 55 / 15%);
+    box-shadow: var(--awa-shadow-focus-ring); /* BP-35: era 0 0 0 3px rgb(183 51 55 / 15%) */
 }
 
 /* --- AYO Footer Classes (velaBlock / velaFooterLinks / contacinfo-logo) --- */

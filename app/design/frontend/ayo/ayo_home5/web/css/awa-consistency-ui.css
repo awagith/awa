@@ -433,6 +433,7 @@ body .page-wrapper :is(.item-product, .product-item, .blog-post-item, .the_blog 
     background: var(--awa-bg-surface); /* BP-12 */
     box-shadow: var(--awa-shadow-sm);
     transition: box-shadow var(--awa-transition-fast), transform var(--awa-transition-fast), border-color var(--awa-transition-fast);
+    contain: layout style paint; /* BP-37: reduce reflows on repeated cards */
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -629,7 +630,7 @@ body .page-wrapper :is(.item-product, .product-item) :is(.product-label, .sticke
     min-height: 22px;
     display: inline-flex;
     align-items: center;
-    box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+    box-shadow: var(--awa-shadow-badge); /* BP-35: era 0 1px 4px rgb(0 0 0 / 12%) */
 }
 
 /* Badges empilhados: segundo badge posicionado abaixo do primeiro */
@@ -648,7 +649,7 @@ body.catalog-product-view .page-wrapper .product.media :is(.product-label, .stic
     min-height: 26px;
     display: inline-flex;
     align-items: center;
-    box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+    box-shadow: var(--awa-shadow-badge); /* BP-35: era 0 1px 4px rgb(0 0 0 / 12%) */
 }
 
 /* ===========================================

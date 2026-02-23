@@ -99,6 +99,8 @@
     --awa-shadow-lg: 0 12px 40px rgb(0 0 0 / 15%);
     --awa-shadow-dropdown: 0 6px 20px rgb(0 0 0 / 12%); /* R13: dropdown menus */
     --awa-shadow-red: 0 4px 12px color-mix(in srgb, var(--awa-red) 24%, transparent); /* F2-01 CTA hover glow */
+    --awa-shadow-badge: 0 1px 4px rgb(0 0 0 / 12%); /* BP-35: product/PDP badges */
+    --awa-shadow-focus-ring: 0 0 0 3px color-mix(in srgb, var(--awa-red) 15%, transparent); /* BP-35: focus ring */
     --awa-overlay: rgb(0 0 0 / 80%); /* R16-02: overlay/backdrop backgrounds */
 
     /* Layout — padrão AYO Bootstrap container
@@ -210,6 +212,7 @@
     --awa-text-md: 16px;
     --awa-text-lg: 18px;
     --awa-text-xl: 20px;
+    --awa-text-xl-plus: 22px; /* BP-38: icons, badge titles, popup headings */
     --awa-text-2xl: 24px;
     --awa-text-3xl: 28px;
     --awa-text-4xl: 32px;

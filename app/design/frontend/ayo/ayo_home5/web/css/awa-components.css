@@ -1513,6 +1513,7 @@ body .page-wrapper .toolbar-products .limiter .limiter-options {
 body .page-wrapper .sidebar .block-content.filter-content .filter-options-item {
     border-bottom: 1px solid var(--awa-gray-200);
     padding: var(--awa-space-4) 0;
+    contain: layout style; /* BP-37: each filter group is independent */
 }
 
 body .page-wrapper .sidebar .filter-options-title {
@@ -1618,6 +1619,7 @@ body .page-wrapper .block-minicart {
     border-top: 2px solid var(--awa-red);
     padding: var(--awa-space-5);
     min-width: 320px;
+    contain: layout style; /* BP-37: reduce reflows on dropdown */
 }
 
 body .page-wrapper .block-minicart .block-title {
@@ -1989,6 +1991,7 @@ body .page-wrapper .search-autocomplete {
     overflow-y: auto;
     scrollbar-width: thin; /* R18-10: alinhado com scrollbar global */
     scrollbar-color: var(--awa-gray-400) transparent;
+    contain: layout style; /* BP-37: reduce reflows on dropdown */
 }
 
 body .page-wrapper .search-autocomplete li {

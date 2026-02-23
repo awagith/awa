@@ -131,7 +131,7 @@ body .page-wrapper .info-testimonial .author-test-link a {
     text-decoration: none;
     color: var(--awa-text-on-primary); /* BP-09: era #fff hardcoded */
     font-weight: var(--awa-weight-semibold);
-    font-size: 22px;
+    font-size: var(--awa-text-xl-plus); /* BP-38: era 22px */
     line-height: var(--awa-leading-none);
     position: relative;
     overflow: hidden;
@@ -140,7 +140,7 @@ body .page-wrapper .info-testimonial .author-test-link a {
 body .page-wrapper .info-testimonial .author-test-link a::before {
     content: "\f007";
     font-family: FontAwesome, sans-serif;
-    font-size: 22px;
+    font-size: var(--awa-text-xl-plus); /* BP-38: era 22px */
     color: rgb(255 255 255 / 90%);
 }
 
@@ -473,7 +473,7 @@ body .newsletterpopup .newsletter-popup-privacy {
     }
 
     body .newsletterpopup .newsletter-popup-badge i {
-        font-size: 22px;
+        font-size: var(--awa-text-xl-plus); /* BP-38: era 22px */
     }
 
     body .newsletterpopup .action.subscribe,
@@ -830,7 +830,7 @@ body #newsletter_pop_up .nl-popup-success-icon {
 
 body #newsletter_pop_up .nl-popup-success-title {
     margin: 0;
-    font-size: 22px;
+    font-size: var(--awa-text-xl-plus); /* BP-38: era 22px */
     color: var(--awa-text-on-light);
 }
 

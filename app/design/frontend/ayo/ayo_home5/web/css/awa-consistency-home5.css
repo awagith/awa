@@ -370,7 +370,7 @@
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .block-search:focus-within {
     border-color: var(--awa-red);
-    box-shadow: 0 0 0 3px rgb(183 51 55 / 16%), 0 10px 24px rgb(0 0 0 / 8%);
+    box-shadow: var(--awa-shadow-focus-ring), 0 10px 24px rgb(0 0 0 / 8%); /* BP-35: ring part tokenized */
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 {
@@ -1201,12 +1201,12 @@
     padding: var(--awa-space-5) var(--awa-space-4); /* BP-18: era 20px 16px */
     border-radius: var(--awa-radius-sm); /* F1-04: era 8px hardcoded */
     background: var(--awa-bg-surface); /* BP-12 */
-    box-shadow: 0 1px 4px rgb(0 0 0 / 6%);
+    box-shadow: var(--awa-shadow-sm); /* BP-35: era 0 1px 4px rgb(0 0 0 / 6%) */
     transition: box-shadow var(--awa-transition-fast), transform var(--awa-transition-fast); /* BP-08: era 0.2s ease hardcoded */
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-trust-badges-wrap .trust-badge-item:hover {
-    box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+    box-shadow: var(--awa-shadow-md); /* BP-35: era 0 4px 12px rgb(0 0 0 / 10%) */
     transform: translateY(-2px);
 }
 
@@ -1240,7 +1240,7 @@
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-faq-quick-wrap details[open] {
-    box-shadow: 0 2px 8px rgb(0 0 0 / 6%);
+    box-shadow: var(--awa-shadow); /* BP-35: era 0 2px 8px rgb(0 0 0 / 6%) */
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-faq-quick-wrap details summary {
