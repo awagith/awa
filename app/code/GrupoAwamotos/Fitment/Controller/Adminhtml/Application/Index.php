@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace GrupoAwamotos\Fitment\Controller\Adminhtml\Application;
 
 use Magento\Backend\App\Action;
+use Magento\Backend\Model\View\Result\Page;
 use Magento\Framework\App\Action\HttpGetActionInterface;
-use Magento\Framework\View\Result\Page;
 use Magento\Framework\View\Result\PageFactory;
 
 /**
