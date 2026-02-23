@@ -117,7 +117,7 @@ body .page-wrapper .btn-secondary {
     padding: 0 var(--awa-space-6);
     border-radius: var(--awa-control-radius);
     border: 1px solid var(--awa-red);
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     color: var(--awa-red);
     font-size: var(--awa-text-sm);
     font-weight: 600;
@@ -192,7 +192,7 @@ body .page-wrapper .opc-block-summary,
 body.customer-account-login .page-wrapper .login-container .block,
 body.account .page-wrapper .column.main > .block {
     border: 1px solid var(--awa-gray-200);
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     box-shadow: var(--awa-shadow-sm);
 }
 
@@ -235,7 +235,7 @@ body.catalog-category-view .page-wrapper .toolbar.toolbar-products {
     padding: var(--awa-space-3) var(--awa-space-4);
     border: 1px solid var(--awa-gray-200);
     border-radius: var(--awa-control-radius);
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
 }
 
 body.catalog-category-view .page-wrapper .toolbar .sorter-options,
@@ -244,7 +244,7 @@ body.catalog-category-view .page-wrapper .toolbar .limiter-options {
     padding-inline: var(--awa-space-3);
     border-radius: var(--awa-control-radius);
     border: 1px solid var(--awa-gray-300);
-    background-color: #fff;
+    background-color: var(--awa-bg-surface); /* BP-12 */
 }
 
 body.catalog-category-view .page-wrapper .toolbar .modes-mode,
@@ -277,7 +277,7 @@ body.catalog-category-view .page-wrapper .grid-mode-show-type-products a.actived
 body.catalog-category-view .page-wrapper .sidebar-main-1 .block.filter {
     border: 1px solid var(--awa-gray-200);
     border-radius: var(--awa-control-radius);
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     padding: var(--awa-space-3);
 }
 
@@ -406,7 +406,7 @@ body.customer-account-login .page-wrapper .login-container .block {
     margin: 0;
     border: 1px solid var(--awa-gray-200);
     border-radius: var(--awa-control-radius);
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     padding: var(--awa-space-5);
     box-shadow: var(--awa-shadow-sm);
 }
@@ -427,7 +427,7 @@ body.customer-account-login .page-wrapper .login-container .actions-toolbar {
 body.account .page-wrapper .column.main > .block {
     border: 1px solid var(--awa-gray-200);
     border-radius: var(--awa-control-radius);
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     padding: var(--awa-space-4);
 }
 
@@ -439,7 +439,7 @@ body.checkout-cart-index .page-wrapper .cart-summary,
 body.checkout-cart-index .page-wrapper .cart.table-wrapper {
     border: 1px solid var(--awa-gray-200);
     border-radius: var(--awa-control-radius);
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
 }
 
 body.checkout-cart-index .page-wrapper .cart-empty {
@@ -670,7 +670,7 @@ body .page-wrapper .pages .items.pages-items .item strong {
     padding: 0 var(--awa-space-2);
     border-radius: var(--awa-radius-sm);
     border: 1px solid var(--awa-gray-200);
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     color: var(--awa-gray-700);
     font-size: var(--awa-text-sm);
     text-decoration: none;
@@ -687,7 +687,7 @@ body .page-wrapper .pages .items.pages-items .item a:hover {
 
 body .page-wrapper .pages .items.pages-items .item.current strong {
     background: var(--awa-red);
-    color: #fff;
+    color: var(--awa-text-on-primary);
     border-color: var(--awa-red);
     font-weight: 700;
 }
@@ -701,14 +701,14 @@ body .page-wrapper .pages .items.pages-items .item .action.previous {
 body .page-wrapper .pages .items.pages-items .item .action.next::before {
     content: "\f105";
     font-family: FontAwesome, 'Font Awesome 5 Free', sans-serif;
-    font-size: 14px;
+    font-size: var(--awa-text-base);
     font-weight: 900;
 }
 
 body .page-wrapper .pages .items.pages-items .item .action.previous::before {
     content: "\f104";
     font-family: FontAwesome, 'Font Awesome 5 Free', sans-serif;
-    font-size: 14px;
+    font-size: var(--awa-text-base);
     font-weight: 900;
 }
 

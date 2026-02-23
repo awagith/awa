@@ -35,46 +35,59 @@
    §1 — GRID DA PÁGINA DE CATEGORIA (AYO list.phtml)
    O markup é: ul.product-grid.category_page_grid_4 > div.item-product
    O LESS legado usa float:left + width% — substituímos por CSS Grid.
+   F3-03: Unificado com .container-products-switch (antes duplicado no §1d).
    ============================================================ */
 body .page-wrapper .products-grid .product-grid,
-body .page-wrapper .products-grid ul.product-grid {
+body .page-wrapper .products-grid ul.product-grid,
+body .page-wrapper .products-grid ul.product-grid.container-products-switch {
     display: grid;
     gap: var(--awa-grid-gap);
     list-style: none;
     padding: 0;
     margin: 0;
     grid-template-columns: repeat(4, 1fr);
+    container-type: inline-size; /* F3-01: container queries */
+    container-name: category-grid;
 }
 
-/* Neutralizar float e nth-child clear do LESS legado */
+/* Neutralizar float e nth-child clear do LESS legado
+   F3-03: inclui .container-products-switch children */
 body .page-wrapper .products-grid .product-grid > .item-product,
 body .page-wrapper .products-grid .product-grid > div,
-body .page-wrapper .products-grid .product-grid > li {
+body .page-wrapper .products-grid .product-grid > li,
+body .page-wrapper .products-grid .container-products-switch > .item-product,
+body .page-wrapper .products-grid .container-products-switch > li,
+body .page-wrapper .products-grid .container-products-switch > div {
     float: none;
     clear: none;
     width: auto;
+    max-width: 100%;
     padding: 0;
     margin: 0;
 }
 
-/* §1a — Breakpoints de colunas para Categoria */
+/* §1a — Breakpoints de colunas para Categoria
+   F3-03: unificado — .container-products-switch agora herda do seletor do §1 acima */
 @media (width >= 1400px) {
     body .page-wrapper .products-grid .product-grid,
-    body .page-wrapper .products-grid ul.product-grid {
+    body .page-wrapper .products-grid ul.product-grid,
+    body .page-wrapper .products-grid ul.product-grid.container-products-switch {
         grid-template-columns: repeat(5, 1fr);
     }
 }
 
 @media (width >= 992px) and (width <= 1399px) {
     body .page-wrapper .products-grid .product-grid,
-    body .page-wrapper .products-grid ul.product-grid {
+    body .page-wrapper .products-grid ul.product-grid,
+    body .page-wrapper .products-grid ul.product-grid.container-products-switch {
         grid-template-columns: repeat(4, 1fr);
     }
 }
 
 @media (width >= 769px) and (width <= 991px) {
     body .page-wrapper .products-grid .product-grid,
-    body .page-wrapper .products-grid ul.product-grid {
+    body .page-wrapper .products-grid ul.product-grid,
+    body .page-wrapper .products-grid ul.product-grid.container-products-switch {
         grid-template-columns: repeat(3, 1fr);
         gap: var(--awa-grid-gap-sm);
     }
@@ -82,7 +95,8 @@ body .page-wrapper .products-grid .product-grid > li {
 
 @media (width >= 480px) and (width <= 768px) {
     body .page-wrapper .products-grid .product-grid,
-    body .page-wrapper .products-grid ul.product-grid {
+    body .page-wrapper .products-grid ul.product-grid,
+    body .page-wrapper .products-grid ul.product-grid.container-products-switch {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--awa-grid-gap-sm);
     }
@@ -90,9 +104,23 @@ body .page-wrapper .products-grid .product-grid > li {
 
 @media (width <= 480px) {
     body .page-wrapper .products-grid .product-grid,
-    body .page-wrapper .products-grid ul.product-grid {
+    body .page-wrapper .products-grid ul.product-grid,
+    body .page-wrapper .products-grid ul.product-grid.container-products-switch {
         grid-template-columns: 1fr;
         gap: var(--awa-grid-gap-xs);
+    }
+}
+
+/* F3-02: Subgrid para cards de Categoria (grids estáticos) */
+@supports (grid-template-rows: subgrid) {
+    body .page-wrapper .products-grid .product-grid:not(.owl-carousel) {
+        grid-template-rows: auto;
+    }
+
+    body .page-wrapper .products-grid .product-grid:not(.owl-carousel) > .item-product {
+        display: grid;
+        grid-template-rows: subgrid;
+        grid-row: span 4; /* img | info | price | button */
     }
 }
 
@@ -149,8 +177,9 @@ body .page-wrapper .category_page_grid_5 { grid-template-columns: repeat(5, 1fr)
 }
 
 /* ============================================================
-   §1d — HOTFIX CATEGORIA (container-products-switch + 2 colunas)
-   Mantém o controle estrutural da categoria centralizado neste arquivo.
+   §1d — HOTFIX CATEGORIA (layout 2 colunas + OWL fallback)
+   F3-03: breakpoints de .container-products-switch consolidados
+   no §1/§1a acima. Rest: apenas layout 2-col e OWL fallback.
    ============================================================ */
 body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row {
     display: grid;
@@ -176,26 +205,6 @@ body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2
     order: 2;
 }
 
-body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--awa-grid-gap);
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch > li.item-product,
-body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch > div.item-product,
-body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch > li,
-body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch > div {
-    float: none;
-    clear: none;
-    width: auto;
-    max-width: 100%;
-    margin: 0;
-}
-
 /* Fallback visual para OWL pré-init na categoria */
 body.catalog-category-view .page-wrapper .owl:not(.owl-carousel) {
     display: flex;
@@ -215,18 +224,8 @@ body.catalog-category-view .page-wrapper .owl:not(.owl-carousel) > .product_row 
     min-width: 0;
 }
 
-@media (width >= 1400px) {
-    body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch {
-        grid-template-columns: repeat(5, minmax(0, 1fr));
-    }
-}
-
-@media (width >= 992px) and (width <= 1399px) {
-    body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-}
-
+/* F3-03: breakpoints de container-products-switch consolidados no §1a.
+   Aqui ficam apenas os overrides de layout-2-col responsivo. */
 @media (width >= 768px) and (width <= 991px) {
     body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row {
         grid-template-columns: 1fr;
@@ -236,28 +235,16 @@ body.catalog-category-view .page-wrapper .owl:not(.owl-carousel) > .product_row 
     body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row > .col-main {
         order: initial;
     }
-
-    body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
 }
 
 @media (width >= 480px) and (width <= 767px) {
     body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row {
         grid-template-columns: 1fr;
     }
-
-    body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
 }
 
 @media (width <= 480px) {
     body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row {
-        grid-template-columns: 1fr;
-    }
-
-    body.catalog-category-view .page-wrapper .products-grid ul.product-grid.container-products-switch {
         grid-template-columns: 1fr;
     }
 }
@@ -771,7 +758,7 @@ body .page-wrapper .owl-carousel .owl-buttons .owl-next {
 body .page-wrapper .owl-carousel .owl-buttons .owl-prev::before,
 body .page-wrapper .owl-carousel .owl-buttons .owl-next::before {
     font-family: FontAwesome, 'Font Awesome 5 Free', sans-serif;
-    font-size: 14px;
+    font-size: var(--awa-text-base);
     font-weight: 900;
 }
 
@@ -786,7 +773,7 @@ body .page-wrapper .owl-carousel .owl-buttons .owl-next::before {
 body .page-wrapper .owl-carousel .owl-buttons .owl-prev:hover,
 body .page-wrapper .owl-carousel .owl-buttons .owl-next:hover {
     background: var(--awa-red);
-    color: #fff;
+    color: var(--awa-text-on-primary);
     border-color: var(--awa-red);
 }
 

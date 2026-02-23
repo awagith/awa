@@ -51,6 +51,10 @@ class Config extends AbstractHelper
     const XML_PATH_VIP_DISCOUNT = 'grupoawamotos_b2b/customer_groups/vip_discount';
     const XML_PATH_DEFAULT_B2B_GROUP = 'grupoawamotos_b2b/customer_groups/default_b2b_group';
     
+    // CNAE Profiling
+    const XML_PATH_CNAE_ENABLED = 'grupoawamotos_b2b/cnae_profiling/enabled';
+    const XML_PATH_CNAE_AUTO_APPROVE_DIRECT = 'grupoawamotos_b2b/cnae_profiling/auto_approve_direct';
+
     /**
      * Check if B2B module is enabled
      */
@@ -390,6 +394,30 @@ class Config extends AbstractHelper
     {
         return (int) $this->scopeConfig->getValue(
             self::XML_PATH_DEFAULT_B2B_GROUP,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * Check if CNAE profiling is enabled
+     */
+    public function isCnaeProfilingEnabled($storeId = null): bool
+    {
+        return $this->isEnabled($storeId) && $this->scopeConfig->isSetFlag(
+            self::XML_PATH_CNAE_ENABLED,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
+    }
+
+    /**
+     * Check if direct-profile customers should be auto-approved
+     */
+    public function isCnaeAutoApproveDirect($storeId = null): bool
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::XML_PATH_CNAE_AUTO_APPROVE_DIRECT,
             ScopeInterface::SCOPE_STORE,
             $storeId
         );

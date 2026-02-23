@@ -48,6 +48,14 @@
                     <dataScope>b2b_approval_status</dataScope>
                 </settings>
             </filterSelect>
+            <filterSelect name="b2b_cnae_profile">
+                <settings>
+                    <options class="GrupoAwamotos\B2B\Model\Customer\Attribute\Source\CnaeProfile"/>
+                    <caption translate="true">Todos</caption>
+                    <label translate="true">Perfil CNAE</label>
+                    <dataScope>b2b_cnae_profile</dataScope>
+                </settings>
+            </filterSelect>
         </filters>
         <paging name="listing_paging"/>
     </listingToolbar>
@@ -110,6 +118,31 @@
                 <filter>select</filter>
                 <dataType>select</dataType>
                 <label translate="true">Tipo Pessoa</label>
+            </settings>
+        </column>
+
+        <column name="b2b_cnae_code">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">CNAE</label>
+                <visible>false</visible>
+            </settings>
+        </column>
+
+        <column name="b2b_cnae_description">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Atividade Principal</label>
+                <visible>false</visible>
+            </settings>
+        </column>
+
+        <column name="b2b_cnae_profile" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <options class="GrupoAwamotos\B2B\Model\Customer\Attribute\Source\CnaeProfile"/>
+                <filter>select</filter>
+                <dataType>select</dataType>
+                <label translate="true">Perfil CNAE</label>
             </settings>
         </column>
         

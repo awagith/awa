@@ -15,6 +15,8 @@
                   instance="GrupoAwamotos\B2B\Observer\ErpRegistrationCheckObserver"/>
         <observer name="grupoawamotos_b2b_registration_notification"
                   instance="GrupoAwamotos\B2B\Observer\CustomerRegistrationNotification"/>
+        <observer name="grupoawamotos_b2b_cnae_classification"
+                  instance="GrupoAwamotos\B2B\Observer\CnaeClassificationObserver"/>
     </event>
 
     <!-- observer para verificar status de aprovação no login -->

@@ -6,6 +6,47 @@
 -->
 <form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <fieldset name="b2b_cnae" sortOrder="95">
+        <settings>
+            <collapsible>true</collapsible>
+            <label translate="true">Classificação CNAE</label>
+        </settings>
+
+        <field name="b2b_cnae_code" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Código CNAE</label>
+                <dataScope>b2b_cnae_code</dataScope>
+                <disabled>true</disabled>
+                <notice translate="true">Preenchido automaticamente pela consulta ReceitaWS</notice>
+            </settings>
+        </field>
+
+        <field name="b2b_cnae_description" formElement="input">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Atividade Principal</label>
+                <dataScope>b2b_cnae_description</dataScope>
+                <disabled>true</disabled>
+            </settings>
+        </field>
+
+        <field name="b2b_cnae_profile" formElement="select">
+            <settings>
+                <dataType>text</dataType>
+                <label translate="true">Perfil CNAE</label>
+                <dataScope>b2b_cnae_profile</dataScope>
+            </settings>
+            <formElements>
+                <select>
+                    <settings>
+                        <options class="GrupoAwamotos\B2B\Model\Customer\Attribute\Source\CnaeProfile"/>
+                    </settings>
+                </select>
+            </formElements>
+        </field>
+    </fieldset>
+
     <fieldset name="b2b_credit" sortOrder="100">
         <settings>
             <collapsible>true</collapsible>

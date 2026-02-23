@@ -1,9 +1,9 @@
 /* ===========================================
    AWA MOTOS — CORE (Design Tokens + Reset + Base)
    Tema: AYO/Rokanthemes (Home5)
-   
+
    ARQUIVO 1/4 da camada AWA consolidada.
-   
+
    CONTEÚDO:
    - Variáveis CSS (FONTE ÚNICA para todo o projeto)
    - Reset e base tipográfica
@@ -13,15 +13,25 @@
    - Scrollbar, seleção de texto
    - Skeleton loader, modais, tabelas
    - Utilitários (sr-text, reduced motion)
-   
+
    INSTALAÇÃO:
    app/design/frontend/ayo/ayo_home5/web/css/awa-core.css
    Carregar PRIMEIRO (antes dos demais awa-*.css)
-   
+
    ESPECIFICIDADE:
    Usa body .page-wrapper para superar Magento/AYO LESS sem !important.
    !important APENAS para overrides de inline styles do Magento.
 =========================================== */
+
+/* ===========================================
+   LAYERS — ORDEM DE CASCATA AWA (F2-02)
+   Declara a prioridade dos layers (menor → maior):
+   awa-reset < awa-core < awa-layout < awa-components < awa-consistency < awa-fixes < awa-grid
+   Atenção: regras fora de @layer (Ayo LESS) têm prioridade máxima.
+   Estratégia adotada: body .page-wrapper supera Ayo LESS por especificidade.
+   TODO: envolver cada arquivo em seu layer correspondente.
+=========================================== */
+@layer awa-reset, awa-core, awa-layout, awa-components, awa-consistency, awa-fixes, awa-grid;
 
 /* ===========================================
    VARIÁVEIS GLOBAIS — FONTE ÚNICA
@@ -33,9 +43,9 @@
 
     /* Cores primárias (prints oficiais) */
     --awa-red: #b73337;
-    --awa-red-dark: #8e2629;
-    --awa-red-light: rgb(183 51 55 / 16%);
-    --awa-red-extra-light: rgb(183 51 55 / 8%); /* hover bg leve */
+    --awa-red-dark: color-mix(in srgb, var(--awa-red), black 30%); /* F2-01 — derivado automático */
+    --awa-red-light: color-mix(in srgb, var(--awa-red) 16%, transparent); /* F2-01 */
+    --awa-red-extra-light: color-mix(in srgb, var(--awa-red) 8%, transparent); /* F2-01 hover bg leve */
     --awa-dark: #333;
     --awa-orange: #b73337; /* mantém badges dentro da paleta oficial */
 
@@ -55,13 +65,13 @@
 
     /* Cores semânticas — diferenciadas para UX clara */
     --awa-success: #198754;
-    --awa-success-light: #e8f5e9;
+    --awa-success-light: color-mix(in srgb, var(--awa-success) 10%, white); /* F2-01 */
     --awa-warning: #e09100;
-    --awa-warning-light: #fff8e1;
+    --awa-warning-light: color-mix(in srgb, var(--awa-warning) 12%, white); /* F2-01 */
     --awa-danger: #8e2629;
-    --awa-danger-light: #f7e9ea;
+    --awa-danger-light: color-mix(in srgb, var(--awa-danger) 12%, white); /* F2-01 */
     --awa-info: #0d6efd;
-    --awa-info-light: #e3f2fd;
+    --awa-info-light: color-mix(in srgb, var(--awa-info) 12%, white); /* F2-01 */
 
     /* Cores semânticas — texto (R12-14) */
     --awa-success-text: #0f5132;
@@ -78,6 +88,9 @@
     --awa-text-on-light: var(--awa-dark);
     --awa-text-muted-on-light: var(--awa-gray-500);
 
+    /* Superfícies */
+    --awa-bg-surface: #fff;
+
     /* Sombras */
     --awa-shadow-sm: 0 1px 3px rgb(0 0 0 / 6%);
     --awa-shadow: 0 2px 8px rgb(0 0 0 / 8%);
@@ -85,7 +98,7 @@
     --awa-shadow-hover: 0 8px 25px rgb(0 0 0 / 12%);
     --awa-shadow-lg: 0 12px 40px rgb(0 0 0 / 15%);
     --awa-shadow-dropdown: 0 6px 20px rgb(0 0 0 / 12%); /* R13: dropdown menus */
-    --awa-shadow-red: 0 4px 12px rgb(183 51 55 / 24%); /* CTA hover glow */
+    --awa-shadow-red: 0 4px 12px color-mix(in srgb, var(--awa-red) 24%, transparent); /* F2-01 CTA hover glow */
     --awa-overlay: rgb(0 0 0 / 80%); /* R16-02: overlay/backdrop backgrounds */
 
     /* Layout — padrão AYO Bootstrap container
@@ -102,6 +115,7 @@
     /* .awa-hidden-leak { display: none !important; } — definida abaixo */
 
     /* Border radius */
+    --awa-radius-xs: 4px;
     --awa-radius: 12px;
     --awa-radius-sm: 8px;
     --awa-radius-lg: 16px;
@@ -130,6 +144,13 @@
     --awa-transition-fast: 0.15s ease;
     --awa-transition-slow: 0.4s ease;
 
+    /* ── Convenção: Logical Properties (BP-05) ──
+       A partir de fev/2026, NOVAS regras devem usar propriedades lógicas:
+       padding-inline / padding-block / margin-inline / margin-block /
+       inset-inline / border-inline / etc.
+       Não migrar em massa código existente — apenas novas adições.
+       Ref: https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_logical_properties */
+
     /* Tipografia — Poppins carregada pelo Ayo via Google Fonts */
     --awa-font: 'Poppins', -apple-system, blinkmacsystemfont, 'Segoe UI', roboto, 'Helvetica Neue', arial, sans-serif;
     --awa-font-size: 16px;
@@ -152,6 +173,9 @@
     --awa-btn-height: 48px;
     --awa-btn-height-sm: 40px;
 
+    /* Touch target mínimo — WCAG 2.2 Success Criterion 2.5.8 (AAA) */
+    --awa-touch-target: 44px;
+
     /* Footer (tokens específicos, valores alinhados com globais) */
     --footer-bg: #1a1a1a;
     --footer-bg-secondary: #242424;
@@ -161,7 +185,7 @@
     --footer-accent: #b73337;
 
     /* --footer-accent-hover: removida (sem uso) */
-    --footer-border: rgb(255 255 255 / 10%);
+    --footer-border: color-mix(in srgb, transparent, white 10%); /* F2-01 */
     --footer-font-size-small: 12px;
     --footer-font-size-base: 14px;
     --footer-font-size-heading: 16px;
@@ -180,7 +204,7 @@
 =========================================== */
 ::selection {
     background: var(--awa-red);
-    color: #fff;
+    color: var(--awa-text-on-primary); /* BP-09: era #fff hardcoded */
 }
 
 /* ::-moz-selection removida — obsoleta desde Firefox 62 (2018) */
@@ -199,7 +223,7 @@
 
 ::-webkit-scrollbar-thumb {
     background: var(--awa-gray-400);
-    border-radius: 4px;
+    border-radius: var(--awa-radius-xs); /* BP-11: era 4px hardcoded */
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -210,6 +234,7 @@ html {
     scrollbar-width: thin;
     scrollbar-color: var(--awa-gray-400) var(--awa-gray-100);
     scroll-behavior: smooth;
+    interpolate-size: allow-keywords; /* F4-01: transição height:auto nativa (Chrome 129+) */
 }
 
 /* ===========================================
@@ -261,31 +286,49 @@ textarea:focus-visible {
 
 /* Hierarquia tipográfica global */
 body .page-wrapper h1 {
-    font-size: var(--awa-text-3xl);
+    font-size: clamp(var(--awa-text-2xl), 2vw + 16px, var(--awa-text-4xl)); /* F2-03: fluid 24→32px */
     font-weight: 700;
     line-height: 1.3;
     margin-bottom: var(--awa-space-4);
+    text-wrap: balance; /* F1-01: elimina viúvas tipográficas */
 }
 
 body .page-wrapper h2 {
-    font-size: var(--awa-text-2xl);
+    font-size: clamp(var(--awa-text-xl), 1.5vw + 14px, var(--awa-text-3xl)); /* F2-03: fluid 20→28px */
     font-weight: 700;
     line-height: 1.35;
     margin-bottom: var(--awa-space-3);
+    text-wrap: balance; /* F1-01 */
 }
 
 body .page-wrapper h3 {
-    font-size: var(--awa-text-xl);
+    font-size: clamp(var(--awa-text-lg), 1vw + 12px, var(--awa-text-2xl)); /* F2-03: fluid 18→24px */
     font-weight: 600;
     line-height: 1.4;
     margin-bottom: var(--awa-space-3);
+    text-wrap: balance; /* F1-01 */
 }
 
 body .page-wrapper h4 {
-    font-size: var(--awa-text-lg);
+    font-size: var(--awa-text-lg); /* F2-03: h4 mantém fixo (18px — adequado para labels) */
     font-weight: 600;
     line-height: 1.4;
     margin-bottom: var(--awa-space-2);
+    text-wrap: balance; /* F1-01 */
+}
+
+/* F1-02: text-wrap pretty em parágrafos — evita viúvas em texto corrido */
+body .page-wrapper p,
+body .page-wrapper .product.attribute.description,
+body .page-wrapper .cms-page-view .page-main {
+    text-wrap: pretty;
+}
+
+/* F4-03: hanging-punctuation — alinhamento óptico de aspas/hífens */
+body .page-wrapper .product.attribute.description,
+body .page-wrapper .cms-page-view .page-main,
+body .page-wrapper .post-content {
+    hanging-punctuation: first allow-end;
 }
 
 .page-wrapper {
@@ -320,7 +363,7 @@ body .page-wrapper .action.primary,
 body .page-wrapper button.primary,
 body .page-wrapper .btn-primary {
     background: var(--awa-red);
-    color: #fff;
+    color: var(--awa-text-on-primary);
     border: none;
     border-radius: var(--awa-radius-sm);
     padding: var(--awa-space-4) var(--awa-space-7);
@@ -375,7 +418,7 @@ body .page-wrapper .btn-primary:disabled {
 body .page-wrapper .action.secondary,
 body .page-wrapper button.secondary,
 body .page-wrapper .btn-secondary {
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     color: var(--awa-red);
     border: 1px solid var(--awa-red);
     border-radius: var(--awa-radius-sm);
@@ -581,7 +624,7 @@ body .page-wrapper .cart-empty .action.continue {
     display: inline-block;
     padding: var(--awa-space-4) var(--awa-space-7);
     background: var(--awa-red);
-    color: #fff;
+    color: var(--awa-text-on-primary);
     border-radius: var(--awa-radius-sm);
     font-weight: 600;
     text-decoration: none;
@@ -687,12 +730,12 @@ body .page-wrapper .pages .item a {
 
 body .page-wrapper .pages .item a:hover {
     background: var(--awa-red-dark);
-    color: #fff;
+    color: var(--awa-text-on-primary);
 }
 
 body .page-wrapper .pages .item.current strong {
     background: var(--awa-red);
-    color: #fff;
+    color: var(--awa-text-on-primary);
 }
 
 /* ===========================================
@@ -1026,11 +1069,11 @@ body .page-wrapper a[href="#maincontent"]:focus {
     height: auto;
     padding: var(--awa-space-3) var(--awa-space-6);
     background: var(--awa-red);
-    color: #fff;
+    color: var(--awa-text-on-primary);
     font-size: var(--awa-text-md);
     font-weight: 600;
     text-decoration: none;
-    outline: 2px solid #fff;
+    outline: 2px solid var(--awa-text-on-primary);
 }
 
 /* R10-05: Scroll-margin para ancoras sob sticky header */
@@ -1051,7 +1094,7 @@ body .page-wrapper a[href="#maincontent"]:focus {
     background: var(--awa-dark);
     border: 1px solid rgb(255 255 255 / 20%);
     border-radius: 50%;
-    color: #fff;
+    color: var(--awa-text-on-dark);
     font-size: var(--awa-text-xl);
     cursor: pointer;
     opacity: 0;
@@ -1090,7 +1133,7 @@ body .page-wrapper a[href="#maincontent"]:focus {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
+    color: var(--awa-text-on-primary);
     text-decoration: none;
     box-shadow: 0 4px 15px rgb(183 51 55 / 28%);
     z-index: 9999;

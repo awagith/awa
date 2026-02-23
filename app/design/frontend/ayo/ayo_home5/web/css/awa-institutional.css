@@ -119,7 +119,7 @@
     width: 2rem;
     height: 2rem;
     background: var(--awa-red);
-    color: #fff;
+    color: var(--awa-text-on-primary);
     border-radius: var(--awa-radius-full);
     text-align: center;
     line-height: 2rem;
@@ -132,7 +132,7 @@
    ============================================================ */
 .awa-inst .awa-cta {
     background: linear-gradient(135deg, var(--awa-red), var(--awa-red-dark));
-    color: #fff;
+    color: var(--awa-text-on-primary);
     padding: var(--awa-space-7);
     border-radius: var(--awa-radius-sm);
     text-align: center;
@@ -140,11 +140,11 @@
 }
 
 .awa-inst .awa-cta h3 {
-    color: #fff;
+    color: var(--awa-text-on-primary);
     margin-top: 0;
 }
 
-.awa-inst .awa-cta p { color: #fff; }
+.awa-inst .awa-cta p { color: var(--awa-text-on-primary); }
 
 .awa-inst .awa-cta a.awa-btn {
     display: inline-block;
@@ -161,7 +161,7 @@
 .awa-inst .awa-cta a.awa-btn:hover,
 .awa-inst .awa-cta a.awa-btn:focus-visible { /* R39c: :focus → :focus-visible (FP-2) */
     background: var(--awa-gray-800);
-    color: #fff;
+    color: var(--awa-text-on-dark);
 }
 
 /* ============================================================
@@ -273,7 +273,7 @@
 }
 
 .awa-inst .awa-right {
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     border: 1px solid var(--awa-gray-300);
     border-radius: var(--awa-radius-sm);
     padding: var(--awa-space-4);

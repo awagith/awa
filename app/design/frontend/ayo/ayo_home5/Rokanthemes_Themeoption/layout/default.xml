@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="page.wrapper">
             <block class="Rokanthemes\Themeoption\Block\Themeoption" name="toki_header" template="html/header.phtml" before="-">
@@ -40,24 +41,13 @@
         <move element="slideshow.top" destination="toki_header"/>
         <move element="custom.topnav" destination="toki_header"/>
 
-        <referenceBlock name="my-account-link">
-            <action method="setTemplate">
-                <argument name="template" xsi:type="string">Rokanthemes_Themeoption::customer/account/link.phtml</argument>
-            </action>
-        </referenceBlock>
-        <referenceBlock name="register-link">
-            <action method="setTemplate">
-                <argument name="template" xsi:type="string">Rokanthemes_Themeoption::customer/account/register_link.phtml</argument>
-            </action>
+        <referenceBlock name="my-account-link" template="Rokanthemes_Themeoption::customer/account/link.phtml"/>
+        <referenceBlock name="register-link" template="Rokanthemes_Themeoption::customer/account/register_link.phtml">
             <arguments>
                 <argument name="label" xsi:type="string" translate="true">Create Account</argument>
             </arguments>
         </referenceBlock>
-        <referenceBlock name="logo">
-            <action method="setTemplate">
-                <argument name="template" xsi:type="string">Rokanthemes_Themeoption::html/header/logo.phtml</argument>
-            </action>
-        </referenceBlock>
+        <referenceBlock name="logo" template="Rokanthemes_Themeoption::html/header/logo.phtml"/>
 
         <referenceContainer name="header.container" remove="true"/>
         <referenceContainer name="header.panel" remove="true"/>
@@ -96,7 +86,7 @@
 
         <move element="footer_links" destination="toki_footer"/>
         <move element="store_switcher" destination="toki_footer"/>
-        <!-- Remove o bloco copyright do Magento default para evitar conflito de alias
+        <!-- remove o bloco copyright do magento default para evitar conflito de alias
              com toki_copyright (as="copyright") ja definido no tema pai ayo_default -->
         <referenceBlock name="copyright" remove="true"/>
 

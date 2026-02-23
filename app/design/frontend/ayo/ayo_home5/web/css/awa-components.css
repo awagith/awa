@@ -106,11 +106,95 @@ body .page-wrapper .products.list .product-items:not(.owl-carousel) {
 }
 
 /* ============================================================
+   F3-01 — CONTAINER QUERIES (Product Card Context-Aware)
+   Cards adaptam ao tamanho do CONTAINER — não da viewport.
+   Beneficia sidebar, modal quickview, widgets estreitos.
+   Suporte: Chrome 105+, Firefox 110+, Safari 16+ (~94%).
+   Fallback: layout viewport-based (grid breakpoints acima).
+   ============================================================ */
+body .page-wrapper .products-grid,
+body .page-wrapper .products.list,
+body .page-wrapper .block-products-list,
+body .page-wrapper .widget-product-grid {
+    container-type: inline-size;
+    container-name: product-grid;
+}
+
+/* Cards em container estreito (<400px): compactar info */
+@container product-grid (width < 400px) {
+    body .page-wrapper .item-product .product-name a,
+    body .page-wrapper .product-item .product-item-link {
+        -webkit-line-clamp: 1;
+        font-size: var(--awa-text-sm);
+    }
+
+    body .page-wrapper .item-product .price-box .price,
+    body .page-wrapper .product-item .price {
+        font-size: var(--awa-text-base);
+    }
+
+    body .page-wrapper .item-product .actions-secondary,
+    body .page-wrapper .product-item .actions-secondary {
+        flex-direction: column;
+        gap: var(--awa-space-1);
+    }
+
+    body .page-wrapper .item-product .product-info,
+    body .page-wrapper .product-item .product-item-details {
+        padding: var(--awa-space-2);
+    }
+}
+
+/* Cards em container muito estreito (<250px): esconder secundários */
+@container product-grid (width < 250px) {
+    body .page-wrapper .item-product .rating-summary,
+    body .page-wrapper .item-product .reviews-actions,
+    body .page-wrapper .product-item .rating-summary,
+    body .page-wrapper .product-item .reviews-actions {
+        display: none;
+    }
+
+    body .page-wrapper .item-product .old-price,
+    body .page-wrapper .product-item .old-price {
+        display: none;
+    }
+}
+
+/* ============================================================
+   F3-02 — SUBGRID (Alinhamento Perfeito entre Cards)
+   Subitens (img, info, preço, botão) se alinham horizontalmente
+   entre TODOS os cards da mesma row no grid estático.
+   Suporte: Chrome 117+, Firefox 71+, Safari 16+ (~94%).
+   Fallback: flex column (layout atual — funcional, sem alinhamento).
+   ⚠ NÃO aplicar em OWL Carousel (usa float/position).
+   ============================================================ */
+@supports (grid-template-rows: subgrid) {
+    body .page-wrapper .products-grid .product-items:not(.owl-carousel) {
+        grid-template-rows: auto; /* subgrid herda as tracks do pai */
+    }
+
+    body .page-wrapper .products-grid .product-items:not(.owl-carousel) > .product-item,
+    body .page-wrapper .products-grid .product-items:not(.owl-carousel) > .item-product {
+        display: grid;
+        grid-template-rows: subgrid;
+        grid-row: span 4; /* img | info | price | button */
+    }
+
+    /* Mapear cada seção do card à sua row no subgrid */
+    body .page-wrapper .products-grid .product-items:not(.owl-carousel) > .product-item > .product-item-info,
+    body .page-wrapper .products-grid .product-items:not(.owl-carousel) > .item-product > .product-item-info {
+        display: grid;
+        grid-template-rows: subgrid;
+        grid-row: span 4;
+    }
+}
+
+/* ============================================================
    PRODUCT CARD — AMBAS classes AYO + Magento
    ============================================================ */
 body .page-wrapper .item-product,
 body .page-wrapper .product-item {
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     border-radius: var(--awa-radius);
     border: 1px solid var(--awa-gray-200);
     overflow: visible;
@@ -495,7 +579,7 @@ body .page-wrapper .item-product .actions-secondary .action,
 body .page-wrapper .item-product .actions-secondary a {
     width: 44px; /* BUG-07: era 36px — WCAG 2.5.5 touch target mínimo 44px */
     height: 44px;
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     border-radius: 50%;
     box-shadow: var(--awa-shadow);
     display: flex;
@@ -538,7 +622,7 @@ body .page-wrapper .item-product .quickview-link {
     left: 50%;
     transform: translateX(-50%) translateY(20px);
     background: var(--awa-overlay);
-    color: #fff;
+    color: var(--awa-text-on-dark);
     padding: var(--awa-space-2) var(--awa-space-4);
     border-radius: var(--awa-radius-full);
     font-size: var(--awa-text-xs); /* 11px ≈ xs */
@@ -617,7 +701,7 @@ body .page-wrapper .item-product .stock.unavailable {
    SUPERDEALS CARDS
    ============================================================ */
 body .page-wrapper .item-deal-product {
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     border-radius: var(--awa-radius);
     border: 1px solid var(--awa-gray-200);
     overflow: visible;
@@ -812,7 +896,7 @@ body .page-wrapper .owl-carousel .owl-nav button.owl-next {
     transform: translateY(-50%);
     width: 44px;   /* WCAG 2.5.5 touch target min 44px */
     height: 44px;
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     border: 1px solid var(--awa-gray-200);
     border-radius: 50%;
     display: flex;
@@ -1527,7 +1611,7 @@ body .page-wrapper .category-image img {
    MINICART DROPDOWN — R15-07
    ============================================================ */
 body .page-wrapper .block-minicart {
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     border-radius: 0 0 var(--awa-radius) var(--awa-radius);
     box-shadow: var(--awa-shadow-dropdown);
     border: 1px solid var(--awa-gray-200);
@@ -1848,7 +1932,7 @@ body .page-wrapper .account .sidebar-main .account-nav .item.current a {
 /* Login / Register pages */
 body .page-wrapper .login-container .block-customer-login,
 body .page-wrapper .login-container .block-new-customer {
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     border-radius: var(--awa-radius);
     padding: var(--awa-space-7);
     border: 1px solid var(--awa-gray-200);
@@ -1896,7 +1980,7 @@ body .page-wrapper .search.results .search.found {
 }
 
 body .page-wrapper .search-autocomplete {
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     border: 1px solid var(--awa-gray-200);
     border-radius: var(--awa-radius);
     box-shadow: var(--awa-shadow-lg);
@@ -2375,7 +2459,7 @@ body .page-wrapper .cat_special {
 .awa-mobile-quick-nav {
     display: none;
     width: 100%;
-    background: #fff;
+    background: var(--awa-bg-surface); /* BP-12 */
     border-bottom: 1px solid var(--awa-gray-200);
     padding: var(--awa-space-3) 0;
     margin-bottom: var(--awa-space-4);
@@ -2428,7 +2512,7 @@ body .page-wrapper .cat_special {
     }
 
     .awa-mobile-quick-nav .quick-nav-link .icon {
-        font-size: 20px;
+        font-size: var(--awa-text-xl);
         background: var(--awa-gray-100);
         width: 48px;
         height: 48px;
