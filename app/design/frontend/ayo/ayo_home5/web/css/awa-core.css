@@ -144,6 +144,22 @@
     --awa-transition-fast: 0.15s ease;
     --awa-transition-slow: 0.4s ease;
 
+    /* Z-index — Escala de camadas arquitetural (BP-16) */
+    --awa-z-dropdown: 99;        /* autocomplete, dropdowns leves */
+    --awa-z-overlay: 1000;       /* minicart, modais leves */
+    --awa-z-menu-container: 1006;/* container do menu vertical */
+    --awa-z-menu-list: 1008;     /* lista do menu vertical dropdown */
+    --awa-z-sticky: 9990;        /* header sticky/fixed */
+    --awa-z-sidebar: 9997;       /* fixed-right sidebar tools */
+    --awa-z-fixed: 9998;         /* back-to-top button */
+    --awa-z-float: 9999;         /* whatsapp float, header dropdown */
+    --awa-z-submenu: 10000;      /* vertical menu flyout */
+    --awa-z-flyout: 10030;       /* submenu acima do menu principal */
+    --awa-z-popup: 10100;        /* newsletter popup */
+    --awa-z-nav-overlay: 99998;  /* overlay backdrop mobile nav */
+    --awa-z-nav-drawer: 99999;   /* mobile nav drawer */
+    --awa-z-skip: 999999;        /* skip-to-content a11y */
+
     /* ── Convenção: Logical Properties (BP-05) ──
        A partir de fev/2026, NOVAS regras devem usar propriedades lógicas:
        padding-inline / padding-block / margin-inline / margin-block /
@@ -1056,7 +1072,7 @@ body .page-wrapper .action.skip {
     width: 1px;
     height: 1px;
     overflow: hidden;
-    z-index: 999999;
+    z-index: var(--awa-z-skip); /* BP-16: era 999999 */
 }
 
 .awa-skip-to-main:focus,
@@ -1100,7 +1116,7 @@ body .page-wrapper a[href="#maincontent"]:focus {
     opacity: 0;
     visibility: hidden;
     transition: opacity var(--awa-transition), visibility var(--awa-transition), background var(--awa-transition), border-color var(--awa-transition); /* R13: era 'all' */
-    z-index: 9998;
+    z-index: var(--awa-z-fixed); /* BP-16: era 9998 */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1112,7 +1128,7 @@ body .page-wrapper a[href="#maincontent"]:focus {
 }
 
 #awaBackToTop:focus-visible {
-    outline: 2px solid #fff;
+    outline: 2px solid var(--awa-text-on-primary); /* BP-15: era #fff hardcoded */
     outline-offset: 2px;
     background: var(--awa-red);
 }
@@ -1136,7 +1152,7 @@ body .page-wrapper a[href="#maincontent"]:focus {
     color: var(--awa-text-on-primary);
     text-decoration: none;
     box-shadow: 0 4px 15px rgb(183 51 55 / 28%);
-    z-index: 9999;
+    z-index: var(--awa-z-float); /* BP-16: era 9999 */
     transition: transform var(--awa-transition), box-shadow var(--awa-transition); /* R13: era 'all' */
 }
 
@@ -1147,7 +1163,7 @@ body .page-wrapper a[href="#maincontent"]:focus {
 }
 
 .awa-whatsapp-float:focus-visible {
-    outline: 2px solid #fff;
+    outline: 2px solid var(--awa-text-on-primary); /* BP-15: era #fff hardcoded */
     outline-offset: 2px;
     box-shadow: 0 0 0 4px var(--awa-red-light);
 }

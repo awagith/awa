@@ -1960,14 +1960,14 @@ body .page-wrapper .cms-page-view .column.main h3 {
 }
 
 body .page-wrapper .cms-page-view .column.main p {
-    margin-bottom: 16px;
+    margin-bottom: var(--awa-space-4); /* BP-19: era 16px */
     color: var(--awa-gray-700);
 }
 
 body .page-wrapper .cms-page-view .column.main ul,
 body .page-wrapper .cms-page-view .column.main ol {
     padding-inline-start: 20px; /* R18-07: logical property */
-    margin-bottom: 16px;
+    margin-bottom: var(--awa-space-4); /* BP-19: era 16px */
 }
 
 /* ============================================================
@@ -1984,7 +1984,7 @@ body .page-wrapper .search-autocomplete {
     border: 1px solid var(--awa-gray-200);
     border-radius: var(--awa-radius);
     box-shadow: var(--awa-shadow-lg);
-    z-index: 1000;
+    z-index: var(--awa-z-overlay); /* BP-16: era 1000 */
     max-height: 400px;
     overflow-y: auto;
     scrollbar-width: thin; /* R18-10: alinhado com scrollbar global */
@@ -2243,7 +2243,7 @@ body .page-wrapper .product.info.detailed .data.item.title > span:focus-visible 
 
     /* R15-09: product image padding compacto em mobile */
     body .page-wrapper .product-item .product-image-photo {
-        padding: 8px;
+        padding: var(--awa-space-2); /* BP-18: era 8px */
     }
 
     /* Detail */
@@ -2363,7 +2363,7 @@ body .page-wrapper .cat_special {
    ============================================================ */
 @media (width <= 480px) {
     body .page-wrapper .owl-carousel .owl-dots {
-        margin-top: 12px;
+        margin-top: var(--awa-space-3); /* BP-19: era 12px */
     }
 
     body .page-wrapper .owl-carousel .owl-dot span {
@@ -2465,7 +2465,7 @@ body .page-wrapper .cat_special {
     margin-bottom: var(--awa-space-4);
     position: sticky;
     top: calc(var(--awa-header-height, 0px) + var(--awa-space-1));
-    z-index: 99;
+    z-index: var(--awa-z-dropdown); /* BP-16: era 99 */
 }
 
 @media (width <= 767px) {

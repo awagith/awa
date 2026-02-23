@@ -277,7 +277,7 @@ body.cms-homepage_ayo_home5 .page-wrapper .block_notification {
     white-space: nowrap;
     background: var(--awa-dark); /* R11-06: token */
     color: var(--awa-text-on-dark); /* BP-09: era #fff hardcoded */
-    padding: 8px 0;
+    padding: var(--awa-space-2) 0; /* BP-18: era 8px 0 */
     font-size: var(--awa-text-sm);
 }
 
@@ -330,7 +330,7 @@ body .page-wrapper .blog-post-item img {
    Popup lives outside .page-wrapper — uses body prefix.
    ============================================================ */
 body .newsletterpopup {
-    z-index: 10100; /* R10-17: acima do vertical-menu submenu (10000) */
+    z-index: var(--awa-z-popup); /* BP-16: era 10100 — R10-17: acima do vertical-menu submenu */
 }
 
 body #newsletter_pop_up {
@@ -385,13 +385,13 @@ body .newsletterpopup .newsletter-popup-description {
 body .newsletterpopup .field.newsletter .control,
 body .ayo-newsletter-popup .field.newsletter .control {
     display: flex;
-    gap: 8px;
+    gap: var(--awa-space-2); /* BP-17: era 8px */
 }
 
 body .newsletterpopup .field.newsletter input[type="email"],
 body .ayo-newsletter-popup .field.newsletter input[type="email"] {
     flex: 1;
-    padding: 12px 16px;
+    padding: var(--awa-space-3) var(--awa-space-4); /* BP-18: era 12px 16px */
     border: 1px solid var(--awa-gray-200);
     border-radius: var(--awa-radius-sm);
     font-size: var(--awa-text-base);
@@ -411,7 +411,7 @@ body .ayo-newsletter-popup .action.subscribe {
     color: var(--awa-text-on-primary); /* BP-09: era #fff hardcoded */
     border: none;
     border-radius: var(--awa-radius-sm);
-    padding: 12px 24px;
+    padding: var(--awa-space-3) var(--awa-space-6); /* BP-18: era 12px 24px */
     font-weight: 600;
     cursor: pointer;
     transition: background-color var(--awa-transition-fast); /* R12-06 */
@@ -432,7 +432,7 @@ body .ayo-newsletter-popup .action.subscribe:focus-visible {
 }
 
 body .newsletterpopup .newsletter-popup-privacy {
-    margin-top: 16px;
+    margin-top: var(--awa-space-4); /* BP-19: era 16px */
     font-size: 11px;
     color: var(--awa-gray-500); /* BUG-04: era gray-400 (#ced4da) — contraste 1.46:1 sobre branco. gray-500 (#6c757d) = ~4.6:1 ✓ */
 }
@@ -522,7 +522,7 @@ body #newsletter_pop_up.newsletterpopup {
     background: rgb(0 0 0 / 60%);
     position: fixed;
     inset: 0;
-    padding: 16px;
+    padding: var(--awa-space-4); /* BP-18: era 16px */
 }
 
 body #newsletter_pop_up.newsletterpopup.nl-popup-fallback-open {
@@ -612,7 +612,7 @@ body #newsletter_pop_up .nl-popup-hero-discount {
 }
 
 body #newsletter_pop_up .nl-popup-hero-off {
-    margin-top: 4px;
+    margin-top: var(--awa-space-1); /* BP-19: era 4px */
     font-size: 40px;
     line-height: 1;
     font-weight: 800;
@@ -620,7 +620,7 @@ body #newsletter_pop_up .nl-popup-hero-off {
 }
 
 body #newsletter_pop_up .nl-popup-hero-caption {
-    margin-top: 8px;
+    margin-top: var(--awa-space-2); /* BP-19: era 8px */
     font-size: 11px;
     line-height: 1.25;
     letter-spacing: 1.4px;
@@ -644,7 +644,7 @@ body #newsletter_pop_up .nl-popup-badge {
     letter-spacing: 0.7px;
     color: var(--awa-gray-700);
     background: var(--awa-gray-100);
-    margin-bottom: 8px;
+    margin-bottom: var(--awa-space-2); /* BP-19: era 8px */
 }
 
 body #newsletter_pop_up .nl-popup-badge svg,
@@ -669,7 +669,7 @@ body #newsletter_pop_up .nl-popup-title-highlight {
 }
 
 body #newsletter_pop_up .nl-popup-subtitle {
-    margin: 0 0 8px;
+    margin: 0 0 var(--awa-space-2); /* BP-19: era 0 0 8px */
     font-size: 25px;
     line-height: 1.1;
     font-weight: 700;
@@ -677,7 +677,7 @@ body #newsletter_pop_up .nl-popup-subtitle {
 }
 
 body #newsletter_pop_up .nl-popup-desc {
-    margin: 0 0 8px;
+    margin: 0 0 var(--awa-space-2); /* BP-19: era 0 0 8px */
     color: var(--awa-text-muted-on-light);
     font-size: var(--awa-text-sm);
     line-height: 1.4;
@@ -687,7 +687,7 @@ body #newsletter_pop_up .nl-popup-urgency {
     display: flex;
     align-items: center;
     gap: 6px;
-    margin-bottom: 8px;
+    margin-bottom: var(--awa-space-2); /* BP-19: era 8px */
     border: 1px solid var(--awa-gray-200);
     border-radius: var(--awa-radius-sm); /* F1-04: era 8px hardcoded */
     background: var(--awa-gray-100);
@@ -698,7 +698,7 @@ body #newsletter_pop_up .nl-popup-urgency {
 }
 
 body #newsletter_pop_up .nl-popup-form {
-    margin-bottom: 8px;
+    margin-bottom: var(--awa-space-2); /* BP-19: era 8px */
 }
 
 body #newsletter_pop_up .nl-popup-form .field.newsletter {
@@ -821,7 +821,7 @@ body #newsletter_pop_up .nl-popup-success {
     justify-content: center;
     text-align: center;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--awa-space-2); /* BP-17: era 8px */
 }
 
 body #newsletter_pop_up .nl-popup-success-icon {
@@ -861,7 +861,7 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
     }
 
     body #newsletter_pop_up .nl-popup-subtitle {
-        font-size: 20px;
+        font-size: var(--awa-text-xl);
     }
 
     body #newsletter_pop_up .nl-popup-hero-discount {
@@ -934,7 +934,7 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
     }
 
     body #newsletter_pop_up .nl-popup-hero-logo {
-        margin-bottom: 8px;
+        margin-bottom: var(--awa-space-2); /* BP-19: era 8px */
         max-width: 70px;
     }
 
@@ -1004,7 +1004,7 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
    ============================================================ */
 body .page-wrapper .testimonials-slider .item,
 body .page-wrapper .testimonials-home .item {
-    padding: 20px;
+    padding: var(--awa-space-5); /* BP-18: era 20px */
     border-radius: var(--awa-radius);
     background: var(--awa-bg-surface); /* BP-12 */
     box-shadow: var(--awa-shadow); /* R12-13 */
@@ -1105,7 +1105,7 @@ body .page-wrapper .countdown_block {
 body .page-wrapper .title_countdown {
     font-weight: 600;
     font-size: 15px;
-    margin-bottom: 8px;
+    margin-bottom: var(--awa-space-2); /* BP-19: era 8px */
 }
 
 /* FIX-17 — REMOVIDO */
@@ -1139,7 +1139,7 @@ body .page-wrapper .actions-secondary a:empty::before {
 
     body .page-wrapper .testimonial-item .author-info {
         flex-direction: column;
-        gap: 8px;
+        gap: var(--awa-space-2); /* BP-17: era 8px */
     }
 
     body .page-wrapper .testimonial-item .author-avatar {
@@ -1163,7 +1163,7 @@ body .page-wrapper .actions-secondary a:empty::before {
     body .page-wrapper .time_circles > div {
         min-width: 40px;
         min-height: 40px;
-        padding: 4px;
+        padding: var(--awa-space-1); /* BP-18: era 4px */
     }
 
     body .page-wrapper .time_circles > div .number {
@@ -1186,7 +1186,7 @@ body .page-wrapper .actions-secondary a:empty::before {
 
     body .page-wrapper .blog-post-item .post-content,
     body .page-wrapper .the_blog .post-item .post-content {
-        padding: 12px;
+        padding: var(--awa-space-3); /* BP-18: era 12px */
     }
 
     body .page-wrapper .blog-post-item .post-title a {
@@ -1391,7 +1391,7 @@ body .page-wrapper .owl-carousel {
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .benefits-bar__item {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--awa-space-2); /* BP-17: era 8px */
     color: var(--awa-gray-700);
     font-size: 15px;
     line-height: 1.45;
@@ -1478,7 +1478,7 @@ body .page-wrapper .owl-carousel {
     display: block;
     width: 64px;
     height: 2px;
-    margin-top: 12px;
+    margin-top: var(--awa-space-3); /* BP-19: era 12px */
     background: var(--awa-red);
 }
 
@@ -1518,14 +1518,14 @@ body .page-wrapper .owl-carousel {
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .aw-home-faq__subtitle {
-    margin: 8px 0 0;
+    margin: var(--awa-space-2) 0 0; /* BP-19: era 8px 0 0 */
     color: var(--awa-gray-600);
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .aw-home-faq__items {
     display: grid;
     gap: 10px;
-    margin-top: 16px;
+    margin-top: var(--awa-space-4); /* BP-19: era 16px */
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .aw-home-faq__item {
@@ -1579,7 +1579,7 @@ body .page-wrapper .owl-carousel {
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .benefits-bar {
         align-items: flex-start;
-        gap: 8px;
+        gap: var(--awa-space-2); /* BP-17: era 8px */
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .benefits-bar__item {
@@ -1587,7 +1587,7 @@ body .page-wrapper .owl-carousel {
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals {
-        padding: 12px;
+        padding: var(--awa-space-3); /* BP-18: era 12px */
         gap: 10px 12px;
     }
 
@@ -1737,7 +1737,7 @@ a[data-action="add-to-wishlist"],
     display: flex !important;
     flex-wrap: wrap;
     align-items: stretch;
-    gap: 12px;
+    gap: var(--awa-space-3); /* BP-17: era 12px */
     margin: 0 !important;
 }
 
@@ -1781,7 +1781,7 @@ a[data-action="add-to-wishlist"],
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    gap: 12px;
+    gap: var(--awa-space-3); /* BP-17: era 12px */
     min-height: 92px;
     height: 100%;
     padding: 14px 12px;
@@ -1859,7 +1859,7 @@ a[data-action="add-to-wishlist"],
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss .countdown_block {
     display: grid;
     place-items: center center;
-    gap: 8px;
+    gap: var(--awa-space-2); /* BP-17: era 8px */
     margin: 0;
     padding: 14px 16px;
     position: static !important;
@@ -1891,7 +1891,7 @@ a[data-action="add-to-wishlist"],
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .vc_tta-tabs-container {
     width: 100%;
-    margin-bottom: 16px;
+    margin-bottom: var(--awa-space-4); /* BP-19: era 16px */
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .tabs {
@@ -1899,7 +1899,7 @@ a[data-action="add-to-wishlist"],
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 8px;
+    gap: var(--awa-space-2); /* BP-17: era 8px */
     margin: 0;
     padding: 0;
     list-style: none;
@@ -1969,13 +1969,13 @@ a[data-action="add-to-wishlist"],
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 12px;
+    gap: var(--awa-space-3); /* BP-17: era 12px */
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .block_cat > .row {
     display: grid;
     grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
-    gap: 20px;
+    gap: var(--awa-space-5); /* BP-17: era 20px */
     margin: 0;
 }
 
@@ -1988,7 +1988,7 @@ a[data-action="add-to-wishlist"],
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 {
     display: grid;
-    gap: 8px;
+    gap: var(--awa-space-2); /* BP-17: era 8px */
     margin: 0;
     padding: 0;
     list-style: none;
@@ -2040,7 +2040,7 @@ a[data-action="add-to-wishlist"],
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        gap: 8px;
+        gap: var(--awa-space-2); /* BP-17: era 8px */
         padding-bottom: var(--awa-space-2);
         mask-image: linear-gradient(to right, transparent 0, #000 8px, #000 calc(100% - 24px), transparent 100%);
     }
@@ -2097,7 +2097,7 @@ a[data-action="add-to-wishlist"],
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    margin-top: 16px;
+    margin-top: var(--awa-space-4); /* BP-19: era 16px */
     padding: 10px 18px;
     border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
     background: var(--awa-red);
@@ -2257,7 +2257,7 @@ body .page-wrapper .modals-wrapper .modal-popup.newsletter-popup-modal .modal-in
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
+    gap: var(--awa-space-4); /* BP-17: era 16px */
     margin: 0;
 }
 
@@ -2274,7 +2274,7 @@ body .page-wrapper .modals-wrapper .modal-popup.newsletter-popup-modal .modal-in
     align-items: center;
     justify-content: flex-end;
     flex-wrap: wrap;
-    gap: 12px 20px;
+    gap: var(--awa-space-3) var(--awa-space-5); /* BP-17: era 12px 20px */
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .footer-title {
@@ -2304,7 +2304,7 @@ body .page-wrapper .modals-wrapper .modal-popup.newsletter-popup-modal .modal-in
     display: flex;
     align-items: center;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--awa-space-2); /* BP-17: era 8px */
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .security-seal-item svg {
@@ -2395,7 +2395,7 @@ body .page-wrapper .product-item .action.tocart:active {
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
         display: none;
-        margin-top: 8px;
+        margin-top: var(--awa-space-2); /* BP-19: era 8px */
         border: 1px solid var(--awa-gray-200);
         border-radius: var(--awa-radius-sm);
         background: var(--awa-bg-surface); /* BP-12 */
@@ -2415,12 +2415,12 @@ body .page-wrapper .product-item .action.tocart:active {
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .block_cat > .row {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: var(--awa-space-4); /* BP-17: era 16px */
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 {
         display: flex;
-        gap: 8px;
+        gap: var(--awa-space-2); /* BP-17: era 8px */
         overflow-x: auto;
         white-space: nowrap;
         scrollbar-width: thin;
@@ -2746,7 +2746,7 @@ body .page-wrapper .product-item .action.tocart:active {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
         scroll-padding-inline: 8px;
         padding-inline: 4px;
-        gap: 4px;
+        gap: var(--awa-space-1); /* BP-17: era 4px */
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > a {
@@ -2774,7 +2774,7 @@ body .page-wrapper .product-item .action.tocart:active {
 
 @media (width <= 991px) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav {
-        margin-bottom: 8px;
+        margin-bottom: var(--awa-space-2); /* BP-19: era 8px */
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > .top-home-content.top-home-content--trust-and-offers {
@@ -2926,7 +2926,7 @@ body .page-wrapper .product-item .action.tocart:active {
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
-    z-index: 10030;
+    z-index: var(--awa-z-flyout); /* BP-16: era 10030 */
 }
 
 /* ============================================================
@@ -3108,7 +3108,7 @@ body .page-wrapper .product-item .action.tocart:active {
         left: 100%;
         top: 0;
         min-width: 220px;
-        z-index: 10000;
+        z-index: var(--awa-z-submenu); /* BP-16: era 10000 */
         pointer-events: none;
         transition: opacity var(--awa-transition-fast), visibility var(--awa-transition-fast); /* BP-08: era 0.2s ease hardcoded */
         border-radius: 0 var(--awa-radius-sm) var(--awa-radius-sm) var(--awa-radius-sm);
@@ -3265,7 +3265,7 @@ body .page-wrapper .product-item .action.tocart:active {
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 {
         position: relative;
-        z-index: 1006;
+        z-index: var(--awa-z-menu-container); /* BP-16: era 1006 */
         overflow: visible;
     }
 
@@ -3289,7 +3289,7 @@ body .page-wrapper .product-item .action.tocart:active {
         width: 100%;
         max-height: min(72vh, 640px);
         overflow: auto;
-        z-index: 1008;
+        z-index: var(--awa-z-menu-list); /* BP-16: era 1008 */
         display: none !important;
     }
 
@@ -3313,7 +3313,7 @@ body .page-wrapper .product-item .action.tocart:active {
         bottom: auto !important;
         opacity: 1 !important;
         pointer-events: auto !important;
-        padding: 8px 12px;
+        padding: var(--awa-space-2) var(--awa-space-3); /* BP-18: era 8px 12px */
         border-top: 1px solid var(--awa-gray-200);
         background: var(--awa-bg-surface); /* BP-12 */
     }
@@ -3370,7 +3370,7 @@ body .page-wrapper .product-item .action.tocart:active {
         padding: 10px 16px;
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: var(--awa-space-2); /* BP-17: era 8px */
         line-height: 1.25;
         border-bottom: 1px solid var(--awa-gray-200);
         transition: background-color var(--awa-transition-fast), color var(--awa-transition-fast);
@@ -3449,7 +3449,7 @@ body .page-wrapper .product-item .action.tocart:active {
         background: var(--awa-bg-surface) !important; /* BP-12 */
         visibility: visible !important;
         opacity: 1 !important;
-        z-index: 10030 !important;
+        z-index: var(--awa-z-flyout) !important; /* BP-16: era 10030 */
     }
 
     /* Avoid floating close icon when drawer is closed (hybrid tablet state). */

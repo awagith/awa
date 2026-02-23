@@ -166,7 +166,7 @@ body .page-wrapper .fixed-right {
     border-radius: var(--awa-control-radius);
     box-shadow: var(--awa-shadow-sm);
     overflow: hidden;
-    z-index: 9997;
+    z-index: var(--awa-z-sidebar); /* BP-16: era 9997 */
 }
 
 body .page-wrapper .fixed-right .fixed-right-ul {
@@ -233,7 +233,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy {
     visibility: hidden;
     pointer-events: none;
     transition: opacity var(--awa-transition-fast), visibility var(--awa-transition-fast), background var(--awa-transition-fast);
-    z-index: 9998;
+    z-index: var(--awa-z-fixed); /* BP-16: era 9998 */
 }
 
 body .page-wrapper #back-top.awa-backtotop-legacy i {
