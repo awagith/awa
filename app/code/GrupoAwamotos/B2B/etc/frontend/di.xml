@@ -147,12 +147,9 @@
                 sortOrder="10"/>
     </type>
 
-    <!-- plugin para filtrar produtos restritos em collections -->
-    <type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
-        <plugin name="grupoawamotos_b2b_restricted_product_collection"
-                type="GrupoAwamotos\B2B\Plugin\Catalog\RestrictedProductCollectionPlugin"
-                sortOrder="10"/>
-    </type>
+    <!-- NOTE:
+         RestrictedProductCollectionPlugin is configured globally in etc/di.xml.
+         Do not duplicate plugin declaration in frontend scope to avoid double execution. -->
 
     <!-- session proxy para logintocart block -->
     <type name="GrupoAwamotos\B2B\Block\LoginToCart">

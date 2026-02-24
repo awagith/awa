@@ -26,7 +26,7 @@ class RestrictedProductCollectionPlugin
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private ?LoggerInterface $logger;
 
     /**
      * @var bool
@@ -82,7 +82,7 @@ class RestrictedProductCollectionPlugin
 
         $isLoggedIn = $this->customerSession->isLoggedIn();
         $customerGroupId = $isLoggedIn ? (int) $this->customerSession->getCustomerGroupId() : 0;
-        $isB2BCustomer = in_array($customerGroupId, $this->b2bHelper->getB2BGroupIds());
+        $isB2BCustomer = in_array($customerGroupId, $this->b2bHelper->getB2BGroupIds(), true);
 
         try {
             // Add attribute to select
@@ -105,9 +105,8 @@ class RestrictedProductCollectionPlugin
                 $this->filterByCustomerGroup($collection, $customerGroupId);
             }
         } catch (\Exception $e) {
-            // Silently fail if attributes don't exist or filter fails
-            // This prevents breaking the site if B2B attributes are not set up
-            if ($this->logger) {
+            // Keep storefront resilient if B2B attributes are missing.
+            if ($this->logger !== null) {
                 $this->logger->warning('[B2B] RestrictedProductCollectionPlugin: ' . $e->getMessage());
             }
         }
