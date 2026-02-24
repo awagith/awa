@@ -1511,3 +1511,17 @@ body .page-wrapper [id]:not(input, select, textarea, button) {
         bottom: 10px;
     }
 }
+
+/* ============================================================
+   ÍCONES — ALINHAMENTO VERTICAL
+   ============================================================ */
+body .page-wrapper .fa,
+body .page-wrapper .fas,
+body .page-wrapper .far,
+body .page-wrapper .fal,
+body .page-wrapper .fab,
+body .page-wrapper [class^="icon-"],
+body .page-wrapper [class*=" icon-"] {
+    vertical-align: middle;
+    line-height: 1;
+}

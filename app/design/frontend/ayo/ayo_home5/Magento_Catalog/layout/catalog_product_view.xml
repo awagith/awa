@@ -10,6 +10,9 @@
     <head>
     </head>
     <body>
+        <!-- Keep product media container in Ayo expected column to reduce layout merge conflicts. -->
+        <move element="product.info.media" destination="product.col.media" before="-"/>
+
         <!-- B2B: Remove Compare from product view -->
         <referenceBlock name="view.addto.compare" remove="true"/>
         <referenceBlock name="related.product.addto.compare" remove="true"/>

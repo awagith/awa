@@ -361,18 +361,6 @@
 }
 
 /* Above-the-fold: busca + categorias com maior destaque na Home */
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .block-search {
-    border: 2px solid rgb(183 51 55 / 22%);
-    border-radius: calc(var(--awa-control-radius) + 2px);
-    box-shadow: 0 10px 24px rgb(0 0 0 / 7%);
-    background: var(--awa-bg-surface); /* BP-12 */
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .block-search:focus-within {
-    border-color: var(--awa-red);
-    box-shadow: var(--awa-shadow-focus-ring), 0 10px 24px rgb(0 0 0 / 8%); /* BP-35: ring part tokenized */
-}
-
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 {
     border-radius: var(--awa-control-radius);
     box-shadow: var(--awa-shadow-sm);

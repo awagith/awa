@@ -13,9 +13,24 @@
         <container name="page.wrapper" as="page_wrapper" htmlTag="div" htmlClass="page-wrapper">
             <container name="global.notices" as="global_notices" before="-"/>
             <container name="header.container" as="header_container_compat" before="-"/>
+            <container name="header" as="header_compat" after="header.container">
+                <container name="header.inner.left" as="header_inner_left_compat" before="-"/>
+                <container name="header.inner.right" as="header_inner_right_compat" after="header.inner.left"/>
+                <container name="header.panel" as="header_panel_compat" after="header.inner.right">
+                    <container name="top.links" as="top_links_compat" before="-"/>
+                    <container name="notifications" as="notifications_compat" after="top.links"/>
+                </container>
+            </container>
             <container name="page.top" as="page_top_compat" after="header.container"/>
+            <container name="page.menu" as="page_menu_compat" after="page.top"/>
+            <container name="page.breadcrumbs" as="page_breadcrumbs_compat" after="page.menu"/>
+            <container name="page.formkey" as="page_formkey_compat" after="page.breadcrumbs"/>
             <container name="main.content" htmlTag="main" htmlId="maincontent" htmlClass="page-main container">
-                <container name="columns.top" label="Before Main Columns"/>
+                <container name="columns.top" label="Before Main Columns">
+                    <container name="page.main.actions" as="page_main_actions_compat" after="-"/>
+                </container>
+                <container name="main.top" as="main_top_compat" before="-"/>
+                <container name="page.messages" as="page_messages_compat" after="main.top"/>
                 <container name="columns" htmlTag="div" htmlClass="columns">
                     <container name="main" label="Main Content Container" htmlTag="div" htmlClass="column main"/>
                 </container>
@@ -23,6 +38,7 @@
             <container name="sidebar.additional" as="sidebar_additional_compat" after="main.content"/>
             <container name="page.bottom.container" as="page_bottom_container" label="Before Page Footer Container" after="main.content" htmlTag="div" htmlClass="page-bottom"/>
             <container name="footer-container" as="footer_container_compat" after="page.bottom.container"/>
+            <container name="footer" as="footer_compat" after="footer-container"/>
             <container name="before.body.end" as="before_body_end" after="-" label="Page Bottom"/>
         </container>
     </container>
