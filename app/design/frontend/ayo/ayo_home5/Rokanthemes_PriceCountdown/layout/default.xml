@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <!-- Compatibilidade AYO: remove script global legado para evitar conflitos na home -->
-        <remove src="Rokanthemes_PriceCountdown::js/timer.js"/>
-    </head>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance";
+      xsi:nonamespaceschemalocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <!-- pricecountdown timer.js restaurado — necessário para módulo funcionar -->
+    <head/>
 </page>

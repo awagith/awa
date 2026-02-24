@@ -1,7 +1,7 @@
-<?php 
+<?php
 	use Magento\Framework\App\Action\Action;
 	$category_load = $block->getCategory();
-	if($category_load && strtotime($block->getConfig('end_date')) >= strtotime($block->getCurrentTime())){ 
+	if($category_load && strtotime($block->getConfig('end_date')) >= strtotime($block->getCurrentTime())){
 		$image = 'new_products_content_widget_grid';
 ?>
 <div class="super-deal">
@@ -19,7 +19,7 @@
 				</div>
 			</div>
 		</div>
-		<?php 
+		<?php
 			$newItems =  $block->getProducts();
 		?>
 		<div class="super-deal-content">
@@ -42,7 +42,22 @@
 							</a>
 							<div class="product-info-cart">
 								<div class="product-extra-link">
-									<?php /* B2B: wishlist/compare desativados */ ?>
+									<?php if ($this->helper('Magento\Wishlist\Helper\Data')->isAllow()): ?>
+									<a href="#"
+									  data-post='<?php echo $block->getAddToWishlistParams($_item); ?>'
+									  class="wishlist-link" data-action="add-to-wishlist"
+									  title="<?php echo __('Add to Wishlist') ?>">
+									<i class="fa fa-heart-o"></i>
+									</a>
+									<?php endif; ?>
+									<?php if ($block->getAddToCompareUrl()): ?>
+									<?php $compareHelper = $this->helper('Magento\Catalog\Helper\Product\Compare');?>
+									<a href="#" class="compare-link"
+									  data-post='<?php echo $compareHelper->getPostDataParams($_item);?>'
+									  title="<?php echo __('Add to Compare') ?>">
+									<i class="fa fa-toggle-on"></i>
+									</a>
+									<?php endif; ?>
 									<div class="quickview-product quickview-product-fixed-inline">
 										<a  data-role="quickview-button" data-id="<?php echo $_item->getId(); ?>" href="javascript: void(0);" data-href="<?php echo $block->getUrl('quickview/product/quickview/id/' . $_item->getId()) ?>" title="<?php echo __('Quick view');?>"><i class="fa fa-search"></i></a>
 									</div>
@@ -138,7 +153,7 @@
 							color: "#f9bc02"
 						}
 					}
-				}); 
+				});
 			}
 		});
     });

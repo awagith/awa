@@ -1,19 +1,19 @@
-<?php 
+<?php
 	use Magento\Framework\App\Action\Action;
 	$enable = $block->getConfig('enabled');
-	if($enable < 1) return ; 
+	if($enable < 1) return ;
 	$items = $block->getConfig('items');
 	$speed = $block->getConfig('speed');
 	$qty = $block->getConfig('qty');
 	$showCart = $block->getConfig('addtocart');
-	$showWishlist = false; // B2B: Wishlist desativada
-	$showCompare = false; // B2B: Compare desativado
+	$showWishlist = $block->getConfig('wishlist');
+	$showCompare = $block->getConfig('compare');
 	$show_navigation = $block->getConfig('navigation');
 	$show_pagination = $block->getConfig('pagination');
 	$auto = $block->getConfig('auto');
 	$rows = $block->getSlideRow();
-	$title = $block->getTitle(); 
-	$identify = trim($block->getIdentify()); 
+	$title = $block->getTitle();
+	$identify = trim($block->getIdentify());
 	$identifyClass = preg_replace('/[^a-zA-Z0-9_-]+/', '-', $identify);
 	if ($identifyClass === '') {
 		$identifyClass = 'default';
@@ -29,8 +29,8 @@
 	<div class="rokan-product-heading rokan-featured-heading clearfix">
 		<?php echo $title ? '<h2 class="pull-left">' . $block->escapeHtml($title) . ' <span class="sup-title">' . $block->escapeHtml(__('Product')) . '</span></h2>' : ''; ?>
 		<div class="vc_tta-tabs-container pull-right">
-		  	<ul class="tabs tabs<?php echo '-' . $block->escapeHtmlAttr($identifyClass);?>" role="tablist"> 
-			   <?php 
+		  	<ul class="tabs tabs<?php echo '-' . $block->escapeHtmlAttr($identifyClass);?>" role="tablist">
+			   <?php
 				$k = 0;
 				foreach($categoryIds as $cate_id) {
 					$cate_model =  $block->getCategory($cate_id);
@@ -42,25 +42,25 @@
 		    </ul>
 		</div>
 	</div>
-	<div class="row">	
+	<div class="row">
 		<div class="vc_tta-tabs-position-top">
-			<div class="vc_tta-panels-container"> 
-			     <?php 
+			<div class="vc_tta-panels-container">
+			     <?php
 					$imageBlock =  $block->getLayout()->createBlock('Magento\Catalog\Block\Product\Image');
 					$image = 'category_image_primary_small';
 					$type = 'widget-new-grid';
 					$templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
 				?>
-				<div class="tab_container tab_container2"> 
+				<div class="tab_container tab_container2">
 					<?php foreach($categoryIds as $cate_id) { ?>
-					<div id="tab<?php echo trim($cate_id).'-'.$identifyClass;?>" class="tab_content_<?php echo $identifyClass; ?>"> 
-							 
+					<div id="tab<?php echo trim($cate_id).'-'.$identifyClass;?>" class="tab_content_<?php echo $identifyClass; ?>">
+
 						<div class="owl-container">
 							<div class="cat_home cat_home2 owl-carousel">
-								<?php 
-								$newItems =  $block -> getProductCate($cate_id)->getItems(); 
+								<?php
+								$newItems =  $block -> getProductCate($cate_id)->getItems();
 								$i=0;
-								foreach($newItems as $_item) { 
+								foreach($newItems as $_item) {
 									$productImage = $block->getImage($_item, $image);
 								?>
 								<?php if($i++%$rows==0) { ?> <div class="product_row"> <?php } ?>
@@ -80,7 +80,7 @@
 											</a>
 											<div class="hot-onsale">
 												<?php if ( $_item->getFinalPrice() < $_item->getPrice() ): ?>
-													
+
 														<span class="onsale">
 														<span class="sale-bg"></span>
 														<span class="sale-text"><?php /* @noEscape */ echo $block->showLableSalePrice($_item); ?>
@@ -122,7 +122,7 @@
 											</li>
 											<?php endif; ?>
 											<?php endif; ?>
-												</ul>										
+												</ul>
 										    </div>
 										    <div class="product-info-cart">
 								                <?php if ($showWishlist || $showCompare || $showCart): ?>
@@ -153,9 +153,9 @@
 									                      <?php endif; ?>
 									                    </div>
 									                <?php endif; ?>
-								                 
+
 					  							<?php endif; ?>
-				  							</div>						
+				  							</div>
 									    </div>
 									    <div class="product-info">
 											<h3 class="product-name">
@@ -180,19 +180,19 @@
 										</div>
 									</div>
 
-										
+
 										<?php if($i%$rows==0 || $i == count($newItems)) { ?> </div> <?php }?>
-								<?php 
+								<?php
 								}
 								?>
 							</div>
-						</div>	
-						
+						</div>
+
 					 </div><!-- #tab1 -->
 					<?php }?>
 				</div>
 			</div>
-		 </div> <!-- .tab_container --> 
+		 </div> <!-- .tab_container -->
 	</div>
 </div>
 <script type="text/x-magento-init">

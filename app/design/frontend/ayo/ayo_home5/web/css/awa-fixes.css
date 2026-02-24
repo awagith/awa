@@ -13,61 +13,19 @@
    ou do conteúdo CMS, pertence aqui.
 =========================================== */
 @layer awa-fixes {
+/* UX POLISH — CAROUSEL/BADGES (FIX-21 UX, FIX-20 UX): REMOVIDO.
+   Conflito com OWL Carousel JS. O tema Ayo original controla arrows/dots/badges.
+   Restaurado para comportamento padrão do demo (ayo.nextsky.co/en_5/). */
+
 /* ============================================================
    FIX-01 — BANNER TEXT DUPLICATION (P0)
    SVG banners have baked-in text + HTML overlay text = doubling.
    Hide pseudo-elements that create ghost text shadows.
    ============================================================ */
 
-/* ============================================================
-   FIX-A11Y-REDUCED-MOTION (P1)
-   Reduz animações/transições custosas quando usuário prefere menos movimento.
-   ============================================================ */
-@media (prefers-reduced-motion: reduce) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(
-        .owl-carousel,
-        .owl-item,
-        .item-product,
-        .testimonials-slider .item,
-        .testimonials-home .item,
-        .the_blog .post-item,
-        .blog-post-item,
-        .banner-slider,
-        .navigation.custommenu.main-nav > ul > li > a
-    ) {
-        animation: none !important;
-        transition: none !important;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(
-        .the_blog .post-item:hover,
-        .blog-post-item:hover,
-        .tab_product .list-tab-product .item-product:hover
-    ) {
-        transform: none !important;
-    }
-
-    body #newsletter_pop_up.popup-closing .nl-popup-card {
-        transform: none;
-        opacity: 1;
-        transition: none;
-    }
-
-    body.cms-index-index .page-wrapper .block_notification marquee,
-    body.cms-home .page-wrapper .block_notification marquee,
-    body.cms-homepage_ayo_home5 .page-wrapper .block_notification marquee {
-        animation: none;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu li > a {
-        transition: none;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
-        scroll-snap-type: none;
-    }
-}
+/* FIX-A11Y-REDUCED-MOTION: REMOVIDO — coberto pelo universal
+   @media (prefers-reduced-motion: reduce) em awa-core.css L1009-1044.
+   O seletor wildcard `body .page-wrapper *` já cobre todos os elementos. */
 
 /* ============================================================
    FIX-PERF-TOUCH-HOVER (P2)
@@ -506,13 +464,7 @@ body .newsletterpopup .newsletter-popup-privacy {
         padding: 10px;
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
-        --awa-owl-item-gutter: 10px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
-        --awa-owl-item-gutter: 12px;
-    }
+    /* OWL gutters: ver FIX-23 (bloco centralizado) */
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > :is(.ayo-home5-section, .section) {
         margin: var(--awa-space-5) 0;
@@ -670,13 +622,7 @@ body .newsletterpopup .newsletter-popup-privacy {
         font-size: var(--awa-text-base);
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
-        --awa-owl-item-gutter: 8px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
-        --awa-owl-item-gutter: 10px;
-    }
+    /* OWL gutters: ver FIX-23 (bloco centralizado) */
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals .microcopy {
         font-size: var(--awa-text-xs);
@@ -742,13 +688,7 @@ body .newsletterpopup .newsletter-popup-privacy {
         font-size: var(--awa-text-xs);
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
-        --awa-owl-item-gutter: 6px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
-        --awa-owl-item-gutter: 8px;
-    }
+    /* OWL gutters: ver FIX-23 (bloco centralizado) */
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a {
         min-height: 44px;
@@ -1127,13 +1067,7 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         font-size: 31px;
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
-        --awa-owl-item-gutter: 12px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
-        --awa-owl-item-gutter: 14px;
-    }
+    /* OWL gutters: ver FIX-23 (bloco centralizado) */
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
         flex: 0 0 calc(50% - 12px);
@@ -1665,13 +1599,7 @@ body .page-wrapper .actions-secondary a:empty::before {
         padding: 10px;
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
-        --awa-owl-item-gutter: 4px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
-        --awa-owl-item-gutter: 6px;
-    }
+    /* OWL gutters: ver FIX-23 (bloco centralizado) */
 }
 
 /* ============================================================
@@ -1755,6 +1683,58 @@ body .page-wrapper .owl-carousel {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
         flex: 0 0 calc(33.333% - 12px);
         max-width: calc(33.333% - 12px);
+    }
+}
+
+/* FIX-23b — Gutters responsivos (breakpoints menores).
+   Escala progressiva: 16→12→10→8→6→4 px */
+@media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 12px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
+        --awa-owl-item-gutter: 14px;
+    }
+}
+
+@media (width <= 767px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 10px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
+        --awa-owl-item-gutter: 12px;
+    }
+}
+
+@media (width <= 480px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 8px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
+        --awa-owl-item-gutter: 10px;
+    }
+}
+
+@media (width <= 375px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 6px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
+        --awa-owl-item-gutter: 8px;
+    }
+}
+
+@media (width <= 320px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 4px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
+        --awa-owl-item-gutter: 6px;
     }
 }
 
@@ -1970,18 +1950,9 @@ body .page-wrapper .owl-carousel {
 
 /* Padding/widht da Home5 agora são governados por --awa-home-inline-padding (awa-consistency-home5.css). */
 
-/* B2B: Ocultar botões de Wishlist e Compare em toda a loja */
-.action.towishlist,
-.action.tocompare,
-.wishlist-link,
-.compare-link,
-.wishlist-product,
-.compare-product,
-a[data-action="add-to-wishlist"],
-.product-addto-links .towishlist,
-.product-addto-links .tocompare {
-    display: none !important;
-}
+/* B2B: Wishlist e Compare — restaurados para fidelidade ao demo Ayo Home5.
+   Se necessário ocultar para grupo B2B, use:
+   body.customer-group-b2b .action.towishlist { display: none !important; } */
 
 /* ============================================================
    FIX-25 — HOME5 UX/CSS STABILIZATION (P1)
@@ -2114,495 +2085,14 @@ a[data-action="add-to-wishlist"],
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5)
-    .page-wrapper .verticalmenu.side-verticalmenu li.level0 > a:hover {
-        padding-left: 15px;
-    }
-
-    /* Estado-base: submenu oculto, posicionado para flyout à direita */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0 > .submenu {
-        display: block;
-        visibility: hidden;
-        opacity: 0;
-        position: absolute;
-        left: 100%;
-        top: 0;
-        min-width: 220px;
-        z-index: var(--awa-z-submenu); /* BP-16: era 10000 */
-        pointer-events: none;
-        transition: opacity var(--awa-transition-fast), visibility var(--awa-transition-fast); /* BP-08: era 0.2s ease hardcoded */
-        border-radius: 0 var(--awa-radius-sm) var(--awa-radius-sm) var(--awa-radius-sm);
-        box-shadow: var(--awa-shadow-dropdown);
-        background: var(--awa-bg-surface); /* BP-12 */
-    }
-
-    /* Hover: submenu visível */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0:hover > .submenu {
-        visibility: visible;
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    /* Sub-submenu: mesma lógica para níveis aninhados */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .submenu li:hover > .submenu {
-        visibility: visible;
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    /* Submenu classic/staticwidth/fullwidth — posição à direita */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.fullwidth > .submenu,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.staticwidth > .submenu,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.classic > .submenu {
-        left: 100% !important;
-        top: 0;
-    }
-
-    /* Submenu level0 min-height — alinha submenu completo ao item pai */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul li.level0 .level0.submenu {
-        min-height: 100%;
-        height: auto;
-    }
-
-    /* Sub-submenu arrow indicator on classic menu parent items */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .subchildmenu > li.parent > a::after {
-        content: '\e606';
-        font-family: simple-line-icons, sans-serif;
-        font-size: var(--awa-text-3xs); /* BP-30: era 10px */
-        margin-left: auto;
-        padding-left: var(--awa-space-2); /* BP-20: era 8px */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block > .vertical-menu-before:empty,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block > .vertical-menu-after:empty {
-        display: none !important;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 {
-        position: relative;
-        z-index: var(--awa-z-menu-container); /* BP-16: era 1006 */
-        overflow: visible;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .sections.nav-sections.category-dropdown,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .sections.nav-sections.category-dropdown > .section-items,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .sections.nav-sections.category-dropdown .section-item-content.category-dropdown-item-content {
-        overflow: visible;
-        height: auto;
-        min-height: 0;
-        max-height: none;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu {
-        position: relative;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
-        position: absolute !important;
-        top: 100% !important;
-        left: 0 !important;
-        width: 100%;
-        max-height: min(72vh, 640px);
-        overflow: auto;
-        overflow-x: hidden;
-        z-index: var(--awa-z-menu-list); /* BP-16: era 1008 */
-        display: none !important;
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-        box-sizing: border-box;
-        scrollbar-width: thin;
-        scrollbar-color: rgb(0 0 0 / 18%) transparent;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown.menu-open,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > .title-category-dropdown.active + ul.togge-menu.list-category-dropdown {
-        display: block !important;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link {
-        position: sticky;
-        bottom: 0;
-        z-index: 2;
-        border-top: 1px solid var(--awa-gray-200);
-        background: var(--awa-bg-surface); /* BP-12 */
-    }
-
-    /* Keep promo block in document flow to avoid overlapping category rows. */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-bg-img {
-        position: static !important;
-        left: auto !important;
-        bottom: auto !important;
-        opacity: 1 !important;
-        pointer-events: auto !important;
-        padding: var(--awa-space-2) var(--awa-space-3); /* BP-18: era 8px 12px */
-        border-top: 1px solid var(--awa-gray-200);
-        background: var(--awa-bg-surface); /* BP-12 */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-bg-img img {
-        width: 100%;
-        height: auto;
-        display: block;
-        border-radius: var(--awa-radius-xs); /* BP-11: era 4px hardcoded */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav {
-        margin: 0;
-        padding: 0;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > .title-category-dropdown {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 48px;
-        margin: 0;
-        padding: 0 var(--awa-space-4); /* BP-21: era 16px */
-        border-radius: var(--awa-radius-sm) var(--awa-radius-sm) 0 0;
-        background: var(--awa-red);
-        color: var(--awa-text-on-primary); /* BP-09 */
-        font-weight: var(--awa-weight-bold);
-        letter-spacing: var(--awa-tracking-tight);
-        text-transform: uppercase;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown::-webkit-scrollbar-thumb {
-        border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
-        background: rgb(0 0 0 / 18%);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li {
-        margin: 0;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a {
-        min-height: 44px;
-        padding: 10px 16px;
-        display: flex;
-        align-items: center;
-        gap: var(--awa-space-2); /* BP-17: era 8px */
-        line-height: var(--awa-leading-snug);
-        border-bottom: 1px solid var(--awa-gray-200);
-        transition: background-color var(--awa-transition-fast), color var(--awa-transition-fast);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li:last-child > a {
-        border-bottom: 0;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a:hover {
-        background: var(--awa-gray-100);
-        color: var(--awa-red-dark);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a .cat-label {
-        display: inline-flex !important;
-        align-items: center;
-        justify-content: center;
-        margin-left: auto;
-        min-height: 16px;
-        padding: 2px 6px;
-        border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
-        font-size: 9px;
-        line-height: var(--awa-leading-none);
-        font-weight: var(--awa-weight-bold);
-        letter-spacing: var(--awa-tracking-normal);
-        text-transform: uppercase;
-        white-space: nowrap;
-        background: var(--awa-red);
-        color: var(--awa-text-on-primary); /* BP-09: era #fff hardcoded */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a .cat-label:empty {
-        display: none !important;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .title-category-dropdown,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a.level-top {
-        min-height: 48px;
-        line-height: var(--awa-leading-compact);
-        padding-block: var(--awa-space-3); /* BP-21: era 12px */
-        display: flex;
-        align-items: center;
+    body .page-wrapper .verticalmenu.side-verticalmenu {
+        margin-bottom: 0;
     }
 }
 
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
-    display: flex !important;
-    flex-wrap: wrap;
-    align-items: stretch;
-    gap: var(--awa-space-3); /* BP-17: era 12px */
-    margin: 0 !important;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
-    flex: 0 0 calc(20% - 12px);
-    max-width: calc(20% - 12px);
-    float: none;
-    margin: 0;
-    padding: 0;
-}
-
-/* Responsive: tablet landscape → 3 colunas */
-
-/* Responsive: tablet portrait → 2 colunas */
-
-/* Responsive: mobile → 1 coluna */
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"]::before {
-    display: none;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxService {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: var(--awa-space-3); /* BP-17: era 12px */
-    min-height: 92px;
-    height: 100%;
-    padding: 14px 12px;
-    border: 1px solid var(--awa-gray-200);
-    border-radius: var(--awa-radius-sm);
-    background: var(--awa-bg-surface); /* BP-12 */
-    text-align: start;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage {
-    width: 48px;
-    height: 48px;
-    margin: 0;
-    flex: 0 0 48px;
-    border-radius: 50%;
-    background: rgb(183 51 55 / 10%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-image: none;
-    mask: none;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage::before {
-    font-family: FontAwesome, sans-serif;
-    font-size: var(--awa-text-xl);
-    line-height: var(--awa-leading-none);
-    color: var(--awa-red);
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage.boxServiceImage1::before { content: "\f0d1"; }
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage.boxServiceImage2::before { content: "\f09d"; }
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage.boxServiceImage3::before { content: "\f058"; }
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage.boxServiceImage4::before { content: "\f0f1"; }
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage.boxServiceImage5::before { content: "\f021"; }
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceContent {
-    padding: 0;
-    min-width: 0;
-    width: 100%;
-    flex: 1 1 auto;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceTitle {
-    margin: 0 0 3px;
-    color: var(--awa-dark);
-    font-size: var(--awa-text-md);
-    line-height: var(--awa-leading-snug);
-    font-weight: var(--awa-weight-bold);
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceDesc {
-    color: var(--awa-gray-700);
-    font-size: var(--awa-text-sm);
-    line-height: var(--awa-leading-comfortable);
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceDesc a {
-    color: inherit;
-    text-decoration: none;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceDesc a:hover {
-    color: var(--awa-red);
-    text-decoration: underline;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss {
-    display: flex !important;
-    flex-direction: column;
-    gap: 0;
-    overflow: hidden;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss .countdown_block {
-    display: grid;
-    place-items: center center;
-    gap: var(--awa-space-2); /* BP-17: era 8px */
-    margin: 0;
-    padding: 14px 16px;
-    position: static !important;
-    top: auto !important;
-    right: auto !important;
-    left: auto !important;
-    float: none !important;
-    width: 100% !important;
-    max-width: none !important;
-    z-index: 1;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss .super-deal-countdown,
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss .time_circles {
-    width: 100%;
-    justify-content: center;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss > .row {
-    margin-left: 0;
-    margin-right: 0;
-    width: 100%;
-    clear: both;
-}
-
-/* R30: .owl-stage flex, .owl-item height:auto e .product_row flex removidos —
-   redundantes com awa-components.css OWL CAROUSEL section (global) e
-   awa-grid-unified.css §3 (.product_row flex-column inside OWL) */
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .vc_tta-tabs-container {
-    width: 100%;
-    margin-bottom: var(--awa-space-4); /* BP-19: era 16px */
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .tabs {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: var(--awa-space-2); /* BP-17: era 8px */
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .tabs > li {
-    float: none;
-    margin: 0;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .tabs > li > a {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: var(--awa-btn-height-sm); /* BP-04: era 40px hardcoded */
-    padding: 0 14px;
-    border: 1px solid var(--awa-gray-200);
-    border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
-    background: var(--awa-bg-surface); /* BP-12 */
-    color: var(--awa-dark);
-    font-size: var(--awa-text-base);
-    font-weight: var(--awa-weight-semibold);
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .tabs > li.active > a,
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .tabs > li:hover > a {
-    background: var(--awa-red);
-    border-color: var(--awa-red);
-    color: var(--awa-text-on-primary) !important; /* BP-09: era #fff hardcoded */
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .tab_container {
-    width: 100%;
-    min-width: 0;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .productTabContent:not(.owl-carousel) {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 14px;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .productTabContent:not(.owl-carousel) .product_row {
-    display: contents;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .item-product-parent {
-    margin: 0;
-    padding: 0 10px;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .item-product.listview {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    height: 100%;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .item-product.listview .product-thumb,
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .item-product.listview .product-info {
-    width: 100%;
-    float: none;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .rokan-product-heading {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: var(--awa-space-3); /* BP-17: era 12px */
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .block_cat > .row {
-    display: grid;
-    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
-    gap: var(--awa-space-5); /* BP-17: era 20px */
-    margin: 0;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .block_cat > .row > [class*="col-"] {
-    float: none;
-    width: auto;
-    max-width: 100%;
-    padding: 0;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 {
-    display: grid;
-    gap: var(--awa-space-2); /* BP-17: era 8px */
-    margin: 0;
-    padding: 0;
-    list-style: none;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li {
-    float: none;
-    margin: 0;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li > a {
-    display: flex;
-    align-items: center;
-    min-height: 42px;
-    padding: 0 12px;
-    border: 1px solid var(--awa-gray-200);
-    border-radius: var(--awa-radius-sm);
-    background: var(--awa-bg-surface); /* BP-12 */
-    color: var(--awa-dark);
-    font-size: var(--awa-text-base);
-    font-weight: var(--awa-weight-semibold);
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li.active > a,
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li:hover > a {
-    background: var(--awa-red);
-    border-color: var(--awa-red);
-    color: var(--awa-text-on-primary) !important; /* BP-09: era #fff hardcoded */
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tab_container {
-    width: 100%;
-    min-width: 0;
-}
+/* UX POLISH — CONTAINER/CARDS/BUTTONS (FIX-14/15/16 UX): REMOVIDO.
+   max-width, padding, gap, transform conflitavam com grid nativo do Rokanthemes.
+   Container, product cards e buttons agora seguem o padrão original do tema Ayo. */
 
 /* ============================================================
    FIX-30 — CATEGORYTAB2 SCROLL-SNAP + FADE INDICATORS (MOBILE)
@@ -2685,8 +2175,9 @@ a[data-action="add-to-wishlist"],
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .testimonialContent .desc {
     display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
     overflow: hidden;
     line-height: var(--awa-leading-loose);
     font-size: var(--awa-text-sm);
@@ -2857,6 +2348,8 @@ body .page-wrapper .product-item .action.tocart {
     background: var(--awa-red);
     border-color: var(--awa-red);
     color: var(--awa-text-on-primary); /* BP-09: era #fff hardcoded */
+    font-weight: var(--awa-weight-bold);
+    transition: background-color var(--awa-transition-fast), box-shadow var(--awa-transition-fast), transform var(--awa-transition-fast);
 }
 
 body .page-wrapper .action.primary:hover,
@@ -2867,6 +2360,8 @@ body .page-wrapper .product-item .action.tocart:hover {
     background: var(--awa-red-dark);
     border-color: var(--awa-red-dark);
     color: var(--awa-text-on-primary); /* BP-09: era #fff hardcoded */
+    box-shadow: var(--awa-shadow-red);
+    transform: translateY(-1px);
 }
 
 body .page-wrapper .action.primary:focus-visible,
@@ -2947,8 +2442,17 @@ body .page-wrapper .product-item .action.tocart:active {
     display: none !important;
 }
 
+/* Cat-labels restaurados para fidelidade ao demo Ayo Home5 */
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a > .cat-label {
-    display: none;
+    display: inline-block;
+    font-size: 10px;
+    line-height: 1;
+    padding: 2px 5px;
+    border-radius: var(--awa-radius-sm);
+    vertical-align: middle;
+    margin-left: 4px;
+    text-transform: uppercase;
+    font-weight: var(--awa-weight-bold);
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a::before,
@@ -3434,6 +2938,573 @@ body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav >
     body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li > .groupmenu.opened {
         display: block;
     }
+}
+
+/* UX POLISH — FORMS/TYPOGRAPHY/MINICART/CATEGORY/PRODUCT/MOBILE/B2B/DEALS
+   (FIX-17..FIX-30 UX): REMOVIDO COMPLETAMENTE.
+   355 !important em propriedades de layout quebravam:
+     - OnePageCheckout (form inputs override)
+     - LayeredAjax (sidebar filters override)
+     - Minicart (border/padding override)
+     - CustomMenu (icon display override)
+     - Product detail (tabs/gallery override)
+     - Mobile nav (touch target overrides)
+   Restaurado para comportamento padrão do demo (ayo.nextsky.co/en_5/). */
+
+/* ============================================================
+   ██ AWA VISUAL REFINEMENTS — SAFE LAYER ██
+
+   REGRA DE OURO: Este bloco SÓ altera propriedades VISUAIS.
+
+   ✅ PERMITIDO: color, background-color, border-color, border-radius,
+      box-shadow, text-shadow, font-size, font-weight, letter-spacing,
+      line-height, text-decoration, text-transform, opacity, cursor,
+      transition, transform (hover only), outline, padding (inline only)
+
+   ❌ PROIBIDO: display, position, float, width, height, min-/max-,
+      overflow, flex*, grid*, gap, align-*, justify-*, order, z-index,
+      top/right/bottom/left, margin (block), padding (block),
+      visibility, clear, table-layout, columns, writing-mode
+
+   Isso garante que NENHUM módulo/carrossel/grid/container quebre.
+   ============================================================ */
+
+
+/* --- 1. TIPOGRAFIA GLOBAL ---
+   Kerning e rendering premium. Sem alterar tamanhos. */
+body {
+    font-feature-settings: "kern" 1, "liga" 1;
+    text-rendering: optimizelegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Títulos — letter-spacing e balance */
+body .page-wrapper h1,
+body .page-wrapper h2,
+body .page-wrapper h3,
+body .page-wrapper h4 {
+    letter-spacing: 0.3px;
+    text-wrap: balance;
+}
+
+/* --- 2. CORES & TIPOGRAFIA DE PRODUTO --- */
+
+/* Preço atual — vermelho bold */
+body .page-wrapper .info-price .price,
+body .page-wrapper .price-box .price-wrapper .price,
+body .page-wrapper .info-price-deal .price {
+    color: var(--awa-red);
+    font-weight: var(--awa-weight-bold);
+}
+
+/* Preço antigo — cinza riscado */
+body .page-wrapper .info-price .old-price .price,
+body .page-wrapper .price-box .old-price .price,
+body .page-wrapper .info-price-deal .old-price .price {
+    color: var(--awa-gray-400);
+    text-decoration: line-through;
+    font-weight: var(--awa-weight-normal);
+}
+
+/* Nome do produto — cor e transição */
+body .page-wrapper .product-name .product-item-link,
+body .page-wrapper .product-item-name a,
+body .page-wrapper .title-product a.product-item-link {
+    color: var(--awa-dark);
+    text-decoration: none;
+    transition: color var(--awa-transition-fast);
+}
+
+body .page-wrapper .product-name .product-item-link:hover,
+body .page-wrapper .product-item-name a:hover,
+body .page-wrapper .title-product a.product-item-link:hover {
+    color: var(--awa-red);
+}
+
+/* --- 3. BADGES (Sale / New) ---
+   Apenas cores e tipografia. NÃO altera tamanho/posição. */
+body .page-wrapper .onsale {
+    background: var(--awa-red);
+    color: #fff;
+    font-weight: var(--awa-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+body .page-wrapper .onsale.new-lable,
+body .page-wrapper .newlabel {
+    background: var(--awa-dark);
+    color: #fff;
+    font-weight: var(--awa-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* --- 4. LINKS & HOVER GLOBAIS --- */
+
+/* Links genéricos com transição */
+body .page-wrapper a {
+    transition: color var(--awa-transition-fast);
+}
+
+/* Hover vermelho para links de ação */
+body .page-wrapper .breadcrumbs a:hover,
+body .page-wrapper .sidebar-post a:hover,
+body .page-wrapper .filter-options a:hover,
+body .page-wrapper .blog-title a:hover,
+body .page-wrapper .readmore:hover,
+body .page-wrapper .testimo-name a:hover {
+    color: var(--awa-red);
+}
+
+/* --- 5. BREADCRUMBS ---
+   Apenas tipografia e cores. */
+body .page-wrapper .breadcrumbs {
+    font-size: var(--awa-text-xs);
+    color: var(--awa-gray-500);
+}
+
+body .page-wrapper .breadcrumbs a {
+    color: var(--awa-gray-500);
+    text-decoration: none;
+}
+
+body .page-wrapper .breadcrumbs strong {
+    color: var(--awa-dark);
+    font-weight: var(--awa-weight-semibold);
+}
+
+/* --- 6. BOTÕES — Cores e transições ---
+   CONSOLIDADO: Definição canônica de cores agora está no bloco
+   .action.primary + .action.tocart na seção FIX-buttons (~L2377).
+   Não duplicar aqui. */
+
+/* Subscribe button */
+body .page-wrapper .action.subscribe.primary,
+body .newsletterpopup .action.subscribe.primary {
+    background-color: var(--awa-red);
+    color: #fff;
+    border-color: var(--awa-red);
+    font-weight: var(--awa-weight-bold);
+    transition: background-color var(--awa-transition-fast), box-shadow var(--awa-transition-fast);
+}
+
+body .page-wrapper .action.subscribe.primary:hover,
+body .newsletterpopup .action.subscribe.primary:hover {
+    background-color: var(--awa-red-dark);
+    box-shadow: var(--awa-shadow-red);
+}
+
+/* --- 7. PRODUCT CARDS — Hover visual ---
+   Apenas border-color, shadow, transform. NÃO altera layout. */
+body .page-wrapper .item-product {
+    transition: box-shadow var(--awa-transition-fast), border-color var(--awa-transition-fast), transform var(--awa-transition-fast);
+}
+
+body .page-wrapper .item-product:hover {
+    box-shadow: var(--awa-shadow-hover);
+    transform: translateY(-2px);
+}
+
+/* Deal cards hover */
+body .page-wrapper .super-deal .item-deal-product {
+    transition: box-shadow var(--awa-transition-fast), transform var(--awa-transition-fast);
+}
+
+body .page-wrapper .super-deal .item-deal-product:hover {
+    box-shadow: var(--awa-shadow-md);
+    transform: translateY(-2px);
+}
+
+/* --- 8. HEADER — Apenas cores e tipografia ---
+   NÃO altera layout do header. */
+
+/* Badge quantidade minicart — cores */
+body .page-wrapper .minicart-wrapper .counter.qty {
+    background: var(--awa-red);
+    color: #fff;
+    font-weight: var(--awa-weight-bold);
+}
+
+/* Top header — contraste */
+body .page-wrapper .top-header {
+    color: var(--awa-gray-300);
+    font-size: var(--awa-text-xs);
+}
+
+/* --- 9. TABS — Cores do estado ativo ---
+   NÃO altera display, flex, overflow. */
+body .page-wrapper .list-tab-product .tabs li.active,
+body .page-wrapper .categorytab-container .tabs li.active {
+    color: var(--awa-red);
+    font-weight: var(--awa-weight-bold);
+    border-bottom-color: var(--awa-red);
+}
+
+body .page-wrapper .list-tab-product .tabs li,
+body .page-wrapper .categorytab-container .tabs li {
+    transition: color var(--awa-transition-fast), border-color var(--awa-transition-fast);
+    cursor: pointer;
+}
+
+body .page-wrapper .list-tab-product .tabs li:hover,
+body .page-wrapper .categorytab-container .tabs li:hover {
+    color: var(--awa-red);
+}
+
+/* --- 10. FILTROS SIDEBAR — Cores e tipografia --- */
+
+/* Título de filtro */
+body .page-wrapper .filter-options .filter-options-title {
+    font-weight: var(--awa-weight-semibold);
+    color: var(--awa-dark);
+    cursor: pointer;
+    transition: color var(--awa-transition-fast);
+}
+
+body .page-wrapper .filter-options .filter-options-title:hover {
+    color: var(--awa-red);
+}
+
+/* Items do filtro */
+body .page-wrapper .filter-options .filter-options-content .item a {
+    color: var(--awa-gray-600);
+    transition: color var(--awa-transition-fast);
+    text-decoration: none;
+}
+
+body .page-wrapper .filter-options .filter-options-content .item a:hover,
+body .page-wrapper .filter-options .filter-options-content .item a.active {
+    color: var(--awa-red);
+    font-weight: var(--awa-weight-semibold);
+}
+
+/* Contador de filtro */
+body .page-wrapper .filter-options .count {
+    color: var(--awa-gray-400);
+}
+
+/* "Clear All" */
+body .page-wrapper .filter-current .action.clear.filter-clear {
+    color: var(--awa-red);
+    font-weight: var(--awa-weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color var(--awa-transition-fast);
+}
+
+body .page-wrapper .filter-current .action.clear.filter-clear:hover {
+    color: var(--awa-red-dark);
+}
+
+/* --- 11. TOOLBAR & PAGINAÇÃO --- */
+
+/* Sorter select — border e foco */
+body .page-wrapper .toolbar-sorter .sorter-options {
+    border-color: var(--awa-gray-300);
+    color: var(--awa-dark);
+    transition: border-color var(--awa-transition-fast);
+}
+
+body .page-wrapper .toolbar-sorter .sorter-options:focus {
+    border-color: var(--awa-red);
+    outline: none;
+}
+
+/* Quantidade "X de Z" */
+body .page-wrapper .toolbar-amount .toolbar-number {
+    font-weight: var(--awa-weight-semibold);
+    color: var(--awa-dark);
+}
+
+/* Grid mode active */
+body .page-wrapper .grid-mode-show-type-products a.actived {
+    background: var(--awa-red);
+    border-color: var(--awa-red);
+    color: #fff;
+}
+
+body .page-wrapper .grid-mode-show-type-products a:hover {
+    border-color: var(--awa-red);
+    color: var(--awa-red);
+}
+
+/* Paginação — página atual */
+body .page-wrapper .pages .items .item.current strong {
+    background: var(--awa-red);
+    color: #fff;
+    border-color: var(--awa-red);
+}
+
+body .page-wrapper .pages .items .item a:hover {
+    border-color: var(--awa-red);
+    color: var(--awa-red);
+}
+
+/* --- 12. VERTICAL MENU — Cores e transições --- */
+
+/* Hover nos itens do menu vertical */
+body .page-wrapper .navigation.verticalmenu .list-category-dropdown > li > a {
+    color: var(--awa-dark);
+    transition: color var(--awa-transition-fast), background-color var(--awa-transition-fast);
+    text-decoration: none;
+}
+
+body .page-wrapper .navigation.verticalmenu .list-category-dropdown > li > a:hover {
+    color: var(--awa-red);
+    background: var(--awa-red-extra-light);
+}
+
+/* "All Categories" link */
+body .page-wrapper .navigation.verticalmenu .expand-category-link .viewall {
+    color: var(--awa-red);
+    font-weight: var(--awa-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color var(--awa-transition-fast);
+    text-decoration: none;
+}
+
+body .page-wrapper .navigation.verticalmenu .expand-category-link .viewall:hover {
+    color: var(--awa-red-dark);
+}
+
+/* --- 13. DROPDOWN/SUBMENU — Cores e shadow ---
+   NÃO altera posição/display do submenu. */
+body .page-wrapper .header-nav .navigation.custommenu .dropdown-menu li a,
+body .page-wrapper .header-nav .navigation.custommenu > ul > li > .submenu li a {
+    transition: background-color var(--awa-transition-fast), color var(--awa-transition-fast);
+}
+
+body .page-wrapper .header-nav .navigation.custommenu .dropdown-menu li a:hover,
+body .page-wrapper .header-nav .navigation.custommenu > ul > li > .submenu li a:hover {
+    background: var(--awa-red-extra-light);
+    color: var(--awa-red);
+}
+
+/* --- 14. BLOG — Cores e tipografia --- */
+body .page-wrapper .block-recent-posts .blog-title a {
+    color: var(--awa-dark);
+    font-weight: var(--awa-weight-semibold);
+    transition: color var(--awa-transition-fast);
+    text-decoration: none;
+}
+
+body .page-wrapper .block-recent-posts .blog-title a:hover {
+    color: var(--awa-red);
+}
+
+body .page-wrapper .block-recent-posts .time-conment,
+body .page-wrapper .block-recent-posts .date-time {
+    color: var(--awa-gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+body .page-wrapper .block-recent-posts .readmore {
+    color: var(--awa-red);
+    font-weight: var(--awa-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color var(--awa-transition-fast);
+    text-decoration: none;
+}
+
+body .page-wrapper .block-recent-posts .readmore:hover {
+    color: var(--awa-red-dark);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* --- 15. TESTIMONIALS — Tipografia e cores --- */
+body .page-wrapper .page-testimonial .testimo-name a {
+    color: var(--awa-dark);
+    font-weight: var(--awa-weight-bold);
+    transition: color var(--awa-transition-fast);
+    text-decoration: none;
+}
+
+body .page-wrapper .page-testimonial .testimo-name a:hover {
+    color: var(--awa-red);
+}
+
+body .page-wrapper .page-testimonial .testimo-job {
+    color: var(--awa-gray-400);
+}
+
+body .page-wrapper .page-testimonial .testimo-desc {
+    color: var(--awa-gray-600);
+    font-style: italic;
+    line-height: var(--awa-leading-relaxed);
+}
+
+body .page-wrapper .page-testimonial .testimo-date {
+    color: var(--awa-gray-400);
+}
+
+/* --- 16. SEARCH AUTOCOMPLETE — Cores e hover --- */
+body .page-wrapper .search-autocomplete .autocomplete-list dd:hover,
+body .page-wrapper .search-autocomplete .qs-option:hover,
+body .page-wrapper .search-autocomplete .qs-option.selected {
+    background: var(--awa-red-extra-light);
+    color: var(--awa-red);
+}
+
+/* --- 17. MENSAGENS DO SISTEMA --- */
+body .page-wrapper .message-success,
+body .page-wrapper .message.success {
+    background: #f0fdf4;
+    border-color: var(--awa-success);
+    color: #166534;
+}
+
+body .page-wrapper .message-error,
+body .page-wrapper .message.error {
+    background: #fef2f2;
+    border-color: var(--awa-danger);
+    color: #991b1b;
+}
+
+body .page-wrapper .message-notice,
+body .page-wrapper .message.info {
+    background: #eff6ff;
+    border-color: var(--awa-info);
+    color: #1e40af;
+}
+
+body .page-wrapper .message-warning,
+body .page-wrapper .message.warning {
+    background: #fffbeb;
+    border-color: var(--awa-warning);
+    color: #92400e;
+}
+
+/* --- 18. PRODUCT DETAIL — Cores e estados ---
+   NÃO altera layout do qty/galeria. */
+
+/* Qty buttons hover */
+body .page-wrapper .attr-product .info-qty .qty-down:hover,
+body .page-wrapper .attr-product .info-qty .qty-up:hover {
+    background: var(--awa-red);
+    color: #fff;
+}
+
+/* Stock status */
+body .page-wrapper .stock.available {
+    color: var(--awa-success);
+    font-weight: var(--awa-weight-semibold);
+}
+
+body .page-wrapper .stock.unavailable {
+    color: var(--awa-danger);
+    font-weight: var(--awa-weight-semibold);
+}
+
+/* Atributos */
+body .page-wrapper .product.attribute .type {
+    font-weight: var(--awa-weight-semibold);
+    color: var(--awa-dark);
+}
+
+body .page-wrapper .product.attribute .value {
+    color: var(--awa-gray-600);
+    line-height: var(--awa-leading-relaxed);
+}
+
+/* Ações — email/print */
+body .page-wrapper .action.email-link,
+body .page-wrapper .action.print-link {
+    color: var(--awa-gray-400);
+    transition: color var(--awa-transition-fast);
+}
+
+body .page-wrapper .action.email-link:hover,
+body .page-wrapper .action.print-link:hover {
+    color: var(--awa-red);
+}
+
+/* --- 19. QUICKVIEW — Cores e tipografia ---
+   NÃO altera tamanho do modal. */
+body .page-wrapper .title-product-quickview {
+    color: var(--awa-dark);
+    font-weight: var(--awa-weight-bold);
+}
+
+/* --- 20. NEWSLETTER POPUP — Cores ---
+   NÃO altera layout do popup. */
+body .newsletterpopup .des-newletter .text-primary {
+    color: var(--awa-red);
+    font-weight: var(--awa-weight-bold);
+}
+
+body .newsletterpopup .btn-close:hover {
+    opacity: 0.7;
+}
+
+/* --- 21. SUPER DEALS — Cores e hover --- */
+body .page-wrapper .super-deal .deal-shop-link {
+    color: var(--awa-red);
+    border-color: var(--awa-red);
+    font-weight: var(--awa-weight-semibold);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background-color var(--awa-transition-fast), color var(--awa-transition-fast);
+}
+
+body .page-wrapper .super-deal .deal-shop-link:hover {
+    background: var(--awa-red);
+    color: #fff;
+}
+
+body .page-wrapper .super-deal .view-all-deal {
+    color: var(--awa-red);
+    font-weight: var(--awa-weight-semibold);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    transition: color var(--awa-transition-fast);
+}
+
+body .page-wrapper .super-deal .view-all-deal:hover {
+    color: var(--awa-red-dark);
+}
+
+/* --- 22. ACESSIBILIDADE --- */
+
+/* Focus ring global */
+body .page-wrapper a:focus-visible,
+body .page-wrapper button:focus-visible,
+body .page-wrapper input:focus-visible,
+body .page-wrapper select:focus-visible,
+body .page-wrapper textarea:focus-visible {
+    outline: 2px solid var(--awa-red);
+    outline-offset: 2px;
+}
+
+/* Seleção de texto com cor da marca */
+::selection {
+    background: var(--awa-red);
+    color: #fff;
+}
+
+/* --- 23. EMPTY STATE --- */
+body .page-wrapper .message.info.empty {
+    text-align: center;
+    color: var(--awa-gray-500);
+    border-color: var(--awa-gray-200);
+    border-style: dashed;
+}
+
+/* --- 24. MICRO-INTERAÇÕES --- */
+
+/* WhatsApp float pulse */
+@keyframes awa-whatsapp-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgb(37 211 102 / 50%); }
+    50% { box-shadow: 0 0 0 12px rgb(37 211 102 / 0%); }
+}
+
+body .page-wrapper .awa-whatsapp-float {
+    animation: awa-whatsapp-pulse 2s infinite;
 }
 
 } /* F2-02: fecha @layer awa-fixes */

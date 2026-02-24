@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 <!--
-    B2B: Remove Compare/Wishlist from search results.
+    B2B: remove compare/wishlist from search results.
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceBlock name="catalogsearch.product.addto.compare" remove="true"/>
-        <referenceBlock name="catalogsearch.product.addto.wishlist" remove="true"/>
+        <!-- wishlist e compare restaurados — fidelidade ao demo ayo home5 -->
     </body>
 </page>

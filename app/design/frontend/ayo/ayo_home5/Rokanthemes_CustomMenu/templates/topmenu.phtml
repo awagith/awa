@@ -15,12 +15,15 @@
     $_helper = $this->helper('Rokanthemes\CustomMenu\Helper\Data');
     $_config = $_helper->getConfig('custommenu');
     $columnsLimit = 0;
-    if($_config['general']['enable']) {
+    $isCustomMenuEnabled = !empty($_config['general']['enable']);
+    if ($isCustomMenuEnabled) {
+        $_menu = $block->getCustomMenuHtml();
+    } else {
+        $_menu = $block->getHtml('level-top', 'submenu', $columnsLimit);
+    }
 ?>
-<?php $_menu = $block->getCustomMenuHtml(); ?>
-
-<div class="navigation custommenu main-nav" role="navigation">
-    <ul>
+<div class="navigation custommenu main-nav" role="navigation" data-role="awa-main-nav">
+    <ul class="main-nav-list" data-role="main-nav-list">
         <?php echo $_menu; ?>
     </ul>
 </div>
@@ -28,21 +31,9 @@
 <script type="text/x-magento-init">
 {
     ".navigation.custommenu.main-nav": {
-        "js/custom-menu-init": {}
+        "js/custom-menu-init": {
+            "useMagentoMenu": <?php echo $isCustomMenuEnabled ? 'false' : 'true'; ?>
+        }
     }
 }
 </script>
-<?php
-    } else {
-?>
-<?php $_menu = $block->getHtml('level-top', 'submenu', $columnsLimit); ?>
-
-<div class="navigation custommenu main-nav" role="navigation">
-    <ul data-mage-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
-        <?php /* @escapeNotVerified */ echo $_menu; ?>
-    </ul>
-</div>
-
-<?php
-    }
-?>

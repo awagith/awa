@@ -1,4 +1,4 @@
-<?php 
+<?php
     use Magento\Framework\App\Action\Action;
     $enable = $block->getConfig('enabled');
     if ($enable < 1) {
@@ -8,8 +8,8 @@
     $speed = $block->getConfig('speed');
     $qty = $block->getConfig('qty');
     $showCart = $block->getConfig('addtocart');
-    $showWishlist = false; // B2B: Wishlist desativada
-    $showCompare = false; // B2B: Compare desativado
+    $showWishlist = $block->getConfig('wishlist');
+    $showCompare = $block->getConfig('compare');
     $default = $block->getdefault();
     $desktop = $block->getdesktop();
     $desktop_small = $block->getdesktop_small();

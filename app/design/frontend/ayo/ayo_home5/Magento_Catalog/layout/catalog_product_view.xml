@@ -5,21 +5,14 @@
  * Carrega CSS de catálogo também em páginas de produto
  */
 -->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance";
+      xsi:nonamespaceschemalocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
     </head>
     <body>
-        <!-- Keep product media container in Ayo expected column to reduce layout merge conflicts. -->
+        <!-- keep product media container in ayo expected column to reduce layout merge conflicts. -->
         <move element="product.info.media" destination="product.col.media" before="-"/>
 
-        <!-- B2B: Remove Compare from product view -->
-        <referenceBlock name="view.addto.compare" remove="true"/>
-        <referenceBlock name="related.product.addto.compare" remove="true"/>
-        <referenceBlock name="upsell.product.addto.compare" remove="true"/>
-        <!-- B2B: Remove Wishlist from product view -->
-        <referenceBlock name="view.addto.wishlist" remove="true"/>
-        <referenceBlock name="related.product.addto.wishlist" remove="true"/>
-        <referenceBlock name="upsell.product.addto.wishlist" remove="true"/>
+        <!-- wishlist e compare restaurados — fidelidade ao demo ayo home5 -->
     </body>
 </page>

@@ -1016,6 +1016,21 @@ body .page-wrapper .action.nav-toggle {
         justify-content: center;
     }
 
+    body .page-wrapper .aw-footer-social {
+        margin-top: var(--awa-space-4);
+        gap: var(--awa-space-2);
+    }
+
+    body .page-wrapper .aw-footer-social a {
+        width: 38px;
+        height: 38px;
+        border: 1px solid rgb(255 255 255 / 20%);
+    }
+
+    body .page-wrapper .aw-footer-legal {
+        padding: var(--awa-space-4) var(--awa-space-5);
+    }
+
     body .page-wrapper .footer-newsletter {
         flex-direction: column;
         text-align: center;
@@ -1038,11 +1053,6 @@ body .page-wrapper .action.nav-toggle {
 
     body .page-wrapper .footer-bottom .row {
         flex-direction: column;
-        text-align: center;
-    }
-
-    body .page-wrapper .footer-bottom .row .col-md-6:last-child {
-        text-align: center;
     }
 
     body .page-wrapper .aw-footer-trust-b2b {
@@ -1411,23 +1421,6 @@ body .page-wrapper .page-footer .social-icons a:hover {
     transform: translateY(-3px);
 }
 
-body .page-wrapper .footer-social a[href*="whatsapp"]:hover,
-body .page-wrapper .aw-footer-social a.whatsapp:hover {
-    background: var(--footer-accent);
-}
-
-body .page-wrapper .aw-footer-social a.instagram:hover {
-    background: var(--footer-accent);
-}
-
-body .page-wrapper .aw-footer-social a.facebook:hover {
-    background: var(--footer-accent);
-}
-
-body .page-wrapper .aw-footer-social a.youtube:hover {
-    background: var(--footer-accent);
-}
-
 body .page-wrapper .footer-social svg,
 body .page-wrapper .aw-footer-social svg,
 body .page-wrapper .page-footer .social-icons svg {
@@ -1632,6 +1625,17 @@ body .page-wrapper .footer-bottom .security-seal-item svg {
     min-width: 160px;
 }
 
+body .page-wrapper .footer-bottom .footer-bottom-inner {
+    width: 100%;
+    padding: var(--awa-space-2) 0;
+}
+
+body .page-wrapper .footer-bottom .footer-bottom-inner .row {
+    margin-left: 0;
+    margin-right: 0;
+    align-items: center;
+}
+
 body .page-wrapper .footer-bottom .row {
     display: flex;
     justify-content: space-between;
@@ -1672,38 +1676,77 @@ body .page-wrapper .footer-bottom .copyright {
 /* Legal bar */
 body .page-wrapper .aw-footer-legal {
     background: var(--footer-bg-tertiary);
-    padding: var(--awa-space-5);
+    margin-top: var(--awa-space-4);
+    padding: var(--awa-space-5) var(--awa-space-6);
     text-align: center;
     border-top: 1px solid rgb(255 255 255 / 10%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 4%);
 }
 
 body .page-wrapper .aw-footer-legal .legal-info {
-    color: var(--awa-gray-500);
+    color: var(--awa-gray-400, #adb5bd);
     font-size: var(--awa-text-sm);
+    line-height: 1.6;
+    letter-spacing: 0.01em;
 }
 
 body .page-wrapper .aw-footer-legal .legal-separator {
     margin: 0 var(--awa-space-2);
-    opacity: 0.5;
+    opacity: 0.45;
 }
 
 body .page-wrapper .aw-footer-legal a {
     color: var(--footer-text); /* R11-07: token */
-    text-decoration: none;
-    transition: color var(--awa-transition-fast);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-underline-offset: 3px;
+    transition: color var(--awa-transition-fast), text-decoration-color var(--awa-transition-fast);
 }
 
-body .page-wrapper .aw-footer-legal a:hover {
+body .page-wrapper .aw-footer-legal a:hover,
+body .page-wrapper .aw-footer-legal a:focus-visible {
     color: var(--footer-accent);
+    text-decoration-color: currentcolor;
 }
 
 body .page-wrapper .aw-footer-legal .legal-links {
-    margin-top: var(--awa-space-2);
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: var(--awa-space-3);
+    margin-top: var(--awa-space-3);
 }
 
 body .page-wrapper .aw-footer-legal .legal-links a {
-    margin: 0 var(--awa-space-2);
+    margin: 0;
     font-size: var(--awa-text-xs);
+}
+
+@media (width >= 992px) {
+    body .page-wrapper .aw-footer-legal {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--awa-space-6);
+        padding: var(--awa-space-5) var(--awa-space-7);
+        text-align: left;
+    }
+
+    body .page-wrapper .aw-footer-legal .legal-info {
+        margin: 0;
+    }
+
+    body .page-wrapper .aw-footer-legal .legal-links {
+        margin-top: 0;
+        justify-content: flex-end;
+        gap: var(--awa-space-4);
+    }
+}
+
+@media (width <= 680px) {
+    body .page-wrapper .aw-footer-legal .legal-separator {
+        display: none;
+    }
 }
 
 /* Highlights (Compra Segura / Suporte etc.) */
@@ -1873,7 +1916,6 @@ body .page-wrapper .footer.content .block-static-block {
     }
 
     body .page-wrapper .footer-bottom .row {
-        flex-direction: column;
         align-items: center;
         gap: var(--awa-space-3);
     }

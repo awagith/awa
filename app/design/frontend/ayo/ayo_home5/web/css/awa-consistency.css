@@ -476,10 +476,6 @@ body.checkout-cart-index .page-wrapper .cart-empty a {
         grid-template-columns: 1fr;
     }
 
-    body .page-wrapper .fixed-right {
-        display: none;
-    }
-
     body .page-wrapper .top-header .top-account ul.header.links {
         flex-wrap: wrap;
         justify-content: flex-end;

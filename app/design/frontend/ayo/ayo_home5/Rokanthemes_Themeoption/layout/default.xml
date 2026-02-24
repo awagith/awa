@@ -55,6 +55,24 @@
         <referenceContainer name="header-wrapper" remove="true"/>
         <referenceContainer name="navigation.sections" remove="true"/>
 
+        <!-- Compatibility sink for 3rd-party blocks that still target Magento default
+             header/footer containers removed by AYO. Kept display=false to avoid visual output. -->
+        <referenceContainer name="page.wrapper">
+            <container name="awa.layout.compat" as="awa_layout_compat">
+                <container name="header"/>
+                <container name="notifications"/>
+                <container name="global.notices"/>
+                <container name="page.menu"/>
+                <container name="page.breadcrumbs"/>
+                <container name="page.formkey"/>
+                <container name="main.top"/>
+                <container name="page.messages"/>
+                <container name="page.main.actions"/>
+                <container name="footer"/>
+            </container>
+        </referenceContainer>
+        <referenceContainer name="awa.layout.compat" display="false"/>
+
         <referenceContainer name="footer-container">
             <block class="Rokanthemes\Themeoption\Block\Themeoption" name="toki_footer" template="html/footer.phtml">
                 <block class="Magento\Cms\Block\Block" name="social_block">

@@ -5,13 +5,11 @@
  * Carrega CSS de catálogo apenas em páginas de categoria
  */
 -->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance";
+      xsi:nonamespaceschemalocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
     </head>
     <body>
-        <!-- B2B: Remove Compare/Wishlist from category listing -->
-        <referenceBlock name="category.product.addto.compare" remove="true"/>
-        <referenceBlock name="category.product.addto.wishlist" remove="true"/>
+        <!-- wishlist e compare restaurados — fidelidade ao demo ayo home5 -->
     </body>
 </page>

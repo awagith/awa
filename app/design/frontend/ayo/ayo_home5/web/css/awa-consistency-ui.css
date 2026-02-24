@@ -118,49 +118,6 @@ body .page-wrapper button.action {
     font-weight: var(--awa-weight-semibold);
 }
 
-body .page-wrapper .footer-bottom .footer-bottom-inner {
-    width: 100%;
-    padding: var(--awa-space-2) 0;
-}
-
-body .page-wrapper .footer-bottom .footer-bottom-inner .row {
-    margin-left: 0;
-    margin-right: 0;
-    align-items: center;
-}
-
-body .page-wrapper .aw-footer-social {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-top: var(--awa-space-4);
-    gap: var(--awa-space-2);
-}
-
-body .page-wrapper .aw-footer-social a {
-    width: 38px;
-    height: 38px;
-    border: 1px solid rgb(255 255 255 / 20%);
-}
-
-body .page-wrapper .aw-footer-legal {
-    margin-top: var(--awa-space-4);
-    padding: var(--awa-space-4) var(--awa-space-5);
-}
-
-body .page-wrapper .aw-footer-legal .legal-links {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: var(--awa-space-3);
-    margin-top: var(--awa-space-3);
-}
-
-body .page-wrapper .aw-footer-legal .legal-links a {
-    margin: 0;
-}
-
 body .page-wrapper .fixed-right {
     right: 10px;
     border-radius: var(--awa-control-radius);
@@ -216,6 +173,12 @@ body .page-wrapper .fixed-right .fixed-right-ul li em,
 body .page-wrapper .fixed-right .fixed-right-ul li i {
     font-size: var(--awa-text-base-plus); /* BP-39: era 15px */
     line-height: var(--awa-leading-none);
+}
+
+@media (width <= 991px) {
+    body .page-wrapper .fixed-right {
+        display: none;
+    }
 }
 
 body .page-wrapper #back-top.awa-backtotop-legacy {
