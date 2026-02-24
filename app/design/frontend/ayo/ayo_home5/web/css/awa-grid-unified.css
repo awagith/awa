@@ -225,8 +225,9 @@ body.catalog-category-view .page-wrapper .owl:not(.owl-carousel) > .product_row 
 }
 
 /* F3-03: breakpoints de container-products-switch consolidados no §1a.
-   Aqui ficam apenas os overrides de layout-2-col responsivo. */
-@media (width >= 768px) and (width <= 991px) {
+   Aqui ficam apenas os overrides de layout-2-col responsivo.
+   R26: 3 MQs (768-991, 480-767, ≤480) mergeados — todos declaravam 1fr. */
+@media (width <= 991px) {
     body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row {
         grid-template-columns: 1fr;
     }
@@ -234,18 +235,6 @@ body.catalog-category-view .page-wrapper .owl:not(.owl-carousel) > .product_row 
     body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row > [class*="col-sm-3"],
     body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row > .col-main {
         order: initial;
-    }
-}
-
-@media (width >= 480px) and (width <= 767px) {
-    body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (width <= 480px) {
-    body.catalog-category-view .page-wrapper main.page-main .columns.layout.layout-2-col.row {
-        grid-template-columns: 1fr;
     }
 }
 
@@ -684,11 +673,8 @@ body .page-wrapper .product-grid[data-view-mode="5"] {
     grid-template-columns: repeat(5, 1fr);
 }
 
-@media (width >= 1400px) {
-    body .page-wrapper .product-grid[data-view-mode="5"] {
-        grid-template-columns: repeat(5, 1fr);
-    }
-}
+/* R26: @media (width >= 1400px) para data-view-mode="5" removido —
+   a regra base acima já define repeat(5, 1fr) incondicionalmente. */
 
 @media (width >= 769px) and (width <= 991px) {
     body .page-wrapper .product-grid[data-view-mode="4"],
