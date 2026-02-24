@@ -3,7 +3,7 @@
     B2B: remove compare/wishlist from search results.
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+      xsi:nonamespaceschemalocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <!-- wishlist e compare restaurados — fidelidade ao demo ayo home5 -->
     </body>

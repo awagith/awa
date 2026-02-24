@@ -5,7 +5,7 @@
  * Carrega CSS de catálogo apenas em páginas de categoria
  */
 -->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance";
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:nonamespaceschemalocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
     </head>
