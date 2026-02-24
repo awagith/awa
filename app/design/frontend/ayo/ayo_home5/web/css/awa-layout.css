@@ -541,11 +541,9 @@ body .page-wrapper h2.title-category-dropdown.active::after {
         margin-bottom: 10px;
     }
 
-
     .category-dropdown #close-menu {
         display: block !important;
     }
-
 
     body .page-wrapper .page-header.sticky,
     body .page-wrapper .page-header.fixed {
@@ -567,7 +565,6 @@ body .page-wrapper h2.title-category-dropdown.active::after {
     body .page-wrapper .page-header.sticky .logo img {
         max-height: 60px;
     }
-
 
     body .page-wrapper .nav-toggle,
     body .page-wrapper .action.nav-toggle {
@@ -788,7 +785,6 @@ body .page-wrapper h2.title-category-dropdown.active::after {
         display: none;
     }
 
-
     body .page-wrapper .header.links,
     body .page-wrapper .panel.header .header.links,
     body .page-wrapper ul.header.links {
@@ -799,7 +795,6 @@ body .page-wrapper h2.title-category-dropdown.active::after {
     body .page-wrapper .header.links li {
         display: block;
     }
-
 
     body .page-wrapper .sidebar-main .filter-options {
         border-radius: var(--awa-radius) var(--awa-radius) 0 0;
@@ -821,7 +816,6 @@ body .page-wrapper h2.title-category-dropdown.active::after {
     body .page-wrapper .sidebar-main .filter-options-title.active::after {
         transform: rotate(180deg);
     }
-
 
     body .page-wrapper .footer.content {
         grid-template-columns: repeat(3, 1fr);
@@ -845,7 +839,6 @@ body .page-wrapper .awa-nav-close {
 }
 
 /* Show on tablets for category dropdown */
-
 
 /* Bug 1.2 — Medium desktop (992-1199): manter sidebar sem compressão rígida */
 @media (width >= 992px) and (width <= 1199px) {
@@ -928,7 +921,6 @@ body .page-wrapper .page-header.sticky .logo img {
 
 /* Sticky header: desabilitar em tablet ≤991px (padrão AYO) */
 
-
 /* ============================================================
    MOBILE HEADER + NAV
    ÚNICA ESTRATÉGIA: transform: translateX()
@@ -937,7 +929,6 @@ body .page-wrapper .nav-toggle,
 body .page-wrapper .action.nav-toggle {
     display: none;
 }
-
 
 /* Bloco XL removido — regras base já usam var(--awa-container) e
    awa-core.css redefine a variável em @media (min-width: 1399px) */
@@ -958,7 +949,6 @@ body .page-wrapper .action.nav-toggle {
 }
 
 /* --- 991px: Header links coluna em mobile (padrão AYO off-canvas) --- */
-
 
 @media (width <= 768px) {
     body .page-wrapper .panel.header {
@@ -985,7 +975,6 @@ body .page-wrapper .action.nav-toggle {
     body .page-wrapper .block-search button[type="submit"] {
         padding: var(--awa-space-3) var(--awa-space-4);
     }
-
 
     body .page-wrapper .footer.content {
         grid-template-columns: repeat(2, 1fr);
@@ -1090,7 +1079,6 @@ body .page-wrapper .action.nav-toggle {
         font-size: var(--awa-text-base);
     }
 
-
     body .page-wrapper .nav-toggle,
     body .page-wrapper .action.nav-toggle {
         top: -60px;
@@ -1148,7 +1136,6 @@ body .page-wrapper .action.nav-toggle {
         top: -50px;
     }
 
-
     body .page-wrapper .aw-footer-trust-b2b {
         flex-direction: column;
         align-items: center;
@@ -1160,7 +1147,6 @@ body .page-wrapper .action.nav-toggle {
         text-align: center;
         margin-bottom: var(--awa-space-4);
     }
-
 
     body .page-wrapper .footer-newsletter form {
         flex-direction: column;
@@ -1179,7 +1165,6 @@ body .page-wrapper .action.nav-toggle {
     body .page-wrapper .block.newsletter .form.subscribe {
         flex-direction: column;
     }
-
 
     body .page-wrapper .footer.content {
         grid-template-columns: 1fr;
@@ -1224,7 +1209,6 @@ body .page-wrapper .action.nav-toggle {
 
 /* --- 375px: Nav-toggle + minicart offset fino (padrão AYO) --- */
 
-
 /* --- 320px: Extremos móveis --- */
 @media (width <= 320px) {
     body .page-wrapper .minicart-wrapper {
@@ -1241,7 +1225,6 @@ body .page-wrapper .action.nav-toggle {
     body .page-wrapper .page-header.sticky .logo img {
         max-height: 35px;
     }
-
 
     body .page-wrapper .footer.content {
         padding: var(--awa-space-5) var(--awa-space-3);
@@ -1279,7 +1262,6 @@ body .page-wrapper .action.nav-toggle {
    ~46 linhas removidas — 0 impacto visual. */
 
 /* Mobile filters overlay */
-
 
 /* ============================================================
    FOOTER — ARQUITETURA CSS GRID (ÚNICA)
@@ -1883,7 +1865,6 @@ body .page-wrapper .footer.content .block-static-block {
     }
 }
 
-
 /* --- 680px: Footer bottom colunas full-width (padrão AYO) --- */
 @media (width <= 680px) {
     body .page-wrapper .footer-bottom > div > div > div {
@@ -1898,14 +1879,11 @@ body .page-wrapper .footer.content .block-static-block {
     }
 }
 
-
 /* Mobile floating buttons — FONTE ÚNICA em awa-core.css responsive */
 
 /* --- 480px: Footer highlights stack --- */
 
-
 /* --- 320px: Footer extremo mobile --- */
-
 
 /* Footer accessibility */
 body .page-wrapper .footer.content a:focus-visible,

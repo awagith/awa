@@ -353,7 +353,6 @@
         gap: var(--awa-space-3);
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex {
         grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
@@ -369,7 +368,6 @@
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper {
         padding-inline: var(--awa-space-3-75); /* BP-50: era 15px */
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal.top-home-content__trust-offers-deals .hot-deal-tab-slider.hot-deal-tab-slider-customcss .countdown_block {
         position: static !important;
@@ -394,7 +392,6 @@
         width: 100% !important;
         justify-content: center;
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section {
         padding-block: 28px;
@@ -439,7 +436,6 @@
         margin-top: var(--awa-space-3);
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .block_cat > .row {
         row-gap: var(--awa-space-4);
     }
@@ -447,7 +443,6 @@
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product .product-tab-slider.tab_content .productTabContent:not(.owl-carousel) {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .leftBlock .tabs {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -511,13 +506,11 @@
         margin-bottom: var(--awa-space-5);
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex {
         grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
         gap: var(--awa-space-3) !important;
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section {
         padding-block: 36px;
@@ -722,7 +715,6 @@
     }
 }
 
-
 @media (width <= 768px) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .block_notification .awa-ticker-wrap {
         min-height: 32px;
@@ -769,7 +761,6 @@
         gap: var(--awa-space-4); /* BP-17: era 16px */
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container .leftBlock .tabs {
         grid-template-columns: 1fr;
     }
@@ -795,7 +786,6 @@
         margin-top: var(--awa-space-3);
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .row,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServices .velaServicesInner > .rowFlex {
         grid-template-columns: 1fr !important;
@@ -810,7 +800,6 @@
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper {
         padding-inline: var(--awa-space-3); /* BP-21: era 12px */
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section {
         padding-block: var(--awa-space-5); /* BP-21: era 20px */
@@ -1036,12 +1025,9 @@
 
 /* ≤991px — velaServices wraps to 3+2 rows (all 5 visible) */
 
-
 /* ≤767px — velaServices 2 colunas, product name 3 linhas */
 
-
 /* ≤480px — velaServices 1 coluna, espaçamentos compactos */
-
 
 /* ===========================================
    HOME5 — SUPER DEALS LAYOUT RECOVERY
@@ -1126,7 +1112,6 @@
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal.top-home-content__trust-offers-deals .countdown_block .super-deal-countdown .time_circles > div .text {
     color: var(--awa-text-countdown-label); /* BP-41: era #ffe8c9 hardcoded */
 }
-
 
 /* ===========================================
    HOMEPAGE UX — HIERARQUIA VISUAL ENTRE SEÇÕES
@@ -1287,5 +1272,3 @@
 }
 
 /* --- Responsivo — breakpoints menores --- */
-
-

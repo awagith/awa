@@ -66,7 +66,6 @@ body .page-wrapper .block-products-list .product-items:not(.owl-carousel) {
         gap: var(--awa-grid-gap-sm);
     }
 
-
     body .page-wrapper .page-products .toolbar-products {
         flex-wrap: nowrap;
         gap: var(--awa-space-2);
@@ -108,7 +107,6 @@ body .page-wrapper .block-products-list .product-items:not(.owl-carousel) {
         gap: var(--awa-grid-gap-xs);
     }
 
-
     body .page-wrapper .catalog-product-view .product-info-main .box-tocart {
         display: flex;
         flex-direction: column;
@@ -131,13 +129,11 @@ body .page-wrapper .block-products-list .product-items:not(.owl-carousel) {
         padding-top: var(--awa-space-5);
     }
 
-
     body .page-wrapper .block-minicart {
         min-width: auto;
         width: calc(100vw - 20px);
         padding: var(--awa-space-4);
     }
-
 
     body .page-wrapper .search-autocomplete {
         max-height: 60vh;
@@ -146,7 +142,6 @@ body .page-wrapper .block-products-list .product-items:not(.owl-carousel) {
     body .page-wrapper .search.results .search.found {
         font-size: var(--awa-text-sm);
     }
-
 
     body .page-wrapper .item-product .product-info,
     body .page-wrapper .product-item .product-item-details {
@@ -201,17 +196,14 @@ body .page-wrapper .block-products-list .product-items:not(.owl-carousel) {
         padding: var(--awa-space-4);
     }
 
-
     body .page-wrapper .login-container .block-customer-login,
     body .page-wrapper .login-container .block-new-customer {
         padding: var(--awa-space-4);
     }
 
-
     body .page-wrapper .cat_special {
         grid-template-columns: 1fr;
     }
-
 
     body .page-wrapper .owl-carousel .owl-dots {
         margin-top: var(--awa-space-3); /* BP-19: era 12px */
@@ -222,11 +214,9 @@ body .page-wrapper .block-products-list .product-items:not(.owl-carousel) {
         height: 8px;
     }
 
-
     body .page-wrapper .owl-carousel .owl-nav {
         display: none;
     }
-
 
     body .page-wrapper .section-title::after,
     body .page-wrapper .aw-section-title::after,
@@ -240,7 +230,6 @@ body .page-wrapper .block-products-list .product-items:not(.owl-carousel) {
     body .page-wrapper .home-module-title {
         margin-bottom: var(--awa-space-4);
     }
-
 
     body .page-wrapper .contact-index-index .column.main .form.contact .fieldset .field {
         width: 100%;
@@ -1039,7 +1028,6 @@ body .page-wrapper .owl-carousel .product-item {
         overflow-x: clip;
     }
 
-
     body .page-wrapper .catalog-product-view .columns {
         display: flex;
         flex-wrap: wrap;
@@ -1054,7 +1042,6 @@ body .page-wrapper .owl-carousel .product-item {
         width: 100%;
         float: none;
     }
-
 
     body .page-wrapper .sidebar-main {
         display: none;
@@ -1103,7 +1090,6 @@ body .page-wrapper .owl-carousel .product-item {
         background: var(--awa-red);
     }
 
-
     body .page-wrapper .checkout-index-index .opc-wrapper,
     body .page-wrapper .checkout-container .opc-wrapper {
         width: 100%;
@@ -1118,11 +1104,9 @@ body .page-wrapper .owl-carousel .product-item {
         margin-top: var(--awa-space-5);
     }
 
-
     body .page-wrapper .cat_special {
         grid-template-columns: repeat(3, 1fr);
     }
-
 
     body .page-wrapper .products.list .product-item {
         flex-direction: column;
@@ -1632,7 +1616,6 @@ body .page-wrapper .block.crosssell .block-title strong {
    PDP RESPONSIVO — gallery + info stack (padrão AYO ≤767px)
    ============================================================ */
 
-
 @media (width <= 767px) {
     body .page-wrapper .catalog-product-view .product.media {
         width: 100%;
@@ -1669,7 +1652,6 @@ body .page-wrapper .block.crosssell .block-title strong {
         border-radius: var(--awa-radius-sm);
     }
 
-
     body .page-wrapper .modal-popup._inner-scroll .modal-inner-wrap,
     body .page-wrapper .modal-popup .modal-inner-wrap {
         width: 95vw;
@@ -1694,7 +1676,6 @@ body .page-wrapper .block.crosssell .block-title strong {
         width: 100%;
         float: none;
     }
-
 
     .awa-mobile-quick-nav {
         display: block;
@@ -1763,7 +1744,6 @@ body .page-wrapper .block.crosssell .block-title strong {
     }
 }
 
-
 /* ============================================================
    CATEGORY PAGE
    ============================================================ */
@@ -1802,7 +1782,6 @@ body .page-wrapper .toolbar-products .limiter .limiter-options {
 }
 
 /* Toolbar compacta para desktop-small 769–991px */
-
 
 /* Layered navigation */
 body .page-wrapper .sidebar .block-content.filter-content .filter-options-item {
@@ -1848,7 +1827,6 @@ body .page-wrapper .category-image img {
    AYO oculta sidebar em mobile; nós adicionamos botão "Filtrar".
    JS cria o botão e toggle a classe .awa-filter-visible no body.
    ============================================================ */
-
 
 @media (width >= 992px) {
     .awa-filter-toggle {
@@ -1971,7 +1949,6 @@ body .page-wrapper .block-minicart .actions .action.viewcart:hover {
     border-color: var(--awa-red-dark);
     background: var(--awa-red-extra-light);
 }
-
 
 /* ============================================================
    CART PAGE
@@ -2171,7 +2148,6 @@ body .page-wrapper .account .sidebar-main .account-nav .item.current a {
         font-size: var(--awa-text-xl);
     }
 
-
     /* Product card adjustments */
     body .page-wrapper .item-product .product-name a,
     body .page-wrapper .product-item .product-item-link {
@@ -2260,7 +2236,6 @@ body .page-wrapper .account .sidebar-main .account-nav .item.current a {
     body .page-wrapper .time_circles > div .number {
         font-size: var(--awa-text-md);
     }
-
 
     body .page-wrapper .login-container .block-customer-login,
     body .page-wrapper .login-container .block-new-customer {
@@ -2369,7 +2344,6 @@ body .page-wrapper .search-autocomplete [role="option"]:focus-visible {
 
 /* Search autocomplete mobile */
 
-
 /* ============================================================
    PRODUCT LIST VIEW (list mode vs grid)
    ============================================================ */
@@ -2453,7 +2427,6 @@ body .page-wrapper .product.info.detailed .data.item.title > span:focus-visible 
 
 /* VB-09: empty 1199px block removed — clamp() handles PDP/section/price sizing */
 
-
 /* ============================================================
    CART RESPONSIVO — column-reverse ≤1199px (padrão AYO)
    ============================================================ */
@@ -2468,7 +2441,6 @@ body .page-wrapper .product.info.detailed .data.item.title > span:focus-visible 
         width: 100%;
     }
 
-
     body .page-wrapper .cat_special {
         grid-template-columns: repeat(4, 1fr);
     }
@@ -2478,11 +2450,9 @@ body .page-wrapper .product.info.detailed .data.item.title > span:focus-visible 
    CHECKOUT RESPONSIVO — colunas empilhadas ≤991px
    ============================================================ */
 
-
 /* ============================================================
    LOGIN/REGISTER RESPONSIVO
    ============================================================ */
-
 
 /* ============================================================
    CAT_SPECIAL — CSS Grid responsivo (padrão AYO)
@@ -2500,18 +2470,15 @@ body .page-wrapper .cat_special {
     }
 }
 
-
 @media (width <= 680px) {
     body .page-wrapper .cat_special {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-
 /* ============================================================
    OWL DOTS RESPONSIVO
    ============================================================ */
-
 
 /* ============================================================
    OWL NAV ARROWS RESPONSIVO — MOBILE
@@ -2520,11 +2487,9 @@ body .page-wrapper .cat_special {
 /* OWL-FIX-06: hide nav arrows on mobile (≤480px) — rely on swipe + dots.
    Arrows at 44px each overlap too much on 320–480px screens. */
 
-
 /* ============================================================
    SECTION TITLES RESPONSIVO
    ============================================================ */
-
 
 /* VB-09: empty 375px section-title block removed — clamp() handles sizing */
 
@@ -2532,11 +2497,9 @@ body .page-wrapper .cat_special {
    PRODUCT LIST VIEW RESPONSIVO
    ============================================================ */
 
-
 /* ============================================================
    QUICKVIEW / MODAL POPUP RESPONSIVO
    ============================================================ */
-
 
 /* ============================================================
    HOMEPAGE — CATEGORY NAVIGATION (FIX-44 / FIX-45)
@@ -2555,7 +2518,6 @@ body .page-wrapper .cat_special {
     top: calc(var(--awa-header-height, 0px) + var(--awa-space-1));
     z-index: var(--awa-z-dropdown); /* BP-16: era 99 */
 }
-
 
 /* --- FIX-45: Desktop Visual Category Grid (≥768px only) --- */
 .awa-visual-cat-grid {
@@ -2644,7 +2606,6 @@ body .page-wrapper .cat_special {
 /* ============================================================
    CONTACT PAGE RESPONSIVO
    ============================================================ */
-
 
 /* ============================================================
    TRUST BADGES HOMEPAGE

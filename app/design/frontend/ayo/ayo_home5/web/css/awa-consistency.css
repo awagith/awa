@@ -454,7 +454,6 @@ body.checkout-cart-index .page-wrapper .cart-empty a {
     font-weight: var(--awa-weight-semibold);
 }
 
-
 /* ===========================================
    RESPONSIVO
 =========================================== */
@@ -604,7 +603,6 @@ body .page-wrapper .breadcrumbs .items li strong {
         font-size: var(--awa-text-xs);
     }
 
-
     body .page-wrapper .page-products .toolbar-products {
         flex-direction: column;
         align-items: stretch;
@@ -631,7 +629,6 @@ body .page-wrapper .breadcrumbs .items li strong {
         display: none;
     }
 
-
     body .page-wrapper .pages .items.pages-items .item a,
     body .page-wrapper .pages .items.pages-items .item strong {
         min-width: 32px;
@@ -644,7 +641,6 @@ body .page-wrapper .breadcrumbs .items li strong {
    TOOLBAR MOBILE (< 480px)
    Toolbar de categoria/listagem empilha em mobile pequeno.
 =========================================== */
-
 
 /* ===========================================
    PAGINAÇÃO — STYLING CONSISTENTE
@@ -720,7 +716,6 @@ body .page-wrapper .pages .items.pages-items .item .action.previous::before {
     font-size: var(--awa-text-base);
     font-weight: var(--awa-weight-black);
 }
-
 
 /* ===========================================
    OWL CAROUSEL CONTAINMENT (Performance)

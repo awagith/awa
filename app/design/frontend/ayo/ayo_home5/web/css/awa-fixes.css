@@ -53,13 +53,11 @@
         transition: none;
     }
 
-
     body.cms-index-index .page-wrapper .block_notification marquee,
     body.cms-home .page-wrapper .block_notification marquee,
     body.cms-homepage_ayo_home5 .page-wrapper .block_notification marquee {
         animation: none;
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu li > a {
@@ -288,7 +286,6 @@ body.cms-homepage_ayo_home5 .page-wrapper .block_notification marquee {
 
 /* R9-13: Respeitar preferência de reduced-motion para marquee */
 
-
 @keyframes marquee-scroll {
     0% { transform: translateX(0); }
     100% { transform: translateX(-50%); }
@@ -440,7 +437,6 @@ body .newsletterpopup .newsletter-popup-privacy {
         flex-direction: column;
     }
 
-
     body #newsletter_pop_up.newsletterpopup {
         padding: var(--awa-space-2-5); /* BP-50: era 10px */
     }
@@ -499,7 +495,6 @@ body .newsletterpopup .newsletter-popup-privacy {
         flex-wrap: wrap;
     }
 
-
     body .page-wrapper .banner-slider .item-banner img,
     body .page-wrapper .slide-banner .item img,
     body .page-wrapper .banner-text {
@@ -511,7 +506,6 @@ body .newsletterpopup .newsletter-popup-privacy {
         padding: 10px;
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
         --awa-owl-item-gutter: 10px;
     }
@@ -519,7 +513,6 @@ body .newsletterpopup .newsletter-popup-privacy {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
         --awa-owl-item-gutter: 12px;
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > :is(.ayo-home5-section, .section) {
         margin: var(--awa-space-5) 0;
@@ -552,7 +545,6 @@ body .newsletterpopup .newsletter-popup-privacy {
         flex: 1 1 calc(50% - 9px);
         min-width: 120px;
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -628,7 +620,6 @@ body .newsletterpopup .newsletter-popup-privacy {
         font-size: var(--awa-text-sm);
     }
 
-
     body .page-wrapper .testimonial-item {
         padding: 15px;
     }
@@ -642,7 +633,6 @@ body .newsletterpopup .newsletter-popup-privacy {
         width: 40px;
         height: 40px;
     }
-
 
     body .page-wrapper .countdown_block {
         padding: 12px 15px;
@@ -666,7 +656,6 @@ body .newsletterpopup .newsletter-popup-privacy {
         font-size: 9px;
     }
 
-
     body .page-wrapper .blog-post-item,
     body .page-wrapper .the_blog .post-item {
         border-radius: var(--awa-radius-sm);
@@ -681,7 +670,6 @@ body .newsletterpopup .newsletter-popup-privacy {
         font-size: var(--awa-text-base);
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
         --awa-owl-item-gutter: 8px;
     }
@@ -690,17 +678,14 @@ body .newsletterpopup .newsletter-popup-privacy {
         --awa-owl-item-gutter: 10px;
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals .microcopy {
         font-size: var(--awa-text-xs);
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
         flex: 0 0 100%;
         max-width: 100%;
     }
-
 
     body .page-wrapper .newsletter-popup,
     body .page-wrapper .modals-wrapper .modal-popup.newsletter-popup-modal .modal-inner-wrap {
@@ -712,7 +697,6 @@ body .newsletterpopup .newsletter-popup-privacy {
     body .page-wrapper .newsletter-popup .popup-title {
         font-size: clamp(1.1rem, 4.5vw, 1.4rem);
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
         grid-template-columns: 1fr;
@@ -748,7 +732,6 @@ body .newsletterpopup .newsletter-popup-privacy {
         font-size: var(--awa-text-sm);
     }
 
-
     body .page-wrapper .banner-text h2,
     body .page-wrapper .banner-text .title {
         font-size: var(--awa-text-lg); /* BP-30: era 18px */
@@ -759,7 +742,6 @@ body .newsletterpopup .newsletter-popup-privacy {
         font-size: var(--awa-text-xs);
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
         --awa-owl-item-gutter: 6px;
     }
@@ -768,14 +750,12 @@ body .newsletterpopup .newsletter-popup-privacy {
         --awa-owl-item-gutter: 8px;
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a {
         min-height: 44px;
         padding-inline: var(--awa-space-3); /* BP-21: era 12px */
         border-radius: var(--awa-radius-sm); /* BP-49: era 6px */
         font-size: var(--awa-text-xs);
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) {
         --awa-main-nav-link-min-h: 44px;
@@ -1147,7 +1127,6 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         font-size: 31px;
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
         --awa-owl-item-gutter: 12px;
     }
@@ -1156,12 +1135,10 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         --awa-owl-item-gutter: 14px;
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
         flex: 0 0 calc(50% - 12px);
         max-width: calc(50% - 12px);
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 {
         overflow: visible;
@@ -1195,7 +1172,6 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         min-height: 38px;
         padding: 0 var(--awa-space-3);
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .velaServicesInner.velaServicesInner--home5,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-banner,
@@ -1257,7 +1233,6 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         gap: var(--awa-space-4); /* BP-17: era 16px */
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent {
         position: relative;
     }
@@ -1307,7 +1282,6 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         display: block;
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers {
         margin-top: var(--awa-space-3);
     }
@@ -1315,7 +1289,6 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid {
         gap: var(--awa-space-3);
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
         scroll-padding-inline: var(--awa-space-2); /* BP-21: era 8px */
@@ -1335,7 +1308,6 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         transform: translateY(0.5px);
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav {
         margin-bottom: var(--awa-space-2); /* BP-19: era 8px */
     }
@@ -1353,12 +1325,10 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu .subchildmenu > li > a {
         min-height: 40px;
         padding-inline: 14px;
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav {
         position: relative;
@@ -1432,7 +1402,6 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         letter-spacing: var(--awa-tracking-tight);
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
         max-width: min(92vw, var(--awa-container));
@@ -1472,7 +1441,6 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         letter-spacing: var(--awa-tracking-tight);
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 {
         width: auto;
         max-width: 100%;
@@ -1492,7 +1460,6 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         cursor: default;
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
@@ -1504,7 +1471,6 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss .countdown_block {
         padding: 12px 10px;
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
         scroll-snap-type: x proximity;
@@ -1522,7 +1488,6 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         text-rendering: optimizelegibility;
     }
 }
-
 
 @media (width <= 420px) {
     body #newsletter_pop_up .nl-popup-trust {
@@ -1686,23 +1651,19 @@ body .page-wrapper .actions-secondary a:empty::before {
    FIX-19 — RESPONSIVO: TESTIMONIALS MOBILE (P3)
    ============================================================ */
 
-
 /* ============================================================
    FIX-20 — RESPONSIVO: COUNTDOWN MOBILE (P3)
    ============================================================ */
 
-
 /* ============================================================
    FIX-21 — RESPONSIVO: BLOG POSTS MOBILE (P3)
    ============================================================ */
-
 
 @media (width <= 320px) {
     body .page-wrapper .blog-post-item .post-content,
     body .page-wrapper .the_blog .post-item .post-content {
         padding: 10px;
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
         --awa-owl-item-gutter: 4px;
@@ -1716,7 +1677,6 @@ body .page-wrapper .actions-secondary a:empty::before {
 /* ============================================================
    FIX-22 — RESPONSIVO: BANNER/HERO SLIDER MOBILE (P3)
    ============================================================ */
-
 
 /* ============================================================
    FIX-23 — OWL CAROUSEL: ALINHAMENTO + GUTTERS RESPONSIVOS (P1)
@@ -1792,13 +1752,11 @@ body .page-wrapper .owl-carousel {
         --awa-owl-item-gutter: 16px;
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
         flex: 0 0 calc(33.333% - 12px);
         max-width: calc(33.333% - 12px);
     }
 }
-
 
 /* ============================================================
     FIX-24 — HOMEPAGE CMS LAYOUT (P1)
@@ -2012,7 +1970,6 @@ body .page-wrapper .owl-carousel {
 
 /* Padding/widht da Home5 agora são governados por --awa-home-inline-padding (awa-consistency-home5.css). */
 
-
 /* B2B: Ocultar botões de Wishlist e Compare em toda a loja */
 .action.towishlist,
 .action.tocompare,
@@ -2128,14 +2085,11 @@ a[data-action="add-to-wishlist"],
         gap: var(--awa-space-5);
     }
 
-
     /* FIX-28 descontinuado: desktop usa modelo overlay (FIX-53) para evitar desalinhamento/cascata conflitante. */
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > .open-children-toggle {
         display: none !important;
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
@@ -2155,17 +2109,14 @@ a[data-action="add-to-wishlist"],
         background: rgb(0 0 0 / 25%);
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu .subchildmenu > li > a {
         max-width: min(360px, 40vw);
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5)
     .page-wrapper .verticalmenu.side-verticalmenu li.level0 > a:hover {
         padding-left: 15px;
     }
-
 
     /* Estado-base: submenu oculto, posicionado para flyout à direita */
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0 > .submenu {
@@ -2220,7 +2171,6 @@ a[data-action="add-to-wishlist"],
         margin-left: auto;
         padding-left: var(--awa-space-2); /* BP-20: era 8px */
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block > .vertical-menu-before:empty,
@@ -2295,7 +2245,6 @@ a[data-action="add-to-wishlist"],
         display: block;
         border-radius: var(--awa-radius-xs); /* BP-11: era 4px hardcoded */
     }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav {
         margin: 0;
@@ -2400,12 +2349,9 @@ a[data-action="add-to-wishlist"],
 
 /* Responsive: tablet landscape → 3 colunas */
 
-
 /* Responsive: tablet portrait → 2 colunas */
 
-
 /* Responsive: mobile → 1 coluna */
-
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"]::before {
     display: none;
@@ -2663,7 +2609,6 @@ a[data-action="add-to-wishlist"],
    Scroll horizontal c/ snap + gradiente de fade nas bordas.
    ============================================================ */
 
-
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo {
     margin: var(--awa-space-6) 0 0;
     padding: clamp(18px, 2.2vw, 28px);
@@ -2839,7 +2784,6 @@ body .page-wrapper .modals-wrapper .modal-popup.newsletter-popup-modal .modal-in
     overflow: hidden;
 }
 
-
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer {
     margin-top: var(--awa-space-7);
 }
@@ -2948,21 +2892,17 @@ body .page-wrapper .product-item .action.tocart:active {
     transform: scale(0.97);
 }
 
-
 /* ============================================================
    FIX-26 — HOME5 MEDIUM VIEWPORT STABILIZATION (P1)
    Neutraliza regras legadas de 80px no menu e melhora leitura 992-1199.
    ============================================================ */
-
 
 /* ============================================================
    FIX-27 — VERTICAL MENU MOBILE TOGGLES (P1)
    Alinha com recomendação do template Ayo para abertura de submenu no mobile.
    ============================================================ */
 
-
 /* FIX-26b — MEDIUM VIEWPORT EXTRAS (992-1199px) */
-
 
 /* ============================================================
    FIX-27 — TRUST & OFFERS GRID STABILITY (P1)
@@ -2989,7 +2929,6 @@ body .page-wrapper .product-item .action.tocart:active {
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-deals {
     margin-top: 0;
 }
-
 
 /* ============================================================
    FIX-30 — MAIN NAV GLYPH/ICON SANITIZATION (P1)
@@ -3023,7 +2962,6 @@ body .page-wrapper .product-item .action.tocart:active {
    Evita overlay de toggle no desktop/médio e melhora foco visível.
    ============================================================ */
 
-
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a:focus-visible {
     outline: 2px solid var(--awa-red);
     outline-offset: 2px;
@@ -3033,7 +2971,6 @@ body .page-wrapper .product-item .action.tocart:active {
    FIX-32 — MAIN NAV MEDIUM-DESKTOP SCROLL UX (P2)
    Melhora rolagem horizontal e legibilidade entre 992-1199px.
    ============================================================ */
-
 
 /* ============================================================
    FIX-33 — MAIN NAV KEYBOARD/SUBMENU REFINEMENT (P2)
@@ -3055,12 +2992,10 @@ body .page-wrapper .product-item .action.tocart:active {
    Evita corte lateral de dropdown e melhora legibilidade desktop.
    ============================================================ */
 
-
 /* ============================================================
    FIX-35 — MAIN NAV RESPONSIVE TOUCH TUNING (P2)
    Melhora hit-area, snapping e estabilidade visual até 991px.
    ============================================================ */
-
 
 /* ============================================================
    FIX-36 — TOP RHYTHM ALIGNMENT (P2)
@@ -3073,7 +3008,6 @@ body .page-wrapper .product-item .action.tocart:active {
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > .top-home-content.top-home-content--trust-and-offers {
     margin-top: clamp(8px, 1vw, 14px);
 }
-
 
 /* ============================================================
    FIX-37 — SUBMENU RESPONSIVE CONTAINMENT (P2)
@@ -3117,7 +3051,6 @@ body .page-wrapper .product-item .action.tocart:active {
    Reduced motion, alto contraste e rolagem horizontal consistente.
    ============================================================ */
 
-
 @media (forced-colors: active) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a:focus-visible,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu li > a:focus-visible {
@@ -3128,7 +3061,6 @@ body .page-wrapper .product-item .action.tocart:active {
         color: CanvasText;
     }
 }
-
 
 /* ============================================================
    FIX-40 — SMALL-SCREEN NAV MICRO-REFINEMENT (P2)
@@ -3148,13 +3080,11 @@ body .page-wrapper .product-item .action.tocart:active {
         letter-spacing: var(--awa-tracking-tight);
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) {
         --awa-main-nav-link-min-h: 46px;
         --awa-main-nav-link-pad-x: 14px;
     }
 }
-
 
 /* ============================================================
    FIX-41 — MAIN NAV LOCAL TOKENS (P2)
@@ -3171,7 +3101,6 @@ body .page-wrapper .product-item .action.tocart:active {
     padding-inline: var(--awa-main-nav-link-pad-x);
     border-radius: var(--awa-main-nav-link-radius);
 }
-
 
 /* ============================================================
    FIX-42 — SUBMENU LAYERING STABILITY (P2)
@@ -3194,7 +3123,6 @@ body .page-wrapper .product-item .action.tocart:active {
    Evita clipping nas bordas em devices com notch/gestures.
    ============================================================ */
 
-
 /* ============================================================
    FIX-45 — MAIN NAV ACTIVE STATE VIA ARIA-CURRENT (P2)
    Consistência do estado ativo com base em aria-current="page".
@@ -3214,7 +3142,6 @@ body .page-wrapper .product-item .action.tocart:active {
    FIX-46 — DESKTOP SUBMENU SCROLLBAR TUNING (P3)
    Scrollbar consistente para submenu/groupmenu no desktop.
    ============================================================ */
-
 
 /* ============================================================
    FIX-47 — SUBMENU ACTIVE/HOVER CONSISTENCY (P2)
@@ -3242,7 +3169,6 @@ body .page-wrapper .product-item .action.tocart:active {
     padding-inline: var(--awa-space-3); /* BP-21: era 12px */
     line-height: var(--awa-leading-cozy);
 }
-
 
 /* ============================================================
    FIX-49 — SUBMENU DEPTH VISUAL HIERARCHY (P2)
@@ -3296,10 +3222,8 @@ body .page-wrapper .product-item .action.tocart:active {
     hyphens: auto;
 }
 
-
 /* R28 — Bug #3: Neutraliza padding-left:18px de themes5.css no hover.
    transform:translateX(5px) em awa-layout.css é o efeito hover canônico. */
-
 
 /* ============================================================
    FIX-34 — VERTICAL MENU SUBMENU FLYOUT (P1)
@@ -3307,7 +3231,6 @@ body .page-wrapper .product-item .action.tocart:active {
    Define estado-base (hidden) e hover (visible) com especificidade
    alta o suficiente para vencer regras do módulo Rokanthemes.
    ============================================================ */
-
 
 /* ============================================================
    FIX-35 — VERTICAL MENU TITLE HAMBURGER ICON + EXPAND BUTTON
@@ -3411,11 +3334,9 @@ body .page-wrapper .product-item .action.tocart:active {
     border: 0 !important;
 }
 
-
 /* ============================================================
    FIX-55 — HOME5 DESKTOP OVERLAY + GRID/BASELINE POLISH (P1)
    ============================================================ */
-
 
 /* ============================================================
    FIX-54 — MOBILE: GARANTIR VISIBILIDADE DO NAV-TOGGLE (P1)
