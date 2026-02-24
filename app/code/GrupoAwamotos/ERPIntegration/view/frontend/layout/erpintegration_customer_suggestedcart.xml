@@ -12,6 +12,7 @@
 
     <head>
         <title>Carrinho Sugerido</title>
+        <css src="GrupoAwamotos_ERPIntegration::css/suggestions-page.css"/>
     </head>
 
     <update handle="customer_account"/>

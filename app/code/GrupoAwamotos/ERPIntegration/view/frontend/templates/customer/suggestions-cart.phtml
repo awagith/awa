@@ -9,11 +9,6 @@
 if (!$block->isEnabled() || !$block->isLoggedIn()) {
     return;
 }
-
-$customerCode = $block->getErpCustomerCode();
-if (!$customerCode) {
-    return;
-}
 ?>
 
 <div class="erp-cart-suggestions-widget erp-loading" id="erp-cart-suggestions">
@@ -29,56 +24,14 @@ if (!$customerCode) {
     </div>
 </div>
 
-<script>
-require(['jquery'], function ($) {
-    'use strict';
-
-    var widgetId = '#erp-cart-suggestions';
-    var url = '<?= $block->escapeJs($block->getUrl('erpintegration/customer/suggestionsAjax')) ?>';
-    var loaded = false;
-
-    function loadSuggestions() {
-        if (loaded) {
-            return;
+<script type="text/x-magento-init">
+{
+    "#erp-cart-suggestions": {
+        "GrupoAwamotos_ERPIntegration/js/cart-suggestions-loader": {
+            "ajaxUrl": "<?= $block->escapeJs($block->getUrl('erpintegration/customer/suggestionsAjax')) ?>",
+            "rootMargin": "250px 0px",
+            "fallbackDelay": 300
         }
-        loaded = true;
-
-        $.get(url)
-            .done(function (html) {
-                if (html && html.trim().length) {
-                    $(widgetId).replaceWith(html);
-                } else {
-                    $(widgetId).remove();
-                }
-            })
-            .fail(function () {
-                $(widgetId).remove();
-            });
     }
-
-    var element = document.querySelector(widgetId);
-
-    if (!element) {
-        return;
-    }
-
-    if ('IntersectionObserver' in window) {
-        var observer = new IntersectionObserver(function (entries) {
-            if (entries[0] && entries[0].isIntersecting) {
-                observer.disconnect();
-                loadSuggestions();
-            }
-        }, { rootMargin: '250px 0px' });
-
-        observer.observe(element);
-        return;
-    }
-
-    if ('requestIdleCallback' in window) {
-        window.requestIdleCallback(loadSuggestions, { timeout: 1200 });
-        return;
-    }
-
-    window.setTimeout(loadSuggestions, 300);
-});
+}
 </script>
