@@ -45,55 +45,6 @@ if (!$viewsToday && !$isLowStock && !$isBestSeller) {
 </div>
 
 <style>
-.social-proof-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin: 10px 0;
-}
-
-.social-proof-list .badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 4px 10px;
-    font-size: 11px;
-    font-weight: 600;
-    border-radius: 3px;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    white-space: nowrap;
-}
-
-.badge-bestseller {
-    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-    color: #000;
-    box-shadow: 0 2px 4px rgba(255, 215, 0, 0.3);
-}
-
-.badge-low-stock {
-    background: linear-gradient(135deg, #ff4444 0%, #ff6666 100%);
-    color: #fff;
-    box-shadow: 0 2px 4px rgba(255, 68, 68, 0.3);
-    animation: pulse-badge 2s infinite;
-}
-
-.badge-popular {
-    background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
-    color: #fff;
-    box-shadow: 0 2px 4px rgba(76, 175, 80, 0.3);
-}
-
-@keyframes pulse-badge {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-}
-
-/* Mobile */
-@media (max-width: 767px) {
-    .social-proof-list .badge {
-        font-size: 10px;
-        padding: 3px 8px;
-    }
-}
+/* NOTE: Este template NÃO é carregado por nenhum layout XML.
+ * Se for reativado, migrar estes estilos para social-proof.css */
 </style>

@@ -1,79 +1,87 @@
 /**
- * Social Proof Badges - Estilos CSS
- * Grupo Awamotos - Paleta #b73337
+ * Social Proof Badges — Estilos CSS
+ * Grupo Awamotos — Paleta #b73337
+ *
+ * §1 — PDP (product/social-proof.phtml)
+ * §2 — Category list badges (product/list-badge.phtml)
  */
 
-/* Container principal */
+/* ====================================================
+ * §1 — PDP Social Proof container + badges
+ * ==================================================== */
+
 .social-proof-container {
     margin: 20px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
 }
 
-/* Badge base */
 .social-proof-badge {
     display: flex;
     align-items: center;
-    gap: 10px;
     padding: 12px 16px;
-    border-radius: 8px;
+    margin-bottom: 10px;
+    border-radius: 6px;
     font-size: 14px;
-    line-height: 1.5;
-    animation: fadeInUp 0.5s ease-out;
+    animation: sp-fadeInUp 0.5s ease-out;
 }
 
 .social-proof-badge i {
     font-size: 20px;
+    margin-right: 12px;
     flex-shrink: 0;
+}
+
+.social-proof-badge .badge-text {
+    line-height: 1.4;
 }
 
 .social-proof-badge strong {
     font-weight: 600;
 }
 
-/* Views Badge (Contador de visualizações) */
+/* Views Badge — Cinza/Azul */
 .views-badge {
-    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-    border-left: 4px solid #4caf50;
-    color: #2e7d32;
+    background: #f0f7ff;
+    border: 1px solid #d0e4ff;
+    color: #1976d2;
 }
 
 .views-badge i {
-    color: #4caf50;
-    animation: pulse 2s infinite;
+    color: #1976d2;
 }
 
-/* Low Stock Badge (Últimas unidades) */
+/* Low Stock Badge — Laranja (Urgência) */
 .low-stock-badge {
-    background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-    border-left: 4px solid #ff9800;
+    background: #fff3e0;
+    border: 1px solid #ffe0b2;
     color: #e65100;
-}
-
-.low-stock-badge.urgency {
-    animation: shake 3s infinite;
 }
 
 .low-stock-badge i {
     color: #ff9800;
-    animation: sparkle 1.5s infinite;
+    animation: sp-pulse 2s infinite;
 }
 
-/* Bestseller Badge (Mais vendido) */
+.low-stock-badge.urgency {
+    box-shadow: 0 2px 8px rgba(230, 81, 0, 0.15);
+}
+
+/* Bestseller Badge — Vermelho/Ouro */
 .bestseller-badge {
-    background: linear-gradient(135deg, #b73337 0%, #8b2629 100%);
-    border: 2px solid #fff;
+    background: linear-gradient(135deg, #b73337 0%, #d63a3f 100%);
+    border: 1px solid #9a2b2f;
     color: #fff;
-    box-shadow: 0 4px 12px rgba(183, 51, 55, 0.3);
+    font-weight: 600;
 }
 
 .bestseller-badge i {
     color: #ffd700;
-    animation: rotate-star 3s linear infinite;
+    animation: sp-sparkle 2s infinite;
 }
 
-/* Product List Badges (Grid/List view) */
+/* ====================================================
+ * §2 — Category list badges (product/list-badge.phtml)
+ * ==================================================== */
+
 .product-badge-container {
     position: absolute;
     top: 10px;
@@ -95,7 +103,7 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-    animation: slideInLeft 0.4s ease-out;
+    animation: sp-slideInLeft 0.4s ease-out;
 }
 
 .product-badge.bestseller {
@@ -112,8 +120,11 @@
     font-size: 12px;
 }
 
-/* Animações */
-@keyframes fadeInUp {
+/* ====================================================
+ * Animações — prefixed sp- para evitar conflitos
+ * ==================================================== */
+
+@keyframes sp-fadeInUp {
     from {
         opacity: 0;
         transform: translateY(10px);
@@ -124,48 +135,27 @@
     }
 }
 
-@keyframes pulse {
+@keyframes sp-pulse {
     0%, 100% {
         transform: scale(1);
     }
     50% {
-        transform: scale(1.15);
+        transform: scale(1.1);
     }
 }
 
-@keyframes shake {
-    0%, 100% {
-        transform: translateX(0);
-    }
-    10%, 30%, 50%, 70%, 90% {
-        transform: translateX(-2px);
-    }
-    20%, 40%, 60%, 80% {
-        transform: translateX(2px);
-    }
-}
-
-@keyframes sparkle {
+@keyframes sp-sparkle {
     0%, 100% {
         opacity: 1;
-        transform: scale(1);
+        transform: rotate(0deg) scale(1);
     }
     50% {
-        opacity: 0.7;
-        transform: scale(1.2);
+        opacity: 0.8;
+        transform: rotate(180deg) scale(1.1);
     }
 }
 
-@keyframes rotate-star {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes slideInLeft {
+@keyframes sp-slideInLeft {
     from {
         opacity: 0;
         transform: translateX(-20px);
@@ -176,35 +166,40 @@
     }
 }
 
-/* Responsivo */
-@media (max-width: 768px) {
-    .social-proof-container {
-        gap: 10px;
-    }
-    
+/* ====================================================
+ * Responsivo
+ * ==================================================== */
+
+@media (max-width: 767px) {
     .social-proof-badge {
-        padding: 10px 14px;
         font-size: 13px;
+        padding: 10px 14px;
     }
-    
+
     .social-proof-badge i {
         font-size: 18px;
+        margin-right: 10px;
     }
-    
+
     .product-badge-container {
         top: 8px;
         left: 8px;
     }
-    
+
     .product-badge {
         font-size: 10px;
         padding: 5px 10px;
     }
 }
 
-/* Modo escuro (se aplicável) */
-@media (prefers-color-scheme: dark) {
+/* Hover effect desktop */
+@media (min-width: 768px) {
     .social-proof-badge {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .social-proof-badge:hover {
+        transform: translateX(5px);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 }
