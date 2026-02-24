@@ -12,6 +12,7 @@
    pertence a core/layout/components. Se é um BUG VISUAL do tema
    ou do conteúdo CMS, pertence aqui.
 =========================================== */
+@layer awa-fixes {
 
 /* ============================================================
    FIX-01 — BANNER TEXT DUPLICATION (P0)
@@ -3454,3 +3455,4 @@ body .page-wrapper .product-item .action.tocart:active {
         color: var(--awa-red);
     }
 }
+} /* F2-02: fecha @layer awa-fixes */
