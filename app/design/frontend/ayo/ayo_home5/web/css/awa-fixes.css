@@ -693,7 +693,7 @@ body #newsletter_pop_up .nl-popup-form .field.newsletter .control {
 body #newsletter_pop_up .nl-popup-form input[type="email"] {
     width: 100%;
     border: 2px solid var(--awa-gray-200);
-    border-radius: 11px;
+    border-radius: var(--awa-radius-md); /* BP-49: era 11px */
     min-height: 42px;
     padding: 10px 14px;
     font-size: var(--awa-text-base);
@@ -710,7 +710,7 @@ body #newsletter_pop_up .nl-popup-form .actions {
 
 body #newsletter_pop_up .nl-popup-form .action.subscribe {
     width: 100%;
-    border-radius: 10px;
+    border-radius: var(--awa-radius-md); /* BP-49: era 10px */
     min-height: 43px;
     padding: 10px 14px;
     display: inline-flex;
@@ -2013,7 +2013,7 @@ a[data-action="add-to-wishlist"],
         scrollbar-width: none;
         gap: var(--awa-space-2); /* BP-17: era 8px */
         padding-bottom: var(--awa-space-2);
-        mask-image: linear-gradient(to right, transparent 0, #000 8px, #000 calc(100% - 24px), transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0, black 8px, black calc(100% - 24px), transparent 100%); /* BP-51: #000 → keyword */
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2::-webkit-scrollbar {
@@ -2817,6 +2817,11 @@ body .page-wrapper .product-item .action.tocart:active {
 }
 
 @media (width <= 991px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
+        scrollbar-width: thin; /* BP-50: standard scrollbar */
+        scrollbar-color: rgb(0 0 0 / 18%) transparent;
+    }
+
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul::-webkit-scrollbar {
         height: 6px;
     }
@@ -2850,7 +2855,7 @@ body .page-wrapper .product-item .action.tocart:active {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a {
         min-height: 44px;
         padding-inline: var(--awa-space-3); /* BP-21: era 12px */
-        border-radius: 6px;
+        border-radius: var(--awa-radius-sm); /* BP-49: era 6px */
         font-size: var(--awa-text-xs);
     }
 }

@@ -494,7 +494,7 @@
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .tab_product .list-tab-product .item-product {
     padding: var(--awa-space-4); /* BP-18: era 16px */
-    border-radius: 6px;
+    border-radius: var(--awa-radius-sm); /* BP-49: era 6px */
     gap: var(--awa-space-3); /* BP-17: era 12px */
 }
 
