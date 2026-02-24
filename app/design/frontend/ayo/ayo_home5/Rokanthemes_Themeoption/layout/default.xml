@@ -2,7 +2,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <referenceContainer name="page.wrapper">
+        <referencecontainer name="page.wrapper">
             <block class="Rokanthemes\Themeoption\Block\Themeoption" name="toki_header" template="html/header.phtml" before="-">
                 <block class="Magento\Cms\Block\Block" name="top-contact">
                     <arguments>
@@ -28,7 +28,7 @@
                     <block class="Rokanthemes\VerticalMenu\Block\Verticalmenu" name="menu.vertical" template="Rokanthemes_VerticalMenu::sidemenu.phtml" group="navigation-sections" ttl="3600" before="-"/>
                 </block>
             </block>
-        </referenceContainer>
+        </referencecontainer>
 
         <move element="store_language" destination="toki_header"/>
         <move element="currency" destination="toki_header"/>
@@ -42,22 +42,22 @@
         <move element="slideshow.top" destination="toki_header"/>
         <move element="custom.topnav" destination="toki_header"/>
 
-        <referenceBlock name="my-account-link" template="Rokanthemes_Themeoption::customer/account/link.phtml"/>
-        <referenceBlock name="register-link" template="Rokanthemes_Themeoption::customer/account/register_link.phtml">
+        <referenceblock name="my-account-link" template="Rokanthemes_Themeoption::customer/account/link.phtml"/>
+        <referenceblock name="register-link" template="Rokanthemes_Themeoption::customer/account/register_link.phtml">
             <arguments>
-                <argument name="label" xsi:type="string" translate="true">Create Account</argument>
+                <argument name="label" xsi:type="string" translate="true">create account</argument>
             </arguments>
-        </referenceBlock>
-        <referenceBlock name="logo" template="Rokanthemes_Themeoption::html/header/logo.phtml"/>
+        </referenceblock>
+        <referenceblock name="logo" template="Rokanthemes_Themeoption::html/header/logo.phtml"/>
 
-        <referenceContainer name="header.container" remove="true"/>
-        <referenceContainer name="header.panel" remove="true"/>
-        <referenceContainer name="header-wrapper" remove="true"/>
-        <referenceContainer name="navigation.sections" remove="true"/>
+        <referencecontainer name="header.container" remove="true"/>
+        <referencecontainer name="header.panel" remove="true"/>
+        <referencecontainer name="header-wrapper" remove="true"/>
+        <referencecontainer name="navigation.sections" remove="true"/>
 
-        <!-- Compatibility sink for 3rd-party blocks that still target Magento default
-             header/footer containers removed by AYO. Kept display=false to avoid visual output. -->
-        <referenceContainer name="page.wrapper">
+        <!-- compatibility sink for 3rd-party blocks that still target magento default
+             header/footer containers removed by ayo. kept display=false to avoid visual output. -->
+        <referencecontainer name="page.wrapper">
             <container name="awa.layout.compat" as="awa_layout_compat">
                 <container name="header"/>
                 <container name="notifications"/>
@@ -70,10 +70,10 @@
                 <container name="page.main.actions"/>
                 <container name="footer"/>
             </container>
-        </referenceContainer>
-        <referenceContainer name="awa.layout.compat" display="false"/>
+        </referencecontainer>
+        <referencecontainer name="awa.layout.compat" display="false"/>
 
-        <referenceContainer name="footer-container">
+        <referencecontainer name="footer-container">
             <block class="Rokanthemes\Themeoption\Block\Themeoption" name="toki_footer" template="html/footer.phtml">
                 <block class="Magento\Cms\Block\Block" name="social_block">
                     <arguments>
@@ -101,30 +101,29 @@
                     </arguments>
                 </block>
             </block>
-        </referenceContainer>
+        </referencecontainer>
 
         <move element="footer_links" destination="toki_footer"/>
         <move element="store_switcher" destination="toki_footer"/>
         <!-- remove o bloco copyright do magento default para evitar conflito de alias
              com toki_copyright (as="copyright") ja definido no tema pai ayo_default -->
-        <referenceBlock name="copyright" remove="true"/>
+        <referenceblock name="copyright" remove="true"/>
 
-        <referenceContainer name="report.bugs" remove="1"/>
-        <referenceContainer name="form.subscribe" remove="1"/>
+        <referencecontainer name="report.bugs" remove="1"/>
+        <referencecontainer name="form.subscribe" remove="1"/>
 
-        <referenceContainer name="page.top">
-            <container name="nav.breadcrumbs" htmlTag="div" htmlClass="nav-breadcrumbs">
-                <container name="nav.breadcrumbs.container" htmlTag="div" htmlClass="container">
-                    <container name="menu.rowbar" htmlTag="div" htmlClass="row">
-                        <container name="menu.bar.col2" htmlTag="div" htmlClass="col-sm-12" after="-">
+        <referencecontainer name="page.top">
+            <container name="nav.breadcrumbs" htmltag="div" htmlclass="nav-breadcrumbs">
+                <container name="nav.breadcrumbs.container" htmltag="div" htmlclass="container">
+                    <container name="menu.rowbar" htmltag="div" htmlclass="row">
+                        <container name="menu.bar.col2" htmltag="div" htmlclass="col-sm-12" after="-">
                             <block class="Magento\Theme\Block\Html\Breadcrumbs" name="breadcrumbs" as="breadcrumbs"/>
                         </container>
                     </container>
                 </container>
             </container>
-        </referenceContainer>
+        </referencecontainer>
 
-        <referenceBlock name="wishlist_sidebar" remove="true"/>
-        <referenceBlock name="catalog.compare.sidebar" remove="true"/>
+        <!-- wishlist e compare sidebar restaurados — fidelidade ao demo ayo home5 -->
     </body>
 </page>
