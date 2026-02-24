@@ -228,11 +228,14 @@
     /* Touch target mínimo — WCAG 2.2 Success Criterion 2.5.8 (AAA) */
     --awa-touch-target: 44px;
 
+    /* Cores especializadas (BP-41) */
+    --awa-text-countdown-label: #ffe8c9; /* BP-41: warm cream p/ labels countdown sobre bg escuro */
+
     /* Footer (tokens específicos, valores alinhados com globais) */
     --footer-bg: #1a1a1a;
     --footer-bg-secondary: #242424;
     --footer-bg-tertiary: #111;
-    --footer-text: #b0b0b0;
+    --footer-text: #c0c0c0; /* BP-41: era #b0b0b0 → 5.3:1 sobre #1a1a1a — WCAG AA */
     --footer-text-bright: #fff;
     --footer-accent: #b73337;
 
@@ -309,6 +312,7 @@ body {
     font-size: var(--awa-font-size);
     color: var(--awa-dark);
     line-height: var(--awa-line-height);
+    font-optical-sizing: auto; /* BP-44: otimização óptica para Poppins (variable-weight awareness) */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizelegibility;
@@ -317,6 +321,7 @@ body {
 a {
     color: var(--awa-red);
     text-decoration: none;
+    text-decoration-skip-ink: auto; /* BP-42: linhas de underline não cortam descendentes */
     transition: color var(--awa-transition);
 }
 
@@ -1109,6 +1114,40 @@ body .page-wrapper *:focus:not(:focus-visible) {
 }
 
 /* ===========================================
+   NO JAVASCRIPT — Fallback (BP-46)
+   Chrome 120+, Firefox 113+ (~85%)
+   Degrada silenciosamente em navegadores sem suporte.
+=========================================== */
+@media (scripting: none) {
+    /* Carousels sem JS: mostrar todos os itens em grid */
+    body .page-wrapper .owl-carousel {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: var(--awa-grid-gap);
+        overflow: visible;
+    }
+
+    /* Lazy images sem JS: forçar visibilidade */
+    body .page-wrapper img[loading="lazy"] {
+        opacity: 1;
+    }
+
+    /* Elementos JS-dependentes: ocultar */
+    body .page-wrapper .loading-mask,
+    body .newsletterpopup,
+    #awaBackToTop,
+    .awa-whatsapp-float,
+    .awa-nav-overlay {
+        display: none;
+    }
+
+    /* Accordion / details: mostrar conteúdo por padrão sem JS */
+    body .page-wrapper details > *:not(summary) {
+        display: block;
+    }
+}
+
+/* ===========================================
    PRINT
 =========================================== */
 @media print {
@@ -1194,8 +1233,11 @@ body .page-wrapper a[href="#maincontent"]:focus {
     outline: 2px solid var(--awa-text-on-primary);
 }
 
-/* R10-05: Scroll-margin para ancoras sob sticky header */
-#maincontent {
+/* R10-05 + BP-43: Scroll-margin para ancoras sob sticky header */
+#maincontent,
+body .page-wrapper .block,
+body .page-wrapper .widget,
+body .page-wrapper [id]:not(input, select, textarea, button) {
     scroll-margin-top: var(--awa-header-height, 0);
 }
 
@@ -1222,6 +1264,7 @@ body .page-wrapper a[href="#maincontent"]:focus {
     display: flex;
     align-items: center;
     justify-content: center;
+    will-change: opacity, visibility; /* BP-47: hint p/ composite layer — toggled by JS */
 }
 
 #awaBackToTop:hover {
@@ -1256,6 +1299,7 @@ body .page-wrapper a[href="#maincontent"]:focus {
     box-shadow: 0 4px 15px rgb(183 51 55 / 28%);
     z-index: var(--awa-z-float); /* BP-16: era 9999 */
     transition: transform var(--awa-transition), box-shadow var(--awa-transition); /* R13: era 'all' */
+    will-change: transform; /* BP-47: hint p/ composite layer — hover scale animation */
 }
 
 .awa-whatsapp-float:hover {

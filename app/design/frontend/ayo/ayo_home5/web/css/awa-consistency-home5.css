@@ -1100,7 +1100,7 @@
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .hot-deal.top-home-content__trust-offers-deals .countdown_block .super-deal-countdown .time_circles > div .text {
-    color: #ffe8c9;
+    color: var(--awa-text-countdown-label); /* BP-41: era #ffe8c9 hardcoded */
 }
 
 @media (width <= 767px) {
@@ -1278,7 +1278,7 @@
     padding: 0 20px 16px;
     font-size: 0.875rem;
     line-height: var(--awa-leading-loose);
-    color: #555;
+    color: var(--awa-gray-600); /* BP-41: era #555 hardcoded */
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-faq-quick-wrap details a {

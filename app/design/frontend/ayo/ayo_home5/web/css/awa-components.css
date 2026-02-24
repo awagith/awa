@@ -1005,7 +1005,8 @@ body .page-wrapper .testimonials-home:last-child {
 /* Excluídos testimonials-home e hot-deal-section — contêm OWL carousels
    que precisam de width calculado ao inicializar */
 body .page-wrapper .the_blog,
-body .page-wrapper .velaServices {
+body .page-wrapper .velaServices,
+body .page-wrapper .service-section { /* BP-48: seções below-fold extras */
     content-visibility: auto;
     contain-intrinsic-size: auto 400px;
 }
