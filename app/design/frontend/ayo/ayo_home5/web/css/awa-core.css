@@ -128,7 +128,10 @@
     /* Spacing scale (base 4px) */
     --awa-space-1: 4px;
     --awa-space-2: 8px;
+    --awa-space-2-5: 10px; /* BP-50: common spacing */
     --awa-space-3: 12px;
+    --awa-space-3-5: 14px; /* BP-50: common spacing */
+    --awa-space-3-75: 15px; /* BP-50: common spacing */
     --awa-space-4: 16px;
     --awa-space-5: 20px;
     --awa-space-6: 24px;
