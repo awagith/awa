@@ -19,43 +19,12 @@
     <preference for="GrupoAwamotos\B2B\Api\PriceVisibilityInterface"
                 type="GrupoAwamotos\B2B\Model\PriceVisibility"/>
     
-    <!-- Plugin para ocultar preços -->
-    <type name="Magento\Catalog\Block\Product\AbstractProduct">
-        <plugin name="grupoawamotos_b2b_hide_price"
-                type="GrupoAwamotos\B2B\Plugin\HidePricePlugin"
-                sortOrder="10"/>
-    </type>
-    
-    <type name="Magento\Catalog\Pricing\Render\FinalPriceBox">
-        <plugin name="grupoawamotos_b2b_hide_final_price"
-                type="GrupoAwamotos\B2B\Plugin\HideFinalPricePlugin"
-                sortOrder="10"/>
-    </type>
-
-    <!-- Carrinho: ocultar preços e totais via plugins -->
-    <type name="Magento\Quote\Api\CartTotalRepositoryInterface">
-        <plugin name="grupoawamotos_b2b_hide_cart_totals"
-                type="GrupoAwamotos\B2B\Plugin\Checkout\HideCartTotalsPlugin"
-                sortOrder="10"/>
-    </type>
-
-    <type name="Magento\Checkout\Block\Cart\Item\Renderer">
-        <plugin name="grupoawamotos_b2b_hide_cart_item_price"
-                type="GrupoAwamotos\B2B\Plugin\Checkout\HideCartItemPricePlugin"
-                sortOrder="10"/>
-    </type>
-
-    <type name="Magento\Checkout\CustomerData\Cart">
-        <plugin name="grupoawamotos_b2b_hide_minicart_price"
-                type="GrupoAwamotos\B2B\Plugin\Checkout\HideMiniCartPricePlugin"
-                sortOrder="10"/>
-    </type>
-
-    <type name="Magento\Checkout\Model\DefaultConfigProvider">
-        <plugin name="grupoawamotos_b2b_hide_checkout_price"
-                type="GrupoAwamotos\B2B\Plugin\Checkout\HideCheckoutPricePlugin"
-                sortOrder="10"/>
-    </type>
+    <!--
+        Plugins de ocultação de preço/carrinho/checkout movidos para etc/frontend/di.xml.
+        Esses plugins dependem de CustomerSession e só fazem sentido no escopo frontend.
+        Veja: grupoawamotos_b2b_hide_price, hide_final_price, hide_cart_totals,
+              hide_cart_item_price, hide_minicart_price, hide_checkout_price
+    -->
     
     <!-- Customer Session Proxy para performance -->
     <type name="GrupoAwamotos\B2B\Model\PriceVisibility">
@@ -70,12 +39,7 @@
         </arguments>
     </type>
     
-    <!-- Plugin para aplicar descontos por grupo B2B -->
-    <type name="Magento\Catalog\Model\Product">
-        <plugin name="grupoawamotos_b2b_group_price"
-                type="GrupoAwamotos\B2B\Plugin\GroupPricePlugin"
-                sortOrder="20"/>
-    </type>
+    <!-- Plugin grupoawamotos_b2b_group_price movido para etc/frontend/di.xml (depende de CustomerSession) -->
     
     <type name="GrupoAwamotos\B2B\Plugin\GroupPricePlugin">
         <arguments>
@@ -103,11 +67,7 @@
                 sortOrder="15"/>
     </type>
 
-    <type name="Magento\Sales\Model\AdminOrder\Create">
-        <plugin name="grupoawamotos_b2b_validate_order_address_cnpj"
-                type="GrupoAwamotos\B2B\Plugin\AdminOrder\ValidateAddressCnpjOnCreateOrderPlugin"
-                sortOrder="20"/>
-    </type>
+    <!-- Plugin AdminOrder\Create movido para etc/adminhtml/di.xml (escopo correto) -->
     
     <!-- B2B Catálogo Restrito - Filtro de Produtos -->
     <type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
@@ -124,12 +84,7 @@
         </arguments>
     </type>
     
-    <!-- B2B Catálogo Restrito - Bloquear Acesso a Produto -->
-    <type name="Magento\Catalog\Controller\Product\View">
-        <plugin name="grupoawamotos_b2b_restricted_product_view"
-                type="GrupoAwamotos\B2B\Plugin\Catalog\RestrictedProductViewPlugin"
-                sortOrder="10"/>
-    </type>
+    <!-- Plugin grupoawamotos_b2b_restricted_product_view movido para etc/frontend/di.xml (depende de CustomerSession) -->
     
     <type name="GrupoAwamotos\B2B\Plugin\Catalog\RestrictedProductViewPlugin">
         <arguments>
