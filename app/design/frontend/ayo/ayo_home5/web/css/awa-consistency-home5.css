@@ -379,48 +379,9 @@
     background: var(--awa-bg-surface); /* BP-12 */
 }
 
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip {
-    max-width: var(--awa-container);
-    width: calc(100% - 40px);
-    margin: 0 auto;
-    padding: var(--awa-space-3) var(--awa-space-4);
-    border: 1px solid var(--awa-gray-200);
-    border-radius: var(--awa-control-radius);
-    background: linear-gradient(135deg, rgb(183 51 55 / 6%), rgb(183 51 55 / 2%));
-    display: grid;
-    justify-items: center;
-    gap: var(--awa-space-2);
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip .action {
-    min-height: 42px;
-    padding-left: var(--awa-space-4);
-    padding-right: var(--awa-space-4);
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip .awa-hero-cta-note {
-    margin: 0;
-    font-size: var(--awa-text-sm);
-    color: var(--awa-gray-700);
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip .awa-hero-cta-helper {
-    margin: 0;
-    font-size: var(--awa-text-sm);
-    color: var(--awa-gray-700);
-    text-align: center;
-    max-width: 72ch;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip .awa-hero-cta-link {
-    color: var(--awa-red-dark);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip .awa-hero-cta-link:hover {
-    color: var(--awa-red);
-}
+/* R24 tombstone — estilos detalhados da .awa-hero-cta-strip removidos
+   porque o bloco foi ocultado por FIX-53 em awa-fixes.css (display:none).
+   Manter este comentário como referência caso a CTA volte futuramente. */
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--intent-grids .ayo-home5-launches {
     margin-top: var(--awa-space-5);
@@ -645,10 +606,8 @@
         gap: var(--awa-space-3);
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip {
-        width: calc(100% - 30px);
-        padding: var(--awa-space-3);
-    }
+    /* R24 tombstone — overrides responsivos da .awa-hero-cta-strip
+       desativados (CTA oculta em FIX-53, awa-fixes.css). */
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .banner_mid_1,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content .hot-deal,
@@ -672,14 +631,7 @@
         min-height: 32px;
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip {
-        justify-items: stretch;
-        gap: var(--awa-space-2);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip .action {
-        width: 100%;
-    }
+    /* R24 tombstone — layout mobile da .awa-hero-cta-strip removido. */
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-mobile-quick-nav .quick-nav-wrapper {
         display: flex;
@@ -768,9 +720,7 @@
         margin-bottom: var(--awa-space-2);
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-hero-cta-strip {
-        width: calc(100% - 24px);
-    }
+    /* R24 tombstone — largura compacta da .awa-hero-cta-strip removida. */
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content + .top-home-content {
         margin-top: var(--awa-space-4);
@@ -935,6 +885,7 @@
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper {
     max-width: var(--awa-container);
     margin-inline: auto;
+    margin-top: var(--awa-space-6); /* R19/R24: margin centralizado aqui (antes em FIX-24) */
     padding-inline: var(--awa-space-5); /* BP-21: era 20px */
     box-sizing: border-box;
 }

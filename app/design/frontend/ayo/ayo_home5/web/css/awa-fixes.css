@@ -1336,19 +1336,13 @@ body .page-wrapper .owl-carousel {
 }
 
 /* ============================================================
-   FIX-24 — HOMEPAGE CMS LAYOUT (P1)
-   FAQ + selos + seções de grade (Coleções/Lançamentos).
-   Escopado apenas à homepage para não afetar o Ayo base.
-   R20: seletores consolidados com :is() (38 blocos).
-        Wrapper simplificado — width/max-width/padding/box-sizing
-        delegados ao AF-07 (awa-consistency-home5.css).
-   ============================================================ */
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper {
-    margin-top: var(--awa-space-6);
-}
-
-/* R19: section margin removido — definido em awa-consistency-home5.css (space-6) */
-
+    FIX-24 — HOMEPAGE CMS LAYOUT (P1)
+    FAQ + selos + seções de grade (Coleções/Lançamentos).
+    Escopado apenas à homepage para não afetar o Ayo base.
+    R20: seletores consolidados com :is() (38 blocos).
+          Wrapper simplificado — width/max-width/padding/box-sizing
+          delegados ao AF-07 (awa-consistency-home5.css).
+    ============================================================ */
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > .ayo-home5-section.container {
     width: 100%;
     max-width: none;
