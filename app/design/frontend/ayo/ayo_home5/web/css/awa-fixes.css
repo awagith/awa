@@ -1173,9 +1173,10 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         touch-action: pan-x pinch-zoom; /* BP-27: melhor scroll horizontal touch */
-        scrollbar-width: none;
+        scrollbar-width: thin;
         gap: var(--awa-space-2); /* BP-17: era 8px */
         padding-bottom: var(--awa-space-2);
+        white-space: nowrap;
         mask-image: linear-gradient(to right, transparent 0, black 8px, black calc(100% - 24px), transparent 100%); /* BP-51: #000 → keyword */
     }
 
@@ -1185,6 +1186,7 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li {
         scroll-snap-align: start;
+        flex: 0 0 auto;
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li > a {
@@ -1255,18 +1257,6 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         gap: var(--awa-space-4); /* BP-17: era 16px */
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 {
-        display: flex;
-        gap: var(--awa-space-2); /* BP-17: era 8px */
-        overflow-x: auto;
-        white-space: nowrap;
-        scrollbar-width: thin;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li {
-        flex: 0 0 auto;
-    }
-
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent {
         position: relative;
@@ -1331,6 +1321,8 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         scroll-padding-inline: var(--awa-space-2); /* BP-21: era 8px */
         padding-inline: var(--awa-space-1); /* BP-21: era 4px */
         gap: var(--awa-space-1); /* BP-17: era 4px */
+        scrollbar-width: thin; /* BP-50: standard scrollbar */
+        scrollbar-color: rgb(0 0 0 / 18%) transparent;
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > a {
@@ -1350,12 +1342,6 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > .top-home-content.top-home-content--trust-and-offers {
         margin-top: 6px;
-    }
-
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
-        scrollbar-width: thin; /* BP-50: standard scrollbar */
-        scrollbar-color: rgb(0 0 0 / 18%) transparent;
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul::-webkit-scrollbar {
@@ -1450,6 +1436,7 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
         max-width: min(92vw, var(--awa-container));
+        overflow-x: hidden; /* fallback para navegadores sem clip */
         overflow-x: clip;
     }
 
@@ -1464,12 +1451,6 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         padding-top: 7px;
         padding-bottom: 7px;
     }
-
-
-        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
-        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
-            overflow-x: hidden;
-        }
     }
 
 @media (width >= 992px) and (width <= 1199px) {
@@ -2142,23 +2123,11 @@ a[data-action="add-to-wishlist"],
         text-decoration: none;
     }
 
-
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: var(--awa-space-5);
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .velaServicesInner.velaServicesInner--home5 {
-        grid-column: 1 / -1;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-banner {
-        grid-column: 1 / 2;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-deals {
-        grid-column: 2 / 3;
-    }
 
     /* FIX-28 descontinuado: desktop usa modelo overlay (FIX-53) para evitar desalinhamento/cascata conflitante. */
 
@@ -2285,8 +2254,14 @@ a[data-action="add-to-wishlist"],
         width: 100%;
         max-height: min(72vh, 640px);
         overflow: auto;
+        overflow-x: hidden;
         z-index: var(--awa-z-menu-list); /* BP-16: era 1008 */
         display: none !important;
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        box-sizing: border-box;
+        scrollbar-width: thin;
+        scrollbar-color: rgb(0 0 0 / 18%) transparent;
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown.menu-open,
@@ -2340,15 +2315,6 @@ a[data-action="add-to-wishlist"],
         font-weight: var(--awa-weight-bold);
         letter-spacing: var(--awa-tracking-tight);
         text-transform: uppercase;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-        overflow-x: hidden;
-        box-sizing: border-box;
-        scrollbar-width: thin;
-        scrollbar-color: rgb(0 0 0 / 18%) transparent;
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown::-webkit-scrollbar {
@@ -3170,7 +3136,7 @@ body .page-wrapper .product-item .action.tocart:active {
    ============================================================ */
 @media (width <= 575px) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul {
-        padding-inline: 2px;
+        padding-inline: max(2px, env(safe-area-inset-left)) max(2px, env(safe-area-inset-right));
         gap: 3px;
         scroll-padding-inline: 6px;
     }
@@ -3186,11 +3152,6 @@ body .page-wrapper .product-item .action.tocart:active {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) {
         --awa-main-nav-link-min-h: 46px;
         --awa-main-nav-link-pad-x: 14px;
-    }
-
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul {
-        padding-inline: max(2px, env(safe-area-inset-left)) max(2px, env(safe-area-inset-right));
     }
 }
 
@@ -3226,13 +3187,7 @@ body .page-wrapper .product-item .action.tocart:active {
     z-index: var(--awa-z-flyout); /* BP-16: era 10030 */
 }
 
-/* ============================================================
-   FIX-43 — OVERFLOW CLIP FALLBACK (P3)
-   Fallback para navegadores sem suporte pleno a overflow: clip.
-   ============================================================ */
-@supports not (overflow: clip) {
-
-}
+/* FIX-43 — OVERFLOW CLIP FALLBACK: removido (bloco vazio, sem regras necessárias). */
 
 /* ============================================================
    FIX-44 — SAFE AREA SUPPORT ON SMALL SCREENS (P3)
@@ -3466,5 +3421,98 @@ body .page-wrapper .product-item .action.tocart:active {
    FIX-54 — MOBILE: GARANTIR VISIBILIDADE DO NAV-TOGGLE (P1)
    Remove conflito de sobreposição com menu_left_home1 no ≤767px.
    ============================================================ */
+
+/* ============================================================
+   FIX-56 — MAIN-NAV HOME5 BASELINE ALIGNMENT (P1)
+   Consolida baseline visual/funcional do custommenu main-nav
+   no header global do ayo_home5 (desktop + touch/tablet).
+   ============================================================ */
+body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav {
+    position: relative;
+    width: 100%;
+}
+
+body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+}
+
+body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li > a,
+body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li > a.level-top {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 12px 16px;
+    line-height: 1.2;
+    white-space: nowrap;
+    border-radius: 8px;
+}
+
+body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li > a:hover,
+body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li > a:focus-visible {
+    background: rgb(183 51 55 / 10%);
+}
+
+body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li > .submenu,
+body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li > .groupmenu {
+    top: calc(100% + 2px);
+}
+
+body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li:nth-last-child(-n+2) > .submenu,
+body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li:nth-last-child(-n+2) > .groupmenu {
+    left: auto;
+    right: 0;
+}
+
+@media (width <= 1199px) {
+    body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul {
+        overflow: visible auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgb(0 0 0 / 25%) transparent;
+    }
+}
+
+@media (width <= 991px) {
+    body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li > .open-children-toggle {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        min-height: 48px;
+    }
+
+    body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li > .submenu,
+    body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li > .groupmenu {
+        display: none;
+        position: absolute;
+        left: 0;
+        right: auto;
+        min-width: 260px;
+        max-width: min(92vw, 420px);
+        max-height: min(70vh, 560px);
+        overflow: auto;
+    }
+
+    body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li.active > .submenu,
+    body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li.active > .groupmenu,
+    body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li._active > .submenu,
+    body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li._active > .groupmenu,
+    body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li > .submenu.opened,
+    body .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav > ul > li > .groupmenu.opened {
+        display: block;
+    }
+}
 
 } /* F2-02: fecha @layer awa-fixes */
