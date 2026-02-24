@@ -101,6 +101,17 @@
             <column name="year_month"/>
         </index>
     </table>
+    <!-- Add customer_erp_code to sales_order for direct ERP access -->
+    <table name="sales_order" resource="sales" engine="innodb">
+        <column xsi:type="varchar" name="customer_erp_code" nullable="true" length="50"
+                comment="Customer ERP Code (CODIGO from FN_FORNECEDORES)"/>
+    </table>
+
+    <table name="sales_order_grid" resource="sales" engine="innodb">
+        <column xsi:type="varchar" name="customer_erp_code" nullable="true" length="50"
+                comment="Customer ERP Code (CODIGO from FN_FORNECEDORES)"/>
+    </table>
+
     <!-- Image Sync Hash Tracking Table -->
     <table name="grupoawamotos_erp_image_hash" resource="default" engine="innodb"
            comment="ERP Image Sync Hash Tracking">

@@ -57,6 +57,16 @@
             "GRUPOAWAMOTOS_ERP_GOALS_YEAR_MONTH_SELLER_ID_REGION_CATEGORY_ID": true
         }
     },
+    "sales_order": {
+        "column": {
+            "customer_erp_code": true
+        }
+    },
+    "sales_order_grid": {
+        "column": {
+            "customer_erp_code": true
+        }
+    },
     "grupoawamotos_erp_image_hash": {
         "column": {
             "id": true,

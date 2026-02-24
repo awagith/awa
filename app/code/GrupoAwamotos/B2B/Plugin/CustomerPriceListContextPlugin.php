@@ -44,7 +44,12 @@ class CustomerPriceListContextPlugin
     }
 
     /**
-     * Add ERP price list code to HTTP context for FPC cache variation
+     * Add ERP price list code to HTTP context for FPC cache variation.
+     *
+     * CRITICAL: Always set a context value for logged-in B2B customers,
+     * even without ERP code. This ensures FPC creates separate cache
+     * entries for guests vs logged-in users, preventing the guest
+     * "Entrar para Comprar" buttons from appearing for logged-in users.
      */
     public function beforeGetVaryString(HttpContext $subject): void
     {
@@ -57,20 +62,21 @@ class CustomerPriceListContextPlugin
             $erpCode = $this->resolveErpCode($customerId);
 
             if ($erpCode === null) {
+                // Logged in but no ERP code: still differentiate from guests
+                $subject->setValue(self::CONTEXT_PRICE_LIST, 'logged_in', '0');
                 return;
             }
 
             $priceListCode = $this->customerPriceProvider->getCustomerPriceListCode($erpCode);
 
-            if ($priceListCode !== null) {
-                $subject->setValue(
-                    self::CONTEXT_PRICE_LIST,
-                    (string) $priceListCode,
-                    '0' // default for non-logged-in users
-                );
-            }
+            $subject->setValue(
+                self::CONTEXT_PRICE_LIST,
+                (string) ($priceListCode ?? 'default'),
+                '0' // default for non-logged-in users
+            );
         } catch (\Exception $e) {
-            // Fail silently - don't break FPC
+            // Still mark as logged-in to differentiate from guest cache
+            $subject->setValue(self::CONTEXT_PRICE_LIST, 'logged_in', '0');
         }
     }
 

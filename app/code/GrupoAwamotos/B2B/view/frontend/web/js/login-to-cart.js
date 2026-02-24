@@ -1,4 +1,6 @@
-define([], function () {
+define([
+    'Magento_Customer/js/customer-data'
+], function (customerData) {
     'use strict';
 
     var PDP_ICON_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false">'
@@ -28,16 +30,63 @@ define([], function () {
         return btn;
     }
 
+    /**
+     * Check if customer is actually logged in using customer-data sections.
+     * This is the authoritative source of truth, not the server-side mode from cached HTML.
+     */
+    function isCustomerLoggedIn() {
+        try {
+            var customer = customerData.get('customer')();
+            // customer-data returns an object with firstname when logged in
+            return !!(customer && customer.firstname);
+        } catch (e) {
+            return false;
+        }
+    }
+
+    /**
+     * Restore original add-to-cart buttons that were hidden by this script.
+     * Called when we detect the customer is actually logged in.
+     */
+    function restoreOriginalButtons() {
+        // Remove body classes
+        document.body.classList.remove('b2b-guest-mode', 'b2b-pending-mode', 'b2b-restricted-mode');
+
+        // Remove all injected B2B buttons
+        document.querySelectorAll('[data-b2b-injected]').forEach(function (btn) {
+            btn.parentNode.removeChild(btn);
+        });
+
+        // Restore all hidden original buttons
+        document.querySelectorAll('[data-b2b-original-hidden]').forEach(function (btn) {
+            btn.style.display = '';
+            btn.removeAttribute('data-b2b-original-hidden');
+        });
+
+        // Hide pending banner
+        var pendingBanner = document.getElementById('b2b-pending-banner');
+        if (pendingBanner) {
+            pendingBanner.style.display = 'none';
+        }
+
+        // Hide login modal
+        var overlay = document.getElementById('b2b-login-modal');
+        if (overlay) {
+            overlay.classList.remove('active');
+            overlay.setAttribute('aria-hidden', 'true');
+        }
+    }
+
     function init(config) {
         if (!config) {
             return;
         }
 
         // Determine mode from server: 'guest' or 'pending'
-        var mode = config.mode || 'guest';
-        var isGuestMode = (mode === 'guest');
-        var isPendingMode = (mode === 'pending');
-        var bodyClass = isGuestMode ? 'b2b-guest-mode' : 'b2b-pending-mode';
+        var serverMode = config.mode || 'guest';
+        var activeMode = serverMode; // May be overridden by customer-data
+        var isRestricted = true; // Assume restricted until customer-data confirms otherwise
+        var bodyClass = (serverMode === 'guest') ? 'b2b-guest-mode' : 'b2b-pending-mode';
 
         var overlay = document.getElementById('b2b-login-modal');
         var pendingBanner = document.getElementById('b2b-pending-banner');
@@ -46,11 +95,7 @@ define([], function () {
         var lastActiveElement = null;
         var lastTriggerButton = null;
         var previousBodyOverflow = null;
-
-        // Show pending banner if in pending mode
-        if (isPendingMode && pendingBanner) {
-            pendingBanner.style.display = '';
-        }
+        var observerInstance = null;
 
         function isModalOpen() {
             return overlay && overlay.classList.contains('active');
@@ -73,7 +118,7 @@ define([], function () {
         }
 
         function openModal(triggerEl) {
-            if (!overlay || !isGuestMode || isModalOpen()) {
+            if (!overlay || activeMode !== 'guest' || isModalOpen()) {
                 return;
             }
             lastActiveElement = document.activeElement;
@@ -172,9 +217,16 @@ define([], function () {
         });
 
         function replaceAddToCartButtons() {
+            // CRITICAL: If customer-data confirms user is logged in, don't replace buttons
+            if (!isRestricted) {
+                return;
+            }
+
+            var isGuestMode = (activeMode === 'guest');
+            var isPendingMode = (activeMode === 'pending');
+
             // Add the appropriate body class
             document.body.classList.add(bodyClass);
-            // Also add a generic class for shared CSS rules
             document.body.classList.add('b2b-restricted-mode');
 
             var iconSvg = isGuestMode ? PDP_ICON_SVG : PENDING_ICON_SVG;
@@ -232,27 +284,57 @@ define([], function () {
             });
         }
 
-        // Initial run
+        /**
+         * Check customer-data and update restriction state.
+         * If customer is logged in, restore original buttons.
+         */
+        function checkAndUpdateState() {
+            if (isCustomerLoggedIn()) {
+                // Customer is actually logged in - FPC served a stale guest page
+                isRestricted = false;
+                restoreOriginalButtons();
+
+                // Disconnect the MutationObserver to stop replacing buttons
+                if (observerInstance) {
+                    observerInstance.disconnect();
+                    observerInstance = null;
+                }
+            }
+        }
+
+        // Show pending banner if in pending mode
+        if (serverMode === 'pending' && pendingBanner) {
+            pendingBanner.style.display = '';
+        }
+
+        // Initial run - replace buttons (may be reverted by customer-data check)
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', replaceAddToCartButtons);
+            document.addEventListener('DOMContentLoaded', function () {
+                replaceAddToCartButtons();
+                // Check customer-data shortly after (it loads async)
+                window.setTimeout(checkAndUpdateState, 500);
+            });
         } else {
             replaceAddToCartButtons();
+            window.setTimeout(checkAndUpdateState, 500);
         }
 
         // Re-run with throttle on DOM changes
         var scheduled = false;
         function scheduleReplace() {
-            if (scheduled) {
+            if (scheduled || !isRestricted) {
                 return;
             }
             scheduled = true;
             window.setTimeout(function () {
                 scheduled = false;
-                replaceAddToCartButtons();
+                if (isRestricted) {
+                    replaceAddToCartButtons();
+                }
             }, 120);
         }
 
-        var observer = new MutationObserver(function (mutations) {
+        observerInstance = new MutationObserver(function (mutations) {
             for (var i = 0; i < mutations.length; i++) {
                 if (mutations[i].addedNodes && mutations[i].addedNodes.length) {
                     scheduleReplace();
@@ -261,19 +343,24 @@ define([], function () {
             }
         });
 
-        observer.observe(document.body, {childList: true, subtree: true});
+        observerInstance.observe(document.body, {childList: true, subtree: true});
 
-        // Re-run when customer-data updates
-        if (typeof require === 'function') {
-            require(['Magento_Customer/js/customer-data'], function (customerData) {
-                try {
-                    customerData.get('customer').subscribe(function () {
-                        scheduleReplace();
-                    });
-                } catch (e) {
-                    // ignore
+        // Subscribe to customer-data changes - this is the KEY fix
+        // When customer-data loads (async), it will tell us if the user is actually logged in
+        try {
+            customerData.get('customer').subscribe(function (customer) {
+                if (customer && customer.firstname) {
+                    // Customer IS logged in - restore everything
+                    isRestricted = false;
+                    restoreOriginalButtons();
+                    if (observerInstance) {
+                        observerInstance.disconnect();
+                        observerInstance = null;
+                    }
                 }
             });
+        } catch (e) {
+            // ignore
         }
     }
 

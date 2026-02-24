@@ -13,6 +13,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\Api\SortOrderBuilder;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Directory\Model\RegionFactory;
 use Psr\Log\LoggerInterface;
 
@@ -25,6 +26,7 @@ class OrderPullManagement implements OrderPullInterface
     private SearchCriteriaBuilder $searchCriteriaBuilder;
     private SortOrderBuilder $sortOrderBuilder;
     private SyncLogResource $syncLogResource;
+    private CustomerRepositoryInterface $customerRepository;
     private RegionFactory $regionFactory;
     private LoggerInterface $logger;
 
@@ -36,6 +38,7 @@ class OrderPullManagement implements OrderPullInterface
         SearchCriteriaBuilder $searchCriteriaBuilder,
         SortOrderBuilder $sortOrderBuilder,
         SyncLogResource $syncLogResource,
+        CustomerRepositoryInterface $customerRepository,
         RegionFactory $regionFactory,
         LoggerInterface $logger
     ) {
@@ -46,6 +49,7 @@ class OrderPullManagement implements OrderPullInterface
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->sortOrderBuilder = $sortOrderBuilder;
         $this->syncLogResource = $syncLogResource;
+        $this->customerRepository = $customerRepository;
         $this->regionFactory = $regionFactory;
         $this->logger = $logger;
     }
@@ -308,6 +312,13 @@ class OrderPullManagement implements OrderPullInterface
 
     private function resolveErpClientCode(OrderInterface $order): int
     {
+        // 0. Check if already stamped on the order (set by OrderPlaceAfter observer)
+        $stamped = $order->getData('customer_erp_code');
+        if ($stamped && is_numeric($stamped)) {
+            return (int) $stamped;
+        }
+
+        // 1. Lookup by taxvat (CPF/CNPJ) in ERP directly
         $taxvat = $order->getCustomerTaxvat();
         if ($taxvat) {
             $erpCustomer = $this->customerSync->getErpCustomerByTaxvat($taxvat);
@@ -316,12 +327,40 @@ class OrderPullManagement implements OrderPullInterface
             }
         }
 
-        if ($order->getCustomerId()) {
-            $erpCode = $this->syncLogResource->getErpCodeByMagentoId('customer', (int) $order->getCustomerId());
-            if ($erpCode) {
-                return (int) $erpCode;
-            }
+        $customerId = $order->getCustomerId();
+        if (!$customerId) {
+            $this->logger->warning('[ERP API] Order has no customer_id (guest order)', [
+                'increment_id' => $order->getIncrementId(),
+            ]);
+            return 0;
         }
+
+        // 2. Entity map lookup
+        $erpCode = $this->syncLogResource->getErpCodeByMagentoId('customer', (int) $customerId);
+        if ($erpCode && is_numeric($erpCode)) {
+            return (int) $erpCode;
+        }
+
+        // 3. Customer erp_code attribute (definitive fallback)
+        try {
+            $customer = $this->customerRepository->getById((int) $customerId);
+            $attr = $customer->getCustomAttribute('erp_code');
+            if ($attr && $attr->getValue() && is_numeric($attr->getValue())) {
+                $this->logger->info('[ERP API] Resolved ERP code from customer attribute', [
+                    'customer_id' => $customerId,
+                    'erp_code' => $attr->getValue(),
+                ]);
+                return (int) $attr->getValue();
+            }
+        } catch (\Exception $e) {
+            $this->logger->warning('[ERP API] Failed to load customer for ERP code: ' . $e->getMessage());
+        }
+
+        $this->logger->error('[ERP API] Could not resolve ERP client code for order', [
+            'increment_id' => $order->getIncrementId(),
+            'customer_id' => $customerId,
+            'taxvat' => $taxvat,
+        ]);
 
         return 0;
     }
