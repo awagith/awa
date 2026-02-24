@@ -1,324 +1,323 @@
+/**
+ * AWA Motos — Vertical Menu Toggle Controller
+ *
+ * Manages the sidebar vertical-menu lifecycle:
+ *  - Desktop >= 992 px : click-to-toggle dropdown (CSS-driven via .menu-open / .active)
+ *  - Mobile  <  992 px : animated drawer + overlay + submenu accordions
+ *
+ * The native Rokanthemes VerticalMenu jQuery plugin is still initialised for
+ * its flyout-positioning logic (hover on desktop).  AWA does NOT duplicate
+ * that behaviour; it only adds: open/close of the category list,
+ * expand/collapse "Show More", and mobile submenu toggles when the
+ * Rokanthemes widget is absent.
+ *
+ * @module js/vertical-menu-init
+ */
 define([
     'jquery',
     'rokanthemes/verticalmenu'
 ], function ($) {
     'use strict';
 
-    function initRokanVerticalMenuWidget($menus) {
-            var initialized = false;
+    /* ================================================================ */
+    /*  Helpers (shared across instances)                               */
+    /* ================================================================ */
 
+    /**
+     * Initialise the Rokanthemes VerticalMenu plugin (idempotent).
+     * @param  {jQuery} $menus
+     * @return {boolean} true when at least one widget is active
+     */
+    function initRokanWidget($menus) {
         if (!$.isFunction($.fn.VerticalMenu)) {
-                return initialized;
+            return false;
         }
 
-        $menus.each(function () {
-            var $menu = $(this);
+        var ok = false;
 
-            if ($menu.data('awaRokanVerticalMenuInit')) {
-                return;
+        $menus.each(function () {
+            var $m = $(this);
+
+            if (!$m.data('awaRokanInit')) {
+                $m.VerticalMenu();
+                $m.data('awaRokanInit', 1);
             }
 
-            $menu.VerticalMenu();
-            $menu.data('awaRokanVerticalMenuInit', 1);
-            initialized = true;
+            ok = true;
         });
 
-        return initialized;
+        return ok;
     }
 
-    function debounce(fn, wait) {
-        var timer = null;
+    /** Trailing-edge debounce. */
+    function debounce(fn, ms) {
+        var t;
 
         return function () {
+            var ctx  = this;
             var args = arguments;
-            var context = this;
 
-            clearTimeout(timer);
-            timer = setTimeout(function () {
-                fn.apply(context, args);
-            }, wait || 120);
+            clearTimeout(t);
+            t = setTimeout(function () { fn.apply(ctx, args); }, ms || 120);
         };
     }
 
-    function cleanupAyoVerticalArtifacts($menuList) {
-        if (!$menuList || !$menuList.length) {
+    /** Remove empty CMS placeholder <li> nodes the block renderer may inject. */
+    function pruneEmptyBlocks($list) {
+        if (!$list || !$list.length) {
             return;
         }
 
-        $menuList.find('> li.vertical-menu-custom-block').each(function () {
-            var $block = $(this);
-            var hasRenderableContent = $.trim($block.text()).length > 0 ||
-                $block.find('img[src], picture source[srcset], video source[src], iframe[src], a[href], .block, .cms-block').length > 0;
+        var has = 'img[src],picture source[srcset],video source[src],iframe[src],a[href],.block,.cms-block';
 
-            if (!hasRenderableContent) {
-                $block.remove();
-            }
-        });
+        $list.find('> li.vertical-menu-custom-block, > li.vertical-bg-img').each(function () {
+            var $li = $(this);
 
-        $menuList.find('> li.vertical-bg-img').each(function () {
-            var $promoBlock = $(this);
-            var hasPromoContent = $.trim($promoBlock.text()).length > 0 ||
-                $promoBlock.find('img[src], picture source[srcset], video source[src], iframe[src], a[href]').length > 0;
-
-            if (!hasPromoContent) {
-                $promoBlock.remove();
+            if (!$.trim($li.text()).length && !$li.find(has).length) {
+                $li.remove();
             }
         });
     }
 
-    return function (config, element) {
-        var $nav = $(element);
-        var $toggleMenu = $nav.find('.togge-menu');
-        var $title = $nav.find('.title-category-dropdown');
-        var $expandLink = $nav.find('.vm-toggle-categories');
-        var $items = $nav.find('.ui-menu-item.level0');
-        var menuUid = $nav.attr('id') || $title.attr('aria-controls') || ('awa-vertical-' + Math.random().toString(36).slice(2));
-        var safeUid = String(menuUid).replace(/[^a-zA-Z0-9_-]/g, '');
-        var overlaySelector = (config && config.overlaySelector) || '.shadow_bkg_show';
-        var desktopBreakpoint = parseInt(config && config.desktopBreakpoint, 10) || 992;
-        var defaultLimit = parseInt(config && config.limitShow, 10) || 0;
-        var limitItemShow = parseInt($toggleMenu.attr('data-limit-show'), 10) || defaultLimit;
-        var $rootVerticalMenus;
-        var rokanWidgetEnabled = false;
-        var resizeNamespace = '.awaVerticalMenuResize-' + safeUid;
-        var overlayClickNamespace = '.awaVerticalMenuOverlay-' + safeUid;
+    /* ================================================================ */
+    /*  Component (called once per x-magento-init match)                */
+    /* ================================================================ */
 
-        if (!$nav.length || $nav.data('awaVerticalMenuInit')) {
+    return function (config, element) {
+        var $nav        = $(element);
+        var $title      = $nav.find('.title-category-dropdown');
+        var $list       = $nav.find('.togge-menu');
+        var $expandLink = $nav.find('.vm-toggle-categories');
+        var $items      = $nav.find('.ui-menu-item.level0');
+
+        /* ---- config ------------------------------------------------ */
+        var safeUid = ($nav.attr('id') || $title.attr('aria-controls') || 'avm-' + Math.random().toString(36).slice(2))
+                          .replace(/[^a-zA-Z0-9_-]/g, '');
+        var overlaySelector   = (config && config.overlaySelector) || '.shadow_bkg_show';
+        var desktopBreakpoint = parseInt(config && config.desktopBreakpoint, 10) || 992;
+        var limitItemShow     = parseInt($list.attr('data-limit-show'), 10)
+                                || parseInt(config && config.limitShow, 10) || 0;
+        var NS = '.awaVM-' + safeUid;
+
+        /* ---- guard: never double-init ------------------------------ */
+        if (!$nav.length || $nav.data('awaVMInit')) {
             return;
         }
 
-        $nav.data('awaVerticalMenuInit', 1);
+        $nav.data('awaVMInit', 1);
         $nav.attr('data-awa-verticalmenu-owner', 'vertical-menu-init');
 
-        $rootVerticalMenus = $nav.filter('.verticalmenu').add($nav.find('.verticalmenu'));
-        // Keep native Rokanthemes positioning handlers active (desktop flyout alignment).
-        rokanWidgetEnabled = initRokanVerticalMenuWidget($rootVerticalMenus);
-        cleanupAyoVerticalArtifacts($toggleMenu);
+        /* ---- Rokanthemes flyout widget ------------------------------ */
+        var rokanActive = initRokanWidget(
+            $nav.filter('.verticalmenu').add($nav.find('.verticalmenu'))
+        );
 
-        function isDesktopViewport() {
-            if (window.matchMedia) {
-                return window.matchMedia('(min-width: ' + desktopBreakpoint + 'px)').matches;
-            }
+        pruneEmptyBlocks($list);
 
-            return window.innerWidth >= desktopBreakpoint;
+        /* ---- viewport ---------------------------------------------- */
+        var mql = window.matchMedia
+            ? window.matchMedia('(min-width: ' + desktopBreakpoint + 'px)')
+            : null;
+
+        function isDesktop() {
+            return mql ? mql.matches : window.innerWidth >= desktopBreakpoint;
         }
 
-        function openMenu(withOverlay) {
-            if (isDesktopViewport()) {
-                $toggleMenu.addClass('menu-open').stop(true, true).show();
-                $title.addClass('active');
-                $title.attr('aria-expanded', 'true');
-                $('body').removeClass('background_shadow_show');
-                return;
-            }
+        /* ============================================================ */
+        /*  Open / Close                                                */
+        /* ============================================================ */
 
-            $toggleMenu.addClass('menu-open').stop(true, true).fadeIn(200);
-            $title.addClass('active');
-            $title.attr('aria-expanded', 'true');
-            $('body').toggleClass('background_shadow_show', !!withOverlay);
+        function openMenu() {
+            $list.addClass('menu-open');
+            $title.addClass('active').attr('aria-expanded', 'true');
+
+            if (isDesktop()) {
+                /* CSS !important drives display via .menu-open / .active+ul.
+                   No jQuery .show() needed — it cannot override !important. */
+                $('body').removeClass('background_shadow_show');
+            } else {
+                $list.stop(true, true).fadeIn(200);
+                $('body').addClass('background_shadow_show');
+            }
         }
 
         function closeMenu() {
-            if (isDesktopViewport()) {
-                $toggleMenu.removeClass('menu-open').stop(true, true).hide();
-                $title.removeClass('active');
-                $title.attr('aria-expanded', 'false');
-                $('body').removeClass('background_shadow_show');
-                return;
+            $list.removeClass('menu-open');
+            $title.removeClass('active').attr('aria-expanded', 'false');
+
+            if (!isDesktop()) {
+                $list.stop(true, true).fadeOut(200);
             }
 
-            $toggleMenu.removeClass('menu-open').stop(true, true).fadeOut(200);
-            $title.removeClass('active');
-            $title.attr('aria-expanded', 'false');
             $('body').removeClass('background_shadow_show');
         }
 
-        function isMenuOpenState() {
-            return $toggleMenu.hasClass('menu-open') || $title.hasClass('active');
+        function isOpen() {
+            return $list.hasClass('menu-open');
         }
 
-        function ensureMobileSubmenuToggles() {
+        /* ============================================================ */
+        /*  Mobile sub-menu toggles                                     */
+        /* ============================================================ */
+
+        function ensureMobileToggles() {
             $nav.find('.ui-menu-item.parent, .ui-menu-item.level0.parent').each(function () {
-                var $item = $(this);
-                var $toggle = $item.children('.open-children-toggle');
+                var $li = $(this);
+                var $t  = $li.children('.open-children-toggle');
 
-                if (!$toggle.length) {
-                    $item.append('<div class="open-children-toggle" role="button" aria-label="Expandir subcategorias" aria-expanded="false" tabindex="0" data-awa-vtoggle="1"></div>');
-                    return;
-                }
-
-                $toggle
-                    .attr('role', 'button')
-                    .attr('tabindex', '0')
-                    .attr('aria-label', $toggle.attr('aria-label') || 'Expandir subcategorias')
-                    .attr('data-awa-vtoggle', '1');
-
-                if (!$toggle.attr('aria-expanded')) {
-                    $toggle.attr('aria-expanded', 'false');
+                if (!$t.length) {
+                    $li.append(
+                        '<div class="open-children-toggle" role="button"' +
+                        ' aria-label="Expandir subcategorias" aria-expanded="false" tabindex="0"></div>'
+                    );
+                } else {
+                    $t.attr({
+                        'role':          'button',
+                        'tabindex':      '0',
+                        'aria-label':    $t.attr('aria-label') || 'Expandir subcategorias',
+                        'aria-expanded': $t.attr('aria-expanded') || 'false'
+                    });
                 }
             });
         }
 
-        function syncMenuState() {
-            if (isDesktopViewport()) {
+        /** Reset accordion & visibility when viewport crosses the breakpoint. */
+        function syncOnResize() {
+            if (isDesktop()) {
+                /* Clean up mobile accordion + stale Rokanthemes "opened" class */
                 $nav.find('.ui-menu-item.parent, .ui-menu-item.level0.parent').each(function () {
-                    var $parent = $(this);
-                    $parent.removeClass('_active');
-                    $parent.children('.open-children-toggle').attr('aria-expanded', 'false');
-                    $parent.children('.submenu, ul.level0').stop(true, true).removeAttr('style');
+                    var $p = $(this);
+
+                    $p.removeClass('_active');
+                    $p.children('.submenu, ul.level0').removeClass('opened').removeAttr('style');
+                    $p.children('.open-children-toggle').attr('aria-expanded', 'false');
                 });
 
-                if (isMenuOpenState()) {
-                    $toggleMenu.addClass('menu-open').stop(true, true).show();
+                /* Re-sync list visibility to current state */
+                if (isOpen()) {
                     $title.addClass('active').attr('aria-expanded', 'true');
                 } else {
-                    $toggleMenu.removeClass('menu-open').stop(true, true).hide();
                     $title.removeClass('active').attr('aria-expanded', 'false');
                 }
 
                 $('body').removeClass('background_shadow_show');
-                return;
-            }
-
-            $toggleMenu.removeClass('menu-open').stop(true, true).hide();
-            $title.removeClass('active');
-            $title.attr('aria-expanded', 'false');
-            $('body').removeClass('background_shadow_show');
-        }
-
-        ensureMobileSubmenuToggles();
-        $title.attr({
-            role: 'button',
-            tabindex: '0',
-            'aria-expanded': 'false'
-        });
-
-        $nav.off('click.awaVerticalMenuToggle').on('click.awaVerticalMenuToggle', '.open-children-toggle', function (event) {
-            var $toggle = $(this);
-            var $parent = $toggle.parent();
-            var isExpanding;
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            if (isDesktopViewport()) {
-                return;
-            }
-
-            if (rokanWidgetEnabled) {
-                return;
-            }
-
-            isExpanding = !$parent.hasClass('_active');
-
-            $parent.toggleClass('_active');
-            $toggle.attr('aria-expanded', isExpanding ? 'true' : 'false');
-            $parent.children('.submenu, ul.level0').stop(true, true).slideToggle(200);
-        });
-
-        $nav.off('keydown.awaVerticalMenuToggle').on('keydown.awaVerticalMenuToggle', '.open-children-toggle', function (event) {
-            if (rokanWidgetEnabled) {
-                return;
-            }
-
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                $(this).trigger('click');
-            }
-        });
-
-        $title.off('click.awaVerticalMenu').on('click.awaVerticalMenu', function (event) {
-            var isOpening;
-
-            event.preventDefault();
-
-            isOpening = !$title.hasClass('active');
-
-            if (isOpening) {
-                openMenu(true);
             } else {
-                closeMenu();
+                /* Entering mobile → collapse */
+                $list.removeClass('menu-open').hide();
+                $title.removeClass('active').attr('aria-expanded', 'false');
+                $('body').removeClass('background_shadow_show');
             }
-        });
-
-        $title.off('keydown.awaVerticalMenu').on('keydown.awaVerticalMenu', function (event) {
-            if (event.key === 'Enter' || event.key === ' ') {
-                event.preventDefault();
-                $(this).trigger('click');
-            }
-        });
-
-        if (limitItemShow > 0) {
-            limitItemShow += 1;
         }
 
-        if (limitItemShow > 0 && $items.length > limitItemShow) {
-            $items.each(function (index) {
-                if (index >= (limitItemShow - 1)) {
+        /* ============================================================ */
+        /*  Event binding                                               */
+        /* ============================================================ */
+
+        /* ---- title click (main toggle) ----------------------------- */
+        $title.on('click' + NS, function (e) {
+            e.preventDefault();
+            isOpen() ? closeMenu() : openMenu();
+        });
+
+        $title.on('keydown' + NS, function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                $title.trigger('click' + NS);
+            }
+        });
+
+        /* ---- mobile submenu accordion (only when Rokanthemes absent) */
+        if (!rokanActive) {
+            $nav.on('click' + NS, '.open-children-toggle', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if (isDesktop()) {
+                    return;
+                }
+
+                var $t = $(this);
+                var $p = $t.parent();
+                var expanding = !$p.hasClass('_active');
+
+                $p.toggleClass('_active');
+                $t.attr('aria-expanded', expanding ? 'true' : 'false');
+                $p.children('.submenu, ul.level0').stop(true, true).slideToggle(200);
+            });
+
+            $nav.on('keydown' + NS, '.open-children-toggle', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    $(this).trigger('click');
+                }
+            });
+        }
+
+        /* ---- "Show more / Show less" -------------------------------- */
+        (function initExpandLink() {
+            if (limitItemShow <= 0) {
+                $expandLink.closest('.expand-category-link').hide();
+                return;
+            }
+
+            var threshold = limitItemShow + 1; /* +1 = the <li> of the link itself */
+
+            if ($items.length <= threshold) {
+                $expandLink.closest('.expand-category-link').hide();
+                return;
+            }
+
+            $items.each(function (i) {
+                if (i >= threshold - 1) {
                     $(this).addClass('orther-link').hide();
                 }
             });
 
             $expandLink.closest('.expand-category-link').show();
-            $expandLink.show().off('click.awaVerticalMenu').on('click.awaVerticalMenu', function (event) {
-                var $link = $(this);
-                var $expandContainer = $link.closest('.expand-category-link');
-                var $hiddenItems = $nav.find('.ui-menu-item.level0.orther-link');
-                var isExpanding;
 
-                event.preventDefault();
+            $expandLink.on('click' + NS, function (e) {
+                e.preventDefault();
 
-                isExpanding = !$link.hasClass('expanding');
-                $expandContainer.toggleClass('expanding', isExpanding);
-                $link.toggleClass('expanding', isExpanding);
+                var $a        = $(this);
+                var $hidden   = $nav.find('.ui-menu-item.level0.orther-link');
+                var expanding = !$a.hasClass('expanding');
 
-                /* Toggle text if data attributes are present */
-                if ($link.data('show-text') && $link.data('hide-text')) {
-                    $link.find('span').text(
-                        isExpanding ? $link.data('hide-text') : $link.data('show-text')
-                    );
+                $a.toggleClass('expanding', expanding)
+                   .closest('.expand-category-link').toggleClass('expanding', expanding);
+
+                if ($a.data('show-text') && $a.data('hide-text')) {
+                    $a.find('span').text(expanding ? $a.data('hide-text') : $a.data('show-text'));
                 }
 
-                $link.attr('aria-expanded', isExpanding ? 'true' : 'false');
-                $link.find('> span').attr('aria-expanded', isExpanding ? 'true' : 'false');
-
-                if (isExpanding) {
-                    $hiddenItems.stop(true, true).fadeIn(180);
-                } else {
-                    $hiddenItems.stop(true, true).fadeOut(180);
-                }
+                $a.attr('aria-expanded', expanding ? 'true' : 'false');
+                $hidden.stop(true, true)[expanding ? 'fadeIn' : 'fadeOut'](180);
             });
-        } else {
-            $expandLink.closest('.expand-category-link').hide();
-            $expandLink.hide();
-        }
+        })();
 
-        $expandLink.attr({
-            role: 'button',
-            'aria-expanded': 'false',
-            'data-awa-expandlink-owner': 'vertical-menu-init'
-        });
-
-        $expandLink.find('> span').attr('aria-expanded', 'false');
-
-        $(overlaySelector).off('click' + overlayClickNamespace).on('click' + overlayClickNamespace, function () {
-            if (isDesktopViewport()) {
-                return;
+        /* ---- overlay click → close (mobile) ------------------------ */
+        $(overlaySelector).on('click' + NS, function () {
+            if (!isDesktop()) {
+                closeMenu();
             }
-
-            closeMenu();
         });
 
-        $(window).off('resize' + resizeNamespace).on('resize' + resizeNamespace, debounce(function () {
-            ensureMobileSubmenuToggles();
-            syncMenuState();
+        /* ---- resize ------------------------------------------------ */
+        $(window).on('resize' + NS, debounce(function () {
+            ensureMobileToggles();
+            syncOnResize();
         }, 120));
 
-        $nav.off('remove.awaVerticalMenuCleanup').on('remove.awaVerticalMenuCleanup', function () {
-            $(window).off('resize' + resizeNamespace);
-            $(overlaySelector).off('click' + overlayClickNamespace);
+        /* ---- cleanup on DOM removal -------------------------------- */
+        $nav.on('remove' + NS, function () {
+            $(window).off(NS);
+            $(overlaySelector).off(NS);
         });
 
-        syncMenuState();
+        /* ============================================================ */
+        /*  Boot                                                        */
+        /* ============================================================ */
+
+        ensureMobileToggles();
+        syncOnResize();
     };
 });

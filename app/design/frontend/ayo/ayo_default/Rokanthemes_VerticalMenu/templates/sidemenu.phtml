@@ -14,12 +14,11 @@
 <?php
     $_helper = $this->helper('Rokanthemes\VerticalMenu\Helper\Data');
     $_config = $_helper->getConfig('verticalmenu');
-    $columnsLimit = 0;
-    if (!empty($_config['general']['enable'])) {
-        $limitShow = isset($_config['general']['limit_show']) ? (int)$_config['general']['limit_show'] : 0;
-        $menuId = 'awa-vertical-menu-list-' . uniqid('', false);
+    if (!empty($_config['general']['enable'])):
+        $limitShow = (int)($_config['general']['limit_show'] ?? 0);
+        $menuId    = 'awa-vertical-menu-' . uniqid('', false);
+        $_menu     = $this->getVerticalMenuHtml();
 ?>
-<?php $_menu = $this->getVerticalMenuHtml(); ?>
 
 <nav class="navigation verticalmenu side-verticalmenu"
      aria-label="<?= $escaper->escapeHtmlAttr(__('Product Categories')) ?>"
@@ -27,23 +26,22 @@
     <h2 class="our_categories title-category-dropdown"
         data-role="awa-vertical-menu-trigger"
         aria-controls="<?= $escaper->escapeHtmlAttr($menuId) ?>"
-        aria-expanded="false">
+        aria-expanded="false"
+        role="button"
+        tabindex="0">
         <span class="vm-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
         <span><?= $escaper->escapeHtml(__('Categories')) ?></span>
     </h2>
-
     <ul id="<?= $escaper->escapeHtmlAttr($menuId) ?>"
         class="togge-menu list-category-dropdown"
-        data-limit-show="<?= (int)$limitShow ?>">
-        <?php echo $_menu; ?>
+        data-limit-show="<?= $limitShow ?>">
+        <?= /** @noEscape */ $_menu ?>
         <?php
-            /** @var \Magento\Cms\Block\Block $_bgBlock */
-            $_bgBlock = $this->getLayout()->createBlock('Magento\Cms\Block\Block');
-            $_bgImages = $_bgBlock ? $_bgBlock->setBlockId('vertical_background_images')->toHtml() : '';
-            $_bgImages = trim($_bgImages);
+            $_bgBlock  = $this->getLayout()->createBlock(\Magento\Cms\Block\Block::class);
+            $_bgImages = $_bgBlock ? trim($_bgBlock->setBlockId('vertical_background_images')->toHtml()) : '';
         ?>
-        <?php if (!empty($_bgImages)): ?>
-            <?php echo $_bgImages; ?>
+        <?php if ($_bgImages !== ''): ?>
+        <li class="vertical-bg-img"><?= /** @noEscape */ $_bgImages ?></li>
         <?php endif; ?>
     </ul>
 </nav>
@@ -58,6 +56,4 @@
     }
 }
 </script>
-<?php
-    }
-?>
+<?php endif; ?>
