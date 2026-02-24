@@ -51,108 +51,14 @@ if (empty($items)) {
         Ver todas as sugestões →
     </a>
 </div>
-
-<script>
-require(['jquery'], function($) {
-    $('#erp-sidebar-suggestions').on('click', '.erp-sidebar-add', function() {
-        var $btn = $(this);
-        $btn.prop('disabled', true).text('...');
-
-        $.post('<?= $block->escapeJs($block->getUrl('erpintegration/cart/addBySku')) ?>', {
-            sku: $btn.data('sku'),
-            qty: $btn.data('qty') || 1,
-            form_key: $.mage.cookies.get('form_key')
-        }).done(function(res) {
-            if (res.success) {
-                $btn.text('✓').addClass('added');
-                setTimeout(function() { location.reload(); }, 1000);
-            } else {
-                $btn.prop('disabled', false).text('+');
-            }
-        }).fail(function() {
-            $btn.prop('disabled', false).text('+');
-        });
-    });
-});
+<script type="text/x-magento-init">
+{
+    "#erp-sidebar-suggestions": {
+        "GrupoAwamotos_ERPIntegration/js/cart-suggestions": {
+            "mode": "sidebar",
+            "addBySkuUrl": "<?= $block->escapeJs($block->getUrl('erpintegration/cart/addBySku')) ?>",
+            "reloadDelay": 1000
+        }
+    }
+}
 </script>
-
-<style>
-.erp-sidebar-suggestions {
-    background: #f8f9fa;
-    border: 1px solid #e0e0e0;
-    border-radius: 6px;
-    padding: 15px;
-    margin-bottom: 15px;
-}
-
-.erp-sidebar-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: #1a1a2e;
-    margin-bottom: 12px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid #b73337;
-}
-
-.erp-sidebar-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 10px;
-}
-
-.erp-sidebar-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.erp-sidebar-item:last-child {
-    border-bottom: none;
-}
-
-.erp-sidebar-link {
-    font-size: 12px;
-    color: #333;
-    text-decoration: none;
-    flex: 1;
-    margin-right: 10px;
-}
-
-.erp-sidebar-link:hover {
-    color: #b73337;
-}
-
-.erp-sidebar-add {
-    width: 24px;
-    height: 24px;
-    border: none;
-    border-radius: 50%;
-    background: #b73337;
-    color: #fff;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.erp-sidebar-add:hover {
-    background: #8b2529;
-}
-
-.erp-sidebar-add.added {
-    background: #2e7d32;
-}
-
-.erp-sidebar-more {
-    display: block;
-    font-size: 12px;
-    color: #b73337;
-    text-decoration: none;
-    text-align: center;
-}
-
-.erp-sidebar-more:hover {
-    text-decoration: underline;
-}
-</style>

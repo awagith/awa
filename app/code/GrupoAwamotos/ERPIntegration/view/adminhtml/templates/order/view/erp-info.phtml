@@ -1,0 +1,180 @@
+<?php
+/**
+ * ERP SECTRA info panel for admin order view.
+ * Displays all data needed for manual SECTRA order entry.
+ *
+ * @var \GrupoAwamotos\ERPIntegration\Block\Adminhtml\Order\View\ErpInfo $block
+ */
+declare(strict_types=1);
+
+$order = $block->getOrder();
+if (!$order) {
+    return;
+}
+
+$erpCode = $block->getCustomerErpCode();
+$erpData = $block->getErpCustomerData();
+$hasErp = $block->hasErpCode();
+?>
+
+<div class="admin__page-section-item erp-sectra-section">
+    <div class="admin__page-section-item-title">
+        <strong class="title">
+            <?= $block->escapeHtml(__('Dados ERP SECTRA')) ?>
+        </strong>
+    </div>
+    <div class="admin__page-section-item-content">
+        <?php if ($hasErp): ?>
+            <div class="erp-sectra-highlight">
+                <span class="erp-sectra-label"><?= $block->escapeHtml(__('Código Cliente ERP:')) ?></span>
+                <span class="erp-sectra-code"><?= $block->escapeHtml((string) $erpCode) ?></span>
+                <?php if (!empty($erpData['RAZAO'])): ?>
+                    <span class="erp-sectra-name">
+                        <?= $block->escapeHtml((string) $erpData['RAZAO']) ?>
+                    </span>
+                <?php endif; ?>
+            </div>
+
+            <table class="admin__table-secondary erp-sectra-table">
+                <tbody>
+                    <?php if (!empty($erpData['FANTASIA'])): ?>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Fantasia')) ?>:</th>
+                        <td><?= $block->escapeHtml((string) $erpData['FANTASIA']) ?></td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if (!empty($erpData['CGC'])): ?>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('CNPJ')) ?>:</th>
+                        <td><?= $block->escapeHtml((string) $erpData['CGC']) ?></td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if (!empty($erpData['VENDPREF'])): ?>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Vendedor')) ?>:</th>
+                        <td>
+                            <strong><?= $block->escapeHtml((string) $erpData['VENDPREF']) ?></strong>
+                            <?php if (!empty($erpData['VENDEDOR_NOME'])): ?>
+                                — <?= $block->escapeHtml((string) $erpData['VENDEDOR_NOME']) ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if (!empty($erpData['CONDPAGTO'])): ?>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Cond. Pagamento')) ?>:</th>
+                        <td>
+                            <strong><?= $block->escapeHtml((string) $erpData['CONDPAGTO']) ?></strong>
+                            <?php if (!empty($erpData['CONDPAGTO_DESC'])): ?>
+                                — <?= $block->escapeHtml((string) $erpData['CONDPAGTO_DESC']) ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if (!empty($erpData['FATORPRECO'])): ?>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Fator Preço')) ?>:</th>
+                        <td>
+                            <strong><?= $block->escapeHtml((string) $erpData['FATORPRECO']) ?></strong>
+                            <?php if (!empty($erpData['TPFATOR'])): ?>
+                                (Tipo: <?= $block->escapeHtml((string) $erpData['TPFATOR']) ?>
+                                <?php if (!empty($erpData['PERCFATOR'])): ?>
+                                    / <?= $block->escapeHtml(number_format((float) $erpData['PERCFATOR'], 2, ',', '.')) ?>%
+                                <?php endif; ?>)
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                    <?php if (!empty($erpData['TRANSPPREF'])): ?>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Transportadora')) ?>:</th>
+                        <td>
+                            <strong><?= $block->escapeHtml((string) $erpData['TRANSPPREF']) ?></strong>
+                            <?php if (!empty($erpData['TRANSP_NOME'])): ?>
+                                — <?= $block->escapeHtml((string) $erpData['TRANSP_NOME']) ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+
+            <div class="erp-sectra-copy-hint">
+                <?= $block->escapeHtml(__('Use o código %1 ao digitar este pedido no SECTRA.', $erpCode)) ?>
+            </div>
+        <?php else: ?>
+            <div class="erp-sectra-warning">
+                <?= $block->escapeHtml(__('Cliente sem código ERP vinculado. Verifique o cadastro antes de lançar no SECTRA.')) ?>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<style>
+    .erp-sectra-section {
+        margin-top: 15px;
+        border-top: 2px solid #eb5202;
+        padding-top: 15px;
+    }
+    .erp-sectra-section .title {
+        color: #eb5202;
+        font-size: 1.4rem;
+        font-weight: 700;
+    }
+    .erp-sectra-highlight {
+        background: #fff8f0;
+        border: 2px solid #eb5202;
+        border-radius: 6px;
+        padding: 12px 16px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .erp-sectra-label {
+        font-weight: 600;
+        color: #333;
+        font-size: 1.3rem;
+    }
+    .erp-sectra-code {
+        display: inline-block;
+        background: #eb5202;
+        color: #fff;
+        padding: 4px 14px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 1.8rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+    .erp-sectra-name {
+        color: #666;
+        font-size: 1.2rem;
+    }
+    .erp-sectra-table th {
+        width: 140px;
+        color: #666;
+        font-weight: 600;
+    }
+    .erp-sectra-table td strong {
+        font-family: monospace;
+    }
+    .erp-sectra-copy-hint {
+        margin-top: 8px;
+        padding: 6px 12px;
+        background: #e8f5e9;
+        border-radius: 4px;
+        color: #2e7d32;
+        font-size: 1.2rem;
+        font-weight: 500;
+    }
+    .erp-sectra-warning {
+        padding: 10px 14px;
+        background: #fff3e0;
+        border: 1px solid #ff9800;
+        border-radius: 4px;
+        color: #e65100;
+        font-weight: 500;
+    }
+</style>
