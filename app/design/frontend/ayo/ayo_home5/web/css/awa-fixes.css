@@ -245,26 +245,7 @@ body .page-wrapper .ayo-home5-wrapper > .banner-slider {
 
 /* Layout base do wrapper Home5 foi consolidado em awa-consistency-home5.css (AF-07). */
 
-/* ============================================================
-   FIX-10 — VERTICAL MENU HOMEPAGE DISPLAY (P2)
-   Desktop deve iniciar colapsado e abrir por clique no título.
-   ============================================================ */
-@media (width >= 992px) {
-    /* Remove duplicate "Todas as Categorias" row injected by navigation-sections on desktop */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .sections.nav-sections.category-dropdown > .section-items > .section-item-title.nav-sections.category-dropdown-item-title {
-        display: none !important;
-        height: 0 !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        border: 0 !important;
-        overflow: hidden !important;
-    }
-
-}
-
-body .page-wrapper .cms-index-index .menu_left_home1 .category-dropdown {
-    width: 100%;
-}
+/* FIX-10 — VERTICAL MENU HOMEPAGE DISPLAY: consolidated into FIX-53 (section-item-title hiding) + awa-layout.css (category-dropdown width:100%) */
 
 /* ============================================================
    FIX-11 — MARQUEE / NOTIFICATION BAR (P3)
@@ -1700,17 +1681,7 @@ a[data-action="add-to-wishlist"],
         box-shadow: var(--awa-shadow-dropdown);
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 52px;
-        margin: 0;
-        padding: 0 16px;
-        border-radius: var(--awa-radius-sm) var(--awa-radius-sm) 0 0;
-        background: var(--awa-red);
-        color: var(--awa-text-on-primary); /* BP-09: era #fff hardcoded */
-    }
+    /* title-category-dropdown desktop styling consolidated into FIX-55 */
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu .ui-menu-item.level0 > a {
         display: flex;
@@ -3336,8 +3307,15 @@ body .page-wrapper .product-item .action.tocart:active {
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > .title-category-dropdown {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         min-height: 48px;
-        padding-inline: var(--awa-space-4); /* BP-21: era 16px */
+        margin: 0;
+        padding: 0 var(--awa-space-4); /* BP-21: era 16px */
+        border-radius: var(--awa-radius-sm) var(--awa-radius-sm) 0 0;
+        background: var(--awa-red);
+        color: var(--awa-text-on-primary); /* BP-09 */
         font-weight: var(--awa-weight-bold);
         letter-spacing: var(--awa-tracking-tight);
         text-transform: uppercase;
