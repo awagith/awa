@@ -5,18 +5,15 @@ define([
     'use strict';
 
     return function (config, element) {
-        var $container = $(element);
-
-        if (!$container.length) {
-            return;
-        }
-
+        var $root = $(element);
         var addBySkuUrl = String(config.addBySkuUrl || '');
-        var checkoutCartUrl = String(config.checkoutCartUrl || '');
-        var isSuggestedCartPage = Boolean(config.isSuggestedCartPage);
         var filterUrl = String(config.filterUrl || '');
         var opportunityUrl = String(config.opportunityUrl || '');
         var currentFilterPage = 1;
+
+        if (!$root.length || !addBySkuUrl || !filterUrl || !opportunityUrl) {
+            return;
+        }
 
         var oppLabels = {
             monthly: 'Mensal',
@@ -86,95 +83,6 @@ define([
                 });
             });
         }
-
-        function updateTotals() {
-            var subtotal = 0;
-            var itemCount = 0;
-
-            $container.find('.erp-item-select:checked').each(function () {
-                var $item = $(this).closest('.erp-cart-item');
-                var qty = parseInt($item.find('.erp-qty-input').val(), 10) || 1;
-                var price = parseFloat($(this).data('price')) || 0;
-                subtotal += qty * price;
-                itemCount++;
-            });
-
-            $container.find('.erp-subtotal-value').text(formatPrice(subtotal));
-            $container.find('.erp-cart-items').text(itemCount + ' produtos');
-            $container.find('.erp-cart-total').text(formatPrice(subtotal));
-
-            var freeShippingThreshold = 1500;
-            var remaining = freeShippingThreshold - subtotal;
-
-            if (remaining <= 0) {
-                $container.find('.erp-shipping-info').hide();
-                $container.find('.erp-free-shipping').show();
-                $container.find('.erp-total-value').text(formatPrice(subtotal));
-            } else {
-                $container.find('.erp-free-shipping').hide();
-                $container.find('.erp-shipping-info').show().find('span').text('Falta ' + formatPrice(remaining) + ' para frete gratis');
-                $container.find('.erp-total-value').text(formatPrice(subtotal + 50));
-            }
-        }
-
-        $container.on('change input', '.erp-qty-input', function () {
-            var $input = $(this);
-            var $item = $input.closest('.erp-cart-item');
-            var qty = parseInt($input.val(), 10) || 1;
-            var price = parseFloat($item.find('.erp-item-select').data('price')) || 0;
-            var lineTotal = qty * price;
-
-            $item.find('.erp-line-total').text(formatPrice(lineTotal));
-            $item.find('.erp-item-select').data('qty', qty);
-            updateTotals();
-        });
-
-        $container.on('change', '.erp-item-select', function () {
-            updateTotals();
-        });
-
-        $('#erp-select-all').on('click', function () {
-            var $checkboxes = $container.find('.erp-item-select');
-            var allChecked = $checkboxes.length && $checkboxes.filter(':checked').length === $checkboxes.length;
-
-            $checkboxes.prop('checked', !allChecked);
-            $(this).text(allChecked ? 'Selecionar Todos' : 'Desmarcar Todos');
-            updateTotals();
-        });
-
-        $('#erp-add-all-to-cart').on('click', function () {
-            var $btn = $(this);
-            var items = [];
-
-            $container.find('.erp-item-select:checked').each(function () {
-                var $item = $(this).closest('.erp-cart-item');
-                items.push({
-                    sku: $(this).val(),
-                    qty: parseInt($item.find('.erp-qty-input').val(), 10) || 1
-                });
-            });
-
-            if (!items.length) {
-                window.alert('Selecione pelo menos um produto para adicionar ao carrinho.');
-                return;
-            }
-
-            $btn.prop('disabled', true).text('Adicionando...');
-
-            Promise.all(items.map(function (item) {
-                return addToCart(item.sku, item.qty);
-            })).then(function () {
-                $btn.text('Adicionado');
-                if (checkoutCartUrl) {
-                    window.setTimeout(function () {
-                        window.location.href = checkoutCartUrl;
-                    }, 1000);
-                }
-            }).catch(function () {
-                window.alert('Erro ao adicionar produtos. Tente novamente.');
-                $btn.prop('disabled', false).text('Adicionar Selecionados ao Carrinho');
-            });
-        });
 
         function renderPagination(currentPage, totalPages) {
             if (totalPages <= 1) {
@@ -343,66 +251,62 @@ define([
             });
         }
 
-        if (isSuggestedCartPage) {
-            $('#erp-filter-toggle').on('click', function () {
-                var $body = $('#erp-filter-body');
-                var $icon = $('#erp-toggle-icon');
-                var isVisible = $body.is(':visible');
-                $body.slideToggle(200);
-                $icon.text(isVisible ? '▶' : '▼');
-            });
+        $('#erp-filter-toggle').on('click', function () {
+            var $body = $('#erp-filter-body');
+            var $icon = $('#erp-toggle-icon');
+            var isVisible = $body.is(':visible');
+            $body.slideToggle(200);
+            $icon.text(isVisible ? '▶' : '▼');
+        });
 
-            $('#erp-btn-filter').on('click', function () {
-                currentFilterPage = 1;
-                loadFilteredHistory();
-            });
+        $('#erp-btn-filter').on('click', function () {
+            currentFilterPage = 1;
+            loadFilteredHistory();
+        });
 
-            $('#erp-btn-clear-filter').on('click', function () {
-                $('#erp-filter-opportunity').val('');
-                $('#erp-filter-period').val('365');
-                $('#erp-filter-freq').val('0-0');
-                $('#erp-filter-min-price').val('');
-                $('#erp-filter-max-price').val('');
-                $('#erp-filter-sort').val('days_since_last');
-                $('#erp-filter-sort-dir').val('ASC');
-                currentFilterPage = 1;
-                $('#erp-filter-results').hide();
-                $('#erp-filter-empty').hide();
-            });
+        $('#erp-btn-clear-filter').on('click', function () {
+            $('#erp-filter-opportunity').val('');
+            $('#erp-filter-period').val('365');
+            $('#erp-filter-freq').val('0-0');
+            $('#erp-filter-min-price').val('');
+            $('#erp-filter-max-price').val('');
+            $('#erp-filter-sort').val('days_since_last');
+            $('#erp-filter-sort-dir').val('ASC');
+            currentFilterPage = 1;
+            $('#erp-filter-results').hide();
+            $('#erp-filter-empty').hide();
+        });
 
-            $('#erp-add-filtered-to-cart').on('click', function () {
-                var $btn = $(this);
-                var items = [];
+        $('#erp-add-filtered-to-cart').on('click', function () {
+            var $btn = $(this);
+            var items = [];
 
-                $('#erp-filter-results-list .erp-fh-item-select:checked').each(function () {
-                    var $row = $(this).closest('.erp-fh-item');
-                    items.push({
-                        sku: $(this).val(),
-                        qty: parseInt($row.find('.erp-fh-qty-input').val(), 10) || 1
-                    });
+            $('#erp-filter-results-list .erp-fh-item-select:checked').each(function () {
+                var $row = $(this).closest('.erp-fh-item');
+                items.push({
+                    sku: $(this).val(),
+                    qty: parseInt($row.find('.erp-fh-qty-input').val(), 10) || 1
                 });
+            });
 
-                if (!items.length) {
-                    window.alert('Selecione pelo menos um produto.');
-                    return;
-                }
+            if (!items.length) {
+                window.alert('Selecione pelo menos um produto.');
+                return;
+            }
 
-                $btn.prop('disabled', true).text('Adicionando...');
+            $btn.prop('disabled', true).text('Adicionando...');
 
-                Promise.all(items.map(function (item) {
-                    return addToCart(item.sku, item.qty);
-                })).then(function () {
-                    $btn.text('Adicionado');
-                    window.setTimeout(function () {
-                        $btn.prop('disabled', false).text('Adicionar Selecionados');
-                    }, 2000);
-                }).catch(function () {
-                    window.alert('Erro ao adicionar produtos. Tente novamente.');
+            Promise.all(items.map(function (item) {
+                return addToCart(item.sku, item.qty);
+            })).then(function () {
+                $btn.text('Adicionado');
+                window.setTimeout(function () {
                     $btn.prop('disabled', false).text('Adicionar Selecionados');
-                });
+                }, 2000);
+            }).catch(function () {
+                window.alert('Erro ao adicionar produtos. Tente novamente.');
+                $btn.prop('disabled', false).text('Adicionar Selecionados');
             });
-        }
-
-        updateTotals();
+        });
     };
 });

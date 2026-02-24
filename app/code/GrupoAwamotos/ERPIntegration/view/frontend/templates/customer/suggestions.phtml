@@ -385,14 +385,20 @@ if (!empty($suggestedCart['sections'])) {
 <script type="text/x-magento-init">
 {
     "#erp-suggestions-container": {
-        "GrupoAwamotos_ERPIntegration/js/suggestions-page": {
+        "GrupoAwamotos_ERPIntegration/js/suggestions-base": {
             "addBySkuUrl": "<?= $block->escapeJs($block->getUrl('erpintegration/cart/addBySku')) ?>",
-            "checkoutCartUrl": "<?= $block->escapeJs($block->getUrl('checkout/cart')) ?>",
-            "isSuggestedCartPage": <?= $block->isSuggestedCartPage() ? 'true' : 'false' ?>,
+            "checkoutCartUrl": "<?= $block->escapeJs($block->getUrl('checkout/cart')) ?>"
+        }
+    }
+<?php if ($block->isSuggestedCartPage()): ?>
+    ,
+    "#erp-filtered-history": {
+        "GrupoAwamotos_ERPIntegration/js/suggestions-filtered-history": {
+            "addBySkuUrl": "<?= $block->escapeJs($block->getUrl('erpintegration/cart/addBySku')) ?>",
             "filterUrl": "<?= $block->escapeJs($block->getUrl('erpintegration/customer/filteredHistory')) ?>",
             "opportunityUrl": "<?= $block->escapeJs($block->getOpportunityClassifierUrl()) ?>"
         }
     }
+<?php endif; ?>
 }
 </script>
-
