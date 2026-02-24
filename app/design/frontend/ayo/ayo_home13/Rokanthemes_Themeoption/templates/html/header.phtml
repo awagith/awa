@@ -3,7 +3,7 @@
 		<div class="top-header">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-6 col-lg-6 hidden-xs hidden-sm">	
+					<div class="col-md-6 col-lg-6 hidden-xs hidden-sm">
 						<div class="top-bar-left">
 							<?php  echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('top-left-static')->toHtml(); ?>
 						</div>
@@ -19,7 +19,7 @@
 										<?php
 									}
 									else{
-									?>	
+									?>
 									<li class="register-login">
 										<a href="<?php echo $this->helper('Rokanthemes\Themeoption\Helper\Data')->getBaseUrl('customer/account/');?>"><?php echo __('My Account');?></a>
 									</li>
@@ -29,7 +29,7 @@
 									<?php } ?>
 									<li class="register-login">
 										<a href="<?php echo $this->helper('Rokanthemes\Themeoption\Helper\Data')->getBaseUrl('checkout/');?>"><?php echo __('Checkout');?></a>
-									</li>	
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -46,7 +46,7 @@
 					            <div class="col-md-2 col-sm-2 col-xs-12">
 									<?php echo $this->getChildHtml("logo"); ?>
 								</div>
-								
+
 					            <div class="col-md-10 col-sm-10 col-xs-12">
 						            <div class="top-search">
 									<div class="flex-layout">
@@ -55,7 +55,7 @@
 												<div class="top-account has-child">
 													<!-- <a href="#"><?php // echo __('Account') ?></a> -->
 													<?php echo $this->getChildHtml("top.links"); ?>
-													
+
 												</div>
 											</div>
 											<div class="mini-cart-wrapper shadowcart">
@@ -63,14 +63,14 @@
 													<?php echo $this->getChildHtml("minicart");?>
 												  </div>
 											 </div>
-										</div> 
+										</div>
 										<?php echo $this->getChildHtml("topSearch");?>
-									</div> 
-					            </div>	
-					            </div>	
-					        </div>	
+									</div>
+					            </div>
+					            </div>
+					        </div>
 					    </div>
-			        </div>    
+			        </div>
 		    	</div>
 		    </div>
 		    <div class="header-control header-nav cms_home_1">
@@ -78,8 +78,7 @@
 		    		<div class="row">
 						<span data-action="toggle-nav" class="action nav-toggle"><span><?php /* @escapeNotVerified */ echo __('Toggle Nav') ?></span></span>
 						<div class="col-lg-2 col-md-3 col-xs-6 hidden-sm menu_left_home1">
-							<?php echo $this->getChildHtml("menu.vertical")?>
-							<?php echo $this->getChildHtml("navigation-sections")?>
+							<?php /* menu.vertical and navigation-sections are children of top.navigation.sections, not direct children of toki_header */ ?>
 							<?php echo $this->getChildHtml("top.navigation.sections")?>
 						</div>
 						<div class="col-lg-7 col-md-7 col-sm-12 hidden-xs">
@@ -91,7 +90,7 @@
 									</div>
 								</div>
 							</div>
-						</div>	
+						</div>
 						<div class="col-lg-3 col-md-2 hidden-sm hidden-xs box_language">
 							<div class="top-header">
 								<?php echo $this->getChildHtml("store_language"); ?>

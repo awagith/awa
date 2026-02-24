@@ -3,7 +3,7 @@
 		<div class="top-header">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-6 col-lg-6 hidden-xs hidden-sm">	
+					<div class="col-md-6 col-lg-6 hidden-xs hidden-sm">
 						<div class="top-bar-left">
 							<?php echo $this->getChildHtml('top-left-static'); ?>
 						</div>
@@ -37,10 +37,10 @@
 						             </div>
 					                <?php echo $this->getChildHtml('topSearch'); ?>
 					                <?php echo $this->getChildHtml('hotline_header'); ?>
-					            </div>	
-					        </div>	
+					            </div>
+					        </div>
 					    </div>
-			        </div>    
+			        </div>
 		    	</div>
 		    </div>
 		    <div class="header-control header-nav cms_home_1">
@@ -48,8 +48,7 @@
 		    		<div class="row">
 						<span data-action="toggle-nav" class="action nav-toggle"><span><?= $escaper->escapeHtml(__('Toggle Nav')) ?></span></span>
 						<div class="col-lg-2 col-md-3 col-sm-2 col-xs-6 menu_left_home1">
-							<?php echo $this->getChildHtml("menu.vertical")?>
-							<?php echo $this->getChildHtml("navigation-sections")?>
+							<?php /* menu.vertical and navigation-sections are children of top.navigation.sections, not direct children of toki_header */ ?>
 							<?php echo $this->getChildHtml("top.navigation.sections")?>
 						</div>
 						<div class="col-lg-7 col-md-7 col-sm-10 menu_primary hidden-xs">
@@ -61,7 +60,7 @@
 									</div>
 								</div>
 							</div>
-						</div>	
+						</div>
 						<div class="col-lg-2 col-md-2 hidden-sm hidden-xs box_language">
 							<div class="top-header">
 								<?php echo $this->getChildHtml("store_language"); ?>

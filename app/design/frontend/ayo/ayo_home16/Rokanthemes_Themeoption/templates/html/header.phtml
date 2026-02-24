@@ -3,7 +3,7 @@
 		<div class="topbar-header">
 			<div class="container">
 				<div class="row">
-					<div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">	
+					<div class="col-md-6 col-lg-6 col-sm-6 col-xs-12">
 						<div class="top-bar-left">
 							<div class="top-header">
 								<?php echo $this->getChildHtml("currency"); ?>
@@ -25,7 +25,7 @@
 										<?php
 									}
 									else{
-									?>	
+									?>
 									<li class="register-login">
 										<a href="<?php echo $this->helper('Rokanthemes\Themeoption\Helper\Data')->getBaseUrl('customer/account/');?>"><?php echo __('My Account');?></a>
 									</li>
@@ -35,7 +35,7 @@
 									<?php } ?>
 									<li class="register-login">
 										<a href="<?php echo $this->helper('Rokanthemes\Themeoption\Helper\Data')->getBaseUrl('checkout/');?>"><?php echo __('Checkout');?></a>
-									</li>	
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -59,7 +59,7 @@
 												<div class="top-account has-child">
 													<!-- <a href="#"><?php // echo __('Account') ?></a> -->
 													<?php echo $this->getChildHtml("top.links"); ?>
-													
+
 												</div>
 											</div>
 											<div class="mini-cart-wrapper shadowcart">
@@ -67,23 +67,22 @@
 													<?php echo $this->getChildHtml("minicart");?>
 												  </div>
 											 </div>
-										</div> 
+										</div>
 										<?php echo $this->getChildHtml("topSearch");?>
-									</div> 
+									</div>
 					            </div>
-								
-					        </div>	
+
+					        </div>
 					    </div>
-			        </div>    
+			        </div>
 		    	</div>
 		    </div>
 		    <div class="header-control header-nav cms_home_1">
 		    	<div class="container">
-		    		<div class="row"> 
+		    		<div class="row">
 						<span data-action="toggle-nav" class="action nav-toggle"><span><?php /* @escapeNotVerified */ echo __('Toggle Nav') ?></span></span>
 						<div class="col-lg-2 col-md-3 col-sm-2 menu_left_home1">
-							<?php echo $this->getChildHtml("menu.vertical")?>
-							<?php echo $this->getChildHtml("navigation-sections")?>
+							<?php /* menu.vertical and navigation-sections are children of top.navigation.sections, not direct children of toki_header */ ?>
 							<?php echo $this->getChildHtml("top.navigation.sections")?>
 						</div>
 						 <div class="col-md-10 menu_primary hidden-sm hidden-xs">
@@ -95,8 +94,8 @@
 									</div>
 								</div>
 							</div>
-						</div>	
-						
+						</div>
+
 					</div>
 				</div>
 			</div>
