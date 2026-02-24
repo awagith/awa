@@ -13,7 +13,6 @@
    ou do conteúdo CMS, pertence aqui.
 =========================================== */
 @layer awa-fixes {
-
 /* ============================================================
    FIX-01 — BANNER TEXT DUPLICATION (P0)
    SVG banners have baked-in text + HTML overlay text = doubling.
@@ -52,6 +51,23 @@
         transform: none;
         opacity: 1;
         transition: none;
+    }
+
+
+    body.cms-index-index .page-wrapper .block_notification marquee,
+    body.cms-home .page-wrapper .block_notification marquee,
+    body.cms-homepage_ayo_home5 .page-wrapper .block_notification marquee {
+        animation: none;
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu li > a {
+        transition: none;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
+        scroll-snap-type: none;
     }
 }
 
@@ -271,13 +287,7 @@ body.cms-homepage_ayo_home5 .page-wrapper .block_notification marquee {
 }
 
 /* R9-13: Respeitar preferência de reduced-motion para marquee */
-@media (prefers-reduced-motion: reduce) {
-    body.cms-index-index .page-wrapper .block_notification marquee,
-    body.cms-home .page-wrapper .block_notification marquee,
-    body.cms-homepage_ayo_home5 .page-wrapper .block_notification marquee {
-        animation: none;
-    }
-}
+
 
 @keyframes marquee-scroll {
     0% { transform: translateX(0); }
@@ -429,6 +439,160 @@ body .newsletterpopup .newsletter-popup-privacy {
     body .newsletterpopup .field.newsletter .control {
         flex-direction: column;
     }
+
+
+    body #newsletter_pop_up.newsletterpopup {
+        padding: var(--awa-space-2-5); /* BP-50: era 10px */
+    }
+
+    body #newsletter_pop_up .nl-popup-card {
+        max-width: 94vw !important;
+    }
+
+    body #newsletter_pop_up .nl-popup-layout {
+        grid-template-columns: 1fr;
+        min-height: 0;
+    }
+
+    body #newsletter_pop_up .nl-popup-hero {
+        min-height: 140px;
+    }
+
+    body #newsletter_pop_up .nl-popup-hero-content {
+        padding: 18px 14px;
+    }
+
+    body #newsletter_pop_up .nl-popup-hero-logo {
+        margin-bottom: var(--awa-space-2); /* BP-19: era 8px */
+        max-width: 70px;
+    }
+
+    body #newsletter_pop_up .nl-popup-hero-discount {
+        font-size: 46px;
+    }
+
+    body #newsletter_pop_up .nl-popup-hero-off {
+        font-size: 26px;
+        letter-spacing: 2px;
+    }
+
+    body #newsletter_pop_up .nl-popup-hero-caption {
+        margin-top: 3px;
+        font-size: var(--awa-text-3xs); /* BP-30: era 10px */
+        letter-spacing: var(--awa-tracking-wider);
+    }
+
+    body #newsletter_pop_up .nl-popup-content {
+        padding: 14px;
+    }
+
+    body #newsletter_pop_up .nl-popup-title {
+        font-size: var(--awa-text-3xl);
+        white-space: normal;
+    }
+
+    body #newsletter_pop_up .nl-popup-subtitle {
+        font-size: var(--awa-text-xl);
+    }
+
+    body #newsletter_pop_up .nl-popup-footer {
+        flex-wrap: wrap;
+    }
+
+
+    body .page-wrapper .banner-slider .item-banner img,
+    body .page-wrapper .slide-banner .item img,
+    body .page-wrapper .banner-text {
+        border-radius: 0;
+    }
+
+    body .page-wrapper .banner-text {
+        font-size: var(--awa-text-base);
+        padding: 10px;
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 10px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
+        --awa-owl-item-gutter: 12px;
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > :is(.ayo-home5-section, .section) {
+        margin: var(--awa-space-5) 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .benefits-bar {
+        align-items: flex-start;
+        gap: var(--awa-space-2); /* BP-17: era 8px */
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .benefits-bar__item {
+        width: 100%;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals {
+        padding: var(--awa-space-3); /* BP-18: era 12px */
+        gap: 10px 12px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals img {
+        height: 30px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals img:first-child {
+        height: 20px;
+        max-width: 180px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .trust-badge-item {
+        flex: 1 1 calc(50% - 9px);
+        min-width: 120px;
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxService {
+        justify-content: center;
+        text-align: center;
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px 10px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .item-product-parent {
+        padding: 0 6px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .item-testimo {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .info-testimonial {
+        text-align: center;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-bottom .footer-bottom-inner .row {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods {
+        justify-content: center;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .payment-methods-wrapper,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .security-seals-wrapper {
+        justify-content: center;
+    }
 }
 
 /* Newsletter popup ≤480px — R12-01: prefixo newsletterpopup */
@@ -463,6 +627,100 @@ body .newsletterpopup .newsletter-popup-privacy {
         padding: var(--awa-space-2-5) 18px; /* BP-50: era 10px 18px */
         font-size: var(--awa-text-sm);
     }
+
+
+    body .page-wrapper .testimonial-item {
+        padding: 15px;
+    }
+
+    body .page-wrapper .testimonial-item .author-info {
+        flex-direction: column;
+        gap: var(--awa-space-2); /* BP-17: era 8px */
+    }
+
+    body .page-wrapper .testimonial-item .author-avatar {
+        width: 40px;
+        height: 40px;
+    }
+
+
+    body .page-wrapper .countdown_block {
+        padding: 12px 15px;
+    }
+
+    body .page-wrapper .title_countdown {
+        font-size: var(--awa-text-sm);
+    }
+
+    body .page-wrapper .time_circles > div {
+        min-width: 40px;
+        min-height: 40px;
+        padding: var(--awa-space-1); /* BP-18: era 4px */
+    }
+
+    body .page-wrapper .time_circles > div .number {
+        font-size: var(--awa-text-base);
+    }
+
+    body .page-wrapper .time_circles > div .text {
+        font-size: 9px;
+    }
+
+
+    body .page-wrapper .blog-post-item,
+    body .page-wrapper .the_blog .post-item {
+        border-radius: var(--awa-radius-sm);
+    }
+
+    body .page-wrapper .blog-post-item .post-content,
+    body .page-wrapper .the_blog .post-item .post-content {
+        padding: var(--awa-space-3); /* BP-18: era 12px */
+    }
+
+    body .page-wrapper .blog-post-item .post-title a {
+        font-size: var(--awa-text-base);
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 8px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
+        --awa-owl-item-gutter: 10px;
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals .microcopy {
+        font-size: var(--awa-text-xs);
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+
+    body .page-wrapper .newsletter-popup,
+    body .page-wrapper .modals-wrapper .modal-popup.newsletter-popup-modal .modal-inner-wrap {
+        max-width: calc(100vw - var(--awa-space-6));
+        padding: var(--awa-space-5);
+    }
+
+    body .page-wrapper .newsletter-popup h2,
+    body .page-wrapper .newsletter-popup .popup-title {
+        font-size: clamp(1.1rem, 4.5vw, 1.4rem);
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
+        grid-template-columns: 1fr;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .productTabContent:not(.owl-carousel) {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Newsletter popup ≤375px — R12-01: prefixo newsletterpopup */
@@ -488,6 +746,41 @@ body .newsletterpopup .newsletter-popup-privacy {
     body .ayo-newsletter-popup .field.newsletter input[type="email"] {
         padding: var(--awa-space-2-5) var(--awa-space-3); /* BP-50: era 10px 12px */
         font-size: var(--awa-text-sm);
+    }
+
+
+    body .page-wrapper .banner-text h2,
+    body .page-wrapper .banner-text .title {
+        font-size: var(--awa-text-lg); /* BP-30: era 18px */
+    }
+
+    body .page-wrapper .banner-text p,
+    body .page-wrapper .banner-text .subtitle {
+        font-size: var(--awa-text-xs);
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 6px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
+        --awa-owl-item-gutter: 8px;
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a {
+        min-height: 44px;
+        padding-inline: var(--awa-space-3); /* BP-21: era 12px */
+        border-radius: var(--awa-radius-sm); /* BP-49: era 6px */
+        font-size: var(--awa-text-xs);
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) {
+        --awa-main-nav-link-min-h: 44px;
+        --awa-main-nav-link-pad-x: 12px;
+        --awa-main-nav-link-radius: 6px;
     }
 }
 
@@ -853,6 +1146,288 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
     body #newsletter_pop_up .nl-popup-hero-off {
         font-size: 31px;
     }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 12px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
+        --awa-owl-item-gutter: 14px;
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
+        flex: 0 0 calc(50% - 12px);
+        max-width: calc(50% - 12px);
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 {
+        overflow: visible;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        touch-action: pan-x pinch-zoom; /* BP-27: melhor scroll horizontal touch */
+        scrollbar-width: none;
+        gap: var(--awa-space-2); /* BP-17: era 8px */
+        padding-bottom: var(--awa-space-2);
+        mask-image: linear-gradient(to right, transparent 0, black 8px, black calc(100% - 24px), transparent 100%); /* BP-51: #000 → keyword */
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2::-webkit-scrollbar {
+        display: none;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li {
+        scroll-snap-align: start;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li > a {
+        white-space: nowrap;
+        font-size: var(--awa-text-sm);
+        min-height: 38px;
+        padding: 0 var(--awa-space-3);
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .velaServicesInner.velaServicesInner--home5,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-banner,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-deals {
+        grid-column: auto;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul {
+        justify-content: flex-start;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: thin;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li {
+        flex: 0 0 auto;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a {
+        min-height: 46px;
+        padding: 0 14px;
+        font-size: var(--awa-text-base);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 46px;
+        margin: 0;
+        padding: 0 14px;
+        border-radius: var(--awa-radius-sm);
+        background: var(--awa-red);
+        color: var(--awa-text-on-primary); /* BP-09: era #fff hardcoded */
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
+        display: none;
+        margin-top: var(--awa-space-2); /* BP-19: era 8px */
+        border: 1px solid var(--awa-gray-200);
+        border-radius: var(--awa-radius-sm);
+        background: var(--awa-bg-surface); /* BP-12 */
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown.active + ul.togge-menu.list-category-dropdown {
+        display: block;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .productTabContent:not(.owl-carousel) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .block_cat > .row {
+        grid-template-columns: 1fr;
+        gap: var(--awa-space-4); /* BP-17: era 16px */
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 {
+        display: flex;
+        gap: var(--awa-space-2); /* BP-17: era 8px */
+        overflow-x: auto;
+        white-space: nowrap;
+        scrollbar-width: thin;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li {
+        flex: 0 0 auto;
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent {
+        position: relative;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent > a {
+        padding-right: 44px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .open-children-toggle {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 40px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 3;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .open-children-toggle::before {
+        content: "+";
+        font-size: var(--awa-text-lg); /* BP-30: era 18px */
+        line-height: var(--awa-leading-none);
+        color: var(--awa-gray-700);
+        font-weight: var(--awa-weight-bold);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .open-children-toggle:focus-visible {
+        outline: 2px solid var(--awa-red);
+        outline-offset: -2px;
+        border-radius: var(--awa-radius-2xs);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent._active > .open-children-toggle::before {
+        content: "−";
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent > ul.level0 {
+        display: none;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent._active > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent._active > ul.level0 {
+        display: block;
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers {
+        margin-top: var(--awa-space-3);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid {
+        gap: var(--awa-space-3);
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
+        scroll-padding-inline: var(--awa-space-2); /* BP-21: era 8px */
+        padding-inline: var(--awa-space-1); /* BP-21: era 4px */
+        gap: var(--awa-space-1); /* BP-17: era 4px */
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > a {
+        min-height: var(--awa-btn-height); /* BP-04: era 48px hardcoded */
+        padding-inline: var(--awa-space-4); /* BP-21: era 16px */
+        border-radius: var(--awa-radius-sm); /* F1-04: era 8px hardcoded */
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > a:active {
+        transform: translateY(0.5px);
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav {
+        margin-bottom: var(--awa-space-2); /* BP-19: era 8px */
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > .top-home-content.top-home-content--trust-and-offers {
+        margin-top: 6px;
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
+        scrollbar-width: thin; /* BP-50: standard scrollbar */
+        scrollbar-color: rgb(0 0 0 / 18%) transparent;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul::-webkit-scrollbar-thumb {
+        background: rgb(0 0 0 / 18%);
+        border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu .subchildmenu > li > a {
+        min-height: 40px;
+        padding-inline: 14px;
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav {
+        position: relative;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav .menu_left_home1 {
+        display: none;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav .menu_primary {
+        display: none !important;
+    }
+
+    body .page-wrapper .header-control.header-nav .nav-toggle,
+    body .page-wrapper .header-control.header-nav .action.nav-toggle {
+        display: flex !important;
+        position: absolute !important;
+        top: -74px !important;
+        left: 12px !important;
+        width: 42px !important;
+        height: 42px !important;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--awa-red) !important;
+        border-radius: var(--awa-radius-sm);
+        background: var(--awa-bg-surface) !important; /* BP-12 */
+        visibility: visible !important;
+        opacity: 1 !important;
+        z-index: var(--awa-z-flyout) !important; /* BP-16: era 10030 */
+    }
+
+    /* Avoid floating close icon when drawer is closed (hybrid tablet state). */
+    body:not(.nav-open) .page-wrapper .awa-nav-close {
+        display: none !important;
+    }
+
+    body.nav-open .page-wrapper .awa-nav-close,
+    .nav-open body .page-wrapper .awa-nav-close {
+        display: flex !important;
+    }
+
+    /* Reserve space for the hamburger icon so search text does not overlap it. */
+    body .page-wrapper .header .top-search .block-search input#search,
+    body .page-wrapper .header .top-search .block-search input.input-text {
+        padding-left: 52px !important;
+    }
+
+    body .page-wrapper .header-control.header-nav .nav-toggle::before,
+    body .page-wrapper .header-control.header-nav .action.nav-toggle::before {
+        content: "\2630";
+        font-family: inherit;
+        font-size: var(--awa-text-xl);
+        line-height: var(--awa-leading-none);
+        color: var(--awa-red);
+    }
 }
 
 /* ============================================================
@@ -870,7 +1445,32 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         font-size: 17px;
         letter-spacing: var(--awa-tracking-tight);
     }
-}
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
+        max-width: min(92vw, var(--awa-container));
+        overflow-x: clip;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li:nth-last-child(-n+2) > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li:nth-last-child(-n+2) > .groupmenu {
+        left: auto;
+        right: 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) .subchildmenu > li > a {
+        line-height: var(--awa-leading-cozy);
+        padding-top: 7px;
+        padding-bottom: 7px;
+    }
+
+
+        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
+        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
+            overflow-x: hidden;
+        }
+    }
 
 @media (width >= 992px) and (width <= 1199px) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul {
@@ -891,67 +1491,57 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         letter-spacing: var(--awa-tracking-tight);
     }
 
-}
 
-@media (width <= 767px) {
-    body #newsletter_pop_up.newsletterpopup {
-        padding: var(--awa-space-2-5); /* BP-50: era 10px */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 {
+        width: auto;
+        max-width: 100%;
+        min-width: 0;
+        flex: 0 0 25%;
     }
 
-    body #newsletter_pop_up .nl-popup-card {
-        max-width: 94vw !important;
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_primary {
+        width: auto;
+        max-width: none;
+        min-width: 0;
+        flex: 1 1 auto;
     }
 
-    body #newsletter_pop_up .nl-popup-layout {
-        grid-template-columns: 1fr;
-        min-height: 0;
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown {
+        font-size: inherit;
+        cursor: default;
     }
 
-    body #newsletter_pop_up .nl-popup-hero {
-        min-height: 140px;
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
-    body #newsletter_pop_up .nl-popup-hero-content {
-        padding: 18px 14px;
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxService {
+        min-height: 104px;
     }
 
-    body #newsletter_pop_up .nl-popup-hero-logo {
-        margin-bottom: var(--awa-space-2); /* BP-19: era 8px */
-        max-width: 70px;
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss .countdown_block {
+        padding: 12px 10px;
     }
 
-    body #newsletter_pop_up .nl-popup-hero-discount {
-        font-size: 46px;
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
+        scroll-snap-type: x proximity;
+        scrollbar-gutter: stable both-edges;
+        touch-action: pan-x pinch-zoom; /* BP-27: melhor scroll horizontal touch */
     }
 
-    body #newsletter_pop_up .nl-popup-hero-off {
-        font-size: 26px;
-        letter-spacing: 2px;
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li {
+        scroll-snap-align: start;
     }
 
-    body #newsletter_pop_up .nl-popup-hero-caption {
-        margin-top: 3px;
-        font-size: var(--awa-text-3xs); /* BP-30: era 10px */
-        letter-spacing: var(--awa-tracking-wider);
-    }
-
-    body #newsletter_pop_up .nl-popup-content {
-        padding: 14px;
-    }
-
-    body #newsletter_pop_up .nl-popup-title {
-        font-size: var(--awa-text-3xl);
-        white-space: normal;
-    }
-
-    body #newsletter_pop_up .nl-popup-subtitle {
-        font-size: var(--awa-text-xl);
-    }
-
-    body #newsletter_pop_up .nl-popup-footer {
-        flex-wrap: wrap;
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > a {
+        line-height: 1.15;
+        font-weight: var(--awa-weight-bold);
+        text-rendering: optimizelegibility;
     }
 }
+
 
 @media (width <= 420px) {
     body #newsletter_pop_up .nl-popup-trust {
@@ -1114,102 +1704,38 @@ body .page-wrapper .actions-secondary a:empty::before {
 /* ============================================================
    FIX-19 — RESPONSIVO: TESTIMONIALS MOBILE (P3)
    ============================================================ */
-@media (width <= 480px) {
-    body .page-wrapper .testimonial-item {
-        padding: 15px;
-    }
 
-    body .page-wrapper .testimonial-item .author-info {
-        flex-direction: column;
-        gap: var(--awa-space-2); /* BP-17: era 8px */
-    }
-
-    body .page-wrapper .testimonial-item .author-avatar {
-        width: 40px;
-        height: 40px;
-    }
-}
 
 /* ============================================================
    FIX-20 — RESPONSIVO: COUNTDOWN MOBILE (P3)
    ============================================================ */
-@media (width <= 480px) {
-    body .page-wrapper .countdown_block {
-        padding: 12px 15px;
-    }
 
-    body .page-wrapper .title_countdown {
-        font-size: var(--awa-text-sm);
-    }
-
-    body .page-wrapper .time_circles > div {
-        min-width: 40px;
-        min-height: 40px;
-        padding: var(--awa-space-1); /* BP-18: era 4px */
-    }
-
-    body .page-wrapper .time_circles > div .number {
-        font-size: var(--awa-text-base);
-    }
-
-    body .page-wrapper .time_circles > div .text {
-        font-size: 9px;
-    }
-}
 
 /* ============================================================
    FIX-21 — RESPONSIVO: BLOG POSTS MOBILE (P3)
    ============================================================ */
-@media (width <= 480px) {
-    body .page-wrapper .blog-post-item,
-    body .page-wrapper .the_blog .post-item {
-        border-radius: var(--awa-radius-sm);
-    }
 
-    body .page-wrapper .blog-post-item .post-content,
-    body .page-wrapper .the_blog .post-item .post-content {
-        padding: var(--awa-space-3); /* BP-18: era 12px */
-    }
-
-    body .page-wrapper .blog-post-item .post-title a {
-        font-size: var(--awa-text-base);
-    }
-}
 
 @media (width <= 320px) {
     body .page-wrapper .blog-post-item .post-content,
     body .page-wrapper .the_blog .post-item .post-content {
         padding: 10px;
     }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
+        --awa-owl-item-gutter: 4px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
+        --awa-owl-item-gutter: 6px;
+    }
 }
 
 /* ============================================================
    FIX-22 — RESPONSIVO: BANNER/HERO SLIDER MOBILE (P3)
    ============================================================ */
-@media (width <= 767px) {
-    body .page-wrapper .banner-slider .item-banner img,
-    body .page-wrapper .slide-banner .item img,
-    body .page-wrapper .banner-text {
-        border-radius: 0;
-    }
 
-    body .page-wrapper .banner-text {
-        font-size: var(--awa-text-base);
-        padding: 10px;
-    }
-}
-
-@media (width <= 375px) {
-    body .page-wrapper .banner-text h2,
-    body .page-wrapper .banner-text .title {
-        font-size: var(--awa-text-lg); /* BP-30: era 18px */
-    }
-
-    body .page-wrapper .banner-text p,
-    body .page-wrapper .banner-text .subtitle {
-        font-size: var(--awa-text-xs);
-    }
-}
 
 /* ============================================================
    FIX-23 — OWL CAROUSEL: ALINHAMENTO + GUTTERS RESPONSIVOS (P1)
@@ -1284,57 +1810,14 @@ body .page-wrapper .owl-carousel {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
         --awa-owl-item-gutter: 16px;
     }
-}
 
-@media (width <= 991px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
-        --awa-owl-item-gutter: 12px;
-    }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
-        --awa-owl-item-gutter: 14px;
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
+        flex: 0 0 calc(33.333% - 12px);
+        max-width: calc(33.333% - 12px);
     }
 }
 
-@media (width <= 767px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
-        --awa-owl-item-gutter: 10px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
-        --awa-owl-item-gutter: 12px;
-    }
-}
-
-@media (width <= 480px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
-        --awa-owl-item-gutter: 8px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
-        --awa-owl-item-gutter: 10px;
-    }
-}
-
-@media (width <= 375px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
-        --awa-owl-item-gutter: 6px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
-        --awa-owl-item-gutter: 8px;
-    }
-}
-
-@media (width <= 320px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .owl-carousel {
-        --awa-owl-item-gutter: 4px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.brand-slider, .brand-logo, .partner-slider, .manufacturer-slider, .testimonials-slider, .testimonials-home, .the_blog) .owl-carousel {
-        --awa-owl-item-gutter: 6px;
-    }
-}
 
 /* ============================================================
     FIX-24 — HOMEPAGE CMS LAYOUT (P1)
@@ -1548,45 +2031,6 @@ body .page-wrapper .owl-carousel {
 
 /* Padding/widht da Home5 agora são governados por --awa-home-inline-padding (awa-consistency-home5.css). */
 
-@media (width <= 767px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > :is(.ayo-home5-section, .section) {
-        margin: var(--awa-space-5) 0;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .benefits-bar {
-        align-items: flex-start;
-        gap: var(--awa-space-2); /* BP-17: era 8px */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .benefits-bar__item {
-        width: 100%;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals {
-        padding: var(--awa-space-3); /* BP-18: era 12px */
-        gap: 10px 12px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals img {
-        height: 30px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals img:first-child {
-        height: 20px;
-        max-width: 180px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .trust-badge-item {
-        flex: 1 1 calc(50% - 9px);
-        min-width: 120px;
-    }
-}
-
-@media (width <= 480px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .security-seals .microcopy {
-        font-size: var(--awa-text-xs);
-    }
-}
 
 /* B2B: Ocultar botões de Wishlist e Compare em toda a loja */
 .action.towishlist,
@@ -1697,6 +2141,279 @@ a[data-action="add-to-wishlist"],
         font-weight: var(--awa-weight-semibold);
         text-decoration: none;
     }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: var(--awa-space-5);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .velaServicesInner.velaServicesInner--home5 {
+        grid-column: 1 / -1;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-banner {
+        grid-column: 1 / 2;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-deals {
+        grid-column: 2 / 3;
+    }
+
+    /* FIX-28 descontinuado: desktop usa modelo overlay (FIX-53) para evitar desalinhamento/cascata conflitante. */
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > .open-children-toggle {
+        display: none !important;
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
+        scrollbar-width: thin;
+        scrollbar-color: rgb(0 0 0 / 25%) transparent;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .submenu::-webkit-scrollbar,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .submenu::-webkit-scrollbar-thumb,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu::-webkit-scrollbar-thumb {
+        border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
+        background: rgb(0 0 0 / 25%);
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu .subchildmenu > li > a {
+        max-width: min(360px, 40vw);
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5)
+    .page-wrapper .verticalmenu.side-verticalmenu li.level0 > a:hover {
+        padding-left: 15px;
+    }
+
+
+    /* Estado-base: submenu oculto, posicionado para flyout à direita */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0 > .submenu {
+        display: block;
+        visibility: hidden;
+        opacity: 0;
+        position: absolute;
+        left: 100%;
+        top: 0;
+        min-width: 220px;
+        z-index: var(--awa-z-submenu); /* BP-16: era 10000 */
+        pointer-events: none;
+        transition: opacity var(--awa-transition-fast), visibility var(--awa-transition-fast); /* BP-08: era 0.2s ease hardcoded */
+        border-radius: 0 var(--awa-radius-sm) var(--awa-radius-sm) var(--awa-radius-sm);
+        box-shadow: var(--awa-shadow-dropdown);
+        background: var(--awa-bg-surface); /* BP-12 */
+    }
+
+    /* Hover: submenu visível */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0:hover > .submenu {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Sub-submenu: mesma lógica para níveis aninhados */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .submenu li:hover > .submenu {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Submenu classic/staticwidth/fullwidth — posição à direita */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.fullwidth > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.staticwidth > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.classic > .submenu {
+        left: 100% !important;
+        top: 0;
+    }
+
+    /* Submenu level0 min-height — alinha submenu completo ao item pai */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul li.level0 .level0.submenu {
+        min-height: 100%;
+        height: auto;
+    }
+
+    /* Sub-submenu arrow indicator on classic menu parent items */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .subchildmenu > li.parent > a::after {
+        content: '\e606';
+        font-family: simple-line-icons, sans-serif;
+        font-size: var(--awa-text-3xs); /* BP-30: era 10px */
+        margin-left: auto;
+        padding-left: var(--awa-space-2); /* BP-20: era 8px */
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block > .vertical-menu-before:empty,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block > .vertical-menu-after:empty {
+        display: none !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 {
+        position: relative;
+        z-index: var(--awa-z-menu-container); /* BP-16: era 1006 */
+        overflow: visible;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .sections.nav-sections.category-dropdown,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .sections.nav-sections.category-dropdown > .section-items,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .sections.nav-sections.category-dropdown .section-item-content.category-dropdown-item-content {
+        overflow: visible;
+        height: auto;
+        min-height: 0;
+        max-height: none;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu {
+        position: relative;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        width: 100%;
+        max-height: min(72vh, 640px);
+        overflow: auto;
+        z-index: var(--awa-z-menu-list); /* BP-16: era 1008 */
+        display: none !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown.menu-open,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > .title-category-dropdown.active + ul.togge-menu.list-category-dropdown {
+        display: block !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link {
+        position: sticky;
+        bottom: 0;
+        z-index: 2;
+        border-top: 1px solid var(--awa-gray-200);
+        background: var(--awa-bg-surface); /* BP-12 */
+    }
+
+    /* Keep promo block in document flow to avoid overlapping category rows. */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-bg-img {
+        position: static !important;
+        left: auto !important;
+        bottom: auto !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        padding: var(--awa-space-2) var(--awa-space-3); /* BP-18: era 8px 12px */
+        border-top: 1px solid var(--awa-gray-200);
+        background: var(--awa-bg-surface); /* BP-12 */
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-bg-img img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: var(--awa-radius-xs); /* BP-11: era 4px hardcoded */
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav {
+        margin: 0;
+        padding: 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > .title-category-dropdown {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 48px;
+        margin: 0;
+        padding: 0 var(--awa-space-4); /* BP-21: era 16px */
+        border-radius: var(--awa-radius-sm) var(--awa-radius-sm) 0 0;
+        background: var(--awa-red);
+        color: var(--awa-text-on-primary); /* BP-09 */
+        font-weight: var(--awa-weight-bold);
+        letter-spacing: var(--awa-tracking-tight);
+        text-transform: uppercase;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
+        overflow-x: hidden;
+        box-sizing: border-box;
+        scrollbar-width: thin;
+        scrollbar-color: rgb(0 0 0 / 18%) transparent;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown::-webkit-scrollbar-thumb {
+        border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
+        background: rgb(0 0 0 / 18%);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li {
+        margin: 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a {
+        min-height: 44px;
+        padding: 10px 16px;
+        display: flex;
+        align-items: center;
+        gap: var(--awa-space-2); /* BP-17: era 8px */
+        line-height: var(--awa-leading-snug);
+        border-bottom: 1px solid var(--awa-gray-200);
+        transition: background-color var(--awa-transition-fast), color var(--awa-transition-fast);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li:last-child > a {
+        border-bottom: 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a:hover {
+        background: var(--awa-gray-100);
+        color: var(--awa-red-dark);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a .cat-label {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        margin-left: auto;
+        min-height: 16px;
+        padding: 2px 6px;
+        border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
+        font-size: 9px;
+        line-height: var(--awa-leading-none);
+        font-weight: var(--awa-weight-bold);
+        letter-spacing: var(--awa-tracking-normal);
+        text-transform: uppercase;
+        white-space: nowrap;
+        background: var(--awa-red);
+        color: var(--awa-text-on-primary); /* BP-09: era #fff hardcoded */
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a .cat-label:empty {
+        display: none !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .title-category-dropdown,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a.level-top {
+        min-height: 48px;
+        line-height: var(--awa-leading-compact);
+        padding-block: var(--awa-space-3); /* BP-21: era 12px */
+        display: flex;
+        align-items: center;
+    }
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
@@ -1716,28 +2433,13 @@ a[data-action="add-to-wishlist"],
 }
 
 /* Responsive: tablet landscape → 3 colunas */
-@media (width <= 1199px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
-        flex: 0 0 calc(33.333% - 12px);
-        max-width: calc(33.333% - 12px);
-    }
-}
+
 
 /* Responsive: tablet portrait → 2 colunas */
-@media (width <= 991px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
-        flex: 0 0 calc(50% - 12px);
-        max-width: calc(50% - 12px);
-    }
-}
+
 
 /* Responsive: mobile → 1 coluna */
-@media (width <= 480px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-}
+
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"]::before {
     display: none;
@@ -1994,38 +2696,7 @@ a[data-action="add-to-wishlist"],
    FIX-30 — CATEGORYTAB2 SCROLL-SNAP + FADE INDICATORS (MOBILE)
    Scroll horizontal c/ snap + gradiente de fade nas bordas.
    ============================================================ */
-@media (width <= 991px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 {
-        overflow: visible;
-    }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 {
-        display: flex;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        touch-action: pan-x pinch-zoom; /* BP-27: melhor scroll horizontal touch */
-        scrollbar-width: none;
-        gap: var(--awa-space-2); /* BP-17: era 8px */
-        padding-bottom: var(--awa-space-2);
-        mask-image: linear-gradient(to right, transparent 0, black 8px, black calc(100% - 24px), transparent 100%); /* BP-51: #000 → keyword */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2::-webkit-scrollbar {
-        display: none;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li {
-        scroll-snap-align: start;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li > a {
-        white-space: nowrap;
-        font-size: var(--awa-text-sm);
-        min-height: 38px;
-        padding: 0 var(--awa-space-3);
-    }
-}
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo {
     margin: var(--awa-space-6) 0 0;
@@ -2202,18 +2873,6 @@ body .page-wrapper .modals-wrapper .modal-popup.newsletter-popup-modal .modal-in
     overflow: hidden;
 }
 
-@media (width <= 480px) {
-    body .page-wrapper .newsletter-popup,
-    body .page-wrapper .modals-wrapper .modal-popup.newsletter-popup-modal .modal-inner-wrap {
-        max-width: calc(100vw - var(--awa-space-6));
-        padding: var(--awa-space-5);
-    }
-
-    body .page-wrapper .newsletter-popup h2,
-    body .page-wrapper .newsletter-popup .popup-title {
-        font-size: clamp(1.1rem, 4.5vw, 1.4rem);
-    }
-}
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer {
     margin-top: var(--awa-space-7);
@@ -2323,226 +2982,21 @@ body .page-wrapper .product-item .action.tocart:active {
     transform: scale(0.97);
 }
 
-@media (width <= 991px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .velaServicesInner.velaServicesInner--home5,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-banner,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-deals {
-        grid-column: auto;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul {
-        justify-content: flex-start;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        scrollbar-width: thin;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li {
-        flex: 0 0 auto;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a {
-        min-height: 46px;
-        padding: 0 14px;
-        font-size: var(--awa-text-base);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 46px;
-        margin: 0;
-        padding: 0 14px;
-        border-radius: var(--awa-radius-sm);
-        background: var(--awa-red);
-        color: var(--awa-text-on-primary); /* BP-09: era #fff hardcoded */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
-        display: none;
-        margin-top: var(--awa-space-2); /* BP-19: era 8px */
-        border: 1px solid var(--awa-gray-200);
-        border-radius: var(--awa-radius-sm);
-        background: var(--awa-bg-surface); /* BP-12 */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown.active + ul.togge-menu.list-category-dropdown {
-        display: block;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .productTabContent:not(.owl-carousel) {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .block_cat > .row {
-        grid-template-columns: 1fr;
-        gap: var(--awa-space-4); /* BP-17: era 16px */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 {
-        display: flex;
-        gap: var(--awa-space-2); /* BP-17: era 8px */
-        overflow-x: auto;
-        white-space: nowrap;
-        scrollbar-width: thin;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .categorytab-container.awa-cat-tabs-categorytab2 .tabs.tabs-categorytab2 > li {
-        flex: 0 0 auto;
-    }
-}
-
-@media (width <= 767px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxService {
-        justify-content: center;
-        text-align: center;
-        flex-direction: column;
-        gap: 10px;
-        padding: 14px 10px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .item-product-parent {
-        padding: 0 6px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .item-testimo {
-        grid-template-columns: 1fr;
-        justify-items: center;
-        text-align: center;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .box-bottom-home2.box-testimo .info-testimonial {
-        text-align: center;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-bottom .footer-bottom-inner .row {
-        flex-direction: column;
-        text-align: center;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods {
-        justify-content: center;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .payment-methods-wrapper,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .security-seals-wrapper {
-        justify-content: center;
-    }
-}
-
-@media (width <= 480px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
-        grid-template-columns: 1fr;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .list-tab-product.common-tab-system-fixed .productTabContent:not(.owl-carousel) {
-        grid-template-columns: 1fr;
-    }
-}
 
 /* ============================================================
    FIX-26 — HOME5 MEDIUM VIEWPORT STABILIZATION (P1)
    Neutraliza regras legadas de 80px no menu e melhora leitura 992-1199.
    ============================================================ */
-@media (width >= 992px) and (width <= 1199px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 {
-        width: auto;
-        max-width: 100%;
-        min-width: 0;
-        flex: 0 0 25%;
-    }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_primary {
-        width: auto;
-        max-width: none;
-        min-width: 0;
-        flex: 1 1 auto;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown {
-        font-size: inherit;
-        cursor: default;
-    }
-}
 
 /* ============================================================
    FIX-27 — VERTICAL MENU MOBILE TOGGLES (P1)
    Alinha com recomendação do template Ayo para abertura de submenu no mobile.
    ============================================================ */
-@media (width <= 991px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent {
-        position: relative;
-    }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent > a {
-        padding-right: 44px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .open-children-toggle {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 40px;
-        height: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 3;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .open-children-toggle::before {
-        content: "+";
-        font-size: var(--awa-text-lg); /* BP-30: era 18px */
-        line-height: var(--awa-leading-none);
-        color: var(--awa-gray-700);
-        font-weight: var(--awa-weight-bold);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .open-children-toggle:focus-visible {
-        outline: 2px solid var(--awa-red);
-        outline-offset: -2px;
-        border-radius: var(--awa-radius-2xs);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent._active > .open-children-toggle::before {
-        content: "−";
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent > .submenu,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent > ul.level0 {
-        display: none;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent._active > .submenu,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent._active > ul.level0 {
-        display: block;
-    }
-}
 
 /* FIX-26b — MEDIUM VIEWPORT EXTRAS (992-1199px) */
-@media (width >= 992px) and (width <= 1199px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxService {
-        min-height: 104px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .hot-deal:not(.top-home-content__trust-offers-deals) .hot-deal-tab-slider.hot-deal-tab-slider-customcss .countdown_block {
-        padding: 12px 10px;
-    }
-}
 
 /* ============================================================
    FIX-27 — TRUST & OFFERS GRID STABILITY (P1)
@@ -2570,36 +3024,6 @@ body .page-wrapper .product-item .action.tocart:active {
     margin-top: 0;
 }
 
-@media (width >= 992px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: var(--awa-space-5);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .velaServicesInner.velaServicesInner--home5 {
-        grid-column: 1 / -1;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-banner {
-        grid-column: 1 / 2;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid > .top-home-content__trust-offers-deals {
-        grid-column: 2 / 3;
-    }
-
-    /* FIX-28 descontinuado: desktop usa modelo overlay (FIX-53) para evitar desalinhamento/cascata conflitante. */
-}
-
-@media (width <= 991px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers {
-        margin-top: var(--awa-space-3);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid {
-        gap: var(--awa-space-3);
-    }
-}
 
 /* ============================================================
    FIX-30 — MAIN NAV GLYPH/ICON SANITIZATION (P1)
@@ -2632,11 +3056,7 @@ body .page-wrapper .product-item .action.tocart:active {
    FIX-31 — MAIN NAV INTERACTION REFINEMENT (P2)
    Evita overlay de toggle no desktop/médio e melhora foco visível.
    ============================================================ */
-@media (width >= 992px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > .open-children-toggle {
-        display: none !important;
-    }
-}
+
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul > li > a:focus-visible {
     outline: 2px solid var(--awa-red);
@@ -2647,23 +3067,7 @@ body .page-wrapper .product-item .action.tocart:active {
    FIX-32 — MAIN NAV MEDIUM-DESKTOP SCROLL UX (P2)
    Melhora rolagem horizontal e legibilidade entre 992-1199px.
    ============================================================ */
-@media (width >= 992px) and (width <= 1199px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
-        scroll-snap-type: x proximity;
-        scrollbar-gutter: stable both-edges;
-        touch-action: pan-x pinch-zoom; /* BP-27: melhor scroll horizontal touch */
-    }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li {
-        scroll-snap-align: start;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > a {
-        line-height: 1.15;
-        font-weight: var(--awa-weight-bold);
-        text-rendering: optimizelegibility;
-    }
-}
 
 /* ============================================================
    FIX-33 — MAIN NAV KEYBOARD/SUBMENU REFINEMENT (P2)
@@ -2684,47 +3088,13 @@ body .page-wrapper .product-item .action.tocart:active {
    FIX-34 — SUBMENU ALIGNMENT & VIEWPORT CONTAINMENT (P2)
    Evita corte lateral de dropdown e melhora legibilidade desktop.
    ============================================================ */
-@media (width >= 1200px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
-        max-width: min(92vw, var(--awa-container));
-        overflow-x: clip;
-    }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li:nth-last-child(-n+2) > .submenu,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li:nth-last-child(-n+2) > .groupmenu {
-        left: auto;
-        right: 0;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) .subchildmenu > li > a {
-        line-height: var(--awa-leading-cozy);
-        padding-top: 7px;
-        padding-bottom: 7px;
-    }
-}
 
 /* ============================================================
    FIX-35 — MAIN NAV RESPONSIVE TOUCH TUNING (P2)
    Melhora hit-area, snapping e estabilidade visual até 991px.
    ============================================================ */
-@media (width <= 991px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
-        scroll-padding-inline: var(--awa-space-2); /* BP-21: era 8px */
-        padding-inline: var(--awa-space-1); /* BP-21: era 4px */
-        gap: var(--awa-space-1); /* BP-17: era 4px */
-    }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > a {
-        min-height: var(--awa-btn-height); /* BP-04: era 48px hardcoded */
-        padding-inline: var(--awa-space-4); /* BP-21: era 16px */
-        border-radius: var(--awa-radius-sm); /* F1-04: era 8px hardcoded */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > a:active {
-        transform: translateY(0.5px);
-    }
-}
 
 /* ============================================================
    FIX-36 — TOP RHYTHM ALIGNMENT (P2)
@@ -2738,15 +3108,6 @@ body .page-wrapper .product-item .action.tocart:active {
     margin-top: clamp(8px, 1vw, 14px);
 }
 
-@media (width <= 991px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary > .navigation.custommenu.main-nav {
-        margin-bottom: var(--awa-space-2); /* BP-19: era 8px */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > .top-home-content.top-home-content--trust-and-offers {
-        margin-top: 6px;
-    }
-}
 
 /* ============================================================
    FIX-37 — SUBMENU RESPONSIVE CONTAINMENT (P2)
@@ -2789,16 +3150,7 @@ body .page-wrapper .product-item .action.tocart:active {
    FIX-39 — NAV ACCESSIBILITY HARDENING (P2)
    Reduced motion, alto contraste e rolagem horizontal consistente.
    ============================================================ */
-@media (prefers-reduced-motion: reduce) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu li > a {
-        transition: none;
-    }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
-        scroll-snap-type: none;
-    }
-}
 
 @media (forced-colors: active) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a:focus-visible,
@@ -2811,21 +3163,6 @@ body .page-wrapper .product-item .action.tocart:active {
     }
 }
 
-@media (width <= 991px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul {
-        scrollbar-width: thin; /* BP-50: standard scrollbar */
-        scrollbar-color: rgb(0 0 0 / 18%) transparent;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul::-webkit-scrollbar {
-        height: 6px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul::-webkit-scrollbar-thumb {
-        background: rgb(0 0 0 / 18%);
-        border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
-    }
-}
 
 /* ============================================================
    FIX-40 — SMALL-SCREEN NAV MICRO-REFINEMENT (P2)
@@ -2844,16 +3181,19 @@ body .page-wrapper .product-item .action.tocart:active {
         font-size: var(--awa-text-sm);
         letter-spacing: var(--awa-tracking-tight);
     }
-}
 
-@media (width <= 375px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a {
-        min-height: 44px;
-        padding-inline: var(--awa-space-3); /* BP-21: era 12px */
-        border-radius: var(--awa-radius-sm); /* BP-49: era 6px */
-        font-size: var(--awa-text-xs);
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) {
+        --awa-main-nav-link-min-h: 46px;
+        --awa-main-nav-link-pad-x: 14px;
+    }
+
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul {
+        padding-inline: max(2px, env(safe-area-inset-left)) max(2px, env(safe-area-inset-right));
     }
 }
+
 
 /* ============================================================
    FIX-41 — MAIN NAV LOCAL TOKENS (P2)
@@ -2871,20 +3211,6 @@ body .page-wrapper .product-item .action.tocart:active {
     border-radius: var(--awa-main-nav-link-radius);
 }
 
-@media (width <= 575px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) {
-        --awa-main-nav-link-min-h: 46px;
-        --awa-main-nav-link-pad-x: 14px;
-    }
-}
-
-@media (width <= 375px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) {
-        --awa-main-nav-link-min-h: 44px;
-        --awa-main-nav-link-pad-x: 12px;
-        --awa-main-nav-link-radius: 6px;
-    }
-}
 
 /* ============================================================
    FIX-42 — SUBMENU LAYERING STABILITY (P2)
@@ -2905,23 +3231,14 @@ body .page-wrapper .product-item .action.tocart:active {
    Fallback para navegadores sem suporte pleno a overflow: clip.
    ============================================================ */
 @supports not (overflow: clip) {
-    @media (width >= 1200px) {
-        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
-        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
-            overflow-x: hidden;
-        }
-    }
+
 }
 
 /* ============================================================
    FIX-44 — SAFE AREA SUPPORT ON SMALL SCREENS (P3)
    Evita clipping nas bordas em devices com notch/gestures.
    ============================================================ */
-@media (width <= 575px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul {
-        padding-inline: max(2px, env(safe-area-inset-left)) max(2px, env(safe-area-inset-right));
-    }
-}
+
 
 /* ============================================================
    FIX-45 — MAIN NAV ACTIVE STATE VIA ARIA-CURRENT (P2)
@@ -2942,25 +3259,7 @@ body .page-wrapper .product-item .action.tocart:active {
    FIX-46 — DESKTOP SUBMENU SCROLLBAR TUNING (P3)
    Scrollbar consistente para submenu/groupmenu no desktop.
    ============================================================ */
-@media (width >= 992px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .submenu,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu {
-        scrollbar-width: thin;
-        scrollbar-color: rgb(0 0 0 / 25%) transparent;
-    }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .submenu::-webkit-scrollbar,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .submenu::-webkit-scrollbar-thumb,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > .groupmenu::-webkit-scrollbar-thumb {
-        border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
-        background: rgb(0 0 0 / 25%);
-    }
-}
 
 /* ============================================================
    FIX-47 — SUBMENU ACTIVE/HOVER CONSISTENCY (P2)
@@ -2989,12 +3288,6 @@ body .page-wrapper .product-item .action.tocart:active {
     line-height: var(--awa-leading-cozy);
 }
 
-@media (width <= 991px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu .subchildmenu > li > a {
-        min-height: 40px;
-        padding-inline: 14px;
-    }
-}
 
 /* ============================================================
    FIX-49 — SUBMENU DEPTH VISUAL HIERARCHY (P2)
@@ -3048,20 +3341,10 @@ body .page-wrapper .product-item .action.tocart:active {
     hyphens: auto;
 }
 
-@media (width >= 992px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) .submenu .subchildmenu > li > a {
-        max-width: min(360px, 40vw);
-    }
-}
 
 /* R28 — Bug #3: Neutraliza padding-left:18px de themes5.css no hover.
    transform:translateX(5px) em awa-layout.css é o efeito hover canônico. */
-@media (width >= 992px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5)
-    .page-wrapper .verticalmenu.side-verticalmenu li.level0 > a:hover {
-        padding-left: 15px;
-    }
-}
+
 
 /* ============================================================
    FIX-34 — VERTICAL MENU SUBMENU FLYOUT (P1)
@@ -3069,61 +3352,7 @@ body .page-wrapper .product-item .action.tocart:active {
    Define estado-base (hidden) e hover (visible) com especificidade
    alta o suficiente para vencer regras do módulo Rokanthemes.
    ============================================================ */
-@media (width >= 992px) {
-    /* Estado-base: submenu oculto, posicionado para flyout à direita */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0 > .submenu {
-        display: block;
-        visibility: hidden;
-        opacity: 0;
-        position: absolute;
-        left: 100%;
-        top: 0;
-        min-width: 220px;
-        z-index: var(--awa-z-submenu); /* BP-16: era 10000 */
-        pointer-events: none;
-        transition: opacity var(--awa-transition-fast), visibility var(--awa-transition-fast); /* BP-08: era 0.2s ease hardcoded */
-        border-radius: 0 var(--awa-radius-sm) var(--awa-radius-sm) var(--awa-radius-sm);
-        box-shadow: var(--awa-shadow-dropdown);
-        background: var(--awa-bg-surface); /* BP-12 */
-    }
 
-    /* Hover: submenu visível */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0:hover > .submenu {
-        visibility: visible;
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    /* Sub-submenu: mesma lógica para níveis aninhados */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .submenu li:hover > .submenu {
-        visibility: visible;
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    /* Submenu classic/staticwidth/fullwidth — posição à direita */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.fullwidth > .submenu,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.staticwidth > .submenu,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.classic > .submenu {
-        left: 100% !important;
-        top: 0;
-    }
-
-    /* Submenu level0 min-height — alinha submenu completo ao item pai */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul li.level0 .level0.submenu {
-        min-height: 100%;
-        height: auto;
-    }
-
-    /* Sub-submenu arrow indicator on classic menu parent items */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .subchildmenu > li.parent > a::after {
-        content: '\e606';
-        font-family: simple-line-icons, sans-serif;
-        font-size: var(--awa-text-3xs); /* BP-30: era 10px */
-        margin-left: auto;
-        padding-left: var(--awa-space-2); /* BP-20: era 8px */
-    }
-}
 
 /* ============================================================
    FIX-35 — VERTICAL MENU TITLE HAMBURGER ICON + EXPAND BUTTON
@@ -3227,232 +3456,15 @@ body .page-wrapper .product-item .action.tocart:active {
     border: 0 !important;
 }
 
-@media (width >= 992px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block > .vertical-menu-before:empty,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block > .vertical-menu-after:empty {
-        display: none !important;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 {
-        position: relative;
-        z-index: var(--awa-z-menu-container); /* BP-16: era 1006 */
-        overflow: visible;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .sections.nav-sections.category-dropdown,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .sections.nav-sections.category-dropdown > .section-items,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1 .sections.nav-sections.category-dropdown .section-item-content.category-dropdown-item-content {
-        overflow: visible;
-        height: auto;
-        min-height: 0;
-        max-height: none;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu {
-        position: relative;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
-        position: absolute !important;
-        top: 100% !important;
-        left: 0 !important;
-        width: 100%;
-        max-height: min(72vh, 640px);
-        overflow: auto;
-        z-index: var(--awa-z-menu-list); /* BP-16: era 1008 */
-        display: none !important;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown.menu-open,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > .title-category-dropdown.active + ul.togge-menu.list-category-dropdown {
-        display: block !important;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link {
-        position: sticky;
-        bottom: 0;
-        z-index: 2;
-        border-top: 1px solid var(--awa-gray-200);
-        background: var(--awa-bg-surface); /* BP-12 */
-    }
-
-    /* Keep promo block in document flow to avoid overlapping category rows. */
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-bg-img {
-        position: static !important;
-        left: auto !important;
-        bottom: auto !important;
-        opacity: 1 !important;
-        pointer-events: auto !important;
-        padding: var(--awa-space-2) var(--awa-space-3); /* BP-18: era 8px 12px */
-        border-top: 1px solid var(--awa-gray-200);
-        background: var(--awa-bg-surface); /* BP-12 */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-bg-img img {
-        width: 100%;
-        height: auto;
-        display: block;
-        border-radius: var(--awa-radius-xs); /* BP-11: era 4px hardcoded */
-    }
-}
 
 /* ============================================================
    FIX-55 — HOME5 DESKTOP OVERLAY + GRID/BASELINE POLISH (P1)
    ============================================================ */
-@media (width >= 992px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav {
-        margin: 0;
-        padding: 0;
-    }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > .title-category-dropdown {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: 48px;
-        margin: 0;
-        padding: 0 var(--awa-space-4); /* BP-21: era 16px */
-        border-radius: var(--awa-radius-sm) var(--awa-radius-sm) 0 0;
-        background: var(--awa-red);
-        color: var(--awa-text-on-primary); /* BP-09 */
-        font-weight: var(--awa-weight-bold);
-        letter-spacing: var(--awa-tracking-tight);
-        text-transform: uppercase;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-        overflow-x: hidden;
-        box-sizing: border-box;
-        scrollbar-width: thin;
-        scrollbar-color: rgb(0 0 0 / 18%) transparent;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown::-webkit-scrollbar-thumb {
-        border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
-        background: rgb(0 0 0 / 18%);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li {
-        margin: 0;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a {
-        min-height: 44px;
-        padding: 10px 16px;
-        display: flex;
-        align-items: center;
-        gap: var(--awa-space-2); /* BP-17: era 8px */
-        line-height: var(--awa-leading-snug);
-        border-bottom: 1px solid var(--awa-gray-200);
-        transition: background-color var(--awa-transition-fast), color var(--awa-transition-fast);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li:last-child > a {
-        border-bottom: 0;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a:hover {
-        background: var(--awa-gray-100);
-        color: var(--awa-red-dark);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a .cat-label {
-        display: inline-flex !important;
-        align-items: center;
-        justify-content: center;
-        margin-left: auto;
-        min-height: 16px;
-        padding: 2px 6px;
-        border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
-        font-size: 9px;
-        line-height: var(--awa-leading-none);
-        font-weight: var(--awa-weight-bold);
-        letter-spacing: var(--awa-tracking-normal);
-        text-transform: uppercase;
-        white-space: nowrap;
-        background: var(--awa-red);
-        color: var(--awa-text-on-primary); /* BP-09: era #fff hardcoded */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li > a .cat-label:empty {
-        display: none !important;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .title-category-dropdown,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a.level-top {
-        min-height: 48px;
-        line-height: var(--awa-leading-compact);
-        padding-block: var(--awa-space-3); /* BP-21: era 12px */
-        display: flex;
-        align-items: center;
-    }
-}
 
 /* ============================================================
    FIX-54 — MOBILE: GARANTIR VISIBILIDADE DO NAV-TOGGLE (P1)
    Remove conflito de sobreposição com menu_left_home1 no ≤767px.
    ============================================================ */
-@media (width <= 991px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav {
-        position: relative;
-    }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav .menu_left_home1 {
-        display: none;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav .menu_primary {
-        display: none !important;
-    }
-
-    body .page-wrapper .header-control.header-nav .nav-toggle,
-    body .page-wrapper .header-control.header-nav .action.nav-toggle {
-        display: flex !important;
-        position: absolute !important;
-        top: -74px !important;
-        left: 12px !important;
-        width: 42px !important;
-        height: 42px !important;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid var(--awa-red) !important;
-        border-radius: var(--awa-radius-sm);
-        background: var(--awa-bg-surface) !important; /* BP-12 */
-        visibility: visible !important;
-        opacity: 1 !important;
-        z-index: var(--awa-z-flyout) !important; /* BP-16: era 10030 */
-    }
-
-    /* Avoid floating close icon when drawer is closed (hybrid tablet state). */
-    body:not(.nav-open) .page-wrapper .awa-nav-close {
-        display: none !important;
-    }
-
-    body.nav-open .page-wrapper .awa-nav-close,
-    .nav-open body .page-wrapper .awa-nav-close {
-        display: flex !important;
-    }
-
-    /* Reserve space for the hamburger icon so search text does not overlap it. */
-    body .page-wrapper .header .top-search .block-search input#search,
-    body .page-wrapper .header .top-search .block-search input.input-text {
-        padding-left: 52px !important;
-    }
-
-    body .page-wrapper .header-control.header-nav .nav-toggle::before,
-    body .page-wrapper .header-control.header-nav .action.nav-toggle::before {
-        content: "\2630";
-        font-family: inherit;
-        font-size: var(--awa-text-xl);
-        line-height: var(--awa-leading-none);
-        color: var(--awa-red);
-    }
-}
 } /* F2-02: fecha @layer awa-fixes */

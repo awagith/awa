@@ -421,6 +421,50 @@ body .page-wrapper .block-products-list .product-items:not(.owl-carousel) {
         padding-left: var(--awa-space-3); /* BP-20: era 12px */
         padding-right: var(--awa-space-3); /* BP-20: era 12px */
     }
+
+
+    body .page-wrapper .page-title-wrapper .page-title {
+        font-size: clamp(1.45rem, 4.8vw, 1.8rem);
+    }
+
+    body.catalog-category-view .page-wrapper .toolbar.toolbar-products {
+        gap: var(--awa-space-2);
+    }
+
+    body.catalog-category-view .page-wrapper .products-grid .product-item .product-item-details,
+    body.catalog-category-view .page-wrapper .products-list .product-item .product-item-details {
+        padding-top: var(--awa-space-2);
+    }
+
+
+    body .page-wrapper .breadcrumbs {
+        padding: var(--awa-space-2) var(--awa-space-3);
+    }
+
+    body .page-wrapper .breadcrumbs .items .item {
+        font-size: var(--awa-text-xs);
+        max-width: 140px;
+    }
+
+
+    body .page-wrapper .table-wrapper {
+        border: 1px solid var(--awa-gray-200);
+        border-radius: var(--awa-radius-sm);
+    }
+
+    body .page-wrapper table thead th,
+    body .page-wrapper table tbody td {
+        padding: var(--awa-space-2) var(--awa-space-3);
+        font-size: var(--awa-text-xs);
+    }
+
+
+    body .page-wrapper .table-comparison {
+        display: block;
+        overflow-x: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--awa-gray-300) transparent;
+    }
 }
 
 /* ===========================================
@@ -442,6 +486,22 @@ body .page-wrapper :is(.item-product, .product-item, .blog-post-item, .the_blog 
         border-color: var(--awa-gray-300);
         box-shadow: var(--awa-shadow);
     }
+
+
+    body .page-wrapper :is(.action.primary, .action.secondary, .action.tocart, button.action):hover {
+        transform: translateY(-1px);
+        box-shadow: var(--awa-shadow-sm);
+    }
+
+
+    body .page-wrapper .account .table-wrapper .data.table tbody tr:hover {
+        background: var(--awa-gray-50);
+    }
+
+
+    body .page-wrapper table tbody tr:hover {
+        background: rgb(183 51 55 / 4%);
+    }
 }
 
 body .page-wrapper :is(.item-product, .product-item, .blog-post-item, .the_blog .post-item, .testimonials-home .item):focus-within {
@@ -459,12 +519,6 @@ body .page-wrapper :is(.action.primary, .action.secondary, .action.tocart, butto
     transition: transform var(--awa-transition-fast), box-shadow var(--awa-transition-fast), background-color var(--awa-transition-fast), color var(--awa-transition-fast), border-color var(--awa-transition-fast);
 }
 
-@media (hover: hover) and (pointer: fine) {
-    body .page-wrapper :is(.action.primary, .action.secondary, .action.tocart, button.action):hover {
-        transform: translateY(-1px);
-        box-shadow: var(--awa-shadow-sm);
-    }
-}
 
 body .page-wrapper :is(.action.primary, .action.secondary, .action.tocart, button.action):focus-visible {
     outline: 2px solid var(--awa-red);
@@ -606,20 +660,6 @@ body .page-wrapper :is(.message.notice, .message.warning, .message.success, .mes
     border-radius: var(--awa-control-radius);
 }
 
-@media (width <= 768px) {
-    body .page-wrapper .page-title-wrapper .page-title {
-        font-size: clamp(1.45rem, 4.8vw, 1.8rem);
-    }
-
-    body.catalog-category-view .page-wrapper .toolbar.toolbar-products {
-        gap: var(--awa-space-2);
-    }
-
-    body.catalog-category-view .page-wrapper .products-grid .product-item .product-item-details,
-    body.catalog-category-view .page-wrapper .products-list .product-item .product-item-details {
-        padding-top: var(--awa-space-2);
-    }
-}
 
 /* ===========================================
    RFF-07 — BADGES MICRO-POLISH (safe)
@@ -804,11 +844,7 @@ body .page-wrapper .account .column.main .action.change-password:hover {
 }
 
 /* Tabelas da conta — hover de linha */
-@media (hover: hover) and (pointer: fine) {
-    body .page-wrapper .account .table-wrapper .data.table tbody tr:hover {
-        background: var(--awa-gray-50);
-    }
-}
+
 
 /* Login/Register — gap entre os blocos */
 body .page-wrapper .login-container {
@@ -975,16 +1011,7 @@ body .page-wrapper .breadcrumbs .items .item {
 }
 
 /* Mobile: padding e fonte menor */
-@media (width <= 768px) {
-    body .page-wrapper .breadcrumbs {
-        padding: var(--awa-space-2) var(--awa-space-3);
-    }
 
-    body .page-wrapper .breadcrumbs .items .item {
-        font-size: var(--awa-text-xs);
-        max-width: 140px;
-    }
-}
 
 /* ===========================================
    RFF-14 — SIDEBAR & FILTER POLISH (safe)
@@ -1196,11 +1223,7 @@ body .page-wrapper table tbody tr:nth-child(even) {
 }
 
 /* Hover em linhas */
-@media (hover: hover) and (pointer: fine) {
-    body .page-wrapper table tbody tr:hover {
-        background: rgb(183 51 55 / 4%);
-    }
-}
+
 
 /* Última linha sem borda */
 body .page-wrapper table tbody tr:last-child td {
@@ -1217,18 +1240,7 @@ body .page-wrapper table caption {
 }
 
 /* Responsivo — scroll indicator */
-@media (width <= 768px) {
-    body .page-wrapper .table-wrapper {
-        border: 1px solid var(--awa-gray-200);
-        border-radius: var(--awa-radius-sm);
-    }
 
-    body .page-wrapper table thead th,
-    body .page-wrapper table tbody td {
-        padding: var(--awa-space-2) var(--awa-space-3);
-        font-size: var(--awa-text-xs);
-    }
-}
 
 /* ===========================================
    RFF-18 — MODAL / POPUP POLISH (safe)
@@ -1535,14 +1547,7 @@ body .page-wrapper .catalog-product_compare-index .message.info {
 }
 
 /* Compare — mobile horizontal scroll */
-@media (width <= 768px) {
-    body .page-wrapper .table-comparison {
-        display: block;
-        overflow-x: auto;
-        scrollbar-width: thin;
-        scrollbar-color: var(--awa-gray-300) transparent;
-    }
-}
+
 
 /* ===========================================
    RFF-22 — SCROLLBAR + OVERSCROLL CONTAINERS

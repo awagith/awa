@@ -603,13 +603,8 @@ body .page-wrapper .breadcrumbs .items li strong {
         max-width: 140px;
         font-size: var(--awa-text-xs);
     }
-}
 
-/* ===========================================
-   TOOLBAR MOBILE (< 480px)
-   Toolbar de categoria/listagem empilha em mobile pequeno.
-=========================================== */
-@media (width <= 480px) {
+
     body .page-wrapper .page-products .toolbar-products {
         flex-direction: column;
         align-items: stretch;
@@ -635,7 +630,21 @@ body .page-wrapper .breadcrumbs .items li strong {
     body .page-wrapper .toolbar-products .limiter {
         display: none;
     }
+
+
+    body .page-wrapper .pages .items.pages-items .item a,
+    body .page-wrapper .pages .items.pages-items .item strong {
+        min-width: 32px;
+        height: 32px;
+        font-size: var(--awa-text-xs);
+    }
 }
+
+/* ===========================================
+   TOOLBAR MOBILE (< 480px)
+   Toolbar de categoria/listagem empilha em mobile pequeno.
+=========================================== */
+
 
 /* ===========================================
    PAGINAÇÃO — STYLING CONSISTENTE
@@ -712,14 +721,6 @@ body .page-wrapper .pages .items.pages-items .item .action.previous::before {
     font-weight: var(--awa-weight-black);
 }
 
-@media (width <= 480px) {
-    body .page-wrapper .pages .items.pages-items .item a,
-    body .page-wrapper .pages .items.pages-items .item strong {
-        min-width: 32px;
-        height: 32px;
-        font-size: var(--awa-text-xs);
-    }
-}
 
 /* ===========================================
    OWL CAROUSEL CONTAINMENT (Performance)
