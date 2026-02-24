@@ -65,8 +65,8 @@ class AyoSeedContent implements DataPatchInterface
      */
     private function seedSlider($connection): void
     {
-        $sliderTable = $this->moduleDataSetup->getTable('rokanthemes_slidebanner_slider');
-        $slideTable = $this->moduleDataSetup->getTable('rokanthemes_slidebanner_slide');
+        $sliderTable = $this->moduleDataSetup->getTable('rokanthemes_slider');
+        $slideTable = $this->moduleDataSetup->getTable('rokanthemes_slide');
 
         // Verificar se as tabelas existem
         if (!$connection->isTableExists($sliderTable) || !$connection->isTableExists($slideTable)) {
@@ -78,7 +78,7 @@ class AyoSeedContent implements DataPatchInterface
         $existingSlider = $connection->fetchOne(
             $connection->select()
                 ->from($sliderTable, ['slider_id'])
-                ->where('identifier = ?', 'homepageslider')
+                ->where('slider_identifier = ?', 'homepageslider')
         );
 
         if ($existingSlider) {
@@ -89,18 +89,11 @@ class AyoSeedContent implements DataPatchInterface
         try {
             // Criar o slider principal
             $connection->insert($sliderTable, [
-                'name'             => 'Homepage Slider — AWA Motos',
-                'identifier'       => 'homepageslider',
-                'status'           => 1,
-                'store_id'         => '0',
-                'autoplay'         => 1,
-                'autoplay_timeout' => 5000,
-                'navigation'       => 1,
-                'stop_on_hover'    => 1,
-                'pagination'       => 1,
-                'items'            => 1,
-                'rewind_speed'     => 1000,
-                'slide_speed'      => 500,
+                'slider_title'      => 'Homepage Slider - AWA Motos',
+                'slider_identifier' => 'homepageslider',
+                'slider_status'     => 1,
+                'store_ids'         => '0',
+                'slider_setting'    => '{"items":1,"itemsDesktop":"[1199,1]","itemsDesktopSmall":"[980,1]","itemsTablet":"[768,1]","itemsMobile":"[479,1]","slideSpeed":500,"paginationSpeed":500,"rewindSpeed":500,"autoPlay":5000,"navigation":true,"pagination":true}',
             ]);
 
             $sliderId = $connection->lastInsertId($sliderTable);
@@ -129,25 +122,28 @@ class AyoSeedContent implements DataPatchInterface
     {
         return [
             [
-                'slider_id'  => $sliderId,
-                'name'       => 'Slide 1 — Peças e Acessórios',
-                'status'     => 1,
-                'sort_order' => 1,
-                'content'    => '<div class="slide-content slide-1"><div class="slide-text-wrap"><h2 class="slide-title">Peças e Acessórios para Motos</h2><p class="slide-desc">Bagageiros, baús, retrovisores e mais — tudo para sua moto</p><a href="/catalogsearch/result/?q=bagageiro" class="slide-btn btn btn-primary">Ver Produtos</a></div></div>',
+                'slider_id'       => $sliderId,
+                'slide_type'      => 2,
+                'slide_status'    => 1,
+                'slide_position'  => 1,
+                'slide_text'      => '<div class="slide-content slide-1"><div class="slide-text-wrap"><h2 class="slide-title">Pecas e Acessorios para Motos</h2><p class="slide-desc">Bagageiros, baus, retrovisores e mais para sua moto</p><a href="/catalogsearch/result/?q=bagageiro" class="slide-btn btn btn-primary">Ver Produtos</a></div></div>',
+                'slide_link'      => '/catalogsearch/result/?q=bagageiro',
             ],
             [
-                'slider_id'  => $sliderId,
-                'name'       => 'Slide 2 — B2B Atacado',
-                'status'     => 1,
-                'sort_order' => 2,
-                'content'    => '<div class="slide-content slide-2"><div class="slide-text-wrap"><h2 class="slide-title">Atacado para Lojistas e Oficinas</h2><p class="slide-desc">Cadastre-se no programa B2B e tenha preços especiais</p><a href="/b2b/account/register" class="slide-btn btn btn-primary">Cadastro B2B</a></div></div>',
+                'slider_id'       => $sliderId,
+                'slide_type'      => 2,
+                'slide_status'    => 1,
+                'slide_position'  => 2,
+                'slide_text'      => '<div class="slide-content slide-2"><div class="slide-text-wrap"><h2 class="slide-title">Atacado para Lojistas e Oficinas</h2><p class="slide-desc">Cadastre-se no programa B2B e tenha precos especiais</p><a href="/b2b/account/register" class="slide-btn btn btn-primary">Cadastro B2B</a></div></div>',
+                'slide_link'      => '/b2b/account/register',
             ],
             [
-                'slider_id'  => $sliderId,
-                'name'       => 'Slide 3 — Frete Grátis',
-                'status'     => 1,
-                'sort_order' => 3,
-                'content'    => '<div class="slide-content slide-3"><div class="slide-text-wrap"><h2 class="slide-title">Frete Grátis Acima de R$ 299</h2><p class="slide-desc">Entrega rápida e segura para todo o Brasil</p><a href="/ofertas" class="slide-btn btn btn-primary">Comprar Agora</a></div></div>',
+                'slider_id'       => $sliderId,
+                'slide_type'      => 2,
+                'slide_status'    => 1,
+                'slide_position'  => 3,
+                'slide_text'      => '<div class="slide-content slide-3"><div class="slide-text-wrap"><h2 class="slide-title">Frete Gratis Acima de R$ 299</h2><p class="slide-desc">Entrega rapida e segura para todo o Brasil</p><a href="/ofertas" class="slide-btn btn btn-primary">Comprar Agora</a></div></div>',
+                'slide_link'      => '/ofertas',
             ],
         ];
     }
@@ -161,9 +157,10 @@ class AyoSeedContent implements DataPatchInterface
      */
     private function seedTestimonials($connection): void
     {
-        $table = $this->moduleDataSetup->getTable('rokanthemes_testimonials');
+        $table = $this->moduleDataSetup->getTable('tv_testimonials');
+        $storeTable = $this->moduleDataSetup->getTable('tv_testimonials_store');
 
-        if (!$connection->isTableExists($table)) {
+        if (!$connection->isTableExists($table) || !$connection->isTableExists($storeTable)) {
             $this->logger->warning('[AyoSeedContent] Tabela de testimonials não encontrada — pulando.');
             return;
         }
@@ -185,6 +182,11 @@ class AyoSeedContent implements DataPatchInterface
 
             foreach ($testimonials as $testimonial) {
                 $connection->insert($table, $testimonial);
+                $testimonialId = (int) $connection->lastInsertId($table);
+                $connection->insert($storeTable, [
+                    'testimonial_id' => $testimonialId,
+                    'store_id'       => 0,
+                ]);
             }
 
             $this->logger->info(
@@ -204,64 +206,58 @@ class AyoSeedContent implements DataPatchInterface
     {
         return [
             [
-                'name'        => 'Carlos Silva',
-                'email'       => 'carlos.silva@email.com',
-                'content'     => 'Excelente loja! Comprei um bagageiro para minha CG 160 e chegou rápido, bem embalado. Qualidade top! Já é minha segunda compra e recomendo.',
-                'rating'      => 5,
-                'position'    => 'Motoboy — São Paulo',
-                'status'      => 1,
-                'store_id'    => '0',
-                'created_at'  => '2025-11-15 10:30:00',
+                'name'       => 'Carlos Silva',
+                'email'      => 'carlos.silva@email.com',
+                'testimonial'=> 'Excelente loja! Comprei um bagageiro para minha CG 160 e chegou rapido, bem embalado. Qualidade top! Ja e minha segunda compra e recomendo.',
+                'rating'     => 5,
+                'job'        => 'Motoboy - Sao Paulo',
+                'position'   => 1,
+                'is_active'  => 1,
             ],
             [
-                'name'        => 'Ana Pereira',
-                'email'       => 'ana.pereira@email.com',
-                'content'     => 'Atendimento incrível pelo WhatsApp! Tive dúvida sobre compatibilidade do retrovisor com a minha Fazer 250 e me ajudaram na hora. Produto chegou certinho.',
-                'rating'      => 5,
-                'position'    => 'Motociclista — Campinas',
-                'status'      => 1,
-                'store_id'    => '0',
-                'created_at'  => '2025-12-02 14:15:00',
+                'name'       => 'Ana Pereira',
+                'email'      => 'ana.pereira@email.com',
+                'testimonial'=> 'Atendimento incrivel pelo WhatsApp! Tive duvida sobre compatibilidade do retrovisor com minha Fazer 250 e me ajudaram na hora.',
+                'rating'     => 5,
+                'job'        => 'Motociclista - Campinas',
+                'position'   => 2,
+                'is_active'  => 1,
             ],
             [
-                'name'        => 'Roberto Mendes',
-                'email'       => 'roberto.mendes@email.com',
-                'content'     => 'Sou dono de oficina e compro no atacado da AWA. Preços muito competitivos e entrega pontual. O programa B2B facilita demais.',
-                'rating'      => 5,
-                'position'    => 'Proprietário de Oficina — Ribeirão Preto',
-                'status'      => 1,
-                'store_id'    => '0',
-                'created_at'  => '2026-01-10 09:45:00',
+                'name'       => 'Roberto Mendes',
+                'email'      => 'roberto.mendes@email.com',
+                'testimonial'=> 'Sou dono de oficina e compro no atacado da AWA. Precos competitivos e entrega pontual. O programa B2B facilita muito.',
+                'rating'     => 5,
+                'job'        => 'Proprietario de Oficina - Ribeirao Preto',
+                'position'   => 3,
+                'is_active'  => 1,
             ],
             [
-                'name'        => 'Fernanda Costa',
-                'email'       => 'fernanda.costa@email.com',
-                'content'     => 'Comprei o baú 45L para minha Bros 160 e superou as expectativas. Acabamento de qualidade, instalação simples. Frete grátis foi a cereja do bolo!',
-                'rating'      => 5,
-                'position'    => 'Viajante — Belo Horizonte',
-                'status'      => 1,
-                'store_id'    => '0',
-                'created_at'  => '2026-01-22 16:20:00',
+                'name'       => 'Fernanda Costa',
+                'email'      => 'fernanda.costa@email.com',
+                'testimonial'=> 'Comprei o bau 45L para minha Bros 160 e superou as expectativas. Acabamento de qualidade e instalacao simples.',
+                'rating'     => 5,
+                'job'        => 'Viajante - Belo Horizonte',
+                'position'   => 4,
+                'is_active'  => 1,
             ],
             [
-                'name'        => 'Marcos Oliveira',
-                'email'       => 'marcos.oliveira@email.com',
-                'content'     => 'Melhor loja de peças para motos que já comprei online. Site fácil de navegar, busca por modelo funciona muito bem. Vou voltar com certeza.',
-                'rating'      => 4,
-                'position'    => 'Entregador — Araraquara',
-                'status'      => 1,
-                'store_id'    => '0',
-                'created_at'  => '2026-02-05 11:00:00',
+                'name'       => 'Marcos Oliveira',
+                'email'      => 'marcos.oliveira@email.com',
+                'testimonial'=> 'Melhor loja de pecas para motos que ja comprei online. Site facil de navegar e busca por modelo funciona muito bem.',
+                'rating'     => 4,
+                'job'        => 'Entregador - Araraquara',
+                'position'   => 5,
+                'is_active'  => 1,
             ],
             [
-                'name'        => 'Luciana Ramos',
-                'email'       => 'luciana.ramos@email.com',
-                'content'     => 'Precisava de peças para minha XRE 300 com urgência. Fiz o pedido e em 3 dias úteis já tinha tudo em casa. Ótimo custo-benefício. Nota 10!',
-                'rating'      => 5,
-                'position'    => 'Motociclista — Curitiba',
-                'status'      => 1,
-                'store_id'    => '0',
-                'created_at'  => '2026-02-18 08:30:00',
+                'name'       => 'Luciana Ramos',
+                'email'      => 'luciana.ramos@email.com',
+                'testimonial'=> 'Precisava de pecas para minha XRE 300 com urgencia. Fiz o pedido e em 3 dias uteis ja tinha tudo em casa. Nota 10!',
+                'rating'     => 5,
+                'job'        => 'Motociclista - Curitiba',
+                'position'   => 6,
+                'is_active'  => 1,
             ],
         ];
     }
@@ -275,7 +271,7 @@ class AyoSeedContent implements DataPatchInterface
      */
     private function seedFaq($connection): void
     {
-        $table = $this->moduleDataSetup->getTable('rokanthemes_faq');
+        $table = $this->moduleDataSetup->getTable('rokan_faq');
 
         if (!$connection->isTableExists($table)) {
             $this->logger->warning('[AyoSeedContent] Tabela de FAQ não encontrada — pulando.');
@@ -323,150 +319,130 @@ class AyoSeedContent implements DataPatchInterface
         return [
             // === ENVIO E ENTREGA ===
             [
-                'title'      => 'Qual o prazo de entrega?',
-                'content'    => 'O prazo de entrega varia de acordo com a região e a transportadora escolhida. Após a aprovação do pagamento, o pedido é preparado em até 2 dias úteis. O prazo de entrega da transportadora é calculado automaticamente no checkout conforme seu CEP.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Qual o prazo de entrega?',
+                'answer'    => 'O prazo de entrega varia pela regiao e transportadora escolhida. Apos aprovacao do pagamento, o pedido e preparado em ate 2 dias uteis.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             [
-                'title'      => 'Vocês oferecem frete grátis?',
-                'content'    => 'Sim! Oferecemos frete grátis para compras acima de R$ 299,00 para todo o Brasil. Para pedidos abaixo desse valor, o frete é calculado conforme CEP de destino.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Voces oferecem frete gratis?',
+                'answer'    => 'Sim! Oferecemos frete gratis para compras acima de R$ 299,00 para todo o Brasil.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             [
-                'title'      => 'Como rastreio meu pedido?',
-                'content'    => 'Após o envio, você receberá o código de rastreamento por e-mail. Também é possível acompanhar o status em "Minha Conta" > "Meus Pedidos". O rastreamento é atualizado automaticamente pela transportadora.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Como rastreio meu pedido?',
+                'answer'    => 'Apos o envio, voce recebe o codigo por e-mail e pode acompanhar em Minha Conta > Meus Pedidos.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             [
-                'title'      => 'Entregam em todo o Brasil?',
-                'content'    => 'Sim, entregamos para todas as regiões do Brasil através dos Correios e transportadoras parceiras. Quanto mais próximo de Araraquara-SP, mais rápido o envio.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Entregam em todo o Brasil?',
+                'answer'    => 'Sim, entregamos para todas as regioes do Brasil pelos Correios e transportadoras parceiras.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             // === PAGAMENTO ===
             [
-                'title'      => 'Quais formas de pagamento são aceitas?',
-                'content'    => 'Aceitamos PIX (aprovação instantânea), boleto bancário, cartões de crédito (Visa, MasterCard, Elo, American Express, Hipercard) com parcelamento em até 12x sem juros, e débito online.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Quais formas de pagamento sao aceitas?',
+                'answer'    => 'Aceitamos PIX, boleto, cartoes de credito e debito online.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             [
-                'title'      => 'Posso parcelar minha compra?',
-                'content'    => 'Sim! Parcelamos em até 12x sem juros no cartão de crédito. O valor mínimo de cada parcela é de R$ 30,00. Para pagamento via PIX ou boleto, o valor é à vista.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Posso parcelar minha compra?',
+                'answer'    => 'Sim, parcelamos em ate 12x sem juros no cartao de credito.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             [
-                'title'      => 'O pagamento por PIX é seguro?',
-                'content'    => 'Totalmente seguro! O PIX é regulamentado pelo Banco Central e funciona 24h por dia. Ao escolher PIX, o pedido é aprovado em segundos após a confirmação do pagamento.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'O pagamento por PIX e seguro?',
+                'answer'    => 'Sim. O PIX e regulamentado pelo Banco Central e o pedido aprova rapidamente.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             // === PRODUTOS ===
             [
-                'title'      => 'Como sei se a peça serve na minha moto?',
-                'content'    => 'Cada produto possui uma tabela de compatibilidade com os modelos de moto aceitos. Use a busca por aplicação informando marca, modelo e ano da sua moto. Se tiver dúvida, entre em contato pelo WhatsApp (16) 99736-7588 que confirmamos a compatibilidade.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Como sei se a peca serve na minha moto?',
+                'answer'    => 'Cada produto possui compatibilidade por marca, modelo e ano. Em caso de duvida, fale no WhatsApp.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             [
-                'title'      => 'Os produtos possuem garantia?',
-                'content'    => 'Sim! Todos os nossos produtos possuem garantia do fabricante. O prazo varia de acordo com cada produto e fabricante. Consulte as condições de garantia na página do produto ou entre em contato conosco.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Os produtos possuem garantia?',
+                'answer'    => 'Sim, todos os produtos possuem garantia do fabricante.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             [
-                'title'      => 'Vocês vendem peças originais ou paralelas?',
-                'content'    => 'Trabalhamos com peças de qualidade comprovada de marcas reconhecidas no mercado. Cada produto tem sua marca claramente identificada na descrição. Não vendemos peças genéricas sem procedência.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Voces vendem pecas originais ou paralelas?',
+                'answer'    => 'Trabalhamos com pecas de marcas reconhecidas e com procedencia.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             // === TROCAS E DEVOLUÇÕES ===
             [
-                'title'      => 'Como faço para trocar ou devolver um produto?',
-                'content'    => 'Você tem até 7 dias corridos após o recebimento para solicitar troca ou devolução (conforme CDC). Acesse "Minha Conta" > "Meus Pedidos" ou entre em contato pelo WhatsApp. O produto deve estar na embalagem original, sem sinais de uso.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Como faco para trocar ou devolver um produto?',
+                'answer'    => 'Voce tem ate 7 dias corridos apos o recebimento, conforme CDC.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             [
-                'title'      => 'Se a peça não servir, posso devolver?',
-                'content'    => 'Sim! Se a peça não for compatível com sua moto, entre em contato em até 7 dias após o recebimento. Verificaremos a compatibilidade e, se confirmada a incompatibilidade, providenciaremos a troca ou reembolso. O frete de devolução será por nossa conta nesse caso.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Se a peca nao servir, posso devolver?',
+                'answer'    => 'Sim. Em caso de incompatibilidade confirmada, providenciamos troca ou reembolso.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             [
-                'title'      => 'Em quanto tempo recebo o reembolso?',
-                'content'    => 'Após recebermos o produto devolvido e confirmarmos as condições, o reembolso é processado em até 5 dias úteis. Para cartão de crédito, o estorno pode levar até 2 faturas. Para PIX e boleto, o valor é devolvido via transferência bancária.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Em quanto tempo recebo o reembolso?',
+                'answer'    => 'Apos confirmacao da devolucao, o reembolso e processado em ate 5 dias uteis.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             // === CONTA E CADASTRO ===
             [
-                'title'      => 'Preciso criar conta para comprar?',
-                'content'    => 'Para compras no varejo, não é obrigatório — você pode finalizar como visitante. Porém, criar uma conta permite acompanhar pedidos, salvar endereços, manter lista de desejos e aproveitar promoções exclusivas.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Preciso criar conta para comprar?',
+                'answer'    => 'Nao e obrigatorio no varejo, mas criar conta facilita acompanhar pedidos e enderecos.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             [
-                'title'      => 'O que é o programa B2B?',
-                'content'    => 'O cadastro B2B é destinado a lojistas, oficinas e revendedores que compram no atacado. Após aprovação do CNPJ, você tem acesso a preços diferenciados, condições especiais de pagamento e atendimento dedicado.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'O que e o programa B2B?',
+                'answer'    => 'Cadastro para lojistas, oficinas e revendedores com condicoes especiais de atacado.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             [
-                'title'      => 'Como me cadastro no programa B2B?',
-                'content'    => 'Acesse a página de cadastro B2B em nosso site, preencha os dados da empresa (CNPJ, razão social, etc.) e envie para análise. A aprovação leva até 24h úteis. Após aprovação, você já pode comprar com preços de atacado.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Como me cadastro no programa B2B?',
+                'answer'    => 'Acesse a pagina de cadastro B2B, envie os dados da empresa e aguarde aprovacao.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             // === SEGURANÇA ===
             [
-                'title'      => 'A loja é confiável?',
-                'content'    => 'Sim! Somos o Grupo Awamotos, distribuidora estabelecida em Araraquara-SP. Nosso site possui certificado SSL, pagamentos processados por gateways seguros (PagSeguro/Mercado Pago) e todas as transações são criptografadas.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'A loja e confiavel?',
+                'answer'    => 'Sim. Somos distribuidora estabelecida em Araraquara-SP e usamos SSL e gateways seguros.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             [
-                'title'      => 'Meus dados estão protegidos?',
-                'content'    => 'Absolutamente. Seguimos a Lei Geral de Proteção de Dados (LGPD). Seus dados pessoais são criptografados e utilizados exclusivamente para processamento de pedidos e comunicação. Consulte nossa Política de Privacidade para mais detalhes.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Meus dados estao protegidos?',
+                'answer'    => 'Sim. Seguimos LGPD e usamos criptografia para proteger os dados.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             // === CONTATO ===
             [
-                'title'      => 'Como entro em contato com vocês?',
-                'content'    => 'Você pode nos contatar por:\n• <strong>WhatsApp:</strong> (16) 99736-7588\n• <strong>Telefone:</strong> (16) 3322-0000\n• <strong>E-mail:</strong> contato@awamotos.com.br\n• <strong>Formulário:</strong> Página de Atendimento ao Cliente\n\nAtendimento de segunda a sexta, das 8h às 18h, e sábados das 8h às 12h.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Como entro em contato com voces?',
+                'answer'    => 'WhatsApp (16) 99736-7588, telefone, e-mail e formulario no site.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
             [
-                'title'      => 'Posso retirar na loja física?',
-                'content'    => 'Sim! Você pode optar por retirada na loja em Araraquara-SP. Basta selecionar "Retirada na Loja" durante o checkout. Seu pedido ficará disponível para retirada após confirmação do pagamento. Endereço: Rua Castro Alves, 1234 — Centro, Araraquara-SP.',
-                'status'     => 1,
-                'store_id'   => '0',
-                'sort_order' => ++$sortOrder,
+                'question'  => 'Posso retirar na loja fisica?',
+                'answer'    => 'Sim. Selecione retirada na loja no checkout e aguarde confirmacao.',
+                'status'    => 1,
+                'parent_id' => 0,
             ],
         ];
     }

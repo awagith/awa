@@ -11,10 +11,10 @@ use Magento\Framework\Setup\Patch\DataPatchInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- * Aplica configuracoes canônicas do tema Ayo (Rokanthemes)
- * conforme mapeamento validado em system.xml dos modulos instalados.
+ * Alinha paths de configuração do tema Ayo aos sections/groups/fields reais
+ * definidos pelos módulos Rokanthemes instalados neste projeto.
  */
-class AyoThemeFullConfiguration implements DataPatchInterface
+class AlignAyoRokanthemesConfigPaths implements DataPatchInterface
 {
     public function __construct(
         private readonly ModuleDataSetupInterface $moduleDataSetup,
@@ -28,20 +28,30 @@ class AyoThemeFullConfiguration implements DataPatchInterface
         $this->moduleDataSetup->startSetup();
 
         $saved = 0;
+        $failed = 0;
 
         foreach (AyoCanonicalConfig::getDefaultConfigs() as $path => $value) {
             try {
                 $this->configWriter->save($path, $value, 'default', 0);
                 $saved++;
             } catch (\Throwable $exception) {
+                $failed++;
                 $this->logger->warning(
-                    sprintf('[AyoThemeFullConfiguration] Falha ao salvar %s: %s', $path, $exception->getMessage())
+                    sprintf(
+                        '[AlignAyoRokanthemesConfigPaths] Falha ao salvar "%s": %s',
+                        $path,
+                        $exception->getMessage()
+                    )
                 );
             }
         }
 
         $this->logger->info(
-            sprintf('[AyoThemeFullConfiguration] %d configuracoes aplicadas com sucesso.', $saved)
+            sprintf(
+                '[AlignAyoRokanthemesConfigPaths] Configurações salvas: %d | falhas: %d',
+                $saved,
+                $failed
+            )
         );
 
         $this->moduleDataSetup->endSetup();
@@ -52,8 +62,7 @@ class AyoThemeFullConfiguration implements DataPatchInterface
     public static function getDependencies(): array
     {
         return [
-            ApplyAwaColorPalette::class,
-            ConfigureAyoHome5Parity::class,
+            AyoThemeFullConfiguration::class,
         ];
     }
 

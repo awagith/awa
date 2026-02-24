@@ -99,6 +99,11 @@ class AyoContentSetup implements DataPatchInterface
     {
         return [
             [
+                'identifier' => 'top-contact',
+                'title'      => 'Topo — Contato Rapido',
+                'content'    => $this->contentTopContact(),
+            ],
+            [
                 'identifier' => 'top-left-static',
                 'title'      => 'Topo — Mensagem Promocional',
                 'content'    => $this->contentTopLeftStatic(),
@@ -119,8 +124,23 @@ class AyoContentSetup implements DataPatchInterface
                 'content'    => $this->contentFooterStatic(),
             ],
             [
+                'identifier' => 'footer_static5',
+                'title'      => 'Rodapé Home5 — Conteúdo Principal',
+                'content'    => $this->contentFooterStatic(),
+            ],
+            [
+                'identifier' => 'footer-tags',
+                'title'      => 'Rodapé — Tags Populares',
+                'content'    => $this->contentFooterTags(),
+            ],
+            [
                 'identifier' => 'footer_payment',
                 'title'      => 'Rodapé — Métodos de Pagamento',
+                'content'    => $this->contentFooterPayment(),
+            ],
+            [
+                'identifier' => 'footer_payment6',
+                'title'      => 'Rodapé — Métodos de Pagamento (Layout 6)',
                 'content'    => $this->contentFooterPayment(),
             ],
             [
@@ -164,6 +184,19 @@ class AyoContentSetup implements DataPatchInterface
     // ========================================================================
     // BLOCOS HEADER
     // ========================================================================
+
+    private function contentTopContact(): string
+    {
+        return <<<'HTML'
+<div class="top-contact" role="complementary" aria-label="Informacoes de atendimento">
+    <ul class="top-contact-list d-flex">
+        <li><a href="tel:+551633220000"><i class="fa fa-phone" aria-hidden="true"></i> (16) 3322-0000</a></li>
+        <li><a href="https://wa.me/5516997367588" target="_blank" rel="noopener"><i class="fa fa-whatsapp" aria-hidden="true"></i> WhatsApp</a></li>
+        <li><a href="/store-locator"><i class="fa fa-map-marker" aria-hidden="true"></i> Loja Fisica</a></li>
+    </ul>
+</div>
+HTML;
+    }
 
     private function contentTopLeftStatic(): string
     {
@@ -342,6 +375,24 @@ HTML;
 HTML;
     }
 
+    private function contentFooterTags(): string
+    {
+        return <<<'HTML'
+<div class="footer-tags velaBlock" role="navigation" aria-label="Categorias populares">
+    <div class="vela-content">
+        <ul class="footer-tag-list d-flex flex-wrap" role="list">
+            <li><a href="/retrovisores.html">Retrovisores</a></li>
+            <li><a href="/bauletos.html">Bauletos</a></li>
+            <li><a href="/bagageiros.html">Bagageiros</a></li>
+            <li><a href="/protetor-de-carenagem.html">Protetor de Carenagem</a></li>
+            <li><a href="/manoplas.html">Manoplas</a></li>
+            <li><a href="/guidoes.html">Guidoes</a></li>
+        </ul>
+    </div>
+</div>
+HTML;
+    }
+
     private function contentFooterInfo(): string
     {
         return <<<'HTML'
@@ -350,7 +401,7 @@ HTML;
         <div class="contacinfo-logo clearfix">
             <div class="velaFooterLogo">
                 <a href="/" title="AWA Motos — Home">
-                    <img src="{{media url='logo/awa-motos-logo-footer.png'}}" alt="AWA Motos" width="180" height="54" loading="lazy">
+                    <span class="footer-logo-text">AWA Motos</span>
                 </a>
             </div>
         </div>

@@ -1,0 +1,182 @@
+<?php
+
+declare(strict_types=1);
+
+namespace GrupoAwamotos\StoreSetup\Setup;
+
+/**
+ * Configuracoes canonicas do tema Ayo para os modulos Rokanthemes instalados.
+ */
+final class AyoCanonicalConfig
+{
+    /**
+     * @return array<string, string>
+     */
+    public static function getDefaultConfigs(): array
+    {
+        return [
+            // Themeoption
+            'themeoption/general/layout' => 'fullwidth',
+            'themeoption/general/copyright' => '© 2026 AWA Motos - Grupo Awamotos. Todos os direitos reservados.',
+            'themeoption/font/custom' => '1',
+            'themeoption/font/font_size' => '14px',
+            'themeoption/font/font_family' => 'google',
+            'themeoption/font/google_font_family' => 'Roboto',
+            'themeoption/colors/custom' => '1',
+            'themeoption/colors/text_color' => '#333333',
+            'themeoption/colors/link_color' => '#b73337',
+            'themeoption/colors/link_hover_color' => '#8e2629',
+            'themeoption/colors/button_text_color' => '#ffffff',
+            'themeoption/colors/button_bg_color' => '#b73337',
+            'themeoption/colors/button_hover_text_color' => '#ffffff',
+            'themeoption/colors/button_hover_bg_color' => '#8e2629',
+            'themeoption/header/sticky_enable' => '1',
+            'themeoption/header/sticky_select_bg_color' => 'custom',
+            'themeoption/header/sticky_bg_color_custom' => '#ffffff',
+
+            // Menus
+            'custommenu/general/enable' => '1',
+            'custommenu/general/menu_type' => 'fullwidth',
+            'custommenu/general/max_level' => '3',
+            'verticalmenu/general/enable' => '1',
+            'verticalmenu/general/menu_type' => 'fullwidth',
+            'verticalmenu/general/max_level' => '3',
+            'verticalmenu/general/limit_show' => '10',
+
+            // Product carousels
+            'newproduct/newproduct_config/enabled' => '1',
+            'newproduct/newproduct_config/title' => 'Novidades',
+            'newproduct/newproduct_config/description' => 'Confira os ultimos lancamentos em pecas e acessorios para motos',
+            'newproduct/newproduct_config/auto' => '1',
+            'newproduct/newproduct_config/show_price' => '1',
+            'newproduct/newproduct_config/addtocart' => '1',
+            'newproduct/newproduct_config/addtowishlist' => '1',
+            'newproduct/newproduct_config/review' => '1',
+            'newproduct/newproduct_config/qty' => '12',
+            'newproduct/newproduct_config/itemsDefault' => '5',
+            'newproduct/newproduct_config/itemsDesktop' => '4',
+            'newproduct/newproduct_config/itemsTablet' => '3',
+            'newproduct/newproduct_config/itemsMobile' => '2',
+            'onsaleproduct/onsaleproduct_config/enabled' => '1',
+            'onsaleproduct/onsaleproduct_config/title' => 'Ofertas',
+            'onsaleproduct/onsaleproduct_config/description' => 'Aproveite os melhores precos em pecas para motos',
+            'onsaleproduct/onsaleproduct_config/auto' => '1',
+            'onsaleproduct/onsaleproduct_config/addtocart' => '1',
+            'onsaleproduct/onsaleproduct_config/addtowishlist' => '1',
+            'onsaleproduct/onsaleproduct_config/review' => '1',
+            'onsaleproduct/onsaleproduct_config/qty' => '12',
+            'onsaleproduct/onsaleproduct_config/itemsDefault' => '5',
+            'onsaleproduct/onsaleproduct_config/itemsDesktop' => '4',
+            'onsaleproduct/onsaleproduct_config/itemsTablet' => '3',
+            'onsaleproduct/onsaleproduct_config/itemsMobile' => '2',
+            'bestsellerproduct/bestsellerproduct_config/enabled' => '1',
+            'bestsellerproduct/bestsellerproduct_config/title' => 'Mais Vendidos',
+            'bestsellerproduct/bestsellerproduct_config/auto' => '1',
+            'bestsellerproduct/bestsellerproduct_config/show_price' => '1',
+            'bestsellerproduct/bestsellerproduct_config/addtocart' => '1',
+            'bestsellerproduct/bestsellerproduct_config/addtowishlist' => '1',
+            'bestsellerproduct/bestsellerproduct_config/review' => '1',
+            'bestsellerproduct/bestsellerproduct_config/qty' => '12',
+            'bestsellerproduct/bestsellerproduct_config/itemsDefault' => '5',
+            'bestsellerproduct/bestsellerproduct_config/itemsDesktop' => '4',
+            'bestsellerproduct/bestsellerproduct_config/itemsTablet' => '3',
+            'bestsellerproduct/bestsellerproduct_config/itemsMobile' => '2',
+            'mostviewedproduct/mostviewedproduct_config/enabled' => '1',
+            'mostviewedproduct/mostviewedproduct_config/title' => 'Mais Visualizados',
+            'mostviewedproduct/mostviewedproduct_config/auto' => '1',
+            'mostviewedproduct/mostviewedproduct_config/show_price' => '1',
+            'mostviewedproduct/mostviewedproduct_config/addtocart' => '1',
+            'mostviewedproduct/mostviewedproduct_config/addtowishlist' => '1',
+            'mostviewedproduct/mostviewedproduct_config/review' => '1',
+            'mostviewedproduct/mostviewedproduct_config/qty' => '12',
+            'mostviewedproduct/mostviewedproduct_config/itemsDefault' => '5',
+            'mostviewedproduct/mostviewedproduct_config/itemsDesktop' => '4',
+            'mostviewedproduct/mostviewedproduct_config/itemsTablet' => '3',
+            'mostviewedproduct/mostviewedproduct_config/itemsMobile' => '2',
+            'featuredproduct/featuredproduct_config/enabled' => '1',
+            'featuredproduct/featuredproduct_config/title' => 'Destaques',
+            'featuredproduct/featuredproduct_config/subdescription' => 'Selecao especial de pecas e acessorios',
+            'featuredproduct/featuredproduct_config/auto' => '1',
+            'featuredproduct/featuredproduct_config/show_price' => '1',
+            'featuredproduct/featuredproduct_config/addtocart' => '1',
+            'featuredproduct/featuredproduct_config/addtowishlist' => '1',
+            'featuredproduct/featuredproduct_config/review' => '1',
+            'featuredproduct/featuredproduct_config/qty' => '12',
+            'featuredproduct/featuredproduct_config/itemsDefault' => '5',
+            'featuredproduct/featuredproduct_config/itemsDesktop' => '4',
+            'featuredproduct/featuredproduct_config/itemsTablet' => '3',
+            'featuredproduct/featuredproduct_config/itemsMobile' => '2',
+            'toprateproduct/toprateproduct_config/enabled' => '1',
+            'toprateproduct/toprateproduct_config/title' => 'Melhor Avaliados',
+            'toprateproduct/toprateproduct_config/auto' => '1',
+            'toprateproduct/toprateproduct_config/show_price' => '1',
+            'toprateproduct/toprateproduct_config/addtocart' => '1',
+            'toprateproduct/toprateproduct_config/addtowishlist' => '1',
+            'toprateproduct/toprateproduct_config/review' => '1',
+            'toprateproduct/toprateproduct_config/qty' => '12',
+            'toprateproduct/toprateproduct_config/itemsDefault' => '5',
+            'toprateproduct/toprateproduct_config/itemsDesktop' => '4',
+            'toprateproduct/toprateproduct_config/itemsTablet' => '3',
+            'toprateproduct/toprateproduct_config/itemsMobile' => '2',
+
+            // Category tab and filters
+            'categorytab/new_status/enabled' => '1',
+            'categorytab/new_status/items' => '4',
+            'categorytab/new_status/row' => '1',
+            'categorytab/new_status/qty' => '12',
+            'categorytab/new_status/addtocart' => '1',
+            'categorytab/new_status/wishlist' => '1',
+            'categorytab/new_status/compare' => '1',
+            'categorytab/new_status/auto' => '1',
+            'layered_ajax/general/enable' => '1',
+            'layered_ajax/general/open_all_tab' => '0',
+            'layered_ajax/general/price_slider' => '1',
+
+            // Checkout and quick view
+            'onepagecheckout/general/enabled' => '1',
+            'onepagecheckout/general/show_order_comment' => '1',
+            'onepagecheckout/general/show_discount_box' => '1',
+            'rokanthemes_quickview/general/enabled' => '1',
+
+            // Ajax suite and search
+            'ajaxsuite/general/enabled' => '1',
+            'ajaxsuite/ajaxcart/enabled' => '1',
+            'ajaxsuite/ajaxwishlist/enabled' => '1',
+            'ajaxsuite/ajaxcompare/enabled' => '1',
+            'rokanthemes_searchsuite/searchsuiteautocomplete_main/search_delay' => '300',
+            'rokanthemes_searchsuite/searchsuiteautocomplete_main/suggested_result_number' => '10',
+            'rokanthemes_searchsuite/searchsuiteautocomplete_main/product_result_number' => '10',
+            'rokanthemes_searchsuite/searchsuiteautocomplete_main/enabled_search_by_cat' => '1',
+
+            // Blog
+            'mfblog/general/enable_frontend' => '1',
+            'mfblog/general/title' => 'Blog AWA Motos',
+            'mfblog/general/shortdec' => 'Dicas, guias e novidades sobre motos e acessorios',
+            'mfblog/general/auto' => '1',
+            'mfblog/general/desktop' => '3',
+            'mfblog/general/tablet' => '2',
+            'mfblog/general/mobile' => '1',
+            'mfblog/index_page/title' => 'Blog AWA Motos',
+            'mfblog/index_page/meta_description' => 'Acompanhe dicas de uso, manutencao de motos e novidades em pecas.',
+            'mfblog/post_list/posts_per_page' => '10',
+            'mfblog/sidebar/recent_posts/enabled' => '1',
+            'mfblog/sidebar/recent_posts/posts_per_page' => '5',
+
+            // Other storefront modules
+            'testimonials_setting/group_testimonial_general/config_enable' => '1',
+            'testimonials_setting/group_testimonial_general/title_page' => 'O que nossos clientes dizem',
+            'superdeals/configuration/enabled' => '1',
+            'superdeals/configuration/title' => 'Super Ofertas',
+            'superdeals/configuration/description' => 'Ofertas por tempo limitado',
+            'superdeals/configuration/limit_products' => '12',
+            'pricecountdown/general/activate_pricecountdown' => '1',
+            'pricecountdown/pricecountdown_config/enabled' => '1',
+            'pricecountdown/pricecountdown_config/qty' => '12',
+            'rokanthemesbrand/general_settings/enable' => '1',
+            'rokanthemesbrand/general_settings/route' => 'brands',
+            'rokanthemesbrand/brand_list_page/page_title' => 'Nossas Marcas',
+            'rokanthemesbrand/brand_list_page/meta_description' => 'Marcas de pecas e acessorios para motos na AWA Motos.',
+            'faq_setting/faq_rokan/enable' => '1',
+        ];
+    }
+}

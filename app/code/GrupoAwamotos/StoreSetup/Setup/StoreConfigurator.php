@@ -1355,7 +1355,7 @@ HTML;
         </p>
     </div>
     <div>
-        <img class="card__media" loading="eager" fetchpriority="high" src="{{media url="wysiwyg/hero/awamotos-hero.webp"}}" alt="Peças e acessórios para motos" width="600" height="400" />
+        <img class="card__media" loading="eager" fetchpriority="high" src="{{view url='Magento_Catalog::images/product/placeholder/image.jpg'}}" alt="Peças e acessórios para motos" width="600" height="400" />
     </div>
 </section>
 HTML;
