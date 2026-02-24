@@ -34,10 +34,10 @@
 @layer awa-reset, awa-core, awa-layout, awa-components, awa-consistency, awa-fixes, awa-grid;
 
 /* ===========================================
-   VARIÁVEIS GLOBAIS — FONTE ÚNICA
-   Todas as variáveis do projeto em um só lugar.
-   NÃO redeclarar :root em outros arquivos AWA.
+   LAYER AWA-CORE — F2-02: Cascade Layers para organização
+   Todas as regras deste arquivo estão dentro de @layer awa-core
 =========================================== */
+@layer awa-core {
 :root {
     color-scheme: light; /* R16-01: sinaliza ao UA que a página é light-only */
 
@@ -1529,3 +1529,4 @@ body .page-wrapper [class*=" icon-"] {
     vertical-align: middle;
     line-height: 1;
 }
+} /* F2-02: fecha @layer awa-core */
