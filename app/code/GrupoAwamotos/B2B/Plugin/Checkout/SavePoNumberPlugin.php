@@ -75,8 +75,8 @@ class SavePoNumberPlugin
                 return;
             }
 
-            $poNumber = $extensionAttributes->getB2bPoNumber();
-            if (empty($poNumber)) {
+            $poNumber = $this->sanitizePoNumber($extensionAttributes->getB2bPoNumber());
+            if ($poNumber === null) {
                 return;
             }
 
@@ -91,5 +91,37 @@ class SavePoNumberPlugin
         } catch (\Exception $e) {
             $this->logger->error('[B2B] Erro ao salvar PO Number: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Sanitize PO Number: trim, limit length, allow only safe characters
+     */
+    private function sanitizePoNumber(mixed $poNumber): ?string
+    {
+        if ($poNumber === null || $poNumber === '') {
+            return null;
+        }
+
+        $poNumber = trim((string) $poNumber);
+
+        if ($poNumber === '') {
+            return null;
+        }
+
+        // Limit to 64 chars (matches db_schema.xml varchar(64))
+        if (mb_strlen($poNumber) > 64) {
+            $this->logger->warning('[B2B] PO Number truncated — exceeded 64 chars');
+            $poNumber = mb_substr($poNumber, 0, 64);
+        }
+
+        // Allow only alphanumeric, hyphens, slashes, dots, spaces
+        if (!preg_match('/^[a-zA-Z0-9\-\/\.\s]+$/', $poNumber)) {
+            $this->logger->warning('[B2B] PO Number rejected — invalid characters', [
+                'po_number' => substr($poNumber, 0, 20) . '...'
+            ]);
+            return null;
+        }
+
+        return $poNumber;
     }
 }

@@ -11,10 +11,7 @@ use Magento\Catalog\Block\Product\AbstractProduct;
 
 class HidePricePlugin
 {
-    /**
-     * @var PriceVisibilityInterface
-     */
-    private $priceVisibility;
+    private PriceVisibilityInterface $priceVisibility;
 
     public function __construct(
         PriceVisibilityInterface $priceVisibility
@@ -24,12 +21,8 @@ class HidePricePlugin
 
     /**
      * After getProductPrice - return message instead of price if not allowed
-     *
-     * @param AbstractProduct $subject
-     * @param string $result
-     * @return string
      */
-    public function afterGetProductPrice(AbstractProduct $subject, $result)
+    public function afterGetProductPrice(AbstractProduct $subject, string $result): string
     {
         if (!$this->priceVisibility->canViewPrices()) {
             return '<div class="b2b-login-to-see-price">' 

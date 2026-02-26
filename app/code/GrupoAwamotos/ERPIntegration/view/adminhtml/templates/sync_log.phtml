@@ -45,7 +45,7 @@ $logs = $block->getLogs();
                         default => '#f57f17'
                     };
                     ?>
-                    <span style="color: <?= $color ?>; font-weight: bold;">
+                    <span style="color: <?= $block->escapeHtmlAttr($color) ?>; font-weight: bold;">
                         <?= $block->escapeHtml($status) ?>
                     </span>
                 </td>
@@ -82,19 +82,18 @@ require(['jquery'], function($) {
             type: 'POST',
             dataType: 'json',
             data: { form_key: window.FORM_KEY },
-            success: function(response) {
-                $btn.prop('disabled', false);
-                if (response.success) {
-                    $status.css('color', '#2e7d32').text('Sync concluido! Recarregando...');
-                    setTimeout(function() { location.reload(); }, 1500);
-                } else {
-                    $status.css('color', '#c62828').text('Erro: ' + response.message);
-                }
-            },
-            error: function() {
-                $btn.prop('disabled', false);
-                $status.css('color', '#c62828').text('Erro de comunicacao.');
+            timeout: 120000
+        }).done(function(response) {
+            $btn.prop('disabled', false);
+            if (response.success) {
+                $status.css('color', '#2e7d32').text('Sync concluido! Recarregando...');
+                setTimeout(function() { location.reload(); }, 1500);
+            } else {
+                $status.css('color', '#c62828').text('Erro: ' + response.message);
             }
+        }).fail(function() {
+            $btn.prop('disabled', false);
+            $status.css('color', '#c62828').text('Erro de comunicacao.');
         });
     }
 
