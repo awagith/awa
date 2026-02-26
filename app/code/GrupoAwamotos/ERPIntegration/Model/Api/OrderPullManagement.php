@@ -7,6 +7,7 @@ use GrupoAwamotos\ERPIntegration\Api\OrderPullInterface;
 use GrupoAwamotos\ERPIntegration\Api\ConnectionInterface;
 use GrupoAwamotos\ERPIntegration\Helper\Data as Helper;
 use GrupoAwamotos\ERPIntegration\Model\CustomerSync;
+use GrupoAwamotos\ERPIntegration\Model\B2BClientRegistration;
 use GrupoAwamotos\ERPIntegration\Model\ResourceModel\SyncLog as SyncLogResource;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -22,6 +23,7 @@ class OrderPullManagement implements OrderPullInterface
     private ConnectionInterface $connection;
     private Helper $helper;
     private CustomerSync $customerSync;
+    private B2BClientRegistration $b2bRegistration;
     private OrderRepositoryInterface $orderRepository;
     private SearchCriteriaBuilder $searchCriteriaBuilder;
     private SortOrderBuilder $sortOrderBuilder;
@@ -34,6 +36,7 @@ class OrderPullManagement implements OrderPullInterface
         ConnectionInterface $connection,
         Helper $helper,
         CustomerSync $customerSync,
+        B2BClientRegistration $b2bRegistration,
         OrderRepositoryInterface $orderRepository,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         SortOrderBuilder $sortOrderBuilder,
@@ -45,6 +48,7 @@ class OrderPullManagement implements OrderPullInterface
         $this->connection = $connection;
         $this->helper = $helper;
         $this->customerSync = $customerSync;
+        $this->b2bRegistration = $b2bRegistration;
         $this->orderRepository = $orderRepository;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->sortOrderBuilder = $sortOrderBuilder;
@@ -143,6 +147,16 @@ class OrderPullManagement implements OrderPullInterface
             (int) $order->getEntityId()
         );
 
+        // Update order status to 'processing' if still pending/new
+        $currentState = $order->getState();
+        if (in_array($currentState, [
+            \Magento\Sales\Model\Order::STATE_NEW,
+            \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT
+        ], true)) {
+            $order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING);
+            $order->setStatus('processing');
+        }
+
         // Add order comment
         $comment = sprintf(
             '[ERP] Pedido recebido pelo ERP via API. ID ERP: %s%s',
@@ -174,6 +188,53 @@ class OrderPullManagement implements OrderPullInterface
             'increment_id' => $incrementId,
             'erp_order_id' => $erpOrderId,
             'acknowledged_at' => date('c'),
+        ]];
+    }
+
+    public function getCanceledOrders(?string $fromDate = null): array
+    {
+        $this->logger->info('[ERP API] getCanceledOrders called', ['fromDate' => $fromDate]);
+
+        $syncedOrderIds = $this->getSyncedOrderIds();
+
+        $this->searchCriteriaBuilder->addFilter('state', 'canceled');
+
+        if ($fromDate) {
+            $this->searchCriteriaBuilder->addFilter('created_at', $fromDate, 'gteq');
+        }
+
+        $sortOrder = $this->sortOrderBuilder
+            ->setField('created_at')
+            ->setAscendingDirection()
+            ->create();
+        $this->searchCriteriaBuilder->setSortOrders([$sortOrder]);
+        $this->searchCriteriaBuilder->setPageSize(100);
+
+        $searchCriteria = $this->searchCriteriaBuilder->create();
+        $orderList = $this->orderRepository->getList($searchCriteria);
+
+        $orders = [];
+        foreach ($orderList->getItems() as $order) {
+            if (in_array((int) $order->getEntityId(), $syncedOrderIds, true)) {
+                continue;
+            }
+
+            $orders[] = [
+                'increment_id' => $order->getIncrementId(),
+                'entity_id' => (int) $order->getEntityId(),
+                'state' => $order->getState(),
+                'status' => $order->getStatus(),
+                'grand_total' => (float) $order->getGrandTotal(),
+                'customer_email' => $order->getCustomerEmail(),
+                'created_at' => $order->getCreatedAt(),
+                'canceled_at' => $order->getUpdatedAt(),
+            ];
+        }
+
+        return [[
+            'orders' => $orders,
+            'total_count' => count($orders),
+            'timestamp' => date('c'),
         ]];
     }
 
@@ -217,6 +278,13 @@ class OrderPullManagement implements OrderPullInterface
         // Fetch customer commercial data from ERP
         $erpCustomerData = $this->getErpCustomerOrderData($erpClientCode);
 
+        // Check and auto-register client in Sectra B2B integration
+        $clientRegistered = $this->b2bRegistration->isClientRegistered($erpClientCode);
+        if (!$clientRegistered) {
+            // Attempt auto-registration if write connection is available
+            $clientRegistered = $this->b2bRegistration->registerClient($erpClientCode);
+        }
+
         // Build items
         $items = $this->buildItemsPayload($order);
 
@@ -243,6 +311,7 @@ class OrderPullManagement implements OrderPullInterface
                 'taxvat' => $order->getCustomerTaxvat() ?? '',
                 'name' => trim(($order->getCustomerFirstname() ?? '') . ' ' . ($order->getCustomerLastname() ?? '')),
                 'email' => $order->getCustomerEmail() ?? '',
+                'registered_in_b2b' => $clientRegistered,
             ],
 
             // ERP Commercial Conditions (from FN_FORNECEDORES)
@@ -430,6 +499,10 @@ class OrderPullManagement implements OrderPullInterface
         }
 
         $street = $shipping->getStreet();
+        if (!is_array($street)) {
+            return '';
+        }
         return $street[2] ?? $street[1] ?? '';
     }
+
 }

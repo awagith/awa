@@ -200,7 +200,7 @@ class AttendantManager
         $tableMap = $this->resource->getTableName(self::TABLE_CUSTOMER_ATTENDANT);
 
         $select = $connection->select()
-            ->from($tableMap, ['count' => new \Zend_Db_Expr('COUNT(*)')])
+            ->from($tableMap, ['count' => new \Magento\Framework\DB\Sql\Expression('COUNT(*)')])
             ->where('attendant_id = ?', $attendantId);
 
         return (int) $connection->fetchOne($select);
@@ -283,40 +283,51 @@ class AttendantManager
 
     /**
      * Transfere todos os clientes de um atendente para outro
+     * Usa batch UPDATE e insertMultiple para performance
      */
     public function transferAllCustomers(int $fromAttendantId, int $toAttendantId): int
     {
         $connection = $this->resource->getConnection();
         $tableMap = $this->resource->getTableName(self::TABLE_CUSTOMER_ATTENDANT);
         $tableLog = $this->resource->getTableName(self::TABLE_ATTENDANT_LOG);
+        $now = date('Y-m-d H:i:s');
 
-        $customers = $this->getAttendantCustomers($fromAttendantId, 10000);
-        $count = 0;
+        // Obtém IDs dos clientes antes do batch update
+        $select = $connection->select()
+            ->from($tableMap, ['customer_id'])
+            ->where('attendant_id = ?', $fromAttendantId);
+        $customerIds = $connection->fetchCol($select);
 
-        foreach ($customers as $customer) {
-            $connection->update(
-                $tableMap,
-                ['attendant_id' => $toAttendantId, 'assigned_at' => date('Y-m-d H:i:s')],
-                ['customer_id = ?' => $customer['customer_id']]
-            );
+        if (empty($customerIds)) {
+            return 0;
+        }
 
-            $connection->insert($tableLog, [
-                'customer_id' => $customer['customer_id'],
+        // Batch UPDATE — uma query para todos
+        $connection->update(
+            $tableMap,
+            ['attendant_id' => $toAttendantId, 'assigned_at' => $now],
+            ['attendant_id = ?' => $fromAttendantId]
+        );
+
+        // Batch INSERT de logs
+        $logData = [];
+        foreach ($customerIds as $customerId) {
+            $logData[] = [
+                'customer_id' => (int) $customerId,
                 'attendant_id' => $toAttendantId,
                 'previous_attendant_id' => $fromAttendantId,
                 'action' => 'transferred',
                 'reason' => 'Transferência em massa',
-                'created_at' => date('Y-m-d H:i:s')
-            ]);
-
-            $count++;
+                'created_at' => $now
+            ];
         }
+        $connection->insertMultiple($tableLog, $logData);
 
         // Atualiza contadores
         $this->updateAttendantCustomerCount($fromAttendantId);
         $this->updateAttendantCustomerCount($toAttendantId);
 
-        return $count;
+        return count($customerIds);
     }
 
     /**
@@ -331,7 +342,7 @@ class AttendantManager
 
         // Novos clientes atribuídos
         $selectNew = $connection->select()
-            ->from($tableLog, ['count' => new \Zend_Db_Expr('COUNT(*)')])
+            ->from($tableLog, ['count' => new \Magento\Framework\DB\Sql\Expression('COUNT(*)')])
             ->where('attendant_id = ?', $attendantId)
             ->where('action = ?', 'assigned')
             ->where('created_at >= ?', $startDate);
@@ -366,6 +377,7 @@ class AttendantManager
 
     /**
      * Redistribui clientes equilibradamente entre atendentes
+     * Usa batch UPDATE para evitar carregar todos os clientes em memória
      */
     public function redistributeCustomers(?string $department = null): array
     {
@@ -377,38 +389,85 @@ class AttendantManager
 
         $connection = $this->resource->getConnection();
         $tableMap = $this->resource->getTableName(self::TABLE_CUSTOMER_ATTENDANT);
+        $tableLog = $this->resource->getTableName(self::TABLE_ATTENDANT_LOG);
 
-        // Obtém todos os clientes
-        $select = $connection->select()->from($tableMap, ['customer_id']);
-        $customers = $connection->fetchCol($select);
+        // Conta total de clientes sem carregar tudo em memória
+        $countSelect = $connection->select()->from($tableMap, ['count' => new \Magento\Framework\DB\Sql\Expression('COUNT(*)')]);
+        $totalCustomers = (int) $connection->fetchOne($countSelect);
 
-        $totalCustomers = count($customers);
-        $perAttendant = (int) ceil($totalCustomers / count($attendants));
+        if ($totalCustomers === 0) {
+            return ['redistributed' => 0, 'total_customers' => 0, 'attendants' => count($attendants)];
+        }
+
+        $attendantCount = count($attendants);
+        $perAttendant = (int) ceil($totalCustomers / $attendantCount);
         $redistributed = 0;
+        $batchSize = 500;
+        $now = date('Y-m-d H:i:s');
 
-        shuffle($customers); // Randomiza para distribuição justa
-
+        // Processa em batches usando LIMIT/OFFSET com ORDER BY RAND()
         foreach ($attendants as $index => $attendant) {
-            $customerSlice = array_slice($customers, $index * $perAttendant, $perAttendant);
+            $attendantId = (int) $attendant['attendant_id'];
+            $offset = 0;
 
-            foreach ($customerSlice as $customerId) {
-                $currentAttendant = $this->getCustomerAttendant($customerId);
+            // Calcula quantos clientes este atendente deve ter
+            $targetCount = ($index === $attendantCount - 1)
+                ? $totalCustomers - ($perAttendant * $index)
+                : $perAttendant;
 
-                if (!$currentAttendant || $currentAttendant['attendant_id'] != $attendant['attendant_id']) {
-                    $this->assignCustomerToAttendant(
-                        (int) $customerId,
-                        (int) $attendant['attendant_id'],
-                        'Redistribuição equilibrada'
-                    );
-                    $redistributed++;
+            // Processa em batches
+            while ($offset < $targetCount) {
+                $batchLimit = min($batchSize, $targetCount - $offset);
+
+                // Seleciona clientes que NÃO estão com este atendente, em batches
+                $select = $connection->select()
+                    ->from($tableMap, ['customer_id'])
+                    ->where('attendant_id != ?', $attendantId)
+                    ->limit($batchLimit, 0);
+
+                $customerIds = $connection->fetchCol($select);
+
+                if (empty($customerIds)) {
+                    break;
                 }
+
+                // Batch UPDATE
+                $connection->update(
+                    $tableMap,
+                    ['attendant_id' => $attendantId, 'assigned_at' => $now],
+                    ['customer_id IN (?)' => $customerIds]
+                );
+
+                // Log batch (single multi-row insert)
+                $logData = [];
+                foreach ($customerIds as $customerId) {
+                    $logData[] = [
+                        'customer_id' => (int) $customerId,
+                        'attendant_id' => $attendantId,
+                        'previous_attendant_id' => null,
+                        'action' => 'redistributed',
+                        'reason' => 'Redistribuição equilibrada (batch)',
+                        'created_at' => $now
+                    ];
+                }
+                if (!empty($logData)) {
+                    $connection->insertMultiple($tableLog, $logData);
+                }
+
+                $redistributed += count($customerIds);
+                $offset += $batchLimit;
             }
+        }
+
+        // Atualiza contadores de todos os atendentes de uma vez
+        foreach ($attendants as $attendant) {
+            $this->updateAttendantCustomerCount((int) $attendant['attendant_id']);
         }
 
         return [
             'redistributed' => $redistributed,
             'total_customers' => $totalCustomers,
-            'attendants' => count($attendants),
+            'attendants' => $attendantCount,
             'target_per_attendant' => $perAttendant
         ];
     }

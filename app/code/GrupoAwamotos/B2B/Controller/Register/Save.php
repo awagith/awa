@@ -180,6 +180,10 @@ class Save implements HttpPostActionInterface
         $resultRedirect = $this->resultRedirectFactory->create();
 
         if (!$this->formKeyValidator->validate($this->request)) {
+            $this->logger->warning('[B2B] CSRF attempt on registration form', [
+                'ip' => $this->request->getServer('REMOTE_ADDR'),
+                'user_agent' => $this->request->getServer('HTTP_USER_AGENT')
+            ]);
             $this->messageManager->addErrorMessage(__('Formulário inválido. Tente novamente.'));
             return $resultRedirect->setPath('*/*/');
         }
@@ -323,8 +327,10 @@ class Save implements HttpPostActionInterface
             $errors[] = __('E-mail inválido.');
         }
 
-        if (empty($password) || strlen($password) < 6) {
-            $errors[] = __('A senha deve ter pelo menos 6 caracteres.');
+        if (empty($password) || strlen($password) < 8) {
+            $errors[] = __('A senha deve ter pelo menos 8 caracteres.');
+        } elseif (!$this->isPasswordComplex($password)) {
+            $errors[] = __('A senha deve conter pelo menos 3 das seguintes classes: letras minúsculas, letras maiúsculas, números e caracteres especiais.');
         }
 
         if ($password !== $passwordConfirm) {
@@ -434,45 +440,6 @@ class Save implements HttpPostActionInterface
     }
 
     /**
-     * Notify admin about new B2B registration
-     *
-     * @param \Magento\Customer\Api\Data\CustomerInterface $customer
-     * @param array $data
-     * @return void
-     */
-    private function notifyAdmin($customer, array $data): void
-    {
-        try {
-            $store = $this->storeManager->getStore();
-            
-            $transport = $this->transportBuilder
-                ->setTemplateIdentifier('grupoawamotos_b2b_registration_admin')
-                ->setTemplateOptions([
-                    'area' => \Magento\Framework\App\Area::AREA_ADMINHTML,
-                    'store' => $store->getId()
-                ])
-                ->setTemplateVars([
-                    'customer' => $customer,
-                    'customer_name' => $customer->getFirstname() . ' ' . $customer->getLastname(),
-                    'customer_email' => $customer->getEmail(),
-                    'razao_social' => $data['razao_social'],
-                    'cnpj' => $this->cnpjValidator->format($data['cnpj']),
-                    'inscricao_estadual' => $data['inscricao_estadual'] ?? 'Não informado',
-                    'phone' => $data['phone'] ?? 'Não informado',
-                    'store' => $store,
-                    'admin_url' => $store->getBaseUrl() . 'admin/customer/index/'
-                ])
-                ->setFromByScope('general')
-                ->addTo($this->getAdminEmail(), 'Administrador')
-                ->getTransport();
-
-            $transport->sendMessage();
-        } catch (\Exception $e) {
-            $this->logger->error('B2B Admin Notification Error: ' . $e->getMessage());
-        }
-    }
-
-    /**
      * Salva o endereço comercial como padrão de cobrança e entrega.
      */
     private function saveCustomerDefaultAddress(CustomerInterface $customer, array $data): void
@@ -563,17 +530,26 @@ class Save implements HttpPostActionInterface
     }
 
     /**
-     * Get admin email from configuration
-     *
-     * @return string
+     * Validate password complexity (at least 3 of 4 character classes)
+     * Matches Magento 2 default policy
      */
-    private function getAdminEmail(): string
+    private function isPasswordComplex(string $password): bool
     {
-        $email = $this->scopeConfig->getValue(
-            'grupoawamotos_b2b/customer_approval/admin_email',
-            ScopeInterface::SCOPE_STORE
-        );
+        $classes = 0;
+        if (preg_match('/[a-z]/', $password)) {
+            $classes++;
+        }
+        if (preg_match('/[A-Z]/', $password)) {
+            $classes++;
+        }
+        if (preg_match('/[0-9]/', $password)) {
+            $classes++;
+        }
+        if (preg_match('/[^a-zA-Z0-9]/', $password)) {
+            $classes++;
+        }
 
-        return $email ?: 'contato@grupoawamotos.com.br';
+        return $classes >= 3;
     }
+
 }
