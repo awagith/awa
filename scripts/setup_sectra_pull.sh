@@ -15,10 +15,13 @@
 
 set -u
 
-MAGENTO_DIR="/home/user/htdocs/srv1113343.hstgr.cloud"
+# Evitar problemas com history expansion ao lidar com '!' em senhas
+set +H 2>/dev/null || true
+
+MAGENTO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # ROOT para operações admin (CREATE USER, GRANT, CREATE TABLE, VIEWS, PROCEDURES)
-MYSQL_ROOT="mysql -u root magento"
+MYSQL_ROOT="sudo mysql magento"
 # User normal para SELECT
 MYSQL_CMD="mysql -u magento -pAw4m0t0s2025Mage magento"
 
@@ -46,12 +49,26 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # Testar acesso root ao MySQL
+# Testar acesso root ao MySQL (com fallback)
 if ! $MYSQL_ROOT -e "SELECT 1" >/dev/null 2>&1; then
-    fail "Nao foi possivel conectar como root no MySQL"
-    fail "Tente: sudo mysql -u root magento -e 'SELECT 1'"
-    exit 1
+    warn "Falha ao conectar com: $MYSQL_ROOT"
+    # fallback 1: root via socket sem sudo (quando o script já roda como root)
+    if mysql magento -e "SELECT 1" >/dev/null 2>&1; then
+        MYSQL_ROOT="mysql magento"
+        ok "Acesso root ao MySQL confirmado (via mysql magento)"
+    # fallback 2: root com usuario explícito
+    elif mysql -u root magento -e "SELECT 1" >/dev/null 2>&1; then
+        MYSQL_ROOT="mysql -u root magento"
+        ok "Acesso root ao MySQL confirmado (via mysql -u root)"
+    else
+        fail "Nao foi possivel conectar como root no MySQL"
+        fail "Teste manual sugerido: sudo mysql magento -e 'SELECT 1'"
+        fail "Se isso falhar, o MySQL root pode exigir senha ou estar desabilitado."
+        exit 1
+    fi
+else
+    ok "Acesso root ao MySQL confirmado"
 fi
-ok "Acesso root ao MySQL confirmado"
 
 # =============================================================================
 # 1. CRIAR USUARIO MYSQL 'sectra'
@@ -278,7 +295,7 @@ END //
 DELIMITER ;
 EOSQL
 
-mysql -u root magento < /tmp/sp_sectra_ack.sql 2>&1 && ok "Procedure sp_sectra_ack_pedido criada" || fail "Falha ao criar procedure"
+${MYSQL_ROOT} < /tmp/sp_sectra_ack.sql 2>&1 && ok "Procedure sp_sectra_ack_pedido criada" || fail "Falha ao criar procedure"
 rm -f /tmp/sp_sectra_ack.sql
 
 $MYSQL_ROOT -e "GRANT EXECUTE ON PROCEDURE magento.sp_sectra_ack_pedido TO 'sectra'@'%';" 2>&1 && ok "GRANT EXECUTE procedure" || warn "Falha grant execute"
@@ -290,7 +307,13 @@ $MYSQL_ROOT -e "FLUSH PRIVILEGES;" 2>&1 || true
 echo ""
 echo "== 7. CONFIGS DO MAGENTO =="
 
-cd "$MAGENTO_DIR"
+cd "$MAGENTO_DIR" || { fail "Nao foi possivel acessar MAGENTO_DIR=$MAGENTO_DIR"; exit 1; }
+
+if [ ! -f "bin/magento" ]; then
+    fail "bin/magento nao encontrado em: $MAGENTO_DIR"
+    fail "Dica: coloque este script dentro da pasta scripts/ do projeto Magento e execute de la."
+    exit 1
+fi
 
 sudo -u www-data php bin/magento config:set grupoawamotos_erp/connection/enabled 1 2>/dev/null && ok "ERP habilitado" || warn "Falha"
 sudo -u www-data php bin/magento config:set grupoawamotos_erp/sync_orders/enabled 1 2>/dev/null && ok "Sync pedidos habilitado" || warn "Falha"
