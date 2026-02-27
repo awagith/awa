@@ -298,20 +298,19 @@ class OrderSync implements OrderSyncInterface
     public function getErpOrderStatus(int $erpOrderId): ?array
     {
         try {
-            // Query sem JOIN na CL_TRANSPORTADORA (tabela pode não existir no ERP)
-            $sql = "SELECT p.CODIGO, p.STATUS, p.DTFATURAMENTO, p.DTSAIDA, p.DTENTREGA,
-                           p.NFNUMERO, p.NFSERIE, p.NFCHAVE,
-                           p.TRANSPORTADORA, p.CODRASTREIO
-                    FROM VE_PEDIDO p
-                    WHERE p.CODIGO = :codigo";
-
-            $result = $this->connection->fetchOne($sql, [':codigo' => $erpOrderId]);
+            // Query base sem CODRASTREIO (coluna pode não existir na view VE_PEDIDO)
+            // Tenta com CODRASTREIO primeiro; se falhar, faz fallback sem ela
+            $result = $this->fetchOrderStatusWithTracking($erpOrderId);
 
             if ($result) {
                 // Tentar buscar nome da transportadora separadamente
                 $result['TRANSPORTADORA_NOME'] = $this->getTransportadoraNome(
                     (int) ($result['TRANSPORTADORA'] ?? 0)
                 );
+                // Garantir que CODRASTREIO existe no array (pode ser null)
+                if (!array_key_exists('CODRASTREIO', $result)) {
+                    $result['CODRASTREIO'] = null;
+                }
             }
 
             return $result;
@@ -319,6 +318,120 @@ class OrderSync implements OrderSyncInterface
             $this->logger->error('[ERP] Get order status error: ' . $e->getMessage());
             return null;
         }
+    }
+
+    /**
+     * Busca status do pedido no ERP com detecção automática de colunas disponíveis.
+     *
+     * A view VE_PEDIDO pode não ter todas as colunas (CODRASTREIO, TRANSPORTADORA).
+     * Detectamos quais colunas existem na primeira chamada e reutilizamos para as demais.
+     */
+    private function fetchOrderStatusWithTracking(int $erpOrderId): ?array
+    {
+        /** @var string[]|null Colunas opcionais confirmadas como disponíveis */
+        static $availableOptionalColumns = null;
+
+        // Colunas obrigatórias (CODIGO e STATUS certamente existem em VE_PEDIDO)
+        $baseColumns = [
+            'p.CODIGO', 'p.STATUS'
+        ];
+
+        // Colunas opcionais (podem não existir na view — detectadas automaticamente)
+        $optionalColumns = [
+            'DTFATURAMENTO', 'DTSAIDA', 'DTENTREGA',
+            'NFNUMERO', 'NFSERIE', 'NFCHAVE',
+            'TRANSPORTADORA', 'CODRASTREIO'
+        ];
+
+        // Se já detectamos as colunas disponíveis, ir direto à query segura
+        if ($availableOptionalColumns !== null) {
+            return $this->executeStatusQuery($baseColumns, $availableOptionalColumns, $erpOrderId, $optionalColumns);
+        }
+
+        // Primeira execução: tentar com TODAS as colunas opcionais
+        $columnsToTry = $optionalColumns;
+
+        while (true) {
+            try {
+                $allColumns = array_merge($baseColumns, array_map(fn($c) => "p.$c", $columnsToTry));
+                $sql = "SELECT " . implode(', ', $allColumns) . "
+                        FROM VE_PEDIDO p
+                        WHERE p.CODIGO = :codigo";
+
+                $result = $this->connection->fetchOne($sql, [':codigo' => $erpOrderId]);
+
+                // Sucesso — cachear colunas disponíveis
+                $availableOptionalColumns = $columnsToTry;
+
+                if ($result) {
+                    // Definir colunas faltantes como null no resultado
+                    foreach (array_diff($optionalColumns, $columnsToTry) as $missing) {
+                        $result[$missing] = null;
+                    }
+                }
+
+                return $result;
+            } catch (\Exception $e) {
+                // Verificar se é erro de coluna inválida
+                $removed = false;
+                foreach ($columnsToTry as $idx => $col) {
+                    if (stripos($e->getMessage(), $col) !== false) {
+                        $this->logger->info(
+                            sprintf('[ERP] VE_PEDIDO does not have %s column, removing from query', $col)
+                        );
+                        unset($columnsToTry[$idx]);
+                        $columnsToTry = array_values($columnsToTry);
+                        $removed = true;
+                        break;
+                    }
+                }
+
+                if (!$removed) {
+                    // Erro não é de coluna inválida — propagar
+                    throw $e;
+                }
+
+                // Se não sobrou nenhuma coluna opcional, usar apenas as base
+                if (empty($columnsToTry)) {
+                    $availableOptionalColumns = [];
+                    break;
+                }
+            }
+        }
+
+        // Fallback final: apenas colunas base
+        return $this->executeStatusQuery($baseColumns, [], $erpOrderId, $optionalColumns);
+    }
+
+    /**
+     * Executa query de status com as colunas determinadas.
+     *
+     * @param string[] $baseColumns     Colunas obrigatórias (já com prefixo p.)
+     * @param string[] $optionalAvail   Colunas opcionais disponíveis (sem prefixo)
+     * @param int      $erpOrderId      ID do pedido no ERP
+     * @param string[] $allOptional     Todas as colunas opcionais (para preencher nulls)
+     * @return array<string, mixed>|null
+     */
+    private function executeStatusQuery(
+        array $baseColumns,
+        array $optionalAvail,
+        int $erpOrderId,
+        array $allOptional
+    ): ?array {
+        $allColumns = array_merge($baseColumns, array_map(fn($c) => "p.$c", $optionalAvail));
+        $sql = "SELECT " . implode(', ', $allColumns) . "
+                FROM VE_PEDIDO p
+                WHERE p.CODIGO = :codigo";
+
+        $result = $this->connection->fetchOne($sql, [':codigo' => $erpOrderId]);
+
+        if ($result) {
+            foreach (array_diff($allOptional, $optionalAvail) as $missing) {
+                $result[$missing] = null;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -500,26 +613,120 @@ class OrderSync implements OrderSyncInterface
     public function getOrderHistory(int $erpClientCode, int $limit = 50): array
     {
         try {
-            $sql = "SELECT p.CODIGO AS pedido_id,
-                        p.DTPEDIDO AS data_pedido,
-                        p.VLRTOTAL AS valor_total,
-                        p.STATUS AS status,
-                        p.NFNUMERO AS nf_numero,
-                        p.CODRASTREIO AS rastreio,
-                        (SELECT COUNT(*) FROM VE_PEDIDOITENS pi WHERE pi.PEDIDO = p.CODIGO) AS total_itens
-                    FROM VE_PEDIDO p
-                    WHERE p.CLIENTE = :cliente
-                    ORDER BY p.DTPEDIDO DESC
-                    OFFSET 0 ROWS FETCH NEXT :limit ROWS ONLY";
-
-            return $this->connection->query($sql, [
-                ':limit' => $limit,
-                ':cliente' => $erpClientCode,
-            ]);
+            return $this->fetchOrderHistory($erpClientCode, $limit);
         } catch (\Exception $e) {
             $this->logger->error('[ERP] Order history error: ' . $e->getMessage());
             return [];
         }
+    }
+
+    /**
+     * Busca histórico de pedidos com detecção automática de colunas disponíveis.
+     *
+     * @param int $erpClientCode Código do cliente no ERP
+     * @param int $limit         Máximo de registros
+     * @return array<int, array<string, mixed>>
+     */
+    private function fetchOrderHistory(int $erpClientCode, int $limit): array
+    {
+        /** @var string[]|null Colunas opcionais confirmadas p/ history */
+        static $historyColumns = null;
+
+        // Colunas base (certamente existem)
+        $baseSelect = 'p.CODIGO AS pedido_id, p.STATUS AS status';
+
+        // Colunas opcionais com alias
+        $optionalDefs = [
+            'DTPEDIDO'  => 'p.DTPEDIDO AS data_pedido',
+            'VLRTOTAL'  => 'p.VLRTOTAL AS valor_total',
+            'NFNUMERO'  => 'p.NFNUMERO AS nf_numero',
+            'CLIENTE'   => '', // usado no WHERE, não no SELECT
+        ];
+
+        // Se CLIENTE não existir, não podemos filtrar — retornar vazio
+        $optionalNames = array_keys($optionalDefs);
+
+        if ($historyColumns !== null) {
+            if (!in_array('CLIENTE', $historyColumns, true)) {
+                return [];
+            }
+            return $this->executeHistoryQuery($baseSelect, $optionalDefs, $historyColumns, $erpClientCode, $limit);
+        }
+
+        $columnsToTry = $optionalNames;
+
+        while (true) {
+            try {
+                $result = $this->executeHistoryQuery($baseSelect, $optionalDefs, $columnsToTry, $erpClientCode, $limit);
+                $historyColumns = $columnsToTry;
+                return $result;
+            } catch (\Exception $e) {
+                $removed = false;
+                foreach ($columnsToTry as $idx => $col) {
+                    if (stripos($e->getMessage(), $col) !== false) {
+                        $this->logger->info(
+                            sprintf('[ERP] VE_PEDIDO history: column %s not available, removing', $col)
+                        );
+                        unset($columnsToTry[$idx]);
+                        $columnsToTry = array_values($columnsToTry);
+                        $removed = true;
+                        break;
+                    }
+                }
+
+                if (!$removed) {
+                    throw $e;
+                }
+
+                if (empty($columnsToTry)) {
+                    $historyColumns = [];
+                    break;
+                }
+            }
+        }
+
+        // Fallback: apenas CODIGO e STATUS, sem filtro por CLIENTE
+        return $this->executeHistoryQuery($baseSelect, $optionalDefs, [], $erpClientCode, $limit);
+    }
+
+    /**
+     * Executa query de histórico com colunas determinadas.
+     */
+    private function executeHistoryQuery(
+        string $baseSelect,
+        array $optionalDefs,
+        array $availableCols,
+        int $erpClientCode,
+        int $limit
+    ): array {
+        $selectParts = [$baseSelect];
+        foreach ($availableCols as $col) {
+            if (!empty($optionalDefs[$col])) {
+                $selectParts[] = $optionalDefs[$col];
+            }
+        }
+
+        // Subquery de itens sempre usa VE_PEDIDOITENS
+        $selectParts[] = '(SELECT COUNT(*) FROM VE_PEDIDOITENS pi WHERE pi.PEDIDO = p.CODIGO) AS total_itens';
+
+        $hasCliente = in_array('CLIENTE', $availableCols, true);
+        $hasDtPedido = in_array('DTPEDIDO', $availableCols, true);
+
+        $where = $hasCliente ? 'WHERE p.CLIENTE = :cliente' : 'WHERE 1=1';
+        $orderBy = $hasDtPedido ? 'ORDER BY p.DTPEDIDO DESC' : 'ORDER BY p.CODIGO DESC';
+
+        $sql = "SELECT " . implode(', ', $selectParts) . "
+                FROM VE_PEDIDO p
+                $where
+                $orderBy
+                OFFSET 0 ROWS FETCH NEXT :limit ROWS ONLY";
+
+        $params = [':limit' => $limit];
+        if ($hasCliente) {
+            $params[':cliente'] = $erpClientCode;
+        }
+
+        return $this->connection->query($sql, $params);
     }
 
     // ==================== Private Methods ====================
@@ -778,11 +985,16 @@ class OrderSync implements OrderSyncInterface
 
     private function addTrackingToExistingShipment(Order $order, array $erpStatus): void
     {
+        $trackNumber = $erpStatus['CODRASTREIO'] ?? null;
+        if (empty($trackNumber)) {
+            return;
+        }
+
         foreach ($order->getShipmentsCollection() as $shipment) {
             // Verifica se já tem esse tracking
             $existingTracks = $shipment->getAllTracks();
             foreach ($existingTracks as $track) {
-                if ($track->getTrackNumber() === $erpStatus['CODRASTREIO']) {
+                if ($track->getTrackNumber() === $trackNumber) {
                     return; // Tracking já existe
                 }
             }
@@ -795,12 +1007,17 @@ class OrderSync implements OrderSyncInterface
 
     private function addTrackToShipment($shipment, array $erpStatus): void
     {
+        $trackNumber = $erpStatus['CODRASTREIO'] ?? null;
+        if (empty($trackNumber)) {
+            return;
+        }
+
         $carrierCode = $this->resolveCarrierCode($erpStatus['TRANSPORTADORA_NOME'] ?? '');
 
         $track = $this->trackFactory->create();
         $track->setCarrierCode($carrierCode);
         $track->setTitle($erpStatus['TRANSPORTADORA_NOME'] ?? 'Transportadora');
-        $track->setTrackNumber($erpStatus['CODRASTREIO']);
+        $track->setTrackNumber($trackNumber);
 
         $shipment->addTrack($track);
     }
@@ -837,7 +1054,7 @@ class OrderSync implements OrderSyncInterface
             $parts[] = sprintf('Faturado em: %s', $erpStatus['DTFATURAMENTO']);
         }
 
-        if (!empty($erpStatus['CODRASTREIO'])) {
+        if (!empty($erpStatus['CODRASTREIO'] ?? null)) {
             $parts[] = sprintf('Rastreio: %s', $erpStatus['CODRASTREIO']);
         }
 

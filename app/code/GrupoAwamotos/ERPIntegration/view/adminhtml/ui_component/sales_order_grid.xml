@@ -2,11 +2,10 @@
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <columns name="sales_order_columns">
-        <column name="customer_erp_code" class="Magento\Ui\Component\Listing\Columns\Column">
+        <column name="customer_erp_code" class="Magento\Ui\Component\Listing\Columns\Column" sortOrder="86">
             <settings>
                 <filter>text</filter>
                 <label translate="true">Cód. ERP</label>
-                <sortOrder>86</sortOrder>
                 <visible>true</visible>
             </settings>
         </column>

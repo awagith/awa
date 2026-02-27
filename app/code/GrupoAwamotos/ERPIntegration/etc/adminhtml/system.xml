@@ -113,6 +113,41 @@
                 </field>
             </group>
 
+            <!-- Write Connection (for B2B client registration) -->
+            <group id="write_connection" translate="label" sortOrder="15"
+                   showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Conexao de Escrita (Registro B2B)</label>
+                <comment><![CDATA[<strong>Opcional:</strong> Credenciais com permissao INSERT na tabela GR_INTEGRACAOVALIDADOR do Sectra.
+                <br>Necessario para auto-registro de clientes B2B novos na integracao Sectra "Importar Pedidos AWA".
+                <br>Se nao configurado, clientes novos precisarao ser registrados manualmente no SQL Server.]]></comment>
+                <depends>
+                    <field id="grupoawamotos_erp/connection/enabled">1</field>
+                </depends>
+
+                <field id="enabled" translate="label comment" type="select" sortOrder="10"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Habilitar Escrita</label>
+                    <comment>Habilita auto-registro de clientes B2B no Sectra ao importar pedidos</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="username" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Usuario (Escrita)</label>
+                    <comment>Usuario SQL Server com permissao INSERT em GR_INTEGRACAOVALIDADOR</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="password" translate="label" type="obscure" sortOrder="30"
+                       showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Senha (Escrita)</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
             <!-- Product Sync -->
             <group id="sync_products" translate="label" sortOrder="20"
                    showInDefault="1" showInWebsite="0" showInStore="0">

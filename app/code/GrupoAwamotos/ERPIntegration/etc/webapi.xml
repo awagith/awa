@@ -159,6 +159,58 @@
         </data>
     </route>
 
+    <!-- ==================== CUSTOMER PULL API (for ERP SECTRA B2B) ==================== -->
+
+    <!-- GET /V1/erp/customers/b2b - List all B2B customers with ERP codes -->
+    <route url="/V1/erp/customers/b2b" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\CustomerPullInterface" method="getB2BCustomers"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::order_pull"/>
+        </resources>
+        <data>
+            <parameter name="limit" force="false">100</parameter>
+            <parameter name="offset" force="false">0</parameter>
+        </data>
+    </route>
+
+    <!-- GET /V1/erp/customers/b2b/unregistered - List customers not in Sectra validador -->
+    <route url="/V1/erp/customers/b2b/unregistered" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\CustomerPullInterface" method="getUnregisteredCustomers"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::order_pull"/>
+        </resources>
+        <data>
+            <parameter name="limit" force="false">100</parameter>
+        </data>
+    </route>
+
+    <!-- GET /V1/erp/customers/b2b/:erpCode - Get single customer by ERP code -->
+    <route url="/V1/erp/customers/b2b/:erpCode" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\CustomerPullInterface" method="getCustomerByErpCode"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::order_pull"/>
+        </resources>
+    </route>
+
+    <!-- GET /V1/erp/customers/b2b/sync-sql - Get T-SQL to register unregistered customers -->
+    <route url="/V1/erp/customers/b2b/sync-sql" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\CustomerPullInterface" method="getRegistrationSQL"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::order_pull"/>
+        </resources>
+        <data>
+            <parameter name="limit" force="false">500</parameter>
+        </data>
+    </route>
+
+    <!-- GET /V1/erp/health - Integration health check and sync stats -->
+    <route url="/V1/erp/health" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\CustomerPullInterface" method="getHealthStatus"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::order_pull"/>
+        </resources>
+    </route>
+
     <!-- ==================== ORDER PULL API (for ERP SECTRA) ==================== -->
 
     <!-- GET /V1/erp/orders/pending - List orders not yet synced to ERP -->
@@ -186,6 +238,25 @@
         <resources>
             <resource ref="GrupoAwamotos_ERPIntegration::order_pull"/>
         </resources>
+    </route>
+
+    <!-- GET /V1/erp/orders/canceled - List canceled orders not synced to ERP -->
+    <route url="/V1/erp/orders/canceled" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\OrderPullInterface" method="getCanceledOrders"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::order_pull"/>
+        </resources>
+    </route>
+
+    <!-- GET /V1/erp/orders/held - List orders held due to unregistered clients -->
+    <route url="/V1/erp/orders/held" method="GET">
+        <service class="GrupoAwamotos\ERPIntegration\Api\OrderPullInterface" method="getHeldOrders"/>
+        <resources>
+            <resource ref="GrupoAwamotos_ERPIntegration::order_pull"/>
+        </resources>
+        <data>
+            <parameter name="limit" force="false">50</parameter>
+        </data>
     </route>
 
 </routes>

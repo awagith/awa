@@ -43,4 +43,25 @@ interface OrderPullInterface
         string $erpOrderId,
         ?string $message = null
     ): array;
+
+    /**
+     * Get canceled orders that were previously pending for ERP.
+     *
+     * Returns orders that were placed but canceled before ERP pull.
+     *
+     * @param string|null $fromDate Optional ISO date filter
+     * @return mixed[]
+     */
+    public function getCanceledOrders(?string $fromDate = null): array;
+
+    /**
+     * Get orders held back from ERP due to unregistered clients.
+     *
+     * These orders exist in Magento but cannot be imported by Sectra because
+     * the client is not registered in GR_INTEGRACAOVALIDADOR.
+     *
+     * @param int $limit Maximum number of orders to return
+     * @return mixed[]
+     */
+    public function getHeldOrders(int $limit = 50): array;
 }

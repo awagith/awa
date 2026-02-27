@@ -944,4 +944,31 @@ class Data extends AbstractHelper
             ScopeInterface::SCOPE_STORE
         );
     }
+
+    // ==================== Write Connection ====================
+
+    public function isWriteConnectionEnabled(): bool
+    {
+        return $this->isEnabled() && $this->scopeConfig->isSetFlag(
+            self::XML_PREFIX . 'write_connection/enabled',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getWriteUsername(): string
+    {
+        return (string) $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'write_connection/username',
+            ScopeInterface::SCOPE_STORE
+        );
+    }
+
+    public function getWritePassword(): string
+    {
+        $value = (string) $this->scopeConfig->getValue(
+            self::XML_PREFIX . 'write_connection/password',
+            ScopeInterface::SCOPE_STORE
+        );
+        return $value ? $this->encryptor->decrypt($value) : '';
+    }
 }

@@ -557,12 +557,19 @@ class StockSync implements StockSyncInterface
 
             $result['anomaly'] = $this->checkAndLogAnomaly($validationResult, $sku);
 
+            // Try exact SKU first, then base-SKU fallback
+            $targetSku = $sku;
             if (!$this->productExists($sku)) {
-                $result['status'] = 'not_found';
-                return $result;
+                $baseSku = $this->getBaseSku($sku);
+                if ($baseSku !== $sku && $this->productExists($baseSku)) {
+                    $targetSku = $baseSku;
+                } else {
+                    $result['status'] = 'not_found';
+                    return $result;
+                }
             }
 
-            $result['status'] = $this->syncValidatedStock($sku, $validationResult);
+            $result['status'] = $this->syncValidatedStock($targetSku, $validationResult);
             return $result;
         } catch (\Exception $e) {
             $this->logger->error('[ERP] Stock sync error', ['sku' => $sku, 'error' => $e->getMessage()]);
@@ -739,6 +746,33 @@ class StockSync implements StockSyncInterface
 
         $data = $this->getMultiBranchStock($sku, $filiais);
         return $data ? $data['branches'] : [];
+    }
+
+    /**
+     * Extract base SKU from variant SKU.
+     *
+     * Same logic as PriceSync to keep SKU matching consistent.
+     */
+    private function getBaseSku(string $sku): string
+    {
+        $sku = trim($sku);
+
+        // Space-separated variant: "1119 RS" → "1119"
+        if (str_contains($sku, ' ')) {
+            return trim(explode(' ', $sku)[0]);
+        }
+
+        // Dot-separated variant: "0045.01" → "0045", "2213.00" → "2213"
+        if (preg_match('/^(\d{3,})\.\d+$/', $sku, $m)) {
+            return $m[1];
+        }
+
+        // Alpha suffix variant: "1125NAO" → "1125"
+        if (preg_match('/^(\d{3,})[A-Z]{2,3}$/i', $sku, $m)) {
+            return $m[1];
+        }
+
+        return $sku;
     }
 
     /**

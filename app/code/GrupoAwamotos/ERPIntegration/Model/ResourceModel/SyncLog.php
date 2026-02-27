@@ -53,20 +53,47 @@ class SyncLog extends AbstractDb
         int $magentoEntityId,
         ?string $syncHash = null
     ): void {
-        $connection = $this->getConnection();
-        $data = [
-            'entity_type' => $entityType,
-            'erp_code' => $erpCode,
-            'magento_entity_id' => $magentoEntityId,
-            'last_sync_at' => (new \DateTime())->format('Y-m-d H:i:s'),
-            'sync_hash' => $syncHash,
-        ];
+        if ($magentoEntityId <= 0) {
+            return;
+        }
 
-        $connection->insertOnDuplicate(
-            'grupoawamotos_erp_entity_map',
-            $data,
-            ['magento_entity_id', 'last_sync_at', 'sync_hash']
+        $connection = $this->getConnection();
+        $now = (new \DateTime())->format('Y-m-d H:i:s');
+
+        // Check if exact mapping already exists
+        $existing = $connection->fetchOne(
+            $connection->select()
+                ->from('grupoawamotos_erp_entity_map', 'map_id')
+                ->where('entity_type = ?', $entityType)
+                ->where('erp_code = ?', $erpCode)
         );
+
+        if ($existing) {
+            // Update existing mapping
+            $connection->update(
+                'grupoawamotos_erp_entity_map',
+                [
+                    'magento_entity_id' => $magentoEntityId,
+                    'last_sync_at' => $now,
+                    'sync_hash' => $syncHash,
+                ],
+                [
+                    'entity_type = ?' => $entityType,
+                    'erp_code = ?' => $erpCode,
+                ]
+            );
+        } else {
+            $connection->insert(
+                'grupoawamotos_erp_entity_map',
+                [
+                    'entity_type' => $entityType,
+                    'erp_code' => $erpCode,
+                    'magento_entity_id' => $magentoEntityId,
+                    'last_sync_at' => $now,
+                    'sync_hash' => $syncHash,
+                ]
+            );
+        }
     }
 
     public function getErpCodeByMagentoId(string $entityType, int $magentoEntityId): ?string

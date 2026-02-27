@@ -62,40 +62,47 @@ class OrderPullManagement implements OrderPullInterface
     {
         $this->logger->info('[ERP API] getPendingOrders called', ['limit' => $limit, 'fromDate' => $fromDate]);
 
-        // Get order IDs already synced to ERP
-        $syncedOrderIds = $this->getSyncedOrderIds();
-
-        // Build search criteria for pending orders
-        $this->searchCriteriaBuilder->addFilter(
-            'state',
-            ['new', 'pending_payment', 'processing'],
-            'in'
-        );
-
-        if ($fromDate) {
-            $this->searchCriteriaBuilder->addFilter('created_at', $fromDate, 'gteq');
-        }
-
-        $sortOrder = $this->sortOrderBuilder
-            ->setField('created_at')
-            ->setAscendingDirection()
-            ->create();
-
-        $this->searchCriteriaBuilder->setSortOrders([$sortOrder]);
-        $this->searchCriteriaBuilder->setPageSize($limit);
-
-        $searchCriteria = $this->searchCriteriaBuilder->create();
-        $orderList = $this->orderRepository->getList($searchCriteria);
+        $allOrders = $this->fetchUnsyncedOrders($limit * 2, $fromDate);
 
         $orders = [];
-        foreach ($orderList->getItems() as $order) {
-            // Skip orders already synced
-            if (in_array((int) $order->getEntityId(), $syncedOrderIds, true)) {
-                continue;
-            }
-
+        $held = [];
+        foreach ($allOrders as $order) {
             try {
+                $erpClientCode = $this->resolveErpClientCode($order);
+
+                // Skip orders from clients not registered in Sectra
+                if ($erpClientCode <= 0 || !$this->b2bRegistration->isClientRegistered($erpClientCode)) {
+                    // Try auto-registration if write connection is available
+                    if ($erpClientCode > 0) {
+                        $registered = $this->b2bRegistration->registerClient($erpClientCode);
+                        if (!$registered) {
+                            $held[] = [
+                                'increment_id' => $order->getIncrementId(),
+                                'erp_code' => $erpClientCode,
+                                'customer' => trim(($order->getCustomerFirstname() ?? '') . ' ' . ($order->getCustomerLastname() ?? '')),
+                                'reason' => 'Cliente nao registrado no GR_INTEGRACAOVALIDADOR do Sectra',
+                            ];
+                            $this->logger->info('[ERP API] Order held - client not registered in Sectra', [
+                                'increment_id' => $order->getIncrementId(),
+                                'erp_code' => $erpClientCode,
+                            ]);
+                            continue;
+                        }
+                    } else {
+                        $held[] = [
+                            'increment_id' => $order->getIncrementId(),
+                            'erp_code' => 0,
+                            'customer' => trim(($order->getCustomerFirstname() ?? '') . ' ' . ($order->getCustomerLastname() ?? '')),
+                            'reason' => 'Cliente sem erp_code no Magento',
+                        ];
+                        continue;
+                    }
+                }
+
                 $orders[] = $this->buildOrderPayload($order);
+                if (count($orders) >= $limit) {
+                    break;
+                }
             } catch (\Exception $e) {
                 $this->logger->warning('[ERP API] Failed to build payload for order ' . $order->getIncrementId(), [
                     'error' => $e->getMessage(),
@@ -107,13 +114,15 @@ class OrderPullManagement implements OrderPullInterface
             'order_pull',
             'export',
             'success',
-            sprintf('Listed %d pending orders via API', count($orders))
+            sprintf('Listed %d pending orders via API (%d held)', count($orders), count($held))
         );
 
         // Wrap in indexed array so Magento's ServiceOutputProcessor preserves keys
         return [[
             'orders' => $orders,
             'total_count' => count($orders),
+            'held_count' => count($held),
+            'held_orders' => $held,
             'timestamp' => date('c'),
         ]];
     }
@@ -238,7 +247,107 @@ class OrderPullManagement implements OrderPullInterface
         ]];
     }
 
+    public function getHeldOrders(int $limit = 50): array
+    {
+        $this->logger->info('[ERP API] getHeldOrders called', ['limit' => $limit]);
+
+        $allOrders = $this->fetchUnsyncedOrders($limit * 3, null);
+
+        $held = [];
+        foreach ($allOrders as $order) {
+            if (count($held) >= $limit) {
+                break;
+            }
+
+            try {
+                $erpClientCode = $this->resolveErpClientCode($order);
+
+                if ($erpClientCode <= 0) {
+                    $held[] = $this->buildHeldOrderPayload($order, 0, 'Cliente sem erp_code no Magento');
+                    continue;
+                }
+
+                if (!$this->b2bRegistration->isClientRegistered($erpClientCode)) {
+                    $held[] = $this->buildHeldOrderPayload(
+                        $order,
+                        $erpClientCode,
+                        'Cliente nao registrado no GR_INTEGRACAOVALIDADOR do Sectra'
+                    );
+                }
+            } catch (\Exception $e) {
+                // skip
+            }
+        }
+
+        $hasWriteAccess = $this->b2bRegistration->hasWriteAccess();
+
+        return [[
+            'orders' => $held,
+            'total_held' => count($held),
+            'write_connection_available' => $hasWriteAccess,
+            'resolution' => $hasWriteAccess
+                ? 'Auto-registro habilitado. Clientes serao registrados automaticamente na proxima chamada de getPendingOrders.'
+                : 'Configurar credenciais de escrita em Stores > Config > GrupoAwamotos > ERP Integration > Conexao de Escrita, ou executar SQL no Sectra.',
+            'timestamp' => date('c'),
+        ]];
+    }
+
     // ==================== Private Methods ====================
+
+    /**
+     * Fetch unsynced orders from Magento
+     *
+     * @return OrderInterface[]
+     */
+    private function fetchUnsyncedOrders(int $limit, ?string $fromDate): array
+    {
+        $syncedOrderIds = $this->getSyncedOrderIds();
+
+        $this->searchCriteriaBuilder->addFilter(
+            'state',
+            ['new', 'pending_payment', 'processing'],
+            'in'
+        );
+
+        if ($fromDate) {
+            $this->searchCriteriaBuilder->addFilter('created_at', $fromDate, 'gteq');
+        }
+
+        $sortOrder = $this->sortOrderBuilder
+            ->setField('created_at')
+            ->setAscendingDirection()
+            ->create();
+
+        $this->searchCriteriaBuilder->setSortOrders([$sortOrder]);
+        $this->searchCriteriaBuilder->setPageSize($limit);
+
+        $searchCriteria = $this->searchCriteriaBuilder->create();
+        $orderList = $this->orderRepository->getList($searchCriteria);
+
+        $orders = [];
+        foreach ($orderList->getItems() as $order) {
+            if (!in_array((int) $order->getEntityId(), $syncedOrderIds, true)) {
+                $orders[] = $order;
+            }
+        }
+
+        return $orders;
+    }
+
+    private function buildHeldOrderPayload(OrderInterface $order, int $erpClientCode, string $reason): array
+    {
+        return [
+            'increment_id' => $order->getIncrementId(),
+            'magento_id' => (int) $order->getEntityId(),
+            'erp_code' => $erpClientCode,
+            'customer' => trim(($order->getCustomerFirstname() ?? '') . ' ' . ($order->getCustomerLastname() ?? '')),
+            'customer_email' => $order->getCustomerEmail() ?? '',
+            'grand_total' => (float) $order->getGrandTotal(),
+            'created_at' => $order->getCreatedAt(),
+            'status' => $order->getStatus(),
+            'reason' => $reason,
+        ];
+    }
 
     private function findOrderByIncrementId(string $incrementId): OrderInterface
     {
