@@ -20,10 +20,25 @@ set +H 2>/dev/null || true
 
 MAGENTO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# ROOT para operações admin (CREATE USER, GRANT, CREATE TABLE, VIEWS, PROCEDURES)
-MYSQL_ROOT="mysql magento"
-# User normal para SELECT
-MYSQL_CMD="mysql -u magento -pAw4m0t0s2025Mage magento"
+DB_NAME='magento'
+MYSQL_SOCKET='/var/run/mysqld/mysqld.sock'
+
+# Usuário do Magento (normalmente tem permissões suficientes no schema para criar tabelas/views/procedures)
+MAGENTO_DB_USER='magento'
+MAGENTO_DB_PASS='Aw4m0t0s2025Mage'
+
+# Credenciais esperadas pelo Sectra
+SECTRA_USER='sectra'
+SECTRA_PASS='S3ctr4B2b_Aw4!2026'
+
+# Conexão MySQL para DDL/DML no schema (sem depender de root do MySQL)
+MYSQL_DDL="MYSQL_PWD='${MAGENTO_DB_PASS}' mysql --socket='${MYSQL_SOCKET}' -u '${MAGENTO_DB_USER}' '${DB_NAME}'"
+
+# Conexão MySQL administrativa (CREATE USER / GRANT). Opcional.
+# Se você souber a senha do root do MySQL, pode passar em runtime:
+#   MYSQL_ROOT_PASSWORD='...' sudo bash scripts/setup_sectra_pull.sh
+MYSQL_SUPER=''
+SUPER_AVAILABLE=0
 
 GREEN='\033[0;32m'
 RED='\033[0;31m'
@@ -56,30 +71,30 @@ if [ -n "$HOST_SHORT" ] && [ -w /etc/hosts ]; then
     fi
 fi
 
-# Testar acesso root ao MySQL
-# Testar acesso root ao MySQL (com fallback)
-if ! $MYSQL_ROOT -e "SELECT 1" >/dev/null 2>&1; then
-    warn "Falha ao conectar com: $MYSQL_ROOT"
-    # fallback 1: root via socket sem sudo (quando o script já roda como root)
-    if mysql magento -e "SELECT 1" >/dev/null 2>&1; then
-        MYSQL_ROOT="mysql magento"
-        ok "Acesso root ao MySQL confirmado (via mysql magento)"
-    # fallback 2: root com usuario explícito
-    elif mysql -u root magento -e "SELECT 1" >/dev/null 2>&1; then
-        MYSQL_ROOT="mysql -u root magento"
-        ok "Acesso root ao MySQL confirmado (via mysql -u root)"
-    # fallback 3: em alguns ambientes, o root só entra com sudo mysql
-    elif sudo -n mysql magento -e "SELECT 1" >/dev/null 2>&1; then
-        MYSQL_ROOT="sudo -n mysql magento"
-        ok "Acesso root ao MySQL confirmado (via sudo mysql)"
+# Verificar acesso ao MySQL como usuário do Magento (obrigatório)
+if ! eval "$MYSQL_DDL -e \"SELECT 1\"" >/dev/null 2>&1; then
+    fail "Nao foi possivel conectar no MySQL com o usuario do Magento (${MAGENTO_DB_USER})."
+    fail "Verifique o socket (${MYSQL_SOCKET}) e a senha em app/etc/env.php."
+    exit 1
+fi
+ok "Conexao MySQL (usuario do Magento) OK"
+
+# Descobrir se temos um canal administrativo para CREATE USER / GRANT
+if [ -n "${MYSQL_ROOT_PASSWORD:-}" ]; then
+    MYSQL_SUPER="MYSQL_PWD='${MYSQL_ROOT_PASSWORD}' mysql --socket='${MYSQL_SOCKET}' -u root '${DB_NAME}'"
+    if eval "$MYSQL_SUPER -e \"SELECT 1\"" >/dev/null 2>&1; then
+        SUPER_AVAILABLE=1
+        ok "Conexao MySQL admin OK (root via MYSQL_ROOT_PASSWORD)"
     else
-        fail "Nao foi possivel conectar como root no MySQL"
-        fail "Teste manual sugerido: sudo mysql magento -e 'SELECT 1'"
-        fail "Se isso falhar, o MySQL root pode exigir senha ou estar desabilitado."
-        exit 1
+        warn "MYSQL_ROOT_PASSWORD foi informado, mas a conexao admin falhou. Vou continuar sem CREATE USER/GRANT."
+        MYSQL_SUPER=''
     fi
+elif sudo -n mysql --socket="${MYSQL_SOCKET}" -u root "${DB_NAME}" -e "SELECT 1" >/dev/null 2>&1; then
+    MYSQL_SUPER="sudo -n mysql --socket='${MYSQL_SOCKET}' -u root '${DB_NAME}'"
+    SUPER_AVAILABLE=1
+    ok "Conexao MySQL admin OK (sudo mysql / auth_socket)"
 else
-    ok "Acesso root ao MySQL confirmado"
+    warn "Sem acesso admin no MySQL (root). Vou pular CREATE USER/GRANT e criar apenas tabelas/views/procedure."
 fi
 
 # =============================================================================
@@ -88,10 +103,16 @@ fi
 echo ""
 echo "== 1. USUARIO MYSQL 'sectra' =="
 
-SECTRA_PASS='S3ctr4B2b_Aw4!2026'
-
-$MYSQL_ROOT -e "CREATE USER IF NOT EXISTS 'sectra'@'%' IDENTIFIED BY '$SECTRA_PASS';" 2>&1 && ok "Usuario sectra criado/verificado" || warn "Aviso ao criar user"
-$MYSQL_ROOT -e "ALTER USER 'sectra'@'%' IDENTIFIED BY '$SECTRA_PASS';" 2>&1 && ok "Senha atualizada" || warn "Aviso ao atualizar senha"
+if [ "$SUPER_AVAILABLE" -eq 1 ]; then
+    eval "$MYSQL_SUPER -e \"CREATE USER IF NOT EXISTS '${SECTRA_USER}'@'%' IDENTIFIED BY '${SECTRA_PASS}';\"" 2>&1 \
+        && ok "Usuario ${SECTRA_USER} criado/verificado" \
+        || warn "Aviso ao criar user ${SECTRA_USER}"
+    eval "$MYSQL_SUPER -e \"ALTER USER '${SECTRA_USER}'@'%' IDENTIFIED BY '${SECTRA_PASS}';\"" 2>&1 \
+        && ok "Senha do ${SECTRA_USER} atualizada" \
+        || warn "Aviso ao atualizar senha do ${SECTRA_USER}"
+else
+    warn "Sem MySQL admin: pulando CREATE/ALTER USER. (Se o user ${SECTRA_USER} ja existe, ok.)"
+fi
 
 # =============================================================================
 # 2. CRIAR TABELAS SE NAO EXISTIREM
@@ -99,7 +120,7 @@ $MYSQL_ROOT -e "ALTER USER 'sectra'@'%' IDENTIFIED BY '$SECTRA_PASS';" 2>&1 && o
 echo ""
 echo "== 2. TABELAS DO MODULO ERP =="
 
-$MYSQL_ROOT -e "
+eval "$MYSQL_DDL -e \"
 CREATE TABLE IF NOT EXISTS grupoawamotos_erp_entity_map (
     map_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     entity_type VARCHAR(50) NOT NULL COMMENT 'Tipo: order, customer, product',
@@ -112,9 +133,9 @@ CREATE TABLE IF NOT EXISTS grupoawamotos_erp_entity_map (
     KEY idx_entity_type (entity_type),
     KEY idx_synced_at (synced_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Mapeamento IDs Magento <-> ERP Sectra';
-" 2>&1 && ok "Tabela grupoawamotos_erp_entity_map OK" || warn "Aviso na tabela entity_map"
+\"" 2>&1 && ok "Tabela grupoawamotos_erp_entity_map OK" || warn "Aviso na tabela entity_map"
 
-$MYSQL_ROOT -e "
+eval "$MYSQL_DDL -e \"
 CREATE TABLE IF NOT EXISTS grupoawamotos_erp_sync_log (
     log_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     sync_type VARCHAR(50) NOT NULL COMMENT 'Tipo: order, customer, product, stock, price',
@@ -128,7 +149,7 @@ CREATE TABLE IF NOT EXISTS grupoawamotos_erp_sync_log (
     KEY idx_status (status),
     KEY idx_created (created_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Log de sincronizacoes ERP';
-" 2>&1 && ok "Tabela grupoawamotos_erp_sync_log OK" || warn "Aviso na tabela sync_log"
+\"" 2>&1 && ok "Tabela grupoawamotos_erp_sync_log OK" || warn "Aviso na tabela sync_log"
 
 # =============================================================================
 # 3. VERIFICAR/CRIAR COLUNA customer_erp_code
@@ -136,13 +157,13 @@ CREATE TABLE IF NOT EXISTS grupoawamotos_erp_sync_log (
 echo ""
 echo "== 3. COLUNA customer_erp_code =="
 
-COL_EXISTS=$($MYSQL_ROOT -N -e "SELECT COUNT(*) FROM information_schema.columns WHERE table_schema='magento' AND table_name='sales_order' AND column_name='customer_erp_code'" 2>/dev/null || echo "0")
+COL_EXISTS=$(eval "$MYSQL_DDL -N -e \"SELECT COUNT(*) FROM information_schema.columns WHERE table_schema='${DB_NAME}' AND table_name='sales_order' AND column_name='customer_erp_code'\"" 2>/dev/null || echo "0")
 if [ "$COL_EXISTS" -gt 0 ]; then
     ok "Coluna customer_erp_code existe em sales_order"
 else
     info "Criando coluna customer_erp_code..."
-    $MYSQL_ROOT -e "ALTER TABLE sales_order ADD COLUMN customer_erp_code VARCHAR(50) DEFAULT NULL COMMENT 'Codigo do cliente no ERP Sectra';" 2>&1 || true
-    $MYSQL_ROOT -e "ALTER TABLE sales_order_grid ADD COLUMN customer_erp_code VARCHAR(50) DEFAULT NULL COMMENT 'Codigo do cliente no ERP Sectra';" 2>&1 || true
+    eval "$MYSQL_DDL -e \"ALTER TABLE sales_order ADD COLUMN customer_erp_code VARCHAR(50) DEFAULT NULL COMMENT 'Codigo do cliente no ERP Sectra';\"" 2>&1 || true
+    eval "$MYSQL_DDL -e \"ALTER TABLE sales_order_grid ADD COLUMN customer_erp_code VARCHAR(50) DEFAULT NULL COMMENT 'Codigo do cliente no ERP Sectra';\"" 2>&1 || true
     ok "Coluna criada"
 fi
 
@@ -152,11 +173,15 @@ fi
 echo ""
 echo "== 4. PERMISSOES (GRANTS) =="
 
-$MYSQL_ROOT -e "GRANT SELECT ON magento.* TO 'sectra'@'%';" 2>&1 && ok "GRANT SELECT ON magento.*" || warn "Falha grant SELECT"
-$MYSQL_ROOT -e "GRANT INSERT, UPDATE ON magento.grupoawamotos_erp_entity_map TO 'sectra'@'%';" 2>&1 && ok "GRANT INSERT/UPDATE entity_map" || warn "Falha"
-$MYSQL_ROOT -e "GRANT INSERT, UPDATE ON magento.grupoawamotos_erp_sync_log TO 'sectra'@'%';" 2>&1 && ok "GRANT INSERT/UPDATE sync_log" || warn "Falha"
-$MYSQL_ROOT -e "GRANT INSERT ON magento.sales_order_status_history TO 'sectra'@'%';" 2>&1 && ok "GRANT INSERT status_history" || warn "Falha"
-$MYSQL_ROOT -e "FLUSH PRIVILEGES;" 2>&1 && ok "FLUSH PRIVILEGES" || warn "Falha flush"
+if [ "$SUPER_AVAILABLE" -eq 1 ]; then
+    eval "$MYSQL_SUPER -e \"GRANT SELECT ON ${DB_NAME}.* TO '${SECTRA_USER}'@'%';\"" 2>&1 && ok "GRANT SELECT ON ${DB_NAME}.*" || warn "Falha grant SELECT"
+    eval "$MYSQL_SUPER -e \"GRANT INSERT, UPDATE ON ${DB_NAME}.grupoawamotos_erp_entity_map TO '${SECTRA_USER}'@'%';\"" 2>&1 && ok "GRANT INSERT/UPDATE entity_map" || warn "Falha"
+    eval "$MYSQL_SUPER -e \"GRANT INSERT, UPDATE ON ${DB_NAME}.grupoawamotos_erp_sync_log TO '${SECTRA_USER}'@'%';\"" 2>&1 && ok "GRANT INSERT/UPDATE sync_log" || warn "Falha"
+    eval "$MYSQL_SUPER -e \"GRANT INSERT ON ${DB_NAME}.sales_order_status_history TO '${SECTRA_USER}'@'%';\"" 2>&1 && ok "GRANT INSERT status_history" || warn "Falha"
+    eval "$MYSQL_SUPER -e \"FLUSH PRIVILEGES;\"" 2>&1 && ok "FLUSH PRIVILEGES" || warn "Falha flush"
+else
+    warn "Sem MySQL admin: pulando GRANT/FLUSH. (Se o user ${SECTRA_USER} ja tem permissao, ok.)"
+fi
 
 # =============================================================================
 # 5. VIEWS
@@ -164,7 +189,7 @@ $MYSQL_ROOT -e "FLUSH PRIVILEGES;" 2>&1 && ok "FLUSH PRIVILEGES" || warn "Falha 
 echo ""
 echo "== 5. VIEWS PARA O SECTRA =="
 
-$MYSQL_ROOT -e "
+eval "$MYSQL_DDL -e \"
 CREATE OR REPLACE VIEW vw_sectra_pedidos_pendentes AS
 SELECT
     so.entity_id AS magento_order_id,
@@ -200,9 +225,9 @@ WHERE so.state IN ('new', 'pending_payment', 'processing')
       SELECT magento_entity_id FROM grupoawamotos_erp_entity_map WHERE entity_type = 'order'
   )
 ORDER BY so.created_at ASC;
-" 2>&1 && ok "View vw_sectra_pedidos_pendentes" || fail "Falha view pedidos_pendentes"
+\"" 2>&1 && ok "View vw_sectra_pedidos_pendentes" || fail "Falha view pedidos_pendentes"
 
-$MYSQL_ROOT -e "
+eval "$MYSQL_DDL -e \"
 CREATE OR REPLACE VIEW vw_sectra_pedidos_itens AS
 SELECT
     soi.order_id AS magento_order_id,
@@ -221,9 +246,9 @@ INNER JOIN sales_order so ON so.entity_id = soi.order_id
 WHERE soi.parent_item_id IS NULL
   AND soi.qty_ordered > 0
 ORDER BY soi.order_id, soi.item_id;
-" 2>&1 && ok "View vw_sectra_pedidos_itens" || fail "Falha view pedidos_itens"
+\"" 2>&1 && ok "View vw_sectra_pedidos_itens" || fail "Falha view pedidos_itens"
 
-$MYSQL_ROOT -e "
+eval "$MYSQL_DDL -e \"
 CREATE OR REPLACE VIEW vw_sectra_clientes_b2b AS
 SELECT
     ce.entity_id AS magento_customer_id,
@@ -244,9 +269,9 @@ LEFT JOIN customer_entity_varchar cev_tipo ON cev_tipo.entity_id = ce.entity_id 
 LEFT JOIN grupoawamotos_erp_entity_map eem ON eem.magento_entity_id = ce.entity_id AND eem.entity_type = 'customer'
 WHERE ce.is_active = 1
 ORDER BY ce.entity_id;
-" 2>&1 && ok "View vw_sectra_clientes_b2b" || fail "Falha view clientes_b2b"
+\"" 2>&1 && ok "View vw_sectra_clientes_b2b" || fail "Falha view clientes_b2b"
 
-$MYSQL_ROOT -e "
+eval "$MYSQL_DDL -e \"
 CREATE OR REPLACE VIEW vw_sectra_pedidos_sincronizados AS
 SELECT
     eem.erp_entity_id AS erp_pedido_id,
@@ -261,7 +286,7 @@ FROM grupoawamotos_erp_entity_map eem
 INNER JOIN sales_order so ON so.entity_id = eem.magento_entity_id
 WHERE eem.entity_type = 'order'
 ORDER BY eem.synced_at DESC;
-" 2>&1 && ok "View vw_sectra_pedidos_sincronizados" || fail "Falha view pedidos_sincronizados"
+\"" 2>&1 && ok "View vw_sectra_pedidos_sincronizados" || fail "Falha view pedidos_sincronizados"
 
 # =============================================================================
 # 6. STORED PROCEDURE (via arquivo SQL para evitar problemas com DELIMITER)
@@ -269,7 +294,10 @@ ORDER BY eem.synced_at DESC;
 echo ""
 echo "== 6. STORED PROCEDURE =="
 
-cat > /tmp/sp_sectra_ack.sql <<'EOSQL'
+mkdir -p "$MAGENTO_DIR/var/tmp" 2>/dev/null || true
+SP_SQL_FILE="$MAGENTO_DIR/var/tmp/sp_sectra_ack.sql"
+
+cat > "$SP_SQL_FILE" <<'EOSQL'
 DROP PROCEDURE IF EXISTS sp_sectra_ack_pedido;
 
 DELIMITER //
@@ -307,11 +335,13 @@ END //
 DELIMITER ;
 EOSQL
 
-${MYSQL_ROOT} < /tmp/sp_sectra_ack.sql 2>&1 && ok "Procedure sp_sectra_ack_pedido criada" || fail "Falha ao criar procedure"
-rm -f /tmp/sp_sectra_ack.sql
+eval "$MYSQL_DDL < \"$SP_SQL_FILE\"" 2>&1 && ok "Procedure sp_sectra_ack_pedido criada" || warn "Falha ao criar procedure (vai seguir sem ela)"
+rm -f "$SP_SQL_FILE" 2>/dev/null || true
 
-$MYSQL_ROOT -e "GRANT EXECUTE ON PROCEDURE magento.sp_sectra_ack_pedido TO 'sectra'@'%';" 2>&1 && ok "GRANT EXECUTE procedure" || warn "Falha grant execute"
-$MYSQL_ROOT -e "FLUSH PRIVILEGES;" 2>&1 || true
+if [ "$SUPER_AVAILABLE" -eq 1 ]; then
+    eval "$MYSQL_SUPER -e \"GRANT EXECUTE ON PROCEDURE ${DB_NAME}.sp_sectra_ack_pedido TO '${SECTRA_USER}'@'%';\"" 2>&1 && ok "GRANT EXECUTE procedure" || warn "Falha grant execute"
+    eval "$MYSQL_SUPER -e \"FLUSH PRIVILEGES;\"" 2>&1 || true
+fi
 
 # =============================================================================
 # 7. ATIVAR CONFIGS NO MAGENTO
