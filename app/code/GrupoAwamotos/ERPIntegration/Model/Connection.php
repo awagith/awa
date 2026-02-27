@@ -366,11 +366,6 @@ class Connection implements ConnectionInterface
 
         $pdo = new \PDO($dsn, $username, $password, $options);
 
-        // Set database if not already in DSN
-        if ($database && $driver === self::DRIVER_DBLIB) {
-            $pdo->exec('USE ' . $this->sanitizeIdentifier($database));
-        }
-
         return $pdo;
     }
 
@@ -389,12 +384,11 @@ class Connection implements ConnectionInterface
                 break;
 
             case self::DRIVER_DBLIB:
-                // FreeTDS (dblib)
+                // FreeTDS (dblib) — include dbname in DSN and version 7.4 for modern SQL Server
                 $dsn = sprintf(
-                    'dblib:host=%s:%d;charset=UTF-8',
-                    $host, $port
+                    'dblib:host=%s:%d;dbname=%s;version=7.4;charset=UTF-8',
+                    $host, $port, $database
                 );
-                // Database set after connection
                 break;
 
             case self::DRIVER_ODBC:
