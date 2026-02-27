@@ -50,8 +50,8 @@ class ImageSync implements ImageSyncInterface
         IoFile $ioFile,
         SyncLogResource $syncLogResource,
         LoggerInterface $logger,
-        ?ProductAttributeMediaGalleryEntryInterfaceFactory $galleryEntryFactory = null,
-        ?ImageContentInterfaceFactory $imageContentFactory = null
+        ProductAttributeMediaGalleryEntryInterfaceFactory $galleryEntryFactory,
+        ImageContentInterfaceFactory $imageContentFactory
     ) {
         $this->connection = $connection;
         $this->helper = $helper;
@@ -62,11 +62,8 @@ class ImageSync implements ImageSyncInterface
         $this->ioFile = $ioFile;
         $this->syncLogResource = $syncLogResource;
         $this->logger = $logger;
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $this->galleryEntryFactory = $galleryEntryFactory
-            ?? $objectManager->get(ProductAttributeMediaGalleryEntryInterfaceFactory::class);
-        $this->imageContentFactory = $imageContentFactory
-            ?? $objectManager->get(ImageContentInterfaceFactory::class);
+        $this->galleryEntryFactory = $galleryEntryFactory;
+        $this->imageContentFactory = $imageContentFactory;
     }
 
     public function syncAll(bool $force = false): array

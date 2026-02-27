@@ -298,18 +298,47 @@ class OrderSync implements OrderSyncInterface
     public function getErpOrderStatus(int $erpOrderId): ?array
     {
         try {
+            // Query sem JOIN na CL_TRANSPORTADORA (tabela pode não existir no ERP)
             $sql = "SELECT p.CODIGO, p.STATUS, p.DTFATURAMENTO, p.DTSAIDA, p.DTENTREGA,
                            p.NFNUMERO, p.NFSERIE, p.NFCHAVE,
-                           p.TRANSPORTADORA, p.CODRASTREIO,
-                           t.NOME AS TRANSPORTADORA_NOME
+                           p.TRANSPORTADORA, p.CODRASTREIO
                     FROM VE_PEDIDO p
-                    LEFT JOIN CL_TRANSPORTADORA t ON t.CODIGO = p.TRANSPORTADORA
                     WHERE p.CODIGO = :codigo";
 
-            return $this->connection->fetchOne($sql, [':codigo' => $erpOrderId]);
+            $result = $this->connection->fetchOne($sql, [':codigo' => $erpOrderId]);
+
+            if ($result) {
+                // Tentar buscar nome da transportadora separadamente
+                $result['TRANSPORTADORA_NOME'] = $this->getTransportadoraNome(
+                    (int) ($result['TRANSPORTADORA'] ?? 0)
+                );
+            }
+
+            return $result;
         } catch (\Exception $e) {
             $this->logger->error('[ERP] Get order status error: ' . $e->getMessage());
             return null;
+        }
+    }
+
+    /**
+     * Busca o nome da transportadora pelo código.
+     * Retorna string vazia se a tabela não existir no ERP.
+     */
+    private function getTransportadoraNome(int $codigo): string
+    {
+        if ($codigo <= 0) {
+            return '';
+        }
+
+        try {
+            $sql = "SELECT TOP 1 NOME FROM CL_TRANSPORTADORA WHERE CODIGO = :codigo";
+            $result = $this->connection->fetchOne($sql, [':codigo' => $codigo]);
+            return $result['NOME'] ?? '';
+        } catch (\Exception $e) {
+            // CL_TRANSPORTADORA pode não existir — não é erro crítico
+            $this->logger->debug('[ERP] Transportadora lookup failed (table may not exist): ' . $e->getMessage());
+            return '';
         }
     }
 

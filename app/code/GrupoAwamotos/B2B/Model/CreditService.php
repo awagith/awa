@@ -10,6 +10,7 @@ use GrupoAwamotos\B2B\Model\ResourceModel\CreditTransaction as CreditTransaction
 use GrupoAwamotos\B2B\Model\ResourceModel\CreditLimit\CollectionFactory as CreditCollectionFactory;
 use GrupoAwamotos\B2B\Model\ResourceModel\CreditTransaction\CollectionFactory as TxnCollectionFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\DB\Sql\Expression;
 use Magento\Framework\Exception\LocalizedException;
 use Psr\Log\LoggerInterface;
 
@@ -54,7 +55,7 @@ class CreditService
      */
     public function getPaymentTitle(): string
     {
-        return (string) ($this->scopeConfig->getValue('grupoawamotos_b2b/credit/payment_title') ?: 'Crédito B2B (Faturamento)');
+        return (string) ($this->scopeConfig->getValue('grupoawamotos_b2b/credit/payment_title') ?: __('Crédito B2B (Faturamento)'));
     }
 
     /**
@@ -156,17 +157,49 @@ class CreditService
 
     /**
      * Charge credit (debit for an order)
+     *
+     * Uses atomic UPDATE with row-level lock to prevent race conditions.
      */
     public function charge(int $customerId, float $amount, int $orderId, string $reference = ''): void
     {
-        $credit = $this->getCreditLimit($customerId);
+        $connection = $this->creditResource->getConnection();
+        $tableName = $this->creditResource->getMainTable();
 
-        if ($credit->getAvailableCredit() < $amount) {
-            throw new LocalizedException(__('Crédito insuficiente. Disponível: R$ %1', number_format($credit->getAvailableCredit(), 2, ',', '.')));
+        $connection->beginTransaction();
+        try {
+            // Atomic: lock row + check + update in single transaction
+            $select = $connection->select()
+                ->from($tableName, ['entity_id', 'credit_limit', 'used_credit'])
+                ->where('customer_id = ?', $customerId)
+                ->forUpdate();
+            $row = $connection->fetchRow($select);
+
+            if (!$row) {
+                throw new LocalizedException(__('Crédito não encontrado para o cliente #%1.', $customerId));
+            }
+
+            $available = (float) $row['credit_limit'] - (float) $row['used_credit'];
+            if ($available < $amount) {
+                throw new LocalizedException(__(
+                    'Crédito insuficiente. Disponível: R$ %1',
+                    number_format($available, 2, ',', '.')
+                ));
+            }
+
+            $connection->update(
+                $tableName,
+                ['used_credit' => new Expression('used_credit + ' . $connection->quote($amount))],
+                ['entity_id = ?' => (int) $row['entity_id']]
+            );
+
+            $connection->commit();
+        } catch (\Exception $e) {
+            $connection->rollBack();
+            throw $e;
         }
 
-        $credit->setUsedCredit($credit->getUsedCredit() + $amount);
-        $this->creditResource->save($credit);
+        // Read updated balance for logging (outside transaction — eventual consistency is fine for log)
+        $credit = $this->getCreditLimit($customerId);
 
         $this->logTransaction(
             $customerId,
@@ -182,13 +215,21 @@ class CreditService
 
     /**
      * Refund credit
+     *
+     * Uses atomic UPDATE to prevent lost updates from concurrent refunds.
      */
     public function refund(int $customerId, float $amount, int $orderId, string $reference = ''): void
     {
+        $connection = $this->creditResource->getConnection();
+        $tableName = $this->creditResource->getMainTable();
+
+        $connection->update(
+            $tableName,
+            ['used_credit' => new Expression('GREATEST(0, used_credit - ' . $connection->quote($amount) . ')')],
+            ['customer_id = ?' => $customerId]
+        );
+
         $credit = $this->getCreditLimit($customerId);
-        $newUsed = max(0, $credit->getUsedCredit() - $amount);
-        $credit->setUsedCredit($newUsed);
-        $this->creditResource->save($credit);
 
         $this->logTransaction(
             $customerId,
@@ -202,13 +243,21 @@ class CreditService
 
     /**
      * Record payment received (reduces used_credit)
+     *
+     * Uses atomic UPDATE to prevent lost updates from concurrent payments.
      */
     public function recordPayment(int $customerId, float $amount, ?int $adminId = null, string $comment = ''): void
     {
+        $connection = $this->creditResource->getConnection();
+        $tableName = $this->creditResource->getMainTable();
+
+        $connection->update(
+            $tableName,
+            ['used_credit' => new Expression('GREATEST(0, used_credit - ' . $connection->quote($amount) . ')')],
+            ['customer_id = ?' => $customerId]
+        );
+
         $credit = $this->getCreditLimit($customerId);
-        $newUsed = max(0, $credit->getUsedCredit() - $amount);
-        $credit->setUsedCredit($newUsed);
-        $this->creditResource->save($credit);
 
         $this->logTransaction(
             $customerId,

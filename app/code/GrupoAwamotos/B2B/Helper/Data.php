@@ -8,7 +8,6 @@ namespace GrupoAwamotos\B2B\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
-use Magento\Framework\App\ObjectManager;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Store\Model\ScopeInterface;
@@ -63,12 +62,12 @@ class Data extends AbstractHelper
     public function __construct(
         Context $context,
         CustomerSession $customerSession,
-        ?CustomerRepositoryInterface $customerRepository = null,
-        ?B2BConfig $b2bConfig = null
+        CustomerRepositoryInterface $customerRepository,
+        B2BConfig $b2bConfig
     ) {
         $this->customerSession = $customerSession;
         $this->customerRepository = $customerRepository;
-        $this->b2bConfig = $b2bConfig ?? ObjectManager::getInstance()->get(B2BConfig::class);
+        $this->b2bConfig = $b2bConfig;
         parent::__construct($context);
     }
 
@@ -232,10 +231,6 @@ class Data extends AbstractHelper
     public function isB2BCustomerById(int $customerId): bool
     {
         try {
-            if ($this->customerRepository === null) {
-                $this->customerRepository = ObjectManager::getInstance()->get(CustomerRepositoryInterface::class);
-            }
-
             $customer = $this->customerRepository->getById($customerId);
             $groupId = (int)$customer->getGroupId();
             return in_array($groupId, $this->getB2BGroupIds());
@@ -256,7 +251,7 @@ class Data extends AbstractHelper
         }
 
         $groupId = (int)$this->customerSession->getCustomerGroupId();
-        
+
         // Pendente não está aprovado
         if ($groupId === self::GROUP_B2B_PENDENTE) {
             return false;

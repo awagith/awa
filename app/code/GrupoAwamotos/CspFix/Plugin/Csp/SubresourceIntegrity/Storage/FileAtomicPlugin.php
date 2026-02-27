@@ -54,7 +54,7 @@ class FileAtomicPlugin
             try {
                 $staticDir->changePermissions($path, 0664);
             } catch (\Throwable $e) {
-                // ignora
+                $this->logger->debug('[CspFix] Could not set permissions on ' . $path . ': ' . $e->getMessage());
             }
 
             return true;

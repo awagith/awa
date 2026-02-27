@@ -9,6 +9,8 @@ namespace GrupoAwamotos\B2B\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\Area;
+use Magento\Framework\App\State;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use GrupoAwamotos\B2B\Model\Notification\WhatsAppService;
@@ -18,6 +20,7 @@ use Psr\Log\LoggerInterface;
 class OrderStatusNotification implements ObserverInterface
 {
     private ScopeConfigInterface $scopeConfig;
+    private State $appState;
     private WhatsAppService $whatsAppService;
     private CustomerRepositoryInterface $customerRepository;
     private B2BHelper $b2bHelper;
@@ -26,12 +29,14 @@ class OrderStatusNotification implements ObserverInterface
 
     public function __construct(
         ScopeConfigInterface $scopeConfig,
+        State $appState,
         WhatsAppService $whatsAppService,
         CustomerRepositoryInterface $customerRepository,
         B2BHelper $b2bHelper,
         LoggerInterface $logger
     ) {
         $this->scopeConfig = $scopeConfig;
+        $this->appState = $appState;
         $this->whatsAppService = $whatsAppService;
         $this->customerRepository = $customerRepository;
         $this->b2bHelper = $b2bHelper;
@@ -41,6 +46,13 @@ class OrderStatusNotification implements ObserverInterface
     public function execute(Observer $observer): void
     {
         try {
+            // Garante area code definido (pode rodar via cron sem area)
+            try {
+                $this->appState->getAreaCode();
+            } catch (\Magento\Framework\Exception\LocalizedException $e) {
+                $this->appState->setAreaCode(Area::AREA_FRONTEND);
+            }
+
             // Verifica se notificação está habilitada
             if (!$this->isWhatsAppNotificationEnabled()) {
                 return;
