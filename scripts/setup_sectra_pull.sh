@@ -123,17 +123,33 @@ echo "== 2. TABELAS DO MODULO ERP =="
 eval "$MYSQL_DDL -e \"
 CREATE TABLE IF NOT EXISTS grupoawamotos_erp_entity_map (
     map_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    entity_type VARCHAR(50) NOT NULL COMMENT 'Tipo: order, customer, product',
-    magento_entity_id INT UNSIGNED NOT NULL COMMENT 'ID no Magento',
-    erp_entity_id VARCHAR(100) NOT NULL COMMENT 'ID no ERP Sectra',
-    synced_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Data da sincronizacao',
-    extra_data TEXT DEFAULT NULL COMMENT 'Dados extras JSON',
+    entity_type VARCHAR(32) NOT NULL,
+    erp_code VARCHAR(50) NOT NULL,
+    magento_entity_id INT UNSIGNED NOT NULL,
+    last_sync_at TIMESTAMP NULL DEFAULT NULL,
+    sync_hash VARCHAR(64) NULL DEFAULT NULL,
     UNIQUE KEY uk_type_magento (entity_type, magento_entity_id),
-    UNIQUE KEY uk_type_erp (entity_type, erp_entity_id),
     KEY idx_entity_type (entity_type),
-    KEY idx_synced_at (synced_at)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Mapeamento IDs Magento <-> ERP Sectra';
+    KEY idx_erp_code (erp_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Mapeamento IDs Magento <-> ERP (Sectra)';
 \"" 2>&1 && ok "Tabela grupoawamotos_erp_entity_map OK" || warn "Aviso na tabela entity_map"
+
+# Garantir colunas esperadas (caso a tabela já exista com versão antiga)
+MAP_HAS_ERP_CODE=$(eval "$MYSQL_DDL -N -e \"SELECT COUNT(*) FROM information_schema.columns WHERE table_schema='${DB_NAME}' AND table_name='grupoawamotos_erp_entity_map' AND column_name='erp_code'\"" 2>/dev/null || echo "0")
+if [ "$MAP_HAS_ERP_CODE" -eq 0 ]; then
+    warn "Tabela grupoawamotos_erp_entity_map sem coluna erp_code. Tentando adicionar..."
+    eval "$MYSQL_DDL -e \"ALTER TABLE grupoawamotos_erp_entity_map ADD COLUMN erp_code VARCHAR(50) NOT NULL AFTER entity_type;\"" 2>&1 || true
+fi
+
+MAP_HAS_LAST_SYNC=$(eval "$MYSQL_DDL -N -e \"SELECT COUNT(*) FROM information_schema.columns WHERE table_schema='${DB_NAME}' AND table_name='grupoawamotos_erp_entity_map' AND column_name='last_sync_at'\"" 2>/dev/null || echo "0")
+if [ "$MAP_HAS_LAST_SYNC" -eq 0 ]; then
+    eval "$MYSQL_DDL -e \"ALTER TABLE grupoawamotos_erp_entity_map ADD COLUMN last_sync_at TIMESTAMP NULL DEFAULT NULL;\"" 2>&1 || true
+fi
+
+MAP_HAS_SYNC_HASH=$(eval "$MYSQL_DDL -N -e \"SELECT COUNT(*) FROM information_schema.columns WHERE table_schema='${DB_NAME}' AND table_name='grupoawamotos_erp_entity_map' AND column_name='sync_hash'\"" 2>/dev/null || echo "0")
+if [ "$MAP_HAS_SYNC_HASH" -eq 0 ]; then
+    eval "$MYSQL_DDL -e \"ALTER TABLE grupoawamotos_erp_entity_map ADD COLUMN sync_hash VARCHAR(64) NULL DEFAULT NULL;\"" 2>&1 || true
+fi
 
 eval "$MYSQL_DDL -e \"
 CREATE TABLE IF NOT EXISTS grupoawamotos_erp_sync_log (
@@ -258,7 +274,7 @@ SELECT
     ce.created_at AS data_cadastro,
     COALESCE(cev_erp.value, '') AS erp_code,
     COALESCE(cev_tipo.value, '') AS tipo_pessoa,
-    COALESCE(eem.erp_entity_id, '') AS erp_entity_map_code
+    COALESCE(eem.erp_code, '') AS erp_entity_map_code
 FROM customer_entity ce
 LEFT JOIN eav_attribute ea_erp ON ea_erp.attribute_code = 'erp_code'
     AND ea_erp.entity_type_id = (SELECT entity_type_id FROM eav_entity_type WHERE entity_type_code = 'customer')
@@ -274,18 +290,18 @@ ORDER BY ce.entity_id;
 eval "$MYSQL_DDL -e \"
 CREATE OR REPLACE VIEW vw_sectra_pedidos_sincronizados AS
 SELECT
-    eem.erp_entity_id AS erp_pedido_id,
+    eem.erp_code AS erp_pedido_id,
     eem.magento_entity_id AS magento_order_id,
     so.increment_id AS pedido_web,
     so.state AS estado,
     so.status AS status_magento,
     so.grand_total AS total,
     so.created_at AS data_pedido,
-    eem.synced_at AS data_sync
+    eem.last_sync_at AS data_sync
 FROM grupoawamotos_erp_entity_map eem
 INNER JOIN sales_order so ON so.entity_id = eem.magento_entity_id
 WHERE eem.entity_type = 'order'
-ORDER BY eem.synced_at DESC;
+ORDER BY eem.last_sync_at DESC;
 \"" 2>&1 && ok "View vw_sectra_pedidos_sincronizados" || fail "Falha view pedidos_sincronizados"
 
 # =============================================================================
@@ -313,9 +329,9 @@ BEGIN
     FROM sales_order WHERE increment_id = p_increment_id LIMIT 1;
 
     IF v_magento_id IS NOT NULL THEN
-        INSERT INTO grupoawamotos_erp_entity_map (entity_type, erp_entity_id, magento_entity_id, synced_at)
+        INSERT INTO grupoawamotos_erp_entity_map (entity_type, erp_code, magento_entity_id, last_sync_at)
         VALUES ('order', p_erp_order_id, v_magento_id, NOW())
-        ON DUPLICATE KEY UPDATE erp_entity_id = p_erp_order_id, synced_at = NOW();
+        ON DUPLICATE KEY UPDATE erp_code = p_erp_order_id, last_sync_at = NOW();
 
         INSERT INTO sales_order_status_history (parent_id, is_customer_notified, is_visible_on_front, comment, status, entity_name, created_at)
         VALUES (v_magento_id, 0, 0, CONCAT('[ERP Sectra] Pedido importado. ID ERP: ', p_erp_order_id), 'processing', 'order', NOW());
