@@ -237,12 +237,12 @@ foreach ($driversToTry as $driver) {
 }
 
 if ($pdo === null) {
-    // Fallback: tenta dblib com diferentes TDS versions via env var
+    // Fallback 1: tenta dblib com diferentes TDS versions via env var
     if ($hasDblib) {
         echo "\n  Tentando fallback com variaveis de ambiente TDSVER...\n";
         $tdsVersions = ['7.4', '7.3', '7.2', '7.1', '7.0', '8.0'];
         foreach ($tdsVersions as $tdsVer) {
-            echo "  Tentando TDSVER=$tdsVer... ";
+            echo "  Tentando TDSVER=$tdsVer (porta $port)... ";
             putenv("TDSVER=$tdsVer");
             try {
                 $dsn = "dblib:host=$host:$port;dbname=$database;charset=UTF-8";
@@ -261,21 +261,76 @@ if ($pdo === null) {
     }
 }
 
+if ($pdo === null && $hasDblib) {
+    // Fallback 2: tenta usar aliases do FreeTDS (freetds.conf)
+    echo "\n  Tentando aliases FreeTDS (freetds.conf)...\n";
+    $aliases = ['ERPLOCAL', 'ERPLOCAL_OFF', 'ERPLOCAL_ENC', 'ERPLOCAL_73', 'ERPLOCAL_72'];
+    foreach ($aliases as $alias) {
+        echo "  Tentando alias [$alias]... ";
+        try {
+            // Quando usa alias, nao precisa porta - FreeTDS resolve
+            $dsn = "dblib:host=$alias;dbname=$database;charset=UTF-8";
+            $pdo = new PDO($dsn, $username, $password, [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_TIMEOUT => 15,
+            ]);
+            $driverUsed = "dblib (alias $alias)";
+            echo "OK!\n";
+            break;
+        } catch (\PDOException $e) {
+            echo "FALHA - " . substr($e->getMessage(), 0, 60) . "\n";
+        }
+    }
+}
+
+if ($pdo === null && $hasDblib && $port !== 3387) {
+    // Fallback 3: tenta porta 3387 (porta padrao do ERP Sectra)
+    echo "\n  A porta configurada ($port) pode estar errada.\n";
+    echo "  Tentando porta 3387 (encontrada no freetds.conf)...\n";
+    $altPorts = [3387];
+    foreach ($altPorts as $altPort) {
+        // Testa TCP primeiro
+        $altSock = @fsockopen($host, $altPort, $errno, $errstr, 3);
+        if ($altSock) {
+            fclose($altSock);
+            echo "  [OK] TCP $host:$altPort acessivel\n";
+        } else {
+            echo "  [FALHA] TCP $host:$altPort inacessivel\n";
+            continue;
+        }
+
+        $tdsVersions = ['7.4', '7.3', '7.2', '7.0'];
+        foreach ($tdsVersions as $tdsVer) {
+            echo "  Tentando porta $altPort + TDS $tdsVer... ";
+            putenv("TDSVER=$tdsVer");
+            try {
+                $dsn = "dblib:host=$host:$altPort;dbname=$database;charset=UTF-8";
+                $pdo = new PDO($dsn, $username, $password, [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::ATTR_TIMEOUT => 15,
+                ]);
+                $driverUsed = "dblib (porta $altPort, TDSVER=$tdsVer)";
+                echo "OK!\n";
+                echo "\n  *** ATENCAO: A porta correta e $altPort, nao $port! ***\n";
+                echo "  *** Atualize no Admin > Stores > Config > AWA > ERP > Porta ***\n\n";
+                break 2;
+            } catch (\PDOException $e) {
+                echo "FALHA\n";
+            }
+        }
+    }
+}
+
 if ($pdo === null) {
-    echo "\n  ERRO: Nao foi possivel conectar com nenhum driver!\n";
+    echo "\n  ERRO: Nao foi possivel conectar com nenhum driver/porta!\n";
     echo "  Verifique: host, porta, credenciais, firewall\n\n";
-    echo "  DICA: Configure o FreeTDS:\n";
-    echo "    sudo nano /etc/freetds/freetds.conf\n";
-    echo "    Adicione na secao [global]:\n";
-    echo "      tds version = 7.4\n";
-    echo "    Ou adicione uma entrada para o servidor:\n";
-    echo "      [sectra]\n";
-    echo "        host = $host\n";
-    echo "        port = $port\n";
-    echo "        tds version = 7.4\n";
-    echo "        client charset = UTF-8\n\n";
-    echo "  Se o SQL Server for antigo, tente tds version = 7.0\n";
-    echo "  Se nada funcionar, instale o driver Microsoft:\n";
+    echo "  DICA 1: A porta pode estar errada. Verificar freetds.conf:\n";
+    echo "    cat /etc/freetds/freetds.conf\n\n";
+    echo "  DICA 2: Tente conectar manualmente com tsql:\n";
+    echo "    tsql -S ERPLOCAL -U $username -P senha\n\n";
+    echo "  DICA 3: Se nada funcionar, instale o driver Microsoft:\n";
     echo "    sudo pecl install pdo_sqlsrv sqlsrv\n";
     exit(1);
 }
