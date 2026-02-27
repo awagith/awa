@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <!-- R35: awa-consistency-home5.css carregado apenas na homepage (antes era global via default_head_blocks.xml) -->
+    <head>
+        <remove src="css/awa-round2-home-owl-tabs.css"/>
+        <css src="css/awa-consistency-home5.css"/>
+        <!-- AWA Round2 (dual-write hotfix): owl tabs visual polish homepage-only -->
+        <css src="css/awa-custom-home-owl-tabs.css"/>
+        <!-- awa home5 demo suppressions (managed by dev/tools/ayo_home5_render_mode_switch.php)
+             template mode: disabled
+             cms mode: enabled -->
+        <!-- awa_home5_demo_suppressions_head_start -->
+        <remove src="css/awa-institutional.css"/>
+        <!-- homepage keeps header/search/minicart + global brand refinements active -->
+        <remove src="css/awa-custom-footer-trust.css"/>
+        <remove src="css/awa-custom-b2b-gate-refine.css"/>
+        <remove src="css/awa-custom-auth-refine.css"/>
+        <remove src="css/awa-custom-plp-search-cart-refine.css"/>
+        <!-- footer-light-perfect e b2b-cart-checkout-premium re-habilitados apos modernizacao css -->
+        <!-- awa_home5_demo_suppressions_head_end -->
+        <!-- re-enable selective child layers on cms homepage (post-themeoption template is intentionally disabled on home) -->
+        <css src="css/awa-custom-post-themeoption-overrides.css"/>
+        <css src="css/awa-custom-components-b2b-foundation.css"/>
+        <css src="css/awa-custom-compat-b2b-nav-plp-cart-checkout.css"/>
+        <css src="css/awa-custom-page-home-category-premium.css"/>
+        <css src="css/awa-custom-home-final-polish.css"/>
+    </head>
+    <body>
+        <referenceBlock name="theme.active.editor" remove="true"/>
+        <referenceBlock name="google.maps.api" remove="true"/>
+
+        <referenceContainer name="head.additional">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.seo.head"
+                   template="Magento_Cms::awa-seo-head.phtml"/>
+        </referenceContainer>
+
+        <referenceContainer name="page.top">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.seo.h1"
+                   template="Magento_Cms::awa-seo-h1.phtml"
+                   before="-"/>
+        </referenceContainer>
+
+        <!-- referenceBlock at body level (XSD requires this, not nested in referenceContainer) -->
+        <referenceBlock name="nav.bar.title" remove="true"/>
+        <!-- awa home5 render mode switch (managed by dev/tools/ayo_home5_render_mode_switch.php)
+             template mode: cms_page_content remove="true",  content-top-home remove="false"
+             cms mode:      cms_page_content remove="false", content-top-home remove="true" -->
+        <referenceBlock name="cms_page_content" remove="true"/>
+        <referenceContainer name="content-top-home" remove="false"/>
+        <!-- awa_home5_demo_suppressions_body_start -->
+        <referenceBlock name="awa.post.themeoption.css">
+            <arguments>
+                <argument name="disable_awa_post_themeoption_css" xsi:type="boolean">false</argument>
+            </arguments>
+        </referenceBlock>
+        <!-- awa_home5_demo_suppressions_body_end -->
+    </body>
+</page>
