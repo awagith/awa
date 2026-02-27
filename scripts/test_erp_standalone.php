@@ -20,6 +20,93 @@ echo "  " . date('Y-m-d H:i:s') . "\n";
 echo "====================================================\n\n";
 
 // ============================================================
+// Helper: Decriptar senha encriptada pelo Magento
+// Formato: <hash_version>:<cipher_version>:<iv_base64>:<encrypted_base64>
+// ============================================================
+function magentoDecrypt(string $data, string $cryptKey): ?string
+{
+    // Se não parece encriptada (não tem formato X:X:...), retorna null
+    $parts = explode(':', $data);
+    if (count($parts) < 3) {
+        return null; // provavelmente texto plano
+    }
+
+    // Remove prefixo "base64" da chave se presente
+    $key = $cryptKey;
+    if (str_starts_with($key, 'base64')) {
+        $key = base64_decode(substr($key, 6));
+    }
+
+    // Magento 2 format: hash_version:cipher_version:iv:encrypted
+    // hash_version: 0 = md5, 1 = sha256
+    // cipher_version: 0 = blowfish, 1 = aes-128, 2 = aes-256, 3 = sodium
+    if (count($parts) === 4) {
+        // New format: hash:cipher:iv:data
+        [, $cipherVersion, $ivBase64, $encryptedBase64] = $parts;
+    } elseif (count($parts) === 3) {
+        // Old format: cipher:iv:data
+        [$cipherVersion, $ivBase64, $encryptedBase64] = $parts;
+    } else {
+        return null;
+    }
+
+    $iv = base64_decode($ivBase64);
+    $encrypted = base64_decode($encryptedBase64);
+    $cipherVersion = (int) $cipherVersion;
+
+    // Determine cipher method
+    switch ($cipherVersion) {
+        case 0:
+            $method = 'bf-ecb';
+            break;
+        case 1:
+            $method = 'aes-128-cbc';
+            break;
+        case 2:
+            $method = 'aes-256-cbc';
+            break;
+        case 3:
+            // Sodium - try sodium_crypto_aead_xchacha20poly1305_ietf_decrypt
+            if (function_exists('sodium_crypto_aead_xchacha20poly1305_ietf_decrypt')) {
+                try {
+                    // For sodium, it's: nonce + ciphertext
+                    $decrypted = sodium_crypto_aead_xchacha20poly1305_ietf_decrypt(
+                        $encrypted,
+                        '',
+                        $iv,
+                        substr(hash('sha256', (string) $key, true), 0, 32)
+                    );
+                    return $decrypted !== false ? rtrim($decrypted, "\0") : null;
+                } catch (\Exception $e) {
+                    return null;
+                }
+            }
+            return null;
+        default:
+            return null;
+    }
+
+    // OpenSSL decrypt
+    if (!function_exists('openssl_decrypt')) {
+        return null;
+    }
+
+    // Truncate/pad key to appropriate length
+    $keyLen = ($cipherVersion === 2) ? 32 : 16;
+    $key = substr(str_pad((string) $key, $keyLen, "\0"), 0, $keyLen);
+
+    $decrypted = openssl_decrypt(
+        $encrypted,
+        $method,
+        $key,
+        OPENSSL_RAW_DATA,
+        $iv
+    );
+
+    return $decrypted !== false ? rtrim($decrypted, "\0") : null;
+}
+
+// ============================================================
 // 1. Buscar credenciais (env vars > hardcoded defaults)
 // ============================================================
 $host     = getenv('ERP_SQL_HOST') ?: '';
@@ -76,8 +163,14 @@ if (empty($host)) {
 
                     // Password pode estar encriptada pelo Magento
                     if (isset($configs['password'])) {
-                        // Tenta usar raw (pode ser encriptada)
-                        $password = $configs['password'];
+                        $rawPassword = $configs['password'];
+                        $decrypted = magentoDecrypt($rawPassword, $env['crypt']['key'] ?? '');
+                        if ($decrypted !== null) {
+                            $password = $decrypted;
+                            echo "  [INFO] Senha decriptada automaticamente\n";
+                        } else {
+                            $password = $rawPassword;
+                        }
                     }
 
                     echo "[INFO] Credenciais lidas do MySQL (core_config_data)\n";
@@ -110,7 +203,17 @@ echo "  Host:     $host\n";
 echo "  Porta:    $port\n";
 echo "  Database: $database\n";
 echo "  Username: $username\n";
-echo "  Senha:    " . (empty($password) ? '(vazia!)' : str_repeat('*', min(strlen($password), 8))) . "\n\n";
+$pwParts = explode(':', $password);
+$isEncrypted = count($pwParts) >= 3 && is_numeric($pwParts[0]);
+if (empty($password)) {
+    echo "  Senha:    (vazia!)\n";
+} elseif ($isEncrypted) {
+    echo "  Senha:    AINDA ENCRIPTADA! (decriptacao falhou)\n";
+    echo "            Use: ERP_SQL_PASSWORD=senha_real php scripts/test_erp_standalone.php\n";
+} else {
+    echo "  Senha:    " . str_repeat('*', min(strlen($password), 8)) . " (" . strlen($password) . " chars)\n";
+}
+echo "\n";
 
 // ============================================================
 // 3. Drivers PDO
