@@ -21,7 +21,7 @@ set +H 2>/dev/null || true
 MAGENTO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
 # ROOT para operações admin (CREATE USER, GRANT, CREATE TABLE, VIEWS, PROCEDURES)
-MYSQL_ROOT="sudo mysql magento"
+MYSQL_ROOT="mysql magento"
 # User normal para SELECT
 MYSQL_CMD="mysql -u magento -pAw4m0t0s2025Mage magento"
 
@@ -48,6 +48,14 @@ if [ "$(id -u)" -ne 0 ]; then
     exit 1
 fi
 
+# Evitar o warning: "sudo: unable to resolve host ..." (não costuma quebrar, mas polui logs e pode afetar automações)
+HOST_SHORT="$(hostname 2>/dev/null || true)"
+if [ -n "$HOST_SHORT" ] && [ -w /etc/hosts ]; then
+    if ! grep -Eq "(^|\s)${HOST_SHORT}(\s|$)" /etc/hosts 2>/dev/null; then
+        echo "127.0.1.1 ${HOST_SHORT}" >> /etc/hosts 2>/dev/null || true
+    fi
+fi
+
 # Testar acesso root ao MySQL
 # Testar acesso root ao MySQL (com fallback)
 if ! $MYSQL_ROOT -e "SELECT 1" >/dev/null 2>&1; then
@@ -60,6 +68,10 @@ if ! $MYSQL_ROOT -e "SELECT 1" >/dev/null 2>&1; then
     elif mysql -u root magento -e "SELECT 1" >/dev/null 2>&1; then
         MYSQL_ROOT="mysql -u root magento"
         ok "Acesso root ao MySQL confirmado (via mysql -u root)"
+    # fallback 3: em alguns ambientes, o root só entra com sudo mysql
+    elif sudo -n mysql magento -e "SELECT 1" >/dev/null 2>&1; then
+        MYSQL_ROOT="sudo -n mysql magento"
+        ok "Acesso root ao MySQL confirmado (via sudo mysql)"
     else
         fail "Nao foi possivel conectar como root no MySQL"
         fail "Teste manual sugerido: sudo mysql magento -e 'SELECT 1'"
