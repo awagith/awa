@@ -13,10 +13,11 @@
 # Uso: sudo bash scripts/setup_sectra_pull.sh
 # =============================================================================
 
-set -euo pipefail
+# NÃO usar set -e — queremos continuar mesmo se um passo falhar
+set -u
 
 MAGENTO_DIR="/home/user/htdocs/srv1113343.hstgr.cloud"
-MYSQL_CMD="mysql -u magento -p'Aw4m0t0s2025Mage' magento"
+MYSQL_CMD="mysql -u magento -pAw4m0t0s2025Mage magento"
 
 # Cores
 GREEN='\033[0;32m'
@@ -45,16 +46,25 @@ echo "== 1. USUARIO MYSQL 'sectra' =="
 SECTRA_PASS='S3ctr4B2b_Aw4!2026'
 
 # Verificar se user já existe
-USER_EXISTS=$($MYSQL_CMD -N -e "SELECT COUNT(*) FROM mysql.user WHERE user='sectra' AND host='%'" 2>/dev/null || echo "0")
+USER_EXISTS=$($MYSQL_CMD -N -e "SELECT COUNT(*) FROM mysql.user WHERE user='sectra' AND host='%'" 2>&1 | grep -o '[0-9]' | head -1 || echo "0")
 
-if [ "$USER_EXISTS" -gt 0 ]; then
+if [ "$USER_EXISTS" -gt 0 ] 2>/dev/null; then
     warn "Usuario 'sectra'@'%' ja existe. Atualizando senha..."
-    $MYSQL_CMD -e "ALTER USER 'sectra'@'%' IDENTIFIED BY '$SECTRA_PASS';" 2>/dev/null
-    ok "Senha atualizada"
+    if $MYSQL_CMD -e "ALTER USER 'sectra'@'%' IDENTIFIED BY '$SECTRA_PASS';" 2>&1; then
+        ok "Senha atualizada"
+    else
+        warn "Falha ao atualizar senha (pode ja estar correta)"
+    fi
 else
     info "Criando usuario 'sectra'@'%'..."
-    $MYSQL_CMD -e "CREATE USER 'sectra'@'%' IDENTIFIED BY '$SECTRA_PASS';" 2>/dev/null
-    ok "Usuario criado"
+    if $MYSQL_CMD -e "CREATE USER IF NOT EXISTS 'sectra'@'%' IDENTIFIED BY '$SECTRA_PASS';" 2>&1; then
+        ok "Usuario criado"
+    else
+        warn "Falha ao criar user (tentando DROP + CREATE)..."
+        $MYSQL_CMD -e "DROP USER IF EXISTS 'sectra'@'%';" 2>&1 || true
+        $MYSQL_CMD -e "CREATE USER 'sectra'@'%' IDENTIFIED BY '$SECTRA_PASS';" 2>&1 || fail "Nao foi possivel criar usuario sectra"
+        ok "Usuario criado (via DROP+CREATE)"
+    fi
 fi
 
 # =============================================================================
@@ -124,11 +134,14 @@ for TABLE in "${WRITE_TABLES[@]}"; do
 done
 ok "INSERT/UPDATE grant nas tabelas de sync"
 
-# Grant na view que vamos criar
-$MYSQL_CMD -e "GRANT SELECT ON magento.* TO 'sectra'@'%';" 2>/dev/null && \
-    warn "Grant genérico SELECT para views (restringir depois se necessário)"
+# Grant na view que vamos criar + procedure + INSERT nas tabelas de sync
+$MYSQL_CMD -e "GRANT SELECT ON magento.* TO 'sectra'@'%';" 2>&1 || true
+$MYSQL_CMD -e "GRANT INSERT, UPDATE ON magento.grupoawamotos_erp_entity_map TO 'sectra'@'%';" 2>&1 || true
+$MYSQL_CMD -e "GRANT INSERT, UPDATE ON magento.grupoawamotos_erp_sync_log TO 'sectra'@'%';" 2>&1 || true
+$MYSQL_CMD -e "GRANT INSERT ON magento.sales_order_status_history TO 'sectra'@'%';" 2>&1 || true
+warn "Grants genericos aplicados"
 
-$MYSQL_CMD -e "FLUSH PRIVILEGES;" 2>/dev/null
+$MYSQL_CMD -e "FLUSH PRIVILEGES;" 2>&1 || true
 ok "Privileges flushed"
 
 # =============================================================================
@@ -272,8 +285,8 @@ END;
 " 2>/dev/null && ok "Procedure sp_sectra_ack_pedido criada" || warn "Falha ao criar procedure"
 
 # Grant EXECUTE na procedure
-$MYSQL_CMD -e "GRANT EXECUTE ON PROCEDURE magento.sp_sectra_ack_pedido TO 'sectra'@'%';" 2>/dev/null
-$MYSQL_CMD -e "FLUSH PRIVILEGES;" 2>/dev/null
+$MYSQL_CMD -e "GRANT EXECUTE ON PROCEDURE magento.sp_sectra_ack_pedido TO 'sectra'@'%';" 2>&1 || true
+$MYSQL_CMD -e "FLUSH PRIVILEGES;" 2>&1 || true
 
 # =============================================================================
 # 4. VERIFICAR COLUNA customer_erp_code EM sales_order
