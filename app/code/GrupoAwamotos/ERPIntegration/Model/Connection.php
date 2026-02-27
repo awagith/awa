@@ -361,6 +361,11 @@ class Connection implements ConnectionInterface
         string $username,
         string $password
     ): \PDO {
+        // FreeTDS (dblib) requires TDSVER env var for proper protocol negotiation
+        if ($driver === self::DRIVER_DBLIB) {
+            putenv('TDSVER=7.4');
+        }
+
         $dsn = $this->buildDsn($driver, $host, $port, $database);
         $options = $this->getConnectionOptions($driver);
 
