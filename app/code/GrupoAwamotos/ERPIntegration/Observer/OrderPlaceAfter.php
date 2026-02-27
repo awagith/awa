@@ -7,6 +7,7 @@ use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer;
 use GrupoAwamotos\ERPIntegration\Helper\Data as Helper;
 use GrupoAwamotos\ERPIntegration\Model\ResourceModel\SyncLog as SyncLogResource;
+use GrupoAwamotos\ERPIntegration\Api\CustomerSyncInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Psr\Log\LoggerInterface;
 
@@ -16,23 +17,31 @@ use Psr\Log\LoggerInterface;
  * In PULL mode, the ERP fetches orders via REST API (GET /V1/erp/orders/pending).
  * This observer logs the order and stamps the customer's ERP code directly on
  * the sales_order record, so ERP SECTRA can read it regardless of import method.
+ *
+ * Resolution order for erp_code:
+ *  1. Customer attribute 'erp_code' (primary)
+ *  2. entity_map table (fallback)
+ *  3. ERP lookup by CPF/CNPJ in FN_FORNECEDORES (auto-link)
  */
 class OrderPlaceAfter implements ObserverInterface
 {
     private Helper $helper;
     private SyncLogResource $syncLogResource;
     private CustomerRepositoryInterface $customerRepository;
+    private CustomerSyncInterface $customerSync;
     private LoggerInterface $logger;
 
     public function __construct(
         Helper $helper,
         SyncLogResource $syncLogResource,
         CustomerRepositoryInterface $customerRepository,
+        CustomerSyncInterface $customerSync,
         LoggerInterface $logger
     ) {
         $this->helper = $helper;
         $this->syncLogResource = $syncLogResource;
         $this->customerRepository = $customerRepository;
+        $this->customerSync = $customerSync;
         $this->logger = $logger;
     }
 
@@ -87,7 +96,10 @@ class OrderPlaceAfter implements ObserverInterface
     }
 
     /**
-     * Resolve ERP code: customer attribute (primary) -> entity_map (fallback)
+     * Resolve ERP code with 3-tier resolution:
+     *  1. Customer attribute 'erp_code' (primary - instant)
+     *  2. entity_map table (fallback - local DB)
+     *  3. ERP lookup by CPF/CNPJ in FN_FORNECEDORES (auto-link, persists for future)
      */
     private function resolveCustomerErpCode($order): ?int
     {
@@ -96,6 +108,7 @@ class OrderPlaceAfter implements ObserverInterface
             return null;
         }
 
+        $customer = null;
         try {
             // Primary: erp_code customer attribute
             $customer = $this->customerRepository->getById((int) $customerId);
@@ -113,6 +126,56 @@ class OrderPlaceAfter implements ObserverInterface
             return (int) $erpCode;
         }
 
-        return null;
+        // Auto-link: lookup by CPF/CNPJ in ERP (read-only)
+        return $this->autoLinkByTaxvat($order, (int) $customerId, $customer);
+    }
+
+    /**
+     * Attempt to resolve and persist erp_code by looking up CPF/CNPJ in Sectra.
+     * This is a read-only operation on the ERP side — only Magento data is updated.
+     */
+    private function autoLinkByTaxvat($order, int $customerId, ?\Magento\Customer\Api\Data\CustomerInterface $customer): ?int
+    {
+        $taxvat = $order->getCustomerTaxvat();
+        if (empty($taxvat)) {
+            // Try from customer entity if not on order
+            if ($customer) {
+                $taxvat = $customer->getTaxvat();
+            }
+        }
+
+        if (empty($taxvat)) {
+            return null;
+        }
+
+        try {
+            $erpCustomer = $this->customerSync->getErpCustomerByTaxvat($taxvat);
+            if (!$erpCustomer || empty($erpCustomer['CODIGO'])) {
+                $this->logger->info('[ERP] Auto-link: CPF/CNPJ not found in ERP', [
+                    'customer_id' => $customerId,
+                    'taxvat' => substr($taxvat, 0, 6) . '***',
+                ]);
+                return null;
+            }
+
+            $erpCode = (int) $erpCustomer['CODIGO'];
+
+            // Persist the link for future orders (saves both entity_map + customer attribute)
+            $linked = $this->customerSync->linkMagentoToErp($customerId, $erpCode);
+            if ($linked) {
+                $this->logger->info('[ERP] Auto-linked customer by CPF/CNPJ', [
+                    'customer_id' => $customerId,
+                    'erp_code' => $erpCode,
+                    'razao' => $erpCustomer['RAZAO'] ?? '',
+                ]);
+            }
+
+            return $erpCode;
+        } catch (\Exception $e) {
+            $this->logger->warning('[ERP] Auto-link by taxvat failed: ' . $e->getMessage(), [
+                'customer_id' => $customerId,
+            ]);
+            return null;
+        }
     }
 }
