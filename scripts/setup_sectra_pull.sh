@@ -1,0 +1,419 @@
+#!/bin/bash
+# =============================================================================
+# Setup completo da integração Sectra ERP <-> Magento 2 (modo PULL via MySQL)
+#
+# O que faz:
+# 1. Cria user MySQL 'sectra' com acesso remoto
+# 2. Cria VIEWs compatíveis com o que o Sectra espera ler
+# 3. Ativa configs do módulo ERP no Magento
+# 4. Verifica/cria coluna customer_erp_code
+# 5. Verifica bind-address do MySQL
+# 6. Mostra IP público para configurar no Sectra
+#
+# Uso: sudo bash scripts/setup_sectra_pull.sh
+# =============================================================================
+
+set -euo pipefail
+
+MAGENTO_DIR="/home/user/htdocs/srv1113343.hstgr.cloud"
+MYSQL_CMD="mysql -u magento -p'Aw4m0t0s2025Mage' magento"
+
+# Cores
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m'
+
+ok()    { echo -e "  ${GREEN}[OK]${NC} $1"; }
+fail()  { echo -e "  ${RED}[ERRO]${NC} $1"; }
+warn()  { echo -e "  ${YELLOW}[AVISO]${NC} $1"; }
+info()  { echo -e "  ${BLUE}[INFO]${NC} $1"; }
+
+echo "============================================================"
+echo "  SETUP SECTRA ERP <-> MAGENTO 2 (PULL VIA MYSQL)"
+echo "  $(date '+%Y-%m-%d %H:%M:%S')"
+echo "============================================================"
+echo ""
+
+# =============================================================================
+# 1. CRIAR USUARIO MYSQL 'sectra'
+# =============================================================================
+echo "== 1. USUARIO MYSQL 'sectra' =="
+
+# Senha do print: S3ctr4B2b_Aw4!2026
+SECTRA_PASS='S3ctr4B2b_Aw4!2026'
+
+# Verificar se user já existe
+USER_EXISTS=$($MYSQL_CMD -N -e "SELECT COUNT(*) FROM mysql.user WHERE user='sectra' AND host='%'" 2>/dev/null || echo "0")
+
+if [ "$USER_EXISTS" -gt 0 ]; then
+    warn "Usuario 'sectra'@'%' ja existe. Atualizando senha..."
+    $MYSQL_CMD -e "ALTER USER 'sectra'@'%' IDENTIFIED BY '$SECTRA_PASS';" 2>/dev/null
+    ok "Senha atualizada"
+else
+    info "Criando usuario 'sectra'@'%'..."
+    $MYSQL_CMD -e "CREATE USER 'sectra'@'%' IDENTIFIED BY '$SECTRA_PASS';" 2>/dev/null
+    ok "Usuario criado"
+fi
+
+# =============================================================================
+# 2. GRANTS - Sectra precisa ler pedidos, items, clientes
+# =============================================================================
+echo ""
+echo "== 2. PERMISSOES (GRANTS) =="
+
+# Tabelas que o Sectra precisa LER
+READ_TABLES=(
+    "sales_order"
+    "sales_order_item"
+    "sales_order_address"
+    "sales_order_payment"
+    "sales_order_grid"
+    "sales_order_status_history"
+    "sales_shipment"
+    "sales_shipment_track"
+    "sales_invoice"
+    "customer_entity"
+    "customer_entity_varchar"
+    "customer_entity_int"
+    "customer_address_entity"
+    "customer_address_entity_varchar"
+    "customer_address_entity_text"
+    "customer_address_entity_int"
+    "eav_attribute"
+    "eav_entity_type"
+    "catalog_product_entity"
+    "catalog_product_entity_varchar"
+    "catalog_product_entity_decimal"
+    "catalog_product_entity_int"
+    "cataloginventory_stock_item"
+    "catalog_category_product"
+    "store"
+    "store_group"
+    "store_website"
+    "core_config_data"
+    "grupoawamotos_erp_entity_map"
+    "grupoawamotos_erp_sync_log"
+    "directory_country_region"
+)
+
+# Tabelas que o Sectra pode ESCREVER (para marcar pedidos como puxados)
+WRITE_TABLES=(
+    "grupoawamotos_erp_entity_map"
+    "grupoawamotos_erp_sync_log"
+)
+
+# Grant SELECT nas tabelas de leitura
+for TABLE in "${READ_TABLES[@]}"; do
+    EXISTS=$($MYSQL_CMD -N -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='magento' AND table_name='$TABLE'" 2>/dev/null || echo "0")
+    if [ "$EXISTS" -gt 0 ]; then
+        $MYSQL_CMD -e "GRANT SELECT ON magento.$TABLE TO 'sectra'@'%';" 2>/dev/null
+    else
+        warn "Tabela $TABLE nao existe (sera criada no setup:upgrade)"
+    fi
+done
+ok "SELECT grant em ${#READ_TABLES[@]} tabelas"
+
+# Grant INSERT/UPDATE nas tabelas de escrita
+for TABLE in "${WRITE_TABLES[@]}"; do
+    EXISTS=$($MYSQL_CMD -N -e "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='magento' AND table_name='$TABLE'" 2>/dev/null || echo "0")
+    if [ "$EXISTS" -gt 0 ]; then
+        $MYSQL_CMD -e "GRANT SELECT, INSERT, UPDATE ON magento.$TABLE TO 'sectra'@'%';" 2>/dev/null
+    fi
+done
+ok "INSERT/UPDATE grant nas tabelas de sync"
+
+# Grant na view que vamos criar
+$MYSQL_CMD -e "GRANT SELECT ON magento.* TO 'sectra'@'%';" 2>/dev/null && \
+    warn "Grant genérico SELECT para views (restringir depois se necessário)"
+
+$MYSQL_CMD -e "FLUSH PRIVILEGES;" 2>/dev/null
+ok "Privileges flushed"
+
+# =============================================================================
+# 3. CRIAR VIEWs COMPATÍVEIS COM O QUE SECTRA ESPERA
+# =============================================================================
+echo ""
+echo "== 3. VIEWS PARA O SECTRA =="
+
+# View de pedidos pendentes (não sincronizados com ERP)
+$MYSQL_CMD -e "
+CREATE OR REPLACE VIEW vw_sectra_pedidos_pendentes AS
+SELECT
+    so.entity_id AS magento_order_id,
+    so.increment_id AS pedido_web,
+    so.created_at AS data_pedido,
+    so.updated_at AS data_atualizacao,
+    so.state AS estado,
+    so.status AS status_magento,
+    so.customer_id,
+    so.customer_email,
+    so.customer_firstname,
+    so.customer_lastname,
+    COALESCE(so.customer_taxvat, '') AS cpf_cnpj,
+    COALESCE(so.customer_erp_code, '') AS erp_code,
+    so.subtotal,
+    ABS(COALESCE(so.discount_amount, 0)) AS desconto,
+    COALESCE(so.shipping_amount, 0) AS frete,
+    so.grand_total AS total,
+    so.total_qty_ordered AS qtd_itens,
+    COALESCE(so.coupon_code, '') AS cupom,
+    COALESCE(sop.method, '') AS forma_pagamento,
+    -- Endereço de entrega
+    COALESCE(soa.street, '') AS endereco,
+    COALESCE(soa.city, '') AS cidade,
+    COALESCE(dcr.code, soa.region, '') AS uf,
+    COALESCE(soa.postcode, '') AS cep,
+    COALESCE(soa.telephone, '') AS telefone
+FROM sales_order so
+LEFT JOIN sales_order_payment sop ON sop.parent_id = so.entity_id
+LEFT JOIN sales_order_address soa ON soa.parent_id = so.entity_id AND soa.address_type = 'shipping'
+LEFT JOIN directory_country_region dcr ON dcr.region_id = soa.region_id
+WHERE so.state IN ('new', 'pending_payment', 'processing')
+  AND so.entity_id NOT IN (
+      SELECT magento_entity_id FROM grupoawamotos_erp_entity_map WHERE entity_type = 'order'
+  )
+ORDER BY so.created_at ASC;
+" 2>/dev/null && ok "View vw_sectra_pedidos_pendentes criada" || warn "Falha ao criar view pedidos_pendentes"
+
+# View de itens dos pedidos
+$MYSQL_CMD -e "
+CREATE OR REPLACE VIEW vw_sectra_pedidos_itens AS
+SELECT
+    soi.order_id AS magento_order_id,
+    so.increment_id AS pedido_web,
+    soi.item_id,
+    soi.sku AS codigo_produto,
+    soi.name AS descricao,
+    soi.qty_ordered AS quantidade,
+    soi.price AS preco_unitario,
+    soi.row_total AS total_item,
+    ABS(COALESCE(soi.discount_amount, 0)) AS desconto_item,
+    (soi.row_total - ABS(COALESCE(soi.discount_amount, 0))) AS total_liquido,
+    soi.weight AS peso
+FROM sales_order_item soi
+INNER JOIN sales_order so ON so.entity_id = soi.order_id
+WHERE soi.parent_item_id IS NULL
+  AND soi.qty_ordered > 0
+ORDER BY soi.order_id, soi.item_id;
+" 2>/dev/null && ok "View vw_sectra_pedidos_itens criada" || warn "Falha ao criar view pedidos_itens"
+
+# View de clientes B2B (com erp_code)
+$MYSQL_CMD -e "
+CREATE OR REPLACE VIEW vw_sectra_clientes_b2b AS
+SELECT
+    ce.entity_id AS magento_customer_id,
+    ce.email,
+    CONCAT(ce.firstname, ' ', ce.lastname) AS nome,
+    COALESCE(ce.taxvat, '') AS cpf_cnpj,
+    ce.created_at AS data_cadastro,
+    COALESCE(cev_erp.value, '') AS erp_code,
+    COALESCE(cev_tipo.value, '') AS tipo_pessoa,
+    COALESCE(eem.erp_entity_id, '') AS erp_entity_map_code
+FROM customer_entity ce
+LEFT JOIN eav_attribute ea_erp ON ea_erp.attribute_code = 'erp_code'
+    AND ea_erp.entity_type_id = (SELECT entity_type_id FROM eav_entity_type WHERE entity_type_code = 'customer')
+LEFT JOIN customer_entity_varchar cev_erp ON cev_erp.entity_id = ce.entity_id AND cev_erp.attribute_id = ea_erp.attribute_id
+LEFT JOIN eav_attribute ea_tipo ON ea_tipo.attribute_code = 'person_type'
+    AND ea_tipo.entity_type_id = (SELECT entity_type_id FROM eav_entity_type WHERE entity_type_code = 'customer')
+LEFT JOIN customer_entity_varchar cev_tipo ON cev_tipo.entity_id = ce.entity_id AND cev_tipo.attribute_id = ea_tipo.attribute_id
+LEFT JOIN grupoawamotos_erp_entity_map eem ON eem.magento_entity_id = ce.entity_id AND eem.entity_type = 'customer'
+WHERE ce.is_active = 1
+ORDER BY ce.entity_id;
+" 2>/dev/null && ok "View vw_sectra_clientes_b2b criada" || warn "Falha ao criar view clientes_b2b"
+
+# View de pedidos já sincronizados (para referência)
+$MYSQL_CMD -e "
+CREATE OR REPLACE VIEW vw_sectra_pedidos_sincronizados AS
+SELECT
+    eem.erp_entity_id AS erp_pedido_id,
+    eem.magento_entity_id AS magento_order_id,
+    so.increment_id AS pedido_web,
+    so.state AS estado,
+    so.status AS status_magento,
+    so.grand_total AS total,
+    so.created_at AS data_pedido,
+    eem.synced_at AS data_sync
+FROM grupoawamotos_erp_entity_map eem
+INNER JOIN sales_order so ON so.entity_id = eem.magento_entity_id
+WHERE eem.entity_type = 'order'
+ORDER BY eem.synced_at DESC;
+" 2>/dev/null && ok "View vw_sectra_pedidos_sincronizados criada" || warn "Falha ao criar view pedidos_sincronizados"
+
+# Procedure para o Sectra marcar pedido como puxado
+$MYSQL_CMD -e "
+DROP PROCEDURE IF EXISTS sp_sectra_ack_pedido;
+CREATE PROCEDURE sp_sectra_ack_pedido(
+    IN p_increment_id VARCHAR(50),
+    IN p_erp_order_id VARCHAR(50)
+)
+BEGIN
+    DECLARE v_magento_id INT;
+
+    SELECT entity_id INTO v_magento_id
+    FROM sales_order WHERE increment_id = p_increment_id LIMIT 1;
+
+    IF v_magento_id IS NOT NULL THEN
+        -- Inserir no mapa
+        INSERT INTO grupoawamotos_erp_entity_map (entity_type, erp_entity_id, magento_entity_id, synced_at)
+        VALUES ('order', p_erp_order_id, v_magento_id, NOW())
+        ON DUPLICATE KEY UPDATE erp_entity_id = p_erp_order_id, synced_at = NOW();
+
+        -- Adicionar comment no pedido
+        INSERT INTO sales_order_status_history (parent_id, is_customer_notified, is_visible_on_front, comment, status, entity_name, created_at)
+        VALUES (v_magento_id, 0, 0, CONCAT('[ERP Sectra] Pedido importado. ID ERP: ', p_erp_order_id), 'processing', 'order', NOW());
+
+        SELECT 'OK' AS resultado, v_magento_id AS magento_id, p_erp_order_id AS erp_id;
+    ELSE
+        SELECT 'ERRO' AS resultado, 'Pedido nao encontrado' AS mensagem;
+    END IF;
+END;
+" 2>/dev/null && ok "Procedure sp_sectra_ack_pedido criada" || warn "Falha ao criar procedure"
+
+# Grant EXECUTE na procedure
+$MYSQL_CMD -e "GRANT EXECUTE ON PROCEDURE magento.sp_sectra_ack_pedido TO 'sectra'@'%';" 2>/dev/null
+$MYSQL_CMD -e "FLUSH PRIVILEGES;" 2>/dev/null
+
+# =============================================================================
+# 4. VERIFICAR COLUNA customer_erp_code EM sales_order
+# =============================================================================
+echo ""
+echo "== 4. COLUNA customer_erp_code =="
+
+COL_EXISTS=$($MYSQL_CMD -N -e "SELECT COUNT(*) FROM information_schema.columns WHERE table_schema='magento' AND table_name='sales_order' AND column_name='customer_erp_code'" 2>/dev/null || echo "0")
+
+if [ "$COL_EXISTS" -gt 0 ]; then
+    ok "Coluna customer_erp_code existe em sales_order"
+else
+    info "Criando coluna customer_erp_code..."
+    $MYSQL_CMD -e "ALTER TABLE sales_order ADD COLUMN customer_erp_code VARCHAR(50) DEFAULT NULL COMMENT 'ERP Client Code';" 2>/dev/null
+    $MYSQL_CMD -e "ALTER TABLE sales_order_grid ADD COLUMN customer_erp_code VARCHAR(50) DEFAULT NULL COMMENT 'ERP Client Code';" 2>/dev/null
+    ok "Coluna criada em sales_order e sales_order_grid"
+fi
+
+# =============================================================================
+# 5. ATIVAR CONFIGS NO MAGENTO
+# =============================================================================
+echo ""
+echo "== 5. CONFIGS DO MAGENTO =="
+
+cd "$MAGENTO_DIR"
+
+# Ativar módulo ERP
+sudo -u www-data php bin/magento config:set grupoawamotos_erp/connection/enabled 1 2>/dev/null && ok "ERP habilitado" || warn "Falha ao habilitar ERP"
+
+# Modo PULL (não enviar ao finalizar)
+sudo -u www-data php bin/magento config:set grupoawamotos_erp/sync_orders/enabled 1 2>/dev/null && ok "Sync pedidos habilitado" || warn "Falha ao habilitar sync"
+sudo -u www-data php bin/magento config:set grupoawamotos_erp/sync_orders/send_on_place 0 2>/dev/null && ok "send_on_place = 0 (modo PULL)" || warn "Falha"
+sudo -u www-data php bin/magento config:set grupoawamotos_erp/sync_orders/use_queue 0 2>/dev/null && ok "use_queue = 0 (PULL direto)" || warn "Falha"
+
+# Limpar cache
+sudo -u www-data php bin/magento cache:flush 2>/dev/null && ok "Cache limpo" || warn "Falha ao limpar cache"
+
+# =============================================================================
+# 6. VERIFICAR BIND-ADDRESS DO MYSQL
+# =============================================================================
+echo ""
+echo "== 6. ACESSO REMOTO MYSQL =="
+
+BIND_ADDR=$(grep -r 'bind-address' /etc/mysql/ 2>/dev/null | grep -v '#' | tail -1 || echo "nao encontrado")
+info "MySQL bind-address: $BIND_ADDR"
+
+if echo "$BIND_ADDR" | grep -q '127.0.0.1'; then
+    warn "MySQL esta com bind-address=127.0.0.1 (apenas local)"
+    warn "Para acesso remoto, mude para 0.0.0.0 em /etc/mysql/mysql.conf.d/mysqld.cnf"
+    warn "Depois reinicie: sudo systemctl restart mysql"
+
+    # Tentar alterar automaticamente
+    MYSQL_CONF="/etc/mysql/mysql.conf.d/mysqld.cnf"
+    if [ -f "$MYSQL_CONF" ]; then
+        info "Alterando bind-address para 0.0.0.0..."
+        sudo sed -i 's/^bind-address\s*=\s*127\.0\.0\.1/bind-address = 0.0.0.0/' "$MYSQL_CONF" 2>/dev/null
+        sudo systemctl restart mysql 2>/dev/null && ok "MySQL reiniciado com bind-address=0.0.0.0" || warn "Falha ao reiniciar MySQL"
+    fi
+elif echo "$BIND_ADDR" | grep -q '0.0.0.0'; then
+    ok "MySQL ja aceita conexoes remotas"
+else
+    info "Verificar manualmente a config do MySQL"
+fi
+
+# =============================================================================
+# 7. VERIFICAR FIREWALL
+# =============================================================================
+echo ""
+echo "== 7. FIREWALL (porta 3306) =="
+
+if command -v ufw &>/dev/null; then
+    UFW_STATUS=$(sudo ufw status 2>/dev/null | head -1)
+    info "UFW: $UFW_STATUS"
+    if echo "$UFW_STATUS" | grep -qi "active"; then
+        # Liberar porta 3306 apenas para o IP do Sectra
+        SECTRA_IP="201.33.193.193"
+        sudo ufw allow from $SECTRA_IP to any port 3306 proto tcp 2>/dev/null && ok "Porta 3306 liberada para $SECTRA_IP" || warn "Falha ao liberar porta"
+    fi
+elif command -v iptables &>/dev/null; then
+    info "Usando iptables"
+    SECTRA_IP="201.33.193.193"
+    sudo iptables -A INPUT -p tcp -s $SECTRA_IP --dport 3306 -j ACCEPT 2>/dev/null && ok "Porta 3306 liberada para $SECTRA_IP via iptables" || warn "Falha"
+fi
+
+# =============================================================================
+# 8. TESTAR CONEXAO COM USER SECTRA
+# =============================================================================
+echo ""
+echo "== 8. TESTE DE CONEXAO 'sectra' =="
+
+mysql -u sectra -p"$SECTRA_PASS" magento -e "SELECT 'Conexao OK' AS status, NOW() AS timestamp;" 2>/dev/null && ok "User sectra conecta localmente" || fail "User sectra NAO consegue conectar"
+
+# Testar view
+mysql -u sectra -p"$SECTRA_PASS" magento -e "SELECT COUNT(*) AS total_pendentes FROM vw_sectra_pedidos_pendentes;" 2>/dev/null && ok "View pedidos pendentes acessivel" || fail "View nao acessivel"
+
+# =============================================================================
+# 9. IP PUBLICO DO SERVIDOR
+# =============================================================================
+echo ""
+echo "== 9. IP DO SERVIDOR =="
+
+PUBLIC_IP=$(curl -s --max-time 5 ifconfig.me 2>/dev/null || curl -s --max-time 5 icanhazip.com 2>/dev/null || echo "NAO DETECTADO")
+DOMAIN_IP=$(dig +short awamotos.com 2>/dev/null | head -1 || echo "")
+
+info "IP publico: $PUBLIC_IP"
+info "IP do dominio awamotos.com: ${DOMAIN_IP:-NAO RESOLVIDO}"
+
+echo ""
+echo "============================================================"
+echo -e "  ${GREEN}SETUP CONCLUIDO!${NC}"
+echo "============================================================"
+echo ""
+echo "O QUE FOI FEITO:"
+echo "  1. User MySQL 'sectra' criado/atualizado com senha do print"
+echo "  2. Grants SELECT em tabelas de pedidos/clientes/produtos"
+echo "  3. 4 Views criadas para o Sectra consultar:"
+echo "     - vw_sectra_pedidos_pendentes  (pedidos nao enviados)"
+echo "     - vw_sectra_pedidos_itens      (itens dos pedidos)"
+echo "     - vw_sectra_clientes_b2b       (clientes com erp_code)"
+echo "     - vw_sectra_pedidos_sincronizados (pedidos ja puxados)"
+echo "  4. Procedure sp_sectra_ack_pedido para confirmar importacao"
+echo "  5. Configs do Magento ativadas (modo PULL)"
+echo "  6. Coluna customer_erp_code verificada"
+echo ""
+echo "CONFIGURAR NO SECTRA (parametros 24.05):"
+echo "  24.05.001 - Host BD:     $PUBLIC_IP"
+echo "  24.05.002 - Nome BD:     magento"
+echo "  24.05.003 - Usuario BD:  sectra"
+echo "  24.05.004 - Senha BD:    (manter a mesma)"
+echo ""
+echo "QUERIES PARA O SECTRA USAR:"
+echo "  -- Buscar pedidos pendentes:"
+echo "  SELECT * FROM vw_sectra_pedidos_pendentes;"
+echo ""
+echo "  -- Buscar itens de um pedido:"
+echo "  SELECT * FROM vw_sectra_pedidos_itens WHERE pedido_web = '100000123';"
+echo ""
+echo "  -- Marcar pedido como importado:"
+echo "  CALL sp_sectra_ack_pedido('100000123', '12345');"
+echo ""
+echo "  -- Ver pedidos ja sincronizados:"
+echo "  SELECT * FROM vw_sectra_pedidos_sincronizados;"
+echo "============================================================"
