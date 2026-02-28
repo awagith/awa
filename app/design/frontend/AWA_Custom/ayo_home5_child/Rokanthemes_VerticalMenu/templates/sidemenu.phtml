@@ -1,0 +1,46 @@
+<?php
+/**
+ * Copyright © 2016 TuanHatay. All rights reserved.
+ *
+ * AWA Motos override — mínimo: adiciona classes togge-menu + list-category-dropdown
+ * à <ul> para compatibilidade com os seletores CSS do tema filho.
+ * Toda a lógica PHP permanece idêntica ao original do módulo.
+ *
+ * @see \Rokanthemes\VerticalMenu\Block\Verticalmenu
+ */
+?>
+<?php
+    $_helper = $this->helper('Rokanthemes\VerticalMenu\Helper\Data');
+    $_config = $_helper->getConfig('verticalmenu');
+    $columnsLimit = 0;
+    if ($_config['general']['enable']) {
+        $limitShow = isset($_config['general']['limit_show']) ? (int)$_config['general']['limit_show'] : 0;
+?>
+<?php $_menu = $block->getVerticalMenuHtml(); ?>
+
+<nav class="navigation verticalmenu side-verticalmenu" aria-label="<?= $escaper->escapeHtmlAttr(__('Product Categories')) ?>">
+    <h2 class="our_categories title-category-dropdown">
+        <span class="vm-icon"><i class="fa fa-bars"></i></span>
+        <span><?= $escaper->escapeHtml(__('Categories')) ?></span>
+    </h2>
+    <ul class="togge-menu list-category-dropdown" data-limit-show="<?= (int)$limitShow ?>">
+        <?php echo $_menu; ?>
+    </ul>
+    <?php if ($limitShow > 0): ?>
+    <a href="javascript:void(0);" class="viewall vm-toggle-categories" data-show-text="<?= $escaper->escapeHtmlAttr(__('Show More')) ?>" data-hide-text="<?= $escaper->escapeHtmlAttr(__('Show Less')) ?>">
+        <span class="vm-toggle-text"><?= $escaper->escapeHtml(__('Show More')) ?></span>
+        <i class="fa fa-angle-down vm-toggle-icon"></i>
+    </a>
+    <?php endif; ?>
+</nav>
+
+<script type="text/javascript">
+    require([
+        'jquery',
+        'rokanthemes/verticalmenu'
+    ], function ($) {
+        $(".verticalmenu").VerticalMenu();
+    });
+</script>
+<?php
+    }
