@@ -59,6 +59,7 @@ node_modules/
 *.gz
 *.zip
 _backups/
+artifacts/
 
 # Scripts utilitários e documentos locais
 scripts/
