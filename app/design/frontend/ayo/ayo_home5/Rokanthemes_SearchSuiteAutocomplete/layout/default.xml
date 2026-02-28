@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!--
+    Ativa os componentes JS e CSS do SearchSuiteAutocomplete no frontend.
+    O bloco top.search já é definido em Rokanthemes_Themeoption/layout/default.xml.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Rokanthemes_SearchSuiteAutocomplete::css/searchsuiteautocomplete.css"/>
+        <css src="Rokanthemes_SearchSuiteAutocomplete::css/awa-autocomplete.css"/>
+    </head>
+</page>

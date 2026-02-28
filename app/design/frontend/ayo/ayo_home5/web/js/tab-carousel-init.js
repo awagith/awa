@@ -241,7 +241,7 @@ define([
             ensureIn: function () {}
         };
 
-        if (!carouselSelector || typeof $.fn.owlCarousel !== 'function') {
+        if (!carouselSelector) {
             return manager;
         }
 
@@ -300,8 +300,16 @@ define([
                     return;
                 }
 
+                if (typeof $carousel.owlCarousel !== 'function') {
+                    return;
+                }
+
                 $carousel.data('awaTabCarouselInit', 1);
-                $carousel.owlCarousel(baseOptions);
+                try {
+                    $carousel.owlCarousel(baseOptions);
+                } catch (error) {
+                    $carousel.removeData('awaTabCarouselInit');
+                }
             });
         }
 

@@ -1,0 +1,62 @@
+<?php
+/**
+ * Customer-specific ERP price comparison + tier pricing on PDP (theme override)
+ * @var \GrupoAwamotos\B2B\Block\Product\CustomerPriceInfo $block
+ */
+$priceData = $block->getCustomerPriceData();
+$tierData = $block->getTierPricingData();
+
+if (!$priceData && !$tierData) {
+    return;
+}
+?>
+<?php if ($priceData):
+    $listName = $priceData['price_list_name'] ?? '';
+?>
+<?php if ($listName): ?>
+<div class="b2b-customer-price-info">
+    <div class="b2b-price-list-info">
+        <span class="b2b-list-label"><?= $block->escapeHtml(__('Tabela: %1', $listName)) ?></span>
+    </div>
+</div>
+<?php endif; ?>
+<?php endif; ?>
+<?php if ($tierData): ?>
+<div class="b2b-tier-pricing" role="region" aria-labelledby="b2b-tier-title">
+    <div class="b2b-tier-heading">
+        <span class="b2b-tier-icon" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                <line x1="12" y1="22.08" x2="12" y2="12"/>
+            </svg>
+        </span>
+        <div class="b2b-tier-heading-copy">
+            <span class="b2b-tier-kicker"><?= $block->escapeHtml(__('Tier Pricing')) ?></span>
+            <span id="b2b-tier-title" class="b2b-tier-title"><?= $block->escapeHtml(__('Preço Progressivo')) ?></span>
+        </div>
+    </div>
+    <div class="b2b-tier-table-wrap">
+        <table class="b2b-tier-table" title="<?= $block->escapeHtmlAttr(__('Tabela de preço progressivo')) ?>" aria-label="<?= $block->escapeHtmlAttr(__('Tabela de preço progressivo por quantidade')) ?>">
+            <thead>
+                <tr>
+                    <th><?= $block->escapeHtml(__('Quantidade')) ?></th>
+                    <th><?= $block->escapeHtml(__('Preço Unitário')) ?></th>
+                    <th><?= $block->escapeHtml(__('Economia')) ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($tierData as $tier): ?>
+                <tr>
+                    <td class="b2b-tier-qty"><?= $block->escapeHtml(__('%1+ unidades', $tier['qty'])) ?></td>
+                    <td class="b2b-tier-price"><?= /* @noEscape */ $block->formatPrice($tier['price']) ?></td>
+                    <td class="b2b-tier-savings">
+                        <span class="b2b-savings-badge">-<?= $block->escapeHtml((string) $tier['savings_pct']) ?>%</span>
+                    </td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<?php endif; ?>

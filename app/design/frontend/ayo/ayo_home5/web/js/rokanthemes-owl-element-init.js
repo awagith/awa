@@ -45,6 +45,28 @@ define([
         return options;
     }
 
+    function initWhenReady($el, options, attemptsLeft) {
+        var remaining = attemptsLeft || 6;
+
+        if (!$el || !$el.length) {
+            return;
+        }
+
+        if (typeof $el.owlCarousel === 'function') {
+            $el.owlCarousel(options);
+            return;
+        }
+
+        if (remaining <= 0) {
+            $el.removeData('awaOwlElementInit');
+            return;
+        }
+
+        setTimeout(function () {
+            initWhenReady($el, options, remaining - 1);
+        }, 120);
+    }
+
     /**
      * Magento initializer for Owl Carousel v1.
      *
@@ -68,6 +90,6 @@ define([
         }
 
         $el.data('awaOwlElementInit', 1);
-        $el.owlCarousel(options);
+        initWhenReady($el, options, 6);
     };
 });

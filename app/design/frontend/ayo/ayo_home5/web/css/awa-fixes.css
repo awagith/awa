@@ -1268,6 +1268,14 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         position: relative;
     }
 
+    /* Stabilize mobile/tablet header row: avoid absolute nav-toggle overlap on search/logo. */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav > .container > .row {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        min-height: 54px;
+    }
+
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav .menu_left_home1 {
         display: none;
     }
@@ -1279,11 +1287,13 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
     body .page-wrapper .header-control.header-nav .nav-toggle,
     body .page-wrapper .header-control.header-nav .action.nav-toggle {
         display: flex !important;
-        position: absolute !important;
-        top: -74px !important;
-        left: 12px !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
         width: 42px !important;
         height: 42px !important;
+        flex: 0 0 auto;
+        margin: 6px 0 6px 15px;
         align-items: center;
         justify-content: center;
         border: 1px solid var(--awa-red) !important;
@@ -1307,7 +1317,51 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
     /* Reserve space for the hamburger icon so search text does not overlap it. */
     body .page-wrapper .header .top-search .block-search input#search,
     body .page-wrapper .header .top-search .block-search input.input-text {
-        padding-left: 52px !important;
+        padding-left: var(--awa-space-4) !important;
+    }
+
+    /* Keep minicart inside the mobile search row (avoid legacy absolute offsets from awa-layout.css). */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: var(--awa-space-2);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper {
+        order: 2;
+        flex: 0 0 auto;
+        margin-left: auto;
+        min-width: max-content;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .block-search {
+        order: 1;
+        flex: 1 1 auto;
+        min-width: 0;
+        margin-top: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .block-search .block-content,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .block-search form#search_mini_form,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .block-search form.minisearch {
+        width: 100%;
+    }
+
+    body .page-wrapper .header .top-search .minicart-wrapper {
+        display: block !important;
+        float: none !important;
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        margin-top: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .mini-carts,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .mini-cart-wrapper {
+        display: flex;
+        align-items: center;
+        flex: 0 0 auto;
     }
 
     body .page-wrapper .header-control.header-nav .nav-toggle::before,
@@ -1318,6 +1372,287 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         line-height: var(--awa-leading-none);
         color: var(--awa-red);
     }
+
+    /* Home5-wide (non-CMS pages too): same mobile/tablet header normalization. */
+    body .page-wrapper .header-control.header-nav > .container > .row {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        min-height: 54px;
+    }
+
+    body .page-wrapper .header-control.header-nav .menu_left_home1 {
+        display: none;
+    }
+
+    body .page-wrapper .header-control.header-nav .menu_primary {
+        display: none !important;
+    }
+
+    body .page-wrapper .header-control.header-nav .nav-toggle,
+    body .page-wrapper .header-control.header-nav .action.nav-toggle {
+        display: flex !important;
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        width: 42px !important;
+        height: 42px !important;
+        flex: 0 0 auto;
+        margin: 6px 0 6px 15px;
+        align-items: center;
+        justify-content: center;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    body .page-wrapper .header .top-search {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: var(--awa-space-2);
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper {
+        order: 2;
+        flex: 0 0 auto;
+        margin-left: auto;
+        min-width: max-content;
+    }
+
+    body .page-wrapper .header .top-search .block-search {
+        order: 1;
+        flex: 1 1 auto;
+        min-width: 0;
+        margin-top: 0 !important;
+    }
+
+    body .page-wrapper .header .top-search .block-search .block-content,
+    body .page-wrapper .header .top-search .block-search form#search_mini_form,
+    body .page-wrapper .header .top-search .block-search form.minisearch {
+        width: 100%;
+    }
+
+    body .page-wrapper .header .top-search .block-search input#search,
+    body .page-wrapper .header .top-search .block-search input.input-text {
+        padding-left: var(--awa-space-4) !important;
+    }
+
+    body .page-wrapper .header .top-search .minicart-wrapper {
+        display: block !important;
+        float: none !important;
+        position: relative !important;
+        top: auto !important;
+        right: auto !important;
+        margin-top: 0 !important;
+    }
+
+    body .page-wrapper .header .top-search .mini-carts,
+    body .page-wrapper .header .top-search .mini-cart-wrapper {
+        display: flex;
+        align-items: center;
+        flex: 0 0 auto;
+    }
+}
+
+@media (width >= 992px) {
+    /* Home5-wide desktop header normalization (not only CMS pages). */
+    body .page-wrapper .header-control.header-nav > .container > .row {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    body .page-wrapper .header-control .menu_left_home1,
+    body .page-wrapper .header-control .menu_primary,
+    body .page-wrapper .header-control .box_language {
+        float: none;
+        min-width: 0;
+    }
+
+    body .page-wrapper .header-wrapper-sticky.enabled-header-sticky .container-header-sticky,
+    body .page-wrapper .header-wrapper-sticky.enable-sticky .container-header-sticky {
+        display: flex;
+        align-items: center;
+        gap: var(--awa-space-3);
+        min-width: 0;
+    }
+
+    body .page-wrapper .header-wrapper-sticky .logo-sticky {
+        flex: 0 0 auto;
+    }
+
+    body .page-wrapper .header-wrapper-sticky .top-menu-sticky {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    /* Linha principal (logo + busca): reduz rigidez do grid e prioriza espaço da busca. */
+    body .page-wrapper .header .header_main .wp-header,
+    body .page-wrapper .header .header-main .wp-header {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        min-width: 0;
+    }
+
+    body .page-wrapper .header .header_main .wp-header > [class*="col-"]:first-child,
+    body .page-wrapper .header .header-main .wp-header > [class*="col-"]:first-child {
+        float: none;
+        width: auto;
+        max-width: none;
+        min-width: 0;
+        flex: 0 0 clamp(150px, 12vw, 168px);
+        padding-right: 8px;
+    }
+
+    body .page-wrapper .header .header_main .wp-header > .top-search,
+    body .page-wrapper .header .header-main .wp-header > .top-search {
+        float: none;
+        width: auto;
+        max-width: none;
+        min-width: 0;
+        flex: 1 1 auto;
+        padding-left: 8px;
+    }
+
+    /* Busca do cabeçalho: ocupar o espaço disponível (B2B-first). */
+    body .page-wrapper .header .top-search {
+        display: flex;
+        align-items: center;
+        gap: var(--awa-space-3);
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper,
+    body .page-wrapper .header .top-search > .hoteline_header {
+        flex: 0 0 auto;
+    }
+
+    body .page-wrapper .header .top-search > .block-search {
+        order: 1;
+        flex: 1 1 auto;
+        width: auto;
+        max-width: none;
+        min-width: 0;
+        margin: 0;
+    }
+
+    body .page-wrapper .header .top-search > .block-search .block-content,
+    body .page-wrapper .header .top-search > .block-search form#search_mini_form,
+    body .page-wrapper .header .top-search > .block-search form.minisearch {
+        width: 100%;
+    }
+
+    body .page-wrapper .header .top-search > .block-search .action.search,
+    body .page-wrapper .header .top-search > .block-search button[type="submit"] {
+        padding-left: var(--awa-space-4);
+        padding-right: var(--awa-space-4);
+        min-width: 44px;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper {
+        order: 2;
+    }
+
+    body .page-wrapper .header .top-search > .hoteline_header {
+        order: 3;
+        flex: 0 1 auto;
+        min-width: 0;
+        max-width: min(22vw, 260px);
+    }
+
+    body .page-wrapper .header .top-search > .hoteline_header .whatsapp-hotline {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--awa-space-2);
+        min-width: 0;
+        max-width: 100%;
+        color: inherit;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    body .page-wrapper .header .top-search > .hoteline_header .whatsapp-hotline > i {
+        color: #25d366;
+        flex: 0 0 auto;
+        font-size: 18px;
+        line-height: 1;
+    }
+
+    body .page-wrapper .header .top-search > .hoteline_header .hotline-wrap {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        line-height: 1.1;
+    }
+
+    body .page-wrapper .header .top-search > .hoteline_header .hotline-label {
+        color: var(--awa-gray-500);
+        font-size: var(--awa-text-2xs);
+        letter-spacing: var(--awa-tracking-tight);
+    }
+
+    body .page-wrapper .header .top-search > .hoteline_header .hotline-number {
+        color: var(--awa-dark);
+        font-weight: var(--awa-weight-semibold);
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* box_language vazio (quando sem conteúdo) não deve ocupar coluna no desktop. */
+    body .page-wrapper .header-nav .row.awa-box-language-empty > .box_language,
+    body .page-wrapper .header-nav .box_language.awa-is-empty {
+        display: none;
+    }
+
+    /* CSS-first (sem depender do JS): detecta box_language sem filhos úteis dentro de .top-header. */
+    @supports selector(.header-nav .row:has(> .box_language)) {
+        body .page-wrapper .header-nav .row:has(> .box_language:has(> .top-header):not(:has(> .top-header > *))) > .box_language {
+            display: none;
+        }
+    }
+}
+
+@media (width >= 1200px) and (width <= 1599px) {
+    /* Compacta hotline para priorizar largura de busca em desktops menores. */
+    body .page-wrapper .header .top-search {
+        gap: var(--awa-space-2);
+    }
+
+    body .page-wrapper .header .top-search > .hoteline_header .hotline-label {
+        display: none;
+    }
+
+    body .page-wrapper .header .top-search > .hoteline_header .hotline-number {
+        font-size: var(--awa-text-sm);
+    }
+}
+
+@media (width >= 1200px) and (width <= 1439px) {
+    /* Prioriza busca: hotline vira CTA compacta (ícone) e botão de busca fica mais estreito. */
+    body .page-wrapper .header .top-search > .hoteline_header {
+        max-width: 44px;
+        flex: 0 0 44px;
+    }
+
+    body .page-wrapper .header .top-search > .hoteline_header .hotline-wrap {
+        display: none;
+    }
+
+    body .page-wrapper .header .top-search > .hoteline_header .whatsapp-hotline {
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        border-radius: var(--awa-radius-sm);
+        background: rgb(37 211 102 / 10%);
+    }
+
+    body .page-wrapper .header .top-search > .block-search .action.search,
+    body .page-wrapper .header .top-search > .block-search button[type="submit"] {
+        width: 44px;
+        min-width: 44px;
+        padding-left: 0;
+        padding-right: 0;
+    }
 }
 
 /* ============================================================
@@ -1325,6 +1660,60 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
    Melhora leitura do menu horizontal e evita aperto no topo.
    ============================================================ */
 @media (width >= 1200px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav > .container > .row {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_primary,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .box_language {
+        float: none;
+        min-width: 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .box_language {
+        flex: 0 0 auto;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_primary {
+        flex: 1 1 auto;
+    }
+
+    body .page-wrapper .header-nav .row.awa-box-language-empty > .menu_primary {
+        width: 83.3333%;
+        max-width: 83.3333%;
+        flex: 0 0 83.3333%;
+        flex-basis: 83.3333%;
+    }
+
+    @supports selector(.header-nav .row:has(> .box_language)) {
+        body .page-wrapper .header-nav .row:has(> .box_language:has(> .top-header):not(:has(> .top-header > *))) > .menu_primary {
+            width: 83.3333%;
+            max-width: 83.3333%;
+            flex: 0 0 83.3333%;
+            flex-basis: 83.3333%;
+        }
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-wrapper-sticky.enabled-header-sticky .container-header-sticky,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-wrapper-sticky.enable-sticky .container-header-sticky {
+        display: flex;
+        align-items: center;
+        gap: var(--awa-space-3);
+        min-width: 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-wrapper-sticky .logo-sticky {
+        flex: 0 0 auto;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-wrapper-sticky .top-menu-sticky {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul {
         gap: 2px;
     }
@@ -1357,6 +1746,12 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
     }
 
 @media (width >= 992px) and (width <= 1199px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav > .container > .row {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .navigation.custommenu.main-nav > ul {
         justify-content: flex-start;
         flex-wrap: nowrap;
@@ -1379,6 +1774,7 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         width: auto;
         max-width: 100%;
         min-width: 0;
+        float: none;
         flex: 0 0 25%;
     }
 
@@ -1386,7 +1782,72 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
         width: auto;
         max-width: none;
         min-width: 0;
+        float: none;
         flex: 1 1 auto;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control .box_language {
+        float: none;
+        min-width: 0;
+        flex: 0 0 auto;
+    }
+
+    body .page-wrapper .header-nav .row.awa-box-language-empty > .menu_primary {
+        width: 75%;
+        max-width: 75%;
+        flex: 0 0 75%;
+        flex-basis: 75%;
+    }
+
+    @supports selector(.header-nav .row:has(> .box_language)) {
+        body .page-wrapper .header-nav .row:has(> .box_language:has(> .top-header):not(:has(> .top-header > *))) > .menu_primary {
+            width: 75%;
+            max-width: 75%;
+            flex: 0 0 75%;
+            flex-basis: 75%;
+        }
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: var(--awa-space-2);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper {
+        order: 2;
+        flex: 0 0 auto;
+        margin-left: auto;
+        min-width: max-content;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .block-search {
+        order: 1;
+        flex: 1 1 auto;
+        min-width: 0;
+        margin-top: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .block-search .block-content,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .block-search form#search_mini_form,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .block-search form.minisearch {
+        width: 100%;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .minicart-wrapper {
+        float: none !important;
+        position: relative;
+        top: auto;
+        right: auto;
+        margin-top: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .mini-carts,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search .mini-cart-wrapper {
+        display: flex;
+        align-items: center;
+        flex: 0 0 auto;
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown {
@@ -2319,10 +2780,15 @@ body .page-wrapper .modals-wrapper .modal-popup.newsletter-popup-modal .modal-in
     align-items: center;
     flex-wrap: wrap;
     gap: 10px;
+    padding: 8px 12px;
+    border: 1px solid rgb(255 255 255 / 10%);
+    border-radius: var(--awa-radius-sm);
+    background: rgb(255 255 255 / 4%);
+    justify-content: flex-end;
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .payment-methods-img {
-    max-height: 30px;
+    max-height: 32px;
     width: auto;
 }
 
@@ -2338,6 +2804,32 @@ body .page-wrapper .modals-wrapper .modal-popup.newsletter-popup-modal .modal-in
     max-width: 120px;
     min-width: 0;
     height: 28px;
+}
+
+@media (width <= 767px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-bottom .footer-bottom-inner .row {
+        align-items: stretch;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-bottom .footer-bottom-inner .row > [class*="col-"] {
+        flex: 1 1 100%;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods {
+        justify-content: stretch;
+        gap: var(--awa-space-3);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .payment-methods-wrapper,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .security-seals-wrapper {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 8px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-payment-methods .footer-title {
+        flex: 0 0 100%;
+    }
 }
 
 body .page-wrapper .action.primary,
@@ -2735,6 +3227,35 @@ body .page-wrapper .product-item .action.tocart:active {
    Define estado-base (hidden) e hover (visible) com especificidade
    alta o suficiente para vencer regras do módulo Rokanthemes.
    ============================================================ */
+@media (width >= 992px) {
+    /* A11y (teclado): replica o hover do flyout usando focus-within. */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.fullwidth:focus-within > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.staticwidth:focus-within > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.classic:focus-within > .submenu {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.classic li.parent:focus-within > .submenu,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.classic .subchildmenu > li.parent:focus-within > .subchildmenu {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    /* Desktop usa flyout por hover/foco; evita ícone "+" enganoso do mobile. */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .open-children-toggle {
+        display: none;
+    }
+
+    /* Foco visível consistente para navegação por teclado dentro do menu vertical. */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0 > a:focus-visible,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .submenu a:focus-visible,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .subchildmenu a:focus-visible {
+        outline: 2px solid var(--awa-red);
+        outline-offset: 2px;
+        border-radius: var(--awa-radius-2xs);
+    }
+}
 
 /* ============================================================
    FIX-35 — VERTICAL MENU TITLE HAMBURGER ICON + EXPAND BUTTON
@@ -3505,6 +4026,1193 @@ body .page-wrapper .message.info.empty {
 
 body .page-wrapper .awa-whatsapp-float {
     animation: awa-whatsapp-pulse 2s infinite;
+}
+
+/* --- 25. HOME5 MOBILE HEADER/TOPBAR POLISH (P3) ---
+   Objetivo: corrigir links utilitários empilhando e melhorar ritmo visual no topo mobile. */
+@media (width <= 767px) {
+    /* Top bar mobile: esconder infos longas e manter ações úteis em linha/2 linhas compactas. */
+    body .page-wrapper .panel.wrapper,
+    body .page-wrapper .header-top {
+        padding-block: 6px !important;
+    }
+
+    body .page-wrapper .header-top .top-bar-left,
+    body .page-wrapper .panel.wrapper .top-bar-left {
+        display: none !important;
+    }
+
+    body .page-wrapper .header-top .container,
+    body .page-wrapper .panel.wrapper .panel.header {
+        padding-inline: 12px;
+    }
+
+    body .page-wrapper .header-top .row > [class*="col-"],
+    body .page-wrapper .panel.wrapper .panel.header > * {
+        width: 100%;
+        max-width: 100%;
+        float: none;
+    }
+
+    body .page-wrapper .top-bar-right,
+    body .page-wrapper .top-bar-right .top-info,
+    body .page-wrapper .top-bar-right .top-account {
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        min-width: 0;
+    }
+
+    body .page-wrapper .top-bar-right .top-account {
+        overflow: visible;
+    }
+
+    body .page-wrapper .top-bar-right .header.links,
+    body .page-wrapper .top-bar-right ul.header.links {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap !important;
+        gap: 6px 12px;
+        width: 100%;
+        min-width: 0;
+        margin: 0;
+        padding: 0;
+    }
+
+    body .page-wrapper .top-bar-right .header.links li {
+        float: none !important;
+        display: inline-flex !important;
+        align-items: center;
+        min-width: 0;
+        width: auto !important;
+        flex: 0 0 auto;
+    }
+
+    body .page-wrapper .top-bar-right .header.links a {
+        font-size: 12px;
+        line-height: 1.2;
+        white-space: nowrap;
+        padding: 3px 0;
+    }
+
+    /* "Minha Conta" é redundante no mobile guest (já existe Entrar). Priorizamos Cadastro B2B + Entrar. */
+    body .page-wrapper .top-bar-right .header.links > li:first-child {
+        display: none !important;
+    }
+
+    /* Compare é redundante com navegação móvel; em telas estreitas atrapalha a hierarquia. */
+    body .page-wrapper .top-bar-right .header.links .item.link.compare {
+        display: none !important;
+    }
+
+    /* Linha do nav-toggle mais compacta no mobile para reduzir o "vazio" entre busca e hero. */
+    body .page-wrapper .header-control.header-nav > .container > .row {
+        min-height: 46px;
+        padding-inline: 6px;
+    }
+
+    body .page-wrapper .header-control.header-nav .nav-toggle,
+    body .page-wrapper .header-control.header-nav .action.nav-toggle {
+        width: 40px !important;
+        height: 40px !important;
+        margin: 3px 0 3px 9px;
+    }
+
+    body .page-wrapper .header-control.header-nav {
+        border-top: 1px solid rgb(15 23 42 / 4%);
+        border-bottom: 1px solid rgb(15 23 42 / 4%);
+    }
+
+    /* Corrige overflow estrutural do header principal no mobile (logo + busca + minicart + hotline). */
+    body .page-wrapper .header .header_main .container,
+    body .page-wrapper .header .header-main .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-left: 12px !important;
+        padding-right: 12px !important;
+        box-sizing: border-box;
+    }
+
+    body .page-wrapper .header .header_main > .header-main > .container > .row,
+    body .page-wrapper .header .header-main > .container > .row,
+    body .page-wrapper .header .header_main .container > .row,
+    body .page-wrapper .header .header-main .container > .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: auto !important;
+    }
+
+    body .page-wrapper .header .header_main .wp-header,
+    body .page-wrapper .header .header-main .wp-header {
+        display: grid !important;
+        grid-template-columns: clamp(74px, 22vw, 96px) minmax(0, 1fr);
+        align-items: center;
+        gap: 10px;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+    }
+
+    body .page-wrapper .header .header_main .wp-header > [class*="col-"],
+    body .page-wrapper .header .header-main .wp-header > [class*="col-"] {
+        float: none !important;
+        width: auto !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    body .page-wrapper .header .header_main .wp-header > [class*="col-"]:first-child,
+    body .page-wrapper .header .header-main .wp-header > [class*="col-"]:first-child {
+        grid-column: 1;
+        width: auto !important;
+    }
+
+    body .page-wrapper .header .header_main .wp-header > .top-search,
+    body .page-wrapper .header .header-main .wp-header > .top-search {
+        grid-column: 2;
+        width: auto !important;
+        min-width: 0 !important;
+    }
+
+    body .page-wrapper .header .wp-header .logo,
+    body .page-wrapper .header .wp-header .logo img {
+        max-width: 100%;
+    }
+
+    body .page-wrapper .header .top-search {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) 42px;
+        grid-template-areas: "search cart";
+        align-items: center;
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    body .page-wrapper .header .top-search > .block-search {
+        grid-area: search;
+        min-width: 0;
+        width: 100%;
+        order: 0;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper {
+        grid-area: cart;
+        width: auto !important;
+        max-width: 42px;
+        min-width: 0 !important;
+        margin-left: 0;
+        order: 0;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .mini-carts,
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .minicart-wrapper {
+        min-width: 0 !important;
+        width: auto !important;
+    }
+
+    /* Home5-specific reinforcement: earlier mobile rules use :is(body.cms-...) and can override generic body selectors. */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .wp-header,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .wp-header {
+        display: grid !important;
+        grid-template-columns: clamp(74px, 22vw, 96px) minmax(0, 1fr) !important;
+        gap: 10px !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .wp-header > [class*="col-"],
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .wp-header > [class*="col-"] {
+        float: none !important;
+        width: auto !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .wp-header > .top-search,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .wp-header > .top-search {
+        grid-column: 2 !important;
+        width: auto !important;
+        min-width: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) 42px !important;
+        grid-template-areas: "search cart" !important;
+        align-items: center !important;
+        gap: 8px !important;
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search {
+        grid-area: search !important;
+        order: 0 !important;
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper {
+        grid-area: cart !important;
+        order: 0 !important;
+        margin-left: 0 !important;
+        width: auto !important;
+        max-width: 42px !important;
+        min-width: 0 !important;
+        justify-self: end;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .hoteline_header {
+        display: none !important;
+    }
+
+    /* WhatsApp/hotline ocupa espaço demais nessa linha no mobile; mantemos o botão flutuante. */
+    body .page-wrapper .header .top-search > .hoteline_header {
+        display: none !important;
+    }
+
+    /* Busca: leve respiro para não colar no topo/linha e placeholder mais legível. */
+    body .page-wrapper .header .top-search .block-search {
+        margin-bottom: 2px;
+    }
+
+    body .page-wrapper .header .top-search .block-search input#search,
+    body .page-wrapper .header .top-search .block-search input.input-text {
+        font-size: 14px;
+        line-height: 1.25;
+    }
+
+    /* Benefits cards: reinforce 2-col grid after legacy flex/Bootstrap rules (awa-fixes is last layer). */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .velaServicesInner.velaServicesInner--home5 .velaContent > .rowFlex.rowFlexMargin.flexJustifyCenter {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 12px !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .velaServicesInner.velaServicesInner--home5 .velaContent > .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
+        width: auto !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        float: none !important;
+        padding: 0 !important;
+        flex: 0 0 auto !important;
+    }
+}
+
+@media (width <= 420px) {
+    body .page-wrapper .top-bar-right .header.links,
+    body .page-wrapper .top-bar-right ul.header.links {
+        gap: 8px;
+    }
+
+    body .page-wrapper .top-bar-right .header.links a {
+        font-size: 11px;
+    }
+
+    body .page-wrapper .top-bar-right .header.links,
+    body .page-wrapper .top-bar-right ul.header.links {
+        gap: 4px 10px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .velaServicesInner.velaServicesInner--home5 .velaContent > .rowFlex.rowFlexMargin.flexJustifyCenter {
+        gap: 10px !important;
+    }
+
+    /* XS: liberar largura útil para a busca e evitar corte do botão submit. */
+    body .page-wrapper .header .header_main .wp-header,
+    body .page-wrapper .header .header-main .wp-header {
+        grid-template-columns: 68px minmax(0, 1fr);
+        gap: 8px;
+    }
+
+    body .page-wrapper .header .top-search {
+        grid-template-columns: 34px minmax(0, 1fr);
+        gap: 6px;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper {
+        max-width: 34px;
+    }
+
+    body .page-wrapper .header .top-search > .block-search .action.search,
+    body .page-wrapper .header .top-search > .block-search button[type="submit"] {
+        width: 38px !important;
+        min-width: 38px !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    body .page-wrapper .header .top-search .block-search input#search,
+    body .page-wrapper .header .top-search .block-search input.input-text {
+        padding-left: 12px !important;
+        padding-right: 10px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .wp-header,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .wp-header {
+        grid-template-columns: 68px minmax(0, 1fr) !important;
+        gap: 8px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search {
+        grid-template-columns: minmax(0, 1fr) 38px !important;
+        gap: 6px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper {
+        max-width: 38px !important;
+    }
+}
+
+/* ===========================================
+   HOME5 — MOBILE HEADER/TOPBAR ALIGNMENT FINAL (P4)
+   Responsabilidade: hotfixes de compat/cascade (Ayo base mobile offsets).
+=========================================== */
+@media (width <= 767px) {
+    /* Topbar mobile compacta e sem overflow horizontal */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .panel.wrapper,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-top {
+        overflow-x: clip;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-bar-right,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-bar-right .top-info,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-bar-right .top-account {
+        min-width: 0;
+        width: 100%;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-bar-right .header.links,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-bar-right ul.header.links {
+        justify-content: center;
+        flex-wrap: wrap !important;
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        overflow: visible;
+    }
+
+    /* Header principal: neutraliza offsets absolutos do Ayo (nav-toggle/minicart) e usa grid real */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main {
+        overflow-x: clip;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .container,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-inline: 12px !important;
+        box-sizing: border-box;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .container > .row,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main > .header-main > .container > .row,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .container > .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        display: block !important;
+        box-sizing: border-box;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .wp-header,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .wp-header {
+        display: grid !important;
+        grid-template-columns: clamp(72px, 22vw, 94px) minmax(0, 1fr) !important;
+        align-items: center;
+        gap: 10px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        box-sizing: border-box;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .wp-header > [class*="col-"],
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .wp-header > [class*="col-"] {
+        float: none !important;
+        width: auto !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .wp-header > [class*="col-"]:first-child,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .wp-header > [class*="col-"]:first-child {
+        grid-column: 1;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .wp-header > .top-search,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .wp-header > .top-search {
+        grid-column: 2 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .wp-header .logo {
+        margin: 0 !important;
+        width: 100%;
+        min-width: 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .wp-header .logo img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) 40px !important;
+        grid-template-areas: "search cart" !important;
+        align-items: center !important;
+        gap: 8px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        box-sizing: border-box;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search {
+        grid-area: search !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        order: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search .block-content,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search form#search_mini_form,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search form.minisearch {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search form#search_mini_form,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search form.minisearch {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) 40px !important;
+        grid-template-areas: "field submit" !important;
+        align-items: center !important;
+        gap: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search .field.search {
+        grid-area: field;
+        min-width: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search .field.search .control,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search .field.search input#search,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search .field.search input.input-text {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search .actions {
+        grid-area: submit;
+        width: 40px !important;
+        min-width: 40px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: static !important;
+        float: none !important;
+        display: flex;
+        align-items: stretch;
+        justify-content: stretch;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search .action.search,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search button[type="submit"] {
+        width: 40px !important;
+        min-width: 40px !important;
+        height: 100% !important;
+        padding-inline: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper {
+        grid-area: cart !important;
+        order: 0 !important;
+        width: 40px !important;
+        max-width: 40px !important;
+        min-width: 40px !important;
+        margin: 0 !important;
+        justify-self: end;
+        align-self: center;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper .mini-carts,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper .minicart-wrapper {
+        position: static !important;
+        top: auto !important;
+        right: auto !important;
+        left: auto !important;
+        bottom: auto !important;
+        inset: auto !important;
+        float: none !important;
+        transform: none !important;
+        width: auto !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper .mini-carts,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper .minicart-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper .showcart {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .hoteline_header {
+        display: none !important;
+    }
+
+    /* Linha do hambúrguer: neutraliza offset absoluto do Ayo base */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav > .container,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav > .container > .row {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav .nav-toggle,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav .action.nav-toggle {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        inset: auto !important;
+        margin: 3px 0 3px 9px !important;
+        transform: none !important;
+    }
+}
+
+@media (width <= 420px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .wp-header,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .wp-header {
+        grid-template-columns: 66px minmax(0, 1fr) !important;
+        gap: 8px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search {
+        grid-template-columns: minmax(0, 1fr) 38px !important;
+        gap: 6px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper {
+        width: 38px !important;
+        max-width: 38px !important;
+        min-width: 38px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search form#search_mini_form,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search form.minisearch {
+        grid-template-columns: minmax(0, 1fr) 38px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search .actions,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search .action.search,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search button[type="submit"] {
+        width: 38px !important;
+        min-width: 38px !important;
+    }
+}
+
+/* Global mobile header stack (Home5): aplica o mesmo padrão estável também em cart/PLP/PDP */
+@media (width <= 767px) {
+    body .page-wrapper {
+        overflow-x: clip;
+    }
+
+    body .page-wrapper .header .header_main .container,
+    body .page-wrapper .header .header-main .container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding-inline: 12px !important;
+        box-sizing: border-box;
+    }
+
+    body .page-wrapper .header .header_main .container > .row,
+    body .page-wrapper .header .header_main > .header-main > .container > .row,
+    body .page-wrapper .header .header-main .container > .row {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    body .page-wrapper .header .header_main .wp-header,
+    body .page-wrapper .header .header-main .wp-header {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 8px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        box-sizing: border-box;
+    }
+
+    body .page-wrapper .header .header_main .wp-header > [class*="col-"],
+    body .page-wrapper .header .header-main .wp-header > [class*="col-"] {
+        float: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        box-sizing: border-box;
+    }
+
+    body .page-wrapper .header .header_main .wp-header > [class*="col-"]:first-child,
+    body .page-wrapper .header .header-main .wp-header > [class*="col-"]:first-child {
+        display: flex !important;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    body .page-wrapper .header .wp-header .logo {
+        width: clamp(78px, 22vw, 98px);
+        margin: 0 !important;
+    }
+
+    body .page-wrapper .header .wp-header .logo img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    body .page-wrapper .header .header_main .wp-header > .top-search,
+    body .page-wrapper .header .header-main .wp-header > .top-search {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+    }
+
+    body .page-wrapper .header .top-search {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) 38px !important;
+        grid-template-areas: "search cart" !important;
+        align-items: center !important;
+        gap: 6px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        box-sizing: border-box;
+    }
+
+    body .page-wrapper .header .top-search > .block-search {
+        grid-area: search !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        order: 0 !important;
+    }
+
+    body .page-wrapper .header .top-search > .block-search .block-content,
+    body .page-wrapper .header .top-search > .block-search form#search_mini_form,
+    body .page-wrapper .header .top-search > .block-search form.minisearch {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+    }
+
+    body .page-wrapper .header .top-search > .block-search form#search_mini_form,
+    body .page-wrapper .header .top-search > .block-search form.minisearch {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) 38px !important;
+        align-items: center !important;
+        gap: 0 !important;
+    }
+
+    body .page-wrapper .header .top-search > .block-search .field.search,
+    body .page-wrapper .header .top-search > .block-search .field.search .control,
+    body .page-wrapper .header .top-search > .block-search .field.search input#search,
+    body .page-wrapper .header .top-search > .block-search .field.search input.input-text {
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    body .page-wrapper .header .top-search > .block-search .actions {
+        width: 38px !important;
+        min-width: 38px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        position: static !important;
+        float: none !important;
+        display: flex !important;
+        align-items: stretch !important;
+    }
+
+    body .page-wrapper .header .top-search > .block-search .action.search,
+    body .page-wrapper .header .top-search > .block-search button[type="submit"] {
+        width: 38px !important;
+        min-width: 38px !important;
+        padding-inline: 0 !important;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper {
+        grid-area: cart !important;
+        width: 38px !important;
+        max-width: 38px !important;
+        min-width: 38px !important;
+        margin: 0 !important;
+        justify-self: end !important;
+        align-self: center !important;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper,
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .mini-carts,
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .minicart-wrapper {
+        position: static !important;
+        inset: auto !important;
+        top: auto !important;
+        right: auto !important;
+        left: auto !important;
+        bottom: auto !important;
+        float: none !important;
+        transform: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: auto !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .mini-carts,
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .minicart-wrapper,
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .showcart {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .showcart {
+        width: 38px !important;
+        height: 38px !important;
+        padding: 0 !important;
+    }
+
+    body .page-wrapper .header .top-search > .hoteline_header {
+        display: none !important;
+    }
+
+    body .page-wrapper .header-control.header-nav > .container,
+    body .page-wrapper .header-control.header-nav > .container > .row {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    body .page-wrapper .header-control.header-nav .nav-toggle,
+    body .page-wrapper .header-control.header-nav .action.nav-toggle {
+        position: relative !important;
+        inset: auto !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: none !important;
+    }
+}
+
+/* HOME5 mobile overflow final (P5):
+   separa visualmente o carrinho da linha da busca (fica no topo direito do wp-header)
+   para evitar soma de larguras (input + submit + cart) em telas estreitas. */
+@media (width <= 767px) {
+    body .page-wrapper .header .header_main .wp-header,
+    body .page-wrapper .header .header-main .wp-header {
+        position: relative !important;
+        padding-right: 46px !important; /* reserva área do carrinho no topo */
+    }
+
+    body .page-wrapper .header .top-search {
+        position: static !important;
+        grid-template-columns: 1fr !important; /* linha da busca sem cart */
+        grid-template-areas: "search" !important;
+        gap: 0 !important;
+        overflow: visible !important;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper {
+        position: absolute !important;
+        top: 0 !important;
+        right: 0 !important;
+        left: auto !important;
+        bottom: auto !important;
+        inset: auto !important;
+        width: 38px !important;
+        max-width: 38px !important;
+        min-width: 38px !important;
+        height: 38px !important;
+        margin: 0 !important;
+        z-index: 2;
+        justify-self: auto !important;
+        align-self: auto !important;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .showcart {
+        width: 38px !important;
+        height: 38px !important;
+    }
+
+    body .page-wrapper .header .top-search > .block-search {
+        grid-area: search !important;
+        min-width: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    body .page-wrapper .header .top-search > .block-search form#search_mini_form,
+    body .page-wrapper .header .top-search > .block-search form.minisearch {
+        grid-template-columns: minmax(0, 1fr) 38px !important;
+    }
+
+    /* Home trust cards: última camada para impedir bleed lateral residual */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers > .container,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .velaServicesInner.velaServicesInner--home5,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .velaServicesInner.velaServicesInner--home5 .velaContent,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .velaServicesInner.velaServicesInner--home5 .velaContent > .rowFlex.rowFlexMargin.flexJustifyCenter {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box;
+        overflow-x: clip;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .velaServicesInner.velaServicesInner--home5 .velaContent > .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"] {
+        min-width: 0 !important;
+        max-width: 100% !important;
+        box-sizing: border-box;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .velaServicesInner.velaServicesInner--home5 .boxService {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+}
+
+/* HOME5 mobile premium polish (P6): garantir carrinho visível no header e ritmo visual */
+@media (width <= 767px) {
+    body .page-wrapper .header .header_main .wp-header,
+    body .page-wrapper .header .header-main .wp-header {
+        padding-right: 46px !important;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        position: absolute !important;
+        top: 4px !important;
+        right: 0 !important;
+        z-index: 25 !important;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .mini-carts,
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .minicart-wrapper {
+        display: inline-flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .showcart {
+        display: inline-flex !important;
+        width: 38px !important;
+        height: 38px !important;
+        border: 1px solid rgb(183 51 55 / 22%);
+        border-radius: 10px;
+        background: #fff;
+        box-shadow: 0 1px 2px rgb(15 23 42 / 8%);
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .showcart:hover,
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .showcart:focus-visible {
+        border-color: rgb(183 51 55 / 40%);
+        box-shadow: 0 4px 10px rgb(15 23 42 / 10%);
+    }
+
+    /* Evita clipping do grid de benefícios por box model herdado */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers > .container.top-home-content__trust-offers-grid,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .velaServicesInner.velaServicesInner--home5 .velaContent > .rowFlex.rowFlexMargin.flexJustifyCenter,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .velaServicesInner.velaServicesInner--home5 .velaContent > .rowFlex.rowFlexMargin.flexJustifyCenter > [class*="col-"],
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .velaServicesInner.velaServicesInner--home5 .boxService {
+        box-sizing: border-box !important;
+    }
+}
+
+@media (width <= 320px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .wp-header,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .wp-header {
+        grid-template-columns: 60px minmax(0, 1fr) !important;
+        gap: 6px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search {
+        grid-template-columns: minmax(0, 1fr) 36px !important;
+        gap: 5px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper {
+        width: 36px !important;
+        max-width: 36px !important;
+        min-width: 36px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search form#search_mini_form,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search form.minisearch {
+        grid-template-columns: minmax(0, 1fr) 36px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search .actions,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search .action.search,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search button[type="submit"] {
+        width: 36px !important;
+        min-width: 36px !important;
+    }
+}
+
+/* Home5 mobile final: stack logo + search/cart to remove residual overflow from combined row width */
+@media (width <= 767px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) {
+        overflow-x: clip;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: clip;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .wp-header,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .wp-header {
+        grid-template-columns: minmax(0, 1fr) !important;
+        gap: 8px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .wp-header > [class*="col-"]:first-child,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .wp-header > [class*="col-"]:first-child {
+        grid-column: 1 !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: flex-start;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .wp-header .logo {
+        width: clamp(78px, 22vw, 98px);
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header_main .wp-header > .top-search,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .header-main .wp-header > .top-search {
+        grid-column: 1 !important;
+        width: 100% !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search {
+        grid-template-columns: minmax(0, 1fr) 38px !important;
+        gap: 6px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper {
+        width: 38px !important;
+        max-width: 38px !important;
+        min-width: 38px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search form#search_mini_form,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search form.minisearch {
+        grid-template-columns: minmax(0, 1fr) 38px !important;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search .actions,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search .action.search,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search button[type="submit"] {
+        width: 38px !important;
+        min-width: 38px !important;
+    }
+}
+
+/* Mobile global overflow guard (P7):
+   Alguns componentes legados (rows/owl/offsets) ainda podem expandir scrollWidth.
+   Mantemos scroll horizontal desabilitado no viewport e contemos wrappers principais. */
+@media (width <= 767px) {
+    html,
+    body {
+        max-width: 100%;
+        overflow-x: hidden !important;
+    }
+
+    body .page-wrapper,
+    body .page-wrapper .page-main,
+    body .page-wrapper main.page-main,
+    body .page-wrapper .columns,
+    body .page-wrapper .column.main,
+    body .page-wrapper .main,
+    body .page-wrapper .main.content,
+    body .page-wrapper .header,
+    body .page-wrapper .content-top-home {
+        max-width: 100%;
+        overflow-x: clip;
+        box-sizing: border-box;
+    }
+
+    body .page-wrapper .owl-stage-outer,
+    body .page-wrapper .owl-wrapper-outer,
+    body .page-wrapper .owl-carousel,
+    body .page-wrapper .wrapper_slider {
+        max-width: 100%;
+    }
+
+    /* Fallback visual do hambúrguer quando alguma folha posterior neutraliza o pseudo-elemento */
+    body .page-wrapper .header-control.header-nav .nav-toggle::before,
+    body .page-wrapper .header-control.header-nav .action.nav-toggle::before {
+        content: "☰" !important;
+        font-family: inherit !important;
+        display: inline-block !important;
+        line-height: 1 !important;
+        font-size: 20px !important;
+        color: currentcolor !important;
+    }
+}
+
+/* Mobile header final stability (P8):
+   usa botão de busca sobreposto (mais robusto que grid interno) e
+   garante ícones visíveis para carrinho e hambúrguer. */
+@media (width <= 767px) {
+    body .page-wrapper .header .top-search > .block-search form#search_mini_form,
+    body .page-wrapper .header .top-search > .block-search form.minisearch {
+        display: block !important;
+        position: relative !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    body .page-wrapper .header .top-search > .block-search .field.search {
+        display: block !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        margin: 0 !important;
+        padding-right: 38px !important; /* reserva botão submit */
+        box-sizing: border-box !important;
+    }
+
+    body .page-wrapper .header .top-search > .block-search .control {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    body .page-wrapper .header .top-search > .block-search .actions {
+        position: absolute !important;
+        top: 0 !important;
+        right: 0 !important;
+        width: 38px !important;
+        min-width: 38px !important;
+        height: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: flex !important;
+        align-items: stretch !important;
+        justify-content: stretch !important;
+        z-index: 2 !important;
+    }
+
+    body .page-wrapper .header .top-search > .block-search .action.search,
+    body .page-wrapper .header .top-search > .block-search button[type="submit"] {
+        width: 38px !important;
+        min-width: 38px !important;
+        height: 100% !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    body .page-wrapper .header .top-search > .block-search .action.search::before,
+    body .page-wrapper .header .top-search > .block-search button[type="submit"]::before {
+        content: "\f002" !important;
+        font-family: FontAwesome, sans-serif !important;
+        font-size: 14px !important;
+        line-height: 1 !important;
+        display: inline-block !important;
+    }
+
+    /* Carrinho: ícone explícito para casos em que o markup vem sem ícone visual e contador vazio */
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .showcart {
+        position: relative !important;
+        color: var(--awa-dark) !important;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .showcart::before {
+        content: "\f290" !important;
+        font-family: FontAwesome, sans-serif !important;
+        font-size: 16px !important;
+        line-height: 1 !important;
+        display: inline-block !important;
+        color: currentcolor !important;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .showcart .counter.qty {
+        display: flex !important;
+        top: -4px !important;
+        right: -4px !important;
+        min-width: 16px !important;
+        height: 16px !important;
+        font-size: 10px !important;
+        padding: 0 3px !important;
+    }
+
+    body .page-wrapper .header .top-search > .mini-cart-wrapper .showcart .counter.qty.empty {
+        display: flex !important; /* mostra 0 em mobile para indicar o carrinho */
+    }
 }
 
 } /* F2-02: fecha @layer awa-fixes */

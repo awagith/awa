@@ -8,11 +8,25 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
+        <css src="css/awa-round3-pdp-conversion.css"/>
+        <css src="css/awa-pdp-final-polish.css"/>
     </head>
     <body>
         <!-- keep product media container in ayo expected column to reduce layout merge conflicts. -->
         <move element="product.info.media" destination="product.col.media" before="-"/>
 
         <!-- wishlist e compare restaurados — fidelidade ao demo ayo home5 -->
+        <referenceContainer name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.round3.pdp.sticky.cta.js"
+                   template="Magento_Theme::html/awa-round2-js-loader.phtml">
+                <arguments>
+                    <argument name="load_header_js" xsi:type="boolean">false</argument>
+                    <argument name="load_home_owl_tabs_js" xsi:type="boolean">false</argument>
+                    <argument name="load_footer_ux_js" xsi:type="boolean">false</argument>
+                    <argument name="load_pdp_sticky_cta_js" xsi:type="boolean">true</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
     </body>
 </page>

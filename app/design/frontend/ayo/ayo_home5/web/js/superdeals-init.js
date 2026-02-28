@@ -48,6 +48,10 @@ define([
             }
 
             $carousel.data('awaSuperdealsCarouselInit', 1);
+            if (typeof $carousel.owlCarousel !== 'function') {
+                $carousel.removeData('awaSuperdealsCarouselInit');
+                return;
+            }
             $carousel.owlCarousel(carouselOptions);
         });
 

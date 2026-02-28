@@ -5,4 +5,10 @@
  * Config mínimo estável.
  * O módulo `js/vertical-menu-init` é resolvido diretamente de `web/js`.
  */
-var config = {};
+var config = {
+    map: {
+        '*': {
+            awaCustomCompatBootstrap: 'js/awa-custom-compat-bootstrap'
+        }
+    }
+};

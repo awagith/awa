@@ -24,13 +24,12 @@ define([
         var $owl = $root.find('.owl');
         var sliderConfig = $.extend(true, {}, (config && config.owl) || {});
         var labels = (config && config.labels) || {};
+        var retryTimer = null;
+        var retriesLeft = 6;
 
-        if (!$owl.length || typeof $owl.owlCarousel !== 'function' || $root.data('awaSlideBannerInit')) {
+        if (!$owl.length || $root.data('awaSlideBannerInit')) {
             return;
         }
-
-        $root.data('awaSlideBannerInit', 1);
-        applyReduceMotion(sliderConfig);
 
         function applyState() {
             var $items = $owl.find('.owl-item');
@@ -90,7 +89,32 @@ define([
             }
         });
 
-        $owl.owlCarousel(sliderConfig);
-        applyState();
+        function initSlider() {
+            if (!$owl.length || $root.data('awaSlideBannerInit')) {
+                return;
+            }
+
+            if (typeof $owl.owlCarousel !== 'function') {
+                if (retriesLeft <= 0) {
+                    return;
+                }
+
+                retriesLeft -= 1;
+                retryTimer = setTimeout(initSlider, 120);
+                return;
+            }
+
+            if (retryTimer) {
+                clearTimeout(retryTimer);
+                retryTimer = null;
+            }
+
+            $root.data('awaSlideBannerInit', 1);
+            applyReduceMotion(sliderConfig);
+            $owl.owlCarousel(sliderConfig);
+            applyState();
+        }
+
+        initSlider();
     };
 });

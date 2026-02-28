@@ -1,0 +1,92 @@
+<!-- AWA Autocomplete — layout 2 colunas estilo Amasty -->
+<div id="searchsuite-autocomplete" class="searchsuite-autocomplete awa-ac" data-bind="visible: showPopup()">
+
+    <div data-bind="visible: anyResultCount()">
+        <div class="awa-ac-wrap">
+
+            <!-- COLUNA ESQUERDA: Sugestões + Recent Searches -->
+            <div class="awa-ac-left">
+
+                <!-- Recent Searches (chips) -->
+                <!-- ko if: typeof recentSearches !== 'undefined' && recentSearches().length > 0 -->
+                <div class="awa-ac-recent">
+                    <div class="awa-ac-section-title">
+                        <!-- ko i18n: 'Buscas Recentes' --><!-- /ko -->
+                    </div>
+                    <div class="awa-ac-chips" data-bind="foreach: recentSearches">
+                        <a class="awa-ac-chip" data-bind="attr: { href: url }, text: term"></a>
+                    </div>
+                </div>
+                <!-- /ko -->
+
+                <!-- Sugestões -->
+                <div class="awa-ac-suggest" data-bind="visible: result.suggest.data().length > 0">
+                    <div class="awa-ac-section-title">
+                        <!-- ko i18n: 'Sugestões' --><!-- /ko -->
+                        <span class="awa-ac-count" data-bind="visible: result.suggest.data().length > 0">
+                            (<span data-bind="text: result.suggest.data().length"></span>)
+                        </span>
+                    </div>
+                    <ul data-bind="foreach: result.suggest.data">
+                        <li>
+                            <a data-bind="attr: { href: url, title: title }">
+                                <svg class="awa-ac-icon-search" viewBox="0 0 20 20" width="14" height="14">
+                                    <path d="M8.5 3a5.5 5.5 0 0 1 4.383 8.823l3.896 3.9a.75.75 0 0 1-1.06 1.06l-3.9-3.896A5.5 5.5 0 1 1 8.5 3zm0 1.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" fill="currentColor"/>
+                                </svg>
+                                <span data-bind="text: title"></span>
+                                <span class="awa-ac-suggest-count" data-bind="text: '(' + num_results + ')'"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- COLUNA DIREITA: Produtos -->
+            <div class="awa-ac-right" data-bind="visible: result.product.data().length > 0">
+                <div class="awa-ac-section-title">
+                    <!-- ko i18n: 'Produtos' --><!-- /ko -->
+                    <a class="awa-ac-see-all" data-bind="attr: {href: result.product.url}">
+                        <!-- ko i18n: 'Ver Todos' --><!-- /ko -->
+                        (<span data-bind="text: result.product.size"></span>)
+                    </a>
+                </div>
+                <ul class="awa-ac-products" data-bind="foreach: result.product.data">
+                    <li class="awa-ac-product-item">
+                        <a class="awa-ac-product-image" data-bind="attr: { href: url, title: name }, visible: image">
+                            <img data-bind="attr: { src: image, alt: name }" loading="lazy" />
+                        </a>
+                        <div class="awa-ac-product-info" data-bind="css: {'awa-ac-noimage': !image}">
+                            <a class="awa-ac-product-name" data-bind="attr: { href: url, title: name }, text: name"></a>
+                            <div class="awa-ac-product-sku" data-bind="visible: sku">
+                                SKU: <span data-bind="text: sku"></span>
+                            </div>
+                            <div class="awa-ac-product-price" data-bind="html: price, visible: price"></div>
+                            <!-- ko if: add_to_cart -->
+                            <form data-role="searchsuiteautocomplete-tocart-form"
+                                  data-bind="attr: {action: add_to_cart.formUrl}"
+                                  method="post">
+                                <input type="hidden" name="product" data-bind="value: add_to_cart.productId" />
+                                <input type="hidden" data-bind="attr: {name: add_to_cart.paramNameUrlEncoded, value: add_to_cart.urlEncoded}" />
+                                <button type="submit" class="awa-ac-addtocart" title="Adicionar ao Carrinho">
+                                    <svg viewBox="0 0 20 20" width="14" height="14">
+                                        <path d="M4 2h1.5l.5 2h11l-2 7H6.5L4 2zm2.5 11a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm8 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z" fill="currentColor"/>
+                                    </svg>
+                                </button>
+                            </form>
+                            <!-- /ko -->
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="awa-ac-no-result" data-bind="visible: !anyResultCount()">
+        <svg viewBox="0 0 20 20" width="20" height="20">
+            <path d="M8.5 3a5.5 5.5 0 0 1 4.383 8.823l3.896 3.9a.75.75 0 0 1-1.06 1.06l-3.9-3.896A5.5 5.5 0 1 1 8.5 3zm0 1.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" fill="currentColor"/>
+        </svg>
+        <!-- ko i18n: 'Nenhum resultado encontrado' --><!-- /ko -->
+    </div>
+
+</div>

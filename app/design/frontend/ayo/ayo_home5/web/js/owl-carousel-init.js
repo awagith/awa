@@ -6,7 +6,7 @@ define([
 ], function ($) {
     'use strict';
 
-    function initWhenVisible($carousel, options, attemptsLeft, delayMs) {
+    function initWhenVisible($carousel, options, attemptsLeft, delayMs, dataFlag) {
         var delay = delayMs || 120;
         var remaining = attemptsLeft || 8;
 
@@ -14,20 +14,43 @@ define([
             return;
         }
 
-        // Owl v1 calcula larguras na inicialização. Se o container estiver oculto
-        // (tabs/sections lazy) ou width=0, o resultado costuma ser itens estreitos.
-        if (!$carousel.is(':visible') || $carousel.width() < 10) {
+        if (typeof $carousel.owlCarousel !== 'function') {
             if (remaining <= 0) {
+                if (dataFlag) {
+                    $carousel.removeData(dataFlag);
+                }
                 return;
             }
 
             setTimeout(function () {
-                initWhenVisible($carousel, options, remaining - 1, delay);
+                initWhenVisible($carousel, options, remaining - 1, delay, dataFlag);
             }, delay);
             return;
         }
 
-        $carousel.owlCarousel(options);
+        // Owl v1 calcula larguras na inicialização. Se o container estiver oculto
+        // (tabs/sections lazy) ou width=0, o resultado costuma ser itens estreitos.
+        if (!$carousel.is(':visible') || $carousel.width() < 10) {
+            if (remaining <= 0) {
+                if (dataFlag) {
+                    $carousel.removeData(dataFlag);
+                }
+                return;
+            }
+
+            setTimeout(function () {
+                initWhenVisible($carousel, options, remaining - 1, delay, dataFlag);
+            }, delay);
+            return;
+        }
+
+        try {
+            $carousel.owlCarousel(options);
+        } catch (error) {
+            if (dataFlag) {
+                $carousel.removeData(dataFlag);
+            }
+        }
     }
 
     function resolveBoolean(value, fallback) {
@@ -80,7 +103,7 @@ define([
             }
 
             $carousel.data(dataFlag, 1);
-            initWhenVisible($carousel, options);
+            initWhenVisible($carousel, options, 8, 120, dataFlag);
         });
     };
 });

@@ -2,7 +2,7 @@
  * AWA Motos — Vertical Menu Toggle Controller
  *
  * Manages the sidebar vertical-menu lifecycle:
- *  - Desktop >= 992 px : click-to-toggle dropdown (CSS-driven via .menu-open / .active)
+ *  - Desktop >= 992 px : hover/focus opens category dropdown (Home 5 default behavior)
  *  - Mobile  <  992 px : animated drawer + overlay + submenu accordions
  *
  * The native Rokanthemes VerticalMenu jQuery plugin is still initialised for
@@ -97,6 +97,7 @@ define([
         var desktopBreakpoint = parseInt(config && config.desktopBreakpoint, 10) || 992;
         var limitItemShow     = parseInt($list.attr('data-limit-show'), 10)
                                 || parseInt(config && config.limitShow, 10) || 0;
+        var childPanelSelector = '.submenu, ul.level0, .subchildmenu';
         var NS = '.awaVM-' + safeUid;
 
         /* ---- guard: never double-init ------------------------------ */
@@ -132,8 +133,8 @@ define([
             $title.addClass('active').attr('aria-expanded', 'true');
 
             if (isDesktop()) {
-                /* CSS !important drives display via .menu-open / .active+ul.
-                   No jQuery .show() needed — it cannot override !important. */
+                /* Clear stale inline display from mobile fadeOut()/hide() after viewport switch. */
+                $list.stop(true, true).removeAttr('style').show();
                 $('body').removeClass('background_shadow_show');
             } else {
                 $list.stop(true, true).fadeIn(200);
@@ -145,7 +146,9 @@ define([
             $list.removeClass('menu-open');
             $title.removeClass('active').attr('aria-expanded', 'false');
 
-            if (!isDesktop()) {
+            if (isDesktop()) {
+                $list.stop(true, true).hide();
+            } else {
                 $list.stop(true, true).fadeOut(200);
             }
 
@@ -181,22 +184,141 @@ define([
             });
         }
 
+        function getParentItems($root) {
+            return ($root || $nav).find('.ui-menu-item.parent, .ui-menu-item.level0.parent');
+        }
+
+        function getDirectChildPanels($item) {
+            return $item.children(childPanelSelector);
+        }
+
+        function getFirstDirectChildPanel($item) {
+            return getDirectChildPanels($item).first();
+        }
+
+        function resetParentItemState($item, animateNested) {
+            var nestedAnimate = !!animateNested;
+
+            $item.removeClass('_active');
+            $item.children('a').removeClass('ui-state-active');
+            $item.children('.open-children-toggle').attr('aria-expanded', 'false');
+
+            getDirectChildPanels($item).each(function () {
+                var $panel = $(this);
+
+                $panel.removeClass('opened');
+
+                if ($panel.hasClass('subchildmenu')) {
+                    if (nestedAnimate) {
+                        $panel.stop(true, true).slideUp(200);
+                    } else {
+                        $panel.stop(true, true).removeAttr('style');
+                    }
+                } else {
+                    $panel.removeAttr('style');
+                }
+            });
+
+            getParentItems($item).each(function () {
+                var $child = $(this);
+
+                if ($child[0] === $item[0]) {
+                    return;
+                }
+
+                $child.removeClass('_active');
+                $child.children('a').removeClass('ui-state-active');
+                $child.children('.open-children-toggle').attr('aria-expanded', 'false');
+                $child.children(childPanelSelector).removeClass('opened').removeAttr('style');
+            });
+        }
+
+        function closeSiblingParentItems($item, animateNested) {
+            $item.siblings('.ui-menu-item.parent, .ui-menu-item.level0.parent').each(function () {
+                resetParentItemState($(this), animateNested);
+            });
+        }
+
+        function syncParentItemStateFromPanels($item) {
+            var $panel = getFirstDirectChildPanel($item);
+            var opened = $panel.length && $panel.hasClass('opened');
+
+            $item.toggleClass('_active', !!opened);
+            $item.children('a').toggleClass('ui-state-active', !!opened);
+            $item.children('.open-children-toggle').attr('aria-expanded', opened ? 'true' : 'false');
+        }
+
+        function syncAllMobileParentStates() {
+            getParentItems().each(function () {
+                syncParentItemStateFromPanels($(this));
+            });
+        }
+
+        function focusFirstCategoryLink() {
+            var $first = $list.children('.ui-menu-item.level0:visible').children('a').first();
+
+            if ($first.length) {
+                $first.trigger('focus');
+            }
+        }
+
+        function bindRokanMobileBridgeHandlers() {
+            var $toggles = $nav.find('.open-children-toggle');
+
+            $toggles.off('click' + NS + ' keydown' + NS);
+
+            $toggles.on('click' + NS, function () {
+                var $t = $(this);
+                var $p = $t.parent();
+
+                if (isDesktop()) {
+                    return;
+                }
+
+                window.setTimeout(function () {
+                    var $panel = getFirstDirectChildPanel($p);
+                    var opened = $panel.length && $panel.hasClass('opened');
+
+                    if (opened) {
+                        closeSiblingParentItems($p, true);
+                    }
+
+                    syncParentItemStateFromPanels($p);
+                    syncAllMobileParentStates();
+                }, 0);
+            });
+
+            $toggles.on('keydown' + NS, function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    $(this).trigger('click');
+                    return;
+                }
+
+                if (e.key === 'Escape' && !isDesktop()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    resetParentItemState($(this).parent(), true);
+                }
+            });
+        }
+
         /** Reset accordion & visibility when viewport crosses the breakpoint. */
         function syncOnResize() {
             if (isDesktop()) {
                 /* Clean up mobile accordion + stale Rokanthemes "opened" class */
-                $nav.find('.ui-menu-item.parent, .ui-menu-item.level0.parent').each(function () {
-                    var $p = $(this);
-
-                    $p.removeClass('_active');
-                    $p.children('.submenu, ul.level0').removeClass('opened').removeAttr('style');
-                    $p.children('.open-children-toggle').attr('aria-expanded', 'false');
+                getParentItems().each(function () {
+                    resetParentItemState($(this), false);
                 });
 
                 /* Re-sync list visibility to current state */
+                $list.stop(true, true).removeAttr('style');
+
                 if (isOpen()) {
+                    $list.show();
                     $title.addClass('active').attr('aria-expanded', 'true');
                 } else {
+                    $list.hide();
                     $title.removeClass('active').attr('aria-expanded', 'false');
                 }
 
@@ -216,15 +338,104 @@ define([
         /* ---- title click (main toggle) ----------------------------- */
         $title.on('click' + NS, function (e) {
             e.preventDefault();
+            if (isDesktop()) {
+                return;
+            }
             isOpen() ? closeMenu() : openMenu();
         });
 
         $title.on('keydown' + NS, function (e) {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                closeMenu();
+                return;
+            }
+
+            if (e.key === 'ArrowDown' && isDesktop()) {
+                e.preventDefault();
+                openMenu();
+                focusFirstCategoryLink();
+                return;
+            }
+
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
+                if (isDesktop()) {
+                    openMenu();
+                    focusFirstCategoryLink();
+                    return;
+                }
                 $title.trigger('click' + NS);
             }
         });
+
+        /* ---- desktop hover/focus (Home 5 default behavior) ---------- */
+        $nav.on('mouseenter' + NS, function () {
+            if (isDesktop()) {
+                openMenu();
+            }
+        });
+
+        $nav.on('mouseleave' + NS, function () {
+            var root = $nav.get(0);
+            var active = document.activeElement;
+
+            if (!isDesktop()) {
+                return;
+            }
+
+            if (root && active && root.contains(active)) {
+                return;
+            }
+
+            closeMenu();
+        });
+
+        $nav.on('focusin' + NS, function () {
+            if (isDesktop()) {
+                openMenu();
+            }
+        });
+
+        $nav.on('focusout' + NS, function () {
+            if (!isDesktop()) {
+                return;
+            }
+
+            window.setTimeout(function () {
+                var root = $nav.get(0);
+                var active = document.activeElement;
+
+                if (root && active && root.contains(active)) {
+                    return;
+                }
+
+                closeMenu();
+            }, 0);
+        });
+
+        $nav.on('keydown' + NS, function (e) {
+            if (e.key !== 'Escape') {
+                return;
+            }
+
+            if (!isDesktop() && !isOpen()) {
+                return;
+            }
+
+            e.stopPropagation();
+            closeMenu();
+            $title.trigger('focus');
+        });
+
+        if (rokanActive) {
+            /* Keyboard desktop should reuse Rokanthemes flyout-positioning handlers. */
+            $nav.on('focusin' + NS, 'li.level0.parent, li.classic .subchildmenu > li.parent', function () {
+                if (isDesktop()) {
+                    $(this).triggerHandler('mouseenter');
+                }
+            });
+        }
 
         /* ---- mobile submenu accordion (only when Rokanthemes absent) */
         if (!rokanActive) {
@@ -240,17 +451,32 @@ define([
                 var $p = $t.parent();
                 var expanding = !$p.hasClass('_active');
 
+                if (expanding) {
+                    closeSiblingParentItems($p, true);
+                }
+
                 $p.toggleClass('_active');
                 $t.attr('aria-expanded', expanding ? 'true' : 'false');
-                $p.children('.submenu, ul.level0').stop(true, true).slideToggle(200);
+                $p.children(childPanelSelector).stop(true, true).slideToggle(200);
             });
 
             $nav.on('keydown' + NS, '.open-children-toggle', function (e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     $(this).trigger('click');
+                    return;
+                }
+
+                if (e.key === 'Escape' && !isDesktop()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    resetParentItemState($(this).parent(), true);
                 }
             });
+        } else {
+            /* Rokanthemes binds direct click handlers with stopPropagation().
+               Bridge must be direct too, otherwise delegated handlers on $nav won't fire. */
+            bindRokanMobileBridgeHandlers();
         }
 
         /* ---- "Show more / Show less" -------------------------------- */
@@ -260,15 +486,13 @@ define([
                 return;
             }
 
-            var threshold = limitItemShow + 1; /* +1 = the <li> of the link itself */
-
-            if ($items.length <= threshold) {
+            if ($items.length <= limitItemShow) {
                 $expandLink.closest('.expand-category-link').hide();
                 return;
             }
 
             $items.each(function (i) {
-                if (i >= threshold - 1) {
+                if (i >= limitItemShow) {
                     $(this).addClass('orther-link').hide();
                 }
             });
@@ -291,6 +515,17 @@ define([
 
                 $a.attr('aria-expanded', expanding ? 'true' : 'false');
                 $hidden.stop(true, true)[expanding ? 'fadeIn' : 'fadeOut'](180);
+            }).on('keydown' + NS, function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    $(this).trigger('click');
+                    return;
+                }
+
+                if (e.key === 'Escape' && $(this).hasClass('expanding')) {
+                    e.preventDefault();
+                    $(this).trigger('click');
+                }
             });
         })();
 
@@ -304,6 +539,9 @@ define([
         /* ---- resize ------------------------------------------------ */
         $(window).on('resize' + NS, debounce(function () {
             ensureMobileToggles();
+            if (rokanActive) {
+                bindRokanMobileBridgeHandlers();
+            }
             syncOnResize();
         }, 120));
 
@@ -318,6 +556,9 @@ define([
         /* ============================================================ */
 
         ensureMobileToggles();
+        if (rokanActive) {
+            bindRokanMobileBridgeHandlers();
+        }
         syncOnResize();
     };
 });

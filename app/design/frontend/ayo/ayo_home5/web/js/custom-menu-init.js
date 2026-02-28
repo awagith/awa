@@ -57,6 +57,17 @@ define([
             return;
         }
 
+        $menuRoot.find('.open-children-toggle').attr({
+            'role': 'button',
+            'tabindex': '0'
+        }).each(function () {
+            var $toggle = $(this);
+
+            if (!$toggle.attr('aria-expanded')) {
+                $toggle.attr('aria-expanded', 'false');
+            }
+        });
+
         $menuRoot.on('click.awaMainNav', '.open-children-toggle', function (event) {
             var $toggle = $(this);
             var $item = $toggle.closest('li');
@@ -75,6 +86,7 @@ define([
             if (isOpen) {
                 $submenu.removeClass('opened active').hide();
                 $item.removeClass('active _active');
+                $toggle.attr('aria-expanded', 'false');
                 return;
             }
 
@@ -83,9 +95,11 @@ define([
                 .children('.submenu, .groupmenu, .subchildmenu')
                 .removeClass('opened active')
                 .hide();
+            $item.siblings('li').children('.open-children-toggle').attr('aria-expanded', 'false');
 
             $submenu.addClass('opened active').show();
             $item.addClass('active _active');
+            $toggle.attr('aria-expanded', 'true');
         });
 
         $menuRoot.data('awaTouchToggleBound', 1);

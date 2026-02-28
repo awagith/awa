@@ -11,4 +11,50 @@
 body.checkout-index-index .page-wrapper,
 body.checkout-cart-index .page-wrapper {
     --awa-checkout-home5-loaded: 1;
+
+    overflow-x: hidden;
+}
+
+/* Layout bridge: evita overflow horizontal quando OPC + Ayo + widgets adicionam
+   colunas/flex items com larguras fixas. */
+body.checkout-index-index .checkout-container,
+body.checkout-index-index .opc-wrapper,
+body.checkout-index-index #opc-sidebar,
+body.checkout-index-index .opc-estimated-wrapper,
+body.checkout-index-index .opc-progress-bar,
+body.checkout-cart-index .cart-container,
+body.checkout-cart-index .cart-summary {
+    box-sizing: border-box;
+    min-width: 0;
+    max-width: 100%;
+}
+
+/* Popup de autenticação/AjaxSuite no checkout: mantém largura e logo responsivos. */
+body.checkout-index-index .popup-authentication .modal-inner-wrap,
+body.checkout-cart-index .popup-authentication .modal-inner-wrap,
+body.checkout-index-index .ajaxsuite-popup-wrapper .block-authentication,
+body.checkout-cart-index .ajaxsuite-popup-wrapper .block-authentication {
+    max-width: min(960px, calc(100vw - 24px));
+}
+
+body.checkout-index-index .popup-authentication .wave-top .logo,
+body.checkout-cart-index .popup-authentication .wave-top .logo,
+body.checkout-index-index .ajaxsuite-popup-wrapper .wave-top .logo,
+body.checkout-cart-index .ajaxsuite-popup-wrapper .wave-top .logo {
+    display: block;
+    max-width: min(180px, 55vw);
+    height: auto;
+}
+
+@media (width <= 767px) {
+    body.checkout-index-index .popup-authentication .modal-inner-wrap,
+    body.checkout-cart-index .popup-authentication .modal-inner-wrap {
+        width: calc(100vw - 16px);
+        margin: 8px auto;
+    }
+
+    body.checkout-index-index #opc-sidebar,
+    body.checkout-index-index .opc-sidebar {
+        margin-top: 16px;
+    }
 }

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * AWA Round2 (dual-write hotfix)
+ * Re-homes compact B2B mode badge into Ayo header alias rendering.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Original module block under toki_header is not rendered by header.phtml (no alias output). -->
+        <referenceBlock name="b2b.header.status.panel" remove="true"/>
+
+        <referenceBlock name="toki_header">
+            <block class="GrupoAwamotos\B2B\Block\Header\StatusPanel"
+                   name="awa.b2b.mode.badge"
+                   as="awaB2bModeBadge"
+                   template="Magento_Theme::html/b2b-mode-badge.phtml"/>
+        </referenceBlock>
+    </body>
+</page>

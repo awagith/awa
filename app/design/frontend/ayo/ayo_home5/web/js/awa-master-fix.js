@@ -656,10 +656,13 @@
         if (!target) return;
 
         function updateStickyHeight() {
-            var isSticky = (stickyWrapper && stickyWrapper.classList.contains('enable-sticky')) ||
-                (header && (header.classList.contains('sticky') || header.classList.contains('fixed')));
+            var stickyWrapperActive = stickyWrapper &&
+                (stickyWrapper.classList.contains('enable-sticky') || stickyWrapper.classList.contains('enabled-header-sticky'));
+            var headerActive = header && (header.classList.contains('sticky') || header.classList.contains('fixed'));
+            var isSticky = stickyWrapperActive || headerActive;
             if (isSticky) {
-                var h = (header || stickyWrapper).offsetHeight;
+                var activeHeader = stickyWrapperActive ? stickyWrapper : (header || stickyWrapper);
+                var h = activeHeader ? activeHeader.offsetHeight : 0;
                 document.documentElement.style.setProperty('--awa-header-height', h + 'px');
                 document.body.classList.add('sticky-header-active'); /* BUG-08: ativa padding-top no body */
             } else {
@@ -669,7 +672,24 @@
         }
 
         var headerObserver = new MutationObserver(updateStickyHeight);
-        headerObserver.observe(target, { attributes: true, attributeFilter: ['class'] });
+        var observedTargets = [];
+
+        if (stickyWrapper && observedTargets.indexOf(stickyWrapper) === -1) {
+            observedTargets.push(stickyWrapper);
+        }
+        if (header && observedTargets.indexOf(header) === -1) {
+            observedTargets.push(header);
+        }
+        if (!observedTargets.length && target) {
+            observedTargets.push(target);
+        }
+
+        observedTargets.forEach(function (el) {
+            headerObserver.observe(el, { attributes: true, attributeFilter: ['class'] });
+        });
+
+        // Run once on init so CSS spacer stays in sync after hard reload / cached sticky state.
+        updateStickyHeight();
 
         var stickyResizeTimer;
         window.addEventListener('resize', function () {

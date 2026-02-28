@@ -43,10 +43,24 @@ define([
         var closeAnimation = parseInt(config.closeAnimation, 10) || 300;
         var focusDelay = parseInt(config.focusDelay, 10) || 500;
         var homeOnly = !!config.homeOnly;
+        var smartTrigger = config.smartTrigger !== false;
+        var scrollPercent = Math.max(1, parseInt(config.scrollPercent, 10) || 12);
+        var minScrollPx = Math.max(120, parseInt(config.minScrollPx, 10) || 420);
+        var exitIntentEnabled = config.exitIntent !== false;
         var sendingText = config.sendingText || 'Enviando...';
         var pPopupRef = null;
         var forcePreview;
         var effectiveDelay;
+        var triggerReadyDelay;
+        var fallbackOpenDelay;
+        var isHomePage;
+        var openRequested = false;
+        var triggerBound = false;
+        var triggerReadyTimer = null;
+        var fallbackOpenTimer = null;
+        var scrollTicking = false;
+        var ghostGuardTimer = null;
+        var overlayObserver = null;
 
         if (!$popup.length || $popup.data('awaNewsletterInit')) {
             return;
@@ -54,7 +68,122 @@ define([
 
         $popup.data('awaNewsletterInit', 1);
 
+        function clearGhostGuardTimer() {
+            if (!ghostGuardTimer) {
+                return;
+            }
+
+            window.clearTimeout(ghostGuardTimer);
+            ghostGuardTimer = null;
+        }
+
+        function getPopupCard() {
+            return $popup.find('.nl-popup-card').get(0) || null;
+        }
+
+        function isNodeVisible(node, minWidth, minHeight) {
+            var rect;
+            var style;
+
+            if (!node) {
+                return false;
+            }
+
+            rect = node.getBoundingClientRect();
+            style = window.getComputedStyle(node);
+
+            if (!rect || rect.width < (minWidth || 1) || rect.height < (minHeight || 1)) {
+                return false;
+            }
+
+            return style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0';
+        }
+
+        function cleanupBPopupArtifacts() {
+            $('.b-modal').each(function () {
+                var $overlay = $(this);
+
+                $overlay.removeClass('_show').css({
+                    display: 'none',
+                    opacity: ''
+                });
+            });
+        }
+
+        function closeGhostPopupIfNeeded() {
+            var popupNode = $popup.get(0);
+            var cardNode = getPopupCard();
+
+            if (!isNodeVisible(popupNode, 40, 40)) {
+                return;
+            }
+
+            if (isNodeVisible(cardNode, 120, 120)) {
+                return;
+            }
+
+            clearGhostGuardTimer();
+            cleanupBPopupArtifacts();
+            $popup.hide()
+                .removeClass('popup-closing')
+                .removeClass('nl-popup-fallback-open');
+            $popup.css({
+                display: '',
+                alignItems: '',
+                justifyContent: '',
+                opacity: '',
+                visibility: '',
+                top: '',
+                left: ''
+            });
+            $('body').removeClass('nl-popup-body-open');
+            $(document).off('keydown.awaNewsletter');
+        }
+
+        function scheduleGhostGuard() {
+            clearGhostGuardTimer();
+
+            ghostGuardTimer = window.setTimeout(function () {
+                ghostGuardTimer = null;
+                closeGhostPopupIfNeeded();
+            }, 220);
+        }
+
+        function preparePopupForOpen() {
+            $popup.removeClass('popup-closing')
+                .removeClass('nl-popup-fallback-open');
+            $popup.css({
+                opacity: '',
+                visibility: ''
+            });
+
+            cleanupBPopupArtifacts();
+        }
+
+        function ensureOverlayObserver() {
+            if (overlayObserver || typeof MutationObserver === 'undefined') {
+                return;
+            }
+
+            overlayObserver = new MutationObserver(function () {
+                closeGhostPopupIfNeeded();
+            });
+
+            overlayObserver.observe(document.body, {
+                childList: true,
+                subtree: false
+            });
+
+            overlayObserver.observe($popup.get(0), {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['class', 'style']
+            });
+        }
+
         function closePopup() {
+            clearGhostGuardTimer();
             $popup.addClass('popup-closing');
 
             setTimeout(function () {
@@ -72,9 +201,14 @@ define([
                 $popup.css({
                     display: '',
                     alignItems: '',
-                    justifyContent: ''
+                    justifyContent: '',
+                    opacity: '',
+                    visibility: '',
+                    top: '',
+                    left: ''
                 });
                 $('body').removeClass('nl-popup-body-open');
+                cleanupBPopupArtifacts();
                 $(document).off('keydown.awaNewsletter');
             }, closeAnimation);
         }
@@ -93,13 +227,23 @@ define([
         function openPopup() {
             var fixedHeight = Math.max(40, ($(window).height() - popupHeight) / 2);
 
+            preparePopupForOpen();
+
             if (typeof $popup.bPopup === 'function') {
                 pPopupRef = $popup.bPopup({
                     position: ['auto', fixedHeight],
                     speed: popupSpeed,
                     transition: 'slideDown',
-                    onClose: function () { }
+                    onOpen: function () {
+                        $('body').addClass('nl-popup-body-open');
+                        scheduleGhostGuard();
+                    },
+                    onClose: function () {
+                        $('body').removeClass('nl-popup-body-open');
+                        cleanupBPopupArtifacts();
+                    }
                 });
+                scheduleGhostGuard();
                 return;
             }
 
@@ -110,6 +254,118 @@ define([
                 justifyContent: 'center'
             });
             $('body').addClass('nl-popup-body-open');
+            scheduleGhostGuard();
+        }
+
+        function shouldAbortOpen() {
+            return getCookie(cookieName) === '1' || $popup.is(':visible') || openRequested;
+        }
+
+        function getScrollProgress() {
+            var doc = document.documentElement;
+            var body = document.body;
+            var scrollTop = window.pageYOffset || doc.scrollTop || body.scrollTop || 0;
+            var viewportHeight = window.innerHeight || doc.clientHeight || 0;
+            var scrollHeight = Math.max(
+                doc.scrollHeight,
+                body.scrollHeight,
+                doc.offsetHeight,
+                body.offsetHeight
+            );
+            var totalScrollable = Math.max(1, scrollHeight - viewportHeight);
+
+            return {
+                top: scrollTop,
+                percent: (scrollTop / totalScrollable) * 100
+            };
+        }
+
+        function unbindSmartOpenTriggers() {
+            if (!triggerBound) {
+                return;
+            }
+
+            triggerBound = false;
+            $(window).off('scroll.awaNewsletterTrigger');
+            $(document).off('mouseout.awaNewsletterTrigger mouseleave.awaNewsletterTrigger');
+        }
+
+        function requestOpen(source) {
+            if (shouldAbortOpen()) {
+                return;
+            }
+
+            openRequested = true;
+            unbindSmartOpenTriggers();
+            clearTimeout(triggerReadyTimer);
+            clearTimeout(fallbackOpenTimer);
+
+            openPopup();
+
+            $(document).off('keydown.awaNewsletter').on('keydown.awaNewsletter', function (event) {
+                if (event.key === 'Escape' && $popup.is(':visible')) {
+                    closePopup();
+                    $(document).off('keydown.awaNewsletter');
+                }
+            });
+
+            setTimeout(function () {
+                if ($popup.is(':visible')) {
+                    $popup.find('#newsletter-popup').focus();
+                }
+            }, focusDelay);
+
+            if (window.console && window.console.debug) {
+                window.console.debug('[AWA Newsletter] opened by:', source);
+            }
+        }
+
+        function bindSmartOpenTriggers() {
+            if (triggerBound || shouldAbortOpen()) {
+                return;
+            }
+
+            triggerBound = true;
+
+            $(window).on('scroll.awaNewsletterTrigger', function () {
+                if (scrollTicking) {
+                    return;
+                }
+
+                scrollTicking = true;
+                window.requestAnimationFrame(function () {
+                    var scrollState = getScrollProgress();
+
+                    scrollTicking = false;
+
+                    if (scrollState.top >= minScrollPx || scrollState.percent >= scrollPercent) {
+                        requestOpen('scroll');
+                    }
+                });
+            });
+
+            if (exitIntentEnabled && window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+                $(document).on('mouseout.awaNewsletterTrigger mouseleave.awaNewsletterTrigger', function (event) {
+                    var relatedTarget = event.relatedTarget || event.toElement;
+
+                    if (relatedTarget) {
+                        return;
+                    }
+
+                    if (typeof event.clientY === 'number' && event.clientY <= 12) {
+                        requestOpen('exit-intent');
+                    }
+                });
+            }
+
+            // Se o usuário já estiver abaixo da dobra quando os triggers forem armados, abre imediatamente.
+            (function () {
+                var scrollState = getScrollProgress();
+
+                if (scrollState.top >= minScrollPx || scrollState.percent >= scrollPercent) {
+                    requestOpen('scroll-initial');
+                }
+            }());
         }
 
         $popup.off('.awaNewsletter')
@@ -158,9 +414,15 @@ define([
             });
 
         forcePreview = window.location.search.indexOf('newsletter_preview=1') !== -1;
+        ensureOverlayObserver();
         effectiveDelay = forcePreview ? 120 : popupDelay;
+        triggerReadyDelay = Math.max(effectiveDelay, 4000);
+        fallbackOpenDelay = Math.max(triggerReadyDelay + 14000, 20000);
+        isHomePage = $('body').hasClass('cms-index-index') ||
+            $('body').hasClass('cms-home') ||
+            $('body').hasClass('cms-homepage_ayo_home5');
 
-        if (!forcePreview && homeOnly && !$('body').hasClass('cms-index-index')) {
+        if (!forcePreview && homeOnly && !isHomePage) {
             return;
         }
 
@@ -168,23 +430,33 @@ define([
             return;
         }
 
-        setTimeout(function () {
-            if (!forcePreview && getCookie(cookieName) === '1') {
-                return;
-            }
-
-            openPopup();
-
-            $(document).off('keydown.awaNewsletter').on('keydown.awaNewsletter', function (event) {
-                if (event.key === 'Escape' && $popup.is(':visible')) {
-                    closePopup();
-                    $(document).off('keydown.awaNewsletter');
-                }
-            });
-
+        if (forcePreview) {
             setTimeout(function () {
-                $popup.find('#newsletter-popup').focus();
-            }, focusDelay);
+                requestOpen('preview');
+            }, effectiveDelay);
+            return;
+        }
+
+        // Home (Ayo Home 5): comportamento mais profissional para não esconder o hero
+        // imediatamente. Abre por scroll/exit-intent e mantém fallback tardio.
+        if (smartTrigger && isHomePage) {
+            triggerReadyTimer = setTimeout(function () {
+                if (shouldAbortOpen()) {
+                    return;
+                }
+
+                bindSmartOpenTriggers();
+            }, triggerReadyDelay);
+
+            fallbackOpenTimer = setTimeout(function () {
+                requestOpen('fallback-timeout');
+            }, fallbackOpenDelay);
+
+            return;
+        }
+
+        setTimeout(function () {
+            requestOpen('delay');
         }, effectiveDelay);
     };
 });

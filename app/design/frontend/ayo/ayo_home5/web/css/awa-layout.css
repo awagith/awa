@@ -1849,8 +1849,56 @@ body .page-wrapper .aw-footer-b2b-contact .b2b-contact-value {
     transition: color var(--awa-transition-fast); /* R11-11: token */
 }
 
-body .page-wrapper .aw-footer-b2b-contact .b2b-contact-value:hover {
+body .page-wrapper .aw-footer-b2b-contact .b2b-contact-value:hover,
+body .page-wrapper .aw-footer-b2b-contact .b2b-contact-value:focus-visible {
     color: var(--footer-accent); /* R10-15: token consistente com footer */
+}
+
+body .page-wrapper .aw-footer-b2b-contact .b2b-contact-content {
+    display: grid;
+    gap: var(--awa-space-2);
+}
+
+body .page-wrapper .aw-footer-b2b-contact .b2b-contact-item {
+    display: grid;
+    grid-template-columns: minmax(98px, auto) 1fr;
+    gap: var(--awa-space-2);
+    align-items: baseline;
+    padding-bottom: var(--awa-space-2);
+    border-bottom: 1px dashed rgb(255 255 255 / 10%);
+}
+
+body .page-wrapper .aw-footer-b2b-contact .b2b-contact-item:last-of-type {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+body .page-wrapper .aw-footer-b2b-contact .b2b-contact-label {
+    color: var(--awa-gray-400, #adb5bd);
+    font-size: var(--awa-text-xs);
+    letter-spacing: var(--awa-tracking-wide);
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+body .page-wrapper .aw-footer-b2b-contact .b2b-contact-hours {
+    margin-top: var(--awa-space-2);
+    padding-top: var(--awa-space-2);
+    border-top: 1px solid rgb(255 255 255 / 8%);
+    color: var(--footer-text);
+    line-height: 1.45;
+    font-size: var(--awa-text-sm);
+}
+
+body .page-wrapper .aw-footer-b2b-contact .b2b-contact-hours strong {
+    color: var(--awa-text-on-dark);
+}
+
+body .page-wrapper .aw-footer-b2b-contact .b2b-contact-value:focus-visible,
+body .page-wrapper .page_footer .velaFooterLinks a:focus-visible {
+    outline: 2px solid var(--footer-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
 }
 
 /* AYO theme adjustments */
@@ -1918,6 +1966,16 @@ body .page-wrapper .footer.content .block-static-block {
     body .page-wrapper .footer-bottom .row {
         align-items: center;
         gap: var(--awa-space-3);
+    }
+
+    body .page-wrapper .aw-footer-b2b-contact .b2b-contact-item {
+        grid-template-columns: 1fr;
+        gap: 4px;
+        text-align: left;
+    }
+
+    body .page-wrapper .aw-footer-b2b-contact .b2b-contact-label {
+        white-space: normal;
     }
 }
 

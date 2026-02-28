@@ -24,7 +24,9 @@
 
 <nav class="navigation verticalmenu side-verticalmenu"
      aria-label="<?= $escaper->escapeHtmlAttr(__('Product Categories')) ?>"
-     data-role="awa-vertical-menu">
+     data-role="awa-vertical-menu"
+     data-awa-component="vertical-menu"
+     data-awa-variant="sidebar">
     <h2 class="our_categories title-category-dropdown"
         data-role="awa-vertical-menu-trigger"
         aria-controls="<?= $escaper->escapeHtmlAttr($menuId) ?>"
@@ -64,10 +66,11 @@
 <script type="text/x-magento-init">
 {
     "[data-role='awa-vertical-menu']": {
-        "js/vertical-menu-init": {
+        "js/awa-vertical-menu-compat": {
             "desktopBreakpoint": 992,
             "overlaySelector": ".shadow_bkg_show",
-            "limitShow": <?= (int)$limitShow ?>
+            "limitShow": <?= (int)$limitShow ?>,
+            "componentName": "vertical-menu"
         }
     }
 }

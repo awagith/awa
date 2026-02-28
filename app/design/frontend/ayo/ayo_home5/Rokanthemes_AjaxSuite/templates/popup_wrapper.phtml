@@ -1,0 +1,11 @@
+<?php
+/**
+ * AWA override: AjaxSuite popup wrapper
+ *
+ * Remove static close anchor (#ajaxsuite-close) that is never used by the module JS.
+ * The real modal close button is rendered by Magento modal (.action-close).
+ */
+?>
+<div class="ajaxsuite-popup-wrapper" id="ajaxsuite-popup-wrapper" aria-hidden="true">
+    <div id="ajaxsuite-popup-content"></div>
+</div>

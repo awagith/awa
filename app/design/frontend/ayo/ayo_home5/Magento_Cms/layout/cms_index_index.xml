@@ -4,6 +4,20 @@
     <!-- R35: awa-consistency-home5.css carregado apenas na homepage (antes era global via default_head_blocks.xml) -->
     <head>
         <css src="css/awa-consistency-home5.css"/>
+        <!-- AWA owl tabs visual polish homepage-only -->
+        <css src="css/awa-round2-home-owl-tabs.css"/>
+        <!-- Homepage CSS suppressions: remove global layers not needed on homepage -->
+        <remove src="css/awa-institutional.css"/>
+        <remove src="css/awa-round3-footer-trust.css"/>
+        <remove src="css/awa-round6-b2b-gate-refine.css"/>
+        <remove src="css/awa-round7-auth-refine.css"/>
+        <remove src="css/awa-round8-plp-search-cart-refine.css"/>
+        <!-- Re-enable selective layers on homepage -->
+        <css src="css/awa-round9-post-themeoption-overrides.css"/>
+        <css src="css/awa-components-b2b-foundation.css"/>
+        <css src="css/awa-compat-b2b-nav-plp-cart-checkout.css"/>
+        <css src="css/awa-page-home-category-premium.css"/>
+        <css src="css/awa-home-final-polish.css"/>
     </head>
     <body>
         <referenceBlock name="theme.active.editor" remove="true"/>
@@ -25,5 +39,24 @@
         <!-- referenceBlock at body level (XSD requires this, not nested in referenceContainer) -->
         <referenceBlock name="nav.bar.title" remove="true"/>
         <referenceBlock name="cms_page_content" remove="true"/>
+        <referenceContainer name="content-top-home" remove="false"/>
+        <referenceBlock name="awa.post.themeoption.css">
+            <arguments>
+                <argument name="disable_awa_post_themeoption_css" xsi:type="boolean">false</argument>
+            </arguments>
+        </referenceBlock>
+
+        <referenceContainer name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.round2.home.owl.tabs.js"
+                   template="Magento_Theme::html/awa-round2-js-loader.phtml">
+                <arguments>
+                    <argument name="load_header_js" xsi:type="boolean">false</argument>
+                    <argument name="load_home_owl_tabs_js" xsi:type="boolean">true</argument>
+                    <argument name="load_footer_ux_js" xsi:type="boolean">false</argument>
+                    <argument name="load_pdp_sticky_cta_js" xsi:type="boolean">false</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
     </body>
 </page>

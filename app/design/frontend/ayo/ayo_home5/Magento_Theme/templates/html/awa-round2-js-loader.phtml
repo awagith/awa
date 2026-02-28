@@ -1,0 +1,69 @@
+<?php
+/**
+ * AWA Motos - Visual JS Loader (consolidated from child theme)
+ * Loads small UI scripts after DOM parsing (defer).
+ * Disables compat scripts on home/demo pages to avoid observer self-trigger loops.
+ */
+$loadHeaderJs = $block->getData('load_header_js');
+$loadHomeOwlTabsJs = $block->getData('load_home_owl_tabs_js');
+$loadFooterUxJs = $block->getData('load_footer_ux_js');
+$loadPdpStickyCtaJs = $block->getData('load_pdp_sticky_cta_js');
+$loadSearchCompatJs = $block->getData('load_search_compat_js');
+$loadB2bCheckoutCompatJs = $block->getData('load_b2b_checkout_compat_js');
+$loadHomeCategoryCompatJs = $block->getData('load_home_category_compat_js');
+
+$request = $block->getRequest();
+$fullActionName = $request ? (string) $request->getFullActionName() : '';
+$pathInfo = $request ? (string) ($request->getOriginalPathInfo() ?: $request->getPathInfo()) : '';
+$pathSlug = trim($pathInfo, '/');
+$isCmsHomeRoute = $fullActionName === 'cms_index_index' || $pathSlug === '';
+$isDemoStagePreview = $fullActionName === 'cms_page_view'
+    && in_array($pathSlug, ['homepage_ayo_home5_stage', 'homepage_ayo_home5_demo_stage'], true);
+
+if ($loadHeaderJs === null) {
+    $loadHeaderJs = true;
+}
+
+$loadHeaderJs = (bool) $loadHeaderJs;
+$loadHomeOwlTabsJs = (bool) $loadHomeOwlTabsJs;
+$loadFooterUxJs = (bool) $loadFooterUxJs;
+$loadPdpStickyCtaJs = (bool) $loadPdpStickyCtaJs;
+$loadSearchCompatJs = (bool) $loadSearchCompatJs;
+$loadB2bCheckoutCompatJs = (bool) $loadB2bCheckoutCompatJs;
+$loadHomeCategoryCompatJs = (bool) $loadHomeCategoryCompatJs;
+
+// Home demo routes should stay close to Ayo base and avoid observer-heavy compat scripts.
+if ($isCmsHomeRoute || $isDemoStagePreview) {
+    $loadSearchCompatJs = false;
+    $loadB2bCheckoutCompatJs = false;
+    $loadHomeCategoryCompatJs = false;
+}
+
+$shouldLoadCompatBootstrap = $loadSearchCompatJs || $loadB2bCheckoutCompatJs || $loadHomeCategoryCompatJs;
+$compatBootstrapConfig = [
+    'load_search_compat_js' => $loadSearchCompatJs,
+    'load_b2b_checkout_compat_js' => $loadB2bCheckoutCompatJs,
+    'load_home_category_compat_js' => $loadHomeCategoryCompatJs,
+];
+?>
+<?php if ($loadHeaderJs): ?>
+<script src="<?= $block->escapeUrl($block->getViewFileUrl('js/awa-round2-header-minicart-ui.js')) ?>" defer></script>
+<?php endif; ?>
+<?php if ($loadHomeOwlTabsJs): ?>
+<script src="<?= $block->escapeUrl($block->getViewFileUrl('js/awa-round2-home-owl-tabs-ui.js')) ?>" defer></script>
+<?php endif; ?>
+<?php if ($loadFooterUxJs): ?>
+<script src="<?= $block->escapeUrl($block->getViewFileUrl('js/awa-round3-footer-ux.js')) ?>" defer></script>
+<?php endif; ?>
+<?php if ($loadPdpStickyCtaJs): ?>
+<script src="<?= $block->escapeUrl($block->getViewFileUrl('js/awa-round3-pdp-sticky-cta.js')) ?>" defer></script>
+<?php endif; ?>
+<?php if ($shouldLoadCompatBootstrap): ?>
+<script type="text/x-magento-init">
+{
+    "*": {
+        "awaCustomCompatBootstrap": <?= /* @noEscape */ json_encode($compatBootstrapConfig, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>
+    }
+}
+</script>
+<?php endif; ?>
