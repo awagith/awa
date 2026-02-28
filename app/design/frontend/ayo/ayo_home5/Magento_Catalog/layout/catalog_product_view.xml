@@ -12,10 +12,10 @@
         <css src="css/awa-pdp-final-polish.css"/>
     </head>
     <body>
-        <!-- keep product media container in ayo expected column to reduce layout merge conflicts. -->
+        <!-- Keep product media container in Ayo expected column to reduce layout merge conflicts. -->
         <move element="product.info.media" destination="product.col.media" before="-"/>
 
-        <!-- wishlist e compare restaurados — fidelidade ao demo ayo home5 -->
+        <!-- Wishlist e Compare restaurados — fidelidade ao demo Ayo Home5 -->
         <referenceContainer name="before.body.end">
             <block class="Magento\Framework\View\Element\Template"
                    name="awa.round3.pdp.sticky.cta.js"
