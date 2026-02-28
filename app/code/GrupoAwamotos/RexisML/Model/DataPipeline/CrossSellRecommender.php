@@ -110,6 +110,18 @@ class CrossSellRecommender
             'tipo_recomendacao = ?' => 'crosssell',
         ]);
 
+        // Filtrar customer_ids inválidos antes do INSERT para evitar FK violation em
+        // rexis_dataset_recomendacao.customer_id → customer_entity.entity_id
+        $potentialIds = array_keys($customerPurchases);
+        $validIdSet = $this->fetchExistingCustomerIds($connection, $potentialIds);
+        if (count($validIdSet) < count($potentialIds)) {
+            $this->logger->warning(sprintf(
+                '[RexisML CrossSell] Skipped %d deleted customers (FK protection)',
+                count($potentialIds) - count($validIdSet)
+            ));
+            $customerPurchases = array_intersect_key($customerPurchases, array_flip($validIdSet));
+        }
+
         $count = 0;
         $batchData = [];
         $batchSize = 500;
@@ -204,6 +216,27 @@ class CrossSellRecommender
 
         $this->logger->info("[RexisML CrossSell Recommender] Generated {$count} cross-sell recommendations for {$mesCode}");
         return $count;
+    }
+
+    /**
+     * Retorna os customer_ids que existem em customer_entity (evita FK violation)
+     *
+     * @param mixed $connection
+     * @param int[]|string[] $ids
+     * @return list<int>
+     */
+    private function fetchExistingCustomerIds($connection, array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+        $intIds = array_values(array_unique(array_map('intval', $ids)));
+        $rows = $connection->fetchCol(
+            $connection->select()
+                ->from($this->resource->getTableName('customer_entity'), ['entity_id'])
+                ->where('entity_id IN (?)', $intIds)
+        );
+        return array_map('intval', $rows);
     }
 
     /**

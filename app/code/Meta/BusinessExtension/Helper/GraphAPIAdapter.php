@@ -301,7 +301,9 @@ class GraphAPIAdapter
                 $skipped++;
                 continue;
             }
-            $data['id'] = $itemId;
+            // ID já promovido para retailer_id no request; removê-lo de data[] evita
+            // o erro "(#100) Unexpected key 'id'" que a API de categories e catalog rejeita.
+            unset($data['id']);
             $itemType = strtoupper(trim((string) ($data['item_type'] ?? self::DEFAULT_CATALOG_ITEM_TYPE)));
             if ($itemType === '') {
                 $itemType = self::DEFAULT_CATALOG_ITEM_TYPE;

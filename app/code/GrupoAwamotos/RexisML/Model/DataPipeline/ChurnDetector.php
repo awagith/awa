@@ -98,6 +98,18 @@ class ChurnDetector
             $rfmMap[$r['customer_id']] = $r;
         }
 
+        // Filtrar customer_ids inválidos antes do INSERT para evitar FK violation em
+        // rexis_dataset_recomendacao.customer_id → customer_entity.entity_id
+        $potentialIds = array_keys($customerProducts);
+        $validIdSet = $this->fetchExistingCustomerIds($connection, $potentialIds);
+        if (count($validIdSet) < count($potentialIds)) {
+            $this->logger->warning(sprintf(
+                '[RexisML Churn] Skipped %d deleted customers (FK protection)',
+                count($potentialIds) - count($validIdSet)
+            ));
+            $customerProducts = array_intersect_key($customerProducts, array_flip($validIdSet));
+        }
+
         $count = 0;
         foreach ($customerProducts as $cid => $products) {
             foreach ($products as $pid => $data) {
@@ -151,5 +163,26 @@ class ChurnDetector
 
         $this->logger->info("[RexisML Churn] Generated {$count} churn recommendations for {$mesCode}");
         return $count;
+    }
+
+    /**
+     * Retorna os customer_ids que existem em customer_entity (evita FK violation)
+     *
+     * @param mixed $connection
+     * @param int[]|string[] $ids
+     * @return list<int>
+     */
+    private function fetchExistingCustomerIds($connection, array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+        $intIds = array_values(array_unique(array_map('intval', $ids)));
+        $rows = $connection->fetchCol(
+            $connection->select()
+                ->from($this->resource->getTableName('customer_entity'), ['entity_id'])
+                ->where('entity_id IN (?)', $intIds)
+        );
+        return array_map('intval', $rows);
     }
 }
