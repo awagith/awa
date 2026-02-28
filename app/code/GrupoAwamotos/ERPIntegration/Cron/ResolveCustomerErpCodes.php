@@ -7,7 +7,7 @@ use GrupoAwamotos\ERPIntegration\Api\CustomerSyncInterface;
 use GrupoAwamotos\ERPIntegration\Helper\Data as Helper;
 use GrupoAwamotos\ERPIntegration\Model\ResourceModel\SyncLog as SyncLogResource;
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory;
 use Magento\Framework\App\State as AppState;
 use Psr\Log\LoggerInterface;
 
@@ -26,7 +26,7 @@ class ResolveCustomerErpCodes
     private const BATCH_SIZE = 200;
 
     private CustomerSyncInterface $customerSync;
-    private CustomerCollectionFactory $customerCollectionFactory;
+    private CollectionFactory $customerCollectionFactory;
     private CustomerRepositoryInterface $customerRepository;
     private SyncLogResource $syncLogResource;
     private Helper $helper;
@@ -35,7 +35,7 @@ class ResolveCustomerErpCodes
 
     public function __construct(
         CustomerSyncInterface $customerSync,
-        CustomerCollectionFactory $customerCollectionFactory,
+        CollectionFactory $customerCollectionFactory,
         CustomerRepositoryInterface $customerRepository,
         SyncLogResource $syncLogResource,
         Helper $helper,

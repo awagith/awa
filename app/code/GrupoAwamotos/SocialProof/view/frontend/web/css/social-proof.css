@@ -10,6 +10,14 @@
  * §1 — PDP Social Proof container + badges
  * ==================================================== */
 
+.social-proof-container,
+.social-proof-badge-stack {
+    --awa-sp-primary: var(--aw-primary, #b73337);
+    --awa-sp-primary-dark: var(--aw-primary-dark, #8e2629);
+    --awa-sp-surface: #fff;
+    --awa-sp-border: #eadfe0;
+}
+
 .social-proof-container {
     margin: 20px 0;
 }
@@ -19,8 +27,10 @@
     align-items: center;
     padding: 12px 16px;
     margin-bottom: 10px;
-    border-radius: 6px;
+    border-radius: 8px;
     font-size: 14px;
+    background: var(--awa-sp-surface);
+    border: 1px solid var(--awa-sp-border);
     animation: sp-fadeInUp 0.5s ease-out;
 }
 
@@ -40,19 +50,19 @@
 
 /* Views Badge — Cinza/Azul */
 .views-badge {
-    background: #f0f7ff;
-    border: 1px solid #d0e4ff;
-    color: #1976d2;
+    background: #f8fafc;
+    border-color: #d9e2ec;
+    color: #334155;
 }
 
 .views-badge i {
-    color: #1976d2;
+    color: var(--awa-sp-primary);
 }
 
 /* Low Stock Badge — Laranja (Urgência) */
 .low-stock-badge {
     background: #fff3e0;
-    border: 1px solid #ffe0b2;
+    border-color: #ffd8a8;
     color: #e65100;
 }
 
@@ -67,8 +77,8 @@
 
 /* Bestseller Badge — Vermelho/Ouro */
 .bestseller-badge {
-    background: linear-gradient(135deg, #b73337 0%, #d63a3f 100%);
-    border: 1px solid #9a2b2f;
+    background: linear-gradient(135deg, var(--awa-sp-primary) 0%, #cf4044 100%);
+    border-color: var(--awa-sp-primary-dark);
     color: #fff;
     font-weight: 600;
 }
@@ -82,7 +92,7 @@
  * §2 — Category list badges (product/list-badge.phtml)
  * ==================================================== */
 
-.product-badge-container {
+.social-proof-badge-stack {
     position: absolute;
     top: 10px;
     left: 10px;
@@ -90,9 +100,10 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    max-width: calc(100% - 20px);
 }
 
-.product-badge {
+.social-proof-pill {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -104,19 +115,21 @@
     letter-spacing: 0.5px;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     animation: sp-slideInLeft 0.4s ease-out;
+    width: fit-content;
+    max-width: 100%;
 }
 
-.product-badge.bestseller {
-    background: #b73337;
+.social-proof-pill--bestseller {
+    background: var(--awa-sp-primary);
     color: #fff;
 }
 
-.product-badge.low-stock {
+.social-proof-pill--low-stock {
     background: #ff9800;
     color: #fff;
 }
 
-.product-badge i {
+.social-proof-pill i {
     font-size: 12px;
 }
 
@@ -181,12 +194,12 @@
         margin-right: 10px;
     }
 
-    .product-badge-container {
+    .social-proof-badge-stack {
         top: 8px;
         left: 8px;
     }
 
-    .product-badge {
+    .social-proof-pill {
         font-size: 10px;
         padding: 5px 10px;
     }
@@ -201,5 +214,23 @@
     .social-proof-badge:hover {
         transform: translateX(5px);
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .social-proof-badge,
+    .social-proof-pill {
+        animation: none;
+        transition: none;
+    }
+
+    .low-stock-badge i,
+    .bestseller-badge i {
+        animation: none;
+    }
+
+    .social-proof-badge:hover {
+        transform: none;
+        box-shadow: none;
     }
 }

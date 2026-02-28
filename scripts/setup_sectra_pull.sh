@@ -419,10 +419,12 @@ fi
 echo ""
 echo "== 10. TESTE FINAL =="
 
-mysql -u sectra -p"$SECTRA_PASS" magento -e "SELECT 'OK' AS conexao;" 2>/dev/null && ok "User sectra conecta" || fail "User sectra NAO conecta"
+MYSQL_PWD="$SECTRA_PASS" mysql --socket="$MYSQL_SOCKET" -u "$SECTRA_USER" "$DB_NAME" -e "SELECT 'OK' AS conexao;" 2>/dev/null \
+    && ok "User ${SECTRA_USER} conecta" \
+    || fail "User ${SECTRA_USER} NAO conecta"
 
 for VIEW in vw_sectra_pedidos_pendentes vw_sectra_pedidos_itens vw_sectra_clientes_b2b vw_sectra_pedidos_sincronizados; do
-    COUNT=$(mysql -u sectra -p"$SECTRA_PASS" magento -N -e "SELECT COUNT(*) FROM $VIEW;" 2>/dev/null || echo "ERRO")
+    COUNT=$(MYSQL_PWD="$SECTRA_PASS" mysql --socket="$MYSQL_SOCKET" -u "$SECTRA_USER" "$DB_NAME" -N -e "SELECT COUNT(*) FROM $VIEW;" 2>/dev/null || echo "ERRO")
     if [ "$COUNT" != "ERRO" ]; then
         ok "$VIEW ($COUNT registros)"
     else
@@ -430,16 +432,28 @@ for VIEW in vw_sectra_pedidos_pendentes vw_sectra_pedidos_itens vw_sectra_client
     fi
 done
 
-PROC_TEST=$(mysql -u sectra -p"$SECTRA_PASS" magento -N -e "SELECT ROUTINE_NAME FROM information_schema.routines WHERE ROUTINE_SCHEMA='magento' AND ROUTINE_NAME='sp_sectra_ack_pedido';" 2>/dev/null || echo "")
-if [ -n "$PROC_TEST" ]; then
-    ok "Procedure sp_sectra_ack_pedido acessivel"
+PROC_EXISTS=$(eval "$MYSQL_DDL -N -e \"SELECT COUNT(*) FROM information_schema.routines WHERE routine_schema='${DB_NAME}' AND routine_name='sp_sectra_ack_pedido' AND routine_type='PROCEDURE'\"" 2>/dev/null || echo "0")
+if [ "$PROC_EXISTS" -gt 0 ]; then
+    ok "Procedure sp_sectra_ack_pedido existe (validado pelo usuario do Magento)"
+
+    # Teste de EXECUTE como sectra (usa increment_id inexistente para nao alterar pedidos reais)
+    CALL_OUT=$(MYSQL_PWD="$SECTRA_PASS" mysql --socket="$MYSQL_SOCKET" -u "$SECTRA_USER" "$DB_NAME" -e "CALL sp_sectra_ack_pedido('000000000', 'TEST-DRYRUN');" 2>&1) || true
+    if echo "$CALL_OUT" | grep -qi "execute command denied"; then
+        warn "User ${SECTRA_USER} NAO tem EXECUTE na procedure (precisa GRANT como admin MySQL)"
+        warn "GRANT necessario: GRANT EXECUTE ON PROCEDURE ${DB_NAME}.sp_sectra_ack_pedido TO '${SECTRA_USER}'@'%';"
+    elif echo "$CALL_OUT" | grep -qi "ERROR"; then
+        warn "CALL executou com erro (normal se o pedido nao existe). Saida:"
+        echo "$CALL_OUT" | tail -n 5
+    else
+        ok "CALL sp_sectra_ack_pedido executou como ${SECTRA_USER}"
+    fi
 else
-    fail "Procedure sp_sectra_ack_pedido NAO encontrada"
+    fail "Procedure sp_sectra_ack_pedido NAO encontrada (validacao Magento)"
 fi
 
 echo ""
 info "Amostra de pedidos pendentes:"
-mysql -u sectra -p"$SECTRA_PASS" magento -e "SELECT pedido_web, data_pedido, cpf_cnpj, total, forma_pagamento FROM vw_sectra_pedidos_pendentes LIMIT 5;" 2>/dev/null || warn "Nenhum pedido pendente"
+MYSQL_PWD="$SECTRA_PASS" mysql --socket="$MYSQL_SOCKET" -u "$SECTRA_USER" "$DB_NAME" -e "SELECT pedido_web, data_pedido, cpf_cnpj, total, forma_pagamento FROM vw_sectra_pedidos_pendentes LIMIT 5;" 2>/dev/null || warn "Nenhum pedido pendente"
 
 # =============================================================================
 # 11. IP E INSTRUCOES FINAIS

@@ -1,33 +1,37 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Implementação do Repositório de Recomendações
  */
 namespace GrupoAwamotos\RexisML\Model;
 
 use GrupoAwamotos\RexisML\Api\RecommendationRepositoryInterface;
-use GrupoAwamotos\RexisML\Model\ResourceModel\DatasetRecomendacao\CollectionFactory as RecomendacaoCollectionFactory;
-use GrupoAwamotos\RexisML\Model\ResourceModel\NetworkRules\CollectionFactory as NetworkCollectionFactory;
-use GrupoAwamotos\RexisML\Model\ResourceModel\CustomerClassification\CollectionFactory as RfmCollectionFactory;
-use GrupoAwamotos\RexisML\Model\ResourceModel\MetricasConversao\CollectionFactory as MetricasCollectionFactory;
-use GrupoAwamotos\RexisML\Model\MetricasConversaoFactory;
+use GrupoAwamotos\RexisML\Api\Data\MetricsInterface;
+use GrupoAwamotos\RexisML\Model\Data\Metrics;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Psr\Log\LoggerInterface;
 
 class RecommendationRepository implements RecommendationRepositoryInterface
 {
-    protected $recomendacaoCollectionFactory;
-    protected $networkCollectionFactory;
-    protected $rfmCollectionFactory;
-    protected $metricasCollectionFactory;
-    protected $metricasFactory;
-    protected $logger;
+    /** Magento DI auto-generated factory */
+    protected object $recomendacaoCollectionFactory;
+    /** Magento DI auto-generated factory */
+    protected object $networkCollectionFactory;
+    /** Magento DI auto-generated factory */
+    protected object $rfmCollectionFactory;
+    /** Magento DI auto-generated factory */
+    protected object $metricasCollectionFactory;
+    /** Magento DI auto-generated factory */
+    protected object $metricasFactory;
+    protected LoggerInterface $logger;
 
     public function __construct(
-        RecomendacaoCollectionFactory $recomendacaoCollectionFactory,
-        NetworkCollectionFactory $networkCollectionFactory,
-        RfmCollectionFactory $rfmCollectionFactory,
-        MetricasCollectionFactory $metricasCollectionFactory,
-        MetricasConversaoFactory $metricasFactory,
+        object $recomendacaoCollectionFactory,
+        object $networkCollectionFactory,
+        object $rfmCollectionFactory,
+        object $metricasCollectionFactory,
+        object $metricasFactory,
         LoggerInterface $logger
     ) {
         $this->recomendacaoCollectionFactory = $recomendacaoCollectionFactory;
@@ -42,11 +46,11 @@ class RecommendationRepository implements RecommendationRepositoryInterface
      * @inheritDoc
      */
     public function getByCustomer(
-        $customerId,
-        $classificacao = null,
-        $minScore = 0.7,
-        $limit = 10
-    ) {
+        int $customerId,
+        ?string $classificacao = null,
+        float $minScore = 0.7,
+        int $limit = 10
+    ): array {
         $collection = $this->recomendacaoCollectionFactory->create();
         $collection->addFieldToFilter('identificador_cliente', $customerId)
                    ->addFieldToFilter('pred', ['gteq' => $minScore])
@@ -64,10 +68,10 @@ class RecommendationRepository implements RecommendationRepositoryInterface
      * @inheritDoc
      */
     public function getCrosssellBySku(
-        $sku,
-        $minLift = 1.5,
-        $limit = 10
-    ) {
+        string $sku,
+        float $minLift = 1.5,
+        int $limit = 10
+    ): array {
         $collection = $this->networkCollectionFactory->create();
         $collection->addFieldToFilter('antecedent', ['like' => '%' . $sku . '%'])
                    ->addFieldToFilter('lift', ['gteq' => $minLift])
@@ -80,7 +84,7 @@ class RecommendationRepository implements RecommendationRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function getRfmByCustomer($customerId)
+    public function getRfmByCustomer(int $customerId)
     {
         $collection = $this->rfmCollectionFactory->create();
         $collection->addFieldToFilter('identificador_cliente', $customerId);
@@ -98,7 +102,7 @@ class RecommendationRepository implements RecommendationRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function registerConversion($chaveGlobal, $valorConversao)
+    public function registerConversion(string $chaveGlobal, float $valorConversao): bool
     {
         try {
             $mesAtual = date('m-Y');
@@ -197,7 +201,7 @@ class RecommendationRepository implements RecommendationRepositoryInterface
         $totalCompraram = (int)$metricasStats->getData('total_compraram');
         $taxaConversao = $totalRecomendados > 0 ? ($totalCompraram / $totalRecomendados) * 100 : 0;
 
-        return new \Magento\Framework\DataObject([
+        return new Metrics([
             'total_recomendacoes' => $totalRecomendacoes,
             'oportunidades_churn' => $oportunidadesChurn,
             'oportunidades_crosssell' => $oportunidadesCrosssell,

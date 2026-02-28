@@ -1,6 +1,7 @@
 <?php
 /** @var \Magento\Framework\View\Element\Template $block */
 
+/** @var \Magento\Framework\App\Request\Http|null $request */
 $request = $block->getRequest();
 $fullActionName = $request ? (string) $request->getFullActionName() : '';
 $pathInfo = $request ? (string) ($request->getOriginalPathInfo() ?: $request->getPathInfo()) : '';

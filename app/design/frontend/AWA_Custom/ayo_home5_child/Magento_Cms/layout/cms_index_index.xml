@@ -7,18 +7,37 @@
         <css src="css/awa-consistency-home5.css"/>
         <!-- AWA Round2 (dual-write hotfix): owl tabs visual polish homepage-only -->
         <css src="css/awa-custom-home-owl-tabs.css"/>
-        <!-- awa home5 demo suppressions (managed by dev/tools/ayo_home5_render_mode_switch.php)
-             template mode: disabled
-             cms mode: enabled -->
-        <!-- awa_home5_demo_suppressions_head_start -->
-        <remove src="css/awa-institutional.css"/>
-        <!-- homepage keeps header/search/minicart + global brand refinements active -->
-        <remove src="css/awa-custom-footer-trust.css"/>
-        <remove src="css/awa-custom-b2b-gate-refine.css"/>
-        <remove src="css/awa-custom-auth-refine.css"/>
-        <remove src="css/awa-custom-plp-search-cart-refine.css"/>
-        <!-- footer-light-perfect e b2b-cart-checkout-premium re-habilitados apos modernizacao css -->
-        <!-- awa_home5_demo_suppressions_head_end -->
+        <!-- Managed by dev/tools/ayo_home5_render_mode_switch.php -->
+        <!-- AWA_HOME5_DEMO_SUPPRESSIONS_HEAD_START -->
+    <remove src="css/awa-institutional.css"/>
+    <remove src="css/awa-core.css"/>
+    <remove src="css/awa-layout.css"/>
+    <remove src="css/awa-components.css"/>
+    <remove src="css/awa-consistency.css"/>
+    <remove src="css/awa-consistency-ui.css"/>
+    <remove src="css/awa-consistency-home5.css"/>
+    <remove src="css/awa-fixes.css"/>
+    <remove src="css/awa-grid-unified.css"/>
+    <remove src="css/awa-custom-brand-bridge.css"/>
+    <remove src="css/awa-custom-header-minicart.css"/>
+    <remove src="css/awa-custom-footer-trust.css"/>
+    <remove src="css/awa-custom-global-brand.css"/>
+    <remove src="css/awa-custom-ux-refine.css"/>
+    <remove src="css/awa-custom-b2b-gate-refine.css"/>
+    <remove src="css/awa-custom-auth-refine.css"/>
+    <remove src="css/awa-custom-plp-search-cart-refine.css"/>
+    <remove src="css/awa-custom-home-owl-tabs.css"/>
+    <remove src="css/awa-custom-post-themeoption-overrides.css"/>
+    <remove src="css/awa-custom-footer-light-perfect.css"/>
+    <remove src="css/awa-custom-components-b2b-foundation.css"/>
+    <remove src="css/awa-custom-compat-b2b-nav-plp-cart-checkout.css"/>
+    <remove src="css/awa-custom-page-b2b-cart-checkout-premium.css"/>
+    <remove src="css/awa-custom-page-home-category-premium.css"/>
+    <remove src="Rokanthemes_SearchSuiteAutocomplete::css/awa-autocomplete.css"/>
+    <remove src="GrupoAwamotos_B2B::css/b2b-header.css"/>
+    <remove src="GrupoAwamotos_B2B::css/header-status-panel.css"/>
+    <remove src="GrupoAwamotos_B2B::css/login-to-cart.css"/>
+        <!-- AWA_HOME5_DEMO_SUPPRESSIONS_HEAD_END -->
         <!-- re-enable selective child layers on cms homepage (post-themeoption template is intentionally disabled on home) -->
         <css src="css/awa-custom-post-themeoption-overrides.css"/>
         <css src="css/awa-custom-components-b2b-foundation.css"/>
@@ -45,17 +64,41 @@
 
         <!-- referenceBlock at body level (XSD requires this, not nested in referenceContainer) -->
         <referenceBlock name="nav.bar.title" remove="true"/>
-        <!-- awa home5 render mode switch (managed by dev/tools/ayo_home5_render_mode_switch.php)
-             template mode: cms_page_content remove="true",  content-top-home remove="false"
-             cms mode:      cms_page_content remove="false", content-top-home remove="true" -->
-        <referenceBlock name="cms_page_content" remove="true"/>
-        <referenceContainer name="content-top-home" remove="false"/>
-        <!-- awa_home5_demo_suppressions_body_start -->
-        <referenceBlock name="awa.post.themeoption.css">
-            <arguments>
-                <argument name="disable_awa_post_themeoption_css" xsi:type="boolean">false</argument>
-            </arguments>
-        </referenceBlock>
-        <!-- awa_home5_demo_suppressions_body_end -->
+        <!-- AWA_HOME5_RENDER_MODE: template -->
+        <!-- Managed by dev/tools/ayo_home5_render_mode_switch.php -->
+        <referenceBlock name="cms_page_content" remove="false"/>
+        <referenceContainer name="content-top-home" remove="true"/>
+        <!-- AWA_HOME5_DEMO_SUPPRESSIONS_BODY_START -->
+    <referenceBlock name="awa.post.themeoption.css">
+        <arguments>
+            <argument name="disable_awa_post_themeoption_css" xsi:type="boolean">true</argument>
+        </arguments>
+    </referenceBlock>
+    <referenceBlock name="awa.seo.head" remove="true"/>
+    <referenceBlock name="awa.seo.h1" remove="true"/>
+    <referenceBlock name="awa.master.fix.js" remove="true"/>
+    <referenceBlock name="awa.custom.header.minicart.js" remove="true"/>
+    <referenceBlock name="awa.custom.home.owl.tabs.js" remove="true"/>
+    <referenceBlock name="newsletter_popup" remove="true"/>
+    <referenceBlock name="fixed_right" remove="true"/>
+        <!-- AWA_HOME5_DEMO_SUPPRESSIONS_BODY_END -->
+
+        <!-- Remove parent's round2 owl tabs JS block; child uses its own loader -->
+        <referenceBlock name="awa.round2.home.owl.tabs.js" remove="true"/>
+        <referenceContainer name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.custom.home.owl.tabs.js"
+                   template="Magento_Theme::html/awa-custom-js-loader.phtml">
+                <arguments>
+                    <argument name="load_header_js" xsi:type="boolean">false</argument>
+                    <argument name="load_home_owl_tabs_js" xsi:type="boolean">true</argument>
+                    <argument name="load_footer_ux_js" xsi:type="boolean">false</argument>
+                    <argument name="load_pdp_sticky_cta_js" xsi:type="boolean">false</argument>
+                    <argument name="load_search_compat_js" xsi:type="boolean">false</argument>
+                    <argument name="load_b2b_checkout_compat_js" xsi:type="boolean">false</argument>
+                    <argument name="load_home_category_compat_js" xsi:type="boolean">false</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
     </body>
 </page>

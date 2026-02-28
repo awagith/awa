@@ -33,7 +33,7 @@ $launchesHtml = $renderCmsBlock('home_new_products');
 $trustBadgesHtml = $renderCmsBlock('trust_badges_homepage');
 $faqQuickHtml = $renderCmsBlock('home_faq_quick');
 
-/** @var \Rokanthemes\ProductTab\Block\Producttab|null $productTabBlock */
+/** @var \Magento\Framework\View\Element\Template|null $productTabBlock */
 $productTabBlock = $layout->createBlock('Rokanthemes\ProductTab\Block\Producttab');
 $productTabHtml = '';
 if ($productTabBlock) {

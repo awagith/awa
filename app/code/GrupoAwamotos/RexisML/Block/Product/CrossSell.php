@@ -10,6 +10,7 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Block\Product\ListProduct;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Psr\Log\LoggerInterface;
 
 class CrossSell extends Template
@@ -19,6 +20,7 @@ class CrossSell extends Template
     private ProductRepositoryInterface $productRepository;
     private ListProduct $listProductBlock;
     private ScopeConfigInterface $scopeConfig;
+    private PriceCurrencyInterface $priceCurrency;
     private LoggerInterface $logger;
     private ?array $cachedItems = null;
 
@@ -29,6 +31,7 @@ class CrossSell extends Template
         ProductRepositoryInterface $productRepository,
         ListProduct $listProductBlock,
         ScopeConfigInterface $scopeConfig,
+        PriceCurrencyInterface $priceCurrency,
         LoggerInterface $logger,
         array $data = []
     ) {
@@ -38,6 +41,7 @@ class CrossSell extends Template
         $this->productRepository = $productRepository;
         $this->listProductBlock = $listProductBlock;
         $this->scopeConfig = $scopeConfig;
+        $this->priceCurrency = $priceCurrency;
         $this->logger = $logger;
     }
 
@@ -126,6 +130,21 @@ class CrossSell extends Template
     public function getAddToCartPostParams($product)
     {
         return $this->listProductBlock->getAddToCartPostParams($product);
+    }
+
+    /**
+     * Format product final price using Magento locale/currency settings.
+     */
+    public function formatProductPrice($product): string
+    {
+        try {
+            return (string)$this->priceCurrency->convertAndFormat(
+                (float)$product->getFinalPrice(),
+                false
+            );
+        } catch (\Exception $e) {
+            return '';
+        }
     }
 
     private function getLiftBadge(float $lift): array

@@ -3,6 +3,8 @@
  * AWA Motos - Visual JS Loader (consolidated from child theme)
  * Loads small UI scripts after DOM parsing (defer).
  * Disables compat scripts on home/demo pages to avoid observer self-trigger loops.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
  */
 $loadHeaderJs = $block->getData('load_header_js');
 $loadHomeOwlTabsJs = $block->getData('load_home_owl_tabs_js');
@@ -12,7 +14,9 @@ $loadSearchCompatJs = $block->getData('load_search_compat_js');
 $loadB2bCheckoutCompatJs = $block->getData('load_b2b_checkout_compat_js');
 $loadHomeCategoryCompatJs = $block->getData('load_home_category_compat_js');
 
+/** @var \Magento\Framework\App\Request\Http|null $request */
 $request = $block->getRequest();
+/** @var string $fullActionName */
 $fullActionName = $request ? (string) $request->getFullActionName() : '';
 $pathInfo = $request ? (string) ($request->getOriginalPathInfo() ?: $request->getPathInfo()) : '';
 $pathSlug = trim($pathInfo, '/');

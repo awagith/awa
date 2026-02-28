@@ -4,6 +4,8 @@
     <module name="GrupoAwamotos_LayoutFix">
         <sequence>
             <module name="Magento_Cms"/>
+            <module name="Magento_Theme"/>
+            <module name="Magento_Backend"/>
             <module name="Magento_AdminNotification"/>
         </sequence>
     </module>

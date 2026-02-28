@@ -11,23 +11,24 @@ $_product = $block->getProduct();
 $isBestSeller = (bool)$_product->getData('is_best_seller');
 
 // Verificar estoque baixo
-$stockItem = $_product->getExtensionAttributes()->getStockItem();
+$extensionAttributes = $_product->getExtensionAttributes();
+$stockItem = $extensionAttributes ? $extensionAttributes->getStockItem() : null;
 $qty = $stockItem ? (int)$stockItem->getQty() : 0;
 $isLowStock = ($qty > 0 && $qty < 10);
 ?>
 
 <?php if ($isBestSeller || $isLowStock): ?>
 <!-- Social Proof Badge Container -->
-<div class="product-badge-container social-proof-badge">
+<div class="social-proof-badge-stack product-badge-container" aria-hidden="true">
     <?php if ($isBestSeller): ?>
-    <span class="product-badge bestseller">
-        <i class="fa fa-star"></i> <?= $escaper->escapeHtml(__('Mais Vendido')) ?>
+    <span class="social-proof-pill social-proof-pill--bestseller">
+        <i class="fa fa-star" aria-hidden="true"></i> <?= $escaper->escapeHtml(__('Mais Vendido')) ?>
     </span>
     <?php endif; ?>
     
     <?php if ($isLowStock): ?>
-    <span class="product-badge low-stock">
-        <i class="fa fa-exclamation-circle"></i> <?= $escaper->escapeHtml(__('Últimas unidades')) ?>
+    <span class="social-proof-pill social-proof-pill--low-stock">
+        <i class="fa fa-exclamation-circle" aria-hidden="true"></i> <?= $escaper->escapeHtml(__('Últimas unidades')) ?>
     </span>
     <?php endif; ?>
 </div>

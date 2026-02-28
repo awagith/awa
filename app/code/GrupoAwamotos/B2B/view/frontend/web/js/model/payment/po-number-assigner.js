@@ -12,20 +12,24 @@ define([
     'use strict';
 
     return function (paymentInformationHandler) {
-        return wrapper.wrap(paymentInformationHandler, function (originalAction, messageContainer, paymentData, billingAddress) {
-            var poNumber = poNumberStorage.getPoNumber();
+        if (typeof paymentInformationHandler !== 'function') {
+            return paymentInformationHandler;
+        }
 
-            if (poNumber && poNumber.trim() !== '') {
-                // Ensure extension_attributes exists
-                if (!paymentData.extension_attributes) {
+        return wrapper.wrap(paymentInformationHandler, function (originalAction) {
+            var args = Array.prototype.slice.call(arguments, 1);
+            var paymentData = args[1];
+            var poNumber = (poNumberStorage.getPoNumber() || '').trim();
+
+            if (poNumber && paymentData && typeof paymentData === 'object') {
+                if (!paymentData.extension_attributes || typeof paymentData.extension_attributes !== 'object') {
                     paymentData.extension_attributes = {};
                 }
 
-                // Add PO Number to payment data
-                paymentData.extension_attributes.b2b_po_number = poNumber.trim();
+                paymentData.extension_attributes.b2b_po_number = poNumber;
             }
 
-            return originalAction(messageContainer, paymentData, billingAddress);
+            return originalAction.apply(this, args);
         });
     };
 });

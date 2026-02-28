@@ -12,7 +12,8 @@ $viewsToday = (int)$_product->getData('views_today');
 $isBestSeller = (bool)$_product->getData('is_best_seller');
 
 // Verificar estoque
-$stockItem = $_product->getExtensionAttributes()->getStockItem();
+$extensionAttributes = $_product->getExtensionAttributes();
+$stockItem = $extensionAttributes ? $extensionAttributes->getStockItem() : null;
 $qty = $stockItem ? (int)$stockItem->getQty() : 0;
 $isLowStock = ($qty > 0 && $qty < 10);
 
@@ -43,8 +44,3 @@ if (!$viewsToday && !$isLowStock && !$isBestSeller) {
     <?php endif; ?>
     
 </div>
-
-<style>
-/* NOTE: Este template NÃO é carregado por nenhum layout XML.
- * Se for reativado, migrar estes estilos para social-proof.css */
-</style>

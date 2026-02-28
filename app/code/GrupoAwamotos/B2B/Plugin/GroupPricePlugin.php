@@ -20,6 +20,8 @@ use GrupoAwamotos\ERPIntegration\Model\ResourceModel\SyncLog as SyncLogResource;
 use Magento\Catalog\Model\Product;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Customer\Api\CustomerRepositoryInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class GroupPricePlugin
 {
@@ -28,6 +30,7 @@ class GroupPricePlugin
     private CustomerRepositoryInterface $customerRepository;
     private CustomerPriceProvider $customerPriceProvider;
     private SyncLogResource $syncLogResource;
+    private LoggerInterface $logger;
 
     /** Cache: productId → computed price */
     private array $processedProducts = [];
@@ -46,13 +49,15 @@ class GroupPricePlugin
         CustomerSession $customerSession,
         CustomerRepositoryInterface $customerRepository,
         CustomerPriceProvider $customerPriceProvider,
-        SyncLogResource $syncLogResource
+        SyncLogResource $syncLogResource,
+        ?LoggerInterface $logger = null
     ) {
         $this->config = $config;
         $this->customerSession = $customerSession;
         $this->customerRepository = $customerRepository;
         $this->customerPriceProvider = $customerPriceProvider;
         $this->syncLogResource = $syncLogResource;
+        $this->logger = $logger ?? new NullLogger();
     }
 
     /**
@@ -172,6 +177,7 @@ class GroupPricePlugin
 
             $this->erpCodeCache = ($erpCode !== null && is_numeric($erpCode)) ? (int) $erpCode : null;
         } catch (\Exception $e) {
+            $this->logger->error('[B2B GroupPricePlugin] getCustomerErpCode error: ' . $e->getMessage());
             $this->erpCodeCache = null;
         }
 

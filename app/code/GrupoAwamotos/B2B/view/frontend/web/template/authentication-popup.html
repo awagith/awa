@@ -5,7 +5,7 @@
         <div class="wave one"></div>
         <div class="wave two"></div>
         <div class="wave three"></div>
-        <img class="logo" data-bind="attr: {src: window.logoUrl}" />
+        <img class="logo" alt="AWA Motos" data-bind="attr: {src: window.logoUrl}" />
     </div>
     <div class="block block-customer-login"
          data-bind="attr: {'data-label': 'ou'}">
@@ -50,7 +50,8 @@
                                    data-validate="{required:true}"
                                    placeholder="Senha">
                         </div>
-                        <a class="action" href="/b2b/account/forgotpassword">
+                        <a class="action"
+                           data-bind="attr: {href: (window.authenticationPopup && window.authenticationPopup.awaB2bForgotPasswordUrl) || ((window.BASE_URL || '/') + 'b2b/account/forgotpassword/')}">
                             <span>Esqueceu sua senha?</span>
                         </a>
                     </div>
@@ -64,7 +65,8 @@
                                 <span>ENTRAR</span>
                             </button>
                         </div>
-                        <a class="action-register" href="/b2b/register">
+                        <a class="action-register"
+                           data-bind="attr: {href: (window.authenticationPopup && window.authenticationPopup.awaB2bRegisterUrl) || ((window.BASE_URL || '/') + 'b2b/register/')}">
                             <span>Cadastre-se como empresa</span>
                         </a>
                     </div>

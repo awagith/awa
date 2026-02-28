@@ -142,13 +142,13 @@
 }
 
 .b2b-company-page .btn-save {
-    background: #0f766e;
+    background: var(--awa-b2b-primary, #b73337);
     color: #fff;
     padding: 9px 16px;
 }
 
 .b2b-company-page .btn-save:hover {
-    background: #115e59;
+    background: var(--awa-b2b-primary-dark, #8e2629);
 }
 
 .b2b-company-page .form-note {
@@ -1066,7 +1066,7 @@
 }
 
 .b2b-shoppinglist-view .shoppinglist-items-table .col-sku {
-    color: #9ca3af;
+    color: var(--awa-gray-500, #6c757d);
     font-size: 13px;
 }
 

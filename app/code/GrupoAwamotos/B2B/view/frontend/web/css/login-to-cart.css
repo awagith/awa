@@ -26,7 +26,7 @@
     padding: 16px;
     box-sizing: border-box;
     background: rgba(0,0,0,0.6);
-    z-index: 9999;
+    z-index: var(--awa-z-modal, 10200);
     justify-content: center;
     align-items: center;
 }
@@ -43,6 +43,7 @@
     max-height: calc(100vh - 32px);
     overflow: auto;
     overscroll-behavior: contain;
+    scroll-padding-block: 16px;
     padding: 0;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     border: 1px solid #ececec;
@@ -250,6 +251,17 @@ body.b2b-restricted-mode .item-product .product-info-cart form[data-role="tocart
     display: none !important;
 }
 
+@media (max-width: 768px) {
+    .b2b-login-modal {
+        width: 95%;
+        max-width: 420px;
+    }
+
+    .b2b-login-modal-header h3 {
+        font-size: 1.15em;
+    }
+}
+
 @media (max-width: 480px) {
     .b2b-login-modal {
         max-width: 100%;
@@ -358,7 +370,7 @@ body.b2b-restricted-mode .block-minicart .subtotal .price-wrapper {
     bottom: 0;
     left: 0;
     right: 0;
-    z-index: 9998;
+    z-index: var(--awa-z-toast, 10050);
     background: #fff3cd;
     border-top: 3px solid #ffc107;
     box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
@@ -413,6 +425,17 @@ body.b2b-restricted-mode .block-minicart .subtotal .price-wrapper {
 
 .b2b-pending-account-link:hover {
     opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+    .b2b-pending-banner-inner {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .b2b-pending-account-link {
+        align-self: center;
+    }
 }
 
 @media (max-width: 480px) {

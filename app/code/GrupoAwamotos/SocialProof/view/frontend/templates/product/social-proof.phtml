@@ -12,17 +12,20 @@ $viewsToday = (int)$_product->getData('views_today');
 $isBestSeller = (bool)$_product->getData('is_best_seller');
 
 // Verificar estoque
-$stockItem = $_product->getExtensionAttributes()->getStockItem();
+$extensionAttributes = $_product->getExtensionAttributes();
+$stockItem = $extensionAttributes ? $extensionAttributes->getStockItem() : null;
 $qty = $stockItem ? (int)$stockItem->getQty() : 0;
 $isLowStock = ($qty > 0 && $qty < 10);
+$hasBadges = ($viewsToday > 0) || $isLowStock || $isBestSeller;
 ?>
 
-<div class="social-proof-container">
+<?php if ($hasBadges): ?>
+<div class="social-proof-container awa-sp-pdp">
     
     <?php if ($viewsToday > 0): ?>
     <!-- Contador de Visualizações -->
-    <div class="social-proof-badge views-badge">
-        <i class="fa fa-eye"></i>
+    <div class="social-proof-badge views-badge" role="note" aria-label="<?= $escaper->escapeHtmlAttr(__('Prova social')) ?>">
+        <i class="fa fa-eye" aria-hidden="true"></i>
         <span class="badge-text">
             <strong><?= $escaper->escapeHtml($viewsToday) ?></strong>
             <?= $escaper->escapeHtml(__('pessoas visualizaram este produto hoje')) ?>
@@ -33,7 +36,7 @@ $isLowStock = ($qty > 0 && $qty < 10);
     <?php if ($isLowStock): ?>
     <!-- Badge Últimas Unidades -->
     <div class="social-proof-badge low-stock-badge urgency">
-        <i class="fa fa-exclamation-triangle"></i>
+        <i class="fa fa-exclamation-triangle" aria-hidden="true"></i>
         <span class="badge-text">
             <strong><?= $escaper->escapeHtml(__('Últimas %1 unidades!', $qty)) ?></strong>
             <?= $escaper->escapeHtml(__('Aproveite enquanto há estoque')) ?>
@@ -44,7 +47,7 @@ $isLowStock = ($qty > 0 && $qty < 10);
     <?php if ($isBestSeller): ?>
     <!-- Badge Mais Vendido -->
     <div class="social-proof-badge bestseller-badge">
-        <i class="fa fa-star"></i>
+        <i class="fa fa-star" aria-hidden="true"></i>
         <span class="badge-text">
             <strong><?= $escaper->escapeHtml(__('MAIS VENDIDO')) ?></strong>
         </span>
@@ -52,3 +55,4 @@ $isLowStock = ($qty > 0 && $qty < 10);
     <?php endif; ?>
     
 </div>
+<?php endif; ?>

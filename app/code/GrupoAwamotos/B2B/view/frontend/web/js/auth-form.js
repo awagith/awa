@@ -1,0 +1,209 @@
+define([
+    'jquery',
+    'mage/validation'
+], function ($) {
+    'use strict';
+
+    function maskCnpj(value) {
+        var digits = String(value || '').replace(/\D/g, '');
+
+        if (!digits) {
+            return '';
+        }
+
+        if (digits.length > 14) {
+            digits = digits.substring(0, 14);
+        }
+
+        digits = digits.replace(/^(\d{2})(\d)/, '$1.$2');
+        digits = digits.replace(/^(\d{2})\.(\d{3})(\d)/, '$1.$2.$3');
+        digits = digits.replace(/\.(\d{3})(\d)/, '.$1/$2');
+        digits = digits.replace(/(\d{4})(\d)/, '$1-$2');
+
+        return digits;
+    }
+
+    return function (config, element) {
+        var options = config || {};
+        var $form = $(element);
+        var $username = $(options.usernameSelector || '');
+        var $cnpjOrEmailField = $(options.cnpjOrEmailMaskSelector || '');
+        var $passwordToggles = $form.find(options.passwordToggleSelector || '[data-password-toggle]');
+        var loadingLabel = options.loadingLabel || 'Processando...';
+        var passwordShowText = options.passwordShowText || 'Mostrar';
+        var passwordHideText = options.passwordHideText || 'Ocultar';
+        var passwordShowAriaLabel = options.passwordShowAriaLabel || 'Mostrar senha';
+        var passwordHideAriaLabel = options.passwordHideAriaLabel || 'Ocultar senha';
+
+        if (!$form.length) {
+            return;
+        }
+
+        function schedule(callback) {
+            if (window.requestAnimationFrame) {
+                window.requestAnimationFrame(callback);
+                return;
+            }
+
+            window.setTimeout(callback, 0);
+        }
+
+        function syncFieldAriaInvalidState() {
+            $form.find('input, select, textarea').each(function () {
+                var $field = $(this);
+                var hasError = $field.hasClass('mage-error');
+
+                $field.attr('aria-invalid', hasError ? 'true' : 'false');
+            });
+        }
+
+        function scrollToField($field) {
+            var topOffset;
+            var prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            if (!$field.length) {
+                return;
+            }
+
+            topOffset = Math.max(0, ($field.offset().top || 0) - 24);
+
+            if (prefersReducedMotion) {
+                window.scrollTo(0, topOffset);
+                return;
+            }
+
+            $('html, body').stop(true).animate({ scrollTop: topOffset }, 220);
+        }
+
+        function focusFirstInvalidField() {
+            var $firstInvalid = $form.find('input.mage-error, select.mage-error, textarea.mage-error').filter(':visible').first();
+
+            if (!$firstInvalid.length) {
+                return;
+            }
+
+            scrollToField($firstInvalid);
+
+            window.setTimeout(function () {
+                $firstInvalid.trigger('focus');
+            }, 40);
+        }
+
+        function applyCnpjOrEmailMask() {
+            var current;
+
+            if (!$cnpjOrEmailField.length) {
+                return;
+            }
+
+            current = String($cnpjOrEmailField.val() || '');
+
+            // If user is typing email, don't force a mask.
+            if (current.indexOf('@') !== -1 || /[a-z]/i.test(current)) {
+                return;
+            }
+
+            $cnpjOrEmailField.val(maskCnpj(current));
+        }
+
+        function updatePasswordToggleButton($toggle, isVisible) {
+            $toggle.attr('aria-pressed', isVisible ? 'true' : 'false');
+            $toggle.attr('aria-label', isVisible ? passwordHideAriaLabel : passwordShowAriaLabel);
+            $toggle.text(isVisible ? passwordHideText : passwordShowText);
+        }
+
+        function initPasswordToggles() {
+            $passwordToggles.each(function () {
+                var $toggle = $(this);
+                var targetSelector = $toggle.attr('data-target');
+                var $target = targetSelector ? $form.find(targetSelector) : $();
+
+                if (!$target.length) {
+                    return;
+                }
+
+                updatePasswordToggleButton($toggle, $target.attr('type') === 'text');
+
+                $toggle.on('click', function (event) {
+                    var showPassword;
+
+                    event.preventDefault();
+                    showPassword = $target.attr('type') !== 'text';
+                    $target.attr('type', showPassword ? 'text' : 'password');
+                    updatePasswordToggleButton($toggle, showPassword);
+                    $target.trigger('focus');
+                });
+            });
+        }
+
+        function setSubmitLoadingState($button) {
+            var $label = $button.find('span').first();
+            var originalLabel;
+
+            if (!$button.length) {
+                return;
+            }
+
+            originalLabel = $button.data('original-label');
+            if (!originalLabel) {
+                $button.data('original-label', $label.text());
+            }
+
+            $button.addClass('is-loading').prop('disabled', true);
+
+            if ($label.length) {
+                $label.text(loadingLabel);
+            }
+        }
+
+        if ($username.length) {
+            $username.on('blur', function () {
+                var value = String($(this).val() || '');
+
+                if (value.indexOf('@') !== -1) {
+                    $(this).val($.trim(value).toLowerCase());
+                    return;
+                }
+
+                $(this).val($.trim(value));
+            });
+        }
+
+        if ($cnpjOrEmailField.length) {
+            $cnpjOrEmailField.on('input blur', function () {
+                applyCnpjOrEmailMask();
+            });
+
+            applyCnpjOrEmailMask();
+        }
+
+        $form.on('input blur change', 'input, select, textarea', function () {
+            schedule(syncFieldAriaInvalidState);
+        });
+
+        $form.on('submit', function (event) {
+            var $submitButton = $form.find('button[type="submit"]').first();
+
+            if ($form.data('isSubmitting')) {
+                event.preventDefault();
+                return false;
+            }
+
+            if (typeof $form.validation === 'function' && !$form.validation('isValid')) {
+                schedule(function () {
+                    syncFieldAriaInvalidState();
+                    focusFirstInvalidField();
+                });
+                return true;
+            }
+
+            $form.data('isSubmitting', true).addClass('is-submitting');
+            setSubmitLoadingState($submitButton);
+
+            return true;
+        });
+
+        initPasswordToggles();
+        syncFieldAriaInvalidState();
+    };
+});

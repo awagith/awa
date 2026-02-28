@@ -15,8 +15,10 @@ define([
 ], function (Component, ko, $, customer, additionalValidators, quote, $t) {
     'use strict';
 
-    var config = window.checkoutConfig.b2bCheckout || {};
+    var checkoutConfig = window.checkoutConfig || {};
+    var config = checkoutConfig.b2bCheckout || {};
     var termsConfig = config.terms || {};
+    var validatorRegistered = false;
 
     return Component.extend({
         defaults: {
@@ -48,8 +50,9 @@ define([
             }, this);
 
             // Register validator only if terms are enabled
-            if (termsConfig.enabled) {
+            if (termsConfig.enabled && !validatorRegistered) {
                 additionalValidators.registerValidator(this);
+                validatorRegistered = true;
             }
 
             return this;

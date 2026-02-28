@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <remove src="css/awa-round3-pdp-conversion.css"/>
+        <css src="css/awa-custom-pdp-conversion.css"/>
+        <css src="css/awa-custom-pdp-final-polish.css"/>
+    </head>
+    <body>
+        <!-- wishlist e compare restaurados — fidelidade ao demo ayo home5 -->
+        <referenceBlock name="awa.round3.pdp.sticky.cta.js" remove="true"/>
+        <referenceContainer name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.custom.pdp.sticky.cta.js"
+                   template="Magento_Theme::html/awa-custom-js-loader.phtml">
+                <arguments>
+                    <argument name="load_header_js" xsi:type="boolean">false</argument>
+                    <argument name="load_home_owl_tabs_js" xsi:type="boolean">false</argument>
+                    <argument name="load_footer_ux_js" xsi:type="boolean">false</argument>
+                    <argument name="load_pdp_sticky_cta_js" xsi:type="boolean">true</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

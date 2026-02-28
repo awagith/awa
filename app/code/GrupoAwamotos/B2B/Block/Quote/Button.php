@@ -12,6 +12,9 @@ use Magento\Framework\View\Element\Template\Context;
 
 class Button extends Template
 {
+    private const MARKETING_CSS_ASSET = 'GrupoAwamotos_B2B::css/b2b-marketing.css';
+    private const MARKETING_CSS_ASSET_NAME = 'grupoawamotos_b2b_marketing_css';
+
     /**
      * @var Config
      */
@@ -24,6 +27,26 @@ class Button extends Template
     ) {
         $this->config = $config;
         parent::__construct($context, $data);
+    }
+
+    /**
+     * Load quote CTA styles only when the quote button is active on the page.
+     *
+     * @return $this
+     */
+    protected function _prepareLayout()
+    {
+        parent::_prepareLayout();
+
+        if ($this->shouldDisplay()) {
+            $this->pageConfig->addPageAsset(
+                self::MARKETING_CSS_ASSET,
+                [],
+                self::MARKETING_CSS_ASSET_NAME
+            );
+        }
+
+        return $this;
     }
 
     /**

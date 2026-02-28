@@ -45,13 +45,8 @@ class RestrictedProductCollectionPlugin
 
     /**
      * Filter products based on B2B restrictions before loading
-     *
-     * @param Collection $subject
-     * @param bool $printQuery
-     * @param bool $logQuery
-     * @return array
      */
-    public function beforeLoad(Collection $subject, $printQuery = false, $logQuery = false): array
+    public function beforeLoad(Collection $subject, bool $printQuery = false, bool $logQuery = false): array
     {
         if ($this->filterApplied || $subject->isLoaded()) {
             return [$printQuery, $logQuery];

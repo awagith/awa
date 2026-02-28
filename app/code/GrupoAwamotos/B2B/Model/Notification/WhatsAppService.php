@@ -55,6 +55,10 @@ class WhatsAppService
         $phone = $this->formatPhone($phone);
         $provider = $this->getProvider();
 
+        // Timeout curto para não bloquear o request do usuário
+        $this->curl->setOption(CURLOPT_TIMEOUT, 5);
+        $this->curl->setOption(CURLOPT_CONNECTTIMEOUT, 3);
+
         try {
             switch ($provider) {
                 case 'zapi':

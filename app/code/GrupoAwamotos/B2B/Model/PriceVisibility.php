@@ -13,6 +13,7 @@ use GrupoAwamotos\ERPIntegration\Model\ResourceModel\SyncLog as SyncLogResource;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Framework\UrlInterface;
+use Psr\Log\LoggerInterface;
 
 class PriceVisibility implements PriceVisibilityInterface
 {
@@ -42,6 +43,11 @@ class PriceVisibility implements PriceVisibilityInterface
     private $syncLogResource;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * @var bool|null
      */
     private $canViewPricesCache = null;
@@ -59,13 +65,15 @@ class PriceVisibility implements PriceVisibilityInterface
         CustomerSession $customerSession,
         CustomerRepositoryInterface $customerRepository,
         UrlInterface $urlBuilder,
-        ?SyncLogResource $syncLogResource = null
+        ?SyncLogResource $syncLogResource = null,
+        ?LoggerInterface $logger = null
     ) {
         $this->config = $config;
         $this->customerSession = $customerSession;
         $this->customerRepository = $customerRepository;
         $this->urlBuilder = $urlBuilder;
         $this->syncLogResource = $syncLogResource;
+        $this->logger = $logger ?? \Magento\Framework\App\ObjectManager::getInstance()->get(LoggerInterface::class);
     }
 
     /**
@@ -76,13 +84,13 @@ class PriceVisibility implements PriceVisibilityInterface
         if ($this->canViewPricesCache !== null) {
             return $this->canViewPricesCache;
         }
-        
+
         // Se módulo desabilitado, mostrar preços
         if (!$this->config->isEnabled()) {
             $this->canViewPricesCache = true;
             return true;
         }
-        
+
         // Se usuário está logado
         if ($this->customerSession->isLoggedIn()) {
             // Usar repository para garantir que custom attributes EAV sejam carregados
@@ -114,7 +122,7 @@ class PriceVisibility implements PriceVisibilityInterface
             $this->canViewPricesCache = false;
             return false;
         }
-        
+
         // Modo strict: visitantes NUNCA veem preços
         if ($this->config->isStrictB2B()) {
             $this->canViewPricesCache = false;
@@ -134,13 +142,13 @@ class PriceVisibility implements PriceVisibilityInterface
         if ($this->canAddToCartCache !== null) {
             return $this->canAddToCartCache;
         }
-        
+
         // Se módulo desabilitado, permitir
         if (!$this->config->isEnabled()) {
             $this->canAddToCartCache = true;
             return true;
         }
-        
+
         // Se usuário está logado
         if ($this->customerSession->isLoggedIn()) {
             if (!$this->isCustomerApproved()) {
@@ -155,7 +163,7 @@ class PriceVisibility implements PriceVisibilityInterface
             $this->canAddToCartCache = true;
             return true;
         }
-        
+
         // Modo strict: visitantes NUNCA podem adicionar ao carrinho
         if ($this->config->isStrictB2B()) {
             $this->canAddToCartCache = false;
@@ -221,26 +229,26 @@ class PriceVisibility implements PriceVisibilityInterface
         if (!$this->customerSession->isLoggedIn()) {
             return false;
         }
-        
+
         try {
             // Buscar dados atualizados diretamente do banco, não da sessão
             $customerId = $this->customerSession->getCustomerId();
             $customer = $this->customerRepository->getById($customerId);
             $approvalStatusAttr = $customer->getCustomAttribute('b2b_approval_status');
             $approvalStatus = $approvalStatusAttr ? $approvalStatusAttr->getValue() : null;
-            
+
             // Se não há status definido, considerar como aprovado (compatibilidade)
             if (empty($approvalStatus)) {
                 return true;
             }
-            
+
             return $approvalStatus === ApprovalStatus::STATUS_APPROVED;
         } catch (\Exception $e) {
             // Se houver erro ao buscar cliente, permitir por segurança
             return true;
         }
     }
-    
+
     /**
      * Get customer approval status
      *
@@ -251,17 +259,18 @@ class PriceVisibility implements PriceVisibilityInterface
         if (!$this->customerSession->isLoggedIn()) {
             return null;
         }
-        
+
         try {
             $customerId = $this->customerSession->getCustomerId();
             $customer = $this->customerRepository->getById($customerId);
             $approvalStatusAttr = $customer->getCustomAttribute('b2b_approval_status');
             return $approvalStatusAttr ? $approvalStatusAttr->getValue() : null;
         } catch (\Exception $e) {
+            $this->logger->error('[B2B PriceVisibility] getCustomerApprovalStatus error: ' . $e->getMessage());
             return null;
         }
     }
-    
+
     /**
      * @inheritDoc
      */
@@ -300,6 +309,7 @@ class PriceVisibility implements PriceVisibilityInterface
 
             $this->erpCodeCache = ($erpCode !== null && is_numeric($erpCode)) ? (int) $erpCode : null;
         } catch (\Exception $e) {
+            $this->logger->error('[B2B PriceVisibility] getCustomerErpCode error: ' . $e->getMessage());
             $this->erpCodeCache = null;
         }
 

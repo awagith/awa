@@ -369,7 +369,7 @@ class HeldOrdersCommand extends Command
     {
         try {
             $collection = $this->orderCollectionFactory->create();
-            $collection->addFieldToFilter('entity_id', $entityId);
+            $collection->addFieldToFilter('entity_id', ['eq' => $entityId]);
             $order = $collection->getFirstItem();
 
             if ($order && $order->getId()) {

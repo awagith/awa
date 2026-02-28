@@ -19,7 +19,7 @@ use GrupoAwamotos\B2B\Model\Attendant\AttendantManager;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
 use Magento\Catalog\Helper\Image as ImageHelper;
-use Magento\Framework\App\ResourceConnection;
+use GrupoAwamotos\B2B\Model\ResourceModel\ShoppingList\CollectionFactory as ShoppingListCollectionFactory;
 
 class Dashboard extends Template
 {
@@ -79,9 +79,9 @@ class Dashboard extends Template
     private $imageHelper;
 
     /**
-     * @var ResourceConnection
+     * @var ShoppingListCollectionFactory
      */
-    private $resourceConnection;
+    private $shoppingListCollectionFactory;
 
     public function __construct(
         Context $context,
@@ -96,7 +96,7 @@ class Dashboard extends Template
         ProductCollectionFactory $productCollectionFactory,
         CategoryCollectionFactory $categoryCollectionFactory,
         ImageHelper $imageHelper,
-        ResourceConnection $resourceConnection,
+        ShoppingListCollectionFactory $shoppingListCollectionFactory,
         array $data = []
     ) {
         $this->customerSession = $customerSession;
@@ -110,7 +110,7 @@ class Dashboard extends Template
         $this->productCollectionFactory = $productCollectionFactory;
         $this->categoryCollectionFactory = $categoryCollectionFactory;
         $this->imageHelper = $imageHelper;
-        $this->resourceConnection = $resourceConnection;
+        $this->shoppingListCollectionFactory = $shoppingListCollectionFactory;
         parent::__construct($context, $data);
     }
 
@@ -263,25 +263,29 @@ class Dashboard extends Template
 
     /**
      * Get total orders amount (last 30 days)
+     * Uses aggregate SUM to avoid loading all order objects
      *
      * @return float
      */
     public function getTotalOrdersAmount(): float
     {
         $customerId = $this->customerSession->getCustomerId();
+        if (!$customerId) {
+            return 0;
+        }
+
         $collection = $this->orderCollectionFactory->create();
         $thirtyDaysAgo = date('Y-m-d H:i:s', strtotime('-30 days'));
-        
+
         $collection->addFieldToFilter('customer_id', $customerId)
             ->addFieldToFilter('created_at', ['gteq' => $thirtyDaysAgo])
             ->addFieldToFilter('state', ['neq' => 'canceled']);
 
-        $total = 0;
-        foreach ($collection as $order) {
-            $total += (float)$order->getGrandTotal();
-        }
+        $collection->getSelect()->columns([
+            'total_amount' => new \Zend_Db_Expr('SUM(grand_total)')
+        ]);
 
-        return $total;
+        return (float) ($collection->getFirstItem()->getData('total_amount') ?? 0);
     }
 
     /**
@@ -550,8 +554,8 @@ class Dashboard extends Template
         }
         return [
             'type' => 'quickorder',
-            'title' => __('Pedido Rápido por SKU'),
-            'description' => __('Já sabe o código do produto? Adicione direto ao carrinho por SKU ou referência.'),
+            'title' => __('Pedido Rápido por Código'),
+            'description' => __('Já sabe o código do produto? Adicione direto ao carrinho por código ou referência.'),
             'action_label' => __('Fazer Pedido Rápido'),
             'action_url' => $this->getUrl('b2b/quickorder'),
             'priority' => 2,
@@ -668,25 +672,19 @@ class Dashboard extends Template
      */
     private function hasShoppingLists(): bool
     {
-        // Check if there are any shopping lists for this customer
         $customerId = $this->customerSession->getCustomerId();
         if (!$customerId) {
             return false;
         }
 
         try {
-            $connection = $this->resourceConnection->getConnection();
-            $tableName = $this->resourceConnection->getTableName('grupoawamotos_b2b_shopping_list');
-            if ($connection->isTableExists($tableName)) {
-                $select = $connection->select()
-                    ->from($tableName, ['COUNT(*)'])
-                    ->where('customer_id = ?', $customerId);
-                return (int)$connection->fetchOne($select) > 0;
-            }
+            $collection = $this->shoppingListCollectionFactory->create();
+            $collection->addFieldToFilter('customer_id', $customerId)
+                ->setPageSize(1);
+            return $collection->getSize() > 0;
         } catch (\Exception $e) {
-            // Table may not exist yet
+            return false;
         }
-        return false;
     }
 
     /**

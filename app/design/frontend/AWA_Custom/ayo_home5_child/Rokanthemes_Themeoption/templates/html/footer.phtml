@@ -1,0 +1,211 @@
+<?php
+/** @var Rokanthemes\Themeoption\Block\Themeoption $block */
+$helper = $this->helper('Rokanthemes\RokanBase\Helper\Data');
+$enableMenu = $helper->getConfigData('themeoption/footer/footer_menu_mobile');
+$footerPaymentLegacy = trim((string) $this->getChildHtml('footer_payment'));
+$storeHost = (string) parse_url((string) $block->getBaseUrl(), PHP_URL_HOST);
+$storeHost = $storeHost !== '' ? $storeHost : 'awamotos.com';
+$safeBrowsingUrl = 'https://transparencyreport.google.com/safe-browsing/search?url=' . rawurlencode($storeHost);
+$sslLabsUrl = 'https://www.ssllabs.com/ssltest/analyze.html?d=' . rawurlencode($storeHost);
+?>
+<div class="page_footer" role="contentinfo">
+    <svg class="awa-footer-sprite" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false">
+        <symbol id="awa-icon-truck" viewBox="0 0 24 24">
+            <path d="M3 6h11v9H3zM14 9h3.5l2.5 3V15h-6zM7.5 18.5a1.5 1.5 0 1 0 0-.01zm10 0a1.5 1.5 0 1 0 0-.01z" fill="currentColor"/>
+        </symbol>
+        <symbol id="awa-icon-shield" viewBox="0 0 24 24">
+            <path d="M12 2 4 5v6c0 5.1 3.4 9.8 8 11 4.6-1.2 8-5.9 8-11V5l-8-3Zm-1 12-3-3 1.4-1.4 1.6 1.6 3.6-3.6L16 9l-5 5Z" fill="currentColor"/>
+        </symbol>
+        <symbol id="awa-icon-gear" viewBox="0 0 24 24">
+            <path d="m19.4 13 .1-1-.1-1 2-1.6-2-3.4-2.4 1a7.7 7.7 0 0 0-1.7-1l-.4-2.6H9.1l-.4 2.6c-.6.2-1.2.6-1.7 1l-2.4-1-2 3.4 2 1.6a7.8 7.8 0 0 0 0 2l-2 1.6 2 3.4 2.4-1c.5.4 1.1.7 1.7 1l.4 2.6h5.8l.4-2.6c.6-.2 1.2-.6 1.7-1l2.4 1 2-3.4-2-1.6ZM12 15.5A3.5 3.5 0 1 1 12 8a3.5 3.5 0 0 1 0 7.5Z" fill="currentColor"/>
+        </symbol>
+        <symbol id="awa-icon-b2b" viewBox="0 0 24 24">
+            <path d="M7 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Zm10 0a3 3 0 1 1 0-6 3 3 0 0 1 0 6ZM2.5 19a4.5 4.5 0 0 1 9 0v1h-9v-1Zm10 0a4.5 4.5 0 0 1 9 0v1h-9v-1ZM10.5 12h3v2h-3z" fill="currentColor"/>
+        </symbol>
+        <symbol id="awa-icon-pix" viewBox="0 0 24 24">
+            <path d="m12 3 4.4 4.4-2 2L12 7 9.6 9.4l-2-2L12 3Zm0 14 2.4-2.4 2 2L12 21l-4.4-4.4 2-2L12 17Zm5-5 2.4 2.4-2 2L15 14l2-2Zm-8 0 2 2-2.4 2.4-2-2L9 12Zm3-3 3 3-3 3-3-3 3-3Z" fill="currentColor"/>
+        </symbol>
+        <symbol id="awa-icon-boleto" viewBox="0 0 24 24">
+            <path d="M4 5h16v14H4zM7 7h1v10H7zm3 0h2v10h-2zm4 0h1v10h-1zm3 0h1v10h-1z" fill="currentColor"/>
+        </symbol>
+        <symbol id="awa-icon-card" viewBox="0 0 24 24">
+            <path d="M3 6h18a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1Zm0 3h18V8H3v1Zm3 5h5v2H6v-2Z" fill="currentColor"/>
+        </symbol>
+        <symbol id="awa-icon-lock" viewBox="0 0 24 24">
+            <path d="M17 10h-1V8a4 4 0 1 0-8 0v2H7a2 2 0 0 0-2 2v8h14v-8a2 2 0 0 0-2-2Zm-6 6.7V18h2v-1.3a2 2 0 1 0-2 0ZM10 8a2 2 0 1 1 4 0v2h-4V8Z" fill="currentColor"/>
+        </symbol>
+        <symbol id="awa-icon-google" viewBox="0 0 24 24">
+            <path d="M21.8 12.2c0-.8-.1-1.3-.2-1.9H12v3.6h5.6c-.1 1-.9 2.6-2.7 3.6l3.2 2.5c1.9-1.8 3.7-4.4 3.7-7.8Z" fill="currentColor"/>
+            <path d="M12 22c2.8 0 5.2-.9 6.9-2.4l-3.2-2.5c-.9.6-2 .9-3.7.9-2.8 0-5.1-1.8-5.9-4.3l-3.3 2.6A10 10 0 0 0 12 22Z" fill="currentColor"/>
+            <path d="M6.1 13.7A6 6 0 0 1 5.8 12c0-.6.1-1.2.3-1.7L2.8 7.7A10 10 0 0 0 2 12c0 1.5.4 2.9.8 4.3l3.3-2.6Z" fill="currentColor"/>
+            <path d="M12 5.9c2 0 3.4.9 4.2 1.6l2.9-2.8C17.2 3 14.8 2 12 2A10 10 0 0 0 2.8 7.7l3.3 2.6C6.9 7.8 9.2 5.9 12 5.9Z" fill="currentColor"/>
+        </symbol>
+    </svg>
+    <div class="container">
+        <div class="border-top-container"></div>
+    </div>
+    <section class="awa-footer-trust-bar" aria-label="<?= $escaper->escapeHtmlAttr(__('Diferenciais AWA Motos')) ?>">
+        <div class="container">
+            <div class="awa-footer-trust-grid">
+                <div class="awa-footer-trust-item">
+                    <span class="awa-footer-trust-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#awa-icon-truck"/></svg></span>
+                    <div class="awa-footer-trust-copy">
+                        <strong><?= $escaper->escapeHtml(__('Envio p/ Todo Brasil')) ?></strong>
+                        <span><?= $escaper->escapeHtml(__('Logística rápida para varejo e atacado')) ?></span>
+                    </div>
+                </div>
+                <div class="awa-footer-trust-item">
+                    <span class="awa-footer-trust-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#awa-icon-shield"/></svg></span>
+                    <div class="awa-footer-trust-copy">
+                        <strong><?= $escaper->escapeHtml(__('Compra 100% Segura')) ?></strong>
+                        <span><?= $escaper->escapeHtml(__('Checkout protegido e antifraude')) ?></span>
+                    </div>
+                </div>
+                <div class="awa-footer-trust-item">
+                    <span class="awa-footer-trust-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#awa-icon-gear"/></svg></span>
+                    <div class="awa-footer-trust-copy">
+                        <strong><?= $escaper->escapeHtml(__('Garantia de Fábrica')) ?></strong>
+                        <span><?= $escaper->escapeHtml(__('Peças com origem e suporte confiáveis')) ?></span>
+                    </div>
+                </div>
+                <div class="awa-footer-trust-item">
+                    <span class="awa-footer-trust-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#awa-icon-b2b"/></svg></span>
+                    <div class="awa-footer-trust-copy">
+                        <strong><?= $escaper->escapeHtml(__('Condições de Atacado')) ?></strong>
+                        <span><?= $escaper->escapeHtml(__('Preço progressivo e atendimento B2B')) ?></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div id="footer" class="footer-container layout2 footer">
+        <?= $this->getChildHtml('footer_static5') ?>
+    </div>
+    <div class="footer-bottom">
+        <div class="container">
+            <div class="footer-bottom-inner">
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <?= $this->getChildHtml('copyright') ?>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        <section class="awa-footer-payments-security" aria-labelledby="awa-footer-payments-title">
+                            <div class="awa-footer-payments-security__grid">
+                                <div class="awa-footer-payments-security__panel">
+                                    <h5 id="awa-footer-payments-title" class="awa-footer-panel-title">
+                                        <?= $escaper->escapeHtml(__('Pagamento & Segurança')) ?>
+                                    </h5>
+                                    <div class="awa-footer-panel-section">
+                                        <p class="awa-footer-panel-label"><?= $escaper->escapeHtml(__('Pagamentos Prioritários')) ?></p>
+                                        <div class="awa-payment-chip-list" role="list" aria-label="<?= $escaper->escapeHtmlAttr(__('Pagamentos prioritários')) ?>">
+                                            <span class="awa-payment-chip awa-payment-chip--priority" role="listitem">
+                                                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#awa-icon-pix"/></svg>
+                                                <span>PIX</span>
+                                            </span>
+                                            <span class="awa-payment-chip awa-payment-chip--priority" role="listitem">
+                                                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#awa-icon-boleto"/></svg>
+                                                <span><?= $escaper->escapeHtml(__('Boleto')) ?></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="awa-footer-panel-section">
+                                        <p class="awa-footer-panel-label"><?= $escaper->escapeHtml(__('Outras Formas de Pagamento')) ?></p>
+                                        <div class="awa-payment-chip-list" role="list" aria-label="<?= $escaper->escapeHtmlAttr(__('Outros meios de pagamento')) ?>">
+                                            <span class="awa-payment-chip" role="listitem">
+                                                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#awa-icon-card"/></svg>
+                                                <span><?= $escaper->escapeHtml(__('Cartão')) ?></span>
+                                            </span>
+                                            <span class="awa-payment-chip" role="listitem">
+                                                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#awa-icon-card"/></svg>
+                                                <span><?= $escaper->escapeHtml(__('Parcelamento')) ?></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="awa-footer-payments-security__panel">
+                                    <h5 class="awa-footer-panel-title"><?= $escaper->escapeHtml(__('Selos de Segurança')) ?></h5>
+                                    <div class="awa-security-badge-list">
+                                        <a class="awa-security-badge"
+                                           href="<?= $escaper->escapeUrl($safeBrowsingUrl) ?>"
+                                           target="_blank"
+                                           rel="noopener noreferrer"
+                                           title="<?= $escaper->escapeHtmlAttr(__('Verificar reputação no Google Transparency Report')) ?>"
+                                           aria-label="<?= $escaper->escapeHtmlAttr(__('Abrir verificação Google Safe Browsing para %1', $storeHost)) ?>">
+                                            <span class="awa-security-badge__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#awa-icon-google"/></svg></span>
+                                            <span class="awa-security-badge__copy">
+                                                <strong>Google Safe</strong>
+                                                <small><?= $escaper->escapeHtml(__('Transparência / Navegação Segura')) ?></small>
+                                            </span>
+                                        </a>
+                                        <a class="awa-security-badge"
+                                           href="<?= $escaper->escapeUrl($sslLabsUrl) ?>"
+                                           target="_blank"
+                                           rel="noopener noreferrer"
+                                           title="<?= $escaper->escapeHtmlAttr(__('Verificar configuração SSL no SSL Labs')) ?>"
+                                           aria-label="<?= $escaper->escapeHtmlAttr(__('Abrir análise SSL de %1 no SSL Labs', $storeHost)) ?>">
+                                            <span class="awa-security-badge__icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#awa-icon-lock"/></svg></span>
+                                            <span class="awa-security-badge__copy">
+                                                <strong>SSL</strong>
+                                                <small><?= $escaper->escapeHtml(__('Conexão criptografada ativa')) ?></small>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <?php if ($footerPaymentLegacy !== ''): ?>
+                            <div class="awa-footer-payment-legacy" hidden aria-hidden="true">
+                                <?= /* @noEscape */ $footerPaymentLegacy ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="fixed-right" role="complementary" aria-label="<?= $escaper->escapeHtmlAttr(__('Links Rápidos')) ?>">
+    <?= $this->getChildHtml('fixed_right') ?>
+</div>
+<div class="shadow_bkg" role="presentation"></div>
+<div class="shadow_bkg_show" role="presentation"></div>
+<a id="back-top" class="hidden-xs" href="#" role="button" aria-label="<?= $escaper->escapeHtmlAttr(__('Voltar ao topo')) ?>">
+    <i class="fa fa-angle-up" aria-hidden="true"></i>
+</a>
+
+<?php if ($enableMenu) { ?>
+<nav class="fixed-bottom hidden-sm hidden-md hidden-lg" role="navigation" aria-label="<?= $escaper->escapeHtmlAttr(__('Navegação Móvel')) ?>">
+    <div class="link-on-bottom">
+        <ul class="mobile-bottom-link flex-layout space-between list-unstyled">
+            <li><a href="<?= $escaper->escapeUrl($this->getUrl('')) ?>" aria-label="<?= $escaper->escapeHtmlAttr(__('Home')) ?>"><span class="icon icon-chrome" aria-hidden="true"></span><?= $escaper->escapeHtml(__('Home')) ?></a></li>
+            <li><a href="#" class="toggle-nav-footer" role="button" aria-haspopup="true" aria-expanded="false" aria-label="<?= $escaper->escapeHtmlAttr(__('Abrir menu')) ?>"><span class="icon icon-menu" aria-hidden="true"></span><?= $escaper->escapeHtml(__('Menu')) ?></a></li>
+            <li><a href="<?= $escaper->escapeUrl($this->getUrl('customer/account/')) ?>" aria-label="<?= $escaper->escapeHtmlAttr(__('Minha Conta')) ?>"><span class="icon icon-users" aria-hidden="true"></span><?= $escaper->escapeHtml(__('Conta')) ?></a></li>
+            <li><a href="<?= $escaper->escapeUrl($this->getUrl('checkout/cart/')) ?>" aria-label="<?= $escaper->escapeHtmlAttr(__('Carrinho de Compras')) ?>"><span class="icon icon-shopping-cart" aria-hidden="true"></span><?= $escaper->escapeHtml(__('Carrinho')) ?></a></li>
+        </ul>
+    </div>
+</nav>
+<?php } ?>
+
+<script type="text/x-magento-init">
+{
+    ".block-content.brandowl-play >ul": {
+        "js/rokanthemes-owl-element-init": {
+            "lazyLoad": true,
+            "items": 7,
+            "itemsDesktop": [1366, 5],
+            "itemsDesktopSmall": [991, 3],
+            "itemsTablet": [767, 2],
+            "itemsMobile": [479, 1],
+            "navigation": true
+        }
+    }
+}
+</script>
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Rokanthemes_Themeoption/js/footer-mobile": {}
+    }
+}
+</script>
+<?= $this->getChildHtml('organization_schema') ?>

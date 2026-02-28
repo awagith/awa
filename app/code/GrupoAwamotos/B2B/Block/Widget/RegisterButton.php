@@ -14,6 +14,9 @@ use GrupoAwamotos\B2B\Helper\Data as B2BHelper;
 
 class RegisterButton extends Template implements BlockInterface
 {
+    private const MARKETING_CSS_ASSET = 'GrupoAwamotos_B2B::css/b2b-marketing.css';
+    private const MARKETING_CSS_ASSET_NAME = 'grupoawamotos_b2b_marketing_css';
+
     /**
      * @var CustomerSession
      */
@@ -38,6 +41,26 @@ class RegisterButton extends Template implements BlockInterface
         $this->customerSession = $customerSession;
         $this->b2bHelper = $b2bHelper;
         parent::__construct($context, $data);
+    }
+
+    /**
+     * Load widget styling only when the widget will render.
+     *
+     * @return $this
+     */
+    protected function _prepareLayout()
+    {
+        parent::_prepareLayout();
+
+        if ($this->shouldDisplay()) {
+            $this->pageConfig->addPageAsset(
+                self::MARKETING_CSS_ASSET,
+                [],
+                self::MARKETING_CSS_ASSET_NAME
+            );
+        }
+
+        return $this;
     }
 
     /**

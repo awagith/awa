@@ -2,7 +2,7 @@
     position: fixed;
     inset: 0;
     background: rgb(0 0 0 / 60%);
-    z-index: 9999;
+    z-index: var(--awa-z-modal, 10200);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -138,38 +138,38 @@
 }
 
 .b2b-register-btn {
-    background: linear-gradient(135deg, #b73337 0%, #8e2629 100%) !important;
-    border: none !important;
-    padding: 14px 24px !important;
-    font-size: 15px !important;
-    font-weight: 600 !important;
-    border-radius: 8px !important;
+    background: linear-gradient(135deg, #b73337 0%, #8e2629 100%);
+    border: none;
+    padding: 14px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 8px;
     color: #fff !important;
     text-decoration: none !important;
-    display: block !important;
-    text-align: center !important;
-    transition: all 0.3s ease !important;
+    display: block;
+    text-align: center;
+    transition: all 0.3s ease;
 }
 
 .b2b-register-btn:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 6px 20px rgb(183 51 55 / 40%) !important;
-    background: linear-gradient(135deg, #8e2629 0%, #6d1d1f 100%) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgb(183 51 55 / 40%);
+    background: linear-gradient(135deg, #8e2629 0%, #6d1d1f 100%);
 }
 
 .b2b-continue-btn {
-    background: transparent !important;
-    border: 1px solid #ddd !important;
-    padding: 12px 24px !important;
-    font-size: 14px !important;
-    border-radius: 8px !important;
+    background: transparent;
+    border: 1px solid #ddd;
+    padding: 12px 24px;
+    font-size: 14px;
+    border-radius: 8px;
     color: #666 !important;
-    cursor: pointer !important;
-    transition: all 0.3s ease !important;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 .b2b-continue-btn:hover {
-    border-color: #999 !important;
+    border-color: #999;
     color: #333 !important;
 }
 
@@ -736,8 +736,8 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background: #ff6f00 !important;
-    border-color: #ff6f00 !important;
+    background: var(--awa-red, #b73337) !important;
+    border-color: var(--awa-red, #b73337) !important;
     padding: 12px 25px;
     font-size: 1rem;
     border-radius: 4px;
@@ -747,8 +747,8 @@
 }
 
 .b2b-quote-button:hover {
-    background: #e65100 !important;
-    border-color: #e65100 !important;
+    background: var(--awa-red-dark, #8e2629) !important;
+    border-color: var(--awa-red-dark, #8e2629) !important;
 }
 
 /* ===========================================================================

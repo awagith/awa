@@ -12,8 +12,8 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
 use Magento\Customer\Api\Data\AddressInterfaceFactory;
-use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\Data\RegionInterfaceFactory;
+use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Directory\Model\RegionFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -347,6 +347,7 @@ class CustomerSync implements CustomerSyncInterface
 
             return null;
         } catch (\Exception $e) {
+            $this->logger->debug('[ERP CustomerSync] getErpCodeByCustomerId failed for #' . $customerId . ': ' . $e->getMessage());
             return null;
         }
     }

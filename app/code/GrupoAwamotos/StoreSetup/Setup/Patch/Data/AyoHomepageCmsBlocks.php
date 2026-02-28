@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace GrupoAwamotos\StoreSetup\Setup\Patch\Data;
 
 use GrupoAwamotos\StoreSetup\Setup\CmsBlockData;
-use Magento\Cms\Model\BlockFactory;
+use Magento\Cms\Model\Block;
 use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
@@ -37,7 +37,7 @@ class AyoHomepageCmsBlocks implements DataPatchInterface
 {
     public function __construct(
         private readonly ModuleDataSetupInterface $moduleDataSetup,
-        private readonly BlockFactory $blockFactory,
+        private readonly Block $blockModel,
         private readonly WriterInterface $configWriter,
         private readonly LoggerInterface $logger
     ) {
@@ -75,7 +75,7 @@ class AyoHomepageCmsBlocks implements DataPatchInterface
     private function createOrUpdateBlock(array $data): void
     {
         try {
-            $block = $this->blockFactory->create();
+            $block = clone $this->blockModel;
             $block->setStoreId(0);
             $block->load($data['identifier'], 'identifier');
             $action = $block->getId() ? 'atualizado' : 'criado';

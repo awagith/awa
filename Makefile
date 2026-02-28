@@ -4,6 +4,7 @@ SHELL := /usr/bin/env bash
 LOCALE ?= pt_BR
 JOBS ?= 4
 BASE_URL ?= https://awamotos.com/
+AYO_PDP_PATH ?=
 MAGENTO ?= ./bin/magento-www
 
 .PHONY: help
@@ -15,6 +16,7 @@ help: ## Mostra esta ajuda
 	@echo "  LOCALE=$(LOCALE)" 
 	@echo "  JOBS=$(JOBS)" 
 	@echo "  BASE_URL=$(BASE_URL)" 
+	@echo "  AYO_PDP_PATH=$(AYO_PDP_PATH)"
 
 .PHONY: smoke-frontend
 smoke-frontend: ## Smoke test HTTP do frontend (BASE_URL)
@@ -75,6 +77,125 @@ frontend: ## Deploy frontend RÁPIDO (detecta tema ativo automaticamente)
 .PHONY: frontend-full
 frontend-full: ## Deploy frontend COMPLETO (limpa tudo, DI, todos temas)
 	@./scripts/deploy_frontend.sh --full
+
+.PHONY: ayo-child-audit
+ayo-child-audit: ## Auditoria de paridade/ativos do child theme Ayo Home5 (read-only)
+	@php ./dev/tools/ayo_child_theme_audit.php
+
+.PHONY: ayo-child-theme-status
+ayo-child-theme-status: ## Status do tema do store default (Ayo Home5 base vs child)
+	@php ./dev/tools/ayo_child_theme_switch.php status --store-code default
+
+.PHONY: ayo-child-theme-activate
+ayo-child-theme-activate: ## Ativa o child theme AWA_Custom/ayo_home5_child no store default
+	@php ./dev/tools/ayo_child_theme_switch.php activate --store-code default
+
+.PHONY: ayo-child-theme-rollback
+ayo-child-theme-rollback: ## Rollback para ayo/ayo_home5 no store default
+	@php ./dev/tools/ayo_child_theme_switch.php rollback --store-code default
+
+.PHONY: ayo-child-js-check
+ayo-child-js-check: ## Sintaxe JavaScript do child theme Ayo Home5
+	@find app/design/frontend/AWA_Custom/ayo_home5_child/web/js -type f -name '*.js' -print0 | xargs -0 -n1 node --check
+
+.PHONY: ayo-child-php-check
+ayo-child-php-check: ## Sintaxe PHP/PHTML do child theme e auditorias Ayo
+	@find app/design/frontend/AWA_Custom/ayo_home5_child -type f \( -name '*.php' -o -name '*.phtml' \) -print0 | xargs -0 -n1 php -l
+	@find dev/tools -maxdepth 1 -type f \( -name 'ayo_child_theme*.php' -o -name 'ayo_home5*.php' \) -print0 | xargs -0 -n1 php -l
+
+.PHONY: ayo-child-layout-check
+ayo-child-layout-check: ## Validação de layout XML (temas frontend + módulos app/code)
+	@php ./dev/tools/validate_layout_xml.php
+
+.PHONY: ayo-child-template-audit
+ayo-child-template-audit: ## Auditoria de anti-patterns em PHTML/PHP do child theme
+	@php ./dev/tools/ayo_child_theme_template_audit.php
+
+.PHONY: ayo-child-html-audit
+ayo-child-html-audit: ## Auditoria HTML da home (dup duplicidades/legado do parent)
+	@php ./dev/tools/ayo_child_theme_html_audit.php --url "$(BASE_URL)"
+
+.PHONY: ayo-child-routes-audit
+ayo-child-routes-audit: ## Auditoria HTML de rotas críticas (home/PLP/busca/cart/auth/B2B)
+	@php ./dev/tools/ayo_child_theme_routes_audit.php --base-url "$(BASE_URL)" $(if $(AYO_PDP_PATH),--pdp-path "$(AYO_PDP_PATH)",)
+
+.PHONY: ayo-home5-homepage-audit
+ayo-home5-homepage-audit: ## Auditoria de alinhamento Home5 (CMS page vs top-home template/blocos)
+	@php ./dev/tools/ayo_home5_homepage_alignment_audit.php --store-code default
+
+.PHONY: ayo-home5-css-audit
+ayo-home5-css-audit: ## Auditoria de CSS da Home5 (cascata, ordem, 404, duplicidades)
+	@php ./dev/tools/ayo_home5_css_cascade_audit.php --url "$(BASE_URL)"
+
+.PHONY: ayo-home5-homepage-cms-fix-dry
+ayo-home5-homepage-cms-fix-dry: ## Dry-run: corrige aliases block_id inválidos na CMS page Home5
+	@php ./dev/tools/ayo_home5_homepage_cms_blockid_repair.php --store-code default
+
+.PHONY: ayo-home5-homepage-cms-fix-apply
+ayo-home5-homepage-cms-fix-apply: ## Apply: corrige aliases block_id inválidos na CMS page Home5 + cache clean
+	@php ./dev/tools/ayo_home5_homepage_cms_blockid_repair.php --store-code default --apply
+	@php ./bin/magento cache:clean layout block_html full_page
+
+.PHONY: ayo-home5-render-mode-status
+ayo-home5-render-mode-status: ## Status do modo Home5 (template-driven vs CMS-driven) no child theme
+	@php ./dev/tools/ayo_home5_render_mode_switch.php status
+
+.PHONY: ayo-home5-render-mode-template
+ayo-home5-render-mode-template: ## Define Home5 em template-driven (top-home.phtml) + cache clean
+	@php ./dev/tools/ayo_home5_render_mode_switch.php template
+	@php ./bin/magento cache:clean layout block_html full_page
+
+.PHONY: ayo-home5-render-mode-cms
+ayo-home5-render-mode-cms: ## Define Home5 em CMS-driven (restaura cms_page_content) + cache clean
+	@php ./dev/tools/ayo_home5_render_mode_switch.php cms
+	@php ./bin/magento cache:clean layout block_html full_page
+
+.PHONY: ayo-home5-stage-sync-dry
+ayo-home5-stage-sync-dry: ## Dry-run: cria/atualiza CMS page stage Home5 com baseline CMS-driven
+	@php ./dev/tools/ayo_home5_stage_page_sync.php --store-code default
+
+.PHONY: ayo-home5-stage-sync-apply
+ayo-home5-stage-sync-apply: ## Apply: cria/atualiza CMS page stage Home5 + cache clean
+	@php ./dev/tools/ayo_home5_stage_page_sync.php --store-code default --apply
+	@php ./bin/magento cache:clean block_html full_page
+
+.PHONY: ayo-home5-demo-stage-sync-dry
+ayo-home5-demo-stage-sync-dry: ## Dry-run: cria/atualiza CMS page stage Home5 demo (en_5) em CMS-driven
+	@php ./dev/tools/ayo_home5_stage_page_sync.php --store-code default --stage-identifier homepage_ayo_home5_demo_stage --title "Homepage Ayo Home 5 Demo Stage (en_5)" --content-file ./dev/tools/ayo_home5_demo_stage_content.html
+
+.PHONY: ayo-home5-demo-stage-sync-apply
+ayo-home5-demo-stage-sync-apply: ## Apply: cria/atualiza CMS page stage Home5 demo (en_5) + cache clean
+	@php ./dev/tools/ayo_home5_stage_page_sync.php --store-code default --stage-identifier homepage_ayo_home5_demo_stage --title "Homepage Ayo Home 5 Demo Stage (en_5)" --content-file ./dev/tools/ayo_home5_demo_stage_content.html --apply
+	@php ./bin/magento cache:clean layout block_html full_page
+
+.PHONY: ayo-home5-demo-cutover-status
+ayo-home5-demo-cutover-status: ## Status do cutover da homepage demo (config + render mode)
+	@php ./dev/tools/ayo_home5_homepage_cutover.php status --store-code default --target-homepage homepage_ayo_home5_demo_stage
+
+.PHONY: ayo-home5-demo-cutover-apply
+ayo-home5-demo-cutover-apply: ## Cutover da home para homepage_ayo_home5_demo_stage (CMS-driven) + cache + smoke
+	@php ./dev/tools/ayo_home5_homepage_cutover.php apply --store-code default --target-homepage homepage_ayo_home5_demo_stage --sync-render-mode --cache-clean
+	@$(MAKE) smoke-frontend
+
+.PHONY: ayo-home5-demo-cutover-rollback
+ayo-home5-demo-cutover-rollback: ## Rollback do último cutover da home + restore render mode + cache + smoke
+	@php ./dev/tools/ayo_home5_homepage_cutover.php rollback --store-code default --sync-render-mode --cache-clean
+	@$(MAKE) smoke-frontend
+
+.PHONY: ayo-child-verify
+ayo-child-verify: ## Validação rápida do child theme ativo (audit + smoke frontend)
+	@$(MAKE) ayo-child-php-check
+	@$(MAKE) ayo-child-js-check
+	@$(MAKE) ayo-child-layout-check
+	@$(MAKE) ayo-child-template-audit
+	@$(MAKE) ayo-child-audit
+	@$(MAKE) smoke-frontend
+	@$(MAKE) ayo-child-html-audit
+
+.PHONY: ayo-child-verify-critical
+ayo-child-verify-critical: ## Validação ampliada do child theme (verify + rotas críticas)
+	@$(MAKE) ayo-child-verify
+	@$(MAKE) ayo-child-routes-audit
 
 .PHONY: indexer-status
 indexer-status: ## Status dos indexadores

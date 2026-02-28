@@ -2,7 +2,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="before.body.end">
-            <block class="Magento\Framework\View\Element\Template"
+            <block class="GrupoAwamotos\FakePurchase\Block\Notification"
                    name="grupoawamotos.fakepurchase.notification"
                    template="GrupoAwamotos_FakePurchase::notification.phtml"
                    ifconfig="grupoawamotos_fakepurchase/general/enabled">

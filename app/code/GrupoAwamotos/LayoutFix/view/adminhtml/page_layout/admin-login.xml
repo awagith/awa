@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Admin login page layout compatibility for Magento 2.4.8 backend theme moves.
+ *
+ * The backend admin theme default.xml and some admin modules expect containers
+ * that are present in admin-1column but absent in the core admin-login page
+ * layout. We provide minimal containers so those references do not emit
+ * "Broken reference" warnings; the admin_login handle later removes the added
+ * wrappers/containers to preserve the native login page output.
+ */
+-->
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_layout.xsd">
+    <referenceContainer name="root">
+        <container name="notices.wrapper">
+            <container name="notifications" as="notifications"/>
+            <container name="notification.window" as="notification_window" before="-"/>
+            <container name="global.notices" as="global_notices" after="notification.window"/>
+        </container>
+        <container name="header">
+            <container name="header.inner.left" as="header_inner_left_compat" before="-"/>
+            <container name="header.inner.right" as="header_inner_right_compat" after="header.inner.left"/>
+        </container>
+        <container name="page.menu" as="page.menu"/>
+        <container name="menu.wrapper"/>
+        <container name="page.breadcrumbs" as="page.breadcrumbs"/>
+        <container name="page.formkey" as="page.formkey"/>
+        <container name="main.top" as="main-top"/>
+        <container name="page.main.actions" as="page_main_actions_compat"/>
+        <container name="page.messages" as="page.messages"/>
+        <container name="footer"/>
+    </referenceContainer>
+</layout>

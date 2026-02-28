@@ -2,19 +2,11 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <meta name="robots" content="NOINDEX,FOLLOW"/>
     </head>
     <body>
-        <referenceBlock name="toki_header" remove="true"/>
-        <referenceBlock name="toki_footer" remove="true"/>
-        <referenceBlock name="newsletter_popup" remove="true"/>
-        <referenceBlock name="before_body_end_fake_order" remove="true"/>
-        <referenceBlock name="b2b.login.to.cart.modal" remove="true"/>
-        <referenceBlock name="ajaxWishlistJs" remove="true"/>
-        <referenceBlock name="ajaxsuite.popup.wrapper" remove="true"/>
+        <attribute name="class" value="b2b-auth-shell"/>
         <referenceBlock name="page.main.title" remove="true"/>
-        <referenceBlock name="breadcrumbs" remove="true"/>
-        <referenceBlock name="authentication-popup" remove="true"/>
-        <referenceContainer name="nav.breadcrumbs" remove="true"/>
     </body>
 </page>

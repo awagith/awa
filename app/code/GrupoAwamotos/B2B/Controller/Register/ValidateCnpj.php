@@ -15,6 +15,8 @@ use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use GrupoAwamotos\B2B\Helper\CnpjValidator;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
+use Magento\Framework\Data\Form\FormKey\Validator as FormKeyValidator;
+use Psr\Log\LoggerInterface;
 
 class ValidateCnpj implements HttpPostActionInterface
 {
@@ -26,6 +28,8 @@ class ValidateCnpj implements HttpPostActionInterface
     private CustomerCollectionFactory $customerCollectionFactory;
     private ErpIntegration $erpIntegration;
     private CnaeClassifier $cnaeClassifier;
+    private FormKeyValidator $formKeyValidator;
+    private LoggerInterface $logger;
 
     public function __construct(
         RequestInterface $request,
@@ -35,7 +39,9 @@ class ValidateCnpj implements HttpPostActionInterface
         RemoteAddress $remoteAddress,
         CustomerCollectionFactory $customerCollectionFactory,
         ErpIntegration $erpIntegration,
-        CnaeClassifier $cnaeClassifier
+        CnaeClassifier $cnaeClassifier,
+        FormKeyValidator $formKeyValidator,
+        LoggerInterface $logger
     ) {
         $this->request = $request;
         $this->jsonFactory = $jsonFactory;
@@ -45,11 +51,24 @@ class ValidateCnpj implements HttpPostActionInterface
         $this->customerCollectionFactory = $customerCollectionFactory;
         $this->erpIntegration = $erpIntegration;
         $this->cnaeClassifier = $cnaeClassifier;
+        $this->formKeyValidator = $formKeyValidator;
+        $this->logger = $logger;
     }
 
     public function execute()
     {
         $result = $this->jsonFactory->create();
+
+        // Validação CSRF — protege contra requisições cross-site
+        if (!$this->formKeyValidator->validate($this->request)) {
+            $this->logger->warning('[B2B] CSRF attempt on CNPJ validation', [
+                'ip' => $this->remoteAddress->getRemoteAddress()
+            ]);
+            return $result->setData([
+                'success' => false,
+                'message' => (string) __('Requisição inválida. Recarregue a página e tente novamente.')
+            ]);
+        }
         $clientIp = (string) (
             $this->remoteAddress->getRemoteAddress()
             ?: $this->request->getServer('REMOTE_ADDR')
@@ -225,7 +244,8 @@ class ValidateCnpj implements HttpPostActionInterface
     }
 
     /**
-     * Mask email for display: j***@domain.com
+     * Mask email for display: j***@d***.com
+     * Shows only first char of local part and first char of domain for privacy
      */
     private function maskEmail(string $email): string
     {
@@ -237,11 +257,20 @@ class ValidateCnpj implements HttpPostActionInterface
 
         [$local, $domain] = explode('@', $email, 2);
 
-        if (strlen($local) <= 1) {
-            return $local . '***@' . $domain;
+        // Mask local part: show only first char
+        $maskedLocal = substr($local, 0, 1) . str_repeat('*', max(4, strlen($local) - 1));
+
+        // Mask domain: show first char + *** + TLD
+        $domainParts = explode('.', $domain);
+        if (count($domainParts) >= 2) {
+            $tld = array_pop($domainParts);
+            $domainName = implode('.', $domainParts);
+            $maskedDomain = substr($domainName, 0, 1) . '***.' . $tld;
+        } else {
+            $maskedDomain = substr($domain, 0, 1) . '***';
         }
 
-        return substr($local, 0, 2) . str_repeat('*', max(3, strlen($local) - 2)) . '@' . $domain;
+        return $maskedLocal . '@' . $maskedDomain;
     }
 
     /**

@@ -246,6 +246,7 @@ class ErpIntegration
             $erpCode = $this->customerSync->getErpCodeByCustomerId($customerId);
             return $erpCode ? (int) $erpCode : null;
         } catch (\Exception $e) {
+            $this->logger->debug('[B2B ErpIntegration] getErpCodeForCustomer failed for #' . $customerId . ': ' . $e->getMessage());
             return null;
         }
     }

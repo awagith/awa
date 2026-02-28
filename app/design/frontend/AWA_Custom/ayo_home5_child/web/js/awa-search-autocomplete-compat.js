@@ -1,0 +1,634 @@
+define([
+    'jquery'
+], function ($) {
+    'use strict';
+
+    var DEFAULT_OPTIONS = {
+        inputSelector: '#search-input-autocomplate, #search, input[name="q"]',
+        panelSelector: '#search_autocomplete',
+        resultsRootSelector: '.searchsuite-autocomplete',
+        fallbackEndpoint: '',
+        searchResultUrl: '/catalogsearch/result/',
+        minQueryLength: 2,
+        fallbackDelay: 260,
+        fallbackTimeout: 8000,
+        fallbackSuggestLimit: 6,
+        fallbackProductLimit: 6
+    };
+    var AUTO_BOOT_KEY = '__awaSearchCompatAutoBoot';
+    var AUTO_OBSERVER_KEY = '__awaSearchCompatAutoObserver';
+    var SEARCH_FORM_SELECTOR = 'form.form.minisearch, #search_mini_form';
+
+    function escapeHtml(value) {
+        return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function toText(value) {
+        return $('<div/>').html(value || '').text();
+    }
+
+    function findScoped($form, selector) {
+        var $scope;
+        var $found;
+
+        if (!$form || !$form.length) {
+            return $(selector).first();
+        }
+
+        $found = $form.find(selector).first();
+        if ($found.length) {
+            return $found;
+        }
+
+        $scope = $form.closest('.block-search, .header .search, .top-search');
+        if ($scope.length) {
+            $found = $scope.find(selector).first();
+            if ($found.length) {
+                return $found;
+            }
+        }
+
+        return $(selector).first();
+    }
+
+    function visible(el) {
+        if (!el) {
+            return false;
+        }
+
+        return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+    }
+
+    function applyTitles($root) {
+        $root.find('a[href]').each(function () {
+            var $a = $(this);
+            var text = $.trim($a.text());
+
+            if (!text) {
+                return;
+            }
+
+            if (!$a.attr('title')) {
+                $a.attr('title', text);
+            }
+
+            if (!$a.attr('aria-label')) {
+                $a.attr('aria-label', text);
+            }
+        });
+    }
+
+    function syncState($form, options) {
+        var $input = findScoped($form, options.inputSelector);
+        var $panel = findScoped($form, options.panelSelector);
+        var panelEl = $panel.get(0);
+        var $resultsRoot = findScoped($form, options.resultsRootSelector);
+        var hasPanel = $panel.length > 0;
+        var isVisible = hasPanel && visible(panelEl);
+        var hasResults = false;
+
+        if ($resultsRoot.length && visible($resultsRoot.get(0))) {
+            hasResults = $resultsRoot.find('li').length > 0;
+        } else if (hasPanel) {
+            hasResults = $.trim($panel.text()).length > 0 || $panel.children().length > 0;
+        }
+
+        $form.toggleClass('is-open', !!isVisible)
+            .toggleClass('has-results', !!hasResults)
+            .toggleClass('is-empty', !hasResults);
+
+        if ($input.length) {
+            $input.attr('aria-expanded', isVisible ? 'true' : 'false');
+        }
+
+        if (hasPanel) {
+            $panel.attr('aria-hidden', isVisible ? 'false' : 'true');
+            $panel.toggleClass('is-open', !!isVisible)
+                .toggleClass('has-results', !!hasResults);
+        }
+
+        if ($resultsRoot.length) {
+            $resultsRoot.attr('data-awa-component', 'search-results')
+                .toggleClass('is-open', !!isVisible)
+                .toggleClass('has-results', !!hasResults);
+
+            $resultsRoot.find('ul').attr('role', 'listbox');
+            $resultsRoot.find('li').attr('role', 'option');
+            applyTitles($resultsRoot);
+        }
+    }
+
+    function getFallbackPanel($form, options) {
+        var $panel = findScoped($form, options.panelSelector);
+
+        if ($panel.length) {
+            return $panel;
+        }
+
+        return findScoped($form, options.resultsRootSelector);
+    }
+
+    function hasNativeResults($form, options) {
+        var $resultsRoot = findScoped($form, options.resultsRootSelector);
+        var $panel = getFallbackPanel($form, options);
+        var $nativeItems = $();
+
+        if ($resultsRoot.length) {
+            $nativeItems = $nativeItems.add($resultsRoot.find('li').not('.awa-fallback-item'));
+        }
+
+        if ($panel.length) {
+            $nativeItems = $nativeItems.add($panel.find('li').not('.awa-fallback-item'));
+        }
+
+        return $nativeItems.length > 0;
+    }
+
+    function extractSuggestItems(suggestRaw) {
+        var suggest = [];
+
+        $.each(suggestRaw || [], function (_, item) {
+            var label = '';
+
+            if (typeof item === 'string') {
+                label = item;
+            } else if (item && typeof item === 'object') {
+                label = item.query_text || item.label || item.value || item.name || '';
+            }
+
+            label = $.trim(label);
+            if (label) {
+                suggest.push(label);
+            }
+        });
+
+        return suggest;
+    }
+
+    function extractProductItems(productRaw) {
+        var products = [];
+
+        $.each(productRaw || [], function (_, item) {
+            if (!item || typeof item !== 'object') {
+                return;
+            }
+
+            products.push({
+                name: $.trim(item.name || ''),
+                url: $.trim(item.url || '#'),
+                image: $.trim(item.image || ''),
+                priceText: $.trim(toText(item.price || ''))
+            });
+        });
+
+        return products;
+    }
+
+    function normalizeFallbackPayload(payload) {
+        var suggest = [];
+        var products = [];
+
+        if (payload && $.isArray(payload.result)) {
+            $.each(payload.result, function (_, chunk) {
+                if (!chunk || typeof chunk !== 'object') {
+                    return;
+                }
+
+                if (chunk.code === 'suggest') {
+                    suggest = extractSuggestItems(chunk.data);
+                    return;
+                }
+
+                if (chunk.code === 'product') {
+                    products = extractProductItems(chunk.data);
+                }
+            });
+        }
+
+        return {
+            suggest: suggest,
+            products: products
+        };
+    }
+
+    function buildFallbackMarkup(normalized, options, query) {
+        var html = '';
+        var i;
+        var label;
+        var product;
+        var searchResultUrl = (options.searchResultUrl || '/catalogsearch/result/').replace(/\/+$/, '');
+
+        if (normalized.suggest.length) {
+            html += '<div class="suggest">';
+            html += '<ul role="listbox">';
+
+            for (i = 0; i < normalized.suggest.length && i < options.fallbackSuggestLimit; i += 1) {
+                label = normalized.suggest[i];
+                html += '<li class="awa-fallback-item" role="option">';
+                html += '<a href="' + escapeHtml(searchResultUrl + '/?q=' + encodeURIComponent(label)) + '">' + escapeHtml(label) + '</a>';
+                html += '</li>';
+            }
+
+            html += '</ul>';
+            html += '</div>';
+        }
+
+        if (normalized.products.length) {
+            html += '<div class="product">';
+            html += '<ul role="listbox">';
+
+            for (i = 0; i < normalized.products.length && i < options.fallbackProductLimit; i += 1) {
+                product = normalized.products[i];
+                html += '<li class="awa-fallback-item" role="option">';
+
+                if (product.image) {
+                    html += '<div class="qs-option-image">';
+                    html += '<a href="' + escapeHtml(product.url || '#') + '">';
+                    html += '<img src="' + escapeHtml(product.image) + '" alt="' + escapeHtml(product.name || query) + '" loading="lazy" />';
+                    html += '</a>';
+                    html += '</div>';
+                }
+
+                html += '<div class="qs-option-info">';
+                html += '<div class="qs-option-title"><a href="' + escapeHtml(product.url || '#') + '">' + escapeHtml(product.name || query) + '</a></div>';
+                if (product.priceText) {
+                    html += '<div class="qs-option-price">' + escapeHtml(product.priceText) + '</div>';
+                }
+                html += '</div>';
+                html += '</li>';
+            }
+
+            html += '</ul>';
+            html += '</div>';
+        }
+
+        if (!html) {
+            html = '<div class="no-result">Nenhum resultado encontrado.</div>';
+        }
+
+        return html;
+    }
+
+    function clearFallback($form, options) {
+        var $panel = getFallbackPanel($form, options);
+        var $input = findScoped($form, options.inputSelector);
+
+        if (!$panel.length) {
+            return;
+        }
+
+        if ($panel.attr('data-awa-fallback-rendered') === 'true') {
+            $panel.empty();
+            $panel.removeAttr('data-awa-fallback-rendered');
+            $panel.hide();
+            $panel.attr('aria-hidden', 'true');
+            if ($input.length) {
+                $input.attr('aria-expanded', 'false');
+            }
+        }
+    }
+
+    function renderFallback($form, options, payload, query) {
+        var $panel = getFallbackPanel($form, options);
+        var $input = findScoped($form, options.inputSelector);
+        var normalized;
+        var html;
+
+        if (!$panel.length) {
+            return;
+        }
+
+        normalized = normalizeFallbackPayload(payload);
+        html = buildFallbackMarkup(normalized, options, query);
+
+        $panel.html(html)
+            .show()
+            .attr('aria-hidden', 'false')
+            .attr('data-awa-fallback-rendered', 'true');
+
+        if ($input.length) {
+            $input.attr('aria-expanded', 'true');
+        }
+
+        $form.addClass('is-open');
+        applyTitles($panel);
+    }
+
+    function resolveFallbackEndpoint($form, options) {
+        var explicit = options.fallbackEndpoint || '';
+        var attrEndpoint = $form.attr('data-awa-search-endpoint') || '';
+
+        if (explicit) {
+            return explicit;
+        }
+
+        if (attrEndpoint) {
+            return attrEndpoint;
+        }
+
+        return '/rokanthemes_searchsuiteautocomplete/ajax/index';
+    }
+
+    function buildCacheKey(query, categoryValue) {
+        return query + '::' + (categoryValue || '');
+    }
+
+    function runFallbackRequest($form, options, state, query) {
+        var endpoint = resolveFallbackEndpoint($form, options);
+        var $category = $form.find('#choose_category');
+        var categoryValue = $category.length ? $.trim($category.val() || '') : '';
+        var cacheKey = buildCacheKey(query, categoryValue);
+        var params = {
+            q: query
+        };
+
+        if (!endpoint || hasNativeResults($form, options)) {
+            clearFallback($form, options);
+            return;
+        }
+
+        if (categoryValue) {
+            params.cat = categoryValue;
+        }
+
+        if (state.xhr && state.xhr.abort) {
+            state.xhr.abort();
+        }
+
+        state.requestId += 1;
+        state.lastRequestId = state.requestId;
+
+        state.xhr = $.ajax({
+            url: endpoint,
+            method: 'GET',
+            dataType: 'json',
+            data: params,
+            cache: false,
+            timeout: options.fallbackTimeout
+        }).done(function (response) {
+            if (state.lastRequestId !== state.requestId) {
+                return;
+            }
+
+            if (!query || query.length < options.minQueryLength || hasNativeResults($form, options)) {
+                clearFallback($form, options);
+                return;
+            }
+
+            state.cache[cacheKey] = response;
+            renderFallback($form, options, response, query);
+            syncState($form, options);
+        }).fail(function (_xhr, status) {
+            if (status === 'abort') {
+                return;
+            }
+
+            clearFallback($form, options);
+            syncState($form, options);
+        }).always(function () {
+            state.xhr = null;
+        });
+    }
+
+    function scheduleFallbackRequest($form, options, state, query) {
+        var $category = $form.find('#choose_category');
+        var categoryValue = $category.length ? $.trim($category.val() || '') : '';
+        var cacheKey = buildCacheKey(query, categoryValue);
+
+        if (state.timer) {
+            window.clearTimeout(state.timer);
+        }
+
+        if (!query || query.length < options.minQueryLength) {
+            clearFallback($form, options);
+            return;
+        }
+
+        if (state.cache[cacheKey]) {
+            if (!hasNativeResults($form, options)) {
+                renderFallback($form, options, state.cache[cacheKey], query);
+                syncState($form, options);
+            }
+            return;
+        }
+
+        state.timer = window.setTimeout(function () {
+            runFallbackRequest($form, options, state, query);
+        }, options.fallbackDelay);
+    }
+
+    function initCompat(config, element) {
+        var options = $.extend({}, DEFAULT_OPTIONS, config || {});
+        var $form = $(element);
+        var observer;
+        var bodyObserver;
+        var panelNode;
+        var scheduled = false;
+        var scopeNode;
+        var fallbackState = {
+            timer: null,
+            xhr: null,
+            cache: {},
+            requestId: 0,
+            lastRequestId: 0
+        };
+
+        if (!$form.length || $form.data('awaSearchCompatInit')) {
+            return;
+        }
+
+        function flushSync() {
+            scheduled = false;
+            attachPanelObserver();
+            syncState($form, options);
+        }
+
+        function scheduleSync() {
+            if (scheduled) {
+                return;
+            }
+
+            scheduled = true;
+
+            if (typeof window.requestAnimationFrame === 'function') {
+                window.requestAnimationFrame(flushSync);
+                return;
+            }
+
+            window.setTimeout(flushSync, 0);
+        }
+
+        function attachPanelObserver() {
+            var nextPanelNode;
+
+            if (!observer) {
+                return false;
+            }
+
+            nextPanelNode = findScoped($form, options.panelSelector).get(0);
+            if (!nextPanelNode) {
+                return false;
+            }
+
+            if (panelNode === nextPanelNode) {
+                return true;
+            }
+
+            observer.disconnect();
+            panelNode = nextPanelNode;
+            observer.observe(panelNode, {
+                subtree: true,
+                childList: true,
+                attributes: true,
+                attributeFilter: ['class', 'style']
+            });
+
+            return true;
+        }
+
+        $form.attr({
+            'data-awa-component': $form.attr('data-awa-component') || 'search-autocomplete',
+            'data-awa-initialized': 'true'
+        }).addClass('is-ready');
+
+        scheduleSync();
+
+        $form.on('focusin.awaSearchCompat input.awaSearchCompat keyup.awaSearchCompat', options.inputSelector, function (e) {
+            var query = $.trim($(this).val() || '');
+
+            if (e.type === 'keyup' && e.key === 'Escape') {
+                $form.removeClass('is-open');
+                clearFallback($form, options);
+            }
+
+            if (e.type === 'input' || e.type === 'keyup' || e.type === 'focusin') {
+                scheduleFallbackRequest($form, options, fallbackState, query);
+            }
+
+            scheduleSync();
+        });
+
+        $form.on('focusout.awaSearchCompat', options.inputSelector, function () {
+            window.setTimeout(function () {
+                scheduleSync();
+            }, 100);
+        });
+
+        $form.on('change.awaSearchCompat', '#choose_category', function () {
+            var $input = findScoped($form, options.inputSelector);
+            var query = $.trim($input.val() || '');
+            scheduleFallbackRequest($form, options, fallbackState, query);
+            scheduleSync();
+        });
+
+        if (typeof window.MutationObserver === 'function') {
+            observer = new window.MutationObserver(function () {
+                scheduleSync();
+            });
+
+            attachPanelObserver();
+            scopeNode = $form.closest('.block-search, .header .search, .top-search').get(0) || document.body;
+
+            if (!panelNode && scopeNode) {
+                bodyObserver = new window.MutationObserver(function () {
+                    attachPanelObserver();
+                    scheduleSync();
+                });
+
+                bodyObserver.observe(scopeNode, {
+                    subtree: true,
+                    childList: true
+                });
+            }
+
+            $form.data('awaSearchCompatObserver', observer);
+            if (bodyObserver) {
+                $form.data('awaSearchCompatBodyObserver', bodyObserver);
+            }
+        }
+
+        $form.data('awaSearchCompatInit', 1);
+    }
+
+    function bootAll(config) {
+        var options = $.extend({}, DEFAULT_OPTIONS, config || {});
+        $(SEARCH_FORM_SELECTOR).each(function () {
+            initCompat(options, this);
+        });
+    }
+
+    function shouldObserveMutation(mutations) {
+        var i;
+        var j;
+        var mutation;
+        var addedNodes;
+
+        for (i = 0; i < mutations.length; i += 1) {
+            mutation = mutations[i];
+            if (!mutation || !mutation.addedNodes || !mutation.addedNodes.length) {
+                continue;
+            }
+
+            addedNodes = mutation.addedNodes;
+            for (j = 0; j < addedNodes.length; j += 1) {
+                if (!addedNodes[j] || addedNodes[j].nodeType !== 1) {
+                    continue;
+                }
+
+                if ($(addedNodes[j]).is(SEARCH_FORM_SELECTOR) || $(addedNodes[j]).find(SEARCH_FORM_SELECTOR).length) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    function autoBoot() {
+        if (window[AUTO_BOOT_KEY]) {
+            return;
+        }
+
+        window[AUTO_BOOT_KEY] = true;
+
+        if (document.readyState === 'loading') {
+            $(function () {
+                bootAll({});
+            });
+        } else {
+            bootAll({});
+        }
+
+        $(document).on('contentUpdated.awaSearchCompatAuto', function (event) {
+            if (!event || !event.target || $(event.target).is(SEARCH_FORM_SELECTOR) || $(event.target).find(SEARCH_FORM_SELECTOR).length) {
+                bootAll({});
+            }
+        });
+
+        if (window.MutationObserver && document.body && !window[AUTO_OBSERVER_KEY]) {
+            window[AUTO_OBSERVER_KEY] = new window.MutationObserver(function (mutations) {
+                if (!shouldObserveMutation(mutations)) {
+                    return;
+                }
+
+                bootAll({});
+            });
+
+            window[AUTO_OBSERVER_KEY].observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        }
+    }
+
+    autoBoot();
+
+    return function (config, element) {
+        initCompat(config, element);
+    };
+});

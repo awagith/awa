@@ -1,0 +1,24 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+
+$request = $block->getRequest();
+$fullActionName = $request ? (string) $request->getFullActionName() : '';
+$pathInfo = $request ? (string) ($request->getOriginalPathInfo() ?: $request->getPathInfo()) : '';
+$pathSlug = trim($pathInfo, '/');
+
+$isHomeDemoCms = $fullActionName === 'cms_index_index'
+    && str_contains((string) (($block->getLayout()->getUpdate()->getHandles() ? implode(' ', $block->getLayout()->getUpdate()->getHandles()) : '')), 'cms_page_view_id_homepage_ayo_home5_demo_stage');
+
+// Path-based fallback covers cases where fullActionName/handles are unavailable in this block render context.
+if ($pathSlug === '' || in_array($pathSlug, ['homepage_ayo_home5_stage', 'homepage_ayo_home5_demo_stage'], true)) {
+    return;
+}
+
+if ($isHomeDemoCms) {
+    return;
+}
+
+$parentTemplate = BP . '/app/design/frontend/ayo/ayo_home5/Rokanthemes_Themeoption/templates/newsletterpopup.phtml';
+if (is_file($parentTemplate)) {
+    include $parentTemplate;
+}

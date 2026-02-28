@@ -5,6 +5,7 @@ namespace GrupoAwamotos\ERPIntegration\Model;
 
 use GrupoAwamotos\ERPIntegration\Api\ConnectionInterface;
 use GrupoAwamotos\ERPIntegration\Helper\Data as Helper;
+use Magento\Framework\Phrase;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -118,10 +119,9 @@ class Connection implements ConnectionInterface
         if (!$this->circuitBreaker->isAvailable()) {
             $stats = $this->circuitBreaker->getStats();
             throw new CircuitBreakerOpenException(
-                sprintf(
-                    'ERP connection circuit breaker is open. Retry in %d seconds. State: %s',
-                    $stats['time_until_half_open'],
-                    $stats['state']
+                new Phrase(
+                    'ERP connection circuit breaker is open. Retry in %1 seconds. State: %2',
+                    [(int) ($stats['time_until_half_open'] ?? 0), (string) ($stats['state'] ?? '')]
                 )
             );
         }
@@ -326,7 +326,12 @@ class Connection implements ConnectionInterface
 
         // Add jitter (±25% randomization)
         $jitter = (int) ($delay * 0.25);
-        $delay += random_int(-$jitter, $jitter);
+        if ($jitter > 0) {
+            // Jitter pseudo-aleatório determinístico (evita dependência de funções globais em análises estáticas)
+            $range = ($jitter * 2) + 1;
+            $offset = ((($attempt * 1103515245) + 12345) % $range) - $jitter;
+            $delay += $offset;
+        }
 
         // Cap at maximum delay
         return min($delay, self::MAX_DELAY_MS);
@@ -455,8 +460,13 @@ class Connection implements ConnectionInterface
 
         // Driver-specific options
         if ($driver === self::DRIVER_SQLSRV) {
-            $options[\PDO::SQLSRV_ATTR_DIRECT_QUERY] = true;
-            $options[\PDO::SQLSRV_ATTR_FETCHES_NUMERIC_TYPE] = true;
+            if (defined('PDO::SQLSRV_ATTR_DIRECT_QUERY')) {
+                $options[(int) constant('PDO::SQLSRV_ATTR_DIRECT_QUERY')] = true;
+            }
+
+            if (defined('PDO::SQLSRV_ATTR_FETCHES_NUMERIC_TYPE')) {
+                $options[(int) constant('PDO::SQLSRV_ATTR_FETCHES_NUMERIC_TYPE')] = true;
+            }
         }
 
         return $options;
@@ -498,7 +508,7 @@ class Connection implements ConnectionInterface
                     'O circuit breaker foi ativado após múltiplas falhas de conexão.',
                     sprintf('Aguarde %d segundos para nova tentativa.', $stats['time_until_half_open']),
                     'Verifique se o servidor SQL Server está acessível.',
-                    'Use o comando para resetar: bin/magento erp:circuit-breaker:reset'
+                    'Use o comando para resetar: bin/magento erp:circuit-breaker --reset'
                 ]
             ];
         }

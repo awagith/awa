@@ -75,31 +75,20 @@ $password = magentoDecrypt($encryptedPassword, $cryptKey);
 
 if ($password === null || $password === false || $password === '') {
     echo "  FALHA na decriptacao padrao. Tentando metodos alternativos...\n";
-    
+
     // Tenta usar o Magento Encryptor via autoload
     $autoloadFile = dirname(__DIR__) . '/vendor/autoload.php';
     if (file_exists($autoloadFile)) {
         require_once $autoloadFile;
-        
+
         try {
-            // Instancia o Encryptor do Magento diretamente
-            $deployConfig = new \Magento\Framework\App\DeploymentConfig\Reader(
-                new \Magento\Framework\App\Filesystem\DirectoryList(dirname(__DIR__)),
-                null,
-                null,
-                \Magento\Framework\Config\File\ConfigFilePool::APP_ENV
-            );
-            
-            // Método mais direto: usar a classe Encryptor
-            $encryptor = new \Magento\Framework\Encryption\Encryptor(
-                new \Magento\Framework\Math\Random(),
-                new \Magento\Framework\App\DeploymentConfig(
-                    new \Magento\Framework\App\DeploymentConfig\Reader(
-                        new \Magento\Framework\App\Filesystem\DirectoryList(dirname(__DIR__))
-                    )
-                )
-            );
-            
+            // Bootstrap Magento para usar Encryptor via ObjectManager
+            $bootstrap = \Magento\Framework\App\Bootstrap::create(dirname(__DIR__), $_SERVER);
+            $objectManager = $bootstrap->getObjectManager();
+
+            /** @var \Magento\Framework\Encryption\EncryptorInterface $encryptor */
+            $encryptor = $objectManager->get(\Magento\Framework\Encryption\EncryptorInterface::class);
+
             $password = $encryptor->decrypt($encryptedPassword);
             if (!empty($password)) {
                 echo "  [OK] Senha decriptada via Magento Encryptor!\n";
@@ -108,12 +97,12 @@ if ($password === null || $password === false || $password === '') {
             echo "  Encryptor falhou: " . $e->getMessage() . "\n";
         }
     }
-    
+
     // Último recurso: tenta a decriptação de baixo nível
     if (empty($password)) {
         $password = magentoDecryptLowLevel($encryptedPassword, $cryptKey);
     }
-    
+
     if (empty($password)) {
         echo "  ERRO: Nao foi possivel decriptar a senha.\n\n";
         echo "  Passe a senha manualmente:\n";
@@ -172,26 +161,26 @@ foreach ($attempts as $attempt) {
     $p = $attempt['port'];
     $tds = $attempt['tds'];
     $label = $attempt['label'];
-    
+
     echo "  Tentando $label... ";
-    
+
     if ($tds) {
         putenv("TDSVER=$tds");
     }
-    
+
     try {
         if ($p) {
             $dsn = "dblib:host=$h:$p;dbname=$database;charset=UTF-8";
         } else {
             $dsn = "dblib:host=$h;dbname=$database;charset=UTF-8";
         }
-        
+
         $pdo = new PDO($dsn, $username, $password, [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_TIMEOUT => 10,
         ]);
-        
+
         $driverUsed = $label;
         echo "OK!\n";
         break;
@@ -230,7 +219,7 @@ try {
 
 // 7. Quick table check
 echo "\n== TABELAS ==\n";
-$tables = ['MT_MATERIAL', 'MT_ESTOQUEMEDIA', 'MT_MATERIALLISTA', 'FN_FORNECEDORES', 
+$tables = ['MT_MATERIAL', 'MT_ESTOQUEMEDIA', 'MT_MATERIALLISTA', 'FN_FORNECEDORES',
            'VE_PEDIDO', 'GR_INTEGRACAOVALIDADOR', 'MT_GRUPOCOMERCIAL'];
 $ok = 0;
 foreach ($tables as $table) {
@@ -303,19 +292,19 @@ function magentoDecrypt(string $data, string $cryptKey): ?string
     if (empty($data)) {
         return '';
     }
-    
+
     $key = decodeKey($cryptKey);
-    
+
     echo "  Debug: key decodificada = " . strlen($key) . " bytes\n";
     echo "  Debug: dados encriptados = " . substr($data, 0, 40) . "...\n";
-    
+
     $parts = explode(':', $data, 4);
     $partsCount = count($parts);
-    
+
     $initVector = null;
     $keyVersion = 0;
     $cryptVersion = 0;
-    
+
     if ($partsCount === 4) {
         // keyVersion:cryptVersion:iv:data → Magento força Rijndael 256 CBC
         [$keyVersion, $cryptVersion, $iv, $data] = $parts;
@@ -341,13 +330,13 @@ function magentoDecrypt(string $data, string $cryptKey): ?string
     } else {
         return null;
     }
-    
+
     // Cipher 3 = SodiumChachaIetf
     if ($cryptVersion >= 3) {
         echo "  Debug: usando SodiumChachaIetf\n";
         return decryptSodiumChacha($data, $key);
     }
-    
+
     // Legacy ciphers (OpenSSL / Mcrypt emulation)
     return decryptLegacy($data, $key, $cryptVersion, $initVector);
 }
@@ -367,7 +356,7 @@ function decodeKey(string $key): string
 
 /**
  * SodiumChachaIetf decrypt (exatamente como Magento\Framework\Encryption\Adapter\SodiumChachaIetf)
- * 
+ *
  * O dado base64-decodificado contém: nonce (12 bytes) + ciphertext+tag
  * A ad (additional data) = nonce (mesmo valor)
  */
@@ -378,29 +367,29 @@ function decryptSodiumChacha(string $base64Data, string $key): ?string
         echo "  Debug: base64_decode falhou\n";
         return null;
     }
-    
+
     $nonceLen = SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_NPUBBYTES; // 12
     echo "  Debug: raw data = " . strlen($raw) . " bytes, nonce = $nonceLen bytes\n";
-    
+
     if (strlen($raw) <= $nonceLen) {
         echo "  Debug: dados curtos demais\n";
         return null;
     }
-    
+
     $nonce = mb_substr($raw, 0, $nonceLen, '8bit');
     $payload = mb_substr($raw, $nonceLen, null, '8bit');
-    
+
     echo "  Debug: nonce = " . bin2hex($nonce) . "\n";
     echo "  Debug: payload = " . strlen($payload) . " bytes\n";
     echo "  Debug: key len = " . strlen($key) . " bytes\n";
-    
+
     // A chave precisa ter exatamente SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_KEYBYTES (32) bytes
     $keyLen = SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_KEYBYTES;
     if (strlen($key) !== $keyLen) {
         echo "  Debug: ajustando key de " . strlen($key) . " para $keyLen bytes\n";
         $key = substr(str_pad($key, $keyLen, "\0"), 0, $keyLen);
     }
-    
+
     try {
         // Magento usa nonce como additional data E como nonce
         $plaintext = sodium_crypto_aead_chacha20poly1305_ietf_decrypt(
@@ -409,7 +398,7 @@ function decryptSodiumChacha(string $base64Data, string $key): ?string
             $nonce,  // nonce
             $key
         );
-        
+
         if ($plaintext !== false && $plaintext !== '') {
             return trim($plaintext);
         }
@@ -417,7 +406,7 @@ function decryptSodiumChacha(string $base64Data, string $key): ?string
     } catch (\SodiumException $e) {
         echo "  Debug: sodium exception: " . $e->getMessage() . "\n";
     }
-    
+
     return null;
 }
 
@@ -430,23 +419,23 @@ function decryptLegacy(string $base64Data, string $key, int $cryptVersion, ?stri
     if ($raw === false || $raw === '') {
         return null;
     }
-    
+
     $iv = ($initVector !== null) ? base64_decode($initVector) : null;
-    
+
     // Mapear cipher version para OpenSSL method
     // Nota: Magento usa phpseclib/mcrypt-compat ou mcrypt nativo
     // ECB modes não usam IV
     $cipherMap = [
         0 => ['method' => 'bf-ecb', 'needsIv' => false],     // Blowfish ECB
-        1 => ['method' => 'aes-128-ecb', 'needsIv' => false], // Rijndael128 ECB 
+        1 => ['method' => 'aes-128-ecb', 'needsIv' => false], // Rijndael128 ECB
         2 => ['method' => 'aes-256-cbc', 'needsIv' => true],  // Rijndael256 CBC
     ];
-    
+
     $cipher = $cipherMap[$cryptVersion] ?? $cipherMap[0];
     $method = $cipher['method'];
-    
+
     echo "  Debug: legacy cipher=$method, iv=" . ($iv ? strlen($iv) . " bytes" : "null") . "\n";
-    
+
     $ivLen = openssl_cipher_iv_length($method);
     $useIv = '';
     if ($cipher['needsIv'] && $ivLen > 0) {
@@ -456,7 +445,7 @@ function decryptLegacy(string $base64Data, string $key, int $cryptVersion, ?stri
             $useIv = str_repeat("\0", $ivLen);
         }
     }
-    
+
     $decrypted = @openssl_decrypt(
         $raw,
         $method,
@@ -464,11 +453,11 @@ function decryptLegacy(string $base64Data, string $key, int $cryptVersion, ?stri
         OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING,
         $useIv
     );
-    
+
     if ($decrypted !== false && $decrypted !== '') {
         return rtrim($decrypted, "\0");
     }
-    
+
     // Tenta sem ZERO_PADDING
     $decrypted = @openssl_decrypt(
         $raw,
@@ -477,11 +466,11 @@ function decryptLegacy(string $base64Data, string $key, int $cryptVersion, ?stri
         OPENSSL_RAW_DATA,
         $useIv
     );
-    
+
     if ($decrypted !== false && $decrypted !== '') {
         return rtrim($decrypted, "\0");
     }
-    
+
     echo "  Debug: openssl_decrypt falhou\n";
     return null;
 }
@@ -493,7 +482,7 @@ function magentoDecryptLowLevel(string $data, string $cryptKey): ?string
 {
     $key = decodeKey($cryptKey);
     $parts = explode(':', $data, 4);
-    
+
     // Extrair dados
     if (count($parts) === 4) {
         $base64Data = $parts[3];
@@ -504,12 +493,12 @@ function magentoDecryptLowLevel(string $data, string $cryptKey): ?string
     } else {
         $base64Data = $data;
     }
-    
+
     $raw = base64_decode($base64Data);
     if ($raw === false) {
         return null;
     }
-    
+
     // Tenta Sodium primeiro (mais provável em Magento 2.4+)
     if (function_exists('sodium_crypto_aead_chacha20poly1305_ietf_decrypt')) {
         $nonceLen = SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_NPUBBYTES;
@@ -518,7 +507,7 @@ function magentoDecryptLowLevel(string $data, string $cryptKey): ?string
             $payload = mb_substr($raw, $nonceLen, null, '8bit');
             $keyLen = SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_KEYBYTES;
             $useKey = substr(str_pad($key, $keyLen, "\0"), 0, $keyLen);
-            
+
             try {
                 $result = sodium_crypto_aead_chacha20poly1305_ietf_decrypt($payload, $nonce, $nonce, $useKey);
                 if ($result !== false && $result !== '') {
@@ -530,13 +519,13 @@ function magentoDecryptLowLevel(string $data, string $cryptKey): ?string
             }
         }
     }
-    
+
     // Tenta OpenSSL ciphers
     $methods = ['aes-256-cbc', 'aes-128-cbc', 'aes-256-ecb', 'aes-128-ecb', 'bf-ecb', 'bf-cbc'];
     foreach ($methods as $method) {
         $ivLen = openssl_cipher_iv_length($method);
         $useIv = ($ivLen > 0) ? str_repeat("\0", $ivLen) : '';
-        
+
         foreach ([OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, OPENSSL_RAW_DATA] as $flags) {
             $dec = @openssl_decrypt($raw, $method, $key, $flags, $useIv);
             if ($dec !== false && $dec !== '' && isPrintable($dec)) {
@@ -545,7 +534,7 @@ function magentoDecryptLowLevel(string $data, string $cryptKey): ?string
             }
         }
     }
-    
+
     return null;
 }
 

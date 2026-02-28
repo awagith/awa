@@ -38,12 +38,21 @@
             <?= $block->getBlockHtml('formkey') ?>
 
             <div class="b2b-field">
+                <label class="b2b-field-label" for="b2b-cnpj-or-email"><?= $escaper->escapeHtml(__('E-mail ou CNPJ da empresa')) ?></label>
                 <input type="text"
                        name="cnpj_or_email"
                        id="b2b-cnpj-or-email"
+                       autocomplete="username"
+                       autocapitalize="none"
+                       spellcheck="false"
+                       inputmode="email"
                        required
                        data-validate="{required:true}"
-                       placeholder="E-mail ou CNPJ" />
+                       placeholder="E-mail ou CNPJ"
+                       aria-describedby="b2b-claim-user-note" />
+                <div id="b2b-claim-user-note" class="b2b-field-note">
+                    <?= $escaper->escapeHtml(__('Use os mesmos dados informados nas compras anteriores para localizar seu cadastro.')) ?>
+                </div>
             </div>
 
             <div class="b2b-login-actions">
@@ -52,6 +61,18 @@
                 </button>
             </div>
         </form>
+
+        <script type="text/x-magento-init">
+        {
+            "#b2b-claim-form": {
+                "GrupoAwamotos_B2B/js/auth-form": {
+                    "loadingLabel": "<?= $escaper->escapeJs(__('Enviando link...')) ?>",
+                    "usernameSelector": "#b2b-cnpj-or-email",
+                    "cnpjOrEmailMaskSelector": "#b2b-cnpj-or-email"
+                }
+            }
+        }
+        </script>
 
         <a href="<?= $escaper->escapeUrl($block->getLoginUrl()) ?>" class="b2b-claim-back">
             &larr; Voltar para login

@@ -1,0 +1,43 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$request = $block->getRequest();
+$fullActionName = $request ? (string) $request->getFullActionName() : '';
+$pathInfo = $request ? (string) ($request->getOriginalPathInfo() ?: $request->getPathInfo()) : '';
+$pathSlug = trim($pathInfo, '/');
+$isHomeRoute = $fullActionName === 'cms_index_index' || $pathSlug === '';
+$isDemoStagePreview = $fullActionName === 'cms_page_view'
+    && in_array($pathSlug, ['homepage_ayo_home5_stage', 'homepage_ayo_home5_demo_stage'], true);
+$disableAwaPostThemeoptionCss = (bool) $block->getData('disable_awa_post_themeoption_css');
+
+if ($isHomeRoute || $isDemoStagePreview) {
+    $disableAwaPostThemeoptionCss = true;
+}
+
+if ($disableAwaPostThemeoptionCss) {
+    return;
+}
+?>
+<link rel="stylesheet"
+      type="text/css"
+      media="all"
+      href="<?= $block->escapeUrl($block->getViewFileUrl('css/awa-custom-post-themeoption-overrides.css')) ?>" />
+<link rel="stylesheet"
+      type="text/css"
+      media="all"
+      href="<?= $block->escapeUrl($block->getViewFileUrl('css/awa-custom-footer-light-perfect.css')) ?>" />
+<link rel="stylesheet"
+      type="text/css"
+      media="all"
+      href="<?= $block->escapeUrl($block->getViewFileUrl('css/awa-custom-components-b2b-foundation.css')) ?>" />
+<link rel="stylesheet"
+      type="text/css"
+      media="all"
+      href="<?= $block->escapeUrl($block->getViewFileUrl('css/awa-custom-compat-b2b-nav-plp-cart-checkout.css')) ?>" />
+<link rel="stylesheet"
+      type="text/css"
+      media="all"
+      href="<?= $block->escapeUrl($block->getViewFileUrl('css/awa-custom-page-b2b-cart-checkout-premium.css')) ?>" />
+<link rel="stylesheet"
+      type="text/css"
+      media="all"
+      href="<?= $block->escapeUrl($block->getViewFileUrl('css/awa-custom-page-home-category-premium.css')) ?>" />

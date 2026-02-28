@@ -61,6 +61,10 @@
         <index referenceId="GRUPOAWAMOTOS_B2B_QUOTE_REQUEST_CREATED_AT" indexType="btree">
             <column name="created_at"/>
         </index>
+        <index referenceId="GRUPOAWAMOTOS_B2B_QUOTE_REQUEST_CUSTOMER_STATUS" indexType="btree">
+            <column name="customer_id"/>
+            <column name="status"/>
+        </index>
     </table>
 
     <!-- itens da solicitação de cotação -->
@@ -484,6 +488,10 @@
         <constraint xsi:type="unique" referenceId="GRUPOAWAMOTOS_B2B_CUST_ATTENDANT_CUSTOMER_ID">
             <column name="customer_id"/>
         </constraint>
+        <constraint xsi:type="foreign" referenceId="GRUPOAWAMOTOS_B2B_CUST_ATTENDANT_CUSTOMER_ID_FK"
+                    table="grupoawamotos_b2b_customer_attendant" column="customer_id"
+                    referenceTable="customer_entity" referenceColumn="entity_id"
+                    onDelete="CASCADE"/>
         <constraint xsi:type="foreign" referenceId="GRUPOAWAMOTOS_B2B_CUST_ATTENDANT_ATTENDANT_ID"
                     table="grupoawamotos_b2b_customer_attendant" column="attendant_id"
                     referenceTable="grupoawamotos_b2b_attendants" referenceColumn="attendant_id"

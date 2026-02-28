@@ -1,0 +1,134 @@
+<?php
+/**
+ * Header search form override (Rokanthemes_SearchSuiteAutocomplete) - AWA Home5 child
+ *
+ * @var \Rokanthemes\SearchSuiteAutocomplete\Block\Autocomplete $block
+ */
+
+/** @var \Magento\Search\Helper\Data $searchHelper */
+$searchHelper = $this->helper(\Magento\Search\Helper\Data::class);
+$selectedCategory = (string) $block->getRequest()->getParam('cat', '');
+$searchDelay = (int) $block->getSearchDelay();
+$searchSuiteUrl = $block->getSearchUrl();
+?>
+<div class="block block-search"
+     role="search"
+     aria-label="<?= $block->escapeHtmlAttr(__('Busca de produtos')) ?>"
+     data-awa-component="search-autocomplete"
+     data-awa-variant="searchsuite">
+    <div class="block-content">
+        <form class="form minisearch search-content"
+              id="search_mini_form"
+              data-awa-search-form="true"
+              action="<?= $block->escapeUrl($searchHelper->getResultUrl()) ?>"
+              method="get">
+            <?php if ($block->enableSearchByCat()): ?>
+                <div class="field-by-cat-search" data-awa-search-category="true">
+                    <label class="awa-sr-only" for="choose_category"><?= $block->escapeHtml(__('Categoria')) ?></label>
+                    <select name="cat" id="choose_category" aria-label="<?= $block->escapeHtmlAttr(__('Categoria')) ?>">
+                        <option value=""><?= $block->escapeHtml(__('Todas as categorias')) ?></option>
+                        <?php foreach ($block->getCategories() as $category): ?>
+                            <option value="<?= $block->escapeHtmlAttr($category->getId()) ?>"
+                                <?php if ($selectedCategory !== '' && $selectedCategory === (string) $category->getId()): ?>
+                                    selected="selected"
+                                <?php endif; ?>>
+                                <?= $block->escapeHtml($category->getName()) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+            <?php endif; ?>
+
+            <div class="field search">
+                <label class="label" for="search" id="awa-search-label" data-role="minisearch-label">
+                    <span><?= $block->escapeHtml(__('Buscar')) ?></span>
+                </label>
+                <div class="control" data-awa-search-control="true">
+                    <input id="search"
+                           data-awa-search-input="true"
+                           data-mage-init='{"quickSearch":{
+                               "formSelector":"#search_mini_form",
+                               "url":"<?= $block->escapeUrl($block->getUrl('search/ajax/suggest')) ?>",
+                               "destinationSelector":"#search_autocomplete"}
+                           }'
+                           type="search"
+                           name="<?= $block->escapeHtmlAttr($searchHelper->getQueryParamName()) ?>"
+                           value="<?= $block->escapeHtmlAttr($searchHelper->getEscapedQueryText()) ?>"
+                           placeholder="<?= $block->escapeHtmlAttr(__('Buscar peças, capacetes, acessórios...')) ?>"
+                           class="input-text"
+                           minlength="2"
+                           maxlength="<?= (int) $searchHelper->getMaxQueryLength() ?>"
+                           role="combobox"
+                           aria-labelledby="awa-search-label"
+                           aria-label="<?= $block->escapeHtmlAttr(__('Buscar')) ?>"
+                           aria-autocomplete="both"
+                           aria-expanded="false"
+                           aria-haspopup="listbox"
+                           aria-controls="search_autocomplete"
+                           autocomplete="off"
+                           autocapitalize="off"
+                           autocorrect="off"
+                           spellcheck="false" />
+                    <div id="search_autocomplete"
+                         class="search-autocomplete searchsuite-autocomplete"
+                         data-role="search-autocomplete"
+                         data-awa-search-panel="true"
+                         role="listbox"
+                         aria-hidden="true"
+                         aria-label="<?= $block->escapeHtmlAttr(__('Sugestões de busca')) ?>"></div>
+                    <div data-bind="scope: 'searchsuiteautocomplete_form'">
+                        <!-- ko template: getTemplate() --><!-- /ko -->
+                    </div>
+                    <?= $block->getChildHtml() ?>
+                </div>
+            </div>
+
+            <div class="actions" data-awa-search-actions="true">
+                <button type="submit"
+                        title="<?= $block->escapeHtmlAttr(__('Buscar')) ?>"
+                        aria-label="<?= $block->escapeHtmlAttr(__('Buscar produtos')) ?>"
+                        class="action search"
+                        data-awa-search-submit="true">
+                    <span><?= $block->escapeHtml(__('Buscar')) ?></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<?php if ($block->enableSearchByCat()): ?>
+<script type="text/x-magento-init">
+{
+    "#choose_category": {
+        "js/awa-search-category-chosen": {}
+    }
+}
+</script>
+<?php endif; ?>
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "searchsuiteautocompleteDataProvider": {
+                    "component": "Rokanthemes_SearchSuiteAutocomplete/js/dataProvider",
+                    "config": {
+                        "url": "<?= $block->escapeUrl($searchSuiteUrl) ?>"
+                    }
+                },
+                "searchsuiteautocomplete_form": {
+                    "component": "Rokanthemes_SearchSuiteAutocomplete/js/autocomplete"
+                },
+                "searchsuiteautocompleteBindEvents": {
+                    "component": "Rokanthemes_SearchSuiteAutocomplete/js/bindEvents",
+                    "config": {
+                        "searchFormSelector": "#search_mini_form",
+                        "searchButtonSelector": "button.search",
+                        "inputSelector": "#search",
+                        "searchDelay": "<?= $searchDelay ?>"
+                    }
+                }
+            }
+        }
+    }
+}
+</script>

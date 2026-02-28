@@ -33,23 +33,47 @@
             <?= $block->getBlockHtml('formkey') ?>
 
             <div class="b2b-field">
+                <label class="b2b-field-label" for="b2b-email"><?= $escaper->escapeHtml(__('E-mail ou CNPJ')) ?></label>
                 <input type="text"
                        name="login[username]"
                        id="b2b-email"
-                       autocomplete="email"
+                       autocomplete="username"
+                       autocapitalize="none"
+                       spellcheck="false"
+                       inputmode="email"
                        required
                        data-validate="{required:true}"
-                       placeholder="E-mail ou CNPJ" />
+                       placeholder="E-mail ou CNPJ"
+                       aria-describedby="b2b-login-user-note" />
+                <div id="b2b-login-user-note" class="b2b-field-note">
+                    <?= $escaper->escapeHtml(__('Use o e-mail cadastrado ou o CNPJ da empresa para localizar sua conta.')) ?>
+                </div>
             </div>
 
-            <div class="b2b-field">
-                <input type="password"
-                       name="login[password]"
-                       id="b2b-pass"
-                       autocomplete="current-password"
-                       required
-                       data-validate="{required:true}"
-                       placeholder="Senha" />
+            <div class="b2b-field b2b-field-password">
+                <label class="b2b-field-label" for="b2b-pass"><?= $escaper->escapeHtml(__('Senha')) ?></label>
+                <div class="b2b-password-wrap">
+                    <input type="password"
+                           name="login[password]"
+                           id="b2b-pass"
+                           autocomplete="current-password"
+                           required
+                           data-validate="{required:true}"
+                           placeholder="Senha"
+                           aria-describedby="b2b-login-password-note" />
+                    <button type="button"
+                            class="b2b-password-toggle"
+                            data-password-toggle
+                            data-target="#b2b-pass"
+                            aria-controls="b2b-pass"
+                            aria-pressed="false"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Mostrar senha')) ?>">
+                        <?= $escaper->escapeHtml(__('Mostrar')) ?>
+                    </button>
+                </div>
+                <div id="b2b-login-password-note" class="b2b-field-note">
+                    <?= $escaper->escapeHtml(__('Se estiver no computador da empresa, use um navegador confiável.')) ?>
+                </div>
             </div>
 
             <div class="b2b-login-forgot">
@@ -63,6 +87,23 @@
                 </button>
             </div>
         </form>
+
+        <script type="text/x-magento-init">
+        {
+            "#b2b-login-form": {
+                "GrupoAwamotos_B2B/js/auth-form": {
+                    "loadingLabel": "<?= $escaper->escapeJs(__('Entrando...')) ?>",
+                    "usernameSelector": "#b2b-email",
+                    "cnpjOrEmailMaskSelector": "#b2b-email",
+                    "passwordToggleSelector": "[data-password-toggle]",
+                    "passwordShowText": "<?= $escaper->escapeJs(__('Mostrar')) ?>",
+                    "passwordHideText": "<?= $escaper->escapeJs(__('Ocultar')) ?>",
+                    "passwordShowAriaLabel": "<?= $escaper->escapeJs(__('Mostrar senha')) ?>",
+                    "passwordHideAriaLabel": "<?= $escaper->escapeJs(__('Ocultar senha')) ?>"
+                }
+            }
+        }
+        </script>
 
         <div class="b2b-login-divider">
             <span>OU</span>

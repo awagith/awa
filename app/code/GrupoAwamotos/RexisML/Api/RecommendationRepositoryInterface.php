@@ -1,4 +1,6 @@
 <?php
+declare(strict_types=1);
+
 /**
  * Interface para API de Recomendações REXIS ML
  */
@@ -16,11 +18,11 @@ interface RecommendationRepositoryInterface
      * @return \GrupoAwamotos\RexisML\Api\Data\RecommendationInterface[]
      */
     public function getByCustomer(
-        $customerId,
-        $classificacao = null,
-        $minScore = 0.7,
-        $limit = 10
-    );
+        int $customerId,
+        ?string $classificacao = null,
+        float $minScore = 0.7,
+        int $limit = 10
+    ): array;
 
     /**
      * Obter oportunidades de cross-sell para um produto
@@ -31,10 +33,10 @@ interface RecommendationRepositoryInterface
      * @return \GrupoAwamotos\RexisML\Api\Data\CrosssellInterface[]
      */
     public function getCrosssellBySku(
-        $sku,
-        $minLift = 1.5,
-        $limit = 10
-    );
+        string $sku,
+        float $minLift = 1.5,
+        int $limit = 10
+    ): array;
 
     /**
      * Obter classificação RFM de um cliente
@@ -42,7 +44,7 @@ interface RecommendationRepositoryInterface
      * @param int $customerId
      * @return \GrupoAwamotos\RexisML\Api\Data\RfmInterface
      */
-    public function getRfmByCustomer($customerId);
+    public function getRfmByCustomer(int $customerId);
 
     /**
      * Registrar conversão de uma recomendação
@@ -51,7 +53,7 @@ interface RecommendationRepositoryInterface
      * @param float $valorConversao
      * @return bool
      */
-    public function registerConversion($chaveGlobal, $valorConversao);
+    public function registerConversion(string $chaveGlobal, float $valorConversao): bool;
 
     /**
      * Obter métricas gerais do sistema

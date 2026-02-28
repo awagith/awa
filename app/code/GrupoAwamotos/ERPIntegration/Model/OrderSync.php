@@ -11,7 +11,6 @@ use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Api\ShipmentRepositoryInterface;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Shipment\TrackFactory;
 use Magento\Sales\Model\Convert\Order as OrderConverter;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\DB\Transaction;
@@ -40,7 +39,6 @@ class OrderSync implements OrderSyncInterface
     private CustomerSync $customerSync;
     private OrderRepositoryInterface $orderRepository;
     private ShipmentRepositoryInterface $shipmentRepository;
-    private TrackFactory $trackFactory;
     private OrderConverter $orderConverter;
     private SearchCriteriaBuilder $searchCriteriaBuilder;
     private Transaction $transaction;
@@ -53,7 +51,6 @@ class OrderSync implements OrderSyncInterface
         CustomerSync $customerSync,
         OrderRepositoryInterface $orderRepository,
         ShipmentRepositoryInterface $shipmentRepository,
-        TrackFactory $trackFactory,
         OrderConverter $orderConverter,
         SearchCriteriaBuilder $searchCriteriaBuilder,
         Transaction $transaction,
@@ -65,7 +62,6 @@ class OrderSync implements OrderSyncInterface
         $this->customerSync = $customerSync;
         $this->orderRepository = $orderRepository;
         $this->shipmentRepository = $shipmentRepository;
-        $this->trackFactory = $trackFactory;
         $this->orderConverter = $orderConverter;
         $this->searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->transaction = $transaction;
@@ -473,6 +469,7 @@ class OrderSync implements OrderSyncInterface
             }
 
             // Verifica se já existe shipment
+            /** @var Order $order */
             if (!$order->hasShipments()) {
                 $this->createShipmentWithTracking($order, $erpStatus);
             } else {
@@ -579,6 +576,7 @@ class OrderSync implements OrderSyncInterface
 
             // Adiciona comentário com informações do ERP
             $comment = $this->buildStatusComment($erpStatus);
+            /** @var Order $order */
             $order->addCommentToStatusHistory($comment, $statusMap['status']);
 
             // Salva pedido
@@ -826,6 +824,7 @@ class OrderSync implements OrderSyncInterface
     private function insertOrderHeader(OrderInterface $order, int $erpClientCode, array $erpCustomerData = []): int
     {
         $filial = $this->helper->getStockFilial();
+        /** @var Order $order */
         $shipping = $order->getShippingAddress();
 
         // Resolve customer commercial data from ERP
@@ -1014,7 +1013,7 @@ class OrderSync implements OrderSyncInterface
 
         $carrierCode = $this->resolveCarrierCode($erpStatus['TRANSPORTADORA_NOME'] ?? '');
 
-        $track = $this->trackFactory->create();
+        $track = $shipment->getTracksCollection()->getNewEmptyItem();
         $track->setCarrierCode($carrierCode);
         $track->setTitle($erpStatus['TRANSPORTADORA_NOME'] ?? 'Transportadora');
         $track->setTrackNumber($trackNumber);

@@ -26,19 +26,14 @@ define([
         initialize: function () {
             this._super();
 
-            // Observable for PO Number
-            this.poNumber = ko.observable('');
+            // Reuse shared storage observable to survive checkout component re-renders.
+            this.poNumber = poNumberStorage.poNumberObservable;
 
             // Check if B2B customer - show only for logged in customers with company
             this.isVisible = ko.computed(function () {
                 // Sempre mostrar para clientes logados
                 return customer.isLoggedIn();
             }, this);
-
-            // Subscribe to changes and save to storage
-            this.poNumber.subscribe(function (value) {
-                poNumberStorage.setPoNumber(value);
-            });
 
             return this;
         },

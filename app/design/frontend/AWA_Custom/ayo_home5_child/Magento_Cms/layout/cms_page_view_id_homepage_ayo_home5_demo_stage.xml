@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <!-- Stage preview da Home5 demo (en_5) em CMS-driven.
+         Desliga overrides AWA de homepage nesta URL para aproximar o visual do Ayo base. -->
+    <head>
+        <!-- Remover camada AWA (global/home-specific) para preview demo -->
+        <remove src="css/awa-institutional.css"/>
+        <remove src="css/awa-core.css"/>
+        <remove src="css/awa-layout.css"/>
+        <remove src="css/awa-components.css"/>
+        <remove src="css/awa-consistency.css"/>
+        <remove src="css/awa-consistency-ui.css"/>
+        <remove src="css/awa-consistency-home5.css"/>
+        <remove src="css/awa-fixes.css"/>
+        <remove src="css/awa-grid-unified.css"/>
+        <remove src="css/awa-custom-brand-bridge.css"/>
+        <remove src="css/awa-custom-header-minicart.css"/>
+        <remove src="css/awa-custom-footer-trust.css"/>
+        <remove src="css/awa-custom-global-brand.css"/>
+        <remove src="css/awa-custom-ux-refine.css"/>
+        <remove src="css/awa-custom-b2b-gate-refine.css"/>
+        <remove src="css/awa-custom-auth-refine.css"/>
+        <remove src="css/awa-custom-plp-search-cart-refine.css"/>
+        <remove src="css/awa-custom-home-owl-tabs.css"/>
+        <remove src="css/awa-custom-post-themeoption-overrides.css"/>
+        <remove src="css/awa-custom-footer-light-perfect.css"/>
+        <remove src="css/awa-custom-components-b2b-foundation.css"/>
+        <remove src="css/awa-custom-compat-b2b-nav-plp-cart-checkout.css"/>
+        <remove src="css/awa-custom-page-b2b-cart-checkout-premium.css"/>
+        <remove src="css/awa-custom-page-home-category-premium.css"/>
+        <remove src="Rokanthemes_SearchSuiteAutocomplete::css/awa-autocomplete.css"/>
+        <remove src="GrupoAwamotos_B2B::css/b2b-header.css"/>
+        <remove src="GrupoAwamotos_B2B::css/header-status-panel.css"/>
+        <remove src="GrupoAwamotos_B2B::css/login-to-cart.css"/>
+        <remove src="css/awa-round2-brand-bridge.css"/>
+        <remove src="css/awa-round2-header-minicart.css"/>
+        <remove src="css/awa-round2-home-owl-tabs.css"/>
+        <remove src="css/awa-round3-footer-trust.css"/>
+        <remove src="css/awa-round4-global-brand.css"/>
+        <remove src="css/awa-round5-ux-refine.css"/>
+        <remove src="css/awa-round6-b2b-gate-refine.css"/>
+        <remove src="css/awa-round7-auth-refine.css"/>
+        <remove src="css/awa-round8-plp-search-cart-refine.css"/>
+    </head>
+    <body>
+        <attribute name="class" value="cms-home"/>
+        <attribute name="class" value="cms-index-index"/>
+        <attribute name="class" value="ayo-home5-demo-stage-preview"/>
+
+        <referenceBlock name="theme.active.editor" remove="true"/>
+        <referenceBlock name="google.maps.api" remove="true"/>
+        <referenceBlock name="nav.bar.title" remove="true"/>
+        <referenceBlock name="breadcrumbs" remove="true"/>
+        <referenceBlock name="page.main.title" remove="true"/>
+        <referenceBlock name="newsletter_popup" remove="true"/>
+        <referenceBlock name="fixed_right" remove="true"/>
+        <referenceBlock name="awa.post.themeoption.css">
+            <arguments>
+                <argument name="disable_awa_post_themeoption_css" xsi:type="boolean">true</argument>
+            </arguments>
+        </referenceBlock>
+
+        <!-- Desliga loaders JS custom AWA nesta stage -->
+        <referenceBlock name="awa.master.fix.js" remove="true"/>
+        <referenceBlock name="awa.round2.header.minicart.js" remove="true"/>
+        <referenceBlock name="awa.custom.header.minicart.js" remove="true"/>
+        <referenceBlock name="awa.custom.home5.stage.owl.tabs.js" remove="true"/>
+    </body>
+</page>

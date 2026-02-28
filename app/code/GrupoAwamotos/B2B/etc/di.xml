@@ -69,13 +69,7 @@
 
     <!-- Plugin AdminOrder\Create movido para etc/adminhtml/di.xml (escopo correto) -->
     
-    <!-- B2B Catálogo Restrito - Filtro de Produtos -->
-    <type name="Magento\Catalog\Model\ResourceModel\Product\Collection">
-        <plugin name="grupoawamotos_b2b_restricted_catalog"
-                type="GrupoAwamotos\B2B\Plugin\Catalog\RestrictedProductCollectionPlugin"
-                sortOrder="100"/>
-    </type>
-    
+    <!-- B2B Catálogo Restrito - Filtro de Produtos (plugin movido para etc/frontend/di.xml) -->
     <type name="GrupoAwamotos\B2B\Plugin\Catalog\RestrictedProductCollectionPlugin">
         <arguments>
             <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session\Proxy</argument>

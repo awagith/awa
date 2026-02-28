@@ -59,7 +59,7 @@ if (!empty($missingTables)) {
 // 3. Verificar coluna customer_erp_code em sales_order
 echo "\n== VERIFICANDO COLUNA customer_erp_code ==\n";
 $col = $mysql->query(
-    "SELECT COLUMN_NAME FROM information_schema.columns 
+    "SELECT COLUMN_NAME FROM information_schema.columns
      WHERE table_schema = DATABASE() AND table_name = 'sales_order' AND column_name = 'customer_erp_code'"
 )->fetch();
 
@@ -77,7 +77,7 @@ if ($col) {
     // Também em sales_order_grid para visibilidade no admin
     try {
         $colGrid = $mysql->query(
-            "SELECT COLUMN_NAME FROM information_schema.columns 
+            "SELECT COLUMN_NAME FROM information_schema.columns
              WHERE table_schema = DATABASE() AND table_name = 'sales_order_grid' AND column_name = 'customer_erp_code'"
         )->fetch();
         if (!$colGrid) {
@@ -159,7 +159,7 @@ echo "\n== VERIFICANDO ACESSO API REST ==\n";
 $stmt = $mysql->query(
     "SELECT i.integration_id, i.name, i.status,
             (SELECT token FROM oauth_token WHERE consumer_id = i.consumer_id AND type = 'access' LIMIT 1) as token
-     FROM integration i 
+     FROM integration i
      WHERE i.name LIKE '%ERP%' OR i.name LIKE '%Sectra%' OR i.name LIKE '%erp%'
      ORDER BY i.integration_id DESC"
 );
@@ -252,8 +252,8 @@ $crons = [
 foreach ($crons as $code => $desc) {
     try {
         $last = $mysql->prepare(
-            "SELECT status, executed_at, finished_at 
-             FROM cron_schedule WHERE job_code = :code 
+            "SELECT status, executed_at, finished_at
+             FROM cron_schedule WHERE job_code = :code
              ORDER BY schedule_id DESC LIMIT 1"
         );
         $last->execute([':code' => $code]);

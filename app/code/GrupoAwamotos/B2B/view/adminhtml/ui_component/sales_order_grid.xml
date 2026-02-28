@@ -8,11 +8,10 @@
 <listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <columns name="sales_order_columns">
-        <column name="b2b_po_number" class="Magento\Ui\Component\Listing\Columns\Column">
+        <column name="b2b_po_number" class="Magento\Ui\Component\Listing\Columns\Column" sortOrder="85">
             <settings>
                 <filter>text</filter>
                 <label translate="true">Número PO (B2B)</label>
-                <sortOrder>85</sortOrder>
                 <visible>true</visible>
             </settings>
         </column>
