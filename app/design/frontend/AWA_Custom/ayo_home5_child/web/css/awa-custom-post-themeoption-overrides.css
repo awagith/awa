@@ -1152,3 +1152,71 @@ body:not(.cms-index-index):not(.cms-home):not(.cms-homepage_ayo_home5) .page-wra
         margin: 0 !important;
     }
 }
+
+/* =====================================================================
+   Slider AWA Motos — slide-caption overlay
+   Funciona com slides que possuem slide_text HTML + imagem de fundo SVG
+   ===================================================================== */
+.wrapper_slider .banner_item {
+    position: relative;
+    overflow: hidden;
+}
+
+.wrapper_slider .banner_item picture,
+.wrapper_slider .banner_item > a picture {
+    display: block;
+    width: 100%;
+}
+
+.wrapper_slider .banner_item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+}
+
+.wrapper_slider .slide-caption {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 8%;
+    pointer-events: none;
+}
+
+.wrapper_slider .slide-content {
+    color: #ffffff;
+    max-width: 520px;
+    pointer-events: auto;
+}
+
+.wrapper_slider .slide-content h2 {
+    font-size: clamp(22px, 4vw, 44px);
+    font-weight: 700;
+    line-height: 1.2;
+    margin: 0 0 14px;
+    color: #ffffff;
+}
+
+.wrapper_slider .slide-content p {
+    font-size: clamp(14px, 1.8vw, 18px);
+    line-height: 1.5;
+    margin: 0;
+    color: rgba(255,255,255,0.88);
+}
+
+@media (max-width: 767px) {
+    .wrapper_slider .slide-caption {
+        padding: 0 5%;
+        align-items: flex-end;
+        padding-bottom: 24px;
+    }
+
+    .wrapper_slider .slide-content h2 {
+        font-size: 20px;
+    }
+
+    .wrapper_slider .slide-content p {
+        font-size: 13px;
+    }
+}

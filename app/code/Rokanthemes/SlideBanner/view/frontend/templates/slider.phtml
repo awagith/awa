@@ -32,11 +32,17 @@ if ($banners = $block->getBannerCollection()):
                 $isFirst = ($slideIndex === 1);
                 $desktopSrc = $banner->getSlideImage();
                 $mobileSrc = $banner->getSlideImageMobile();
-                $html = $block->getPictureElement($desktopSrc, $mobileSrc, $slideAlt, $isFirst);
+                $rawText = (string) $banner->getSlideText();
+                $hasOverlay = (strpos($rawText, '<') !== false);
+                $pictureHtml = $block->getPictureElement($desktopSrc, $mobileSrc, $slideAlt, $isFirst);
+                $overlayHtml = $hasOverlay
+                    ? '<div class="slide-caption" aria-hidden="true">' . $rawText . '</div>'
+                    : '';
+                $inner = $pictureHtml . $overlayHtml;
                 if ($link = $banner->getSlideLink()) {
-                    $html = '<a href="' . $block->escapeUrl($link) . '" title="' . $block->escapeHtml($slideAlt) . '">' . $html . '</a>';
+                    $inner = '<a href="' . $block->escapeUrl($link) . '" title="' . $block->escapeHtml($slideAlt) . '">' . $inner . '</a>';
                 }
-                echo $html;
+                echo $inner;
             ?>
         </div>
         <?php endforeach; ?>
