@@ -164,6 +164,9 @@ class RetryHeldOrders
     /**
      * Get orders in active statuses that don't have an ERP code stamped.
      *
+     * Usa getSelect()->where() em vez do addFieldToFilter() com arrays aninhados para
+     * evitar o TypeError "Cannot access offset of type array in isset or empty" no PHP 8.4.
+     *
      * @return \Magento\Sales\Model\Order[]
      */
     private function getOrdersWithoutErpCode(): array
@@ -171,9 +174,13 @@ class RetryHeldOrders
         $collection = $this->orderCollectionFactory->create();
         $collection->addFieldToFilter('status', ['in' => ['pending', 'processing', 'new']]);
         $collection->addFieldToFilter('customer_id', ['notnull' => true]);
-        $collection->addFieldToFilter(
-            ['customer_erp_code', 'customer_erp_code', 'customer_erp_code'],
-            [['null' => true], ['eq' => ''], ['eq' => '0']]
+
+        // OR: customer_erp_code IS NULL, empty string, or '0'
+        // Usando where() direto para evitar TypeError do PHP 8.4 com addFieldToFilter nested arrays
+        $collection->getSelect()->where(
+            'main_table.customer_erp_code IS NULL'
+            . ' OR main_table.customer_erp_code = \'\''
+            . ' OR main_table.customer_erp_code = \'0\''
         );
         $collection->setPageSize(self::BATCH_SIZE);
         $collection->setOrder('created_at', 'ASC'); // Oldest first
