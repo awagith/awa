@@ -250,12 +250,16 @@ body .page-wrapper .header .top-search .block-search .action.search[data-awa-sea
 
 body .page-wrapper .header .top-search .block-search .action.search[data-awa-search-submit='true']::before {
     content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
     display: block;
     width: 14px;
     height: 14px;
     border: 2px solid currentcolor;
     border-radius: 50%;
-    transform: translate(-1px, -1px);
+    transform: translate(-58%, -58%);
+    pointer-events: none;
 }
 
 body .page-wrapper .header .top-search .block-search .action.search[data-awa-search-submit='true']::after {
@@ -265,9 +269,12 @@ body .page-wrapper .header .top-search .block-search .action.search[data-awa-sea
     height: 2px;
     border-radius: 2px;
     background: currentcolor;
-    right: 14px;
-    bottom: 14px;
-    transform: rotate(45deg);
+    left: 50%;
+    top: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(35%, 185%) rotate(45deg);
+    pointer-events: none;
 }
 
 body .page-wrapper .header .top-search .block-search input#search {

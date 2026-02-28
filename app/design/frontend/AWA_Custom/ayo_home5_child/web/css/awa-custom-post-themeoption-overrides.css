@@ -598,12 +598,16 @@ body .page-wrapper .block.block-search .actions .action.search[data-awa-search-s
 
 body .page-wrapper .block.block-search .actions .action.search[data-awa-search-submit='true']::before {
     content: '' !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
     display: block !important;
     width: 14px !important;
     height: 14px !important;
     border: 2px solid currentcolor !important;
     border-radius: 50% !important;
-    transform: translate(-1px, -1px) !important;
+    transform: translate(-58%, -58%) !important;
+    pointer-events: none !important;
 }
 
 body .page-wrapper .block.block-search .actions .action.search[data-awa-search-submit='true']::after {
@@ -613,9 +617,12 @@ body .page-wrapper .block.block-search .actions .action.search[data-awa-search-s
     height: 2px !important;
     border-radius: 2px !important;
     background: currentcolor !important;
-    right: 14px !important;
-    bottom: 14px !important;
-    transform: rotate(45deg) !important;
+    left: 50% !important;
+    top: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translate(35%, 185%) rotate(45deg) !important;
+    pointer-events: none !important;
 }
 
 body:not(.cms-index-index):not(.cms-home):not(.cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1,
