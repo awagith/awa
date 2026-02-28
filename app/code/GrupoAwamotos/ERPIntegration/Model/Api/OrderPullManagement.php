@@ -66,36 +66,48 @@ class OrderPullManagement implements OrderPullInterface
 
         $orders = [];
         $held = [];
+        $hasWriteAccess = $this->b2bRegistration->hasWriteAccess();
+
         foreach ($allOrders as $order) {
             try {
                 $erpClientCode = $this->resolveErpClientCode($order);
 
-                // Skip orders from clients not registered in Sectra
-                if ($erpClientCode <= 0 || !$this->b2bRegistration->isClientRegistered($erpClientCode)) {
-                    // Try auto-registration if write connection is available
-                    if ($erpClientCode > 0) {
+                // Orders without any ERP client code are truly unresolvable — hold them
+                if ($erpClientCode <= 0) {
+                    $held[] = [
+                        'increment_id' => $order->getIncrementId(),
+                        'erp_code' => 0,
+                        'customer' => trim(($order->getCustomerFirstname() ?? '') . ' ' . ($order->getCustomerLastname() ?? '')),
+                        'reason' => 'Cliente sem erp_code no Magento',
+                    ];
+                    continue;
+                }
+
+                // Try auto-registration when write connection is available
+                if (!$this->b2bRegistration->isClientRegistered($erpClientCode)) {
+                    if ($hasWriteAccess) {
                         $registered = $this->b2bRegistration->registerClient($erpClientCode);
                         if (!$registered) {
+                            // Write available but registration failed — hold and warn
                             $held[] = [
                                 'increment_id' => $order->getIncrementId(),
                                 'erp_code' => $erpClientCode,
                                 'customer' => trim(($order->getCustomerFirstname() ?? '') . ' ' . ($order->getCustomerLastname() ?? '')),
-                                'reason' => 'Cliente nao registrado no GR_INTEGRACAOVALIDADOR do Sectra',
+                                'reason' => 'Falha ao registrar cliente no GR_INTEGRACAOVALIDADOR. Verificar logs.',
                             ];
-                            $this->logger->info('[ERP API] Order held - client not registered in Sectra', [
+                            $this->logger->warning('[ERP API] Order held - auto-registration failed', [
                                 'increment_id' => $order->getIncrementId(),
                                 'erp_code' => $erpClientCode,
                             ]);
                             continue;
                         }
                     } else {
-                        $held[] = [
+                        // No write access — include order with warning flag so operator can see it.
+                        // Sectra will validate GR_INTEGRACAOVALIDADOR on its side; do not hide data here.
+                        $this->logger->info('[ERP API] Order included with unregistered client (no write access)', [
                             'increment_id' => $order->getIncrementId(),
-                            'erp_code' => 0,
-                            'customer' => trim(($order->getCustomerFirstname() ?? '') . ' ' . ($order->getCustomerLastname() ?? '')),
-                            'reason' => 'Cliente sem erp_code no Magento',
-                        ];
-                        continue;
+                            'erp_code' => $erpClientCode,
+                        ]);
                     }
                 }
 

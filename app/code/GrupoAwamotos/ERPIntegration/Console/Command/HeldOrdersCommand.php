@@ -257,7 +257,7 @@ class HeldOrdersCommand extends Command
         $output->writeln(sprintf('<info>Gerando SQL para %d cliente(s) não registrado(s)...</info>', count($unregistered)));
         $output->writeln('');
 
-        $unregisteredCodes = array_map(fn($c) => (int) $c['CODIGO'], $unregistered);
+        $unregisteredCodes = array_map(fn($c) => (int) $c['erp_code'], $unregistered);
         $sql = $this->b2bRegistration->generateRegistrationSQL($unregisteredCodes);
 
         // Save to file
