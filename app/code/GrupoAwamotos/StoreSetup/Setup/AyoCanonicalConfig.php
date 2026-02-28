@@ -16,7 +16,7 @@ final class AyoCanonicalConfig
     {
         return [
             // Themeoption
-            'themeoption/general/layout' => 'fullwidth',
+            'themeoption/general/layout' => 'full_width',
             'themeoption/general/copyright' => '© 2026 AWA Motos - Grupo Awamotos. Todos os direitos reservados.',
             'themeoption/font/custom' => '1',
             'themeoption/font/font_size' => '14px',

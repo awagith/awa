@@ -81,6 +81,7 @@ class StoreConfigurator
         $this->configureHomepage($output);
         $this->createCategories($output);
         $this->applyThemeConfigurations($output);
+        $this->cleanupLegacyThemeConfigurations($output);
 
         $this->ensurePlaceholderBanners($output);
         $this->seedSlider($output);
@@ -973,6 +974,18 @@ HTML;
         }
     }
 
+    private function cleanupLegacyThemeConfigurations(OutputInterface $output): void
+    {
+        foreach ($this->getLegacyThemeConfigPaths() as $path) {
+            try {
+                $this->configWriter->delete($path, 'default', 0);
+                $output->writeln(sprintf(' - Configuração legada removida: %s', $path));
+            } catch (\Throwable $exception) {
+                $output->writeln(sprintf('<error>   ✗ Erro ao remover %s: %s</error>', $path, $exception->getMessage()));
+            }
+        }
+    }
+
     private function resolveFrontendThemeId(string $themePath): ?string
     {
         try {
@@ -1469,6 +1482,25 @@ HTML;
             ['path' => 'ajaxsuite/ajaxcart/enabled', 'value' => '1'],
             ['path' => 'ajaxsuite/ajaxcompare/enabled', 'value' => '1'],
             ['path' => 'ajaxsuite/ajaxwishlist/enabled', 'value' => '1']
+        ];
+    }
+
+    private function getLegacyThemeConfigPaths(): array
+    {
+        return [
+            'rokanthemes_custommenu/general/animation',
+            'rokanthemes_custommenu/general/default_menu_type',
+            'rokanthemes_custommenu/general/show_icons',
+            'rokanthemes_custommenu/general/visible_menu_depth',
+            'rokanthemes_verticalmenu/general/enable',
+            'rokanthemes_verticalmenu/general/limit_show_more',
+            'rokanthemes_verticalmenu/general/show_less_text',
+            'rokanthemes_verticalmenu/general/show_more_text',
+            'rokanthemes_themeoption/newsletter_popup/enable',
+            'rokanthemes_themeoption/newsletter_popup/delay',
+            'rokanthemes_themeoption/newsletter_popup/cookie_lifetime',
+            'rokanthemes_themeoption/newsletter_popup/width',
+            'rokanthemes_themeoption/newsletter_popup/height',
         ];
     }
 
