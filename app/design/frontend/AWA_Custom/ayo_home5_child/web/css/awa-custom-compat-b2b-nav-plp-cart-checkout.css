@@ -7,7 +7,7 @@ body .page-wrapper .block.block-search {
     color: var(--awa-text-1, #1f2937);
 }
 
-body .page-wrapper .navigation.verticalmenu.side-verticalmenu.is-ready .title-category-dropdown {
+body .page-wrapper .navigation.verticalmenu.side-verticalmenu .title-category-dropdown {
     min-height: 56px;
     display: flex;
     align-items: center;

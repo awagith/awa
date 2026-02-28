@@ -40,6 +40,15 @@
         'rokanthemes/verticalmenu'
     ], function ($) {
         $(".verticalmenu").VerticalMenu();
+
+        // Mobile click-toggle: adiciona .active ao h2 para CSS mostrar ul.togge-menu
+        // Necessário pois hover não funciona em touch; desktop usa CSS :hover
+        $(document).on('click.awaVmToggle',
+            '.verticalmenu.side-verticalmenu > .title-category-dropdown',
+            function () {
+                $(this).toggleClass('active');
+            }
+        );
     });
 </script>
 <?php
