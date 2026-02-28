@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Meta\BusinessExtension\Api\SystemConfigInterface"
+                type="Meta\BusinessExtension\Model\System\Config"/>
+
+    <type name="Magento\Config\Model\Config\TypePool">
+        <arguments>
+            <argument name="sensitive" xsi:type="array">
+                <item name="facebook_business_extension/general/access_token" xsi:type="string">1</item>
+            </argument>
+        </arguments>
+    </type>
+</config>

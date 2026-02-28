@@ -3,6 +3,9 @@
 # Arquivos de configuração sensíveis
 /app/etc/env.php
 /app/etc/config.php
+/app/etc/*.bak
+/app/etc/*.bak*
+/app/etc/*.bak-*
 auth.json
 
 # Arquivos de ambiente (NUNCA comite segredos)

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="facebook_business_extension_config" resource="default" engine="innodb"
+           comment="Meta Business Extension Configuration">
+        <column xsi:type="int" name="id" unsigned="true" nullable="false" identity="true" comment="ID"/>
+        <column xsi:type="varchar" name="pixel_id" length="255" nullable="true" comment="Pixel ID"/>
+        <column xsi:type="varchar" name="access_token" length="500" nullable="true" comment="Access Token"/>
+        <column xsi:type="varchar" name="catalog_id" length="255" nullable="true" comment="Catalog ID"/>
+        <column xsi:type="varchar" name="commerce_account_id" length="255" nullable="true" comment="Commerce Account ID"/>
+        <column xsi:type="varchar" name="business_manager_id" length="255" nullable="true" comment="Business Manager ID"/>
+        <column xsi:type="varchar" name="page_id" length="255" nullable="true" comment="Page ID"/>
+        <column xsi:type="varchar" name="external_business_id" length="255" nullable="true" comment="External Business ID"/>
+        <column xsi:type="int" name="store_id" unsigned="true" nullable="false" default="0" comment="Store ID"/>
+        <column xsi:type="timestamp" name="created_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="false" default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="id"/>
+        </constraint>
+    </table>
+</schema>

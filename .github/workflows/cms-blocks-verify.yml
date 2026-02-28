@@ -1,0 +1,52 @@
+name: Verify CMS Blocks
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  cms-blocks-static-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Static placeholder audit (StoreConfigurator)
+        run: |
+          set -e
+          FILE=app/code/GrupoAwamotos/StoreSetup/Setup/StoreConfigurator.php
+          echo "Auditing $FILE for disallowed placeholder tokens..."
+          # Lista de tokens que não devem aparecer em produção (placeholders antigos / genéricos)
+          TOKENS='Banner Placeholder|Placeholder|TODO|Your Phone|your@email|0000-0000'
+          if grep -E "$TOKENS" "$FILE"; then
+            echo "Encontrado placeholder proibido. Falhando."
+            exit 1
+          else
+            echo "OK: Nenhum placeholder proibido encontrado."
+          fi
+
+      - name: Optional full Magento block verification (requires DB)
+        if: ${{ env.FULL_BLOCK_AUDIT == '1' }}
+        env:
+          MYSQL_HOST: 127.0.0.1
+          MYSQL_DATABASE: magento
+          MYSQL_USER: root
+          MYSQL_PASSWORD: root
+        run: |
+          echo "Full audit não habilitado (exemplo exige ambiente Magento instalado)."
+          echo "Para habilitar: configure FULL_BLOCK_AUDIT=1 e provisionamento MySQL + setup:install."
+      - name: Export CMS blocks snapshot (dry, requires FULL_BLOCK_AUDIT)
+        if: ${{ env.FULL_BLOCK_AUDIT == '1' }}
+        run: |
+          if [ ! -f scripts/export_cms_blocks_snapshot.php ]; then
+            echo "Script export_cms_blocks_snapshot.php ausente."; exit 1; fi
+          php scripts/export_cms_blocks_snapshot.php || exit 1
+          ls -1 relatorios/cms_blocks_snapshot_*.json | head -3
+      - name: Diff CMS blocks snapshots (requires >=2 snapshots)
+        if: ${{ env.FULL_BLOCK_AUDIT == '1' }}
+        run: |
+          if [ ! -f scripts/diff_cms_blocks_snapshot.php ]; then
+            echo "Script diff_cms_blocks_snapshot.php ausente."; exit 1; fi
+          php scripts/diff_cms_blocks_snapshot.php || exit 0

@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="facebook" translate="label" sortOrder="500">
+            <label>Meta</label>
+        </tab>
+
+        <section id="facebook_business_extension"
+                 translate="label"
+                 sortOrder="10"
+                 showInDefault="1"
+                 showInWebsite="1"
+                 showInStore="1">
+            <class>separator-top</class>
+            <label>Business Extension</label>
+            <tab>facebook</tab>
+            <resource>Meta_BusinessExtension::config</resource>
+
+            <group id="general"
+                   translate="label"
+                   sortOrder="10"
+                   showInDefault="1"
+                   showInWebsite="1"
+                   showInStore="1">
+                <label>General Settings</label>
+
+                <field id="active"
+                       translate="label comment"
+                       type="select"
+                       sortOrder="10"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable or disable Meta Business Extension integration.</comment>
+                </field>
+
+                <field id="pixel_id"
+                       translate="label comment"
+                       type="text"
+                       sortOrder="20"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1">
+                    <label>Pixel ID</label>
+                    <comment>Meta Pixel ID used for browser and Conversions API tracking.</comment>
+                    <validate>validate-number validate-digits</validate>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+
+                <field id="access_token"
+                       translate="label comment"
+                       type="obscure"
+                       sortOrder="30"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1">
+                    <label>Access Token</label>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <comment>Meta Conversions API access token (stored encrypted).</comment>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+
+                <field id="api_version"
+                       translate="label comment"
+                       type="text"
+                       sortOrder="40"
+                       showInDefault="1"
+                       showInWebsite="0"
+                       showInStore="0">
+                    <label>API Version</label>
+                    <comment>Meta Graph API version (example: v18.0). Leave blank to use default.</comment>
+                    <depends>
+                        <field id="active">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="catalog"
+                   translate="label"
+                   sortOrder="20"
+                   showInDefault="1"
+                   showInWebsite="1"
+                   showInStore="1">
+                <label>Catalog Settings</label>
+
+                <field id="catalog_id"
+                       translate="label comment"
+                       type="text"
+                       sortOrder="10"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1">
+                    <label>Catalog ID</label>
+                    <comment>Meta Commerce Catalog ID.</comment>
+                    <validate>validate-number validate-digits</validate>
+                </field>
+
+                <field id="out_of_stock_threshold"
+                       translate="label comment"
+                       type="text"
+                       sortOrder="20"
+                       showInDefault="1"
+                       showInWebsite="1"
+                       showInStore="1">
+                    <label>Out of Stock Threshold</label>
+                    <comment>Products with stock below this value will be marked as out of stock.</comment>
+                    <validate>validate-zero-or-greater validate-number</validate>
+                </field>
+            </group>
+
+            <group id="business"
+                   translate="label"
+                   sortOrder="30"
+                   showInDefault="1"
+                   showInWebsite="0"
+                   showInStore="0">
+                <label>Business Settings</label>
+
+                <field id="business_manager_id"
+                       translate="label"
+                       type="text"
+                       sortOrder="10"
+                       showInDefault="1"
+                       showInWebsite="0"
+                       showInStore="0">
+                    <label>Business Manager ID</label>
+                    <validate>validate-number validate-digits</validate>
+                </field>
+
+                <field id="external_business_id"
+                       translate="label"
+                       type="text"
+                       sortOrder="20"
+                       showInDefault="1"
+                       showInWebsite="0"
+                       showInStore="0">
+                    <label>External Business ID</label>
+                </field>
+
+                <field id="commerce_account_id"
+                       translate="label"
+                       type="text"
+                       sortOrder="30"
+                       showInDefault="1"
+                       showInWebsite="0"
+                       showInStore="0">
+                    <label>Commerce Account ID</label>
+                    <validate>validate-number validate-digits</validate>
+                </field>
+
+                <field id="page_id"
+                       translate="label"
+                       type="text"
+                       sortOrder="40"
+                       showInDefault="1"
+                       showInWebsite="0"
+                       showInStore="0">
+                    <label>Page ID</label>
+                    <validate>validate-number validate-digits</validate>
+                </field>
+            </group>
+
+            <group id="debug"
+                   translate="label"
+                   sortOrder="90"
+                   showInDefault="1"
+                   showInWebsite="0"
+                   showInStore="0">
+                <label>Debug</label>
+                <field id="enabled"
+                       translate="label"
+                       type="select"
+                       sortOrder="10"
+                       showInDefault="1"
+                       showInWebsite="0"
+                       showInStore="0">
+                    <label>Enable Debug Logging</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
