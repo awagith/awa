@@ -28,6 +28,8 @@
         <css src="css/awa-round7-auth-refine.css"/>
         <!-- AWA Round8: PLP/search/cart visual + UX refinement -->
         <css src="css/awa-round8-plp-search-cart-refine.css"/>
+        <!-- AWA Round11: Premium finish (breadcrumbs, messages, account, cards, pagination, modals) -->
+        <css src="css/awa-premium-finish.css"/>
     </head>
     <body>
         <referenceContainer name="before.body.end">
