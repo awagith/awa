@@ -104,7 +104,7 @@ if(count($categories) > 0 && count($arr_config_point2) > 0){
                     <span><?php /* @escapeNotVerified */ echo __('Qty') ?></span>
                 </label>
                 <div class="control qty">
-					<a class="qty-down-fixed-onclick-page-cart" href="#"><i class="ion ion-ios-minus-empty"></i></a>
+					<button type="button" class="qty-down-fixed-onclick-page-cart" aria-label="<?= $block->escapeHtml(__('Decrease quantity')) ?>"><i class="ion ion-ios-minus-empty"></i></button>
                     <input id="cart-<?php /* @escapeNotVerified */ echo $_item->getId() ?>-qty"
                            name="cart[<?php /* @escapeNotVerified */ echo $_item->getId() ?>][qty]"
                            data-cart-item-id="<?php /* @escapeNotVerified */ echo $_item->getSku() ?>"
@@ -117,7 +117,7 @@ if(count($categories) > 0 && count($arr_config_point2) > 0){
                            maxlength="12"
                            data-validate="{required:true,'validate-greater-than-zero':true}"
                            data-role="cart-item-qty"/>
-					<a class="qty-up-fixed-onclick-page-cart" href="#"><i class="ion ion-ios-plus-empty"></i></a>
+					<button type="button" class="qty-up-fixed-onclick-page-cart" aria-label="<?= $block->escapeHtml(__('Increase quantity')) ?>"><i class="ion ion-ios-plus-empty"></i></button>
                 </div>
             </div>
         </td>

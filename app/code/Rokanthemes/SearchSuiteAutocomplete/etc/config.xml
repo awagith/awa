@@ -9,6 +9,7 @@
                 <suggested_result_number>3</suggested_result_number>
                 <product_result_number>5</product_result_number>
                 <product_result_fields>name,image,reviews_rating,description,price</product_result_fields>
+                <enabled_search_by_cat>1</enabled_search_by_cat>
             </searchsuiteautocomplete_main>
         </rokanthemes_searchsuite>
     </default>

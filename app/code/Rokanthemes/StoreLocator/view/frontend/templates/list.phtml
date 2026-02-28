@@ -25,25 +25,25 @@ $mediaUrl = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_
             </div>
             <div class="location-information"> 
 				<h2><?php echo $this->escapeHtml($location->getName()); ?></h2>
-				<?php if (trim($location->getCity())) { ?>
+				<?php if (trim((string) $location->getCity())) { ?>
 					<div><?php echo __('City') ?>: <?php echo $this->escapeHtml($location->getCity()); ?></div>
 				<?php }?>
-				<?php if (trim($location->getPostcode())) { ?>
+				<?php if (trim((string) $location->getPostcode())) { ?>
 					<div><?php echo __('Zip') ?>: <?php echo $this->escapeHtml($location->getPostcode()); ?></div>
 				<?php }?>
-				<?php if (trim($location->getCountry())) { ?>
+				<?php if (trim((string) $location->getCountry())) { ?>
 					<div><?php echo __('Country') ?>: <?php echo $this->escapeHtml($location->getCountry()); ?></div>
 				<?php }?>
-				<?php if (trim($location->getAddress())) { ?>
+				<?php if (trim((string) $location->getAddress())) { ?>
 					<div><strong><?php echo __('Endereço') ?>:</strong> <?php echo $this->escapeHtml($location->getAddress()); ?></div>
 				<?php }?>
-				<?php if (trim($location->getPhone())) { ?>
+				<?php if (trim((string) $location->getPhone())) { ?>
 					<div class="store-phone"><strong><?php echo __('Telefone') ?>:</strong> <a href="tel:<?php echo preg_replace('/[^0-9]/', '', $location->getPhone()); ?>"><?php echo $this->escapeHtml($location->getPhone()); ?></a></div>
 				<?php }?>
 				
 				<div class="store-actions">
 					<a href="<?php echo $this->getUrl('store-locator/store/view/key/'.$location->getId()) ?>" class="btn-view-detail"><?php echo __('Ver Detalhes') ?></a>
-					<?php if (trim($location->getPhone())) { 
+					<?php if (trim((string) $location->getPhone())) { 
 						$cleanPhone = preg_replace('/[^0-9]/', '', $location->getPhone());
 						if (strlen($cleanPhone) >= 10) { ?>
 							<a href="https://wa.me/55<?php echo $cleanPhone; ?>" target="_blank" class="btn-whatsapp" title="Chamar no WhatsApp">

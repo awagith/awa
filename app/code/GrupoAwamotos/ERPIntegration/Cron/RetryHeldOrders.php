@@ -172,11 +172,8 @@ class RetryHeldOrders
         $collection->addFieldToFilter('status', ['in' => ['pending', 'processing', 'new']]);
         $collection->addFieldToFilter('customer_id', ['notnull' => true]);
         $collection->addFieldToFilter(
-            [
-                ['attribute' => 'customer_erp_code', 'null' => true],
-                ['attribute' => 'customer_erp_code', 'eq' => ''],
-                ['attribute' => 'customer_erp_code', 'eq' => '0'],
-            ]
+            ['customer_erp_code', 'customer_erp_code', 'customer_erp_code'],
+            [['null' => true], ['eq' => ''], ['eq' => '0']]
         );
         $collection->setPageSize(self::BATCH_SIZE);
         $collection->setOrder('created_at', 'ASC'); // Oldest first

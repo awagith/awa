@@ -60,8 +60,48 @@ define([
                     'id': 'mb-ajaxsuite-popup-wrapper'
                 }).appendTo($('#ajaxsuite-popup-content'));
         },
+        _hasPopupHtmlContent: function (html) {
+            var htmlString = (typeof html === 'string') ? html : '';
+            var $probe;
+            var text;
+
+            if (!htmlString) {
+                return false;
+            }
+
+            $probe = $('<div/>').html(htmlString);
+
+            if ($probe.find('#mb-ajaxsuite-popup-wrapper, .wrapper-success, .block-authentication, form, img, button, .action').length) {
+                return true;
+            }
+
+            text = ($probe.text() || '').replace(/\s+/g, ' ').trim();
+
+            return text.length > 0;
+        },
+        _renderPopupHtml: function (html) {
+            if (!this.options.popupWrapper || !this.options.popupWrapper.length) {
+                return false;
+            }
+
+            if (!this._hasPopupHtmlContent(html)) {
+                this.options.popupWrapper.empty();
+                return false;
+            }
+
+            this.options.popupWrapper.html(html);
+            return true;
+        },
         showModal: function (element) {
-            ajaxsuitepopup.createPopUp(element);
+            var created;
+
+            created = ajaxsuitepopup.createPopUp(element);
+
+            if (created === false) {
+                ajaxsuitepopup.hideModal();
+                return ajaxsuitepopup;
+            }
+
             ajaxsuitepopup.showModal();
             return ajaxsuitepopup;
         },
@@ -110,8 +150,9 @@ define([
                     success: function (res) {
                         ajaxsuitepopup.hideModal();
                         if (res.html_popup) {
-                            self.options.popupWrapper.html(res.html_popup);
-                            self.showModal(self.options.popupWrapper);
+                            if (self._renderPopupHtml(res.html_popup)) {
+                                self.showModal(self.options.popupWrapper);
+                            }
                         }
                         self.reloadCustomerData(['wishlist']);
 						_this_fixed.removeClass('loading');
@@ -150,8 +191,9 @@ define([
                     success: function (res) {
                         ajaxsuitepopup.hideModal();
                         if (res.html_popup) {
-                            self.options.popupWrapper.html(res.html_popup);
-                            self.showModal(self.options.popupWrapper);
+                            if (self._renderPopupHtml(res.html_popup)) {
+                                self.showModal(self.options.popupWrapper);
+                            }
                         }
                         self.reloadCustomerData(['compare-products']);
 						_this_fixed.removeClass('loading');
@@ -221,8 +263,11 @@ define([
                     if (res.success) {
                         if(self.options.ajaxCart.actionAfterSuccess == 'popup')
                         {
-                            self.options.popupWrapper.html(res.success);
-                            self.showModal(self.options.popupWrapper);
+                            if (self._renderPopupHtml(res.success)) {
+                                self.showModal(self.options.popupWrapper);
+                            } else {
+                                $(self.options.ajaxCart.minicartSelector).addClass('ajaxcartcomplete');
+                            }
                         }else{
                             $(self.options.ajaxCart.minicartSelector).addClass('ajaxcartcomplete');
                         }
@@ -234,13 +279,15 @@ define([
                     }else if (res.error && res.content) {
                         if(!form.closest(self.options.popupWrapperSelector).length)
                         {
-                            self.options.popupWrapper.html(res.content);
-                            self.showModal(self.options.popupWrapper);
+                            if (self._renderPopupHtml(res.content)) {
+                                self.showModal(self.options.popupWrapper);
+                            }
                         }
                     }else if(res.error)
                     {
-                        self.options.popupWrapper.html(res.error);
-                        self.showModal(self.options.popupWrapper);
+                        if (self._renderPopupHtml(res.error)) {
+                            self.showModal(self.options.popupWrapper);
+                        }
                         window.location.reload();
                     }
                     self.enableAddToCartButton(form);

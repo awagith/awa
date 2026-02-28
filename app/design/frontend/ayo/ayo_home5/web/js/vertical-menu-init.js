@@ -124,6 +124,22 @@ define([
             return mql ? mql.matches : window.innerWidth >= desktopBreakpoint;
         }
 
+        function isHomeContext() {
+            var body = document.body;
+            if (!body) {
+                return false;
+            }
+
+            return body.classList.contains('cms-index-index')
+                || body.classList.contains('cms-home')
+                || body.classList.contains('cms-homepage_ayo_home5')
+                || body.classList.contains('cms-homepage_ayo_home5_demo_stage');
+        }
+
+        function keepDesktopMenuExpanded() {
+            return isDesktop() && isHomeContext();
+        }
+
         /* ============================================================ */
         /*  Open / Close                                                */
         /* ============================================================ */
@@ -314,6 +330,10 @@ define([
                 /* Re-sync list visibility to current state */
                 $list.stop(true, true).removeAttr('style');
 
+                if (keepDesktopMenuExpanded()) {
+                    $list.addClass('menu-open');
+                }
+
                 if (isOpen()) {
                     $list.show();
                     $title.addClass('active').attr('aria-expanded', 'true');
@@ -388,6 +408,11 @@ define([
                 return;
             }
 
+            if (keepDesktopMenuExpanded()) {
+                openMenu();
+                return;
+            }
+
             closeMenu();
         });
 
@@ -410,6 +435,11 @@ define([
                     return;
                 }
 
+                if (keepDesktopMenuExpanded()) {
+                    openMenu();
+                    return;
+                }
+
                 closeMenu();
             }, 0);
         });
@@ -420,6 +450,11 @@ define([
             }
 
             if (!isDesktop() && !isOpen()) {
+                return;
+            }
+
+            if (keepDesktopMenuExpanded()) {
+                openMenu();
                 return;
             }
 

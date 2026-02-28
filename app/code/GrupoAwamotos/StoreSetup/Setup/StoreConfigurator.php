@@ -991,6 +991,18 @@ HTML;
         }
     }
 
+    private function resolvePreferredAyoThemeId(): ?string
+    {
+        foreach (['AWA_Custom/ayo_home5_child', 'ayo/ayo_home5'] as $themePath) {
+            $themeId = $this->resolveFrontendThemeId($themePath);
+            if ($themeId !== null && $themeId !== '') {
+                return $themeId;
+            }
+        }
+
+        return null;
+    }
+
     private function getBlockDefinitions(): array
     {
         return [
@@ -1406,9 +1418,9 @@ HTML;
     private function getThemeConfigurations(): array
     {
         return [
-            // Tema: necessário para que o Canal A (top-home.phtml) e o CSS consolidado AWA do child theme (ayo_home5) estejam ativos.
+            // Tema: prioriza o child AWA_Custom/ayo_home5_child e usa ayo/ayo_home5 apenas como fallback.
             // Resolve o theme_id dinamicamente para não depender de IDs fixos do banco.
-            ['path' => 'design/theme/theme_id', 'value' => $this->resolveFrontendThemeId('ayo/ayo_home5')],
+            ['path' => 'design/theme/theme_id', 'value' => $this->resolvePreferredAyoThemeId()],
 
             // Header layout & visibility (added for idempotence of Ayo header preset)
             ['path' => 'themeoption/header/header_type', 'value' => '5'],
@@ -1431,11 +1443,6 @@ HTML;
             ['path' => 'themeoption/newsletter/height', 'value' => '520'],
             ['path' => 'themeoption/newsletter/bg_color', 'value' => '#ffffff'],
             ['path' => 'themeoption/newsletter/bg_custom_style', 'value' => 'padding:0;'],
-            ['path' => 'rokanthemes_themeoption/newsletter_popup/enable', 'value' => '1'],
-            ['path' => 'rokanthemes_themeoption/newsletter_popup/delay', 'value' => '30000'], // 30 segundos
-            ['path' => 'rokanthemes_themeoption/newsletter_popup/cookie_lifetime', 'value' => '30'], // 30 dias
-            ['path' => 'rokanthemes_themeoption/newsletter_popup/width', 'value' => '580'],
-            ['path' => 'rokanthemes_themeoption/newsletter_popup/height', 'value' => '520'],
             ['path' => 'producttab/new_status/enabled', 'value' => '1'],
             ['path' => 'producttab/new_status/items', 'value' => '5'],
             ['path' => 'producttab/new_status/row', 'value' => '1'],
@@ -1457,11 +1464,11 @@ HTML;
             ['path' => 'producttab/new_status/onsalename', 'value' => 'Promoções'],
             ['path' => 'producttab/new_status/showrandom', 'value' => '0'],
             ['path' => 'producttab/new_status/randomname', 'value' => 'Descubra também'],
-            ['path' => 'rokanthemes_custommenu/general/enable', 'value' => '1'],
-            ['path' => 'rokanthemes_quickview/general/enable', 'value' => '1'],
-            ['path' => 'rokanthemes_ajaxsuite/general/ajaxcart_enable', 'value' => '1'],
-            ['path' => 'rokanthemes_ajaxsuite/general/ajaxcompare_enable', 'value' => '1'],
-            ['path' => 'rokanthemes_ajaxsuite/general/ajaxwishlist_enable', 'value' => '1']
+            ['path' => 'rokanthemes_quickview/general/enabled', 'value' => '1'],
+            ['path' => 'ajaxsuite/general/enabled', 'value' => '1'],
+            ['path' => 'ajaxsuite/ajaxcart/enabled', 'value' => '1'],
+            ['path' => 'ajaxsuite/ajaxcompare/enabled', 'value' => '1'],
+            ['path' => 'ajaxsuite/ajaxwishlist/enabled', 'value' => '1']
         ];
     }
 

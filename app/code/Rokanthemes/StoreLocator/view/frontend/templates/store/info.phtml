@@ -26,31 +26,31 @@ $mediaUrl = $currentStore->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_
 		</div>
 		<div class="location-information">
 			<div><h2><?php echo $this->escapeHtml($locations->getName()); ?><h2></div>
-			<?php if (trim($locations->getCity())) { ?>
+			<?php if (trim((string) $locations->getCity())) { ?>
 				<div><?php echo __('City') ?>: <?php echo $this->escapeHtml($locations->getCity()); ?></div>
 			<?php }?>
-			<?php if (trim($locations->getPostcode())) { ?>
+			<?php if (trim((string) $locations->getPostcode())) { ?>
 				<div><?php echo __('Zip') ?>: <?php echo $this->escapeHtml($locations->getPostcode()); ?></div>
 			<?php }?>
-			<?php if (trim($locations->getCountry())) { ?>
+			<?php if (trim((string) $locations->getCountry())) { ?>
 				<div><?php echo __('Country') ?>: <?php echo $this->escapeHtml($locations->getCountry()); ?></div>
 			<?php }?>
-			<?php if (trim($locations->getAddress())) { ?>
+			<?php if (trim((string) $locations->getAddress())) { ?>
 				<div><?php echo __('Address') ?>: <?php echo $this->escapeHtml($locations->getAddress()); ?></div>
 			<?php }?>
-			<?php if (trim($locations->getPhone())) { ?>
+			<?php if (trim((string) $locations->getPhone())) { ?>
 				<div><?php echo __('Phone') ?>: <?php echo $this->escapeHtml($locations->getPhone()); ?></div>
 			<?php }?>
-			<?php if (trim($locations->getEmail())) { ?>
+			<?php if (trim((string) $locations->getEmail())) { ?>
 				<div><?php echo __('Email') ?>: <?php echo $this->escapeHtml($locations->getEmail()); ?></div>
 			<?php }?>
-			<?php if (trim($locations->getFax())) { ?>
+			<?php if (trim((string) $locations->getFax())) { ?>
 				<div><?php echo __('Fax') ?>: <?php echo $this->escapeHtml($locations->getFax()); ?></div>
 			<?php }?>
-			<?php if (trim($locations->getWebsite())) { ?>
+			<?php if (trim((string) $locations->getWebsite())) { ?>
 				<div><?php echo __('Website') ?>: <?php echo $this->escapeHtml($locations->getWebsite()); ?></div>
 			<?php }?>
-			<?php if (trim($locations->getDes())) { ?>
+			<?php if (trim((string) $locations->getDes())) { ?>
 				<div><?php echo __('Description') ?>: <?php echo $this->escapeHtml($locations->getDes()); ?></div>
 			<?php }?>
 		</div>
