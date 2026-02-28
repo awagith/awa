@@ -17,7 +17,10 @@ final class AyoCanonicalConfig
         return [
             // Themeoption
             'themeoption/general/layout' => 'full_width',
-            'themeoption/general/copyright' => '© 2026 AWA Motos - Grupo Awamotos. Todos os direitos reservados.',
+            'themeoption/general/copyright' => '© 2026 AWA Motos - Grupo Awamotos. CNPJ: 06.093.812/0001-05. Todos os direitos reservados.',
+            'rokanthemes_themeoption/general/copyright' => '© 2026 AWA Motos - Grupo Awamotos. CNPJ: 06.093.812/0001-05. Todos os direitos reservados.',
+            'design/footer/copyright' => '© 2026 AWA Motos - Grupo Awamotos. CNPJ: 06.093.812/0001-05. Todos os direitos reservados.',
+            'rokanthemes_themeoption/header/hotline_number' => '(16) 3301-1890',
             'themeoption/font/custom' => '1',
             'themeoption/font/font_size' => '14px',
             'themeoption/font/font_family' => 'google',
