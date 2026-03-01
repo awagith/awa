@@ -358,9 +358,17 @@ define([
         /* ---- title click (main toggle) ----------------------------- */
         $title.on('click' + NS, function (e) {
             e.preventDefault();
+
             if (isDesktop()) {
+                if (keepDesktopMenuExpanded()) {
+                    openMenu();
+                    return;
+                }
+
+                isOpen() ? closeMenu() : openMenu();
                 return;
             }
+
             isOpen() ? closeMenu() : openMenu();
         });
 
@@ -587,6 +595,62 @@ define([
         });
 
         /* ============================================================ */
+        /*  ARIA fix — prevent tabs-widget aria-hidden from hiding      */
+        /*  the focusable trigger h2 from assistive technology.         */
+        /*                                                              */
+        /*  Magento tabs widget marks closed panels aria-hidden="true". */
+        /*  Since FIX-53 CSS hides the tab-trigger visually (not via   */
+        /*  JS), the panel is never "opened" by the widget, so it keeps */
+        /*  aria-hidden on the ancestor while our h2 (tabindex="0") is  */
+        /*  focusable — a WCAG 1.3.1 / ARIA violation.                 */
+        /*                                                              */
+        /*  Fix: remove aria-hidden from every ancestor panel on init,  */
+        /*  and observe for re-injection via MutationObserver.          */
+        /* ============================================================ */
+
+        function fixSectionAriaHidden() {
+            /* Collect the two relevant ancestor layers:
+               1. The Magento tabs content panel (data-role="content" / .section-item-content)
+               2. The outer sections wrapper (#nav-sections / .sections.nav-sections) */
+            var $panels = $nav
+                .closest('[data-role="content"], .section-item-content')
+                .add($nav.closest('#nav-sections, .sections.nav-sections.category-dropdown'));
+
+            if (!$panels.length) {
+                return;
+            }
+
+            /* Remove on current render */
+            $panels.removeAttr('aria-hidden');
+
+            /* Guard against the tabs widget re-adding it after init */
+            if (typeof MutationObserver === 'undefined') {
+                return;
+            }
+
+            $panels.each(function () {
+                var el  = this;
+                var obs = new MutationObserver(function (mutations) {
+                    var i, m;
+
+                    for (i = 0; i < mutations.length; i++) {
+                        m = mutations[i];
+
+                        if (m.attributeName === 'aria-hidden'
+                                && el.getAttribute('aria-hidden') !== null) {
+                            el.removeAttribute('aria-hidden');
+                        }
+                    }
+                });
+
+                obs.observe(el, { attributes: true, attributeFilter: ['aria-hidden'] });
+
+                /* Disconnect when the nav is removed from the DOM */
+                $nav.one('remove' + NS, function () { obs.disconnect(); });
+            });
+        }
+
+        /* ============================================================ */
         /*  Boot                                                        */
         /* ============================================================ */
 
@@ -595,5 +659,6 @@ define([
             bindRokanMobileBridgeHandlers();
         }
         syncOnResize();
+        fixSectionAriaHidden();
     };
 });

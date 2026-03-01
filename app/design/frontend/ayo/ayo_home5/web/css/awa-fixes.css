@@ -3338,6 +3338,7 @@ body .page-wrapper .product-item .action.tocart:active {
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .sections.nav-sections.category-dropdown .section-item-content.category-dropdown-item-content {
+    display: block !important; /* anti-tabs-widget: garante conteúdo visível */
     margin: 0 !important;
     padding-top: 0 !important;
 }
@@ -3360,8 +3361,40 @@ body .page-wrapper .product-item .action.tocart:active {
 }
 
 /* ============================================================
-   FIX-55 — HOME5 DESKTOP OVERLAY + GRID/BASELINE POLISH (P1)
+   FIX-55 — HOME5 DESKTOP: TITLE-CATEGORY-DROPDOWN VISUAL (P1)
+   Estiliza o gatilho h2 do VerticalMenu no desktop homepage.
+   No desktop a lista (.togge-menu) é gerenciada via JS
+   (vertical-menu-init.js keepDesktopMenuExpanded); o h2 é
+   o elemento visual que o usuário vê como "header do menu".
    ============================================================ */
+@media (width >= 992px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5)
+    .page-wrapper .menu_left_home1
+    .navigation.verticalmenu.side-verticalmenu > h2.title-category-dropdown {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        min-height: 48px;
+        padding: 0 14px;
+        border-radius: var(--awa-radius-sm, 4px);
+        background: var(--awa-red, #c0392b);
+        color: var(--awa-text-on-primary, #fff);
+        cursor: default;
+        user-select: none;
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5)
+    .page-wrapper .menu_left_home1
+    .navigation.verticalmenu.side-verticalmenu > h2.title-category-dropdown .vm-icon {
+        display: inline-flex;
+        align-items: center;
+        font-size: 16px;
+    }
+}
 
 /* ============================================================
    FIX-54 — MOBILE: GARANTIR VISIBILIDADE DO NAV-TOGGLE (P1)
