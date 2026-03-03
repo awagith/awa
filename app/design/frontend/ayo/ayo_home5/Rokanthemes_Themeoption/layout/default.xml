@@ -26,7 +26,7 @@
                         <argument name="block_id" xsi:type="string">hotline_header</argument>
                     </arguments>
                 </block>
-                <block class="Rokanthemes\SearchSuiteAutocomplete\Block\Autocomplete" name="top.search" as="topSearch" template="Rokanthemes_SearchSuiteAutocomplete::autocomplete.phtml"/>
+                <!-- <block class="Magento\Framework\View\Element\Template" name="top.search" as="topSearch" template="Magento_Search::form.mini.phtml"/> Atualizado pelo Mirasvit -->
                 <block class="Magento\Framework\View\Element\Template" name="top.navigation.sections" template="Magento_Theme::html/sections.phtml">
                     <arguments>
                         <argument name="group_name" xsi:type="string">navigation-sections</argument>

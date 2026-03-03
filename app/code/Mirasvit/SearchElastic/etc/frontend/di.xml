@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Elasticsearch7\SearchAdapter\Adapter">
+        <plugin name="mstSearchElasticsearchAdapterPlugin" type="Mirasvit\SearchElastic\Plugin\Frontend\ElasticsearchDebugLoggerAdapterPlugin"/>
+    </type>
+    <type name="Magento\Elasticsearch8\SearchAdapter\Adapter">
+        <plugin name="mstSearchElasticsearch8AdapterPlugin" type="Mirasvit\SearchElastic\Plugin\Frontend\ElasticsearchDebugLoggerAdapterPlugin"/>
+    </type>
+    <type name="Magento\OpenSearch\SearchAdapter\Adapter">
+        <plugin name="mstSearchOpensearchAdapterPlugin" type="Mirasvit\SearchElastic\Plugin\Frontend\ElasticsearchDebugLoggerAdapterPlugin"/>
+    </type>
+</config>

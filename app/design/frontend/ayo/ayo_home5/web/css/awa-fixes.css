@@ -13,6 +13,30 @@
    ou do conteúdo CMS, pertence aqui.
 =========================================== */
 @layer awa-fixes {
+
+/* ============================================================
+   AWA GLOBAL COLOR SYSTEM (PHASE 0)
+   Enforces exact AWA brand colors over the theme defaults
+   ============================================================ */
+:root {
+  --awa-brand-primary: #b73337;
+  --awa-brand-hover: #8e2629;
+  --awa-text-main: #333333;
+  --awa-text-inverse: #FFFFFF;
+
+  /* Override the existing Ayo/AWA tokens to use the exact brand hex */
+  --awa-red: var(--awa-brand-primary);
+  --awa-red-dark: var(--awa-brand-hover);
+  --awa-text: var(--awa-text-main);
+  --color-primary: var(--awa-brand-primary);
+  --color-primary-dark: var(--awa-brand-hover);
+  --color-text: var(--awa-text-main);
+
+  /* Link states */
+  --link-color: var(--awa-brand-primary);
+  --link-color-hover: var(--awa-brand-hover);
+}
+
 /* UX POLISH — CAROUSEL/BADGES (FIX-21 UX, FIX-20 UX): REMOVIDO.
    Conflito com OWL Carousel JS. O tema Ayo original controla arrows/dots/badges.
    Restaurado para comportamento padrão do demo (ayo.nextsky.co/en_5/). */
@@ -1152,6 +1176,25 @@ body #newsletter_pop_up.popup-closing .nl-popup-card {
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown.active + ul.togge-menu.list-category-dropdown {
         display: block;
+    }
+
+    @media (width >= 992px) {
+        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu {
+            position: relative;
+        }
+
+        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu::after {
+            content: "";
+            position: absolute;
+            inset-inline: 0;
+            top: 100%;
+            height: 10px;
+        }
+
+        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu:hover > ul.togge-menu.list-category-dropdown,
+        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu:focus-within > ul.togge-menu.list-category-dropdown {
+            display: block;
+        }
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
@@ -4591,18 +4634,13 @@ body .page-wrapper .awa-whatsapp-float {
         max-width: 40px !important;
         min-width: 40px !important;
         margin: 0 !important;
-        justify-self: end;
-        align-self: center;
+        place-self: center end;
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper .mini-carts,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .top-search > .mini-cart-wrapper .minicart-wrapper {
         position: static !important;
-        top: auto !important;
-        right: auto !important;
-        left: auto !important;
-        bottom: auto !important;
         inset: auto !important;
         float: none !important;
         transform: none !important;
@@ -4646,10 +4684,6 @@ body .page-wrapper .awa-whatsapp-float {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav .nav-toggle,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav .action.nav-toggle {
         position: relative !important;
-        top: auto !important;
-        left: auto !important;
-        right: auto !important;
-        bottom: auto !important;
         inset: auto !important;
         margin: 3px 0 3px 9px !important;
         transform: none !important;
@@ -4832,8 +4866,7 @@ body .page-wrapper .awa-whatsapp-float {
         max-width: 38px !important;
         min-width: 38px !important;
         margin: 0 !important;
-        justify-self: end !important;
-        align-self: center !important;
+        place-self: center end !important;
     }
 
     body .page-wrapper .header .top-search > .mini-cart-wrapper,
@@ -4841,10 +4874,6 @@ body .page-wrapper .awa-whatsapp-float {
     body .page-wrapper .header .top-search > .mini-cart-wrapper .minicart-wrapper {
         position: static !important;
         inset: auto !important;
-        top: auto !important;
-        right: auto !important;
-        left: auto !important;
-        bottom: auto !important;
         float: none !important;
         transform: none !important;
         margin: 0 !important;
@@ -4884,10 +4913,6 @@ body .page-wrapper .awa-whatsapp-float {
     body .page-wrapper .header-control.header-nav .action.nav-toggle {
         position: relative !important;
         inset: auto !important;
-        top: auto !important;
-        left: auto !important;
-        right: auto !important;
-        bottom: auto !important;
         transform: none !important;
     }
 }
@@ -4912,10 +4937,7 @@ body .page-wrapper .awa-whatsapp-float {
 
     body .page-wrapper .header .top-search > .mini-cart-wrapper {
         position: absolute !important;
-        top: 0 !important;
-        right: 0 !important;
-        left: auto !important;
-        bottom: auto !important;
+        inset: 0 0 auto auto !important;
         inset: auto !important;
         width: 38px !important;
         max-width: 38px !important;
@@ -4923,8 +4945,7 @@ body .page-wrapper .awa-whatsapp-float {
         height: 38px !important;
         margin: 0 !important;
         z-index: 2;
-        justify-self: auto !important;
-        align-self: auto !important;
+        place-self: auto auto !important;
     }
 
     body .page-wrapper .header .top-search > .mini-cart-wrapper .showcart {
@@ -5248,4 +5269,820 @@ body .page-wrapper .awa-whatsapp-float {
     }
 }
 
+/* ============================================================
+   MOTOROLA-INSPIRED HOMEPAGE POLISH
+   Baseado na análise do site empresas.motorola.com.br
+   Adicionado: 2026-03-02
+   ============================================================ */
+
+/* ----- MP-01: Hero Banner Placeholder Cleanup ----- */
+/* Hide "Banner 1 Placeholder" ghost text that overlays the real title */
+body .page-wrapper .banner-slider .item-slide .slide-content h1:empty,
+body .page-wrapper .banner-slider .item-slide .slide-content h2:empty,
+body .page-wrapper .banner-slider .item-slide .slide-text-placeholder,
+body .page-wrapper .owl-item .item-slide > div[class*="placeholder"],
+body .page-wrapper .banner-slider2 .owl-item .item-slide .slide-content:has(> :empty) {
+    display: none !important;
+}
+
+/* Fallback hero: improve the grey placeholder to a proper gradient hero */
+body .page-wrapper .banner-slider2--fallback {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%);
+    min-height: clamp(280px, 45vh, 520px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+    overflow: hidden;
+}
+
+body .page-wrapper .banner-slider2--fallback h1,
+body .page-wrapper .banner-slider2--fallback h2 {
+    color: #fff;
+    font-size: clamp(1.8rem, 4vw, 3.2rem);
+    font-weight: 700;
+    text-align: center;
+    text-shadow: 0 2px 8px rgb(0 0 0 / 30%);
+    letter-spacing: -0.02em;
+}
+
+body .page-wrapper .banner-slider2--fallback p,
+body .page-wrapper .banner-slider2--fallback .subtitle {
+    color: rgb(255 255 255 / 80%);
+    font-size: clamp(0.95rem, 1.6vw, 1.2rem);
+    text-align: center;
+    margin-top: var(--awa-space-2);
+}
+
+/* ----- MP-02: Section Spacing Normalization (Motorola-style) ----- */
+/* Normalizar o espaçamento entre seções — Motorola usa ~64-80px consistentes */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > .awa-home-section,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > .top-home-content,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > section {
+    margin-block: 0;
+    padding-block: clamp(40px, 5vw, 72px);
+}
+
+/* Primeiro elemento após o hero não precisa de padding-top extra */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > .top-home-content--above-fold {
+    padding-block: 0;
+    margin-block: 0;
+}
+
+/* ----- MP-03: Alternating Section Backgrounds (Motorola Pattern) ----- */
+/* Motorola alterna seções brancas e cinza-claro para criar profundidade */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > :nth-child(even of .awa-home-section) {
+    background-color: var(--awa-bg-surface, #fff);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-wrapper > :nth-child(odd of .awa-home-section) {
+    background-color: var(--awa-bg-muted, #f5f7fa);
+}
+
+/* Seções de destaque (B2B, trust) mantêm fundo escuro premium */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section--highlight {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
+    color: #fff;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section--highlight h2,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section--highlight .ayo-home5-label {
+    color: #fff;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section--highlight p,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section--highlight .description {
+    color: rgb(255 255 255 / 75%);
+}
+
+/* ----- MP-04: Section Headings — Motorola-Style ----- */
+/* Motorola: label pequeno + título grande + sem linha divisória pesada */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-heading {
+    text-align: center;
+    margin-bottom: clamp(24px, 3vw, 40px);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-heading .ayo-home5-label {
+    display: block;
+    font-size: var(--awa-text-xs, 0.75rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--awa-red, #c62828);
+    margin-bottom: var(--awa-space-2, 8px);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-heading h2 {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--awa-dark, #1a1a2e);
+    margin: 0;
+    line-height: 1.2;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .ayo-home5-heading .ayo-home5-divider {
+    display: block;
+    width: 48px;
+    height: 3px;
+    background: var(--awa-red, #c62828);
+    border-radius: 2px;
+    margin: var(--awa-space-3, 12px) auto 0;
+}
+
+/* ----- MP-05: Category Carousel Premium Styling -> MUELLER B2B CLONE ----- */
+/* Design idêntico ao Mueller: ícones sem círculo, fundo F1F1F1, borda radius 16px, texto roxo escuro */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__header {
+    text-align: center;
+    margin-bottom: clamp(20px, 3vw, 40px);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__header h2 {
+    font-size: clamp(22px, 3vw, 30px);
+    font-weight: 700;
+    letter-spacing: 0;
+    color: #672146; /* Cor roxa original do Mueller mas adaptável */
+    margin: 0 0 8px;
+    font-family: 'Ubuntu', 'Inter', sans-serif;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__header p {
+    color: #000000;
+    font-size: 16px;
+    font-weight: 400;
+    margin: 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__track {
+    display: flex;
+    gap: clamp(12px, 1.5vw, 16px);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    padding: 10px 0 20px 0;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__track::-webkit-scrollbar {
+    display: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__item {
+    flex: 0 0 auto;
+    width: 140px;
+    height: 140px;
+    scroll-snap-align: start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px;
+    background: #F5F0eb; /* Fundo solicitado pelo usuário */
+    border: none;
+    border-radius: 16px;
+    text-decoration: none;
+    transition: transform 0.25s ease, background-color 0.2s ease;
+    box-shadow: none;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__item:hover {
+    background: #ebe1d7; /* Um tom ligeiramente mais escuro para o hover */
+    transform: translateY(-4px);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent; /* Remove background circular anterior */
+    border-radius: 0;
+    transition: transform 0.25s ease;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__item:hover .awa-category-carousel__icon {
+    background: transparent;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__icon svg {
+    width: 44px;
+    height: 44px;
+    color: #672146; /* Matching text color */
+    stroke-width: 1.5px;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__label {
+    font-size: 15px;
+    font-weight: 500;
+    color: #672146;
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* Nav buttons */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__nav {
+    display: flex;
+    justify-content: center;
+    gap: var(--awa-space-2, 8px);
+    margin-top: var(--awa-space-4, 16px);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__prev,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__next {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--awa-gray-200, #e0e0e0);
+    border-radius: 50%;
+    background: var(--awa-bg-surface, #fff);
+    color: var(--awa-dark, #1a1a2e);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.3rem;
+    transition: all 0.2s ease;
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__prev:hover,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__next:hover {
+    background: var(--awa-red, #c62828);
+    border-color: var(--awa-red, #c62828);
+    color: #fff;
+}
+
+/* ----- MP-06: Benefits Bar Premium ----- */
+/* Motorola: barra horizontal com ícones limpos e texto conciso */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 {
+    background: var(--awa-bg-surface, #fff);
+    border: 1px solid var(--awa-gray-100, #f0f0f0);
+    border-radius: var(--awa-radius-lg, 16px);
+    padding: clamp(16px, 2vw, 24px);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 4%);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxService {
+    text-align: center;
+    transition: transform 0.2s ease;
+    border-radius: var(--awa-radius-md, 12px);
+    padding: clamp(14px, 1.5vw, 20px);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxService:hover {
+    transform: translateY(-2px);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage {
+    margin-bottom: var(--awa-space-2, 8px);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage i,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .boxServiceImage svg {
+    font-size: 2rem;
+    color: var(--awa-red, #c62828);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .serviceTitle {
+    font-size: var(--awa-text-sm, 0.875rem);
+    font-weight: 700;
+    color: var(--awa-dark, #1a1a2e);
+    margin-bottom: var(--awa-space-1, 4px);
+}
+
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .serviceContent {
+    font-size: var(--awa-text-xs, 0.75rem);
+    color: var(--awa-gray-500, #6c757d);
+    line-height: 1.4;
+}
+
+/* ----- MP-07: Floating Buttons Stack Fix ----- */
+/* Evitar sobreposição entre WhatsApp, Cotação e Back-to-top */
+body .page-wrapper #awa-back-to-top {
+    bottom: 160px !important;
+    right: 16px !important;
+    z-index: 999 !important;
+}
+
+body .awa-quote-fab__btn,
+body .page-wrapper .awa-quote-fab__btn {
+    bottom: 104px !important;
+    right: 16px !important;
+    z-index: 998 !important;
+}
+
+body .awa-whatsapp-fab__link,
+body .page-wrapper .awa-whatsapp-fab__link {
+    bottom: 24px !important;
+    right: 16px !important;
+    z-index: 997 !important;
+}
+
+/* No mobile, the stack needs tighter spacing */
+@media (width <= 767px) {
+    body .page-wrapper #awa-back-to-top {
+        bottom: 140px !important;
+        right: 12px !important;
+        width: 40px !important;
+        height: 40px !important;
+    }
+
+    body .awa-quote-fab__btn,
+    body .page-wrapper .awa-quote-fab__btn {
+        bottom: 88px !important;
+        right: 12px !important;
+    }
+
+    body .awa-whatsapp-fab__link,
+    body .page-wrapper .awa-whatsapp-fab__link {
+        bottom: 16px !important;
+        right: 12px !important;
+    }
+}
+
+/* ----- MP-08: Nav Badges Refinement ----- */
+/* Substituir o estilo "bubble" antigo por badges mais clean como Motorola */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: var(--awa-text-xs, 0.75rem);
+    letter-spacing: 0.06em;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+/* "QUENTE!OFERTAS" badge — estilo mais limpo */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a[style*="background"],
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-nav .menu_primary :where(.navigation.custommenu.main-nav) > ul > li.hot-deals > a {
+    background: transparent !important;
+    color: var(--awa-red, #c62828) !important;
+    font-weight: 700;
+    border-bottom: 2px solid var(--awa-red, #c62828);
+    border-radius: 0;
+}
+
+/* ----- MP-09: Product Card "Login for Price" CTA Enhancement ----- */
+/* Motorola usa "Cadastre-se e veja o preço" — versão premium do CTA */
+body .page-wrapper .product-item .price-box .awa-b2b-gate-msg,
+body .page-wrapper .product-item .price-box .awa-price-login-msg,
+body .page-wrapper .product-item .b2b-login-prompt {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--awa-space-1, 4px);
+    padding: var(--awa-space-2, 8px) var(--awa-space-3, 12px);
+    background: var(--awa-bg-muted, #f5f7fa);
+    border: 1px solid var(--awa-gray-200, #e0e0e0);
+    border-radius: var(--awa-radius-sm, 8px);
+    font-size: var(--awa-text-xs, 0.75rem);
+    font-weight: 600;
+    color: var(--awa-red, #c62828);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+body .page-wrapper .product-item .price-box .awa-b2b-gate-msg:hover,
+body .page-wrapper .product-item .price-box .awa-price-login-msg:hover,
+body .page-wrapper .product-item .b2b-login-prompt:hover {
+    background: var(--awa-red, #c62828);
+    color: #fff;
+    border-color: var(--awa-red, #c62828);
+}
+
+/* Product cards: skeleton placeholder for missing images */
+body .page-wrapper .product-item .product-image-wrapper img[src=""]:not([data-loaded]),
+body .page-wrapper .product-item .product-image-wrapper img:not([src]):not([data-loaded]) {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s ease-in-out infinite;
+    min-height: 200px;
+}
+
+@keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ----- MP-10: Sticky Header Compact on Scroll ----- */
+/* Motorola: ao scrollar, header encolhe. Baseado na classe .scroll-to-fixed-fixed do tema */
+body .page-wrapper .header-nav.scroll-to-fixed-fixed {
+    box-shadow: 0 2px 12px rgb(0 0 0 / 8%) !important;
+    backdrop-filter: blur(10px);
+    background: rgb(255 255 255 / 97%) !important;
+}
+
+body .page-wrapper .header-nav.scroll-to-fixed-fixed .menu_primary :where(.navigation.custommenu.main-nav) > ul > li > a {
+    padding-block: var(--awa-space-2, 8px);
+    font-size: var(--awa-text-2xs, 0.69rem);
+}
+
+/* Header principal compacto no scroll */
+body .page-wrapper .header.scroll-to-fixed-fixed {
+    box-shadow: 0 1px 4px rgb(0 0 0 / 6%);
+    padding-block: var(--awa-space-1, 4px) !important;
+}
+
+body .page-wrapper .header.scroll-to-fixed-fixed .logo img {
+    max-height: 36px !important;
+    transition: max-height 0.3s ease;
+}
+
+/* ----- MP-11: Notification Bar Cleanup ----- */
+/* Motorola: barra fina sutil no topo. Melhorar o ticker */
+body .page-wrapper .block_notification,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .block_notification {
+    background: var(--awa-dark, #1a1a2e) !important;
+    font-size: var(--awa-text-xs, 0.75rem);
+    letter-spacing: 0.03em;
+    padding: var(--awa-space-1-5, 6px) 0 !important;
+}
+
+/* ----- MP-12: Product Grid Cards Polish ----- */
+/* Motorola product cards: clean, minimal borders, shadow on hover */
+body .page-wrapper .product-item-info {
+    border: 1px solid var(--awa-gray-100, #f0f0f0);
+    border-radius: var(--awa-radius-md, 12px);
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+    overflow: hidden;
+    background: var(--awa-bg-surface, #fff);
+}
+
+body .page-wrapper .product-item-info:hover {
+    box-shadow: 0 8px 32px rgb(0 0 0 / 8%);
+    transform: translateY(-2px);
+    border-color: var(--awa-gray-200, #e0e0e0);
+}
+
+body .page-wrapper .product-item .product-item-details {
+    padding: clamp(10px, 1.2vw, 16px);
+}
+
+body .page-wrapper .product-item .product-item-name a,
+.product-item-link {
+    font-size: var(--awa-text-base, 14px); /* F2-01: era 14px hardcoded */
+    font-weight: var(--awa-weight-semibold);
+    color: var(--awa-text, #333333);
+    text-decoration: none;
+    line-height: var(--awa-leading-snug, 1.375);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2; /* Fix for lint warning: add standard property */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+body .page-wrapper .product-item .product-item-name a:hover {
+    color: var(--awa-red, #c62828);
+}
+
+/* ================================================
+   10. IMAGE PLACEHOLDER REFINEMENT (B2B)
+   Substituir a caixa cinza vazia quando não há foto
+   ================================================ */
+.product-image-photo[src*="placeholder"],
+.product-image-photo[src*="small_image"] {
+    position: relative;
+    background-color: transparent !important;
+}
+
+/* Criar um efeito sofisticado de wireframe para produtos sem imagem */
+.product-image-photo[src*="placeholder"] {
+    opacity: 0.15;
+    filter: sepia(100%) hue-rotate(320deg) saturate(300%) contrast(150%);
+    transition: all 0.3s ease;
+}
+
+.product-item:hover .product-image-photo[src*="placeholder"] {
+    opacity: 0.25;
+}
+
 } /* F2-02: fecha @layer awa-fixes */
+
+
+/* -------------------------------------------------------------------------
+   Mosaic 4-Banner Grid (Trust Offers Banner Section)
+   ------------------------------------------------------------------------- */
+.awa-banners-mosaic {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.awa-banners-mosaic .awa-banner-item a {
+    display: block;
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%;
+}
+
+.awa-banners-mosaic .awa-banner-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.awa-banners-mosaic .awa-banner-item:hover img {
+    transform: scale(1.03);
+}
+
+@media (min-width: 768px) {
+    .awa-banners-mosaic {
+        grid-template-columns: 8fr 6fr 6fr;
+        grid-template-rows: auto auto;
+        gap: 20px;
+    }
+
+    .awa-banner-tall {
+        grid-area: 1 / 1 / 3 / 2;
+    }
+
+    .awa-banner-wide {
+        grid-area: 1 / 2 / 2 / 4;
+    }
+
+    .awa-banner-square:nth-of-type(3) {
+        grid-area: 2 / 2 / 3 / 3;
+    }
+
+    .awa-banner-square:nth-of-type(4) {
+        grid-area: 2 / 3 / 3 / 4;
+    }
+}
+
+/* ============================================================
+   AWA UI/UX OVERHAUL (MOTOROLA EMPRESAS INSPIRED)
+   PHASE 1: CRITICAL HOMEPAGE FIXES
+   ============================================================ */
+
+/* Remove duplicate "Ofertas da Semana" banner */
+.promo-banner-ofertas:nth-child(n+2),
+.banner-grid-section .banner-item:nth-child(n+4) {
+    display: none !important;
+}
+
+/* Fix banner object-fit to prevent clipping */
+.promo-banners-grid img,
+.top-home-content__banners img,
+.banner_mid_1 img,
+[class*="banner"] img {
+    object-fit: cover;
+}
+
+/* ============================================================
+   PHASE 4.5: 100% WIDTH BENEFITS BAR (MOTO STYLE)
+   ============================================================ */
+.awa-benefits-bar {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%); /* Force 100% width out of the container */
+    background: #1a2744; /* Dark corporate navy */
+    padding: 32px 0;
+    color: #ffffff;
+    position: relative;
+    z-index: 10;
+    font-family: var(--font-primary, 'Montserrat', sans-serif);
+}
+
+.awa-benefits-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+
+.awa-benefit-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.awa-benefit-icon {
+    width: 38px;
+    height: 38px;
+    color: #ffffff;
+    opacity: 0.95;
+}
+
+.awa-benefit-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.awa-benefit-title {
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 16px;
+    color: #ffffff;
+    line-height: 1.2;
+}
+
+.awa-benefit-desc {
+    font-family: inherit;
+    font-weight: 500;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.3;
+}
+
+/* Responsive Mobile Benefits Bar */
+@media (max-width: 900px) {
+    .awa-benefits-container {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 32px;
+        padding: 0 16px;
+    }
+    .awa-benefit-item {
+        flex: 0 0 calc(50% - 16px);
+    }
+}
+
+@media (max-width: 480px) {
+    .awa-benefits-bar {
+        padding: 24px 0;
+    }
+    .awa-benefits-container {
+        gap: 24px;
+    }
+    .awa-benefit-item {
+        flex: 0 0 100%;
+        flex-direction: row;
+        text-align: left;
+        align-items: center;
+        gap: 16px;
+    }
+    .awa-benefit-icon {
+        width: 32px;
+        height: 32px;
+    }
+    .awa-benefit-title {
+        font-size: 15px;
+    }
+}
+
+/* ============================================================
+   PHASE 2: MOTOROLA-STYLE HEADER & NAVIGATION
+   ============================================================ */
+
+/* Sticky header com sombra suave */
+.page-header,
+header.page-header {
+  position: sticky !important;
+  top: 0;
+  z-index: 999;
+  background: #ffffff !important;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Sombra leve para o header */
+.page-header {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Barra superior (se houver topbar de atendimento) */
+.header-top-bar,
+.panel.wrapper {
+  background-color: var(--awa-text-main) !important;
+  color: #ffffff !important;
+  border-bottom: none !important;
+}
+.header-top-bar a,
+.panel.wrapper a {
+  color: #ffffff !important;
+}
+.header-top-bar a:hover,
+.panel.wrapper a:hover {
+  text-decoration: underline;
+}
+
+/* Barra de busca — estilo limpo Motorola (arredondado) */
+.form.minisearch .input-text,
+input#search {
+  border: 1.5px solid var(--awa-gray-200, #E0E0E0);
+  border-radius: 24px;
+  padding: 10px 20px 10px 24px;
+  font-family: inherit;
+  font-size: 14px;
+  background: var(--awa-gray-100, #F8F8F8);
+  transition: all 0.2s ease;
+}
+
+.form.minisearch .input-text:focus,
+input#search:focus {
+  border-color: var(--awa-brand-primary);
+  box-shadow: 0 0 0 3px rgba(183, 51, 55, 0.12); /* #b73337 rgba */
+  outline: none;
+  background: #FFFFFF;
+}
+
+/* Search button fix to match rounded input */
+.form.minisearch .action.search,
+button.action.search {
+  background: var(--awa-brand-primary) !important;
+  border-radius: 0 24px 24px 0 !important;
+  border: none !important;
+  color: var(--awa-text-inverse) !important;
+  transition: background 0.2s ease;
+}
+.form.minisearch .action.search:hover {
+  background: var(--awa-brand-hover) !important;
+}
+
+/* Icons & Header Utilities (Minicart, Account) */
+.header .minicart-wrapper .action.showcart {
+  color: var(--awa-brand-primary) !important;
+  transition: color 0.2s ease;
+}
+
+.header .minicart-wrapper .action.showcart:before,
+.header.content .minicart-wrapper .action.showcart::before {
+  color: var(--awa-brand-primary) !important;
+}
+
+.header .minicart-wrapper .action.showcart:hover {
+  color: var(--awa-brand-hover) !important;
+}
+
+.header .minicart-wrapper .action.showcart .counter.qty {
+  background: var(--awa-brand-primary) !important;
+  color: var(--awa-text-inverse) !important;
+}
+
+/* Force Primary Navigation Hover to Brand Red */
+.navigation.custommenu.main-nav > ul > li > a:hover {
+  color: var(--awa-brand-primary) !important;
+}
+
+/* ============================================================
+   PHASE 2.5: MUELLER VERTICAL MENU REFINEMENT
+   Fixing layout, z-index, and coloring of the vertical mega menu
+   ============================================================ */
+
+/* 1. Trigger Button Styling */
+.navigation.verticalmenu .title-category-dropdown,
+nav.navigation.verticalmenu .our_categories.title-category-dropdown,
+h2.our_categories.title-category-dropdown {
+    background: var(--awa-brand-primary) !important;
+}
+
+.navigation.verticalmenu .title-category-dropdown:hover,
+.navigation.verticalmenu .title-category-dropdown.active,
+h2.our_categories.title-category-dropdown:hover {
+    background: var(--awa-brand-hover) !important;
+}
+
+/* 2. Z-Index Fix: Make sure dropdown stays ABOVE the hero slider */
+.navigation.verticalmenu .togge-menu.list-category-dropdown {
+    z-index: 99999 !important;
+}
+
+/* 3. Remove excessive padding causing layout breaks */
+.navigation.verticalmenu .togge-menu.list-category-dropdown {
+    padding: 0 !important;
+}
+
+.navigation.verticalmenu .togge-menu.list-category-dropdown > li.ui-menu-item {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.navigation.verticalmenu .ui-menu-item > a {
+    padding: 10px 15px !important;
+    margin: 0 !important;
+    min-height: auto !important;
+}
+
+/* 4. Fix SVG icons not inheriting color properly on hover */
+.navigation.verticalmenu .ui-menu-item:hover > a,
+.navigation.verticalmenu .ui-menu-item._active > a {
+    color: var(--awa-brand-primary) !important;
+}
+
+.navigation.verticalmenu .ui-menu-item:hover > a svg.awa-vmm-cat-icon,
+.navigation.verticalmenu .ui-menu-item._active > a svg.awa-vmm-cat-icon {
+    color: var(--awa-brand-primary) !important;
+}
+
+/* 5. Hide the native "Busca por SKU" shadow text inside the search bar if present */
+input#search::placeholder {
+    color: #999;
+}
+
+/* 6. Fix "Always Open" Bug on Homepage (Override native theme hover state) */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu:hover > ul.togge-menu.list-category-dropdown,
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu:focus-within > ul.togge-menu.list-category-dropdown {
+    display: none !important; /* Force hide on hover, let JS .vmm-open handle it */
+}
+
+/* 7. Show menu ONLY when JS adds the vmm-open class (Mueller style) */
+:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown.vmm-open {
+    display: grid !important; /* Use grid layout from our custom CSS */
+}

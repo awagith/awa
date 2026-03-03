@@ -54,7 +54,7 @@ $searchSuiteUrl = $block->getSearchUrl();
                            type="search"
                            name="<?= $block->escapeHtmlAttr($searchHelper->getQueryParamName()) ?>"
                            value="<?= $block->escapeHtmlAttr($searchHelper->getEscapedQueryText()) ?>"
-                           placeholder="<?= $block->escapeHtmlAttr(__('Buscar peças, capacetes, acessórios...')) ?>"
+                           placeholder="<?= $block->escapeHtmlAttr(__('Busca por SKU, Código Original EAN ou Nome da Peça...')) ?>"
                            class="input-text"
                            minlength="2"
                            maxlength="<?= (int) $searchHelper->getMaxQueryLength() ?>"
@@ -104,31 +104,3 @@ $searchSuiteUrl = $block->getSearchUrl();
 }
 </script>
 <?php endif; ?>
-<script type="text/x-magento-init">
-{
-    "*": {
-        "Magento_Ui/js/core/app": {
-            "components": {
-                "searchsuiteautocompleteDataProvider": {
-                    "component": "Rokanthemes_SearchSuiteAutocomplete/js/dataProvider",
-                    "config": {
-                        "url": "<?= $block->escapeUrl($searchSuiteUrl) ?>"
-                    }
-                },
-                "searchsuiteautocomplete_form": {
-                    "component": "Rokanthemes_SearchSuiteAutocomplete/js/autocomplete"
-                },
-                "searchsuiteautocompleteBindEvents": {
-                    "component": "Rokanthemes_SearchSuiteAutocomplete/js/bindEvents",
-                    "config": {
-                        "searchFormSelector": "#search_mini_form",
-                        "searchButtonSelector": "button.search",
-                        "inputSelector": "#search",
-                        "searchDelay": "<?= $searchDelay ?>"
-                    }
-                }
-            }
-        }
-    }
-}
-</script>

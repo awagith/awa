@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+    AWA B2B — Customer Login Page Layout Override
+    Injeta bloco de informações B2B na sidebar do login
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- B2B Info Block acima do formulário de login -->
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.b2b.login.info"
+                   template="Magento_Theme::html/awa-b2b-login-info.phtml"
+                   before="customer_form_login"/>
+        </referenceContainer>
+    </body>
+</page>

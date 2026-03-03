@@ -1,0 +1,62 @@
+<?php
+declare(strict_types=1);
+
+/** @var \Mirasvit\SearchAutocomplete\Block\Adminhtml\Config\Form\Field\Indexes $block */
+
+use Mirasvit\Core\Service\CspService;
+use Mirasvit\SearchAutocomplete\Model\Index;
+
+$nonce = CspService::getNonce();
+?>
+<td class="label">
+    <label><?= $block->escapeHtml(__('Searchable content')) ?></label>
+</td>
+<td colspan="3">
+    <table class="sas__config-index" id="searchautocomplete-indices">
+        <tr>
+            <th></th>
+            <th><?= $block->escapeHtml(__('Index')) ?></th>
+            <th><?= $block->escapeHtml(__('Is Enabled')) ?></th>
+            <th><?= $block->escapeHtml(__('Max Number of results')) ?></th>
+        </tr>
+        <?php foreach ($block->getIndexes() as $index): ?>
+            <tr>
+                <td class="col-order" data-role="draggable-handle">
+                    <div class="draggable-handle"></div>
+                    <input type="hidden" data-role="order"
+                           name="<?= $block->escapeHtml($block->getNamePrefix($index)) ?>[<?= $block->escapeHtml(Index::POSITION) ?>]"
+                           value="<?= $block->escapeHtml($index->getPosition()) ?>">
+                </td>
+                <td class="col-title"><?= $block->escapeHtml($index->getTitle()) ?></td>
+                <td class="col-is_active">
+                    <input type="checkbox" id="<?= $block->escapeHtml($index->getIdentifier()) ?>"
+                           name="<?= $block->escapeHtml($block->getNamePrefix($index)) ?>[<?= $block->escapeHtml(Index::IS_ACTIVE) ?>]"
+                           value="1"
+                           <?php if ($index->isActive()): ?>checked<?php endif ?>>
+                </td>
+                <td class="col-limit">
+                    <input type="number" name="<?= $block->escapeHtml($block->getNamePrefix($index)) ?>[<?= $block->escapeHtml(Index::LIMIT) ?>]" value="<?= $block->escapeHtml($index->getLimit()) ?>"/>
+                </td>
+            </tr>
+        <?php endforeach ?>
+    </table>
+</td>
+<script<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+    require([
+        'jquery',
+        'collapsable'
+    ], function ($) {
+        var list = $('#searchautocomplete-indices');
+        list.sortable({
+            axis:      'y',
+            handle:    '[data-role=draggable-handle]',
+            items:     'tr',
+            update:    function (event, data) {
+                list.find('[data-role=order]').each(function (i, el) {
+                    $(el).val(i + 1);
+                });
+            },
+            tolerance: 'pointer'
+        });
+    });
+</script>

@@ -1,7 +1,7 @@
 /**
- * B2B Header Status Panel - Professional Styles
+ * B2B Unified Header Status Panel
  * AWA Motos E-commerce B2B
- * Version: 1.0
+ * Version: 2.0 — Unified (replaces badge + welcome with single component)
  */
 
 /* ===========================================================================
@@ -27,6 +27,22 @@
 }
 
 /* ===========================================================================
+   UNIFICATION: Hide redundant top.links when B2B panel is active
+   The panel already has My Account + Logout in its dropdown.
+   =========================================================================== */
+.top-info .b2b-status-panel + .top-account {
+    display: none !important;
+}
+
+/* Ensure top-info uses flex for proper layout */
+.top-info[data-awa-header-account-group] {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+/* ===========================================================================
    Status Panel Container
    =========================================================================== */
 .b2b-status-panel {
@@ -43,13 +59,14 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 8px 14px;
+    padding: 6px 12px;
     background: linear-gradient(135deg, rgba(183, 51, 55, 0.08) 0%, rgba(183, 51, 55, 0.04) 100%);
     border: 1px solid rgba(183, 51, 55, 0.15);
     border-radius: 10px;
     cursor: pointer;
     transition: var(--b2b-transition);
     font-family: inherit;
+    max-width: 320px;
 }
 
 .b2b-status-trigger:hover {
@@ -88,12 +105,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     background: var(--badge-color, var(--b2b-primary));
     border-radius: 8px;
     color: #fff;
-    font-size: 14px;
+    font-size: 13px;
     flex-shrink: 0;
     transition: var(--b2b-transition);
 }
@@ -103,9 +120,11 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 2px;
+    gap: 1px;
     color: var(--b2b-text);
     transition: color var(--b2b-transition);
+    min-width: 0;
+    overflow: hidden;
 }
 
 .status-greeting {
@@ -113,24 +132,45 @@
     font-weight: 500;
     color: var(--b2b-text-muted);
     line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
 }
 
 .b2b-status-trigger[aria-expanded="true"] .status-greeting {
     color: rgba(255, 255, 255, 0.8);
 }
 
+/* Company name in trigger */
+.status-company {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--b2b-text-muted);
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    opacity: 0.8;
+}
+
+.b2b-status-trigger[aria-expanded="true"] .status-company {
+    color: rgba(255, 255, 255, 0.65);
+}
+
 .status-group {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     line-height: 1.2;
 }
 
 .status-discount {
     display: inline-flex;
-    padding: 2px 6px;
+    padding: 1px 5px;
     background: var(--b2b-success);
     color: #fff;
     font-size: 10px;
@@ -148,7 +188,8 @@
     font-size: 10px;
     color: var(--b2b-text-muted);
     transition: transform var(--b2b-transition), color var(--b2b-transition);
-    margin-left: 4px;
+    margin-left: 2px;
+    flex-shrink: 0;
 }
 
 /* ===========================================================================
@@ -409,6 +450,7 @@
 .dropdown-footer {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 12px 16px;
     background: linear-gradient(180deg, #fff 0%, var(--b2b-soft) 100%);
     border-top: 1px solid var(--b2b-border);
@@ -425,6 +467,10 @@
     text-decoration: none;
     border-radius: 6px;
     transition: var(--b2b-transition);
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
 }
 
 .footer-link:hover {
@@ -446,6 +492,13 @@
     color: #dc2626;
 }
 
+/* Logout form inline */
+.b2b-logout-form {
+    display: inline-flex;
+    margin: 0;
+    padding: 0;
+}
+
 /* ===========================================================================
    B2B Registration CTA (Guest Users)
    =========================================================================== */
@@ -458,12 +511,12 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 16px;
-    background: linear-gradient(135deg, var(--b2b-primary) 0%, var(--b2b-primary-dark) 100%);
+    padding: 8px 14px;
+    background: linear-gradient(135deg, var(--b2b-primary, #b73337) 0%, var(--b2b-primary-dark, #8e2629) 100%);
     border-radius: 10px;
     color: #fff;
     text-decoration: none;
-    transition: var(--b2b-transition);
+    transition: var(--b2b-transition, 0.25s ease);
     box-shadow: 0 2px 8px rgba(183, 51, 55, 0.3);
 }
 
@@ -480,7 +533,7 @@
 }
 
 .b2b-register-btn i {
-    font-size: 18px;
+    font-size: 16px;
     opacity: 0.9;
 }
 
@@ -492,7 +545,7 @@
 }
 
 .b2b-register-btn .btn-label {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -509,13 +562,16 @@
 /* ===========================================================================
    Responsive Design
    =========================================================================== */
+
+/* Tablet */
 @media screen and (max-width: 991px) {
     .b2b-status-dropdown {
         width: 300px;
         right: -10px;
     }
 
-    .status-greeting {
+    /* Hide company from trigger on tablet — still visible in dropdown */
+    .status-company {
         display: none;
     }
 
@@ -524,23 +580,32 @@
     }
 }
 
+/* Mobile */
 @media screen and (max-width: 767px) {
     .b2b-status-panel {
         position: static;
     }
 
     .b2b-status-trigger {
-        padding: 6px 10px;
+        padding: 5px 8px;
+        gap: 6px;
     }
 
-    .status-info {
+    /* On mobile, trigger shows only badge icon + group name */
+    .status-greeting,
+    .status-company {
         display: none;
+    }
+
+    .status-group {
+        font-size: 11px;
     }
 
     .status-arrow {
         display: none;
     }
 
+    /* Bottom sheet on mobile */
     .b2b-status-dropdown {
         position: fixed;
         top: auto;
@@ -562,11 +627,16 @@
     }
 
     .b2b-register-btn {
-        padding: 8px 12px;
+        padding: 6px 10px;
     }
 
     .b2b-register-btn .btn-text {
         display: none;
+    }
+
+    /* On mobile with status-panel, show top-account for fallback nav (login/logout links) */
+    .top-info .b2b-status-panel + .top-account {
+        display: none !important;
     }
 }
 
@@ -587,6 +657,14 @@
 
     .stat-value {
         font-size: 14px;
+    }
+
+    .status-info {
+        display: none;
+    }
+
+    .b2b-status-trigger {
+        padding: 5px 8px;
     }
 }
 
@@ -614,6 +692,23 @@
 
 .b2b-status-panel.has-notification .status-badge {
     animation: b2b-pulse 2s ease-in-out infinite;
+}
+
+/* Mobile overlay backdrop */
+@media screen and (max-width: 767px) {
+    .b2b-status-panel.is-open::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: calc(var(--awa-z-overlay, 1000) - 1);
+        animation: b2b-fade-in 0.2s ease;
+    }
+}
+
+@keyframes b2b-fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 /* Reduced Motion */

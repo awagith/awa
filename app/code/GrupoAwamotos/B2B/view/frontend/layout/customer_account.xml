@@ -14,7 +14,7 @@
     <body>
         <referenceBlock name="customer_account_navigation">
             <!-- === SEÇÃO B2B (topo da sidebar) === -->
-            
+
             <!-- Painel B2B (primeiro item, substituindo "Minha Conta") -->
             <block class="Magento\Customer\Block\Account\SortLink"
                    name="customer-account-navigation-b2b-dashboard-link">
@@ -24,7 +24,7 @@
                     <argument name="sortOrder" xsi:type="number">10</argument>
                 </arguments>
             </block>
-            
+
             <!-- Pedido Rápido -->
             <block class="Magento\Customer\Block\Account\SortLink"
                    name="customer-account-navigation-b2b-quickorder-link">
@@ -34,7 +34,7 @@
                     <argument name="sortOrder" xsi:type="number">20</argument>
                 </arguments>
             </block>
-            
+
             <!-- Solicitar Cotação -->
             <block class="Magento\Customer\Block\Account\SortLink"
                    name="customer-account-navigation-b2b-quote-request-link">
@@ -44,7 +44,7 @@
                     <argument name="sortOrder" xsi:type="number">30</argument>
                 </arguments>
             </block>
-            
+
             <!-- Minhas Cotações -->
             <block class="Magento\Customer\Block\Account\SortLink"
                    name="customer-account-navigation-b2b-quotes-link">
@@ -54,7 +54,7 @@
                     <argument name="sortOrder" xsi:type="number">40</argument>
                 </arguments>
             </block>
-            
+
             <!-- Listas de Compras -->
             <block class="Magento\Customer\Block\Account\SortLink"
                    name="customer-account-navigation-b2b-shoppinglist-link">
@@ -72,6 +72,16 @@
                     <argument name="label" xsi:type="string" translate="true">Meu Crédito</argument>
                     <argument name="path" xsi:type="string">b2b/credit</argument>
                     <argument name="sortOrder" xsi:type="number">55</argument>
+                </arguments>
+            </block>
+
+            <!-- Minhas Faturas / Pedidos -->
+            <block class="Magento\Customer\Block\Account\SortLink"
+                   name="customer-account-navigation-b2b-invoices-link">
+                <arguments>
+                    <argument name="label" xsi:type="string" translate="true">Minhas Faturas</argument>
+                    <argument name="path" xsi:type="string">sales/order/history</argument>
+                    <argument name="sortOrder" xsi:type="number">56</argument>
                 </arguments>
             </block>
 

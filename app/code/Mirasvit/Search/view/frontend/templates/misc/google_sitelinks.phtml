@@ -1,0 +1,22 @@
+<?php
+
+use Mirasvit\Core\Service\CspService;
+
+/** @var \Mirasvit\Search\Block\Options\GoogleSitelinks $block */
+
+$nonce = CspService::getNonce();
+?>
+<?php if ($block->isEnabled()): ?>
+<script<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?> type="application/ld+json">
+{
+   "@context": "http://schema.org",
+   "@type": "WebSite",
+   "url": "<?= /* @noEscape */ $block->getBaseUrl() ?>",
+   "potentialAction": {
+     "@type": "SearchAction",
+     "target": "<?= /* @noEscape */ urldecode($block->getTargetUrl()) ?>",
+     "query-input": "required name=search_term_string"
+   }
+}
+</script>
+<?php endif ?>

@@ -1,0 +1,64 @@
+<?php
+/**
+ * AWA B2B — Breadcrumbs com Schema.org BreadcrumbList (SEO)
+ * Override do tema Ayo para adicionar JSON-LD estruturado
+ */
+declare(strict_types=1);
+?>
+<?php if ($crumbs && is_array($crumbs)) : ?>
+<?php
+// Build JSON-LD structured data for breadcrumbs SEO
+$items = [];
+$position = 1;
+foreach ($crumbs as $crumbName => $crumbInfo) :
+    if (!empty($crumbInfo['link'])) {
+        $items[] = [
+            '@type'    => 'ListItem',
+            'position' => $position++,
+            'name'     => $crumbInfo['label'],
+            'item'     => $crumbInfo['link'],
+        ];
+    } elseif (!empty($crumbInfo['last'])) {
+        $items[] = [
+            '@type'    => 'ListItem',
+            'position' => $position++,
+            'name'     => $crumbInfo['label'],
+        ];
+    }
+endforeach;
+
+$jsonLd = [
+    '@context'        => 'https://schema.org',
+    '@type'           => 'BreadcrumbList',
+    'itemListElement' => $items,
+];
+?>
+<script type="application/ld+json">
+<?= /* @noEscape */ json_encode($jsonLd, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) ?>
+</script>
+<div class="breadcrumbs" aria-label="Navegação estrutural">
+    <ul class="items" itemscope itemtype="https://schema.org/BreadcrumbList">
+        <?php foreach ($crumbs as $crumbName => $crumbInfo) : ?>
+            <li class="item <?= $block->escapeHtmlAttr($crumbName) ?>"
+                itemprop="itemListElement"
+                itemscope
+                itemtype="https://schema.org/ListItem">
+                <?php if ($crumbInfo['link']) : ?>
+                    <a href="<?= $block->escapeUrl($crumbInfo['link']) ?>"
+                       title="<?= $block->escapeHtmlAttr($crumbInfo['title']) ?>"
+                       itemprop="item">
+                        <span itemprop="name"><?= $block->escapeHtml($crumbInfo['label']) ?></span>
+                    </a>
+                    <meta itemprop="position" content="<?= $block->escapeHtmlAttr((string)($crumbInfo['sortOrder'] ?? 1)) ?>"/>
+                <?php elseif ($crumbInfo['last']) : ?>
+                    <strong itemprop="name" aria-current="page">
+                        <?= $block->escapeHtml($crumbInfo['label']) ?>
+                    </strong>
+                <?php else : ?>
+                    <span itemprop="name"><?= $block->escapeHtml($crumbInfo['label']) ?></span>
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+<?php endif; ?>

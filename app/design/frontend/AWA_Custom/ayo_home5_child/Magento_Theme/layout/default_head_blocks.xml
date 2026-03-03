@@ -2,6 +2,12 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
+        <!-- B2B Performance: Preconnect to critical third-party origins -->
+        <!-- Note: Magento layout XSD does not support <link> with href for preconnect.
+             These hints are handled via a custom head block or meta tags instead.
+             Commenting out to prevent XML validation errors. -->
+        <!-- <link rel="preconnect" src="https://fonts.googleapis.com" /> -->
+        <!-- <link rel="preconnect" src="https://fonts.gstatic.com" /> -->
         <remove src="css/awa-round2-brand-bridge.css"/>
         <remove src="css/awa-round2-header-minicart.css"/>
         <remove src="css/awa-round3-footer-trust.css"/>
@@ -40,6 +46,25 @@
         <css src="css/awa-custom-plp-search-cart-refine.css"/>
         <!-- AWA Global Polish: breadcrumbs, customer account, messages, CMS, data tables -->
         <css src="css/awa-custom-global-polish.css"/>
+        <!-- AWA Phase 3: B2B features (WhatsApp FAB, breadcrumbs, login) -->
+        <css src="css/awa-b2b-phase3.css"/>
+        <!-- AWA Phase 4: Advanced B2B (sticky header, quote modal, mobile nav, toolbar) -->
+        <css src="css/awa-b2b-phase4.css"/>
+        <!-- AWA Phase 5: UI/UX Pro Max (Lexend, Source Sans 3, micro-interactions, Trust badges) -->
+        <css src="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;family=Source+Sans+3:wght@300;400;500;600;700&amp;display=swap" src_type="url" />
+        <css src="css/awa-ui-ux-pro-max.css"/>
+        <!-- AWA Phase 6: Conversion & SEO Hardening -->
+        <css src="css/awa-phase6-conversion.css"/>
+        <!-- AWA Phase 7: Header, Search & Navigation (Mueller/Motorola) -->
+        <css src="css/awa-phase7-header-nav.css"/>
+        <!-- AWA Phase 8: Refinamento B2B Enterprise -->
+        <css src="css/awa-phase8-b2b-enterprise.css"/>
+        <!-- AWA Phase 9: Vertical Mega Menu — 3-column panel (Mueller/Amazon) -->
+        <css src="css/awa-vertical-mega-menu.css"/>
+        <!-- AWA Onda 2: PLP List View and Quick Order Header -->
+        <css src="css/awa-b2b-onda2.css"/>
+        <!-- AWA Grid Spacing Fix: Resolve gap/spacing conflicts across PLP, Homepage, OWL carousels -->
+        <css src="css/awa-grid-spacing-fix.css"/>
     </head>
     <body>
         <referenceBlock name="awa.round2.header.minicart.js" remove="true"/>
@@ -62,6 +87,35 @@
                     <argument name="load_home_category_compat_js" xsi:type="boolean">false</argument>
                 </arguments>
             </block>
+            <!-- AWA Phase 3: WhatsApp Floating Action Button -->
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.whatsapp.fab"
+                   template="Magento_Theme::html/awa-whatsapp-fab.phtml"
+                   after="-"/>
+            <!-- AWA Phase 4: Quick Quote Modal -->
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.quote.modal"
+                   template="Magento_Theme::html/awa-quote-modal.phtml"
+                   after="awa.whatsapp.fab"/>
+        </referenceContainer>
+        <!-- AWA Phase 4: Sticky Header JS -->
+        <referenceContainer name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.sticky.header.js"
+                   template="Magento_Theme::html/awa-sticky-header-loader.phtml"/>
+            <!-- AWA Phase 6: Back-to-Top Button -->
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.back.to.top"
+                   template="Magento_Theme::html/awa-back-to-top.phtml"
+                   after="-"/>
+            <!-- AWA Phase 6: Organization JSON-LD -->
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.organization.jsonld"
+                   template="Magento_Theme::html/awa-organization-jsonld.phtml"/>
+            <!-- AWA Phase 6: OG Meta Tags -->
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.og.meta"
+                   template="Magento_Theme::html/awa-og-meta.phtml"/>
         </referenceContainer>
     </body>
 </page>

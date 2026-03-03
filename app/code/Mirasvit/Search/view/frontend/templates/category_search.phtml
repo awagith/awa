@@ -1,0 +1,33 @@
+<?php
+
+use Mirasvit\Core\Service\CspService;
+
+/** @var \Mirasvit\Search\Block\CategorySearch $block */
+	$config = $block->getJsConfig();
+    $nonce  = CspService::getNonce();
+	if ($config['isActive'] && $block->getIsVisibleCategorySearch()) :
+?>
+	<div class="mst_categorySearch">
+		<input type="text" id="mst_categorySearch" placeholder="<?= $block->getCollectionSize() === null? '' : $block->escapeHtml(__('Search across %1 products', $block->getCollectionSize()))?>"
+			value="<?= $block->escapeHtml($block->getQueryText())?>" />
+		<span class="mst_categorySearch_searchIcon"><i class="fa fa-search"></i></span>
+		<span class="mst_categorySearch_totals"><?= $block->getCollectionSize() === null? '' : $block->escapeHtml(__('found %1 products', $block->getCollectionSize()))?></span>
+		<div class="mst_categorySearchLoader">
+	        <div class="spinner-item spinner-item-1"></div>
+	        <div class="spinner-item spinner-item-2"></div>
+	        <div class="spinner-item spinner-item-3"></div>
+	        <div class="spinner-item spinner-item-4"></div>
+		</div>
+	</div>
+	<script<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+	    require([
+	            'jquery',
+	            'Mirasvit_Search/js/categorySearch',
+	        ], function ($, categorySearch) {
+	            $(document).ready(function () {
+                    new categorySearch($('#mst_categorySearch')).init(<?= /* @noEscape */ $block->jsonEncode($config)?>);
+                });
+	        }
+	    );
+	</script>
+<?php endif;?>

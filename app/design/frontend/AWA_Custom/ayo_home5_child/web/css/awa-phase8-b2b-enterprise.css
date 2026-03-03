@@ -1,0 +1,535 @@
+/* ============================================================
+   AWA B2B — FASE 8: Refinamento B2B Enterprise (Tech-Corporate)
+   Design System: Colors #b73337, #333333, #8e2629 | BorderRadius Max 4px
+   ============================================================ */
+
+/* ============================================================
+   TAREFA 1: CORPORATE HERO BANNER
+   ============================================================ */
+.awa-corporate-hero {
+    position: relative;
+    width: 100%;
+    max-height: 400px;
+    background: #1e293b; /* Fallback corporativo */
+    overflow: hidden;
+    margin-bottom: 0; /* No margin to connect with Category Grid */
+}
+
+/* Hide the old banner slider (Themeoption / Revolution Slider / Owl) */
+.owl-banner-slider,
+.home5_banner_slider,
+.rokanthemes-slider {
+    display: none !important;
+}
+
+.awa-corporate-hero__wrapper {
+    position: relative;
+    width: 100%;
+    height: 400px; /* Fixed max height requested */
+    display: flex;
+    align-items: center;
+}
+
+.awa-corporate-hero__image-container {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+}
+
+.awa-corporate-hero__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center center;
+}
+
+.awa-corporate-hero__overlay {
+    position: absolute;
+    inset: 0;
+
+    /* Corporate dark overlay + gradient to read text */
+    background: linear-gradient(90deg, rgb(15 23 42 / 85%) 0%, rgb(15 23 42 / 60%) 50%, rgb(15 23 42 / 0%) 100%);
+    z-index: 2;
+}
+
+.awa-corporate-hero__content {
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    padding: 2rem 0;
+}
+
+.awa-corporate-hero__inner {
+    max-width: 650px;
+    padding: 0 15px;
+}
+
+.awa-corporate-hero__title {
+    font-family: var(--awa-font-heading, 'Lexend', sans-serif);
+    font-size: 42px;
+    line-height: 1.15;
+    font-weight: 300;
+    color: #fff;
+    margin: 0 0 16px;
+    letter-spacing: -0.5px;
+}
+
+.awa-corporate-hero__title strong {
+    font-weight: 700;
+    color: #fff;
+}
+
+.awa-corporate-hero__subtitle {
+    font-family: var(--awa-font-body, 'Source Sans 3', sans-serif);
+    font-size: 18px;
+    line-height: 1.5;
+    color: #e2e8f0;
+    margin: 0 0 32px;
+    font-weight: 400;
+}
+
+/* ============================================================
+   DESIGN SYSTEM - BUTTONS & LINKS
+   ============================================================ */
+
+/* Primary Button (Solid Red) */
+.awa-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #b73337 !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 4px !important; /* Rules: Max 4px */
+    padding: 12px 24px;
+    font-family: var(--awa-font-heading, 'Lexend', sans-serif);
+    font-weight: 600;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-decoration: none !important;
+    transition: background 0.15s ease, transform 0.1s ease;
+    box-shadow: none !important; /* No blurry shadows */
+}
+
+.awa-btn-primary:hover,
+.awa-btn-primary:focus {
+    background: #8e2629 !important; /* Action Hover */
+    color: #fff !important;
+}
+
+/* Secondary Button (Ghost White/Red) */
+.awa-btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent !important;
+    color: #fff !important;
+    border: 2px solid #fff !important;
+    border-radius: 4px !important;
+    padding: 10px 24px;
+    font-family: var(--awa-font-heading, 'Lexend', sans-serif);
+    font-weight: 600;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    text-decoration: none !important;
+    transition: all 0.15s ease;
+}
+
+.awa-btn-ghost:hover,
+.awa-btn-ghost:focus {
+    background: #fff !important;
+    color: #0f172a !important; /* Dark text on white bg */
+    border-color: #fff !important;
+}
+
+.awa-corporate-hero__actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* Responsive Hero */
+@media (width <= 767px) {
+    .awa-corporate-hero__wrapper {
+        height: 340px;
+    }
+
+    .awa-corporate-hero__overlay {
+        background: rgb(15 23 42 / 70%); /* Solid dark overlay for mobile readability */
+    }
+
+    .awa-corporate-hero__title {
+        font-size: 30px;
+    }
+
+    .awa-corporate-hero__subtitle {
+        font-size: 16px;
+        margin-bottom: 24px;
+    }
+
+    .awa-corporate-hero__actions {
+        flex-direction: column;
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+/* ============================================================
+   TAREFA 3: REFINAMENTO DA CATEGORIA (PLP) E FILTROS B2B
+   ============================================================ */
+
+/* Sidebar Titles */
+.sidebar .block .block-title strong {
+    font-family: var(--awa-font-heading, 'Lexend', sans-serif);
+    font-size: 16px;
+    font-weight: 600;
+    color: #333 !important; /* Strict text color */
+    text-transform: uppercase;
+    letter-spacing: 0;
+}
+
+/* Filter options (text) */
+.filter-options-content a,
+.filter-options-content .item a {
+    font-family: var(--awa-font-body, 'Source Sans 3', sans-serif);
+    font-size: 14px;
+    font-weight: 400;
+    color: #333 !important;
+    transition: color 0.15s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.filter-options-content a:hover,
+.filter-options-content .item a:hover {
+    color: #b73337 !important; /* Primary hover */
+}
+
+/* Checked state for filters */
+.filter-options-content a.checked,
+.filter-options-content input[type="radio"]:checked + label,
+.filter-options-content input[type="checkbox"]:checked + label {
+    color: #b73337 !important;
+    font-weight: 600;
+}
+
+/* Custom checkbox styling for Layered Navigation */
+.filter-options-content input[type="checkbox"] {
+    accent-color: #b73337;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    cursor: pointer;
+}
+
+.filter-options-content .count {
+    color: #64748b;
+    font-size: 12px;
+    margin-left: 4px;
+}
+
+/* ============================================================
+   TAREFA 4: O "RODAPÉ ENTERPRISE" (Corporate Footer)
+   ============================================================ */
+
+/* Corporate grayscale payment/security icons */
+.footer-payment-methods .payment-methods-img,
+.footer-payment-methods .seals svg {
+    filter: grayscale(100%) opacity(70%);
+    transition: filter 0.2s ease;
+    max-width: 96px; /* Prevent huge SVGs */
+    height: auto;
+}
+
+.footer-payment-methods .payment-methods-img:hover,
+.footer-payment-methods .seals svg:hover {
+    filter: grayscale(0%) opacity(100%); /* Slight interactive reveal */
+}
+
+/* Footer Links Primary Hover Color */
+.footer.content .links li a {
+    transition: color 0.2s;
+}
+
+.footer.content .links li a:hover {
+    color: #b73337 !important;
+}
+
+/* Inject 'Trabalhe Conosco / Carreiras' to the Institutional column dynamically */
+
+/* The block footer_info contains an ul list. We append it using CSS 'content' for pure frontend approach without touching DB */
+.velaFooterMenu .velaFooterLinks::after {
+    content: "Trabalhe Conosco / Carreiras";
+    display: list-item; /* Make it behave like an li */
+    margin-top: 10px;
+    color: #64748b; /* matching other links */
+    font-family: var(--awa-font-body, 'Source Sans 3', sans-serif);
+    font-size: 15px;
+    line-height: 24px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.velaFooterMenu .velaFooterLinks:hover::after {
+    color: #b73337;
+}
+
+/* ============================================================
+   PHASE 9: HOMEPAGE LAYOUT RESTRUCTURE
+   ============================================================ */
+
+/* --- A) Mueller-Style Category Carousel --- */
+.top-home-content--category-carousel {
+    background: linear-gradient(180deg, #F5F0EB 0%, #EDE7DF 100%);
+    padding: 48px 0 56px;
+    position: relative;
+}
+
+/* Subtle top border accent */
+.top-home-content--category-carousel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(100%, 1170px);
+    height: 3px;
+    background: linear-gradient(90deg, transparent 0%, #b73337 30%, #b73337 70%, transparent 100%);
+    border-radius: 0 0 2px 2px;
+    opacity: 0.4;
+}
+
+.awa-category-carousel__header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.awa-category-carousel__header h2 {
+    font-family: var(--awa-font-heading, 'Lexend', sans-serif);
+    font-size: 30px;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin: 0 0 8px;
+    letter-spacing: -0.02em;
+}
+
+.awa-category-carousel__header p {
+    font-family: var(--awa-font-body, 'Source Sans 3', sans-serif);
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+}
+
+.awa-category-carousel__track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 4px 0;
+}
+
+.awa-category-carousel__track::-webkit-scrollbar {
+    display: none;
+}
+
+.awa-category-carousel__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 120px;
+    max-width: 140px;
+    padding: 24px 16px 20px;
+    background: #FFFFFF;
+    border-radius: 10px;
+    border: 1px solid #E8E0D8;
+    text-decoration: none;
+    color: #2d3748;
+    cursor: pointer;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Subtle shimmer on hover */
+.awa-category-carousel__item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #b73337, transparent);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.awa-category-carousel__item:hover::after {
+    transform: scaleX(1);
+}
+
+.awa-category-carousel__item:hover {
+    border-color: #d4a0a2;
+    box-shadow:
+        0 4px 12px rgb(183 51 55 / 8%),
+        0 12px 32px rgb(0 0 0 / 6%);
+    transform: translateY(-4px);
+    text-decoration: none;
+    color: #b73337;
+}
+
+.awa-category-carousel__icon {
+    width: 56px;
+    height: 56px;
+    max-width: 56px;
+    max-height: 56px;
+    margin-bottom: 14px;
+    color: #b73337;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #fef2f2 0%, #fce8e8 100%);
+    border-radius: 12px;
+    padding: 10px;
+    transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.awa-category-carousel__item:hover .awa-category-carousel__icon {
+    background: linear-gradient(135deg, #fee2e2 0%, #fccaca 100%);
+    transform: scale(1.08);
+}
+
+.awa-category-carousel__icon svg {
+    width: 36px !important;
+    height: 36px !important;
+    max-width: 36px !important;
+    max-height: 36px !important;
+    display: block;
+}
+
+.awa-category-carousel__label {
+    font-family: var(--awa-font-body, 'Source Sans 3', sans-serif);
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.35;
+    text-transform: capitalize;
+    transition: color 0.25s ease;
+}
+
+/* Navigation arrows */
+.awa-category-carousel__nav {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.awa-category-carousel__prev,
+.awa-category-carousel__next {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 1px solid #d4ccc4;
+    background: #FFFFFF;
+    font-size: 22px;
+    line-height: 1;
+    color: #2d3748;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 6%);
+}
+
+.awa-category-carousel__prev:hover,
+.awa-category-carousel__next:hover {
+    background: #b73337;
+    border-color: #b73337;
+    color: #FFF;
+    box-shadow: 0 4px 12px rgb(183 51 55 / 25%);
+    transform: scale(1.05);
+}
+
+/* Desktop: show all items in a centered grid */
+@media (width >= 1024px) {
+    .awa-category-carousel__track {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 16px;
+        overflow: visible;
+    }
+
+    .awa-category-carousel__item {
+        min-width: unset;
+        max-width: unset;
+        flex: 1;
+    }
+
+    .awa-category-carousel__nav {
+        display: none; /* Arrows hidden on desktop since all items visible */
+    }
+}
+
+/* --- B) Full-Width Banner Breakout (Mueller-style) --- */
+.awa-fullwidth-banner {
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    margin-top: 24px;
+}
+
+.awa-fullwidth-banner img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* --- C) Motorola-Style Section Spacing --- */
+.ayo-home5-section {
+    padding-top: 48px;
+    padding-bottom: 48px;
+}
+
+.ayo-home5-heading {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.ayo-home5-heading h2 {
+    font-family: var(--awa-font-heading, 'Lexend', sans-serif);
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    letter-spacing: -0.01em;
+}
+
+.ayo-home5-label {
+    font-family: var(--awa-font-body, 'Source Sans 3', sans-serif);
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #b73337;
+    display: block;
+    margin-bottom: 4px;
+}
+
+.ayo-home5-divider {
+    display: block;
+    width: 48px;
+    height: 3px;
+    background: #b73337;
+    margin: 12px auto 0;
+    border-radius: 2px;
+}

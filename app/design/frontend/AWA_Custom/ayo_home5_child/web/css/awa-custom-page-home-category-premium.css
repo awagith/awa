@@ -1263,44 +1263,7 @@ body.cms-home .page-wrapper .block_notification a:focus-visible {
     scroll-margin-top: 110px;
 }
 
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer {
-    margin-top: clamp(16px, 3vw, 28px);
-    border-top: 1px solid color-mix(in srgb, var(--awa-hc-border) 80%, white);
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .aw-footer-highlights,
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .aw-footer-trust-b2b,
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .aw-footer-legal,
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .awa-footer-payments-security {
-    border: 1px solid color-mix(in srgb, var(--awa-hc-border) 86%, white);
-    border-radius: 14px;
-    background: #fff;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .aw-footer-highlights {
-    margin-top: 16px;
-    padding-top: 6px;
-    padding-bottom: 6px;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .aw-footer-trust-b2b {
-    margin-top: 14px;
-    padding: 12px;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .aw-footer-legal {
-    margin-top: 12px;
-    padding: 10px 12px;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-bottom {
-    margin-top: 14px;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .footer-bottom .footer-bottom-inner {
-    border-top: 0;
-    padding-top: 0;
-}
+/* Footer card styling moved to awa-custom-footer-light-perfect.css (global) */
 
 @media (width <= 1199px) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header .wp-header {
@@ -1327,13 +1290,6 @@ body.cms-home .page-wrapper .block_notification a:focus-visible {
         padding-top: 12px;
         padding-bottom: 24px;
     }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .aw-footer-highlights,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .aw-footer-trust-b2b,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .aw-footer-legal,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .awa-footer-payments-security {
-        border-radius: 12px;
-    }
 }
 
 @media (width <= 767px) {
@@ -1348,17 +1304,6 @@ body.cms-home .page-wrapper .block_notification a:focus-visible {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page-main.container {
         padding-top: 10px;
         padding-bottom: 20px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer {
-        margin-top: 12px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .aw-footer-highlights,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .aw-footer-trust-b2b,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .aw-footer-legal,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .page_footer .awa-footer-payments-security {
-        border-radius: 10px;
     }
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .fixed-bottom .mobile-bottom-link {

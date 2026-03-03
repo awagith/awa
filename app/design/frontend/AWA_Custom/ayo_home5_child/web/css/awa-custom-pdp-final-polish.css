@@ -314,3 +314,4 @@ body.b2b-register-index .awa-pdp-sticky-cta {
         transition: none;
     }
 }
+\n/* AWA Phase 6: Compact Tech Specs Above Fold */\n.product-info-main .product.attribute.new-table {\n    margin-top: 20px;\n    border: 1px solid var(--awa-border);\n    border-radius: var(--awa-radius-sm);\n    overflow: hidden;\n    background: #fff;\n}\n.product-info-main .product.attribute.new-table th {\n    background: #f8fafc;\n    color: var(--awa-dark);\n    font-weight: 600;\n    padding: 8px 12px;\n    width: 40%;\n    border-right: 1px solid var(--awa-border);\n}\n.product-info-main .product.attribute.new-table td {\n    padding: 8px 12px;\n    color: #475569;\n}\n

@@ -120,6 +120,7 @@ body.cms-homepage_ayo_home5 .page-wrapper .header .header-nav .menu_primary .nav
        to avoid large empty whitespace before hero. */
     body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav {
         margin-bottom: 10px;
+        overflow: visible !important;
     }
 
     body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav > .container > .row {
@@ -127,11 +128,12 @@ body.cms-homepage_ayo_home5 .page-wrapper .header .header-nav .menu_primary .nav
         min-height: 46px !important;
         height: auto !important;
         align-items: flex-start !important;
+        overflow: visible !important;
     }
 
     body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav .menu_left_home1 {
         position: relative;
-        z-index: 25;
+        z-index: 1200;
         min-height: 46px !important;
         height: 46px !important;
         overflow: visible !important;
@@ -140,6 +142,8 @@ body.cms-homepage_ayo_home5 .page-wrapper .header .header-nav .menu_primary .nav
     body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav .menu_left_home1 .verticalmenu.side-verticalmenu {
         border-radius: 12px;
         overflow: visible !important;
+        padding-bottom: 8px;
+        z-index: 1201;
     }
 
     body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav .menu_left_home1 .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
@@ -155,7 +159,8 @@ body.cms-homepage_ayo_home5 .page-wrapper .header .header-nav .menu_primary .nav
         border-radius: 12px;
         background: #fff;
         box-shadow: 0 20px 34px rgb(15 23 42 / 14%);
-        z-index: 35;
+        z-index: 1300;
+        pointer-events: auto;
     }
 
     body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown.active + ul.togge-menu.list-category-dropdown,
@@ -314,17 +319,7 @@ body.cms-homepage_ayo_home5 .page-wrapper .product-item .b2b-login-to-see-price 
     display: none !important;
 }
 
-/* Footer dedupe for homepage: keep legal/payment/B2B blocks and remove repeated highlights. */
-body.cms-homepage_ayo_home5 .page-wrapper .page_footer .aw-footer-highlights {
-    display: none;
-}
-
-body.cms-homepage_ayo_home5 .page-wrapper .page_footer .aw-footer-trust-b2b,
-body.cms-homepage_ayo_home5 .page-wrapper .page_footer .aw-footer-legal,
-body.cms-homepage_ayo_home5 .page-wrapper .page_footer .awa-footer-payments-security {
-    border-color: var(--awa-home-final-border);
-    background: var(--awa-home-final-surface);
-}
+/* Footer dedup + card styling moved to awa-custom-footer-light-perfect.css (global) */
 
 @media (width <= 991px) {
     body.cms-homepage_ayo_home5 .page-wrapper .header .top-search {
@@ -383,4 +378,85 @@ body.cms-homepage_ayo_home5 .page-wrapper .page_footer .awa-footer-payments-secu
     body.cms-homepage_ayo_home5 .page-wrapper .header .header-nav .menu_primary .navigation.custommenu.main-nav > ul > li.b2b-link > a {
         transition: none;
     }
+}
+
+/* ==========================================================================
+   Correção Banners Home e Seção Atacado (Grid/Containers)
+   ========================================================================== */
+
+/* 1. Mosaico Perfeito de Banners (1 Principal Esquerda, 1 Largo Direita, 2 Quadrados) */
+body.cms-homepage_ayo_home5 .awa-banners-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: clamp(15px, 2vw, 24px) !important;
+}
+
+body.cms-homepage_ayo_home5 .awa-banners-grid figure,
+body.cms-homepage_ayo_home5 .awa-banners-grid img {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--awa-home-final-radius);
+    display: block;
+}
+
+body.cms-homepage_ayo_home5 .awa-banners-grid .awa-banner-item {
+    overflow: hidden;
+    border-radius: var(--awa-home-final-radius);
+    box-shadow: var(--awa-home-final-shadow);
+    transition: transform var(--awa-home-transition), box-shadow var(--awa-home-transition);
+}
+
+body.cms-homepage_ayo_home5 .awa-banners-grid .awa-banner-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--awa-home-final-shadow-hover);
+}
+
+body.cms-homepage_ayo_home5 .awa-banners-grid .awa-banner-tall {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+}
+
+body.cms-homepage_ayo_home5 .awa-banners-grid .awa-banner-wide {
+    grid-column: 2 / 4;
+    grid-row: 1 / 2;
+}
+
+body.cms-homepage_ayo_home5 .awa-banners-grid .awa-banner-square {
+    grid-column: auto;
+    grid-row: 2 / 3;
+}
+
+@media (max-width: 991px) {
+    body.cms-homepage_ayo_home5 .awa-banners-grid {
+        grid-template-columns: 1fr 1fr !important;
+        grid-template-rows: auto auto auto !important;
+    }
+    body.cms-homepage_ayo_home5 .awa-banners-grid .awa-banner-tall {
+        grid-column: 1 / 3;
+        grid-row: 1 / 2;
+    }
+    body.cms-homepage_ayo_home5 .awa-banners-grid .awa-banner-wide {
+        grid-column: 1 / 3;
+        grid-row: 2 / 3;
+    }
+}
+
+/* 2. Remoção de Padding Excessivo em Atacado e Revendedor */
+body.cms-homepage_ayo_home5 .top-home-content--b2b-promo {
+    padding-top: 10px !important;
+    padding-bottom: 30px !important;
+    margin-top: calc(var(--awa-home-final-gap) * 0.5) !important;
+}
+
+body.cms-homepage_ayo_home5 .top-home-content--b2b-promo .container {
+    padding: 0 15px !important;
+}
+
+/* Reduzir margens enormes da section title caso tenha */
+body.cms-homepage_ayo_home5 .top-home-content--b2b-promo .ayo-home5-heading {
+    margin-bottom: 20px !important;
+    margin-top: 15px !important;
 }

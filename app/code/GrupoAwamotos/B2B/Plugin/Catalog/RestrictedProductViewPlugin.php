@@ -93,18 +93,31 @@ class RestrictedProductViewPlugin
 
         $isLoggedIn = $this->customerSession->isLoggedIn();
 
-        // B2B Puro: redireciona visitantes não-logados para página de login
+        // B2B SEO-friendly: permite que visitantes vejam specs/fotos do produto.
+        // Preços ficam ocultos pelo HidePricePlugin, cart bloqueado pelo BlockCartAddPlugin,
+        // e o LoginToCart block exibe CTA de login/cadastro no lugar do botão de compra.
+        // Apenas produtos marcados como b2b_exclusive continuam restritos (tratados abaixo).
         if (!$isLoggedIn) {
+            // Para guests, apenas verificar se o produto é B2B exclusive
             $productId = (int) $this->request->getParam('id');
-            $productUrl = $this->urlBuilder->getUrl('catalog/product/view', ['id' => $productId]);
-            $referer = base64_encode($productUrl);
-
-            $this->messageManager->addNoticeMessage(
-                __('Faça login ou cadastre-se para acessar nossos produtos.')
-            );
-
-            $redirect = $this->redirectFactory->create();
-            return $redirect->setPath('b2b/account/login', ['referer' => $referer]);
+            if ($productId) {
+                try {
+                    $product = $this->productRepository->getById($productId);
+                    $isB2BExclusive = (bool) $product->getData('b2b_exclusive');
+                    if ($isB2BExclusive) {
+                        $productUrl = $this->urlBuilder->getUrl('catalog/product/view', ['id' => $productId]);
+                        $referer = base64_encode($productUrl);
+                        $this->messageManager->addNoticeMessage(
+                            __('Este produto é exclusivo para clientes B2B. Faça login ou cadastre sua empresa.')
+                        );
+                        $redirect = $this->redirectFactory->create();
+                        return $redirect->setPath('b2b/account/login', ['referer' => $referer]);
+                    }
+                } catch (\Exception $e) {
+                    // Product not found — let proceed() handle
+                }
+            }
+            return $proceed();
         }
 
         $productId = (int) $this->request->getParam('id');

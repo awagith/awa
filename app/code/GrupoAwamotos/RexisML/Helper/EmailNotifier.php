@@ -122,8 +122,12 @@ class EmailNotifier extends AbstractHelper
                 $totalValue += (float)str_replace(['.', ','], ['', '.'], $opp['predicted_value']);
             }
 
+            $opportunitiesHtml = $type === 'churn'
+                ? $this->buildChurnRows($opportunities)
+                : $this->buildCrossSellRows($opportunities);
+
             $templateVars = [
-                'opportunities' => $opportunities,
+                'opportunities_html' => $opportunitiesHtml,
                 'total_value' => number_format($totalValue, 2, ',', '.'),
                 'alert_date' => date('d/m/Y H:i'),
                 'type_label' => $type === 'churn' ? 'Churn (Reativacao)' : 'Cross-sell',
@@ -220,5 +224,82 @@ class EmailNotifier extends AbstractHelper
         } catch (\Exception $e) {
             return ['name' => $productCode];
         }
+    }
+
+    /**
+     * Gera HTML das linhas de oportunidades de churn para o email.
+     * Evita passar array PHP ao template filter (Array to string conversion).
+     */
+    private function buildChurnRows(array $opportunities): string
+    {
+        $html = '';
+        foreach ($opportunities as $opp) {
+            $customerName  = htmlspecialchars((string)($opp['customer_name'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $customerEmail = htmlspecialchars((string)($opp['customer_email'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $productName   = htmlspecialchars((string)($opp['product_name'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $productSku    = htmlspecialchars((string)($opp['product_sku'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $score         = number_format((float)($opp['score'] ?? 0), 1);
+            $predictedValue = htmlspecialchars((string)($opp['predicted_value'] ?? '0,00'), ENT_QUOTES, 'UTF-8');
+            $recencyDays   = (int)($opp['recency_days'] ?? 0);
+
+            $scoreBg    = (float)($opp['score'] ?? 0) >= 90 ? '#fee2e2' : '#fef3c7';
+            $scoreColor = (float)($opp['score'] ?? 0) >= 90 ? '#991b1b' : '#92400e';
+            $recencyColor = $recencyDays > 90 ? '#dc2626' : '#d97706';
+
+            $html .= '<tr style="border-bottom: 1px solid #e5e7eb;">';
+            $html .= '<td style="padding: 12px; border: 1px solid #e5e7eb;">';
+            $html .= '<strong style="display: block; margin-bottom: 4px;">' . $customerName . '</strong>';
+            $html .= '<span style="font-size: 12px; color: #6b7280;">' . $customerEmail . '</span>';
+            $html .= '</td>';
+            $html .= '<td style="padding: 12px; border: 1px solid #e5e7eb;">';
+            $html .= '<strong style="display: block; margin-bottom: 4px;">' . $productName . '</strong>';
+            $html .= '<span style="font-size: 12px; color: #6b7280;">SKU: ' . $productSku . '</span>';
+            $html .= '</td>';
+            $html .= '<td style="padding: 12px; text-align: center; border: 1px solid #e5e7eb;">';
+            $html .= '<span style="display: inline-block; padding: 4px 12px; background: ' . $scoreBg . '; color: ' . $scoreColor . '; border-radius: 12px; font-weight: 600; font-size: 13px;">' . $score . '%</span>';
+            $html .= '</td>';
+            $html .= '<td style="padding: 12px; text-align: right; font-weight: 600; border: 1px solid #e5e7eb;">R$ ' . $predictedValue . '</td>';
+            $html .= '<td style="padding: 12px; text-align: center; border: 1px solid #e5e7eb;">';
+            $html .= '<span style="color: ' . $recencyColor . '; font-weight: 600;">' . $recencyDays . ' dias</span>';
+            $html .= '</td>';
+            $html .= '</tr>';
+        }
+        return $html;
+    }
+
+    /**
+     * Gera HTML das linhas de oportunidades de cross-sell para o email.
+     * Evita passar array PHP ao template filter (Array to string conversion).
+     */
+    private function buildCrossSellRows(array $opportunities): string
+    {
+        $html = '';
+        foreach ($opportunities as $opp) {
+            $customerName  = htmlspecialchars((string)($opp['customer_name'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $customerEmail = htmlspecialchars((string)($opp['customer_email'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $productName   = htmlspecialchars((string)($opp['product_name'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $productSku    = htmlspecialchars((string)($opp['product_sku'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $score         = number_format((float)($opp['score'] ?? 0), 1);
+            $predictedValue = htmlspecialchars((string)($opp['predicted_value'] ?? '0,00'), ENT_QUOTES, 'UTF-8');
+
+            $scoreBg    = (float)($opp['score'] ?? 0) >= 70 ? '#d1fae5' : '#e0f2fe';
+            $scoreColor = (float)($opp['score'] ?? 0) >= 70 ? '#065f46' : '#075985';
+
+            $html .= '<tr style="border-bottom: 1px solid #e5e7eb;">';
+            $html .= '<td style="padding: 12px; border: 1px solid #e5e7eb;">';
+            $html .= '<strong style="display: block; margin-bottom: 4px;">' . $customerName . '</strong>';
+            $html .= '<span style="font-size: 12px; color: #6b7280;">' . $customerEmail . '</span>';
+            $html .= '</td>';
+            $html .= '<td style="padding: 12px; border: 1px solid #e5e7eb;">';
+            $html .= '<strong style="display: block; margin-bottom: 4px;">' . $productName . '</strong>';
+            $html .= '<span style="font-size: 12px; color: #6b7280;">SKU: ' . $productSku . '</span>';
+            $html .= '</td>';
+            $html .= '<td style="padding: 12px; text-align: center; border: 1px solid #e5e7eb;">';
+            $html .= '<span style="display: inline-block; padding: 4px 12px; background: ' . $scoreBg . '; color: ' . $scoreColor . '; border-radius: 12px; font-weight: 600; font-size: 13px;">' . $score . '%</span>';
+            $html .= '</td>';
+            $html .= '<td style="padding: 12px; text-align: right; font-weight: 600; border: 1px solid #e5e7eb;">R$ ' . $predictedValue . '</td>';
+            $html .= '</tr>';
+        }
+        return $html;
     }
 }

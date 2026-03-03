@@ -1,0 +1,18 @@
+<?php declare(strict_types=1);
+
+use Mirasvit\Core\Service\CspService;
+
+/** @var \Magento\Backend\Block\Page\RequireJs $block */
+
+$nonce = CspService::getNonce();
+?>
+
+<script <?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+    // we disabled mutation observers that used in ui/../lib/dom-observer.js for prevent slow rendering if we have many attributes
+    window.MutationObserver = function () {
+        this.observe = function () {
+        }
+    };
+</script>
+
+<?= $block->getChildHtml() ?>

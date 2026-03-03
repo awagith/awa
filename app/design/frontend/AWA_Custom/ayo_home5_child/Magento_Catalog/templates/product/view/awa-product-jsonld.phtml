@@ -1,0 +1,78 @@
+<?php
+/**
+ * AWA B2B — Product Structured Data (Schema.org JSON-LD)
+ * Injects Product schema on PDP for SEO rich results.
+ */
+
+/** @var \Magento\Catalog\Block\Product\View $block */
+$product = $block->getProduct();
+if (!$product || !$product->getId()) {
+    return;
+}
+
+$imageHelper = $this->helper('Magento\Catalog\Helper\Image');
+$productImage = $imageHelper->init($product, 'product_base_image')->getUrl();
+$productUrl = $product->getProductUrl();
+$productName = $product->getName();
+$productSku = $product->getSku();
+$productDescription = strip_tags((string)$product->getShortDescription() ?: (string)$product->getDescription());
+
+$brandAttr = 'AWA Motos';
+try {
+    $brandAttr = $product->getAttributeText('manufacturer') ?: $product->getAttributeText('marca') ?: 'AWA Motos';
+} catch (\Throwable $e) {
+    // Falls back to default if getAttributeText throws getSource() on false
+}
+
+
+$schema = [
+    '@context' => 'https://schema.org/',
+    '@type' => 'Product',
+    'name' => $productName,
+    'sku' => $productSku,
+    'image' => $productImage,
+    'url' => $productUrl,
+    'itemCondition' => 'https://schema.org/NewCondition',
+    'brand' => [
+        '@type' => 'Brand',
+        'name' => (string)$brandAttr,
+    ],
+];
+
+if ($productDescription) {
+    $schema['description'] = mb_substr($productDescription, 0, 1000);
+}
+
+// Only add price offer if product is salable and has a price (B2B guest check)
+$finalPrice = $product->getFinalPrice();
+if ($finalPrice > 0) {
+    $schema['offers'] = [
+        '@type' => 'Offer',
+        'url' => $productUrl,
+        'priceCurrency' => 'BRL',
+        'price' => number_format((float)$finalPrice, 2, '.', ''),
+        'itemCondition' => 'https://schema.org/NewCondition',
+        'priceValidUntil' => date('Y-12-31', strtotime('+1 year')),
+        'availability' => $product->isAvailable()
+            ? 'https://schema.org/InStock'
+            : 'https://schema.org/OutOfStock',
+        'seller' => [
+            '@type' => 'Organization',
+            'name' => 'Grupo Awamotos',
+        ],
+    ];
+}
+
+// MPN / GTIN if available
+$mpn = $product->getData('mpn') ?: $product->getData('codigo_original');
+if ($mpn) {
+    $schema['mpn'] = (string)$mpn;
+}
+$gtin = $product->getData('ean') ?: $product->getData('gtin');
+if ($gtin) {
+    $schema['gtin13'] = (string)$gtin;
+}
+?>
+<script type="application/ld+json">
+<?= /* @noEscape */ json_encode($schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) ?>
+</script>

@@ -1,51 +1,15 @@
 <?xml version="1.0"?>
-<!--
-/**
- * GrupoAwamotos B2B - Theme Integration
- * Adds B2B links to header and customer account navigation
- */
--->
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <css src="GrupoAwamotos_B2B::css/b2b-header.css"/>
-        <css src="GrupoAwamotos_B2B::css/header-status-panel.css"/>
+        <!-- awa-b2b-onda2.css carregado via tema filho (AWA_Custom/ayo_home5_child) default_head_blocks.xml -->
     </head>
     <body>
-        <!-- B2B Status Panel in Header (using Ayo theme's toki_header) -->
-        <referenceBlock name="toki_header">
-            <block class="GrupoAwamotos\B2B\Block\Header\StatusPanel"
-                   name="b2b.header.status.panel"
-                   template="GrupoAwamotos_B2B::header/status-panel.phtml"
-                   after="-"/>
-        </referenceBlock>
-        
-        <!-- B2B Links in Header top.links -->
         <referenceBlock name="top.links">
-            <!-- B2B Register Link (for guests only) -->
-            <block class="GrupoAwamotos\B2B\Block\Link\Register" name="b2b-register-link">
+            <block class="GrupoAwamotos\B2B\Block\Header\QuickOrderLink" name="b2b.quickorder.link" before="-">
                 <arguments>
-                    <argument name="label" xsi:type="string" translate="true">Cadastro B2B</argument>
-                    <argument name="path" xsi:type="string">b2b/register</argument>
-                    <argument name="sortOrder" xsi:type="number">50</argument>
-                </arguments>
-            </block>
-            
-            <!-- B2B Dashboard Link (for logged-in B2B customers) -->
-            <block class="GrupoAwamotos\B2B\Block\Link\Dashboard" name="b2b-dashboard-link-header">
-                <arguments>
-                    <argument name="label" xsi:type="string" translate="true">Painel B2B</argument>
-                    <argument name="path" xsi:type="string">b2b/account/dashboard</argument>
-                    <argument name="sortOrder" xsi:type="number">45</argument>
+                    <argument name="css_class" xsi:type="string">b2b-quickorder-link</argument>
                 </arguments>
             </block>
         </referenceBlock>
-        
-        <!-- Login to Cart Modal for Guests (when hide_add_to_cart_guests is enabled) -->
-        <referenceContainer name="before.body.end">
-            <block class="GrupoAwamotos\B2B\Block\LoginToCart"
-                   name="b2b.login.to.cart.modal"
-                   template="GrupoAwamotos_B2B::product/login-to-cart.phtml"/>
-        </referenceContainer>
     </body>
 </page>

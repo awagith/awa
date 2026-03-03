@@ -4,11 +4,11 @@
  */
 -->
 <!--@subject REXIS ML - Oportunidades de Cross-sell Detectadas @-->
-<!--@vars {
-    "var opportunities":"Array de oportunidades",
-    "var total_value":"Valor total potencial",
+<!--@vars {,
     "var alert_date":"Data do alerta"
-} @-->
+}
+
+ @-->
 
 {{template config_path="design/email/header_template"}}
 
@@ -23,8 +23,11 @@
                 com alto score que podem aumentar o ticket medio dos seus clientes.
             </p>
             <p style="font-size: 14px; color: #666; margin: 0 0 30px;">
-                <strong>Data do Alerta:</strong> {{var alert_date}}<br>
+                <strong>Data do Alerta:</strong> {{var alert_date}}
+
+<br>
                 <strong>Valor Potencial Total:</strong> R$ {{var total_value}}
+
             </p>
         </td>
     </tr>
@@ -40,7 +43,7 @@
         </tr>
     </thead>
     <tbody>
-        {{block class='GrupoAwamotos\RexisML\Block\Email\CrossSellOpportunities' area='frontend' template='GrupoAwamotos_RexisML::email/crosssell_opportunities.phtml' opportunities=$opportunities}}
+        {{var opportunities_html}}
     </tbody>
 </table>
 

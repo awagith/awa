@@ -1,0 +1,39 @@
+<?php
+/**
+ * AWA B2B — Corporate Hero Banner (Static)
+ * Substitui o slider antigo por uma imagem única e estática de impacto corporativo.
+ */
+?>
+<div class="awa-corporate-hero" data-awa-component="corporate-hero">
+    <div class="awa-corporate-hero__wrapper">
+        <div class="awa-corporate-hero__image-container">
+            <img class="awa-corporate-hero__image"
+                 src="<?= $block->escapeUrl($block->getViewFileUrl('images/home/banner-hero-corporate.jpg')) ?>"
+                 alt="Awa Motos B2B — Peças e Acessórios"
+                 width="1920" height="400" loading="eager" decoding="sync"/>
+            <!-- Overlay to darken the image if needed -->
+            <div class="awa-corporate-hero__overlay"></div>
+        </div>
+        <div class="awa-corporate-hero__content">
+            <div class="container">
+                <div class="awa-corporate-hero__inner">
+                    <h1 class="awa-corporate-hero__title">
+                        O Maior Estoque de<br>
+                        <strong>Motopeças B2B</strong> do Brasil
+                    </h1>
+                    <p class="awa-corporate-hero__subtitle">
+                        Abasteça sua loja com as melhores marcas. Entrega imediata em todo território nacional.
+                    </p>
+                    <div class="awa-corporate-hero__actions">
+                        <a href="<?= $block->escapeUrl($block->getUrl('customer/account/create')) ?>" class="action primary awa-btn-primary">
+                            <span>Abra sua conta B2B</span>
+                        </a>
+                        <a href="<?= $block->escapeUrl($block->getUrl('catalogsearch/advanced')) ?>" class="action secondary awa-btn-ghost">
+                            <span>Busca Avançada</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

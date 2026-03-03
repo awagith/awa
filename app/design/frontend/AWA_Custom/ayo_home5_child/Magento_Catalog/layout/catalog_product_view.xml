@@ -21,5 +21,40 @@
                 </arguments>
             </block>
         </referenceContainer>
+
+        <!-- AWA Phase 5: Prominent B2B SKU on PDP -->
+        <referenceContainer name="product.info.main">
+            <block class="Magento\Catalog\Block\Product\View"
+                   name="awa.b2b.pdp.sku"
+                   template="Magento_Catalog::product/view/b2b_sku.phtml"
+                   after="page.main.title" />
+
+            <!-- Hide the default Magento SKU to prevent duplication -->
+            <referenceBlock name="product.info.sku" remove="true" />
+
+            <!-- AWA Phase 6: Move Tech Specs Above Fold -->
+            <block class="Magento\Catalog\Block\Product\View\Attributes"
+                   name="product.attributes.above.fold"
+                   template="Magento_Catalog::product/view/attributes.phtml"
+                   after="product.info.price" />
+        </referenceContainer>
+
+        <!-- Hide original attributes tab -->
+        <referenceBlock name="product.attributes" remove="true" />
+
+        <!-- AWA Phase 4: Product JSON-LD Schema.org -->
+        <referenceContainer name="content">
+            <block class="Magento\Catalog\Block\Product\View"
+                   name="awa.product.jsonld"
+                   template="Magento_Catalog::product/view/awa-product-jsonld.phtml"
+                   after="-"/>
+        </referenceContainer>
+        <!-- AWA Phase 5: UI/UX Pro Max - Trust & Authority Badges under Add to Cart -->
+        <referenceContainer name="product.info.extrahint">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.trust.badges"
+                   template="Magento_Theme::html/awa-trust-badges.phtml"
+                   after="-"/>
+        </referenceContainer>
     </body>
 </page>

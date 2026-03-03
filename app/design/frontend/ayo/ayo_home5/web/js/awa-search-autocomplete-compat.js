@@ -133,10 +133,19 @@ define([
         return findScoped($form, options.resultsRootSelector);
     }
 
+    function isMirasvitAutocompleteActive() {
+        return document.getElementById('searchAutocompletePlaceholder') !== null
+            || document.querySelector('.mst-searchautocomplete__autocomplete') !== null;
+    }
+
     function hasNativeResults($form, options) {
         var $resultsRoot = findScoped($form, options.resultsRootSelector);
         var $panel = getFallbackPanel($form, options);
         var $nativeItems = $();
+
+        if (isMirasvitAutocompleteActive()) {
+            return true;
+        }
 
         if ($resultsRoot.length) {
             $nativeItems = $nativeItems.add($resultsRoot.find('li').not('.awa-fallback-item'));
@@ -331,7 +340,7 @@ define([
             return attrEndpoint;
         }
 
-        return '/rokanthemes_searchsuiteautocomplete/ajax/index';
+        return '/search/ajax/suggest';
     }
 
     function buildCacheKey(query, categoryValue) {

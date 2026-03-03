@@ -9,5 +9,12 @@
                    template="GrupoAwamotos_B2B::product/customer-price-info.phtml"
                    after="product.info.price"/>
         </referenceContainer>
+
+        <referenceContainer name="product.info.extrahint">
+            <block class="Magento\Catalog\Block\Product\View"
+                   name="b2b.secondary.ctas"
+                   template="Magento_Catalog::product/view/b2b_secondary_ctas.phtml"
+                   after="-"/>
+        </referenceContainer>
     </body>
 </page>

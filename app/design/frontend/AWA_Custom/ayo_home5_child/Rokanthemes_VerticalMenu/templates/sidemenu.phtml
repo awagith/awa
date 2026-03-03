@@ -16,11 +16,14 @@ if (!empty($_config['general']['enable'])):
     $limitShow = (int)($_config['general']['limit_show'] ?? 0);
     $menuId    = 'awa-vertical-menu-' . uniqid('', false);
     $_menu     = $block->getVerticalMenuHtml();
-?>
-
+?><!-- Skip navigation link for keyboard/screen reader users -->
+<a class="vmm-skip-nav" href="#maincontent">
+    <?= $block->escapeHtml(__('Skip to main content')) ?>
+</a>
 <nav class="navigation verticalmenu side-verticalmenu"
      aria-label="<?= $block->escapeHtmlAttr(__('Product Categories')) ?>"
-     data-role="awa-vertical-menu">
+     data-role="awa-vertical-menu"
+     data-vmm="true">
     <h2 class="our_categories title-category-dropdown"
         data-role="awa-vertical-menu-trigger"
         aria-controls="<?= $block->escapeHtmlAttr($menuId) ?>"
@@ -28,7 +31,7 @@ if (!empty($_config['general']['enable'])):
         role="button"
         tabindex="0">
         <span class="vm-icon"><i class="fa fa-bars" aria-hidden="true"></i></span>
-        <span><?= $block->escapeHtml(__('Categories')) ?></span>
+        <span><?= $block->escapeHtml(__('Todas as categorias')) ?></span>
     </h2>
     <ul id="<?= $block->escapeHtmlAttr($menuId) ?>"
         class="togge-menu list-category-dropdown"
@@ -64,6 +67,11 @@ if (!empty($_config['general']['enable'])):
             "desktopBreakpoint": 992,
             "overlaySelector": ".shadow_bkg_show",
             "limitShow": <?= (int)$limitShow ?>
+        }
+    },
+    "[data-vmm='true']": {
+        "js/awa-vertical-mega-menu": {
+            "desktopBreakpoint": 992
         }
     }
 }

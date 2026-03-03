@@ -1,0 +1,17 @@
+<!-- ko if: items().length > 0 -->
+<div data-bind="foreach: { data: items, as: 'item' }, attr: {class: 'mstInPage__itemList ' + props.activeIndex()}">
+    <!-- ko if: $parent.props.activeIndex().includes('catalog_attribute_') -->
+    <div data-bind="template: { name: 'mstInPage__magento_catalog_attribute', data: item }, attr: {class: 'mstInPage__item ' + $parent.props.activeIndex()}"></div>
+    <!-- /ko -->
+
+    <!-- ko if: !$parent.props.activeIndex().includes('_attribute_') -->
+    <div data-bind="template: { name: 'mstInPage__' + $parent.props.activeIndex(), data: item }, attr: {class: 'mstInPage__item ' + $parent.props.activeIndex()}"></div>
+    <!-- /ko -->
+</div>
+<!-- /ko -->
+
+<!-- ko ifnot: items().length > 0 -->
+<div class="mstInPage__itemList _empty">
+    <?= $block->escapeHtml(__('Your search returned no results.')) ?>
+</div>
+<!-- /ko -->

@@ -1,0 +1,18 @@
+<?php
+/**
+ * AWA B2B — Login Info Block
+ * Exibe mensagem e benefícios para usuários não logados.
+ */
+?>
+<div class="awa-b2b-login-info" role="note" aria-label="Informações de acesso B2B">
+    <strong>Portal Exclusivo para Empresas e Revendas</strong><br/>
+    Faça login para visualizar preços, condições de atacado e realizar pedidos.
+    Ainda não tem cadastro? <a href="<?= $block->escapeUrl($block->getUrl('b2b/register')) ?>">Cadastre sua empresa</a> e acesse condições especiais B2B.
+</div>
+
+<div class="awa-b2b-benefits" aria-label="Benefícios B2B">
+    <div class="awa-b2b-benefits__item">Preços exclusivos para CNPJ cadastrado</div>
+    <div class="awa-b2b-benefits__item">Tabela de frete diferenciada para revendas</div>
+    <div class="awa-b2b-benefits__item">Pedidos por planilha e nota fiscal automática</div>
+    <div class="awa-b2b-benefits__item">Gerente de conta dedicado para frotistas</div>
+</div>

@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!--
+    AWA Motos B2B — CSP Whitelist
+    Allows Facebook Pixel, Google Fonts, and analytics domains.
+-->
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <value id="facebook-pixel" type="host">connect.facebook.net</value>
+                <value id="google-tagmanager" type="host">www.googletagmanager.com</value>
+                <value id="google-analytics" type="host">www.google-analytics.com</value>
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="facebook-connect" type="host">www.facebook.com</value>
+                <value id="facebook-pixel-connect" type="host">connect.facebook.net</value>
+                <value id="google-analytics-connect" type="host">www.google-analytics.com</value>
+                <value id="google-tagmanager-connect" type="host">www.googletagmanager.com</value>
+            </values>
+        </policy>
+        <policy id="img-src">
+            <values>
+                <value id="facebook-img" type="host">www.facebook.com</value>
+                <value id="google-analytics-img" type="host">www.google-analytics.com</value>
+            </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <value id="google-fonts" type="host">fonts.gstatic.com</value>
+            </values>
+        </policy>
+        <policy id="style-src">
+            <values>
+                <value id="google-fonts-css" type="host">fonts.googleapis.com</value>
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

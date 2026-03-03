@@ -88,6 +88,7 @@ class Product implements \Rokanthemes\SearchSuiteAutocomplete\Model\SearchInterf
         $queryText             = $query->getQueryText();
         $productResultFields   = $this->helperData->getProductResultFieldsAsArray();
         $productResultFields[] = ProductFields::URL;
+        $productResultFields[] = ProductFields::SKU;
 
         $productCollection = $this->getProductCollection($queryText);
 

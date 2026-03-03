@@ -70,6 +70,36 @@ if ($hotDealBlock) {
 	$hotDealHtml = trim((string)$hotDealBlock->setTemplate('Rokanthemes_Superdeals::category.phtml')->toHtml());
 }
 
+/* Phase 9: Rokanthemes Categorytab — Mueller-style "Busque por Categorias" carousel */
+$categoryCarouselCategories = [
+	['id' => 141, 'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="16" y="24" width="32" height="28" rx="4"/><path d="M24 24V16a8 8 0 0116 0v8"/><circle cx="32" cy="40" r="3"/></svg>', 'name' => 'Bauletos'],
+	['id' => 154, 'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 40h40"/><path d="M20 40c0-12 6-20 12-20s12 8 12 20"/><circle cx="20" cy="44" r="3"/><circle cx="44" cy="44" r="3"/></svg>', 'name' => 'Guidões'],
+	['id' => 146, 'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="32" cy="20" rx="10" ry="14"/><path d="M32 34v16"/><path d="M24 50h16"/></svg>', 'name' => 'Retrovisores'],
+	['id' => 159, 'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 48V16l16 8 16-8v32l-16-8-16 8z"/></svg>', 'name' => 'Carcaças'],
+	['id' => 164, 'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="20" y="12" width="24" height="8" rx="2"/><path d="M28 20v32"/><path d="M36 20v32"/><path d="M20 52h24"/></svg>', 'name' => 'Pedal'],
+	['id' => 165, 'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="32" cy="32" r="16"/><path d="M32 16v32M16 32h32"/><circle cx="32" cy="32" r="6"/></svg>', 'name' => 'Lentes de Freio'],
+	['id' => 120, 'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 32h40"/><path d="M16 28v8"/><path d="M48 28v8"/><circle cx="32" cy="32" r="4"/></svg>', 'name' => 'Barras de Guidão'],
+	['id' => 54,  'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M32 12v40"/><path d="M20 20l12-8 12 8"/><path d="M16 52h32"/></svg>', 'name' => 'Suportes'],
+];
+
+// Build category URLs
+/** @var \Magento\Catalog\Model\CategoryFactory|null */
+try {
+	$categoryFactory = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Catalog\Model\CategoryFactory');
+	foreach ($categoryCarouselCategories as &$cat) {
+		$catModel = $categoryFactory->create()->load($cat['id']);
+		if ($catModel->getId()) {
+			$cat['url'] = $catModel->getUrl();
+			$cat['name'] = $catModel->getName(); // Use actual DB name
+		} else {
+			$cat['url'] = '#';
+		}
+	}
+	unset($cat);
+} catch (\Exception $e) {
+	// Fallback: keep default names/urls
+}
+
 
 
 if ($benefitsHtml !== '' && strpos($benefitsHtml, 'velaServicesInner--home5') === false) {
@@ -103,18 +133,85 @@ if ($benefitsHtml !== '' && strpos($benefitsHtml, 'velaServicesInner--home5') ==
 	<?php endif; ?>
 </div>
 
-<!-- ② Benefits + Banners + Super Deals -->
-<?php if ($benefitsHtml !== '' || $bannerMidHtml !== '' || $hotDealHtml !== ''): ?>
+<!-- ①.a Phase 4.5: Barra de Benefícios 100% Width (Estilo Motorola Empresas) -->
+<div class="awa-benefits-bar">
+    <div class="awa-benefits-container">
+        <div class="awa-benefit-item">
+            <svg class="awa-benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+            <div class="awa-benefit-text">
+                <span class="awa-benefit-title">Compra Garantida</span>
+                <span class="awa-benefit-desc">Com o fabricante oficial</span>
+            </div>
+        </div>
+
+        <div class="awa-benefit-item">
+            <svg class="awa-benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            <div class="awa-benefit-text">
+                <span class="awa-benefit-title">Desconto Progressivo</span>
+                <span class="awa-benefit-desc">Compre mais, pague menos</span>
+            </div>
+        </div>
+
+        <div class="awa-benefit-item">
+            <svg class="awa-benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            <div class="awa-benefit-text">
+                <span class="awa-benefit-title">Até 10x sem Juros</span>
+                <span class="awa-benefit-desc">Nos cartões de crédito</span>
+            </div>
+        </div>
+
+        <div class="awa-benefit-item">
+            <svg class="awa-benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+            <div class="awa-benefit-text">
+                <span class="awa-benefit-title">10% OFF no PIX</span>
+                <span class="awa-benefit-desc">Pagando à vista</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ①b Phase 9: "Busque por Categorias" — Mueller-style Carousel -->
+<section class="top-home-content top-home-content--category-carousel awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Busque por Categorias')); ?>">
+	<div class="container">
+		<header class="awa-category-carousel__header">
+			<h2><?php echo $this->escapeHtml(__('Busque por Categorias')); ?></h2>
+			<p><?php echo $this->escapeHtml(__('Tudo o que você precisa está aqui!')); ?></p>
+		</header>
+		<div class="awa-category-carousel__track" id="awa-cat-carousel">
+			<?php foreach ($categoryCarouselCategories as $cat): ?>
+			<a href="<?php echo $this->escapeUrl($cat['url'] ?? '#'); ?>" class="awa-category-carousel__item" title="<?php echo $this->escapeHtmlAttr($cat['name']); ?>">
+				<div class="awa-category-carousel__icon">
+					<?php echo $cat['icon']; ?>
+				</div>
+				<span class="awa-category-carousel__label"><?php echo $this->escapeHtml($cat['name']); ?></span>
+			</a>
+			<?php endforeach; ?>
+		</div>
+		<div class="awa-category-carousel__nav">
+			<button class="awa-category-carousel__prev" aria-label="Anterior" type="button">&#8249;</button>
+			<button class="awa-category-carousel__next" aria-label="Próximo" type="button">&#8250;</button>
+		</div>
+	</div>
+</section>
+<script>
+(function(){
+	var track = document.getElementById('awa-cat-carousel');
+	if (!track) return;
+	var prev = document.querySelector('.awa-category-carousel__prev');
+	var next = document.querySelector('.awa-category-carousel__next');
+	var scrollAmt = 280;
+	if (prev) prev.addEventListener('click', function(){ track.scrollBy({left: -scrollAmt, behavior:'smooth'}); });
+	if (next) next.addEventListener('click', function(){ track.scrollBy({left: scrollAmt, behavior:'smooth'}); });
+})();
+</script>
+
+
+<!-- ② Benefits + Super Deals -->
+<?php if ($benefitsHtml !== '' || $hotDealHtml !== ''): ?>
 <section class="top-home-content top-home-content--trust-and-offers awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Confiança e ofertas')); ?>">
 	<div class="container top-home-content__trust-offers-grid" data-role="trust-offers-grid">
 		<?php if ($benefitsHtml !== ''): ?>
 			<?php echo $benefitsHtml; ?>
-		<?php endif; ?>
-
-		<?php if ($bannerMidHtml !== ''): ?>
-			<div class="banner_mid_1 top-home-content__trust-offers-banner" data-role="trust-offers-banner">
-				<?php echo $bannerMidHtml; ?>
-			</div>
 		<?php endif; ?>
 
 		<?php if ($hotDealHtml !== ''): ?>

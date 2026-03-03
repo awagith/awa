@@ -1,0 +1,67 @@
+<?php
+
+use Mirasvit\Core\Service\CspService;
+
+/** @var \Mirasvit\Search\Block\Debug $block */
+
+$results = [];
+$nonce   = CspService::getNonce();
+?>
+<div class="mst-search-debug">
+    <div class="mst-search-debug__keys">
+        <?php foreach ($block->getPreparedLogs() as $key => $log): ?>
+            <a href="#<?= $block->escapeHtml($key) ?>"><?= $block->escapeHtml($key) ?></a>
+        <?php endforeach ?>
+    </div>
+
+    <?php foreach ($block->getPreparedLogs() as $key => $log): ?>
+        <div class="mst-search-debug__title" id="<?= $block->escapeHtml($key) ?>"><?= $block->escapeHtml($key) ?></div>
+
+        <?php if (strlen($log) > 0 && in_array($log[0], ['{', '['])): ?>
+            <pre><?= /* @noEscape */ json_encode(json_decode($log), JSON_PRETTY_PRINT) ?></pre>
+        <?php else: ?>
+            <pre><?= $block->escapeHtml($log) ?></pre>
+        <?php endif ?>
+
+    <?php endforeach ?>
+</div>
+<style<?php if ($nonce): ?> nonce="<?= $block->escapeHtml($nonce) ?>"<?php endif; ?>>
+    .mst-search-debug {
+        display: block;
+        background: #f9faff;
+        padding: 15px;
+        direction: ltr;
+    }
+
+    .mst-search-debug pre {
+        font-size: 10px;
+        white-space: pre-wrap;
+        margin-left: 80px;
+    }
+
+    .mst-search-debug__title {
+        font-weight: 600;
+        font-size: 18px;
+        margin: 20px 0 10px 0;
+    }
+
+    .mst-search-debug__keys {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        background: #fff;
+        flex-wrap: wrap;
+        border-top: 1px solid #eee;
+    }
+
+    .mst-search-debug__keys > a {
+        display: block;
+        padding: 5px 10px;
+        border: 1px solid #eee;
+        margin: 3px;
+        text-decoration: none;
+        font-size: 12px;
+    }
+</style>

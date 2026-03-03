@@ -10,27 +10,37 @@
    - .action.primary, button { background/border/color ... !important }
    This file loads after add_custom_theme_head and restores component-level visuals. */
 
-body .page-wrapper .awa-b2b-mode-badge {
+/* B2B Unified Status Panel — override ThemeOption button resets */
+body .page-wrapper .b2b-status-trigger {
+    background: linear-gradient(135deg, rgba(183, 51, 55, 0.08) 0%, rgba(183, 51, 55, 0.04) 100%) !important;
+    border-color: rgba(183, 51, 55, 0.15) !important;
     color: #1f2937 !important;
-    border-color: color-mix(in srgb, var(--awa-b2b-mode-accent, var(--primary-color, #b73337)) 22%, white) !important;
-    background: color-mix(in srgb, var(--awa-b2b-mode-accent, var(--primary-color, #b73337)) 8%, white) !important;
 }
 
-body .page-wrapper .awa-b2b-mode-badge:hover,
-body .page-wrapper .awa-b2b-mode-badge:focus-visible {
+body .page-wrapper .b2b-status-trigger:hover,
+body .page-wrapper .b2b-status-trigger:focus-visible {
+    background: linear-gradient(135deg, rgba(183, 51, 55, 0.12) 0%, rgba(183, 51, 55, 0.08) 100%) !important;
+    border-color: rgba(183, 51, 55, 0.25) !important;
     color: #111827 !important;
-    border-color: color-mix(in srgb, var(--awa-b2b-mode-accent, var(--primary-color, #b73337)) 35%, white) !important;
-    background: color-mix(in srgb, var(--awa-b2b-mode-accent, var(--primary-color, #b73337)) 14%, white) !important;
     outline: 0;
     box-shadow: var(--awa-post-themeoption-focus) !important;
 }
 
-body .page-wrapper .awa-b2b-mode-badge__dot {
-    background: var(--awa-b2b-mode-accent, var(--primary-color, #b73337)) !important;
+body .page-wrapper .b2b-status-trigger[aria-expanded="true"] {
+    background: var(--primary-color, #b73337) !important;
+    border-color: var(--primary-color, #b73337) !important;
+    color: #fff !important;
 }
 
-body .page-wrapper .awa-b2b-mode-badge__tier {
-    color: var(--awa-b2b-mode-accent, var(--primary-color, #b73337)) !important;
+body .page-wrapper .b2b-status-panel .footer-link,
+body .page-wrapper .b2b-status-panel .quick-action-link {
+    background: transparent !important;
+    border: none !important;
+}
+
+body .page-wrapper .b2b-logout-form .logout-link {
+    background: transparent !important;
+    border: none !important;
 }
 
 body .page-wrapper .block-search .block-content button.action.search {

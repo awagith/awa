@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+    Override: re-habilita top.search que o tema pai (ayo_default) removia
+    para substituir pelo SearchbyCat (módulo desativado).
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="top.search" remove="false"/>
+    </body>
+</page>

@@ -529,3 +529,23 @@ body.cms-page-view .column.main blockquote {
         transition: none;
     }
 }
+
+/* ================================================
+   8. FOOTER PAYMENT ICONS
+   ================================================ */
+/* B2B Payment Icons Monochromatic Filter */
+.footer-payments-list img,
+.payment-methods img,
+.footer-col-pay img,
+.footer-payment img,
+.footer .payment img {
+    filter: grayscale(100%) opacity(0.7);
+    transition: filter 0.3s ease;
+}
+.footer-payments-list img:hover,
+.payment-methods img:hover,
+.footer-col-pay img:hover,
+.footer-payment img:hover,
+.footer .payment img:hover {
+    filter: grayscale(0%) opacity(1);
+}

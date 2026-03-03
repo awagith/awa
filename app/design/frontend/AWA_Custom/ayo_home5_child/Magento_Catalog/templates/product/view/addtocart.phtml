@@ -1,0 +1,87 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+/** @var $block \Magento\Catalog\Block\Product\View */
+?>
+<?php $_product = $block->getProduct(); ?>
+<?php $buttonTitle = __('Add to Cart'); ?>
+
+<?php /* =========================================================
+         B2B TECHNICAL SUMMARY & SECONDARY ACTIONS
+         ========================================================= */ ?>
+<div class="awa-b2b-pdp-technical-summary">
+    <table>
+        <tbody>
+            <tr>
+                <td><?= $block->escapeHtml(__('SKU')) ?></td>
+                <td><?= $block->escapeHtml($_product->getSku()) ?></td>
+            </tr>
+            <tr>
+                <td><?= $block->escapeHtml(__('Código de Barras (EAN)')) ?></td>
+                <td><?= $block->escapeHtml($_product->getData('ean') ?: 'N/A') ?></td>
+            </tr>
+            <tr>
+                <td><?= $block->escapeHtml(__('Master Box')) ?></td>
+                <td><?= $block->escapeHtml($_product->getData('master_box_qty') ?: 'N/A') ?></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="awa-b2b-secondary-actions">
+        <?php $pdfUrl = $_product->getData('product_manual_pdf'); ?>
+        <?php if ($pdfUrl): ?>
+            <a href="<?= $block->escapeUrl($pdfUrl) ?>" target="_blank" class="awa-b2b-action-btn">
+                <?= $block->escapeHtml(__('Baixar PDF')) ?>
+            </a>
+        <?php else: ?>
+            <button type="button" class="awa-b2b-action-btn" title="<?= $block->escapeHtmlAttr(__('Ficha técnica indisponível')) ?>" disabled>
+                <?= $block->escapeHtml(__('Baixar PDF')) ?>
+            </button>
+        <?php endif; ?>
+        <button type="button" class="awa-b2b-action-btn">
+            <?= $block->escapeHtml(__('Criar Tabela')) ?>
+        </button>
+    </div>
+</div>
+
+<?php if ($_product->isSaleable()) :?>
+<div class="box-tocart">
+    <div class="fieldset">
+        <?php if ($block->shouldRenderQuantity()) :?>
+        <div class="awa-catalog-qty-box field qty">
+            <label class="label awa-sr-only" for="qty"><span><?= $block->escapeHtml(__('Qty')) ?></span></label>
+            <div class="control">
+                <input type="number"
+                       name="qty"
+                       id="qty"
+                       min="0"
+                       value="<?= $block->getProductDefaultQty() * 1 ?>"
+                       title="<?= $block->escapeHtmlAttr(__('Qty')) ?>"
+                       class="input-text qty"
+                       data-validate="<?= $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
+                       />
+            </div>
+        </div>
+        <?php endif; ?>
+        <div class="actions">
+            <button type="submit"
+                    title="<?= $block->escapeHtmlAttr($buttonTitle) ?>"
+                    class="action primary tocart b2b-primary-btn"
+                    id="product-addtocart-button" disabled>
+                <span><?= $block->escapeHtml($buttonTitle) ?></span>
+            </button>
+            <?= $block->getChildHtml('', true) ?>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+<script type="text/x-magento-init">
+    {
+        "#product_addtocart_form": {
+            "Magento_Catalog/js/validate-product": {}
+        }
+    }
+</script>

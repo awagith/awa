@@ -1,0 +1,17 @@
+<?php
+//@codingStandardsIgnoreFile
+/** @var \Mirasvit\Search\Block\Index\Base $block */
+/** @var \Mirasvit\BlogMx\ViewModel\PostViewModel $postViewModel */
+$postView = $block->create(\Mirasvit\BlogMx\ViewModel\PostViewModel::class);
+?>
+<div class="mst-search__index mst-search__index-external-wordpress-post">
+    <?= $block->getPager() ?>
+    <?php /** @var \Mirasvit\BlogMx\Model\Post $post */ ?>
+    <?php foreach ($block->getCollection() as $post): ?>
+        <div>
+            <?= $postView->render('chunks/post_5.phtml', ['post' => $post]) ?>
+        </div>
+    <?php endforeach ?>
+    <?= $block->getPager() ?>
+</div>
+

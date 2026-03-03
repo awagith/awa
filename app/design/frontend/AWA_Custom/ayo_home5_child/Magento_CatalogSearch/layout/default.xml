@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+    Fix: container top.search oculto + remove advanced-search-link.
+    DO NOT FORMAT THIS FILE. Magento requires PascalCase XML tags.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="after.body.start">
+            <container name="top.search" label="Search Bar (hidden)"/>
+        </referenceContainer>
+        <referenceBlock name="advanced-search-link" remove="true"/>
+    </body>
+</page>
