@@ -3,4 +3,11 @@
     xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Rokanthemes\VerticalMenu\Block\Verticalmenu"
                 type="GrupoAwamotos\Theme\Block\VerticalMenu\SafeVerticalmenu"/>
+
+    <!-- HTML Minification Plugin: strips whitespace and comments from HTML responses -->
+    <type name="Magento\Framework\App\Response\Http">
+        <plugin name="grupoawamotos_theme_html_minify"
+                type="GrupoAwamotos\Theme\Plugin\Response\HtmlMinifyPlugin"
+                sortOrder="999"/>
+    </type>
 </config>

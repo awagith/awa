@@ -33,10 +33,10 @@ define([
             return false;
         }
 
-        var ok = false;
+        let ok = false;
 
         $menus.each(function () {
-            var $m = $(this);
+            const $m = $(this);
 
             if (!$m.data('awaRokanInit')) {
                 $m.VerticalMenu();
@@ -51,14 +51,11 @@ define([
 
     /** Trailing-edge debounce. */
     function debounce(fn, ms) {
-        var t;
+        let t;
 
         return function () {
-            var ctx  = this;
-            var args = arguments;
-
             clearTimeout(t);
-            t = setTimeout(function () { fn.apply(ctx, args); }, ms || 120);
+            t = setTimeout(() => { fn.apply(this, arguments); }, ms || 120);
         };
     }
 
@@ -68,10 +65,10 @@ define([
             return;
         }
 
-        var has = 'img[src],picture source[srcset],video source[src],iframe[src],a[href],.block,.cms-block';
+        const has = 'img[src],picture source[srcset],video source[src],iframe[src],a[href],.block,.cms-block';
 
         $list.find('> li.vertical-menu-custom-block, > li.vertical-bg-img').each(function () {
-            var $li = $(this);
+            const $li = $(this);
 
             if (!$.trim($li.text()).length && !$li.find(has).length) {
                 $li.remove();
@@ -84,21 +81,22 @@ define([
     /* ================================================================ */
 
     return function (config, element) {
-        var $nav        = $(element);
-        var $title      = $nav.find('.title-category-dropdown');
-        var $list       = $nav.find('.togge-menu');
-        var $expandLink = $nav.find('.vm-toggle-categories');
-        var $items      = $nav.find('.ui-menu-item.level0');
+        const $nav        = $(element);
+        const $title      = $nav.find('.title-category-dropdown');
+        const $list       = $nav.find('.togge-menu');
+        const $expandLink = $nav.find('.vm-toggle-categories');
+        const $items      = $nav.find('.ui-menu-item.level0');
 
         /* ---- config ------------------------------------------------ */
-        var safeUid = ($nav.attr('id') || $title.attr('aria-controls') || 'avm-' + Math.random().toString(36).slice(2))
+        const safeUid = ($nav.attr('id') || $title.attr('aria-controls') || 'avm-' + Math.random().toString(36).slice(2))
                           .replace(/[^a-zA-Z0-9_-]/g, '');
-        var overlaySelector   = (config && config.overlaySelector) || '.shadow_bkg_show';
-        var desktopBreakpoint = parseInt(config && config.desktopBreakpoint, 10) || 992;
-        var limitItemShow     = parseInt($list.attr('data-limit-show'), 10)
+        const overlaySelector   = (config && config.overlaySelector) || '.shadow_bkg_show';
+        const overlaySelectorAll = overlaySelector + ', .shadow_bkg_show, .shadow_bkg, .vmm-overlay';
+        const desktopBreakpoint = parseInt(config && config.desktopBreakpoint, 10) || 992;
+        const limitItemShow     = parseInt($list.attr('data-limit-show'), 10)
                                 || parseInt(config && config.limitShow, 10) || 0;
-        var childPanelSelector = '.submenu, ul.level0, .subchildmenu';
-        var NS = '.awaVM-' + safeUid;
+        const childPanelSelector = '.submenu, ul.level0, .subchildmenu';
+        const NS = '.awaVM-' + safeUid;
 
         /* ---- guard: never double-init ------------------------------ */
         if (!$nav.length || $nav.data('awaVMInit')) {
@@ -109,15 +107,15 @@ define([
         $nav.attr('data-awa-verticalmenu-owner', 'vertical-menu-init');
 
         /* ---- Rokanthemes flyout widget ------------------------------ */
-        var rokanActive = initRokanWidget(
+        const rokanActive = initRokanWidget(
             $nav.filter('.verticalmenu').add($nav.find('.verticalmenu'))
         );
 
         pruneEmptyBlocks($list);
 
         /* ---- viewport ---------------------------------------------- */
-        var mql = window.matchMedia
-            ? window.matchMedia('(min-width: ' + desktopBreakpoint + 'px)')
+        const mql = window.matchMedia
+            ? window.matchMedia(`(min-width: ${desktopBreakpoint}px)`)
             : null;
 
         function isDesktop() {
@@ -125,7 +123,7 @@ define([
         }
 
         function isHomeContext() {
-            var body = document.body;
+            const body = document.body;
             if (!body) {
                 return false;
             }
@@ -140,6 +138,16 @@ define([
             return isDesktop() && isHomeContext();
         }
 
+        function disableLegacyOverlay() {
+            $(overlaySelectorAll).css({
+                display: 'none',
+                opacity: 0,
+                visibility: 'hidden',
+                pointerEvents: 'none'
+            });
+            $('body').removeClass('background_shadow background_shadow_show shadow_bkg_show');
+        }
+
         /* ============================================================ */
         /*  Open / Close                                                */
         /* ============================================================ */
@@ -151,7 +159,7 @@ define([
             if (isDesktop()) {
                 /* Clear stale inline display from mobile fadeOut()/hide() after viewport switch. */
                 $list.stop(true, true).removeAttr('style').show();
-                $('body').removeClass('background_shadow_show');
+                disableLegacyOverlay();
             } else {
                 $list.stop(true, true).fadeIn(200);
                 $('body').addClass('background_shadow_show');
@@ -164,6 +172,7 @@ define([
 
             if (isDesktop()) {
                 $list.stop(true, true).hide();
+                disableLegacyOverlay();
             } else {
                 $list.stop(true, true).fadeOut(200);
             }
@@ -181,8 +190,8 @@ define([
 
         function ensureMobileToggles() {
             $nav.find('.ui-menu-item.parent, .ui-menu-item.level0.parent').each(function () {
-                var $li = $(this);
-                var $t  = $li.children('.open-children-toggle');
+                const $li = $(this);
+                const $t  = $li.children('.open-children-toggle');
 
                 if (!$t.length) {
                     $li.append(
@@ -213,14 +222,14 @@ define([
         }
 
         function resetParentItemState($item, animateNested) {
-            var nestedAnimate = !!animateNested;
+            const nestedAnimate = !!animateNested;
 
             $item.removeClass('_active');
             $item.children('a').removeClass('ui-state-active');
             $item.children('.open-children-toggle').attr('aria-expanded', 'false');
 
             getDirectChildPanels($item).each(function () {
-                var $panel = $(this);
+                const $panel = $(this);
 
                 $panel.removeClass('opened');
 
@@ -236,7 +245,7 @@ define([
             });
 
             getParentItems($item).each(function () {
-                var $child = $(this);
+                const $child = $(this);
 
                 if ($child[0] === $item[0]) {
                     return;
@@ -256,8 +265,8 @@ define([
         }
 
         function syncParentItemStateFromPanels($item) {
-            var $panel = getFirstDirectChildPanel($item);
-            var opened = $panel.length && $panel.hasClass('opened');
+            const $panel = getFirstDirectChildPanel($item);
+            const opened = $panel.length && $panel.hasClass('opened');
 
             $item.toggleClass('_active', !!opened);
             $item.children('a').toggleClass('ui-state-active', !!opened);
@@ -271,7 +280,7 @@ define([
         }
 
         function focusFirstCategoryLink() {
-            var $first = $list.children('.ui-menu-item.level0:visible').children('a').first();
+            const $first = $list.children('.ui-menu-item.level0:visible').children('a').first();
 
             if ($first.length) {
                 $first.trigger('focus');
@@ -279,21 +288,21 @@ define([
         }
 
         function bindRokanMobileBridgeHandlers() {
-            var $toggles = $nav.find('.open-children-toggle');
+            const $toggles = $nav.find('.open-children-toggle');
 
             $toggles.off('click' + NS + ' keydown' + NS);
 
             $toggles.on('click' + NS, function () {
-                var $t = $(this);
-                var $p = $t.parent();
+                const $t = $(this);
+                const $p = $t.parent();
 
                 if (isDesktop()) {
                     return;
                 }
 
-                window.setTimeout(function () {
-                    var $panel = getFirstDirectChildPanel($p);
-                    var opened = $panel.length && $panel.hasClass('opened');
+                window.setTimeout(() => {
+                    const $panel = getFirstDirectChildPanel($p);
+                    const opened = $panel.length && $panel.hasClass('opened');
 
                     if (opened) {
                         closeSiblingParentItems($p, true);
@@ -342,7 +351,7 @@ define([
                     $title.removeClass('active').attr('aria-expanded', 'false');
                 }
 
-                $('body').removeClass('background_shadow_show');
+                disableLegacyOverlay();
             } else {
                 /* Entering mobile → collapse */
                 $list.removeClass('menu-open').hide();
@@ -400,13 +409,14 @@ define([
         /* ---- desktop hover/focus (Home 5 default behavior) ---------- */
         $nav.on('mouseenter' + NS, function () {
             if (isDesktop()) {
+                disableLegacyOverlay();
                 openMenu();
             }
         });
 
         $nav.on('mouseleave' + NS, function () {
-            var root = $nav.get(0);
-            var active = document.activeElement;
+            const root = $nav.get(0);
+            const active = document.activeElement;
 
             if (!isDesktop()) {
                 return;
@@ -426,6 +436,7 @@ define([
 
         $nav.on('focusin' + NS, function () {
             if (isDesktop()) {
+                disableLegacyOverlay();
                 openMenu();
             }
         });
@@ -435,9 +446,9 @@ define([
                 return;
             }
 
-            window.setTimeout(function () {
-                var root = $nav.get(0);
-                var active = document.activeElement;
+            window.setTimeout(() => {
+                const root = $nav.get(0);
+                const active = document.activeElement;
 
                 if (root && active && root.contains(active)) {
                     return;
@@ -490,9 +501,9 @@ define([
                     return;
                 }
 
-                var $t = $(this);
-                var $p = $t.parent();
-                var expanding = !$p.hasClass('_active');
+                const $t = $(this);
+                const $p = $t.parent();
+                const expanding = !$p.hasClass('_active');
 
                 if (expanding) {
                     closeSiblingParentItems($p, true);
@@ -545,9 +556,9 @@ define([
             $expandLink.on('click' + NS, function (e) {
                 e.preventDefault();
 
-                var $a        = $(this);
-                var $hidden   = $nav.find('.ui-menu-item.level0.orther-link');
-                var expanding = !$a.hasClass('expanding');
+                const $a        = $(this);
+                const $hidden   = $nav.find('.ui-menu-item.level0.orther-link');
+                const expanding = !$a.hasClass('expanding');
 
                 $a.toggleClass('expanding', expanding)
                    .closest('.expand-category-link').toggleClass('expanding', expanding);
@@ -612,7 +623,7 @@ define([
             /* Collect the two relevant ancestor layers:
                1. The Magento tabs content panel (data-role="content" / .section-item-content)
                2. The outer sections wrapper (#nav-sections / .sections.nav-sections) */
-            var $panels = $nav
+            const $panels = $nav
                 .closest('[data-role="content"], .section-item-content')
                 .add($nav.closest('#nav-sections, .sections.nav-sections.category-dropdown'));
 
@@ -629,12 +640,10 @@ define([
             }
 
             $panels.each(function () {
-                var el  = this;
-                var obs = new MutationObserver(function (mutations) {
-                    var i, m;
-
-                    for (i = 0; i < mutations.length; i++) {
-                        m = mutations[i];
+                const el  = this;
+                const obs = new MutationObserver((mutations) => {
+                    for (let i = 0; i < mutations.length; i++) {
+                        const m = mutations[i];
 
                         if (m.attributeName === 'aria-hidden'
                                 && el.getAttribute('aria-hidden') !== null) {
@@ -658,6 +667,7 @@ define([
         if (rokanActive) {
             bindRokanMobileBridgeHandlers();
         }
+        disableLegacyOverlay();
         syncOnResize();
         fixSectionAriaHidden();
     };

@@ -13,7 +13,7 @@ body .page-wrapper .top-bar-right .top-info {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    gap: 10px;
+    gap: var(--awa-gap-md);
     flex-wrap: wrap;
     min-height: 36px;
 }
@@ -30,11 +30,11 @@ body .page-wrapper .top-account ul.header.links > li .counter.qty {
     height: 18px;
     padding-inline: 5px;
     margin-inline-start: 6px;
-    border-radius: 999px;
+    border-radius: var(--awa-radius-pill);
     background: var(--primary-color);
     color: var(--bg-white);
     font-size: 11px;
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     line-height: 1;
     vertical-align: middle;
 }
@@ -48,15 +48,15 @@ body .page-wrapper .awa-b2b-mode-badge {
 
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--awa-gap-sm);
     min-height: 34px;
     padding: 6px 10px;
-    border-radius: 999px;
+    border-radius: var(--awa-radius-pill);
     border: 1px solid color-mix(in srgb, var(--awa-b2b-accent-current) 22%, white);
     background: color-mix(in srgb, var(--awa-b2b-accent-current) 8%, white);
     color: var(--text-color);
     text-decoration: none;
-    font-size: 12px;
+    font-size: var(--awa-text-xs);
     line-height: 1.2;
     max-width: 100%;
     transition: background-color var(--awa-round2-transition), border-color var(--awa-round2-transition), box-shadow var(--awa-round2-transition);
@@ -85,7 +85,7 @@ body .page-wrapper .awa-b2b-mode-badge__dot {
 }
 
 body .page-wrapper .awa-b2b-mode-badge__label {
-    font-weight: 700;
+    font-weight: var(--awa-weight-bold);
     color: var(--primary-color);
     white-space: nowrap;
 }
@@ -93,7 +93,7 @@ body .page-wrapper .awa-b2b-mode-badge__label {
 body .page-wrapper .top-account ul.header.links > li > a {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--awa-gap-xs);
     min-height: 32px;
     padding: 4px 12px;
     border-radius: var(--awa-radius-pill, 999px);
@@ -110,6 +110,12 @@ body .page-wrapper .top-account ul.header.links > li > a {
 body .page-wrapper .top-account ul.header.links > li > a:hover {
     border-color: var(--border-hover, #cbd5e1);
     background: var(--bg-surface, #f8fafc);
+}
+
+body .page-wrapper .top-account ul.header.links > li > a:focus-visible {
+    outline: none;
+    border-color: var(--primary-color, #b73337);
+    box-shadow: 0 0 0 3px rgb(183 51 55 / 18%);
 }
 
 /* ================================================================
@@ -269,10 +275,7 @@ body .page-wrapper .header .top-search .block-search .action.search[data-awa-sea
     height: 2px;
     border-radius: 2px;
     background: currentcolor;
-    left: 50%;
-    top: 50%;
-    right: auto;
-    bottom: auto;
+    inset: 50% auto auto 50%;
     transform: translate(35%, 185%) rotate(45deg);
     pointer-events: none;
 }
@@ -378,6 +381,11 @@ body .page-wrapper .header .top-search .minicart-wrapper .block-minicart .action
     box-shadow: 0 0 0 3px var(--awa-focus-ring, rgb(183 51 55 / 25%));
 }
 
+body .page-wrapper .header .top-search .minicart-wrapper .block-minicart .action.viewcart:hover,
+body .page-wrapper .header .top-search .minicart-wrapper .block-minicart .action.checkout:hover {
+    filter: saturate(1.05);
+}
+
 /* Runtime hardening for pages internas: neutraliza offsets legados do logo e evita colapso do form */
 body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header .wp-header .logo,
 body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header .wp-header .logo a {
@@ -403,7 +411,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
 /* Keep internal pages focused on main nav/content by hiding expanded vertical category rail */
 body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1,
 body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header-control .sections.nav-sections.category-dropdown,
-body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header-control .navigation.verticalmenu.side-verticalmenu {
+body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header-control .navigation.verticalmenu.side-verticalmenu:not(.navigation--mueller) {
     display: none !important;
 }
 
@@ -414,7 +422,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     pointer-events: none !important;
 }
 
-@media (width >= 768px) {
+@media (min-width: 768px) {
     body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header-control .menu_primary {
         flex: 0 0 83.333333% !important;
         width: 83.333333% !important;
@@ -423,7 +431,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
 }
 
 /* Sticky header condensed state (desktop sticky menu area only) */
-@media (width >= 992px) {
+@media (min-width: 992px) {
     body .page-wrapper .header-wrapper-sticky .container-header-sticky,
     body .page-wrapper .header-wrapper-sticky .logo-sticky img {
         transition: padding var(--awa-round2-transition), min-height var(--awa-round2-transition), max-height var(--awa-round2-transition), transform var(--awa-round2-transition);
@@ -452,10 +460,10 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     }
 }
 
-@media (width <= 991px) {
+@media (max-width: 991px) {
     body .page-wrapper .top-bar-right .top-info {
         justify-content: center;
-        gap: 8px;
+        gap: var(--awa-gap-sm);
     }
 
     body .page-wrapper .top-account ul.header.links {
@@ -463,7 +471,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
-        gap: 4px 8px;
+        gap: var(--awa-gap-xs) var(--awa-gap-sm);
         margin: 0;
         padding: 0;
     }
@@ -484,14 +492,14 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     body .page-wrapper .top-account ul.header.links > li > a {
         display: inline-flex;
         align-items: center;
-        gap: 4px;
+        gap: var(--awa-gap-xs);
         min-height: 30px;
         padding: 4px 8px;
-        border-radius: 999px;
+        border-radius: var(--awa-radius-pill);
         border: 1px solid var(--awa-gray-200, #e5e7eb);
         background: #fff;
         color: var(--text-color);
-        font-size: 12px;
+        font-size: var(--awa-text-xs);
         line-height: 1.1;
         white-space: nowrap;
     }
@@ -507,7 +515,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     }
 }
 
-@media (width <= 767px) {
+@media (max-width: 767px) {
     body .page-wrapper .top-header .top-bar-right {
         padding-top: 2px;
     }
@@ -522,7 +530,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        gap: 4px;
+        gap: var(--awa-gap-xs);
         padding-inline: 0;
     }
 
@@ -603,7 +611,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
         display: flex;
         align-items: center;
         flex-wrap: wrap;
-        gap: 8px;
+        gap: var(--awa-gap-sm);
         margin-top: 0 !important;
     }
 
@@ -680,7 +688,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     }
 
     body .page-wrapper .header .top-search > .block-search .action.search {
-        border-radius: 0 12px 12px 0;
+        border-radius: 0 var(--awa-radius-md) var(--awa-radius-md) 0;
     }
 
     body .page-wrapper .header .top-search > .block-search .field.search input#search {
@@ -695,7 +703,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
         width: 100%;
         min-height: 40px;
         padding: 8px 10px;
-        border-radius: 10px;
+        border-radius: var(--awa-radius-base);
         background: #fff;
         border: 1px solid var(--awa-gray-200, #e5e7eb);
     }
@@ -703,7 +711,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     body .page-wrapper .header .top-search > .hoteline_header .hotline-wrap {
         display: inline-flex;
         align-items: baseline;
-        gap: 4px;
+        gap: var(--awa-gap-xs);
         flex-wrap: wrap;
         justify-content: center;
     }
@@ -713,8 +721,8 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     }
 
     body .page-wrapper .header .top-search > .hoteline_header .hotline-number {
-        font-size: 12px;
-        font-weight: 700;
+        font-size: var(--awa-text-xs);
+        font-weight: var(--awa-weight-bold);
     }
 
     body .page-wrapper .header-control .action.nav-toggle {
@@ -728,7 +736,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     }
 
     :is(body.catalog-category-view, body.catalogsearch-result-index) .page-wrapper .sections.nav-sections.category-dropdown,
-    :is(body.catalog-category-view, body.catalogsearch-result-index) .page-wrapper .navigation.verticalmenu.side-verticalmenu {
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .page-wrapper .navigation.verticalmenu.side-verticalmenu:not(.navigation--mueller) {
         display: none !important;
     }
 
@@ -736,7 +744,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 8px;
+        gap: var(--awa-gap-sm);
     }
 
     :is(body.catalog-category-view, body.catalogsearch-result-index) .page-wrapper .action.nav-toggle {
@@ -768,7 +776,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
         position: static !important;
         float: none !important;
         clear: both !important;
-        border-radius: 12px !important;
+        border-radius: var(--awa-radius-md) !important;
         border: 1px solid var(--awa-gray-200, #e5e7eb) !important;
         background: #fff !important;
         color: var(--primary-color, #b73337) !important;
@@ -782,7 +790,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .menu_left_home1,
     body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header-control .menu_left_home1,
     body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .sections.nav-sections.category-dropdown,
-    body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .navigation.verticalmenu.side-verticalmenu,
+    body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .navigation.verticalmenu.side-verticalmenu:not(.navigation--mueller),
     body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .title-category-dropdown {
         display: none !important;
     }
@@ -848,52 +856,52 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     pointer-events: none !important;
 }
 
-@media (width >= 768px) {
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav-global.cms_home_1,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav-global.cms_home_1 > .container,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav-global.cms_home_1 > .container > .row {
+@media (min-width: 768px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"],
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] > .container,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] > .container > .row {
         height: auto !important;
         min-height: 0 !important;
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav-global.cms_home_1 .menu_left_home1 {
-        max-height: min(480px, calc(100vh - 210px)) !important;
-        overflow: hidden !important;
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .menu_left_home1 {
+        max-height: none !important;
+        overflow: visible !important;
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav-global.cms_home_1 .menu_left_home1 .sections.nav-sections.category-dropdown,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav-global.cms_home_1 .menu_left_home1 .navigation.verticalmenu.side-verticalmenu {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .menu_left_home1 .sections.nav-sections.category-dropdown,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .menu_left_home1 .navigation.verticalmenu.side-verticalmenu:not(.navigation--mueller) {
         max-height: inherit !important;
         overflow: visible !important;
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav-global.cms_home_1 .menu_left_home1 .list-category-dropdown {
-        max-height: min(420px, calc(100vh - 270px)) !important;
-        overflow: hidden auto !important;
-        overscroll-behavior: contain;
-        scrollbar-width: thin;
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .menu_left_home1 .navigation.verticalmenu.side-verticalmenu:not(.navigation--mueller) > .list-category-dropdown {
+        max-height: none !important;
+        overflow: visible !important;
+        overscroll-behavior: auto;
+        scrollbar-width: auto;
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav-global.cms_home_1 .menu_left_home1 .list-category-dropdown > .vertical-bg-img {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .menu_left_home1 .navigation.verticalmenu.side-verticalmenu:not(.navigation--mueller) > .list-category-dropdown > .vertical-bg-img {
         display: none !important;
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav-global.cms_home_1 .menu_left_home1 .list-category-dropdown > .expand-category-link {
-        position: sticky;
-        inset-block-end: 0;
-        z-index: 3;
-        background: #fff;
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .menu_left_home1 .navigation.verticalmenu.side-verticalmenu:not(.navigation--mueller) > .list-category-dropdown > .expand-category-link {
+        position: static;
+        inset-block-end: auto;
+        z-index: auto;
+        background: transparent;
     }
 }
 
 /* Round21: mobile utility links priority + strict 44px search control height */
-@media (width <= 767px) {
+@media (max-width: 767px) {
     body .page-wrapper .top-account ul.header.links {
         justify-content: center !important;
         flex-wrap: wrap !important;
         overflow: visible !important;
-        gap: 6px !important;
-        row-gap: 6px !important;
+        gap: var(--awa-gap-sm) !important;
+        row-gap: var(--awa-gap-sm) !important;
     }
 
     body .page-wrapper .top-account ul.header.links > li {
@@ -911,9 +919,9 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     body .page-wrapper .top-account ul.header.links > li.awa-top-link-item--logout > a {
         min-height: 30px !important;
         padding: 4px 10px !important;
-        border-radius: 999px !important;
+        border-radius: var(--awa-radius-pill) !important;
         font-size: 11.5px !important;
-        font-weight: 600 !important;
+        font-weight: var(--awa-weight-semibold) !important;
     }
 
     body .page-wrapper .header .top-search > .block-search .actions,

@@ -5,8 +5,8 @@ define([
     'use strict';
 
     return function (config, element) {
-        var $select = $(element);
-        var options = $.extend({}, config || {});
+        const $select = $(element);
+        const options = $.extend({}, config || {});
 
         if (!$select.length) {
             return;

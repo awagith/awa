@@ -1,0 +1,919 @@
+/* ==========================================================================
+   AWA Design System — Global Application (child theme)
+   Applies tokens from _variables.less to all pages.
+   The standalone CSS files coexist: LESS = base, CSS = page-specific refinement.
+   ========================================================================== */
+
+@import '_awa-variables';
+
+/* ---------- A. CSS Custom Properties ---------- */
+
+:root {
+    /* Colors */
+    --awa-color-primary: @awa-color-primary;
+    --awa-color-primary-dark: @awa-color-primary-dark;
+    --awa-color-text-primary: @awa-color-text-primary;
+    --awa-color-button-text: @awa-color-button-text;
+    --awa-color-link: @awa-color-link;
+    --awa-color-link-hover: @awa-color-link-hover;
+    --awa-color-bg: @awa-color-bg;
+    --awa-color-bg-soft: @awa-color-bg-soft;
+    --awa-color-border: @awa-color-border;
+    --awa-color-text-secondary: @awa-color-text-secondary;
+    --awa-color-disabled: @awa-color-disabled;
+    --awa-color-success: @awa-color-success;
+    --awa-color-warning: @awa-color-warning;
+    --awa-color-error: @awa-color-error;
+
+    /* Aliases for backward compat with CSS avulsos */
+    --primary-color: var(--awa-color-primary);
+    --primary-hover: var(--awa-color-primary-dark);
+    --text-color: var(--awa-color-text-primary);
+    --border-color: var(--awa-color-border);
+    --awa-red: var(--awa-color-primary);
+    --awa-red-dark: var(--awa-color-primary-dark);
+    --awa-dark: var(--awa-color-text-primary);
+    --awa-border: var(--awa-color-border);
+    --bg-white: var(--awa-color-bg);
+    --bg-surface: var(--awa-color-bg-soft);
+
+    /* Spacing */
+    --awa-space-1: @space-1;
+    --awa-space-2: @space-2;
+    --awa-space-3: @space-3;
+    --awa-space-4: @space-4;
+    --awa-space-5: @space-5;
+    --awa-space-6: @space-6;
+    --awa-space-7: @space-7;
+    --awa-space-8: @space-8;
+
+    /* Shape / Shadow */
+    --awa-radius-sm: @radius-sm;
+    --awa-radius-md: @radius-md;
+    --awa-shadow-card: @shadow-1;
+    --awa-shadow-card-hover: @shadow-2;
+    --awa-shadow-1: @shadow-1;
+    --awa-shadow-2: @shadow-2;
+
+    /* Transition */
+    --awa-transition: @awa-transition;
+
+    /* Z-index */
+    --awa-z-dropdown: @awa-z-dropdown;
+    --awa-z-sticky: @awa-z-sticky;
+    --awa-z-overlay: @awa-z-overlay;
+    --awa-z-modal: @awa-z-modal;
+
+    /* Container */
+    --awa-container-max: @container-max;
+    --awa-container-pad: @container-pad;
+}
+
+/* ---------- B. Body Base ---------- */
+
+body {
+    background: @awa-color-bg;
+    color: @awa-color-text-primary;
+    font-size: @font-size-14;
+    line-height: @awa-line-height-base;
+}
+
+@media (min-width: @awa-breakpoint-md) {
+    body {
+        font-size: @font-size-16;
+    }
+}
+
+/* ---------- C. Links ---------- */
+
+a {
+    color: @awa-color-link;
+    transition: color @awa-transition;
+}
+
+a:hover,
+a:focus-visible {
+    color: @awa-color-link-hover;
+    text-decoration: none;
+}
+
+/* ---------- D. Headings ---------- */
+
+h1, h2, h3, h4, h5, h6 {
+    color: @awa-color-text-primary;
+    font-weight: 700;
+    line-height: @lh-tight;
+}
+
+h1 { font-size: @font-size-32; }
+h2 { font-size: @font-size-24; }
+h3 { font-size: @font-size-18; }
+h4, h5, h6 { font-size: @font-size-16; }
+
+/* ---------- E. Buttons ---------- */
+
+/* E.1 Primary */
+.action.primary,
+button.action.primary,
+.awa-ds-btn--primary {
+    background: @awa-color-primary;
+    border: 1px solid @awa-color-primary;
+    color: @awa-color-button-text;
+    border-radius: @radius-sm;
+    min-height: 44px;
+    padding: @space-2 @space-5;
+    font-weight: 600;
+    font-size: @font-size-14;
+    letter-spacing: 0.02em;
+    transition: background @awa-transition, border-color @awa-transition, box-shadow @awa-transition;
+    cursor: pointer;
+}
+
+.action.primary:hover,
+.action.primary:focus-visible,
+button.action.primary:hover,
+button.action.primary:focus-visible,
+.awa-ds-btn--primary:hover,
+.awa-ds-btn--primary:focus-visible {
+    background: @awa-color-primary-dark;
+    border-color: @awa-color-primary-dark;
+    color: @awa-color-button-text;
+    box-shadow: 0 4px 12px rgba(183, 51, 55, 0.25);
+}
+
+/* E.2 Secondary / Outline */
+.action.secondary,
+button.action.secondary,
+.awa-ds-btn--secondary {
+    background: transparent;
+    border: 1px solid @awa-color-primary;
+    color: @awa-color-primary;
+    border-radius: @radius-sm;
+    min-height: 44px;
+    padding: @space-2 @space-5;
+    font-weight: 600;
+    font-size: @font-size-14;
+    transition: background @awa-transition, color @awa-transition;
+    cursor: pointer;
+}
+
+.action.secondary:hover,
+.action.secondary:focus-visible,
+button.action.secondary:hover,
+button.action.secondary:focus-visible,
+.awa-ds-btn--secondary:hover,
+.awa-ds-btn--secondary:focus-visible {
+    background: @awa-color-bg-soft;
+    color: @awa-color-primary-dark;
+    border-color: @awa-color-primary-dark;
+}
+
+/* E.3 Disabled */
+button[disabled],
+input[disabled],
+select[disabled],
+textarea[disabled],
+.disabled {
+    background: @awa-color-disabled;
+    border-color: @awa-color-disabled;
+    color: @awa-color-button-text;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* ---------- F. Forms ---------- */
+
+input:not([type='checkbox']):not([type='radio']):not([type='hidden']),
+select,
+textarea,
+.awa-ds-form-control {
+    border: 1px solid @awa-color-border;
+    border-radius: @radius-sm;
+    color: @awa-color-text-primary;
+    background: @awa-color-bg;
+    min-height: 44px;
+    padding: @space-2 @space-3;
+    font-size: @font-size-14;
+    transition: border-color @awa-transition, box-shadow @awa-transition;
+}
+
+input:not([type='checkbox']):not([type='radio']):not([type='hidden']):focus,
+input:not([type='checkbox']):not([type='radio']):not([type='hidden']):focus-visible,
+select:focus,
+select:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+.awa-ds-form-control:focus,
+.awa-ds-form-control:focus-visible {
+    border-color: @awa-color-primary;
+    box-shadow: 0 0 0 3px rgba(183, 51, 55, 0.16);
+    outline: none;
+}
+
+/* Placeholder text */
+input::placeholder,
+textarea::placeholder {
+    color: @awa-color-text-secondary;
+    opacity: 0.7;
+}
+
+/* Fieldset / legend */
+fieldset {
+    border: 1px solid @awa-color-border;
+    border-radius: @radius-md;
+    padding: @space-4;
+}
+
+legend {
+    font-weight: 600;
+    color: @awa-color-text-primary;
+    padding: 0 @space-2;
+}
+
+/* Label */
+label {
+    font-weight: 500;
+    color: @awa-color-text-primary;
+    margin-bottom: @space-1;
+}
+
+/* ---------- G. Cards ---------- */
+
+/* G.1 Generic card */
+.awa-card,
+.b2b-card {
+    background: @awa-color-bg;
+    border: 1px solid @awa-color-border;
+    border-radius: @radius-md;
+    box-shadow: @shadow-1;
+    padding: @space-4;
+    transition: box-shadow @awa-transition, transform @awa-transition;
+}
+
+.awa-card:hover,
+.b2b-card:hover {
+    box-shadow: @shadow-2;
+    transform: translateY(-2px);
+}
+
+/* G.2 Product cards — consistent across Home + PLP + PDP related */
+.product-item {
+    border: 1px solid @awa-color-border;
+    border-radius: @radius-md;
+    background: @awa-color-bg;
+    transition: box-shadow @awa-transition, transform @awa-transition;
+    overflow: hidden;
+}
+
+.product-item:hover {
+    box-shadow: @shadow-2;
+    transform: translateY(-2px);
+}
+
+.product-item-info {
+    padding: @space-3;
+}
+
+/* Product name link */
+.product-item-name a.product-item-link {
+    color: @awa-color-text-primary;
+    font-weight: 600;
+    font-size: @font-size-14;
+    line-height: @lh-normal;
+    transition: color @awa-transition;
+}
+
+.product-item-name a.product-item-link:hover {
+    color: @awa-color-primary;
+}
+
+/* Price styling */
+.product-item .price-box .price {
+    color: @awa-color-text-primary;
+    font-weight: 700;
+    font-size: @font-size-18;
+}
+
+.product-item .price-box .old-price .price {
+    color: @awa-color-text-secondary;
+    font-size: @font-size-14;
+    text-decoration: line-through;
+}
+
+.product-item .price-box .special-price .price {
+    color: @awa-color-primary;
+}
+
+/* G.3 Sidebar blocks */
+.sidebar .block {
+    border: 1px solid @awa-color-border;
+    border-radius: @radius-md;
+    padding: @space-4;
+    margin-bottom: @space-5;
+}
+
+/* G.4 Cart summary */
+.cart-summary {
+    border: 1px solid @awa-color-border;
+    border-radius: @radius-md;
+    padding: @space-5;
+}
+
+/* ---------- H. Messages ---------- */
+
+.message.success {
+    background: fade(@awa-color-success, 8%);
+    border: 1px solid fade(@awa-color-success, 30%);
+    border-left: 4px solid @awa-color-success;
+    color: @awa-color-success;
+    border-radius: @radius-sm;
+    padding: @space-3 @space-4;
+}
+
+.message.warning,
+.message.notice {
+    background: fade(@awa-color-warning, 10%);
+    border: 1px solid fade(@awa-color-warning, 35%);
+    border-left: 4px solid @awa-color-warning;
+    color: darken(@awa-color-warning, 30%);
+    border-radius: @radius-sm;
+    padding: @space-3 @space-4;
+}
+
+.message.error {
+    background: fade(@awa-color-error, 6%);
+    border: 1px solid fade(@awa-color-error, 20%);
+    border-left: 4px solid @awa-color-error;
+    color: @awa-color-error;
+    border-radius: @radius-sm;
+    padding: @space-3 @space-4;
+}
+
+/* ---------- I. Grid & Spacing ---------- */
+
+/* I.1 Product grid */
+.products-grid .product-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: @awa-gap-lg;
+}
+
+.products-grid .product-item {
+    box-sizing: border-box;
+}
+
+/* I.2 Toolbar spacing */
+.toolbar-products {
+    gap: @awa-gap-md;
+}
+
+/* I.3 Home sections uniform spacing */
+.content-top-home > .row {
+    margin-bottom: @space-8;
+}
+
+/* I.4 Container alignment */
+.page-main .columns {
+    max-width: @container-max;
+    margin: 0 auto;
+    padding-left: @container-pad;
+    padding-right: @container-pad;
+    box-sizing: border-box;
+}
+
+/* ---------- J. Breadcrumbs ---------- */
+
+.breadcrumbs {
+    padding: @space-3 0;
+    margin-bottom: @space-4;
+}
+
+.breadcrumbs .items {
+    font-size: @font-size-12;
+    color: @awa-color-text-secondary;
+}
+
+.breadcrumbs a {
+    color: @awa-color-text-secondary;
+}
+
+.breadcrumbs a:hover {
+    color: @awa-color-primary;
+}
+
+.breadcrumbs .item:not(:last-child)::after {
+    color: @awa-color-disabled;
+}
+
+/* ---------- K. Carousels (owl-carousel normalization) ---------- */
+
+/* K.1 Owl stage must flex so items stay side-by-side */
+.owl-carousel .owl-stage {
+    display: flex;
+    align-items: stretch;
+}
+
+.owl-carousel .owl-item {
+    flex-shrink: 0;
+}
+
+/* K.2 Product cards inside carousels get same DS treatment */
+.owl-carousel .product-item,
+.owl-carousel .item .product-item {
+    border: 1px solid @awa-color-border;
+    border-radius: @radius-md;
+    background: @awa-color-bg;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* K.3 Carousel navigation arrows */
+.owl-carousel .owl-nav button {
+    background: @awa-color-bg;
+    border: 1px solid @awa-color-border;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all @awa-transition;
+    box-shadow: @shadow-1;
+}
+
+.owl-carousel .owl-nav button:hover {
+    background: @awa-color-primary;
+    border-color: @awa-color-primary;
+    color: @awa-color-button-text;
+    box-shadow: @shadow-2;
+}
+
+/* K.4 Carousel dots */
+.owl-carousel .owl-dots .owl-dot span {
+    background: @awa-color-disabled;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transition: all @awa-transition;
+}
+
+.owl-carousel .owl-dots .owl-dot.active span {
+    background: @awa-color-primary;
+    width: 24px;
+    border-radius: 4px;
+}
+
+/* ---------- L. PDP — Product Detail Page ---------- */
+
+/* L.1 Attribute table */
+.product-info-main .additional-attributes {
+    border: 1px solid @awa-color-border;
+    border-radius: @radius-md;
+    overflow: hidden;
+}
+
+.additional-attributes th,
+.additional-attributes td {
+    padding: @space-3 @space-4;
+    font-size: @font-size-14;
+    border-bottom: 1px solid @awa-color-border;
+}
+
+.additional-attributes th {
+    background: @awa-color-bg-soft;
+    color: @awa-color-text-secondary;
+    font-weight: 600;
+    width: 35%;
+}
+
+.additional-attributes td {
+    color: @awa-color-text-primary;
+}
+
+.additional-attributes tr:last-child th,
+.additional-attributes tr:last-child td {
+    border-bottom: none;
+}
+
+/* L.2 Product info box */
+.product-info-main .product-info-price {
+    padding: @space-4 0;
+    border-bottom: 1px solid @awa-color-border;
+    margin-bottom: @space-4;
+}
+
+/* L.3 Product tabs */
+.product.data.items > .item.title > .switch {
+    font-weight: 600;
+    color: @awa-color-text-primary;
+    border-bottom: 2px solid transparent;
+    padding: @space-3 @space-4;
+    transition: all @awa-transition;
+}
+
+.product.data.items > .item.title.active > .switch,
+.product.data.items > .item.title > .switch:hover {
+    color: @awa-color-primary;
+    border-bottom-color: @awa-color-primary;
+}
+
+/* ---------- M. Login / Account ---------- */
+
+/* M.1 Login form consistency */
+.login-container .block-customer-login,
+.form-create-account,
+.form-edit-account {
+    border: 1px solid @awa-color-border;
+    border-radius: @radius-md;
+    padding: @space-6;
+    background: @awa-color-bg;
+    box-shadow: @shadow-1;
+}
+
+/* M.2 B2B login form */
+.b2b-login-form .b2b-field-label {
+    font-weight: 500;
+    color: @awa-color-text-primary;
+    margin-bottom: @space-1;
+}
+
+/* ---------- N. Tables ---------- */
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table th,
+table td {
+    padding: @space-3 @space-4;
+    border-bottom: 1px solid @awa-color-border;
+    text-align: left;
+}
+
+table thead th {
+    background: @awa-color-bg-soft;
+    font-weight: 600;
+    color: @awa-color-text-primary;
+    font-size: @font-size-12;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+table tbody tr:hover {
+    background: fade(@awa-color-bg-soft, 50%);
+}
+
+/* ---------- O. Pagination ---------- */
+
+.pages .items .item a,
+.pages .items .item strong {
+    min-width: 36px;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: @radius-sm;
+    font-weight: 500;
+    font-size: @font-size-14;
+    transition: all @awa-transition;
+}
+
+.pages .items .item a {
+    color: @awa-color-text-primary;
+    border: 1px solid @awa-color-border;
+}
+
+.pages .items .item a:hover {
+    background: @awa-color-primary;
+    border-color: @awa-color-primary;
+    color: @awa-color-button-text;
+}
+
+.pages .items .item.current strong {
+    background: @awa-color-primary;
+    border: 1px solid @awa-color-primary;
+    color: @awa-color-button-text;
+}
+
+/* ---------- P. Responsive refinements ---------- */
+
+@media (max-width: @awa-breakpoint-sm) {
+    h1 { font-size: @font-size-24; }
+    h2 { font-size: @font-size-18; }
+    h3 { font-size: @font-size-16; }
+
+    .action.primary,
+    button.action.primary,
+    .action.secondary,
+    button.action.secondary {
+        width: 100%;
+        text-align: center;
+    }
+
+    /* Cards: reduce padding on small screens */
+    .product-item-info {
+        padding: @space-2;
+    }
+
+    /* Carousel: 2 items on tablet/mobile */
+    .owl-carousel .owl-nav {
+        display: none;
+    }
+}
+
+@media (max-width: @awa-breakpoint-xs) {
+    /* Stack product grid to single column */
+    .products-grid .product-items {
+        gap: @awa-gap-sm;
+    }
+}
+
+/* ---------- Q. Product Image Safety ---------- */
+
+/* Ensure product images always display correctly in grids */
+.product-image-container {
+    position: relative;
+    overflow: hidden;
+    border-radius: @radius-md @radius-md 0 0;
+}
+
+.product-image-wrapper {
+    display: block;
+    overflow: hidden;
+}
+
+.product-image-photo {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    position: relative;
+}
+
+/* Placeholder images: subtle background */
+img.product-image-photo[src*="placeholder"] {
+    background: @awa-color-bg-soft;
+    min-height: 160px;
+}
+
+/* ---------- R. Enhanced Attribute Table (PDP) ---------- */
+
+/* Override section L with stronger contrast */
+.product-info-main .additional-attributes,
+.additional-attributes-wrapper table {
+    border: 1px solid darken(@awa-color-border, 5%);
+    border-radius: @radius-md;
+    overflow: hidden;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.additional-attributes th {
+    background: darken(@awa-color-bg-soft, 3%);
+    color: @awa-color-text-primary;
+    font-weight: 600;
+    font-size: @font-size-14;
+    padding: @space-3 @space-4;
+    border-bottom: 1px solid @awa-color-border;
+    border-right: 1px solid @awa-color-border;
+    width: 40%;
+}
+
+.additional-attributes td {
+    padding: @space-3 @space-4;
+    font-size: @font-size-14;
+    color: @awa-color-text-primary;
+    border-bottom: 1px solid @awa-color-border;
+}
+
+.additional-attributes tr:last-child th,
+.additional-attributes tr:last-child td {
+    border-bottom: none;
+}
+
+/* Alternating rows for readability */
+.additional-attributes tr:nth-child(even) td {
+    background: fade(@awa-color-bg-soft, 50%);
+}
+
+.additional-attributes tr:nth-child(even) th {
+    background: darken(@awa-color-bg-soft, 5%);
+}
+
+/* ---------- S. Breadcrumbs Enhancement ---------- */
+
+.breadcrumbs {
+    padding: @space-3 0;
+    margin-bottom: @space-4;
+}
+
+.breadcrumbs .items {
+    font-size: @font-size-14;
+    color: @awa-color-text-secondary;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: @space-1;
+}
+
+.breadcrumbs .items .item {
+    display: inline-flex;
+    align-items: center;
+}
+
+.breadcrumbs .items .item a {
+    color: @awa-color-text-secondary;
+    transition: color @awa-transition;
+    padding: @space-1 0;
+}
+
+.breadcrumbs .items .item a:hover {
+    color: @awa-color-primary;
+}
+
+.breadcrumbs .items .item:not(:last-child)::after {
+    content: '›';
+    margin: 0 @space-2;
+    color: @awa-color-disabled;
+    font-size: @font-size-16;
+}
+
+.breadcrumbs .items .item:last-child {
+    color: @awa-color-text-primary;
+    font-weight: 500;
+}
+
+/* ---------- T. Search Results Page ---------- */
+
+/* Reduce oversized search title */
+body.catalogsearch-result-index .page-title-wrapper .page-title {
+    font-size: @font-size-24;
+    font-weight: 700;
+    color: @awa-color-text-primary;
+    margin-bottom: @space-4;
+}
+
+body.catalogsearch-result-index .search.results {
+    margin-top: @space-4;
+}
+
+/* ---------- U. B2B Login Page Consistency ---------- */
+
+/* Ensure all B2B login buttons are consistent */
+.b2b-btn-register,
+.b2b-btn-entrar,
+.b2b-btn-claim {
+    background: @awa-color-primary;
+    color: @awa-color-button-text;
+    border: 1px solid @awa-color-primary;
+    border-radius: @radius-sm;
+    min-height: 44px;
+    padding: @space-2 @space-5;
+    font-weight: 600;
+    font-size: @font-size-14;
+    cursor: pointer;
+    transition: background @awa-transition, border-color @awa-transition;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+}
+
+.b2b-btn-register:hover,
+.b2b-btn-entrar:hover,
+.b2b-btn-claim:hover {
+    background: @awa-color-primary-dark;
+    border-color: @awa-color-primary-dark;
+    color: @awa-color-button-text;
+}
+
+/* ---------- V. Toolbar Styling ---------- */
+
+.toolbar-products {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: @space-3;
+    padding: @space-3 @space-4;
+    border: 1px solid @awa-color-border;
+    border-radius: @radius-md;
+    background: @awa-color-bg;
+    margin-bottom: @space-4;
+}
+
+.toolbar-products select {
+    min-height: 36px;
+    font-size: @font-size-14;
+}
+
+/* Sorter label */
+.toolbar-products .sorter-label {
+    color: @awa-color-text-secondary;
+    font-size: @font-size-14;
+}
+
+/* Results count */
+.toolbar-products .toolbar-amount {
+    color: @awa-color-text-secondary;
+    font-size: @font-size-14;
+}
+
+/* ---------- W. B2B Enterprise Missions ---------- */
+
+/* W.1 PLP Stepper and Qty Box */
+.awa-stepper-control {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid @awa-color-border;
+    border-radius: @radius-sm;
+    height: 44px;
+    background: @awa-color-bg;
+}
+.awa-stepper-control input.qty {
+    width: 50px;
+    height: 100%;
+    text-align: center;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    -moz-appearance: textfield;
+}
+.awa-stepper-control input.qty::-webkit-outer-spin-button,
+.awa-stepper-control input.qty::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+.awa-stepper-control .awa-qty-btn {
+    width: 32px;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: @awa-color-text-primary;
+    font-size: @font-size-18;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background @awa-transition;
+}
+.awa-stepper-control .awa-qty-btn:hover {
+    background: @awa-color-bg-soft;
+}
+
+/* W.2 PDP Zebra Table */
+.awa-b2b-zebra-table {
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid @awa-color-border;
+}
+.awa-b2b-zebra-table th,
+.awa-b2b-zebra-table td {
+    padding: @space-3 @space-4;
+    border: 1px solid @awa-color-border;
+}
+.awa-b2b-zebra-table tr:nth-child(odd) {
+    background-color: @awa-color-bg;
+}
+.awa-b2b-zebra-table tr:nth-child(even) {
+    background-color: @awa-color-bg-soft;
+}
+
+/* W.3 Header Search Box */
+.awa-b2b-searchbox input#search {
+    border: 2px solid @awa-color-primary;
+    font-size: 16px;
+    padding: @space-3 @space-4;
+    min-height: 48px;
+    border-radius: @radius-sm;
+}
+.awa-b2b-searchbox input#search:focus {
+    box-shadow: 0 0 0 4px rgba(183, 51, 55, 0.2);
+}
+
+/* W.4 Toast Notification Anti-Blocking */
+.message-success.success.message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    background: fade(@awa-color-success, 90%);
+    color: #fff;
+    border: none;
+    padding: @space-3 @space-5;
+    border-radius: @radius-md;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    pointer-events: none; /* Allows clicking through the notification */
+    animation: fadeOut 5s forwards;
+}
+@keyframes fadeOut {
+    0% { opacity: 1; transform: translateY(0); }
+    80% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-20px); pointer-events: none; }
+}
+
+@import '_awa-b2b-phases4-7.less';

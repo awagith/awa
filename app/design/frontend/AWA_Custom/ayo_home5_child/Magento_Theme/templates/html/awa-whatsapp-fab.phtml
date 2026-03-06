@@ -2,9 +2,13 @@
 /**
  * AWA B2B — WhatsApp Floating Button
  * Exibe botão flutuante de atendimento via WhatsApp
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \GrupoAwamotos\Theme\ViewModel\ContactInfo $contactInfo
  */
-$whatsappNumber = '5516997367588'; // Formato internacional sem + e sem espaços
-$whatsappMessage = rawurlencode('Olá! Gostaria de informações sobre peças para moto.');
+$contactInfo = $block->getData('contact_info');
+$whatsappNumber = $contactInfo ? $block->escapeHtmlAttr($contactInfo->getWhatsAppNumber()) : '5516997367588';
+$whatsappMessage = rawurlencode($contactInfo ? $contactInfo->getWhatsAppMessage() : 'Olá! Gostaria de informações sobre peças para moto.');
 ?>
 <div class="awa-whatsapp-fab" id="awa-whatsapp-btn" aria-label="Atendimento via WhatsApp">
     <a href="https://wa.me/<?= $whatsappNumber ?>?text=<?= $whatsappMessage ?>"

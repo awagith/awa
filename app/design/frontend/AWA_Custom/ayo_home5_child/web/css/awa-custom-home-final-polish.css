@@ -5,16 +5,16 @@
 
 body.cms-homepage_ayo_home5 {
     --awa-home-final-surface: #fff;
-    --awa-home-final-border: #dbe4ee;
-    --awa-home-final-shadow: 0 8px 24px rgb(15 23 42 / 5%);
-    --awa-home-final-shadow-hover: 0 12px 32px rgb(15 23 42 / 9%);
-    --awa-home-final-radius: 16px;
-    --awa-home-final-gap: clamp(16px, 2.4vw, 28px);
+    --awa-home-final-border: #e5e5e5;
+    --awa-home-final-shadow: 0 8px 24px rgb(15 23 42 / 6%);
+    --awa-home-final-shadow-hover: 0 12px 32px rgb(15 23 42 / 10%);
+    --awa-home-final-radius: 10px;
+    --awa-home-final-gap: var(--awa-section-gap, clamp(16px, 2.4vw, 28px));
     --awa-home-transition: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body.cms-homepage_ayo_home5 .page-wrapper .page-main.container > .columns > .column.main {
-    max-width: 1170px;
+    max-width: var(--awa-container-max);
 }
 
 body.cms-homepage_ayo_home5 .page-wrapper .top-home-content,
@@ -35,7 +35,7 @@ body.cms-homepage_ayo_home5 .page-wrapper .awa-home-section + .awa-home-section 
 
 body.cms-homepage_ayo_home5 .page-wrapper .top-home-content .container,
 body.cms-homepage_ayo_home5 .page-wrapper .awa-home-section .container {
-    max-width: 1170px;
+    max-width: var(--awa-container-max);
 }
 
 body.cms-homepage_ayo_home5 .page-wrapper .top-home-content .ayo-home5-heading,
@@ -75,7 +75,7 @@ body.cms-homepage_ayo_home5 .page-wrapper .header .top-search .block-search .con
 }
 
 body.cms-homepage_ayo_home5 .page-wrapper .header .top-search .block-search .control .input-text {
-    border-color: #c9d8e6;
+    border-color: var(--awa-hc-border-strong);
     box-shadow: 0 8px 20px rgb(15 23 42 / 7%);
 }
 
@@ -89,12 +89,12 @@ body.cms-homepage_ayo_home5 .page-wrapper .header .top-search .block-search .con
 body.cms-homepage_ayo_home5 .page-wrapper .header .top-search .block-search .actions .action.search {
     min-width: 48px;
     min-height: 48px;
-    border-radius: 0 12px 12px 0;
+    border-radius: 0 var(--awa-radius-md) var(--awa-radius-md) 0;
 }
 
 body.cms-homepage_ayo_home5 .page-wrapper .header .header-nav .menu_primary .navigation.custommenu.main-nav > ul > li.ofertas-link > a,
 body.cms-homepage_ayo_home5 .page-wrapper .header .header-nav .menu_primary .navigation.custommenu.main-nav > ul > li.b2b-link > a {
-    border-radius: 999px;
+    border-radius: var(--awa-radius-pill);
     padding-inline: 14px;
 }
 
@@ -118,12 +118,12 @@ body.cms-homepage_ayo_home5 .page-wrapper .header .header-nav .menu_primary .nav
     /* Home header compaction:
        keep categories entrypoint visible, collapse full category list into hover/focus dropdown
        to avoid large empty whitespace before hero. */
-    body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] {
         margin-bottom: 10px;
         overflow: visible !important;
     }
 
-    body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav > .container > .row {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] > .container > .row {
         position: relative;
         min-height: 46px !important;
         height: auto !important;
@@ -131,7 +131,7 @@ body.cms-homepage_ayo_home5 .page-wrapper .header .header-nav .menu_primary .nav
         overflow: visible !important;
     }
 
-    body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav .menu_left_home1 {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .menu_left_home1 {
         position: relative;
         z-index: 1200;
         min-height: 46px !important;
@@ -139,44 +139,41 @@ body.cms-homepage_ayo_home5 .page-wrapper .header .header-nav .menu_primary .nav
         overflow: visible !important;
     }
 
-    body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav .menu_left_home1 .verticalmenu.side-verticalmenu {
-        border-radius: 12px;
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .menu_left_home1 .verticalmenu.side-verticalmenu:not(.navigation--mueller) {
+        border-radius: var(--awa-radius-md);
         overflow: visible !important;
         padding-bottom: 8px;
         z-index: 1201;
     }
 
-    body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav .menu_left_home1 .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
-        display: none !important;
-        position: absolute;
-        inset-inline: 0;
-        top: calc(100% + 8px);
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .menu_left_home1 .verticalmenu.side-verticalmenu:not(.navigation--mueller) > ul.togge-menu.list-category-dropdown {
         margin: 0 !important;
-        max-height: min(420px, calc(100vh - 240px));
-        overflow: hidden auto !important;
-        overscroll-behavior: contain;
-        border: 1px solid #dbe4ee;
-        border-radius: 12px;
-        background: #fff;
-        box-shadow: 0 20px 34px rgb(15 23 42 / 14%);
-        z-index: 1300;
         pointer-events: auto;
     }
 
-    body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown.active + ul.togge-menu.list-category-dropdown,
-    body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav .menu_left_home1 .verticalmenu.side-verticalmenu:hover > ul.togge-menu.list-category-dropdown,
-    body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav .menu_left_home1 .verticalmenu.side-verticalmenu:focus-within > ul.togge-menu.list-category-dropdown {
-        display: block !important;
-    }
-
-    body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav .box_language {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .box_language {
         display: none !important;
     }
 
-    body.cms-homepage_ayo_home5 .page-wrapper .header-control.header-nav .menu_primary {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .menu_primary {
         width: auto !important;
         max-width: none !important;
         flex: 1 1 auto !important;
+    }
+
+    /* Desktop: only show category panel when JS explicitly opened it.
+       Avoid opening on plain :hover, which creates a ghost blank panel. */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .menu_left_home1 .verticalmenu.side-verticalmenu:not(.navigation--mueller) > ul.togge-menu.list-category-dropdown.menu-open,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .menu_left_home1 .verticalmenu.side-verticalmenu:not(.navigation--mueller) > ul.togge-menu.list-category-dropdown.vmm-open {
+        display: grid !important;
+    }
+}
+
+@media (width <= 991px) {
+    /* Mobile: show menu panel when JS toggles menu-open/vmm-open after title click. */
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5).nav-open .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .menu_left_home1 .verticalmenu.side-verticalmenu:not(.navigation--mueller) > ul.togge-menu.list-category-dropdown.menu-open,
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5).nav-open .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] .menu_left_home1 .verticalmenu.side-verticalmenu:not(.navigation--mueller) > ul.togge-menu.list-category-dropdown.vmm-open {
+        display: block !important;
     }
 }
 
@@ -198,8 +195,8 @@ body.cms-homepage_ayo_home5 .page-wrapper .column.main > .aw-home-faq {
 
 body.cms-homepage_ayo_home5 .page-wrapper .column.main > .benefits-bar {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
+    grid-template-columns: var(--awa-grid-product-cols);
+    gap: var(--awa-gap-md);
     padding: 14px;
     border: 1px solid var(--awa-home-final-border);
     border-radius: var(--awa-home-final-radius);
@@ -211,14 +208,14 @@ body.cms-homepage_ayo_home5 .page-wrapper .column.main > .benefits-bar .benefits
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
+    gap: var(--awa-gap-md);
     min-height: 44px;
-    padding: 10px 14px;
-    border-radius: 12px;
+    padding: var(--awa-gap-md) 14px;
+    border-radius: var(--awa-radius-md);
     background: #fff;
     border: 1px solid #e6edf5;
     color: #334155;
-    font-weight: 600;
+    font-weight: var(--awa-weight-semibold);
     line-height: 1.35;
     text-align: center;
     transition: border-color var(--awa-home-transition), box-shadow var(--awa-home-transition), transform var(--awa-home-transition);
@@ -241,7 +238,7 @@ body.cms-homepage_ayo_home5 .page-wrapper .column.main > .trust-badges-homepage 
     place-items: center;
     text-align: center;
     min-height: 118px;
-    border-radius: 12px;
+    border-radius: var(--awa-radius-md);
     padding: 12px;
     transition: box-shadow var(--awa-home-transition), transform var(--awa-home-transition);
 }
@@ -303,12 +300,12 @@ body.cms-homepage_ayo_home5 .page-wrapper .product-item .b2b-login-to-see-price 
     min-height: 28px;
     margin: 8px 0 6px;
     padding: 0 10px;
-    border-radius: 999px;
+    border-radius: var(--awa-radius-pill);
     border: 1px solid #f3d3d4;
     background: #fff5f5;
     color: #9f2c31;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: var(--awa-text-xs);
+    font-weight: var(--awa-weight-bold);
     line-height: 1.2;
 }
 
@@ -323,7 +320,7 @@ body.cms-homepage_ayo_home5 .page-wrapper .product-item .b2b-login-to-see-price 
 
 @media (width <= 991px) {
     body.cms-homepage_ayo_home5 .page-wrapper .header .top-search {
-        gap: 8px;
+        gap: var(--awa-gap-sm);
     }
 
     body.cms-homepage_ayo_home5 .page-wrapper .column.main > .benefits-bar {
@@ -352,8 +349,8 @@ body.cms-homepage_ayo_home5 .page-wrapper .product-item .b2b-login-to-see-price 
 
     body.cms-homepage_ayo_home5 .page-wrapper .column.main > .benefits-bar {
         grid-template-columns: 1fr;
-        gap: 8px;
-        padding: 8px;
+        gap: var(--awa-gap-sm);
+        padding: var(--awa-gap-sm);
     }
 
     body.cms-homepage_ayo_home5 .page-wrapper .column.main > .benefits-bar .benefits-bar__item {
@@ -389,7 +386,7 @@ body.cms-homepage_ayo_home5 .awa-banners-grid {
     display: grid !important;
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: clamp(15px, 2vw, 24px) !important;
+    gap: clamp(var(--awa-gap-lg), 2vw, var(--awa-gap-xl)) !important;
 }
 
 body.cms-homepage_ayo_home5 .awa-banners-grid figure,
@@ -429,18 +426,65 @@ body.cms-homepage_ayo_home5 .awa-banners-grid .awa-banner-square {
     grid-row: 2 / 3;
 }
 
-@media (max-width: 991px) {
+@media (width <= 991px) {
     body.cms-homepage_ayo_home5 .awa-banners-grid {
         grid-template-columns: 1fr 1fr !important;
         grid-template-rows: auto auto auto !important;
     }
+
     body.cms-homepage_ayo_home5 .awa-banners-grid .awa-banner-tall {
         grid-column: 1 / 3;
         grid-row: 1 / 2;
     }
+
     body.cms-homepage_ayo_home5 .awa-banners-grid .awa-banner-wide {
         grid-column: 1 / 3;
         grid-row: 2 / 3;
+    }
+}
+
+/* ---- Carousel Responsive Extras (tablet + large desktop) ---- */
+
+/* Parent awa-fixes.css covers desktop + ≤768px. These add tablet + 1440+ breakpoints. */
+
+/* Tablet (768–1023px): show 4.5 items per row */
+@media (width >= 768px) and (width <= 1023px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__track {
+        gap: 20px;
+        padding: 0 56px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__item {
+        width: calc((100% - 3 * 20px) / 4.5);
+        min-width: unset;
+        max-width: unset;
+        height: auto;
+        min-height: 140px;
+        flex-shrink: 0;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__icon svg {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+/* Large desktop (≥1440px): show 8.3 items per row */
+@media (width >= 1440px) {
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__track {
+        gap: 20px;
+        padding: 0 56px;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__item {
+        width: calc((100% - 7 * 20px) / 8.3);
+        min-height: 140px;
+        height: auto;
+    }
+
+    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-category-carousel__icon svg {
+        width: 44px;
+        height: 44px;
     }
 }
 
@@ -457,6 +501,6 @@ body.cms-homepage_ayo_home5 .top-home-content--b2b-promo .container {
 
 /* Reduzir margens enormes da section title caso tenha */
 body.cms-homepage_ayo_home5 .top-home-content--b2b-promo .ayo-home5-heading {
-    margin-bottom: 20px !important;
+    margin-bottom: var(--awa-section-gap) !important;
     margin-top: 15px !important;
 }

@@ -3,7 +3,7 @@ define([
 ], function ($) {
     'use strict';
 
-    var DEFAULT_OPTIONS = {
+    const DEFAULT_OPTIONS = {
         inputSelector: '#search-input-autocomplate, #search, input[name="q"]',
         panelSelector: '#search_autocomplete',
         resultsRootSelector: '.searchsuite-autocomplete',
@@ -15,9 +15,9 @@ define([
         fallbackSuggestLimit: 6,
         fallbackProductLimit: 6
     };
-    var AUTO_BOOT_KEY = '__awaSearchCompatAutoBoot';
-    var AUTO_OBSERVER_KEY = '__awaSearchCompatAutoObserver';
-    var SEARCH_FORM_SELECTOR = 'form.form.minisearch, #search_mini_form';
+    const AUTO_BOOT_KEY = '__awaSearchCompatAutoBoot';
+    const AUTO_OBSERVER_KEY = '__awaSearchCompatAutoObserver';
+    const SEARCH_FORM_SELECTOR = 'form.form.minisearch, #search_mini_form';
 
     function escapeHtml(value) {
         return String(value || '')
@@ -33,8 +33,8 @@ define([
     }
 
     function findScoped($form, selector) {
-        var $scope;
-        var $found;
+        let $scope;
+        let $found;
 
         if (!$form || !$form.length) {
             return $(selector).first();
@@ -66,8 +66,8 @@ define([
 
     function applyTitles($root) {
         $root.find('a[href]').each(function () {
-            var $a = $(this);
-            var text = $.trim($a.text());
+            const $a = $(this);
+            const text = $.trim($a.text());
 
             if (!text) {
                 return;
@@ -84,13 +84,13 @@ define([
     }
 
     function syncState($form, options) {
-        var $input = findScoped($form, options.inputSelector);
-        var $panel = findScoped($form, options.panelSelector);
-        var panelEl = $panel.get(0);
-        var $resultsRoot = findScoped($form, options.resultsRootSelector);
-        var hasPanel = $panel.length > 0;
-        var isVisible = hasPanel && visible(panelEl);
-        var hasResults = false;
+        const $input = findScoped($form, options.inputSelector);
+        const $panel = findScoped($form, options.panelSelector);
+        const panelEl = $panel.get(0);
+        const $resultsRoot = findScoped($form, options.resultsRootSelector);
+        const hasPanel = $panel.length > 0;
+        const isVisible = hasPanel && visible(panelEl);
+        let hasResults = false;
 
         if ($resultsRoot.length && visible($resultsRoot.get(0))) {
             hasResults = $resultsRoot.find('li').length > 0;
@@ -124,7 +124,7 @@ define([
     }
 
     function getFallbackPanel($form, options) {
-        var $panel = findScoped($form, options.panelSelector);
+        const $panel = findScoped($form, options.panelSelector);
 
         if ($panel.length) {
             return $panel;
@@ -139,9 +139,9 @@ define([
     }
 
     function hasNativeResults($form, options) {
-        var $resultsRoot = findScoped($form, options.resultsRootSelector);
-        var $panel = getFallbackPanel($form, options);
-        var $nativeItems = $();
+        const $resultsRoot = findScoped($form, options.resultsRootSelector);
+        const $panel = getFallbackPanel($form, options);
+        let $nativeItems = $();
 
         if (isMirasvitAutocompleteActive()) {
             return true;
@@ -159,10 +159,10 @@ define([
     }
 
     function extractSuggestItems(suggestRaw) {
-        var suggest = [];
+        const suggest = [];
 
         $.each(suggestRaw || [], function (_, item) {
-            var label = '';
+            let label = '';
 
             if (typeof item === 'string') {
                 label = item;
@@ -180,7 +180,7 @@ define([
     }
 
     function extractProductItems(productRaw) {
-        var products = [];
+        const products = [];
 
         $.each(productRaw || [], function (_, item) {
             if (!item || typeof item !== 'object') {
@@ -199,8 +199,8 @@ define([
     }
 
     function normalizeFallbackPayload(payload) {
-        var suggest = [];
-        var products = [];
+        let suggest = [];
+        let products = [];
 
         if (payload && $.isArray(payload.result)) {
             $.each(payload.result, function (_, chunk) {
@@ -226,18 +226,15 @@ define([
     }
 
     function buildFallbackMarkup(normalized, options, query) {
-        var html = '';
-        var i;
-        var label;
-        var product;
-        var searchResultUrl = (options.searchResultUrl || '/catalogsearch/result/').replace(/\/+$/, '');
+        let html = '';
+        const searchResultUrl = (options.searchResultUrl || '/catalogsearch/result/').replace(/\/+$/, '');
 
         if (normalized.suggest.length) {
             html += '<div class="suggest">';
             html += '<ul role="listbox">';
 
-            for (i = 0; i < normalized.suggest.length && i < options.fallbackSuggestLimit; i += 1) {
-                label = normalized.suggest[i];
+            for (let i = 0; i < normalized.suggest.length && i < options.fallbackSuggestLimit; i += 1) {
+                const label = normalized.suggest[i];
                 html += '<li class="awa-fallback-item" role="option">';
                 html += '<a href="' + escapeHtml(searchResultUrl + '/?q=' + encodeURIComponent(label)) + '">' + escapeHtml(label) + '</a>';
                 html += '</li>';
@@ -251,8 +248,8 @@ define([
             html += '<div class="product">';
             html += '<ul role="listbox">';
 
-            for (i = 0; i < normalized.products.length && i < options.fallbackProductLimit; i += 1) {
-                product = normalized.products[i];
+            for (let i = 0; i < normalized.products.length && i < options.fallbackProductLimit; i += 1) {
+                const product = normalized.products[i];
                 html += '<li class="awa-fallback-item" role="option">';
 
                 if (product.image) {
@@ -284,8 +281,8 @@ define([
     }
 
     function clearFallback($form, options) {
-        var $panel = getFallbackPanel($form, options);
-        var $input = findScoped($form, options.inputSelector);
+        const $panel = getFallbackPanel($form, options);
+        const $input = findScoped($form, options.inputSelector);
 
         if (!$panel.length) {
             return;
@@ -303,17 +300,15 @@ define([
     }
 
     function renderFallback($form, options, payload, query) {
-        var $panel = getFallbackPanel($form, options);
-        var $input = findScoped($form, options.inputSelector);
-        var normalized;
-        var html;
+        const $panel = getFallbackPanel($form, options);
+        const $input = findScoped($form, options.inputSelector);
 
         if (!$panel.length) {
             return;
         }
 
-        normalized = normalizeFallbackPayload(payload);
-        html = buildFallbackMarkup(normalized, options, query);
+        const normalized = normalizeFallbackPayload(payload);
+        const html = buildFallbackMarkup(normalized, options, query);
 
         $panel.html(html)
             .show()
@@ -329,8 +324,8 @@ define([
     }
 
     function resolveFallbackEndpoint($form, options) {
-        var explicit = options.fallbackEndpoint || '';
-        var attrEndpoint = $form.attr('data-awa-search-endpoint') || '';
+        const explicit = options.fallbackEndpoint || '';
+        const attrEndpoint = $form.attr('data-awa-search-endpoint') || '';
 
         if (explicit) {
             return explicit;
@@ -348,11 +343,11 @@ define([
     }
 
     function runFallbackRequest($form, options, state, query) {
-        var endpoint = resolveFallbackEndpoint($form, options);
-        var $category = $form.find('#choose_category');
-        var categoryValue = $category.length ? $.trim($category.val() || '') : '';
-        var cacheKey = buildCacheKey(query, categoryValue);
-        var params = {
+        const endpoint = resolveFallbackEndpoint($form, options);
+        const $category = $form.find('#choose_category');
+        const categoryValue = $category.length ? $.trim($category.val() || '') : '';
+        const cacheKey = buildCacheKey(query, categoryValue);
+        const params = {
             q: query
         };
 
@@ -405,9 +400,9 @@ define([
     }
 
     function scheduleFallbackRequest($form, options, state, query) {
-        var $category = $form.find('#choose_category');
-        var categoryValue = $category.length ? $.trim($category.val() || '') : '';
-        var cacheKey = buildCacheKey(query, categoryValue);
+        const $category = $form.find('#choose_category');
+        const categoryValue = $category.length ? $.trim($category.val() || '') : '';
+        const cacheKey = buildCacheKey(query, categoryValue);
 
         if (state.timer) {
             window.clearTimeout(state.timer);
@@ -426,20 +421,20 @@ define([
             return;
         }
 
-        state.timer = window.setTimeout(function () {
+        state.timer = window.setTimeout(() => {
             runFallbackRequest($form, options, state, query);
         }, options.fallbackDelay);
     }
 
     function initCompat(config, element) {
-        var options = $.extend({}, DEFAULT_OPTIONS, config || {});
-        var $form = $(element);
-        var observer;
-        var bodyObserver;
-        var panelNode;
-        var scheduled = false;
-        var scopeNode;
-        var fallbackState = {
+        const options = $.extend({}, DEFAULT_OPTIONS, config || {});
+        const $form = $(element);
+        let observer;
+        let bodyObserver;
+        let panelNode;
+        let scheduled = false;
+        let scopeNode;
+        const fallbackState = {
             timer: null,
             xhr: null,
             cache: {},
@@ -448,6 +443,12 @@ define([
         };
 
         if (!$form.length || $form.data('awaSearchCompatInit')) {
+            return;
+        }
+
+        // Mirasvit autocomplete is the primary provider in this storefront.
+        // Skip compat bootstrap entirely when its placeholder/template is present.
+        if (document.getElementById('searchAutocompletePlaceholder') !== null) {
             return;
         }
 
@@ -473,13 +474,11 @@ define([
         }
 
         function attachPanelObserver() {
-            var nextPanelNode;
-
             if (!observer) {
                 return false;
             }
 
-            nextPanelNode = findScoped($form, options.panelSelector).get(0);
+            const nextPanelNode = findScoped($form, options.panelSelector).get(0);
             if (!nextPanelNode) {
                 return false;
             }
@@ -508,7 +507,7 @@ define([
         scheduleSync();
 
         $form.on('focusin.awaSearchCompat input.awaSearchCompat keyup.awaSearchCompat', options.inputSelector, function (e) {
-            var query = $.trim($(this).val() || '');
+            const query = $.trim($(this).val() || '');
 
             if (e.type === 'keyup' && e.key === 'Escape') {
                 $form.removeClass('is-open');
@@ -523,20 +522,20 @@ define([
         });
 
         $form.on('focusout.awaSearchCompat', options.inputSelector, function () {
-            window.setTimeout(function () {
+            window.setTimeout(() => {
                 scheduleSync();
             }, 100);
         });
 
         $form.on('change.awaSearchCompat', '#choose_category', function () {
-            var $input = findScoped($form, options.inputSelector);
-            var query = $.trim($input.val() || '');
+            const $input = findScoped($form, options.inputSelector);
+            const query = $.trim($input.val() || '');
             scheduleFallbackRequest($form, options, fallbackState, query);
             scheduleSync();
         });
 
         if (typeof window.MutationObserver === 'function') {
-            observer = new window.MutationObserver(function () {
+            observer = new window.MutationObserver(() => {
                 scheduleSync();
             });
 
@@ -544,7 +543,7 @@ define([
             scopeNode = $form.closest('.block-search, .header .search, .top-search').get(0) || document.body;
 
             if (!panelNode && scopeNode) {
-                bodyObserver = new window.MutationObserver(function () {
+                bodyObserver = new window.MutationObserver(() => {
                     attachPanelObserver();
                     scheduleSync();
                 });
@@ -565,26 +564,21 @@ define([
     }
 
     function bootAll(config) {
-        var options = $.extend({}, DEFAULT_OPTIONS, config || {});
+        const options = $.extend({}, DEFAULT_OPTIONS, config || {});
         $(SEARCH_FORM_SELECTOR).each(function () {
             initCompat(options, this);
         });
     }
 
     function shouldObserveMutation(mutations) {
-        var i;
-        var j;
-        var mutation;
-        var addedNodes;
-
-        for (i = 0; i < mutations.length; i += 1) {
-            mutation = mutations[i];
+        for (let i = 0; i < mutations.length; i += 1) {
+            const mutation = mutations[i];
             if (!mutation || !mutation.addedNodes || !mutation.addedNodes.length) {
                 continue;
             }
 
-            addedNodes = mutation.addedNodes;
-            for (j = 0; j < addedNodes.length; j += 1) {
+            const addedNodes = mutation.addedNodes;
+            for (let j = 0; j < addedNodes.length; j += 1) {
                 if (!addedNodes[j] || addedNodes[j].nodeType !== 1) {
                     continue;
                 }
@@ -620,7 +614,7 @@ define([
         });
 
         if (window.MutationObserver && document.body && !window[AUTO_OBSERVER_KEY]) {
-            window[AUTO_OBSERVER_KEY] = new window.MutationObserver(function (mutations) {
+            window[AUTO_OBSERVER_KEY] = new window.MutationObserver((mutations) => {
                 if (!shouldObserveMutation(mutations)) {
                     return;
                 }

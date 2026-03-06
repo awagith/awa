@@ -3,7 +3,7 @@
 #back-top,
 .fixed-right .fixed-right-ul li,
 .fixed-right .fixed-right-ul li > a {
-    border-radius: 999px;
+    border-radius: var(--awa-radius-pill);
 }
 
 #back-top {
@@ -52,7 +52,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
 
 .fixed-right .fixed-right-ul {
     display: grid;
-    gap: 10px;
+    gap: var(--awa-gap-md);
 }
 
 .fixed-right .fixed-right-ul li {
@@ -97,7 +97,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
 
 .fixed-bottom .mobile-bottom-link > li > a {
     min-height: 44px;
-    border-radius: 10px;
+    border-radius: var(--awa-radius-base);
     transition: color 0.3s ease, background-color 0.3s ease;
 }
 
@@ -125,7 +125,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 999px;
+    border-radius: var(--awa-radius-pill);
     background: rgb(255 255 255 / 92%);
     color: var(--text-color, #333);
     border: 1px solid rgb(0 0 0 / 8%);
@@ -157,7 +157,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
 
 .newsletterpopup .nl-popup-form .field.newsletter .control input {
     min-height: 44px;
-    border-radius: 12px;
+    border-radius: var(--awa-radius-md);
 }
 
 .newsletterpopup .nl-popup-form .field.newsletter .control input:focus {
@@ -167,7 +167,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
 
 .newsletterpopup .nl-popup-form .action.subscribe.primary {
     min-height: 44px;
-    border-radius: 12px;
+    border-radius: var(--awa-radius-md);
     box-shadow: 0 8px 20px rgb(183 51 55 / 14%);
     transition: background-color 280ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1), transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -186,7 +186,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
 .b2b-login-modal-close {
     width: 44px;
     height: 44px;
-    border-radius: 999px;
+    border-radius: var(--awa-radius-pill);
     border: 1px solid rgb(183 51 55 / 18%);
     background: #fff;
     color: var(--text-color, #333);
@@ -203,7 +203,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
 
 .ajaxsuite-popup-wrapper .modal-inner-wrap,
 .popup-authentication .modal-inner-wrap {
-    border-radius: 16px;
+    border-radius: var(--awa-radius-xl);
     overflow: hidden;
 }
 
@@ -217,7 +217,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
 .ajaxsuite-popup-wrapper .field .input-text,
 .popup-authentication .field .input-text {
     min-height: 44px;
-    border-radius: 12px;
+    border-radius: var(--awa-radius-md);
 }
 
 .ajaxsuite-popup-wrapper .field .input-text:focus,
@@ -246,11 +246,11 @@ body.checkout-cart-index .cart-empty .action.primary {
     }
 
     .fixed-right .fixed-right-ul {
-        gap: 8px;
+        gap: var(--awa-gap-sm);
     }
 
     .newsletterpopup .nl-popup-footer {
-        gap: 10px;
+        gap: var(--awa-gap-md);
     }
 
     .newsletterpopup .newletter_popup_close_text {

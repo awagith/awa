@@ -1,4 +1,5 @@
 <?php
+/** @var \Magento\Framework\View\Element\Template $block */
 /**
  * AWA B2B — Quick Quote Modal
  * Botão flutuante "Solicitar Cotação" + formulário modal.
@@ -6,11 +7,11 @@
 $formAction = $block->escapeUrl($block->getUrl('contact/index/post'));
 ?>
 <!-- Quick Quote FAB Button -->
-<div class="awa-quote-fab" id="awa-quote-fab">
+<div class="awa-quote-fab" id="awa-quote-fab"
+     data-mage-init='{"js/awa-quote-modal": {"modalId": "awa-quote-modal"}}'>
     <button type="button"
             class="awa-quote-fab__btn"
-            aria-label="Solicitar Cotação"
-            onclick="document.getElementById('awa-quote-modal').classList.add('is-open'); document.body.classList.add('awa-modal-open');">
+            aria-label="Solicitar Cotação">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
             <polyline points="14 2 14 8 20 8"/>
@@ -24,15 +25,13 @@ $formAction = $block->escapeUrl($block->getUrl('contact/index/post'));
 
 <!-- Quick Quote Modal -->
 <div class="awa-quote-modal" id="awa-quote-modal" role="dialog" aria-modal="true" aria-labelledby="awa-quote-title">
-    <div class="awa-quote-modal__backdrop"
-         onclick="document.getElementById('awa-quote-modal').classList.remove('is-open'); document.body.classList.remove('awa-modal-open');"></div>
+    <div class="awa-quote-modal__backdrop"></div>
     <div class="awa-quote-modal__panel">
         <div class="awa-quote-modal__header">
             <h3 id="awa-quote-title" class="awa-quote-modal__title">📋 Solicitar Cotação Rápida</h3>
             <button type="button"
                     class="awa-quote-modal__close"
-                    aria-label="Fechar"
-                    onclick="document.getElementById('awa-quote-modal').classList.remove('is-open'); document.body.classList.remove('awa-modal-open');">
+                    aria-label="Fechar">
                 ✕
             </button>
         </div>

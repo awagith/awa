@@ -73,7 +73,7 @@ class PriceVisibility implements PriceVisibilityInterface
         $this->customerRepository = $customerRepository;
         $this->urlBuilder = $urlBuilder;
         $this->syncLogResource = $syncLogResource;
-        $this->logger = $logger ?? \Magento\Framework\App\ObjectManager::getInstance()->get(LoggerInterface::class);
+        $this->logger = $logger ?? new \Psr\Log\NullLogger();
     }
 
     /**

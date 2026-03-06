@@ -1,4 +1,5 @@
 <?php
+/** @var \Rokanthemes\Categorytab\Block\CateWidget $block */
     use Magento\Framework\App\Action\Action;
     $enable = $block->getConfig('enabled');
     if ($enable < 1) {
@@ -15,7 +16,7 @@
     $desktop_small = $block->getdesktop_small();
     $tablet = $block->gettablet();
     $mobile = $block->getmobile();
-    $show_navigation = $block->getConfig('navigation');
+    $show_navigation = $block->getConfig('navigation') ?: true;
     $show_pagination = $block->getConfig('pagination');
     $auto = $block->getConfig('auto');
     $rows = 1;
@@ -73,9 +74,10 @@
                             $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
                         ?>
                         <div class="tab_container">
-                            <?php foreach ($categoryIds as $cate_id) { ?>
+                            <?php $tabIndex = 0; foreach ($categoryIds as $cate_id) { ?>
                             <div id="tab<?php echo trim($cate_id) . '-' . $identifyClass; ?>" class="tab_content_<?php echo $identifyClass; ?>">
                                 <div class="owl-container">
+                                    <?php if ($tabIndex === 0): ?>
                                     <div class="cat_home2 owl-carousel">
                                         <?php
                                             $newItems = $block->getProductCate($cate_id)->getItems();
@@ -207,9 +209,22 @@
                                             }
                                         ?>
                                     </div>
+                                    <?php else:
+                                        $lazyUrl = $block->getUrl('catalogfix/categorytab/load', [
+                                            '_query' => [
+                                                'category_id' => trim($cate_id),
+                                                'limit' => (int)($block->getLimitQty() ?: ($qty ?: 8)),
+                                                'template' => 'grid-original',
+                                                'rows' => 1
+                                            ]
+                                        ]);
+                                    ?>
+                                    <div class="cat_home2 owl-carousel" data-lazy-url="<?php echo $block->escapeUrl($lazyUrl); ?>">
+                                    </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
-                            <?php } ?>
+                            <?php $tabIndex++; } ?>
                         </div>
                     </div>
                 </div>

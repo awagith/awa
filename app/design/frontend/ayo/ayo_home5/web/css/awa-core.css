@@ -420,7 +420,7 @@ body .page-wrapper .post-content {
 body .page-wrapper .page-main {
     max-width: var(--awa-container);
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 var(--awa-space-5); /* P2-fluid: era 0 20px */
     isolation: isolate; /* BP-33: stacking context — conter z-index de conteúdo */
 }
 
@@ -1189,8 +1189,8 @@ body .page-wrapper *:focus:not(:focus-visible) {
     body .page-wrapper .footer-primary,
     body .page-wrapper .footer-columns,
     body .page-wrapper .footer-container .rowFlex {
-        padding-left: 15px;
-        padding-right: 15px;
+        padding-left: var(--awa-space-3-75); /* P2-fluid: era 15px */
+        padding-right: var(--awa-space-3-75); /* P2-fluid: era 15px */
     }
 }
 
@@ -1359,7 +1359,7 @@ body .page-wrapper [id]:not(input, select, textarea, button) {
     }
 
     body .page-wrapper .page-main {
-        padding: 0 15px;
+        padding: 0 var(--awa-space-3-75); /* P2-fluid: era 0 15px */
     }
 }
 
@@ -1379,7 +1379,7 @@ body .page-wrapper [id]:not(input, select, textarea, button) {
     }
 
     body .page-wrapper .page-main {
-        padding: 0 15px;
+        padding: 0 var(--awa-space-3-75); /* P2-fluid: era 0 15px */
     }
 
     /* Breadcrumbs mobile */
@@ -1464,7 +1464,7 @@ body .page-wrapper [id]:not(input, select, textarea, button) {
     }
 
     body .page-wrapper .page-main {
-        padding: 0 12px;
+        padding: 0 var(--awa-space-3); /* P2-fluid: era 0 12px */
     }
 
     body .page-wrapper .breadcrumbs {
@@ -1499,7 +1499,7 @@ body .page-wrapper [id]:not(input, select, textarea, button) {
     }
 
     body .page-wrapper .page-main {
-        padding: 0 10px;
+        padding: 0 var(--awa-space-2-5); /* P2-fluid: era 0 10px */
     }
 
     /* Floating buttons mínimos */

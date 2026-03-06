@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Repository Preferences -->
+    <preference for="GrupoAwamotos\MarketingIntelligence\Api\ProspectRepositoryInterface"
+                type="GrupoAwamotos\MarketingIntelligence\Model\ProspectRepository"/>
+    <preference for="GrupoAwamotos\MarketingIntelligence\Api\AudienceRepositoryInterface"
+                type="GrupoAwamotos\MarketingIntelligence\Model\AudienceRepository"/>
+    <preference for="GrupoAwamotos\MarketingIntelligence\Api\CompetitorRepositoryInterface"
+                type="GrupoAwamotos\MarketingIntelligence\Model\CompetitorRepository"/>
+
+    <!-- Data Interface Preferences -->
+    <preference for="GrupoAwamotos\MarketingIntelligence\Api\Data\ProspectInterface"
+                type="GrupoAwamotos\MarketingIntelligence\Model\Prospect"/>
+    <preference for="GrupoAwamotos\MarketingIntelligence\Api\Data\AudienceInterface"
+                type="GrupoAwamotos\MarketingIntelligence\Model\Audience"/>
+    <preference for="GrupoAwamotos\MarketingIntelligence\Api\Data\CompetitorInterface"
+                type="GrupoAwamotos\MarketingIntelligence\Model\Competitor"/>
+    <preference for="GrupoAwamotos\MarketingIntelligence\Api\Data\CompetitorAdInterface"
+                type="GrupoAwamotos\MarketingIntelligence\Model\CompetitorAd"/>
+
+    <!-- Service Classes -->
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\ProspectFetcher">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\ProspectScorer">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\AudienceSyncer">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\CompetitorMonitor">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\OfflineConversionUploader">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Virtual Logger -->
+    <virtualType name="MarketingIntelligenceLogHandler"
+                 type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">/var/log/marketing_intelligence.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="MarketingIntelligenceLogger"
+                 type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="name" xsi:type="string">marketing_intelligence</argument>
+            <argument name="handlers" xsi:type="array">
+                <item name="system" xsi:type="object">MarketingIntelligenceLogHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <!-- UI Component Data Providers -->
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mktg_prospects_listing_data_source" xsi:type="string">GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\Prospect\Grid\Collection</item>
+                <item name="mktg_audiences_listing_data_source" xsi:type="string">GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\Audience\Grid\Collection</item>
+                <item name="mktg_competitors_listing_data_source" xsi:type="string">GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\CompetitorAd\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <!-- Grid Collections (Virtual Types) -->
+    <virtualType name="GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\Prospect\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">grupoawamotos_mktg_prospects</argument>
+            <argument name="resourceModel" xsi:type="string">GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\Prospect</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\Audience\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">grupoawamotos_mktg_audiences</argument>
+            <argument name="resourceModel" xsi:type="string">GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\Audience</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\CompetitorAd\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">grupoawamotos_mktg_competitor_ads</argument>
+            <argument name="resourceModel" xsi:type="string">GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\CompetitorAd</argument>
+        </arguments>
+    </virtualType>
+</config>

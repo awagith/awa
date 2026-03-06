@@ -104,3 +104,45 @@ $searchSuiteUrl = $block->getSearchUrl();
 }
 </script>
 <?php endif; ?>
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "searchsuiteautocompleteDataProvider": {
+                    "component": "Rokanthemes_SearchSuiteAutocomplete/js/dataProvider",
+                    "config": {
+                        "url": "<?= $block->escapeUrl($searchSuiteUrl) ?>"
+                    }
+                },
+                "searchsuiteautocomplete_form": {
+                    "component": "js/awa-searchsuite-autocomplete"
+                },
+                "searchsuiteautocompleteBindEvents": {
+                    "component": "Rokanthemes_SearchSuiteAutocomplete/js/bindEvents",
+                    "config": {
+                        "searchFormSelector": "#search_mini_form",
+                        "searchButtonSelector": "button.search",
+                        "inputSelector": "#search",
+                        "searchDelay": "<?= (int) $searchDelay ?>"
+                    }
+                }
+            }
+        }
+    }
+}
+</script>
+<script type="text/x-magento-init">
+{
+    "#search_mini_form": {
+        "js/awa-search-autocomplete-compat": {
+            "inputSelector": "#search",
+            "panelSelector": "#search_autocomplete",
+            "resultsRootSelector": ".searchsuite-autocomplete",
+            "fallbackEndpoint": "<?= $block->escapeUrl($searchSuiteUrl) ?>",
+            "searchResultUrl": "<?= $block->escapeUrl($searchHelper->getResultUrl()) ?>",
+            "minQueryLength": 2
+        }
+    }
+}
+</script>

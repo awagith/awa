@@ -6,8 +6,8 @@ define(['jquery'], function ($) {
     'use strict';
 
     return {
-        initialize: function () {},
-        start: function () {},
-        stop: function () {}
+        initialize() {},
+        start() {},
+        stop() {}
     };
 });

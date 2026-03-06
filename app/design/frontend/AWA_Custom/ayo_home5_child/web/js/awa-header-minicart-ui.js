@@ -6,13 +6,13 @@
     }
     window.__awaRound2HeaderMinicartUiInit = true;
 
-    var SCROLL_THRESHOLD = 48;
-    var scheduled = false;
-    var searchObserver;
-    var stickyObserver;
-    var autocompleteOptionId = 0;
-    var searchCompatLoading = false;
-    var searchCompatLoaded = false;
+    const SCROLL_THRESHOLD = 48;
+    let scheduled = false;
+    let searchObserver;
+    let stickyObserver;
+    let autocompleteOptionId = 0;
+    let searchCompatLoading = false;
+    let searchCompatLoaded = false;
 
     function onReady(callback) {
         if (document.readyState === 'loading') {
@@ -32,6 +32,11 @@
 
     function getBody() {
         return document.body;
+    }
+
+    function getHomeNavRoot() {
+        return document.querySelector('[data-awa-header-nav="true"]')
+            || document.querySelector('.header-control.header-nav.header-nav-global.cms_home_1');
     }
 
     function isVisible(el) {
@@ -55,7 +60,7 @@
     }
 
     function measureVisibleTopStackBottom() {
-        var selectors = [
+        const selectors = [
             '.header-wrapper-sticky',
             '.page-wrapper .header-wrapper-sticky',
             '.page-wrapper .top-header',
@@ -63,35 +68,28 @@
             '.page-wrapper .header .header_main',
             '.page-wrapper .header .header-main'
         ];
-        var seen = [];
-        var maxBottom = 0;
-        var i;
-        var j;
-        var nodes;
-        var el;
-        var style;
-        var position;
-        var rect;
+        const seen = [];
+        let maxBottom = 0;
 
-        for (i = 0; i < selectors.length; i += 1) {
-            nodes = document.querySelectorAll(selectors[i]);
+        for (let i = 0; i < selectors.length; i += 1) {
+            const nodes = document.querySelectorAll(selectors[i]);
 
-            for (j = 0; j < nodes.length; j += 1) {
-                el = nodes[j];
+            for (let j = 0; j < nodes.length; j += 1) {
+                const el = nodes[j];
 
                 if (!el || seen.indexOf(el) !== -1 || !isVisible(el)) {
                     continue;
                 }
                 seen.push(el);
 
-                style = window.getComputedStyle ? window.getComputedStyle(el) : null;
-                position = style ? style.position : '';
+                const style = window.getComputedStyle ? window.getComputedStyle(el) : null;
+                const position = style ? style.position : '';
 
                 if (position !== 'fixed' && position !== 'sticky') {
                     continue;
                 }
 
-                rect = el.getBoundingClientRect();
+                const rect = el.getBoundingClientRect();
 
                 if (!rect || rect.height < 20 || rect.bottom <= 0) {
                     continue;
@@ -111,7 +109,7 @@
     }
 
     function isHomeHeaderContext() {
-        var body = getBody();
+        const body = getBody();
 
         if (!body) {
             return false;
@@ -123,7 +121,7 @@
     }
 
     function isPlpContext() {
-        var body = getBody();
+        const body = getBody();
 
         if (!body) {
             return false;
@@ -142,8 +140,8 @@
     }
 
     function getSearchUi() {
-        var scope = getSearchScope();
-        var form = scope ? scope.querySelector('#search_mini_form, form.form.minisearch') : null;
+        const scope = getSearchScope();
+        const form = scope ? scope.querySelector('#search_mini_form, form.form.minisearch') : null;
 
         if (!scope || !form) {
             return null;
@@ -156,8 +154,17 @@
             actions: form.querySelector('.actions'),
             button: form.querySelector('.action.search, button[type="submit"]'),
             panel: scope.querySelector('#search_autocomplete'),
-            resultsRoot: scope.querySelector('.searchsuite-autocomplete')
+            resultsRoot: scope.querySelector('.mst-searchautocomplete__autocomplete, .searchsuite-autocomplete')
         };
+    }
+
+    function isMirasvitAutocompleteAvailable(scope) {
+        const context = scope || document;
+
+        return !!(
+            document.getElementById('searchAutocompletePlaceholder') ||
+            context.querySelector('.mst-searchautocomplete__autocomplete')
+        );
     }
 
     function getRequireFn() {
@@ -173,8 +180,13 @@
     }
 
     function ensureSearchCompatBridge() {
-        var requireFn = getRequireFn();
-        var searchUi = getSearchUi();
+        const requireFn = getRequireFn();
+        const searchUi = getSearchUi();
+
+        if (isMirasvitAutocompleteAvailable(searchUi ? searchUi.scope : document)) {
+            searchCompatLoaded = true;
+            return;
+        }
 
         if (!requireFn || !searchUi || !searchUi.form || searchCompatLoaded || searchCompatLoading) {
             return;
@@ -185,7 +197,7 @@
         requireFn(
             ['js/awa-search-autocomplete-compat'],
             function (initAwaSearchCompat) {
-                var latestSearchUi = getSearchUi();
+                const latestSearchUi = getSearchUi();
 
                 searchCompatLoading = false;
                 searchCompatLoaded = true;
@@ -198,22 +210,18 @@
                 latestSearchUi.form.setAttribute('data-awa-search-compat-bound', 'true');
                 scheduleRuntimeSync();
             },
-            function () {
+            () => {
                 searchCompatLoading = false;
             }
         );
     }
 
     function ensureSearchLiveRegion(searchUi) {
-        var liveRegion;
-        var describedBy;
-        var describedByTokens;
-
         if (!searchUi || !searchUi.scope) {
             return null;
         }
 
-        liveRegion = searchUi.scope.querySelector('#awa-search-live-region');
+        let liveRegion = searchUi.scope.querySelector('#awa-search-live-region');
         if (!liveRegion) {
             liveRegion = document.createElement('div');
             liveRegion.id = 'awa-search-live-region';
@@ -234,8 +242,8 @@
         }
 
         if (searchUi.input) {
-            describedBy = searchUi.input.getAttribute('aria-describedby') || '';
-            describedByTokens = describedBy.split(/\s+/).filter(Boolean);
+            const describedBy = searchUi.input.getAttribute('aria-describedby') || '';
+            const describedByTokens = describedBy.split(/\s+/).filter(Boolean);
             if (describedByTokens.indexOf(liveRegion.id) === -1) {
                 describedByTokens.push(liveRegion.id);
                 searchUi.input.setAttribute('aria-describedby', describedByTokens.join(' '));
@@ -246,25 +254,18 @@
     }
 
     function collectAutocompleteOptions(searchUi) {
-        var panel = searchUi ? (searchUi.resultsRoot || searchUi.panel) : null;
-        var candidates;
-        var options = [];
-        var i;
-        var j;
-        var node;
-        var optionNode;
-        var actionNode;
-        var duplicate;
+        const panel = searchUi ? (searchUi.resultsRoot || searchUi.panel) : null;
+        const options = [];
 
         if (!panel) {
             return options;
         }
 
-        candidates = panel.querySelectorAll('.suggest ul li, .product ul li, [role="option"], li');
+        const candidates = panel.querySelectorAll('.suggest ul li, .product ul li, [role="option"], li');
 
-        for (i = 0; i < candidates.length; i += 1) {
-            node = candidates[i];
-            optionNode = node;
+        for (let i = 0; i < candidates.length; i += 1) {
+            const node = candidates[i];
+            let optionNode = node;
 
             if (!optionNode) {
                 continue;
@@ -278,8 +279,8 @@
                 continue;
             }
 
-            duplicate = false;
-            for (j = 0; j < options.length; j += 1) {
+            let duplicate = false;
+            for (let j = 0; j < options.length; j += 1) {
                 if (options[j].option === optionNode) {
                     duplicate = true;
                     break;
@@ -296,7 +297,7 @@
                 optionNode.id = 'awa-search-option-' + autocompleteOptionId;
             }
 
-            actionNode = optionNode.matches && optionNode.matches('a[href], button, [tabindex]') ?
+            const actionNode = optionNode.matches && optionNode.matches('a[href], button, [tabindex]') ?
                 optionNode :
                 optionNode.querySelector('a[href], button, [tabindex]');
 
@@ -310,15 +311,12 @@
     }
 
     function getAutocompleteActiveIndex(searchUi) {
-        var rawIndex;
-        var index;
-
         if (!searchUi || !searchUi.form) {
             return -1;
         }
 
-        rawIndex = searchUi.form.getAttribute('data-awa-active-index');
-        index = parseInt(rawIndex || '-1', 10);
+        const rawIndex = searchUi.form.getAttribute('data-awa-active-index');
+        const index = parseInt(rawIndex || '-1', 10);
 
         if (isNaN(index)) {
             return -1;
@@ -336,13 +334,11 @@
     }
 
     function clearAutocompleteActiveState(searchUi, options) {
-        var i;
-
         if (!searchUi) {
             return;
         }
 
-        for (i = 0; i < options.length; i += 1) {
+        for (let i = 0; i < options.length; i += 1) {
             options[i].option.classList.remove('selected');
             options[i].option.classList.remove('awa-option-active');
             options[i].option.setAttribute('aria-selected', 'false');
@@ -356,10 +352,7 @@
     }
 
     function setActiveAutocompleteOption(searchUi, options, nextIndex, announce) {
-        var boundedIndex = nextIndex;
-        var activeEntry;
-        var liveRegion;
-        var optionLabel;
+        let boundedIndex = nextIndex;
 
         if (!searchUi || !options.length) {
             clearAutocompleteActiveState(searchUi, options || []);
@@ -375,7 +368,7 @@
         }
 
         clearAutocompleteActiveState(searchUi, options);
-        activeEntry = options[boundedIndex];
+        const activeEntry = options[boundedIndex];
         activeEntry.option.classList.add('selected');
         activeEntry.option.classList.add('awa-option-active');
         activeEntry.option.setAttribute('aria-selected', 'true');
@@ -393,25 +386,22 @@
         }
 
         if (announce) {
-            liveRegion = ensureSearchLiveRegion(searchUi);
+            const liveRegion = ensureSearchLiveRegion(searchUi);
             if (liveRegion) {
-                optionLabel = (activeEntry.option.textContent || '').replace(/\s+/g, ' ').trim();
-                liveRegion.textContent = 'Sugestão ' + (boundedIndex + 1) + ' de ' + options.length + ': ' + optionLabel;
+                const optionLabel = (activeEntry.option.textContent || '').replace(/\s+/g, ' ').trim();
+                liveRegion.textContent = `Sugestão ${boundedIndex + 1} de ${options.length}: ${optionLabel}`;
             }
         }
     }
 
     function closeSearchAutocomplete(searchUi) {
-        var options;
-        var liveRegion;
-
         if (!searchUi) {
             return;
         }
 
-        options = collectAutocompleteOptions(searchUi);
+        const options = collectAutocompleteOptions(searchUi);
         clearAutocompleteActiveState(searchUi, options);
-        liveRegion = ensureSearchLiveRegion(searchUi);
+        const liveRegion = ensureSearchLiveRegion(searchUi);
 
         if (liveRegion) {
             liveRegion.textContent = 'Sugestões fechadas.';
@@ -434,20 +424,17 @@
     }
 
     function announceAutocompleteSummary(searchUi, panelVisible, hasResults, optionsCount) {
-        var liveRegion;
-        var queryText;
-
-        liveRegion = ensureSearchLiveRegion(searchUi);
+        const liveRegion = ensureSearchLiveRegion(searchUi);
         if (!liveRegion) {
             return;
         }
 
         if (panelVisible && hasResults) {
-            liveRegion.textContent = optionsCount + ' sugestões disponíveis. Use seta para baixo e cima para navegar.';
+            liveRegion.textContent = `${optionsCount} sugestões disponíveis. Use seta para baixo e cima para navegar.`;
             return;
         }
 
-        queryText = searchUi.input ? (searchUi.input.value || '').trim() : '';
+        const queryText = searchUi.input ? (searchUi.input.value || '').trim() : '';
         if (panelVisible && !hasResults && queryText.length >= 2) {
             liveRegion.textContent = 'Nenhuma sugestão encontrada.';
             return;
@@ -457,11 +444,8 @@
     }
 
     function handleSearchAutocompleteKeyboard(event) {
-        var key = event.key;
-        var searchUi = getSearchUi();
-        var options;
-        var activeIndex;
-        var activeOption;
+        const key = event.key;
+        const searchUi = getSearchUi();
 
         if (!searchUi || !searchUi.input || event.target !== searchUi.input) {
             return;
@@ -471,8 +455,8 @@
             return;
         }
 
-        options = collectAutocompleteOptions(searchUi);
-        activeIndex = getAutocompleteActiveIndex(searchUi);
+        const options = collectAutocompleteOptions(searchUi);
+        const activeIndex = getAutocompleteActiveIndex(searchUi);
 
         if (key === 'Escape') {
             event.preventDefault();
@@ -497,7 +481,7 @@
         }
 
         if (key === 'Enter' && activeIndex >= 0) {
-            activeOption = options[activeIndex];
+            const activeOption = options[activeIndex];
             if (activeOption && activeOption.action && activeOption.action.click) {
                 event.preventDefault();
                 activeOption.action.click();
@@ -506,22 +490,19 @@
     }
 
     function handleSearchAutocompleteHover(event) {
-        var searchUi = getSearchUi();
-        var hoveredOption;
-        var options;
-        var i;
+        const searchUi = getSearchUi();
 
         if (!searchUi || !searchUi.panel || !searchUi.panel.contains(event.target)) {
             return;
         }
 
-        hoveredOption = event.target.closest('[role="option"], li');
+        const hoveredOption = event.target.closest('[role="option"], li');
         if (!hoveredOption) {
             return;
         }
 
-        options = collectAutocompleteOptions(searchUi);
-        for (i = 0; i < options.length; i += 1) {
+        const options = collectAutocompleteOptions(searchUi);
+        for (let i = 0; i < options.length; i += 1) {
             if (options[i].option === hoveredOption) {
                 setActiveAutocompleteOption(searchUi, options, i, false);
                 break;
@@ -534,29 +515,26 @@
     }
 
     function normalizeSearchFormAction() {
-        var searchUi = getSearchUi();
-        var form = searchUi ? searchUi.form : null;
-        var rawAction;
-        var parsedAction;
-        var currentOrigin;
-        var normalizedAction;
+        const searchUi = getSearchUi();
+        const form = searchUi ? searchUi.form : null;
 
         if (!form) {
             return;
         }
 
-        rawAction = form.getAttribute('action') || form.action || '';
+        const rawAction = form.getAttribute('action') || form.action || '';
         if (!rawAction || !canUseUrlParser()) {
             return;
         }
 
+        let parsedAction;
         try {
             parsedAction = new window.URL(rawAction, window.location.origin);
         } catch (e) {
             return;
         }
 
-        currentOrigin = window.location.origin;
+        const currentOrigin = window.location.origin;
         if (!/\/catalogsearch\/result\/?/i.test(parsedAction.pathname)) {
             return;
         }
@@ -565,7 +543,7 @@
             return;
         }
 
-        normalizedAction = currentOrigin + parsedAction.pathname;
+        const normalizedAction = currentOrigin + parsedAction.pathname;
 
         if (form.getAttribute('action') !== normalizedAction) {
             form.setAttribute('action', normalizedAction);
@@ -573,11 +551,11 @@
     }
 
     function syncA11yLabels() {
-        var searchUi = getSearchUi();
-        var searchButton = searchUi ? searchUi.button : null;
-        var searchInput = searchUi ? searchUi.input : null;
-        var searchPanel = searchUi ? searchUi.panel : null;
-        var minicartTrigger = document.querySelector('.header .top-search .minicart-wrapper .action.showcart');
+        const searchUi = getSearchUi();
+        const searchButton = searchUi ? searchUi.button : null;
+        const searchInput = searchUi ? searchUi.input : null;
+        const searchPanel = searchUi ? searchUi.panel : null;
+        const minicartTrigger = document.querySelector('.header .top-search .minicart-wrapper .action.showcart');
 
         if (searchButton && !searchButton.getAttribute('aria-label')) {
             searchButton.setAttribute('aria-label', searchButton.getAttribute('title') || 'Buscar');
@@ -592,8 +570,20 @@
                 searchInput.setAttribute('aria-label', 'Buscar produtos');
             }
 
-            if (searchPanel && !searchInput.getAttribute('aria-controls')) {
+            if (searchPanel && !searchPanel.id) {
+                searchPanel.id = 'search_autocomplete';
+            }
+
+            if (searchPanel) {
                 searchInput.setAttribute('aria-controls', searchPanel.id || 'search_autocomplete');
+                searchInput.setAttribute('aria-haspopup', 'listbox');
+            }
+        }
+
+        if (searchPanel) {
+            searchPanel.setAttribute('role', 'listbox');
+            if (!searchPanel.getAttribute('aria-hidden')) {
+                searchPanel.setAttribute('aria-hidden', 'true');
             }
         }
 
@@ -607,15 +597,7 @@
     }
 
     function syncSearchState() {
-        var searchUi = getSearchUi();
-        var panelVisible;
-        var hasResults = false;
-        var panelText = '';
-        var autocompleteOptions = [];
-        var activeIndex;
-        var currentQuery = '';
-        var lastQuery = '';
-        var panelForcedClosed;
+        const searchUi = getSearchUi();
 
         if (!searchUi) {
             return;
@@ -624,11 +606,15 @@
         searchUi.form.classList.add('is-ready');
         ensureSearchLiveRegion(searchUi);
 
+        let currentQuery = '';
         if (searchUi.input) {
             currentQuery = searchUi.input.value || '';
         }
 
-        lastQuery = searchUi.form.getAttribute('data-awa-last-query') || '';
+        const trimmedQuery = currentQuery.trim();
+        const isQueryEmpty = trimmedQuery.length === 0;
+
+        const lastQuery = searchUi.form.getAttribute('data-awa-last-query') || '';
         if (currentQuery !== lastQuery) {
             searchUi.form.setAttribute('data-awa-last-query', currentQuery);
             searchUi.form.removeAttribute('data-awa-panel-closed');
@@ -637,8 +623,10 @@
             }
         }
 
-        panelVisible = !!(searchUi.panel && isVisible(searchUi.panel) && window.getComputedStyle(searchUi.panel).display !== 'none');
-        autocompleteOptions = collectAutocompleteOptions(searchUi);
+        let panelVisible = !!(searchUi.panel && isVisible(searchUi.panel) && window.getComputedStyle(searchUi.panel).display !== 'none');
+        const autocompleteOptions = collectAutocompleteOptions(searchUi);
+        let hasResults = false;
+        let panelText = '';
 
         if (searchUi.resultsRoot && isVisible(searchUi.resultsRoot)) {
             hasResults = autocompleteOptions.length > 0 || searchUi.resultsRoot.querySelectorAll('li').length > 0;
@@ -648,7 +636,7 @@
             hasResults = autocompleteOptions.length > 0 || panelText !== '' || searchUi.panel.children.length > 0;
         }
 
-        panelForcedClosed = searchUi.form.getAttribute('data-awa-panel-closed') === 'true';
+        const panelForcedClosed = searchUi.form.getAttribute('data-awa-panel-closed') === 'true';
         if (panelForcedClosed) {
             panelVisible = false;
             if (searchUi.panel) {
@@ -659,6 +647,10 @@
         searchUi.form.classList.toggle('is-open', panelVisible);
         searchUi.form.classList.toggle('has-results', hasResults);
         searchUi.form.classList.toggle('is-empty', !hasResults);
+        searchUi.form.classList.toggle('is-query-empty', isQueryEmpty);
+        searchUi.form.classList.toggle('has-query', !isQueryEmpty);
+        searchUi.scope.classList.toggle('is-query-empty', isQueryEmpty);
+        searchUi.scope.classList.toggle('has-query', !isQueryEmpty);
 
         if (searchUi.input) {
             searchUi.input.setAttribute('aria-expanded', panelVisible ? 'true' : 'false');
@@ -667,6 +659,7 @@
 
         if (searchUi.panel) {
             searchUi.panel.setAttribute('aria-hidden', panelVisible ? 'false' : 'true');
+            searchUi.panel.setAttribute('role', 'listbox');
             searchUi.panel.classList.toggle('is-open', panelVisible);
             searchUi.panel.classList.toggle('has-results', hasResults);
 
@@ -678,7 +671,7 @@
         if (!panelVisible || !hasResults) {
             clearAutocompleteActiveState(searchUi, autocompleteOptions);
         } else {
-            activeIndex = getAutocompleteActiveIndex(searchUi);
+            const activeIndex = getAutocompleteActiveIndex(searchUi);
             if (activeIndex >= autocompleteOptions.length) {
                 clearAutocompleteActiveState(searchUi, autocompleteOptions);
             }
@@ -688,20 +681,14 @@
     }
 
     function classifyTopLinks() {
-        var anchors = document.querySelectorAll('.top-account ul.header.links > li > a');
-        var i;
-        var anchor;
-        var li;
-        var href;
-        var text;
-        var normalizedHref;
+        const anchors = document.querySelectorAll('.top-account ul.header.links > li > a');
 
-        for (i = 0; i < anchors.length; i += 1) {
-            anchor = anchors[i];
-            li = anchor ? anchor.closest('li') : null;
-            href = anchor ? (anchor.getAttribute('href') || '') : '';
-            normalizedHref = href.toLowerCase();
-            text = anchor ? ((anchor.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase()) : '';
+        for (let i = 0; i < anchors.length; i += 1) {
+            const anchor = anchors[i];
+            const li = anchor ? anchor.closest('li') : null;
+            const href = anchor ? (anchor.getAttribute('href') || '') : '';
+            const normalizedHref = href.toLowerCase();
+            const text = anchor ? ((anchor.textContent || '').replace(/\s+/g, ' ').trim().toLowerCase()) : '';
 
             if (!anchor || !li) {
                 continue;
@@ -736,29 +723,23 @@
     }
 
     function syncTopLinkCounters() {
-        var items = document.querySelectorAll('.top-account ul.header.links > li');
-        var i;
-        var item;
-        var counter;
-        var raw;
-        var parsed;
-        var hasCount;
+        const items = document.querySelectorAll('.top-account ul.header.links > li');
 
-        for (i = 0; i < items.length; i += 1) {
-            item = items[i];
+        for (let i = 0; i < items.length; i += 1) {
+            const item = items[i];
             if (!item) {
                 continue;
             }
 
-            counter = item.querySelector('.counter.qty');
+            const counter = item.querySelector('.counter.qty');
             if (!counter) {
                 item.classList.remove('awa-top-link-counter-zero', 'awa-top-link-counter-has-value');
                 continue;
             }
 
-            raw = (counter.textContent || '').replace(/[^\d]/g, '');
-            parsed = raw ? Number(raw) : 0;
-            hasCount = Number.isFinite(parsed) && parsed > 0;
+            const raw = (counter.textContent || '').replace(/[^\d]/g, '');
+            const parsed = raw ? Number(raw) : 0;
+            const hasCount = Number.isFinite(parsed) && parsed > 0;
 
             item.classList.toggle('awa-top-link-counter-has-value', hasCount);
             item.classList.toggle('awa-top-link-counter-zero', !hasCount);
@@ -767,12 +748,11 @@
     }
 
     function enforceSearchButtonTouchTarget() {
-        var searchUi = getSearchUi();
-        var searchButton = searchUi ? searchUi.button : null;
-        var actions = searchUi ? searchUi.actions : null;
-        var buttonRect;
-        var targetSize = 44;
-        var isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
+        const searchUi = getSearchUi();
+        const searchButton = searchUi ? searchUi.button : null;
+        const actions = searchUi ? searchUi.actions : null;
+        const isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
+        let targetSize = 44;
 
         if (!searchButton || !actions) {
             return;
@@ -782,20 +762,20 @@
             targetSize = 48;
         }
 
-        buttonRect = searchButton.getBoundingClientRect();
+        const buttonRect = searchButton.getBoundingClientRect();
 
         setImportantStyle(actions, 'display', 'flex');
         setImportantStyle(actions, 'position', 'static');
-        setImportantStyle(actions, 'width', targetSize + 'px');
-        setImportantStyle(actions, 'min-width', targetSize + 'px');
-        setImportantStyle(actions, 'flex', '0 0 ' + targetSize + 'px');
+        setImportantStyle(actions, 'width', `${targetSize}px`);
+        setImportantStyle(actions, 'min-width', `${targetSize}px`);
+        setImportantStyle(actions, 'flex', `0 0 ${targetSize}px`);
         setImportantStyle(actions, 'height', '44px');
         setImportantStyle(actions, 'max-height', '44px');
 
         setImportantStyle(searchButton, 'position', 'static');
-        setImportantStyle(searchButton, 'width', targetSize + 'px');
-        setImportantStyle(searchButton, 'min-width', targetSize + 'px');
-        setImportantStyle(searchButton, 'flex', '0 0 ' + targetSize + 'px');
+        setImportantStyle(searchButton, 'width', `${targetSize}px`);
+        setImportantStyle(searchButton, 'min-width', `${targetSize}px`);
+        setImportantStyle(searchButton, 'flex', `0 0 ${targetSize}px`);
         setImportantStyle(searchButton, 'height', '44px');
         setImportantStyle(searchButton, 'min-height', '44px');
         setImportantStyle(searchButton, 'max-height', '44px');
@@ -810,8 +790,8 @@
     }
 
     function enforceSearchInlineLayout() {
-        var searchUi = getSearchUi();
-        var input = searchUi ? searchUi.input : null;
+        const searchUi = getSearchUi();
+        const input = searchUi ? searchUi.input : null;
 
         if (!searchUi) {
             return;
@@ -841,8 +821,8 @@
     }
 
     function suppressNonHomeNavToggle() {
-        var navToggle = document.querySelector('.header-control .action.nav-toggle, .header-control .nav-toggle');
-        var isHome = isHomeHeaderContext();
+        const navToggle = document.querySelector('.header-control .action.nav-toggle, .header-control .nav-toggle');
+        const isHome = isHomeHeaderContext();
 
         if (!navToggle) {
             return;
@@ -867,36 +847,25 @@
     }
 
     function stabilizeInternalMobileHeaderLayout() {
-        var isHome = isHomeHeaderContext();
-        var isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
-        var rows = document.querySelectorAll('.header .header_main .wp-header, .header .header-main .wp-header');
-        var i;
-        var row;
-        var firstCol;
-        var topSearch;
-        var searchBlock;
-        var miniCartWrapper;
-        var miniCarts;
-        var miniCartTrigger;
-        var logo;
-        var logoLink;
-        var logoImg;
+        const isHome = isHomeHeaderContext();
+        const isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
+        const rows = document.querySelectorAll('.header .header_main .wp-header, .header .header-main .wp-header');
 
         if (isHome || !isMobile || !rows.length) {
             return;
         }
 
-        for (i = 0; i < rows.length; i += 1) {
-            row = rows[i];
-            firstCol = row.querySelector(':scope > [class*="col-"]:first-child');
-            topSearch = row.querySelector(':scope > .top-search');
-            searchBlock = topSearch ? topSearch.querySelector(':scope > .block-search') : null;
-            miniCartWrapper = topSearch ? topSearch.querySelector(':scope > .mini-cart-wrapper') : null;
-            miniCarts = miniCartWrapper ? miniCartWrapper.querySelector(':scope > .mini-carts, .minicart-wrapper') : null;
-            miniCartTrigger = miniCartWrapper ? miniCartWrapper.querySelector('.showcart, .action.showcart') : null;
-            logo = firstCol ? firstCol.querySelector('.logo') : row.querySelector('.logo');
-            logoLink = logo ? logo.querySelector('a') : null;
-            logoImg = logo ? logo.querySelector('img') : null;
+        for (let i = 0; i < rows.length; i += 1) {
+            const row = rows[i];
+            const firstCol = row.querySelector(':scope > [class*="col-"]:first-child');
+            const topSearch = row.querySelector(':scope > .top-search');
+            const searchBlock = topSearch ? topSearch.querySelector(':scope > .block-search') : null;
+            const miniCartWrapper = topSearch ? topSearch.querySelector(':scope > .mini-cart-wrapper') : null;
+            const miniCarts = miniCartWrapper ? miniCartWrapper.querySelector(':scope > .mini-carts, .minicart-wrapper') : null;
+            const miniCartTrigger = miniCartWrapper ? miniCartWrapper.querySelector('.showcart, .action.showcart') : null;
+            const logo = firstCol ? firstCol.querySelector('.logo') : row.querySelector('.logo');
+            const logoLink = logo ? logo.querySelector('a') : null;
+            const logoImg = logo ? logo.querySelector('img') : null;
 
             setImportantStyle(row, 'display', 'grid');
             setImportantStyle(row, 'grid-template-columns', 'clamp(82px, 24vw, 108px) minmax(0, 1fr)');
@@ -1028,17 +997,24 @@
     }
 
     function capHomeMenuColumn() {
-        var isHome = isHomeHeaderContext();
-        var isDesktop = window.matchMedia && window.matchMedia('(min-width: 768px)').matches;
-        var navShell = document.querySelector('.header-control.header-nav-global.cms_home_1');
-        var navContainer = document.querySelector('.header-control.header-nav-global.cms_home_1 > .container');
-        var navRow = document.querySelector('.header-control.header-nav-global.cms_home_1 > .container > .row');
-        var menuColumn = document.querySelector('.header-control.header-nav-global.cms_home_1 .menu_left_home1');
-        var list = document.querySelector('.header-control.header-nav-global.cms_home_1 .menu_left_home1 .list-category-dropdown');
-        var promo = document.querySelector('.header-control.header-nav-global.cms_home_1 .menu_left_home1 .list-category-dropdown > .vertical-bg-img');
-        var expandLink = document.querySelector('.header-control.header-nav-global.cms_home_1 .menu_left_home1 .list-category-dropdown > .expand-category-link');
+        const isHome = isHomeHeaderContext();
+        const isDesktop = window.matchMedia && window.matchMedia('(min-width: 768px)').matches;
+        const navShell = getHomeNavRoot();
+        const navContainer = navShell ? navShell.querySelector(':scope > .container') : null;
+        const navRow = navContainer ? navContainer.querySelector(':scope > .row') : null;
+        const menuColumn = navShell ? navShell.querySelector('.menu_left_home1') : null;
+        const menuNav = menuColumn ? menuColumn.querySelector('.navigation.verticalmenu.side-verticalmenu') : null;
+        const list = menuColumn ? menuColumn.querySelector('.list-category-dropdown') : null;
+        const promo = list ? list.querySelector(':scope > .vertical-bg-img') : null;
+        const expandLink = list ? list.querySelector(':scope > .expand-category-link') : null;
+        const isMuellerMenu = !!(menuNav && menuNav.classList.contains('navigation--mueller'));
 
-        if (!isHome || !isDesktop) {
+        if (!isHome || !isDesktop || !navShell) {
+            return;
+        }
+
+        if (isMuellerMenu) {
+            // Mueller menu controls layout/overflow in its own CSS contract.
             return;
         }
 
@@ -1048,35 +1024,32 @@
         setImportantStyle(navContainer, 'min-height', '0');
         setImportantStyle(navRow, 'height', 'auto');
         setImportantStyle(navRow, 'min-height', '0');
-        setImportantStyle(menuColumn, 'max-height', 'min(360px, calc(100vh - 260px))');
-        setImportantStyle(menuColumn, 'overflow', 'hidden');
-        setImportantStyle(list, 'max-height', 'min(300px, calc(100vh - 320px))');
-        setImportantStyle(list, 'overflow-x', 'hidden');
-        setImportantStyle(list, 'overflow-y', 'auto');
+        setImportantStyle(menuColumn, 'max-height', 'none');
+        setImportantStyle(menuColumn, 'overflow', 'visible');
+
+        setImportantStyle(list, 'max-height', 'none');
+        setImportantStyle(list, 'overflow-x', 'visible');
+        setImportantStyle(list, 'overflow-y', 'visible');
+
         setImportantStyle(promo, 'display', 'none');
-        setImportantStyle(expandLink, 'position', 'sticky');
-        setImportantStyle(expandLink, 'inset-block-end', '0');
-        setImportantStyle(expandLink, 'background', '#fff');
-        setImportantStyle(expandLink, 'z-index', '3');
+        setImportantStyle(expandLink, 'position', 'static');
+        setImportantStyle(expandLink, 'inset-block-end', 'auto');
+        setImportantStyle(expandLink, 'background', 'transparent');
+        setImportantStyle(expandLink, 'z-index', 'auto');
     }
 
     function syncMobilePlpFilterToggle() {
-        var body = getBody();
-        var isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
-        var toolbar = document.querySelector('.shop-tab-select .toolbar.toolbar-products');
-        var filterBlock = document.querySelector('#layered-ajax-filter-block, .block.filter');
-        var modesWrap;
-        var toggle;
-        var collapsed;
-        var filterBlockId;
-        var toggleLabel;
+        const body = getBody();
+        const isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
+        const toolbar = document.querySelector('.shop-tab-select .toolbar.toolbar-products');
+        const filterBlock = document.querySelector('#layered-ajax-filter-block, .block.filter');
 
         if (!body || !isPlpContext() || !toolbar || !filterBlock) {
             return;
         }
 
-        modesWrap = toolbar.querySelector('.modes');
-        toggle = modesWrap ? modesWrap.querySelector('.modes-label') : null;
+        const modesWrap = toolbar.querySelector('.modes');
+        const toggle = modesWrap ? modesWrap.querySelector('.modes-label') : null;
 
         if (!toggle) {
             return;
@@ -1087,7 +1060,7 @@
         toggle.setAttribute('role', 'button');
         toggle.setAttribute('tabindex', '0');
         toggle.setAttribute('data-awa-filter-toggle', 'true');
-        filterBlockId = filterBlock.getAttribute('id') || 'awa-plp-filter-panel';
+        const filterBlockId = filterBlock.getAttribute('id') || 'awa-plp-filter-panel';
         if (!filterBlock.getAttribute('id')) {
             filterBlock.setAttribute('id', filterBlockId);
         }
@@ -1100,8 +1073,8 @@
             body.classList.remove('awa-plp-filters-collapsed');
         }
 
-        collapsed = isMobile && body.classList.contains('awa-plp-filters-collapsed');
-        toggleLabel = collapsed ? 'Mostrar Filtros' : 'Ocultar Filtros';
+        const collapsed = isMobile && body.classList.contains('awa-plp-filters-collapsed');
+        const toggleLabel = collapsed ? 'Mostrar Filtros' : 'Ocultar Filtros';
 
         toggle.textContent = toggleLabel;
         toggle.setAttribute('aria-label', toggleLabel);
@@ -1110,12 +1083,10 @@
     }
 
     function syncPlpMobileStickyToolbarOffset() {
-        var body = getBody();
-        var root = document.documentElement;
-        var isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
-        var toolbar = document.querySelector('.shop-tab-select .toolbar.toolbar-products');
-        var topStackBottom;
-        var offset;
+        const body = getBody();
+        const root = document.documentElement;
+        const isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
+        const toolbar = document.querySelector('.shop-tab-select .toolbar.toolbar-products');
 
         if (!root) {
             return;
@@ -1126,17 +1097,17 @@
             return;
         }
 
-        topStackBottom = measureVisibleTopStackBottom();
-        offset = Math.round(Math.min(220, Math.max(6, topStackBottom + 8)));
+        const topStackBottom = measureVisibleTopStackBottom();
+        const offset = Math.round(Math.min(220, Math.max(6, topStackBottom + 8)));
 
-        root.style.setProperty('--awa-plp-toolbar-top-offset', offset + 'px');
+        root.style.setProperty('--awa-plp-toolbar-top-offset', `${offset}px`);
     }
 
     function handleMobilePlpFilterToggle(event) {
-        var target = event && event.target ? event.target : null;
-        var toggle = target ? target.closest('.toolbar .modes .modes-label[data-awa-filter-toggle="true"]') : null;
-        var body = getBody();
-        var isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
+        const target = event && event.target ? event.target : null;
+        const toggle = target ? target.closest('.toolbar .modes .modes-label[data-awa-filter-toggle="true"]') : null;
+        const body = getBody();
+        const isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
 
         if (!toggle || !body || !isMobile || !isPlpContext()) {
             return;
@@ -1148,8 +1119,8 @@
     }
 
     function handleMobilePlpFilterToggleKeydown(event) {
-        var target = event && event.target ? event.target : null;
-        var toggle = target ? target.closest('.toolbar .modes .modes-label[data-awa-filter-toggle="true"]') : null;
+        const target = event && event.target ? event.target : null;
+        const toggle = target ? target.closest('.toolbar .modes .modes-label[data-awa-filter-toggle="true"]') : null;
 
         if (!toggle) {
             return;
@@ -1192,28 +1163,27 @@
         }
 
         scheduled = true;
-        window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(() => {
             scheduled = false;
             syncRuntimeAndSticky();
         });
     }
 
     function syncCondensedState() {
-        var wrapper = getStickyWrapper();
-        var body = getBody();
-        var shouldCondense;
+        const wrapper = getStickyWrapper();
+        const body = getBody();
 
         if (!body || !wrapper || !isStickyFeatureEnabled(wrapper)) {
             return;
         }
 
-        shouldCondense = window.scrollY >= SCROLL_THRESHOLD;
+        const shouldCondense = window.scrollY >= SCROLL_THRESHOLD;
 
         wrapper.classList.toggle('awa-header-condensed', shouldCondense);
         body.classList.toggle('awa-header-condensed', shouldCondense);
     }
 
-    onReady(function () {
+    onReady(() => {
         syncRuntimeAndSticky();
 
         window.addEventListener('scroll', scheduleRuntimeSync, { passive: true });
@@ -1228,8 +1198,8 @@
         document.addEventListener('keydown', handleMobilePlpFilterToggleKeydown, true);
 
         if (window.MutationObserver) {
-            var wrapper = getStickyWrapper();
-            var searchScope = getSearchScope();
+            const wrapper = getStickyWrapper();
+            const searchScope = getSearchScope();
 
             if (wrapper) {
                 stickyObserver = new MutationObserver(scheduleRuntimeSync);

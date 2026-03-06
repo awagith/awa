@@ -6,15 +6,15 @@
     }
     window.__awaRound3PdpStickyCtaInit = true;
 
-    var MOBILE_QUERY = '(max-width: 767px)';
-    var REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
-    var INVALID_STICKY_LABEL_RE = /\b(entrar|login|cadastro|acessar)\b/i;
-    var stickyStarted = false;
-    var deferredRetryBound = false;
-    var deferredRetryObserver = null;
-    var deferredRetryIntervalId = null;
-    var deferredRetryTimeoutId = null;
-    var SELECTORS = {
+    const MOBILE_QUERY = '(max-width: 767px)';
+    const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
+    const INVALID_STICKY_LABEL_RE = /\b(entrar|login|cadastro|acessar)\b/i;
+    let stickyStarted = false;
+    let deferredRetryBound = false;
+    let deferredRetryObserver = null;
+    let deferredRetryIntervalId = null;
+    let deferredRetryTimeoutId = null;
+    const SELECTORS = {
         addToCart: '#product-addtocart-button',
         addToCartForm: '#product_addtocart_form',
         b2bPriceGate: '.product-info-main .b2b-login-to-see-price',
@@ -69,8 +69,7 @@
     }
 
     function resolveAddToCartButton() {
-        var button = document.querySelector(SELECTORS.addToCart);
-        var form;
+        const button = document.querySelector(SELECTORS.addToCart);
 
         if (!button) {
             return null;
@@ -80,7 +79,7 @@
             return null;
         }
 
-        form = button.form || button.closest(SELECTORS.addToCartForm);
+        const form = button.form || button.closest(SELECTORS.addToCartForm);
         if (!form || form.id !== 'product_addtocart_form') {
             return null;
         }
@@ -89,13 +88,11 @@
     }
 
     function hasValidCartAction(form) {
-        var action;
-
         if (!form || !form.getAttribute) {
             return false;
         }
 
-        action = form.getAttribute('action') || '';
+        const action = form.getAttribute('action') || '';
         if (!action) {
             return false;
         }
@@ -104,22 +101,22 @@
     }
 
     function hasVisibleB2bPriceGate() {
-        var gate = document.querySelector(SELECTORS.b2bPriceGate);
+        const gate = document.querySelector(SELECTORS.b2bPriceGate);
         return isVisible(gate);
     }
 
     function hasVisibleB2bLoginReplacement() {
-        var replacement = document.querySelector(SELECTORS.b2bLoginButton);
+        const replacement = document.querySelector(SELECTORS.b2bLoginButton);
         return isVisible(replacement);
     }
 
     function hasVisiblePendingBanner() {
-        var pendingBanner = document.querySelector(SELECTORS.b2bPendingBanner);
+        const pendingBanner = document.querySelector(SELECTORS.b2bPendingBanner);
         return isVisible(pendingBanner);
     }
 
     function hasRestrictedB2bBodyState() {
-        var body = document.body;
+        const body = document.body;
 
         if (!body) {
             return false;
@@ -130,8 +127,8 @@
     }
 
     function isRestrictedB2bContext(button) {
-        var form = button ? (button.form || button.closest(SELECTORS.addToCartForm)) : null;
-        var gateVisible = hasVisibleB2bPriceGate();
+        const form = button ? (button.form || button.closest(SELECTORS.addToCartForm)) : null;
+        const gateVisible = hasVisibleB2bPriceGate();
 
         if (hasRestrictedB2bBodyState()) {
             return true;
@@ -153,14 +150,11 @@
     }
 
     function isStickyCapableAddToCartButton(button) {
-        var form;
-        var label;
-
         if (!button) {
             return false;
         }
 
-        form = button.form || button.closest(SELECTORS.addToCartForm);
+        const form = button.form || button.closest(SELECTORS.addToCartForm);
         if (!form || form.id !== 'product_addtocart_form') {
             return false;
         }
@@ -173,7 +167,7 @@
             return false;
         }
 
-        label = getButtonLabel(button);
+        const label = getButtonLabel(button);
         if (label && INVALID_STICKY_LABEL_RE.test(label)) {
             return false;
         }
@@ -202,9 +196,9 @@
     }
 
     function enhanceQtyControls() {
-        var qtyInput = document.getElementById('qty');
-        var qtyUp = document.querySelector('.info-qty .qty-up');
-        var qtyDown = document.querySelector('.info-qty .qty-down');
+        const qtyInput = document.getElementById('qty');
+        const qtyUp = document.querySelector('.info-qty .qty-up');
+        const qtyDown = document.querySelector('.info-qty .qty-down');
 
         if (qtyInput) {
             setAttrIfMissing(qtyInput, 'inputmode', 'numeric');
@@ -228,9 +222,9 @@
     }
 
     function getMediaSentinel() {
-        var nodes = document.querySelectorAll(SELECTORS.media);
-        for (var i = 0; i < nodes.length; i += 1) {
-            var rect = nodes[i].getBoundingClientRect();
+        const nodes = document.querySelectorAll(SELECTORS.media);
+        for (let i = 0; i < nodes.length; i += 1) {
+            const rect = nodes[i].getBoundingClientRect();
             if (rect.width > 0 && rect.height > 80) {
                 return nodes[i];
             }
@@ -239,12 +233,12 @@
     }
 
     function getPriceText() {
-        var priceNode = document.querySelector(SELECTORS.price);
+        const priceNode = document.querySelector(SELECTORS.price);
         return priceNode ? (priceNode.textContent || '').trim() : '';
     }
 
     function createStickyUi(getButton) {
-        var bar = document.createElement('div');
+        const bar = document.createElement('div');
         bar.className = 'awa-pdp-sticky-cta';
         bar.setAttribute('aria-hidden', 'true');
         bar.innerHTML = '' +
@@ -258,8 +252,8 @@
 
         document.body.appendChild(bar);
 
-        var stickyButton = bar.querySelector('.awa-pdp-sticky-cta__button');
-        var stickyPrice = bar.querySelector('.awa-pdp-sticky-cta__price');
+        const stickyButton = bar.querySelector('.awa-pdp-sticky-cta__button');
+        const stickyPrice = bar.querySelector('.awa-pdp-sticky-cta__price');
 
         function getLiveButton() {
             if (typeof getButton !== 'function') {
@@ -268,9 +262,9 @@
             return getButton();
         }
 
-        stickyButton.addEventListener('click', function () {
-            var behavior = prefersReducedMotion() ? 'auto' : 'smooth';
-            var button = getLiveButton();
+        stickyButton.addEventListener('click', () => {
+            const behavior = prefersReducedMotion() ? 'auto' : 'smooth';
+            const button = getLiveButton();
 
             if (!button) {
                 return;
@@ -287,16 +281,16 @@
                 button.scrollIntoView();
             }
 
-            window.setTimeout(function () {
+            window.setTimeout(() => {
                 button.click();
             }, prefersReducedMotion() ? 0 : 120);
         });
 
         function syncFromOriginal() {
-            var button = getLiveButton();
-            var label = getButtonLabel(button) || 'Comprar';
-            var priceText = getPriceText();
-            var canAct = isActionableAddToCartButton(button);
+            const button = getLiveButton();
+            const label = getButtonLabel(button) || 'Comprar';
+            const priceText = getPriceText();
+            const canAct = isActionableAddToCartButton(button);
 
             stickyButton.textContent = label;
             stickyButton.title = label;
@@ -310,7 +304,7 @@
         syncFromOriginal();
 
         if (window.MutationObserver) {
-            var observeTarget = document.querySelector(SELECTORS.productInfoMain) || document.body;
+            const observeTarget = document.querySelector(SELECTORS.productInfoMain) || document.body;
 
             new MutationObserver(syncFromOriginal).observe(observeTarget, {
                 childList: true,
@@ -337,15 +331,15 @@
 
         enhanceQtyControls();
 
-        var addToCartButton = resolveAddToCartButton();
-        var productInfoMain = document.querySelector(SELECTORS.productInfoMain);
+        let addToCartButton = resolveAddToCartButton();
+        const productInfoMain = document.querySelector(SELECTORS.productInfoMain);
 
         if (!addToCartButton || !productInfoMain || !isStickyCapableAddToCartButton(addToCartButton)) {
             scheduleDeferredInit();
             return;
         }
 
-        var mediaSentinel = getMediaSentinel();
+        const mediaSentinel = getMediaSentinel();
         if (!mediaSentinel) {
             scheduleDeferredInit();
             return;
@@ -361,7 +355,7 @@
         stickyStarted = true;
 
         function getLiveAddToCartButton() {
-            var liveButton = resolveAddToCartButton();
+            let liveButton = resolveAddToCartButton();
 
             if (liveButton && liveButton !== addToCartButton) {
                 addToCartButton = liveButton;
@@ -370,12 +364,12 @@
             return addToCartButton;
         }
 
-        var mq = window.matchMedia ? window.matchMedia(MOBILE_QUERY) : null;
-        var sticky = createStickyUi(getLiveAddToCartButton);
-        var body = document.body;
+        const mq = window.matchMedia ? window.matchMedia(MOBILE_QUERY) : null;
+        const sticky = createStickyUi(getLiveAddToCartButton);
+        const body = document.body;
 
         function shouldShowSticky() {
-            var liveButton = getLiveAddToCartButton();
+            const liveButton = getLiveAddToCartButton();
 
             if (mq && !mq.matches) {
                 return false;
@@ -402,13 +396,13 @@
         }
 
         if (window.IntersectionObserver) {
-            var observer = new IntersectionObserver(function (entries) {
-                var entry = entries[0];
+            const observer = new IntersectionObserver((entries) => {
+                const entry = entries[0];
                 if (!document.contains(getLiveAddToCartButton())) {
                     setVisible(false);
                     return;
                 }
-                var visible = shouldShowSticky() && entry && !entry.isIntersecting;
+                const visible = shouldShowSticky() && entry && !entry.isIntersecting;
                 setVisible(visible);
                 sticky.sync();
             }, {
@@ -418,13 +412,13 @@
 
             observer.observe(mediaSentinel);
         } else {
-            var onScroll = function () {
+            const onScroll = () => {
                 if (!document.contains(getLiveAddToCartButton())) {
                     setVisible(false);
                     return;
                 }
-                var rect = mediaSentinel.getBoundingClientRect();
-                var visible = shouldShowSticky() && rect.bottom < 0;
+                const rect = mediaSentinel.getBoundingClientRect();
+                const visible = shouldShowSticky() && rect.bottom < 0;
                 setVisible(visible);
                 sticky.sync();
             };
@@ -435,7 +429,7 @@
         }
 
         if (mq && mq.addEventListener) {
-            mq.addEventListener('change', function () {
+            mq.addEventListener('change', () => {
                 sticky.sync();
                 if (!mq.matches || !isStickyCapableAddToCartButton(addToCartButton)) {
                     setVisible(false);

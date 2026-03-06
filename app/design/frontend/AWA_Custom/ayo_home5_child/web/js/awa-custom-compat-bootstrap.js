@@ -3,12 +3,12 @@ define([
 ], function ($) {
     'use strict';
 
-    var SEARCH_FORM_SELECTOR = 'form.form.minisearch, #search_mini_form';
-    var SEARCH_BOOT_INIT_KEY = '__awaSearchCompatBootInit';
-    var SEARCH_OBSERVER_KEY = '__awaSearchCompatBootObserver';
-    var SEARCH_SCHEDULED_KEY = '__awaSearchCompatBootScheduled';
-    var B2B_BOOT_INIT_KEY = '__awaB2bCheckoutCompatBootInit';
-    var HOME_CATEGORY_BOOT_INIT_KEY = '__awaHomeCategoryCompatBootInit';
+    const SEARCH_FORM_SELECTOR = 'form.form.minisearch, #search_mini_form';
+    const SEARCH_BOOT_INIT_KEY = '__awaSearchCompatBootInit';
+    const SEARCH_OBSERVER_KEY = '__awaSearchCompatBootObserver';
+    const SEARCH_SCHEDULED_KEY = '__awaSearchCompatBootScheduled';
+    const B2B_BOOT_INIT_KEY = '__awaB2bCheckoutCompatBootInit';
+    const HOME_CATEGORY_BOOT_INIT_KEY = '__awaHomeCategoryCompatBootInit';
 
     function toBool(value) {
         return value === true || value === 1 || value === '1' || value === 'true';
@@ -33,45 +33,33 @@ define([
     }
 
     function nodeContainsSearchForm(node) {
-        var $node;
-
         if (!node || node.nodeType !== 1) {
             return false;
         }
 
-        $node = $(node);
+        const $node = $(node);
 
         return $node.is(SEARCH_FORM_SELECTOR) || $node.find(SEARCH_FORM_SELECTOR).length > 0;
     }
 
     function mutationsContainSearchForm(mutations) {
-        var i;
-        var j;
-        var mutation;
-        var addedNodes;
-        var removedNodes;
-
         if (!mutations || !mutations.length) {
             return false;
         }
 
-        for (i = 0; i < mutations.length; i += 1) {
-            mutation = mutations[i];
-
+        for (const mutation of mutations) {
             if (!mutation) {
                 continue;
             }
 
-            addedNodes = mutation.addedNodes || [];
-            for (j = 0; j < addedNodes.length; j += 1) {
-                if (nodeContainsSearchForm(addedNodes[j])) {
+            for (const node of (mutation.addedNodes || [])) {
+                if (nodeContainsSearchForm(node)) {
                     return true;
                 }
             }
 
-            removedNodes = mutation.removedNodes || [];
-            for (j = 0; j < removedNodes.length; j += 1) {
-                if (nodeContainsSearchForm(removedNodes[j])) {
+            for (const node of (mutation.removedNodes || [])) {
+                if (nodeContainsSearchForm(node)) {
                     return true;
                 }
             }
@@ -81,8 +69,8 @@ define([
     }
 
     function initSearchCompat() {
-        runOnce(SEARCH_BOOT_INIT_KEY, function () {
-            require(['js/awa-search-autocomplete-compat'], function (initAwaSearchCompat) {
+        runOnce(SEARCH_BOOT_INIT_KEY, () => {
+            require(['js/awa-search-autocomplete-compat'], (initAwaSearchCompat) => {
                 function boot() {
                     $(SEARCH_FORM_SELECTOR).each(function () {
                         initAwaSearchCompat({}, this);
@@ -108,17 +96,17 @@ define([
                     window.setTimeout(flush, 0);
                 }
 
-                onReady(function () {
+                onReady(() => {
                     scheduleBoot();
 
-                    $(document).on('contentUpdated.awaSearchCompatBootstrap', function (event) {
+                    $(document).on('contentUpdated.awaSearchCompatBootstrap', (event) => {
                         if (!event || !event.target || nodeContainsSearchForm(event.target)) {
                             scheduleBoot();
                         }
                     });
 
                     if (window.MutationObserver && document.body && !window[SEARCH_OBSERVER_KEY]) {
-                        window[SEARCH_OBSERVER_KEY] = new window.MutationObserver(function (mutations) {
+                        window[SEARCH_OBSERVER_KEY] = new window.MutationObserver((mutations) => {
                             if (!mutationsContainSearchForm(mutations)) {
                                 return;
                             }
@@ -137,9 +125,9 @@ define([
     }
 
     function initB2bCheckoutCompat() {
-        runOnce(B2B_BOOT_INIT_KEY, function () {
-            require(['js/awa-custom-b2b-cart-checkout-compat'], function (initAwaB2bCartCheckoutCompat) {
-                onReady(function () {
+        runOnce(B2B_BOOT_INIT_KEY, () => {
+            require(['js/awa-custom-b2b-cart-checkout-compat'], (initAwaB2bCartCheckoutCompat) => {
+                onReady(() => {
                     initAwaB2bCartCheckoutCompat();
                 });
             });
@@ -147,9 +135,9 @@ define([
     }
 
     function initHomeCategoryCompat() {
-        runOnce(HOME_CATEGORY_BOOT_INIT_KEY, function () {
-            require(['js/awa-custom-home-category-compat'], function (initAwaHomeCategoryCompat) {
-                onReady(function () {
+        runOnce(HOME_CATEGORY_BOOT_INIT_KEY, () => {
+            require(['js/awa-custom-home-category-compat'], (initAwaHomeCategoryCompat) => {
+                onReady(() => {
                     initAwaHomeCategoryCompat();
                 });
             });
@@ -157,7 +145,7 @@ define([
     }
 
     return function (config) {
-        var options = config || {};
+        const options = config || {};
 
         if (toBool(options.load_search_compat_js)) {
             initSearchCompat();

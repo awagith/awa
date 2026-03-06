@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!--
 /**
- * Checkout Layout - B2B PO Number Field
- * P0-1: Purchase Order Number field before payment methods
+ * Checkout Layout - B2B Fields Before Payment
+ * P0-1: PO Number + Terms + P2-4.2: Order Notes
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -20,7 +20,7 @@
                                             <item name="children" xsi:type="array">
                                                 <item name="payment" xsi:type="array">
                                                     <item name="children" xsi:type="array">
-                                                        <!-- P0-1: campo po number antes da area de pagamentos -->
+                                                        <!-- B2B fields before payment methods -->
                                                         <item name="beforeMethods" xsi:type="array">
                                                             <item name="children" xsi:type="array">
                                                                 <item name="b2b-po-number" xsi:type="array">
@@ -32,6 +32,11 @@
                                                                     <item name="component" xsi:type="string">GrupoAwamotos_B2B/js/view/checkout/b2b-terms</item>
                                                                     <item name="displayArea" xsi:type="string">beforeMethods</item>
                                                                     <item name="sortOrder" xsi:type="string">10</item>
+                                                                </item>
+                                                                <item name="b2b-order-notes" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">GrupoAwamotos_B2B/js/view/checkout/order-notes</item>
+                                                                    <item name="displayArea" xsi:type="string">beforeMethods</item>
+                                                                    <item name="sortOrder" xsi:type="string">15</item>
                                                                 </item>
                                                             </item>
                                                         </item>

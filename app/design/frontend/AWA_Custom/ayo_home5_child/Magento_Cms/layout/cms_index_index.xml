@@ -1,25 +1,20 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <!-- R35: awa-consistency-home5.css carregado apenas na homepage (antes era global via default_head_blocks.xml) -->
     <head>
+        <remove src="css/awa-round9-post-themeoption-overrides.css"/>
+        <remove src="css/awa-components-b2b-foundation.css"/>
+        <remove src="css/awa-compat-b2b-nav-plp-cart-checkout.css"/>
+        <remove src="css/awa-page-home-category-premium.css"/>
+        <remove src="css/awa-home-final-polish.css"/>
         <remove src="css/awa-round2-home-owl-tabs.css"/>
-        <css src="css/awa-consistency-home5.css"/>
-        <!-- AWA Round2 (dual-write hotfix): owl tabs visual polish homepage-only -->
-        <css src="css/awa-custom-home-owl-tabs.css"/>
-        <!-- Managed by dev/tools/ayo_home5_render_mode_switch.php -->
-        <!-- AWA_HOME5_DEMO_SUPPRESSIONS_HEAD_START -->
-        <!-- AWA_HOME5_DEMO_SUPPRESSIONS_HEAD_END -->
-        <!-- re-enable selective child layers on cms homepage (post-themeoption template is intentionally disabled on home) -->
-        <css src="css/awa-custom-post-themeoption-overrides.css"/>
-        <css src="css/awa-custom-components-b2b-foundation.css"/>
-        <css src="css/awa-custom-compat-b2b-nav-plp-cart-checkout.css"/>
-        <css src="css/awa-custom-page-home-category-premium.css"/>
+
+        <css src="css/awa-fixes-home.css"/>
+        <css src="css/awa-design-system-layout.css"/>
         <css src="css/awa-custom-home-final-polish.css"/>
-        <!-- AWA Grid Spacing Fix: loaded last to resolve OWL/grid gap conflicts -->
-        <css src="css/awa-grid-spacing-fix.css"/>
     </head>
     <body>
+        <attribute name="class" value="awa-home-premium-conservative"/>
         <referenceBlock name="theme.active.editor" remove="true"/>
         <referenceBlock name="google.maps.api" remove="true"/>
 
@@ -36,19 +31,15 @@
                    before="-"/>
         </referenceContainer>
 
-        <!-- referenceBlock at body level (XSD requires this, not nested in referenceContainer) -->
+        <referenceBlock name="top_home">
+            <arguments>
+                <argument name="category_carousel_data" xsi:type="object">GrupoAwamotos\Theme\ViewModel\CategoryCarouselData</argument>
+            </arguments>
+        </referenceBlock>
+
         <referenceBlock name="nav.bar.title" remove="true"/>
-        <!-- AWA_HOME5_RENDER_MODE: template -->
-        <!-- Managed by dev/tools/ayo_home5_render_mode_switch.php -->
         <referenceBlock name="cms_page_content" remove="true"/>
 
-        <!-- Phase 8 corporate hero + category grid REMOVED (Phase 9: slider first) -->
-        <!-- Category carousel now integrated directly into top-home.phtml -->
-
-        <!-- AWA_HOME5_DEMO_SUPPRESSIONS_BODY_START -->
-        <!-- AWA_HOME5_DEMO_SUPPRESSIONS_BODY_END -->
-
-        <!-- Remove parent's round2 owl tabs JS block; child uses its own loader -->
         <referenceBlock name="awa.round2.home.owl.tabs.js" remove="true"/>
         <referenceContainer name="before.body.end">
             <block class="Magento\Framework\View\Element\Template"
@@ -56,12 +47,7 @@
                    template="Magento_Theme::html/awa-custom-js-loader.phtml">
                 <arguments>
                     <argument name="load_header_js" xsi:type="boolean">false</argument>
-                    <argument name="load_home_owl_tabs_js" xsi:type="boolean">true</argument>
-                    <argument name="load_footer_ux_js" xsi:type="boolean">false</argument>
-                    <argument name="load_pdp_sticky_cta_js" xsi:type="boolean">false</argument>
-                    <argument name="load_search_compat_js" xsi:type="boolean">false</argument>
-                    <argument name="load_b2b_checkout_compat_js" xsi:type="boolean">false</argument>
-                    <argument name="load_home_category_compat_js" xsi:type="boolean">false</argument>
+                    <argument name="load_home_owl_tabs_js" xsi:type="boolean">false</argument>
                 </arguments>
             </block>
         </referenceContainer>

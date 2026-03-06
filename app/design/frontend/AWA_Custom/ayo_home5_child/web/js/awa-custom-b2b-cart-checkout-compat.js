@@ -3,11 +3,11 @@ define([
 ], function ($) {
     'use strict';
 
-    var OBSERVER_KEY = '__awaB2bCheckoutCompatObserver';
-    var scheduled = false;
+    const OBSERVER_KEY = '__awaB2bCheckoutCompatObserver';
+    let scheduled = false;
 
     function inScope() {
-        var body = document.body;
+        const body = document.body;
 
         if (!body) {
             return false;
@@ -47,9 +47,9 @@ define([
     }
 
     function decorateCart() {
-        var $body = $(document.body);
-        var $summary = $('.cart-summary');
-        var $container = $('.cart-container');
+        const $body = $(document.body);
+        const $summary = $('.cart-summary');
+        const $container = $('.cart-container');
 
         if (!$body.hasClass('checkout-cart-index')) {
             return;
@@ -74,8 +74,8 @@ define([
 
         $('.cart.table-wrapper input.qty').each(function () {
             var $input = $(this);
-            var itemName = $.trim($input.closest('tr.item-info, .cart.item').find('.product-item-name, .item-name').first().text());
-            var label = itemName ? ('Quantidade para ' + itemName) : 'Quantidade do item';
+            const itemName = $.trim($input.closest('tr.item-info, .cart.item').find('.product-item-name, .item-name').first().text());
+            const label = itemName ? `Quantidade para ${itemName}` : 'Quantidade do item';
             setLabel($input, label);
         });
 
@@ -92,9 +92,9 @@ define([
     function decoratePoNumber() {
         $('.b2b-po-number-container').each(function () {
             var $box = $(this);
-            var $input = $box.find('input[name="b2b_po_number"]').first();
-            var $note = $box.find('.field-note .note').first();
-            var noteId;
+            const $input = $box.find('input[name="b2b_po_number"]').first();
+            const $note = $box.find('.field-note .note').first();
+            let noteId;
 
             setComponent($box, 'b2b-po-number');
             $box.attr('data-awa-initialized', 'true');
@@ -115,10 +115,10 @@ define([
     function decorateTerms() {
         $('.b2b-terms-container').each(function () {
             var $box = $(this);
-            var $checkbox = $box.find('#b2b-terms-checkbox, input[name="b2b_terms_accepted"]').first();
-            var $link = $box.find('.b2b-terms-link').first();
-            var $status = $box.find('.b2b-terms-status').first();
-            var accepted = $checkbox.length ? !!$checkbox.prop('checked') : false;
+            const $checkbox = $box.find('#b2b-terms-checkbox, input[name="b2b_terms_accepted"]').first();
+            const $link = $box.find('.b2b-terms-link').first();
+            const $status = $box.find('.b2b-terms-status').first();
+            const accepted = $checkbox.length ? !!$checkbox.prop('checked') : false;
 
             setComponent($box, 'b2b-terms');
             $box.attr('data-awa-initialized', 'true')
@@ -139,8 +139,8 @@ define([
 
         $('.b2b-terms-modal-overlay').each(function () {
             var $overlay = $(this);
-            var $modal = $overlay.find('.b2b-terms-modal').first();
-            var isOpen = visible(this);
+            const $modal = $overlay.find('.b2b-terms-modal').first();
+            const isOpen = visible(this);
 
             $overlay.toggleClass('is-open', isOpen)
                 .attr('aria-hidden', isOpen ? 'false' : 'true');
@@ -164,7 +164,7 @@ define([
     }
 
     function decorateCheckout() {
-        var $body = $(document.body);
+        const $body = $(document.body);
 
         if (!$body.hasClass('checkout-index-index') && !$body.hasClass('rokanthemes-onepagecheckout')) {
             return;
@@ -178,7 +178,7 @@ define([
 
         $('.opc-wrapper .step-title, .checkout-payment-method .step-title').each(function () {
             var $title = $(this);
-            var txt = $.trim($title.text());
+            const txt = $.trim($title.text());
             if (txt && !$title.attr('title')) {
                 $title.attr('title', txt);
             }
@@ -186,7 +186,7 @@ define([
 
         $('.payment-method-title .label, .payment-method-title label').each(function () {
             var $label = $(this);
-            var methodTitle = $.trim($label.text());
+            const methodTitle = $.trim($label.text());
             if (methodTitle) {
                 $label.attr('data-awa-payment-label', '1');
                 setLabel($label, methodTitle);
@@ -200,7 +200,7 @@ define([
         $('.opc-block-summary input, .opc-wrapper input, .opc-wrapper select, .opc-wrapper textarea').each(function () {
             var $field = $(this);
             if (!$field.attr('aria-label') && !$field.attr('aria-labelledby')) {
-                var labelText = $.trim($field.closest('.field').find('label .label, label').first().text());
+                const labelText = $.trim($field.closest('.field').find('label .label, label').first().text());
                 if (labelText) {
                     $field.attr('aria-label', labelText);
                 }
@@ -227,10 +227,10 @@ define([
 
         scheduled = true;
 
-        function flush() {
+        const flush = () => {
             scheduled = false;
             decorate();
-        }
+        };
 
         if (typeof window.requestAnimationFrame === 'function') {
             window.requestAnimationFrame(flush);
@@ -248,7 +248,7 @@ define([
         decorate();
 
         if (window.MutationObserver && !window[OBSERVER_KEY]) {
-            window[OBSERVER_KEY] = new window.MutationObserver(function () {
+            window[OBSERVER_KEY] = new window.MutationObserver(() => {
                 scheduleDecorate();
             });
 

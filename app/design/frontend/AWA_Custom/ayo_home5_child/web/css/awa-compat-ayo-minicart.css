@@ -1,0 +1,20 @@
+[data-block='minicart'] .awa-minicart-subtotal {
+    display: inline-flex;
+    align-items: center;
+    min-height: 18px;
+    margin-inline-start: 6px;
+    padding-inline-start: 6px;
+    border-inline-start: 1px solid rgb(255 255 255 / 30%);
+    font-weight: 400;
+}
+
+[data-block='minicart'] .awa-minicart-subtotal .price {
+    color: inherit;
+    font-weight: 600;
+}
+
+[data-block='minicart'] .showcart:focus-visible {
+    outline: 0;
+    border-radius: 999px;
+    box-shadow: 0 0 0 3px rgb(255 255 255 / 18%);
+}

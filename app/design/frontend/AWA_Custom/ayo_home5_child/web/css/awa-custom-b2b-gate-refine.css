@@ -25,19 +25,19 @@
 }
 
 .b2b-login-modal-body {
-    gap: 18px;
+    gap: var(--awa-gap-lg);
 }
 
 .b2b-login-options {
-    gap: 14px;
+    gap: var(--awa-gap-lg);
 }
 
 .b2b-login-option {
     min-height: 76px;
     display: grid;
     align-content: center;
-    gap: 4px;
-    border-radius: 10px;
+    gap: var(--awa-gap-xs);
+    border-radius: var(--awa-radius-base);
     border-color: rgb(0 0 0 / 10%);
     box-shadow: 0 0 0 0 rgb(183 51 55 / 0%);
     transition: border-color 0.25s ease, background-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
@@ -102,7 +102,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 999px;
+    border-radius: var(--awa-radius-pill);
     border: 1px solid rgb(183 51 55 / 18%);
     background: rgb(255 255 255 / 96%);
     color: var(--primary-color, #b73337);
@@ -130,7 +130,7 @@
 }
 
 #ajaxsuite-popup-wrapper #ajaxsuite-popup-content {
-    border-radius: 12px;
+    border-radius: var(--awa-radius-md);
     overflow: hidden;
 }
 
@@ -150,7 +150,7 @@
 
     .b2b-login-modal-body {
         padding: 18px;
-        gap: 14px;
+        gap: var(--awa-gap-lg);
     }
 
     .b2b-login-option {

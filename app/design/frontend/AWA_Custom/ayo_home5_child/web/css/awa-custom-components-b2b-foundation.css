@@ -96,7 +96,7 @@ body .page-wrapper .minicart-wrapper .counter.qty {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 999px;
+    border-radius: var(--awa-radius-pill);
     line-height: 1;
 }
 

@@ -9,6 +9,7 @@ namespace GrupoAwamotos\B2B\Plugin\Checkout;
 
 use GrupoAwamotos\B2B\Api\PriceVisibilityInterface;
 use GrupoAwamotos\B2B\Helper\Config;
+use GrupoAwamotos\B2B\Model\CreditService;
 use GrupoAwamotos\ERPIntegration\Model\ResourceModel\SyncLog as SyncLogResource;
 use Magento\Checkout\Api\PaymentInformationManagementInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
@@ -52,6 +53,11 @@ class BlockPlaceOrderPlugin
     private $syncLogResource;
 
     /**
+     * @var CreditService
+     */
+    private $creditService;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -63,6 +69,7 @@ class BlockPlaceOrderPlugin
         CustomerSession $customerSession,
         CustomerRepositoryInterface $customerRepository,
         SyncLogResource $syncLogResource,
+        CreditService $creditService,
         ?LoggerInterface $logger = null
     ) {
         $this->priceVisibility = $priceVisibility;
@@ -71,6 +78,7 @@ class BlockPlaceOrderPlugin
         $this->customerSession = $customerSession;
         $this->customerRepository = $customerRepository;
         $this->syncLogResource = $syncLogResource;
+        $this->creditService = $creditService;
         $this->logger = $logger;
     }
 
@@ -108,6 +116,29 @@ class BlockPlaceOrderPlugin
                 throw new CouldNotSaveException(
                     __('Seu cadastro ainda não está vinculado ao sistema ERP. Entre em contato com o departamento comercial para liberar seus pedidos.')
                 );
+            }
+        }
+
+        // Validate B2B credit sufficiency when paying with b2b_credit
+        if ($this->customerSession->isLoggedIn()
+            && $paymentMethod->getMethod() === 'b2b_credit'
+        ) {
+            $customerId = (int) $this->customerSession->getCustomerId();
+            try {
+                $quote = $this->cartRepository->getActive($cartId);
+                $grandTotal = (float) $quote->getBaseGrandTotal();
+
+                if (!$this->creditService->hasSufficientCredit($customerId, $grandTotal)) {
+                    throw new CouldNotSaveException(
+                        __('Crédito B2B insuficiente para este pedido. Verifique seu limite disponível ou escolha outra forma de pagamento.')
+                    );
+                }
+            } catch (CouldNotSaveException $e) {
+                throw $e;
+            } catch (\Exception $e) {
+                if ($this->logger) {
+                    $this->logger->error('[B2B] Credit check failed: ' . $e->getMessage(), ['exception' => $e]);
+                }
             }
         }
 

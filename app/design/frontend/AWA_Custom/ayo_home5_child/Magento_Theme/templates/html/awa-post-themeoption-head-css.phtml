@@ -16,28 +16,8 @@ if ($isHomeRoute || $isDemoStagePreview) {
 if ($disableAwaPostThemeoptionCss) {
     return;
 }
-?>
-<link rel="stylesheet"
-      type="text/css"
-      media="all"
-      href="<?= $block->escapeUrl($block->getViewFileUrl('css/awa-custom-post-themeoption-overrides.css')) ?>" />
-<link rel="stylesheet"
-      type="text/css"
-      media="all"
-      href="<?= $block->escapeUrl($block->getViewFileUrl('css/awa-custom-footer-light-perfect.css')) ?>" />
-<link rel="stylesheet"
-      type="text/css"
-      media="all"
-      href="<?= $block->escapeUrl($block->getViewFileUrl('css/awa-custom-components-b2b-foundation.css')) ?>" />
-<link rel="stylesheet"
-      type="text/css"
-      media="all"
-      href="<?= $block->escapeUrl($block->getViewFileUrl('css/awa-custom-compat-b2b-nav-plp-cart-checkout.css')) ?>" />
-<link rel="stylesheet"
-      type="text/css"
-      media="all"
-      href="<?= $block->escapeUrl($block->getViewFileUrl('css/awa-custom-page-b2b-cart-checkout-premium.css')) ?>" />
-<link rel="stylesheet"
-      type="text/css"
-      media="all"
-      href="<?= $block->escapeUrl($block->getViewFileUrl('css/awa-custom-page-home-category-premium.css')) ?>" />
+// CSS Consolidation (Phase 5): individual CSS files below are now part of
+// awa-04-components.css loaded globally via default_head_blocks.xml.
+// Keeping this template active (no-op) so demo-stage suppression logic still works.
+// Original files: awa-custom-post-themeoption-overrides, components-b2b-foundation,
+// compat-b2b-nav-plp-cart-checkout, page-b2b-cart-checkout-premium.

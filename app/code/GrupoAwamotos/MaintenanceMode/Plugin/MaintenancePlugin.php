@@ -8,6 +8,7 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
+use Magento\Framework\App\Response\Http as ResponseHttp;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 use Magento\Framework\Stdlib\CookieManagerInterface;
@@ -23,7 +24,7 @@ class MaintenancePlugin
     private ScopeConfigInterface $scopeConfig;
     private DeploymentConfig $deploymentConfig;
     private RemoteAddress $remoteAddress;
-    private ResponseInterface $response;
+    private ResponseHttp $response;
     private CookieManagerInterface $cookieManager;
     private CookieMetadataFactory $cookieMetadataFactory;
     private StoreManagerInterface $storeManager;
@@ -32,7 +33,7 @@ class MaintenancePlugin
         ScopeConfigInterface $scopeConfig,
         DeploymentConfig $deploymentConfig,
         RemoteAddress $remoteAddress,
-        ResponseInterface $response,
+        ResponseHttp $response,
         CookieManagerInterface $cookieManager,
         CookieMetadataFactory $cookieMetadataFactory,
         StoreManagerInterface $storeManager
@@ -58,18 +59,24 @@ class MaintenancePlugin
 
         // Verificar código secreto na URL (?preview=CODIGO)
         if ($this->checkSecretKey($request)) {
-            $this->setAccessCookie();
-            return $proceed($request);
+            $result = $proceed($request);
+            $this->setAccessCookieViaHeader();
+            $this->setNoCacheHeaders();
+            return $result;
         }
 
         // Verificar cookie de acesso válido
         if ($this->hasAccessCookie()) {
-            return $proceed($request);
+            $result = $proceed($request);
+            $this->setNoCacheHeaders();
+            return $result;
         }
 
         // Verificar se IP está na whitelist
         if ($this->isWhitelisted()) {
-            return $proceed($request);
+            $result = $proceed($request);
+            $this->setNoCacheHeaders();
+            return $result;
         }
 
         // Verificar se é rota permitida (admin, newsletter, etc.)
@@ -84,6 +91,17 @@ class MaintenancePlugin
 
         // Mostrar página de manutenção/em breve
         return $this->getMaintenanceResponse();
+    }
+
+    /**
+     * Impede FPC de cachear ao setar no-cache no objeto Response.
+     * Sem isso, Kernel::process() vê s-maxage e faz header_remove('Set-Cookie').
+     */
+    private function setNoCacheHeaders(): void
+    {
+        $this->response->setNoCacheHeaders();
+        $this->response->clearHeader('X-Magento-Tags');
+        header('X-Maintenance-Bypass: 1', false);
     }
 
     private function getConfig(string $path, $default = null)
@@ -110,20 +128,20 @@ class MaintenancePlugin
         return !empty($secretKey) && $previewParam === $secretKey;
     }
 
-    private function setAccessCookie(): void
+    private function setAccessCookieViaHeader(): void
     {
         $duration = (int) $this->getConfig('general/cookie_duration', 72);
-        $metadata = $this->cookieMetadataFactory
-            ->createPublicCookieMetadata()
-            ->setDuration($duration * 3600)
-            ->setPath('/')
-            ->setHttpOnly(true);
+        $value = hash('sha256', $this->getConfig('general/secret_key') . '_awamotos_access');
+        $expires = gmdate('D, d M Y H:i:s T', time() + ($duration * 3600));
 
-        $this->cookieManager->setPublicCookie(
+        $cookieString = sprintf(
+            '%s=%s; Expires=%s; Max-Age=%d; Path=/; Secure; HttpOnly; SameSite=Lax',
             self::COOKIE_NAME,
-            hash('sha256', $this->getConfig('general/secret_key') . '_awamotos_access'),
-            $metadata
+            $value,
+            $expires,
+            $duration * 3600
         );
+        header('Set-Cookie: ' . $cookieString, false);
     }
 
     private function hasAccessCookie(): bool

@@ -3,11 +3,13 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <remove src="css/awa-round3-pdp-conversion.css"/>
+        <remove src="css/awa-pdp-final-polish.css"/>
         <css src="css/awa-custom-pdp-conversion.css"/>
         <css src="css/awa-custom-pdp-final-polish.css"/>
+        <css src="css/awa-page-catalog-product.css"/>
     </head>
     <body>
-        <!-- wishlist e compare restaurados — fidelidade ao demo ayo home5 -->
+        <!-- wishlist e compare restaurados - fidelidade ao demo ayo home5 -->
         <referenceBlock name="awa.round3.pdp.sticky.cta.js" remove="true"/>
         <referenceContainer name="before.body.end">
             <block class="Magento\Framework\View\Element\Template"
@@ -27,7 +29,7 @@
             <block class="Magento\Catalog\Block\Product\View"
                    name="awa.b2b.pdp.sku"
                    template="Magento_Catalog::product/view/b2b_sku.phtml"
-                   after="page.main.title" />
+                   after="-" />
 
             <!-- Hide the default Magento SKU to prevent duplication -->
             <referenceBlock name="product.info.sku" remove="true" />
@@ -40,7 +42,7 @@
         </referenceContainer>
 
         <!-- Hide original attributes tab -->
-        <referenceBlock name="product.attributes" remove="true" />
+        <referenceBlock name="product.attributes" remove="true"/>
 
         <!-- AWA Phase 4: Product JSON-LD Schema.org -->
         <referenceContainer name="content">
@@ -49,6 +51,7 @@
                    template="Magento_Catalog::product/view/awa-product-jsonld.phtml"
                    after="-"/>
         </referenceContainer>
+
         <!-- AWA Phase 5: UI/UX Pro Max - Trust & Authority Badges under Add to Cart -->
         <referenceContainer name="product.info.extrahint">
             <block class="Magento\Framework\View\Element\Template"

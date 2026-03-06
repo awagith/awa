@@ -6,8 +6,8 @@
     }
     window.__awaRound2HomeOwlTabsUiInit = true;
 
-    var scheduled = false;
-    var observer;
+    let scheduled = false;
+    let observer;
 
     function onReady(callback) {
         if (document.readyState === 'loading') {
@@ -18,7 +18,7 @@
     }
 
     function isHomePage() {
-        var body = document.body;
+        const body = document.body;
         if (!body) {
             return false;
         }
@@ -41,9 +41,9 @@
     }
 
     function syncTabLabels(root) {
-        var selector = '.list-tab-product .tab-title-link, .tab_product .tab-title-item, .tab_product ul.tabs li';
-        root.querySelectorAll(selector).forEach(function (el) {
-            var text = normalizeText(el.textContent);
+        const selector = '.list-tab-product .tab-title-link, .tab_product .tab-title-item, .tab_product ul.tabs li';
+        root.querySelectorAll(selector).forEach((el) => {
+            const text = normalizeText(el.textContent);
             if (!text) {
                 return;
             }
@@ -51,7 +51,7 @@
             setAttrIfMissing(el, 'title', text);
 
             if (!el.getAttribute('aria-label')) {
-                el.setAttribute('aria-label', 'Selecionar aba ' + text);
+                el.setAttribute('aria-label', `Selecionar aba ${text}`);
             }
 
             if (el.tagName !== 'A' && !el.getAttribute('tabindex')) {
@@ -61,16 +61,15 @@
     }
 
     function syncOwlControls(root) {
-        root.querySelectorAll('.list-tab-product .owl-nav button, .tab_product .owl-nav button').forEach(function (btn) {
-            var isPrev = btn.classList.contains('owl-prev');
-            var isNext = btn.classList.contains('owl-next');
-            var label;
+        root.querySelectorAll('.list-tab-product .owl-nav button, .tab_product .owl-nav button').forEach((btn) => {
+            const isPrev = btn.classList.contains('owl-prev');
+            const isNext = btn.classList.contains('owl-next');
 
             if (!isPrev && !isNext) {
                 return;
             }
 
-            label = isPrev ? 'Ver produtos anteriores' : 'Ver próximos produtos';
+            const label = isPrev ? 'Ver produtos anteriores' : 'Ver próximos produtos';
 
             setAttrIfMissing(btn, 'title', label);
             if (!btn.getAttribute('aria-label')) {
@@ -82,15 +81,14 @@
     }
 
     function syncHeroFallback(root) {
-        var heroSelector = '.top-home-content .banner-slider.banner-slider2 .wrapper_slider .owl';
+        const heroSelector = '.top-home-content .banner-slider.banner-slider2 .wrapper_slider .owl';
 
-        root.querySelectorAll(heroSelector).forEach(function (owlNode) {
-            var wrapper = owlNode.closest('.wrapper_slider');
-            var items = owlNode.querySelectorAll('.banner_item');
-            var isInitialized = owlNode.classList.contains('owl-carousel')
+        root.querySelectorAll(heroSelector).forEach((owlNode) => {
+            const wrapper = owlNode.closest('.wrapper_slider');
+            const items = owlNode.querySelectorAll('.banner_item');
+            const isInitialized = owlNode.classList.contains('owl-carousel')
                 || owlNode.classList.contains('owl-loaded')
                 || !!owlNode.querySelector('.owl-wrapper, .owl-stage');
-            var i;
 
             if (!items.length) {
                 return;
@@ -103,10 +101,10 @@
                 wrapper.classList.toggle('awa-hero-fallback-active', !isInitialized);
             }
 
-            for (i = 0; i < items.length; i += 1) {
-                var item = items[i];
-                var image = item.querySelector('img');
-                var isPrimary = i === 0;
+            for (let i = 0; i < items.length; i += 1) {
+                const item = items[i];
+                const image = item.querySelector('img');
+                const isPrimary = i === 0;
 
                 if (!item) {
                     continue;
@@ -148,15 +146,13 @@
         }
 
         scheduled = true;
-        window.requestAnimationFrame(function () {
+        window.requestAnimationFrame(() => {
             scheduled = false;
             apply(document);
         });
     }
 
-    onReady(function () {
-        var pageWrapper;
-
+    onReady(() => {
         if (!isHomePage()) {
             return;
         }
@@ -167,12 +163,12 @@
             return;
         }
 
-        pageWrapper = document.querySelector('.page-wrapper');
+        const pageWrapper = document.querySelector('.page-wrapper');
         if (!pageWrapper) {
             return;
         }
 
-        observer = new MutationObserver(function () {
+        observer = new MutationObserver(() => {
             scheduleApply();
         });
 

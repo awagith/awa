@@ -1,4 +1,5 @@
 <?php
+/** @var \Magento\Catalog\Block\Product\ListProduct $block */
 /**
  * Copyright © 2016 Magento. All rights reserved.
  * See COPYING.txt for license details.
@@ -18,6 +19,23 @@ use Magento\Framework\App\Action\Action;
 <?php
 $_productCollection = $block->getLoadedProductCollection();
 $_helper = $this->helper('Magento\Catalog\Helper\Output');
+$qtyControlConfig = [
+    'selectors' => [
+        'input' => '[data-awa-role="qty-input"]',
+        'trigger' => '[data-awa-role="qty-trigger"]',
+    ],
+    'messages' => [
+        'invalidQuantity' => (string) __('Quantidade inválida.'),
+    ],
+    'flags' => [
+        'dispatchEvents' => true,
+    ],
+    'endpoints' => new \stdClass(),
+];
+$qtyControlMageInit = json_encode(
+    ['js/awa-qty-control' => $qtyControlConfig],
+    JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT
+);
 ?>
 <?php if (!$_productCollection->count()): ?>
     <div class="message info empty"><div><?php echo $block->escapeHtml(__('We can\'t find products matching the selection.')); ?></div></div>
@@ -140,7 +158,11 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 							<div class="actions-primary addcart-link">
 								<?php if ($_product->isSaleable()): ?>
 									<?php $postParams = $block->getAddToCartPostParams($_product); ?>
-									<form data-role="tocart-form" action="<?php echo $block->escapeUrl($postParams['action']); ?>" method="post">
+									<form data-role="tocart-form"
+                                              data-awa-component="awa-qty-control"
+                                              data-mage-init='<?= /* @noEscape */ $qtyControlMageInit ?>'
+                                              action="<?php echo $block->escapeUrl($postParams['action']); ?>"
+                                              method="post">
 										<input type="hidden" name="product" value="<?php echo $block->escapeHtmlAttr($postParams['data']['product']); ?>">
 										<input type="hidden" name="<?php echo $block->escapeHtmlAttr(Action::PARAM_NAME_URL_ENCODED); ?>" value="<?php echo $block->escapeHtmlAttr($postParams['data'][Action::PARAM_NAME_URL_ENCODED]); ?>">
 										<?php echo $block->getBlockHtml('formkey')?>
@@ -148,16 +170,36 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 										<?php /* B2B QUANTITY BOX INJECTION */ ?>
 										<div class="awa-catalog-qty-box field qty">
 											<label class="label awa-sr-only" for="qty_<?php echo $_product->getId(); ?>"><span><?php echo __('Qty') ?></span></label>
-											<div class="control">
+											<div class="control awa-stepper-control" data-awa-role="qty-control">
+												<button type="button"
+                                                        class="awa-qty-btn awa-qty-minus"
+                                                        data-awa-role="qty-trigger"
+                                                        data-awa-direction="decrement"
+                                                        aria-controls="qty_<?php echo $_product->getId(); ?>"
+                                                        aria-label="<?php echo $block->escapeHtmlAttr(__('Diminuir quantidade')); ?>">
+                                                    <span aria-hidden="true">-</span>
+                                                </button>
 												<input type="number"
 													   name="qty"
 													   id="qty_<?php echo $_product->getId(); ?>"
 													   min="1"
+                                                       step="1"
+                                                       inputmode="numeric"
+                                                       pattern="[0-9]*"
 													   value="1"
 													   title="<?php echo __('Qty') ?>"
 													   class="input-text qty"
+                                                       data-awa-role="qty-input"
 													   data-validate="<?php echo $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
 													   />
+												<button type="button"
+                                                        class="awa-qty-btn awa-qty-plus"
+                                                        data-awa-role="qty-trigger"
+                                                        data-awa-direction="increment"
+                                                        aria-controls="qty_<?php echo $_product->getId(); ?>"
+                                                        aria-label="<?php echo $block->escapeHtmlAttr(__('Aumentar quantidade')); ?>">
+                                                    <span aria-hidden="true">+</span>
+                                                </button>
 											</div>
 										</div>
 
@@ -190,9 +232,9 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 								<?php echo $_helper->productAttribute($_product, $_product->getName(), 'name'); ?>
 							</a>
 						</h3>
-						<div class="awa-b2b-sku" style="font-size: 11px; color: #64748b; margin-bottom: 6px; font-weight: 500;">
-							<span class="label" style="text-transform: uppercase; margin-right: 2px; color: #9ca3af;">Cod:</span>
-							<span class="value" style="font-family: monospace; color: #475569; letter-spacing: 0.5px;"><?php echo $block->escapeHtml($_product->getSku()); ?></span>
+						<div class="awa-b2b-sku" data-awa-role="product-sku">
+							<span class="label awa-b2b-sku__label"><?php echo $block->escapeHtml(__('Cod:')); ?></span>
+							<span class="value awa-b2b-sku__value"><?php echo $block->escapeHtml($_product->getSku()); ?></span>
 						</div>
 						<div class="product-rating">
 							<?php echo $block->getReviewsSummaryHtml($_product, $templateType, true); ?>
@@ -250,9 +292,9 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 								<?php echo $_helper->productAttribute($_product, $_product->getName(), 'name'); ?>
 							</a>
 						</h3>
-						<div class="awa-b2b-sku" style="font-size: 11px; color: #64748b; margin-bottom: 8px; font-weight: 500;">
-							<span class="label" style="text-transform: uppercase; margin-right: 2px; color: #9ca3af;">Cod:</span>
-							<span class="value" style="font-family: monospace; color: #475569; letter-spacing: 0.5px;"><?php echo $block->escapeHtml($_product->getSku()); ?></span>
+						<div class="awa-b2b-sku" data-awa-role="product-sku">
+							<span class="label awa-b2b-sku__label"><?php echo $block->escapeHtml(__('Cod:')); ?></span>
+							<span class="value awa-b2b-sku__value"><?php echo $block->escapeHtml($_product->getSku()); ?></span>
 						</div>
 
 						<div class="product-rating">
@@ -268,7 +310,11 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 							<div class="actions-primary">
 								<?php if ($_product->isSaleable()): ?>
 									<?php $postParams = $block->getAddToCartPostParams($_product); ?>
-									<form data-role="tocart-form" action="<?php echo $block->escapeUrl($postParams['action']); ?>" method="post">
+									<form data-role="tocart-form"
+                                          data-awa-component="awa-qty-control"
+                                          data-mage-init='<?= /* @noEscape */ $qtyControlMageInit ?>'
+                                          action="<?php echo $block->escapeUrl($postParams['action']); ?>"
+                                          method="post">
 										<input type="hidden" name="product" value="<?php echo $block->escapeHtmlAttr($postParams['data']['product']); ?>">
 										<input type="hidden" name="<?php echo $block->escapeHtmlAttr(Action::PARAM_NAME_URL_ENCODED); ?>" value="<?php echo $block->escapeHtmlAttr($postParams['data'][Action::PARAM_NAME_URL_ENCODED]); ?>">
 										<?php echo $block->getBlockHtml('formkey')?>
@@ -276,16 +322,34 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 										<?php /* B2B QUANTITY BOX INJECTION */ ?>
 										<div class="awa-catalog-qty-box field qty">
 											<label class="label awa-sr-only" for="list_qty_<?php echo $_product->getId(); ?>"><span><?php echo __('Qty') ?></span></label>
-											<div class="control">
+											<div class="control awa-stepper-control" data-awa-role="qty-control">
+												<button type="button"
+                                                        class="awa-qty-btn awa-qty-minus"
+                                                        data-awa-role="qty-trigger"
+                                                        data-awa-direction="decrement"
+                                                        aria-controls="list_qty_<?php echo $_product->getId(); ?>"
+                                                        aria-label="<?php echo $block->escapeHtmlAttr(__('Diminuir quantidade')); ?>">
+                                                    <span aria-hidden="true">-</span>
+                                                </button>
 												<input type="number"
 													   name="qty"
 													   id="list_qty_<?php echo $_product->getId(); ?>"
 													   min="1"
+                                                       inputmode="numeric"
 													   value="1"
 													   title="<?php echo __('Qty') ?>"
 													   class="input-text qty"
+                                                       data-awa-role="qty-input"
 													   data-validate="<?php echo $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
 													   />
+												<button type="button"
+                                                        class="awa-qty-btn awa-qty-plus"
+                                                        data-awa-role="qty-trigger"
+                                                        data-awa-direction="increment"
+                                                        aria-controls="list_qty_<?php echo $_product->getId(); ?>"
+                                                        aria-label="<?php echo $block->escapeHtmlAttr(__('Aumentar quantidade')); ?>">
+                                                    <span aria-hidden="true">+</span>
+                                                </button>
 											</div>
 										</div>
 

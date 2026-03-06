@@ -108,6 +108,7 @@ class ExportCsv implements HttpGetActionInterface
             'Forma Pagamento',
             'Transportadora',
             'PO Number',
+            'Observações do Pedido',
             'Itens',
         ], ';');
 
@@ -132,6 +133,7 @@ class ExportCsv implements HttpGetActionInterface
                 $order->getPayment()?->getMethodInstance()?->getTitle() ?? '',
                 $order->getShippingDescription() ?? '',
                 $order->getData('b2b_po_number') ?? '',
+                $this->normalizeCsvText((string) ($order->getData('b2b_order_notes') ?? '')),
                 implode(' | ', $items),
             ], ';');
         }
@@ -152,5 +154,16 @@ class ExportCsv implements HttpGetActionInterface
     private function formatPrice(float $price): string
     {
         return number_format($price, 2, ',', '.');
+    }
+
+    /**
+     * Normalize multiline/untrusted text to keep CSV row stable.
+     *
+     * @param string $value
+     * @return string
+     */
+    private function normalizeCsvText(string $value): string
+    {
+        return trim((string) preg_replace('/\s+/u', ' ', $value));
     }
 }

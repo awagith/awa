@@ -2,7 +2,14 @@
 /**
  * AWA B2B — Organization JSON-LD (Schema.org)
  * Injected on homepage for enterprise SEO rich results.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \GrupoAwamotos\Theme\ViewModel\ContactInfo $contactInfo
  */
+$contactInfo = $block->getData('contact_info');
+$phone = $contactInfo ? $contactInfo->getPhone() : '+5516997367588';
+$email = $contactInfo ? $contactInfo->getEmail() : 'contato@awamotos.com';
+
 $schema = [
     '@context' => 'https://schema.org',
     '@type' => 'Organization',
@@ -11,8 +18,8 @@ $schema = [
     'url' => 'https://awamotos.com',
     'logo' => 'https://awamotos.com/media/logo/stores/1/logo-awa.png',
     'description' => 'Distribuidora B2B de peças e acessórios para motos. Bauletos, retrovisores, guidões, bagageiros, cavaletes e mais. Atendimento especializado para lojistas e oficinas.',
-    'telephone' => '+551699736-7588',
-    'email' => 'contato@awamotos.com',
+    'telephone' => $phone,
+    'email' => $email,
     'address' => [
         '@type' => 'PostalAddress',
         'addressLocality' => 'Araraquara',
@@ -21,7 +28,7 @@ $schema = [
     ],
     'contactPoint' => [
         '@type' => 'ContactPoint',
-        'telephone' => '+5516997367588',
+        'telephone' => $phone,
         'contactType' => 'sales',
         'areaServed' => 'BR',
         'availableLanguage' => 'Portuguese',

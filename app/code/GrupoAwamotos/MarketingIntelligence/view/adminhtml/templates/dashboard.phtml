@@ -1,0 +1,293 @@
+<?php
+/**
+ * Marketing Intelligence Dashboard
+ *
+ * @var \GrupoAwamotos\MarketingIntelligence\Block\Adminhtml\Dashboard $block
+ */
+
+$kpis = $block->getKpis();
+$statusBreakdown = $block->getStatusBreakdown();
+$topProspects = $block->getTopProspects(10);
+$recentAds = $block->getRecentAds(5);
+$scoreChartJson = $block->getScoreChartJson();
+$ufChartJson = $block->getUfChartJson();
+$isEnabled = $block->isEnabled();
+?>
+
+<style>
+    .mktg-dashboard { padding: 0 10px; font-family: 'Open Sans', sans-serif; }
+    .mktg-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .mktg-header h1 { font-size: 24px; font-weight: 700; color: #1e293b; margin: 0; }
+    .mktg-disabled-banner { background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 16px; margin-bottom: 20px; color: #92400e; display: flex; align-items: center; gap: 12px; }
+    .mktg-actions { display: flex; gap: 8px; }
+    .mktg-btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: background 0.15s; text-decoration: none; }
+    .mktg-btn-primary { background: #2563eb; color: #fff; }
+    .mktg-btn-primary:hover { background: #1d4ed8; }
+    .mktg-btn-secondary { background: #7c3aed; color: #fff; }
+    .mktg-btn-secondary:hover { background: #6d28d9; }
+    .mktg-btn-warning { background: #d97706; color: #fff; }
+    .mktg-btn-warning:hover { background: #b45309; }
+
+    /* KPI Cards */
+    .mktg-kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    .mktg-kpi-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .mktg-kpi-icon { font-size: 28px; width: 54px; height: 54px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .mktg-kpi-info { flex: 1; }
+    .mktg-kpi-value { font-size: 28px; font-weight: 800; color: #1e293b; line-height: 1.1; }
+    .mktg-kpi-label { font-size: 12px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; }
+
+    /* Sections */
+    .mktg-grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+    .mktg-section { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .mktg-section-title { font-size: 16px; font-weight: 700; color: #1e293b; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px; }
+
+    /* Tables */
+    .mktg-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .mktg-table th { text-align: left; padding: 10px 12px; background: #f8fafc; color: #64748b; font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #e2e8f0; }
+    .mktg-table td { padding: 10px 12px; border-bottom: 1px solid #f1f5f9; color: #334155; }
+    .mktg-table tr:hover td { background: #f8fafc; }
+
+    /* Status Pipeline */
+    .mktg-pipeline { display: flex; gap: 4px; }
+    .mktg-pipeline-step { flex: 1; text-align: center; padding: 12px 8px; border-radius: 8px; }
+    .mktg-pipeline-count { font-size: 22px; font-weight: 800; color: #1e293b; }
+    .mktg-pipeline-label { font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; margin-top: 2px; }
+
+    /* Badges */
+    .mktg-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; color: #fff; }
+    .mktg-score-bar { height: 6px; border-radius: 3px; background: #e2e8f0; overflow: hidden; }
+    .mktg-score-fill { height: 100%; border-radius: 3px; }
+
+    /* Chart Container */
+    .mktg-chart-container { position: relative; height: 220px; }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+        .mktg-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+        .mktg-grid-2col { grid-template-columns: 1fr; }
+    }
+</style>
+
+<div class="mktg-dashboard">
+    <!-- Header -->
+    <div class="mktg-header">
+        <h1>📡 Marketing Intelligence</h1>
+        <div class="mktg-actions">
+            <form action="<?= $block->escapeUrl($block->getFetchProspectsUrl()) ?>" method="post" style="display:inline">
+                <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                <button type="submit" class="mktg-btn mktg-btn-primary">🔍 Buscar Prospects</button>
+            </form>
+            <form action="<?= $block->escapeUrl($block->getSyncAudiencesUrl()) ?>" method="post" style="display:inline">
+                <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                <button type="submit" class="mktg-btn mktg-btn-secondary">👥 Sync Audiências</button>
+            </form>
+            <form action="<?= $block->escapeUrl($block->getScanCompetitorsUrl()) ?>" method="post" style="display:inline">
+                <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                <button type="submit" class="mktg-btn mktg-btn-warning">👁️ Varrer Concorrentes</button>
+            </form>
+        </div>
+    </div>
+
+    <?php if (!$isEnabled): ?>
+    <div class="mktg-disabled-banner">
+        ⚠️ <strong>Módulo desabilitado</strong> — Ative em Stores &gt; Configuration &gt; Marketing Intelligence &gt; General.
+    </div>
+    <?php endif; ?>
+
+    <!-- KPI Cards -->
+    <div class="mktg-kpi-grid">
+        <?php foreach ($kpis as $kpi): ?>
+        <div class="mktg-kpi-card">
+            <div class="mktg-kpi-icon" style="background: <?= $block->escapeHtmlAttr($kpi['color']) ?>15;">
+                <?= /* @noEscape */ $kpi['icon'] ?>
+            </div>
+            <div class="mktg-kpi-info">
+                <div class="mktg-kpi-value" style="color: <?= $block->escapeHtmlAttr($kpi['color']) ?>;">
+                    <?= $block->escapeHtml((string) $kpi['value']) ?>
+                </div>
+                <div class="mktg-kpi-label"><?= $block->escapeHtml($kpi['label']) ?></div>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- Prospect Status Pipeline -->
+    <div class="mktg-section" style="margin-bottom: 24px;">
+        <h3 class="mktg-section-title">📊 Pipeline de Prospecção</h3>
+        <div class="mktg-pipeline">
+            <?php
+            $pipelineColors = [
+                'new' => '#2563eb',
+                'contacted' => '#d97706',
+                'interested' => '#7c3aed',
+                'converted' => '#059669',
+                'rejected' => '#dc2626',
+            ];
+            $pipelineLabels = [
+                'new' => 'Novos',
+                'contacted' => 'Contatados',
+                'interested' => 'Interessados',
+                'converted' => 'Convertidos',
+                'rejected' => 'Rejeitados',
+            ];
+            foreach ($statusBreakdown as $status => $count):
+                $color = $pipelineColors[$status] ?? '#6b7280';
+            ?>
+            <div class="mktg-pipeline-step" style="background: <?= $block->escapeHtmlAttr($color) ?>10;">
+                <div class="mktg-pipeline-count"><?= (int) $count ?></div>
+                <div class="mktg-pipeline-label"><?= $block->escapeHtml($pipelineLabels[$status] ?? $status) ?></div>
+            </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="mktg-grid-2col">
+        <!-- Score Distribution Chart -->
+        <div class="mktg-section">
+            <h3 class="mktg-section-title">📈 Distribuição de Score</h3>
+            <div class="mktg-chart-container">
+                <canvas id="mktg-score-chart"></canvas>
+            </div>
+        </div>
+
+        <!-- UF Distribution Chart -->
+        <div class="mktg-section">
+            <h3 class="mktg-section-title">🗺️ Prospects por UF</h3>
+            <div class="mktg-chart-container">
+                <canvas id="mktg-uf-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Prospects + Recent Ads -->
+    <div class="mktg-grid-2col">
+        <!-- Top Prospects -->
+        <div class="mktg-section">
+            <h3 class="mktg-section-title">🔥 Top 10 Prospects</h3>
+            <?php if (empty($topProspects)): ?>
+                <p style="color:#64748b; text-align:center; padding:20px;">Nenhum prospect encontrado. Clique em "Buscar Prospects" para iniciar.</p>
+            <?php else: ?>
+            <table class="mktg-table">
+                <thead>
+                    <tr>
+                        <th>Empresa</th>
+                        <th>UF</th>
+                        <th>Perfil</th>
+                        <th>Score</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($topProspects as $prospect): ?>
+                    <?php
+                        $profileDisplay = $block->getProfileDisplay($prospect['cnae_profile'] ?? '');
+                        $statusDisplay = $block->getStatusDisplay($prospect['status']);
+                        $scoreColor = $prospect['score'] >= 70 ? '#059669' : ($prospect['score'] >= 40 ? '#d97706' : '#dc2626');
+                    ?>
+                    <tr>
+                        <td>
+                            <strong><?= $block->escapeHtml($prospect['nome_fantasia']) ?></strong>
+                        </td>
+                        <td><?= $block->escapeHtml($prospect['uf']) ?></td>
+                        <td>
+                            <span class="mktg-badge" style="background:<?= $block->escapeHtmlAttr($profileDisplay['color']) ?>">
+                                <?= $block->escapeHtml($profileDisplay['label']) ?>
+                            </span>
+                        </td>
+                        <td>
+                            <strong style="color:<?= $block->escapeHtmlAttr($scoreColor) ?>"><?= (int) $prospect['score'] ?></strong>
+                            <div class="mktg-score-bar" style="width:80px;margin-top:4px">
+                                <div class="mktg-score-fill" style="width:<?= (int) $prospect['score'] ?>%;background:<?= $block->escapeHtmlAttr($scoreColor) ?>"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="mktg-badge" style="background:<?= $block->escapeHtmlAttr($statusDisplay['color']) ?>">
+                                <?= $block->escapeHtml($statusDisplay['label']) ?>
+                            </span>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php endif; ?>
+        </div>
+
+        <!-- Recent Competitor Ads -->
+        <div class="mktg-section">
+            <h3 class="mktg-section-title">📢 Anúncios Recentes de Concorrentes</h3>
+            <?php if (empty($recentAds)): ?>
+                <p style="color:#64748b; text-align:center; padding:20px;">Nenhum anúncio encontrado. Clique em "Varrer Concorrentes" para iniciar.</p>
+            <?php else: ?>
+            <table class="mktg-table">
+                <thead>
+                    <tr>
+                        <th>Página</th>
+                        <th>Título do Anúncio</th>
+                        <th>Início</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($recentAds as $ad): ?>
+                    <tr>
+                        <td><strong><?= $block->escapeHtml($ad['page_name']) ?></strong></td>
+                        <td><?= $block->escapeHtml(mb_substr($ad['title'] ?? '—', 0, 60)) ?></td>
+                        <td><?= $block->escapeHtml($ad['start'] ?? '—') ?></td>
+                        <td>
+                            <span class="mktg-badge" style="background:<?= $ad['active'] ? '#059669' : '#6b7280' ?>">
+                                <?= $ad['active'] ? 'Ativo' : 'Inativo' ?>
+                            </span>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var scoreData = <?= /* @noEscape */ $scoreChartJson ?>;
+    var ufData = <?= /* @noEscape */ $ufChartJson ?>;
+
+    // Score Distribution - Bar Chart
+    var scoreCtx = document.getElementById('mktg-score-chart');
+    if (scoreCtx) {
+        new Chart(scoreCtx.getContext('2d'), {
+            type: 'bar',
+            data: scoreData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+    }
+
+    // UF Distribution - Horizontal Bar Chart
+    var ufCtx = document.getElementById('mktg-uf-chart');
+    if (ufCtx) {
+        new Chart(ufCtx.getContext('2d'), {
+            type: 'bar',
+            data: ufData,
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { beginAtZero: true, ticks: { precision: 0 } }
+                }
+            }
+        });
+    }
+});
+</script>

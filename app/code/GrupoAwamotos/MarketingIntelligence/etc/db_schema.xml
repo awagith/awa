@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+
+    <!-- Prospects: companies found via CNAE search -->
+    <table name="grupoawamotos_mktg_prospects" resource="default" engine="innodb"
+           comment="Marketing Intelligence - B2B Prospects">
+        <column xsi:type="int" name="prospect_id" unsigned="true" nullable="false" identity="true"
+                comment="Prospect ID"/>
+        <column xsi:type="varchar" name="cnpj" nullable="false" length="18" comment="CNPJ"/>
+        <column xsi:type="varchar" name="razao_social" nullable="true" length="255" comment="Razao Social"/>
+        <column xsi:type="varchar" name="nome_fantasia" nullable="true" length="255" comment="Nome Fantasia"/>
+        <column xsi:type="varchar" name="cnae_principal" nullable="true" length="10" comment="CNAE Principal"/>
+        <column xsi:type="varchar" name="cnae_descricao" nullable="true" length="255" comment="CNAE Descricao"/>
+        <column xsi:type="varchar" name="cnae_profile" nullable="true" length="20"
+                comment="Profile: direct/adjacent/off_profile"/>
+        <column xsi:type="varchar" name="uf" nullable="true" length="2" comment="Estado UF"/>
+        <column xsi:type="varchar" name="municipio" nullable="true" length="100" comment="Municipio"/>
+        <column xsi:type="varchar" name="cep" nullable="true" length="10" comment="CEP"/>
+        <column xsi:type="varchar" name="email" nullable="true" length="255" comment="Email"/>
+        <column xsi:type="varchar" name="telefone" nullable="true" length="20" comment="Telefone"/>
+        <column xsi:type="decimal" name="capital_social" precision="15" scale="2" nullable="true"
+                comment="Capital Social"/>
+        <column xsi:type="varchar" name="porte" nullable="true" length="20" comment="Porte (ME/EPP/Normal)"/>
+        <column xsi:type="date" name="data_abertura" nullable="true" comment="Data de Abertura"/>
+        <column xsi:type="varchar" name="situacao_cadastral" nullable="true" length="20"
+                comment="Situacao Cadastral"/>
+        <column xsi:type="smallint" name="prospect_score" unsigned="true" nullable="false" default="0"
+                comment="Score 0-100"/>
+        <column xsi:type="varchar" name="prospect_status" nullable="false" length="20" default="new"
+                comment="Status: new/contacted/interested/converted/rejected"/>
+        <column xsi:type="varchar" name="source" nullable="true" length="30" comment="Source API"/>
+        <column xsi:type="text" name="notes" nullable="true" comment="Observacoes"/>
+        <column xsi:type="timestamp" name="contacted_at" nullable="true" comment="Ultimo Contato"/>
+        <column xsi:type="int" name="converted_customer_id" unsigned="true" nullable="true"
+                comment="Customer ID se convertido"/>
+        <column xsi:type="timestamp" name="fetched_at" nullable="true" default="CURRENT_TIMESTAMP"
+                comment="Data de Importacao"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="true" on_update="true"
+                default="CURRENT_TIMESTAMP" comment="Ultima Atualizacao"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="prospect_id"/>
+        </constraint>
+        <constraint xsi:type="unique" referenceId="UNQ_MKTG_PROSPECTS_CNPJ">
+            <column name="cnpj"/>
+        </constraint>
+        <index referenceId="IDX_MKTG_PROSPECTS_CNAE" indexType="btree">
+            <column name="cnae_principal"/>
+        </index>
+        <index referenceId="IDX_MKTG_PROSPECTS_PROFILE" indexType="btree">
+            <column name="cnae_profile"/>
+        </index>
+        <index referenceId="IDX_MKTG_PROSPECTS_UF" indexType="btree">
+            <column name="uf"/>
+        </index>
+        <index referenceId="IDX_MKTG_PROSPECTS_SCORE" indexType="btree">
+            <column name="prospect_score"/>
+        </index>
+        <index referenceId="IDX_MKTG_PROSPECTS_STATUS" indexType="btree">
+            <column name="prospect_status"/>
+        </index>
+    </table>
+
+    <!-- Audiences: Meta Custom/Lookalike Audiences -->
+    <table name="grupoawamotos_mktg_audiences" resource="default" engine="innodb"
+           comment="Marketing Intelligence - Meta Audiences">
+        <column xsi:type="int" name="audience_id" unsigned="true" nullable="false" identity="true"
+                comment="Audience ID"/>
+        <column xsi:type="varchar" name="meta_audience_id" nullable="true" length="64"
+                comment="Meta Audience ID"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Audience Name"/>
+        <column xsi:type="varchar" name="audience_type" nullable="false" length="30"
+                comment="Type: custom/lookalike"/>
+        <column xsi:type="text" name="segment_rule" nullable="true" comment="JSON segment rules"/>
+        <column xsi:type="int" name="customer_count" unsigned="true" nullable="false" default="0"
+                comment="Customer Count"/>
+        <column xsi:type="decimal" name="meta_match_rate" precision="5" scale="2" nullable="true"
+                comment="Meta Match Rate %"/>
+        <column xsi:type="boolean" name="auto_refresh" nullable="false" default="false"
+                comment="Auto Refresh"/>
+        <column xsi:type="varchar" name="refresh_frequency" nullable="true" length="20"
+                comment="Frequency: daily/weekly/monthly"/>
+        <column xsi:type="timestamp" name="last_synced_at" nullable="true" comment="Last Sync"/>
+        <column xsi:type="varchar" name="status" nullable="false" length="20" default="active"
+                comment="Status: active/paused/error"/>
+        <column xsi:type="varchar" name="source_audience_id" nullable="true" length="64"
+                comment="Source Audience for Lookalike"/>
+        <column xsi:type="decimal" name="lookalike_ratio" precision="3" scale="2" nullable="true"
+                comment="Lookalike Ratio (0.01-0.20)"/>
+        <column xsi:type="varchar" name="lookalike_country" nullable="true" length="2"
+                comment="Lookalike Country"/>
+        <column xsi:type="timestamp" name="created_at" nullable="true" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="true" on_update="true"
+                default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="audience_id"/>
+        </constraint>
+        <index referenceId="IDX_MKTG_AUDIENCES_TYPE" indexType="btree">
+            <column name="audience_type"/>
+        </index>
+        <index referenceId="IDX_MKTG_AUDIENCES_STATUS" indexType="btree">
+            <column name="status"/>
+        </index>
+    </table>
+
+    <!-- Competitors: tracked competitor pages -->
+    <table name="grupoawamotos_mktg_competitors" resource="default" engine="innodb"
+           comment="Marketing Intelligence - Competitors">
+        <column xsi:type="int" name="competitor_id" unsigned="true" nullable="false" identity="true"
+                comment="Competitor ID"/>
+        <column xsi:type="varchar" name="name" nullable="false" length="255" comment="Competitor Name"/>
+        <column xsi:type="varchar" name="meta_page_id" nullable="true" length="64" comment="Meta Page ID"/>
+        <column xsi:type="varchar" name="website" nullable="true" length="255" comment="Website"/>
+        <column xsi:type="text" name="keywords" nullable="true" comment="Search Keywords (comma-separated)"/>
+        <column xsi:type="boolean" name="is_active" nullable="false" default="true" comment="Active"/>
+        <column xsi:type="text" name="notes" nullable="true" comment="Notes"/>
+        <column xsi:type="timestamp" name="created_at" nullable="true" default="CURRENT_TIMESTAMP"
+                comment="Created At"/>
+        <column xsi:type="timestamp" name="updated_at" nullable="true" on_update="true"
+                default="CURRENT_TIMESTAMP" comment="Updated At"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="competitor_id"/>
+        </constraint>
+    </table>
+
+    <!-- Competitor Ads: ads found in Meta Ad Library -->
+    <table name="grupoawamotos_mktg_competitor_ads" resource="default" engine="innodb"
+           comment="Marketing Intelligence - Competitor Ads">
+        <column xsi:type="int" name="ad_id" unsigned="true" nullable="false" identity="true"
+                comment="Ad ID"/>
+        <column xsi:type="int" name="competitor_id" unsigned="true" nullable="true"
+                comment="Competitor FK"/>
+        <column xsi:type="varchar" name="meta_ad_id" nullable="true" length="64" comment="Meta Ad ID"/>
+        <column xsi:type="varchar" name="page_id" nullable="true" length="64" comment="Advertiser Page ID"/>
+        <column xsi:type="varchar" name="page_name" nullable="true" length="255" comment="Page Name"/>
+        <column xsi:type="text" name="ad_creative_body" nullable="true" comment="Ad Body Text"/>
+        <column xsi:type="varchar" name="ad_creative_title" nullable="true" length="512" comment="Ad Title"/>
+        <column xsi:type="varchar" name="ad_creative_link" nullable="true" length="512" comment="Destination URL"/>
+        <column xsi:type="varchar" name="ad_creative_image_url" nullable="true" length="512"
+                comment="Creative Image URL"/>
+        <column xsi:type="date" name="ad_delivery_start" nullable="true" comment="Delivery Start"/>
+        <column xsi:type="date" name="ad_delivery_stop" nullable="true" comment="Delivery Stop"/>
+        <column xsi:type="varchar" name="platforms" nullable="true" length="100" comment="Platforms"/>
+        <column xsi:type="boolean" name="is_active" nullable="false" default="true" comment="Active"/>
+        <column xsi:type="varchar" name="category" nullable="true" length="100" comment="Product Category"/>
+        <column xsi:type="timestamp" name="first_seen_at" nullable="true" default="CURRENT_TIMESTAMP"
+                comment="First Seen"/>
+        <column xsi:type="timestamp" name="last_seen_at" nullable="true" on_update="true"
+                default="CURRENT_TIMESTAMP" comment="Last Seen"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="ad_id"/>
+        </constraint>
+        <constraint xsi:type="foreign" referenceId="FK_MKTG_COMP_AD_COMP_ID"
+                    table="grupoawamotos_mktg_competitor_ads" column="competitor_id"
+                    referenceTable="grupoawamotos_mktg_competitors" referenceColumn="competitor_id"
+                    onDelete="SET NULL"/>
+        <index referenceId="IDX_MKTG_COMP_ADS_META_ID" indexType="btree">
+            <column name="meta_ad_id"/>
+        </index>
+        <index referenceId="IDX_MKTG_COMP_ADS_PAGE" indexType="btree">
+            <column name="page_id"/>
+        </index>
+        <index referenceId="IDX_MKTG_COMP_ADS_ACTIVE" indexType="btree">
+            <column name="is_active"/>
+        </index>
+    </table>
+</schema>

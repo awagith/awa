@@ -6,25 +6,24 @@
 (function () {
     'use strict';
 
-    // Wait for DOM ready
     function init() {
-        var headerEl = document.getElementById('header')
+        const headerEl = document.getElementById('header')
             || document.querySelector('.header-container')
             || document.querySelector('header[role="banner"]');
         if (!headerEl) return;
 
-        var topHeader = headerEl.querySelector('.top-header');
-        var threshold = topHeader ? topHeader.offsetHeight + 20 : 80;
-        var isSticky = false;
-        var STICKY_CLASS = 'awa-header-sticky';
-        var headerHeight = 0;
+        const topHeader = headerEl.querySelector('.top-header');
+        const threshold = topHeader ? topHeader.offsetHeight + 20 : 80;
+        let isSticky = false;
+        const STICKY_CLASS = 'awa-header-sticky';
+        let headerHeight = 0;
 
         function onScroll() {
-            var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollY = window.pageYOffset || document.documentElement.scrollTop;
             if (scrollY > threshold && !isSticky) {
                 headerHeight = headerEl.offsetHeight;
                 headerEl.classList.add(STICKY_CLASS);
-                document.body.style.paddingTop = headerHeight + 'px';
+                document.body.style.paddingTop = `${headerHeight}px`;
                 isSticky = true;
             } else if (scrollY <= threshold && isSticky) {
                 headerEl.classList.remove(STICKY_CLASS);
@@ -33,11 +32,10 @@
             }
         }
 
-        // Passive scroll listener for performance
-        var supportsPassive = false;
+        let supportsPassive = false;
         try {
-            var opts = Object.defineProperty({}, 'passive', {
-                get: function () { supportsPassive = true; return true; }
+            const opts = Object.defineProperty({}, 'passive', {
+                get() { supportsPassive = true; return true; }
             });
             window.addEventListener('test', null, opts);
         } catch (e) {}

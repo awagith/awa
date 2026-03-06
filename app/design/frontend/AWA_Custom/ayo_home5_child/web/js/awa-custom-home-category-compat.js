@@ -3,11 +3,11 @@ define([
 ], function ($) {
     'use strict';
 
-    var OBS_KEY = '__awaHomeCategoryCompatObserver';
-    var scheduled = false;
+    const OBS_KEY = '__awaHomeCategoryCompatObserver';
+    let scheduled = false;
 
     function inScope() {
-        var body = document.body;
+        const body = document.body;
 
         if (!body) {
             return false;
@@ -42,28 +42,26 @@ define([
     }
 
     function syncVerticalMenu() {
-        var $nav = $('.navigation.verticalmenu.side-verticalmenu');
-        var $list;
-        var open;
+        const $nav = $('.navigation.verticalmenu.side-verticalmenu');
 
         if (!$nav.length) {
             return;
         }
 
         $nav.attr('data-awa-component', $nav.attr('data-awa-component') || 'vertical-menu');
-        $list = $nav.find('.togge-menu').first();
-        open = $list.hasClass('menu-open') || visible($list.get(0));
+        const $list = $nav.find('.togge-menu').first();
+        const open = $list.hasClass('menu-open') || visible($list.get(0));
 
         $nav.toggleClass('is-open', !!open);
 
         $nav.find('.ui-menu-item.parent, .ui-menu-item.level0.parent').each(function () {
-            var $item = $(this);
-            var $link = $item.children('a').first();
-            var $toggle = $item.children('.open-children-toggle').first();
-            var $panel = $item.children('.submenu, .subchildmenu, ul.level0').first();
-            var text = normalizeText($link.text()) || 'Submenu';
-            var isOpen = $item.hasClass('_active') || $item.hasClass('active') || ($panel.length && ($panel.hasClass('opened') || visible($panel.get(0))));
-            var panelId;
+            const $item = $(this);
+            const $link = $item.children('a').first();
+            const $toggle = $item.children('.open-children-toggle').first();
+            const $panel = $item.children('.submenu, .subchildmenu, ul.level0').first();
+            const text = normalizeText($link.text()) || 'Submenu';
+            const isOpen = $item.hasClass('_active') || $item.hasClass('active') || ($panel.length && ($panel.hasClass('opened') || visible($panel.get(0))));
+            let panelId;
 
             $item.toggleClass('is-open', !!isOpen)
                 .attr('data-awa-parent-item', 'true');
@@ -71,7 +69,7 @@ define([
             if ($toggle.length) {
                 panelId = $panel.attr('id');
                 if (!panelId && $panel.length) {
-                    panelId = 'awa-vm-panel-' + Math.random().toString(36).slice(2, 9);
+                    panelId = `awa-vm-panel-${Math.random().toString(36).slice(2, 9)}`;
                     $panel.attr('id', panelId);
                 }
 
@@ -107,12 +105,12 @@ define([
 
     function syncMainNav() {
         $('.navigation.custommenu.main-nav').each(function () {
-            var $nav = $(this);
+            const $nav = $(this);
 
             $nav.attr('data-awa-component', $nav.attr('data-awa-component') || 'main-nav');
             $nav.find('a[href]').each(function () {
-                var $a = $(this);
-                var text = normalizeText($a.text());
+                const $a = $(this);
+                let text = normalizeText($a.text());
 
                 if (!text && $a.find('i.fa').length) {
                     text = 'Link de navegação';
@@ -121,12 +119,12 @@ define([
             });
 
             $nav.find('.open-children-toggle').each(function () {
-                var $toggle = $(this);
-                var $item = $toggle.closest('li');
-                var $link = $item.children('a').first();
-                var text = normalizeText($link.text()) || 'Submenu';
-                var $submenu = $item.children('.submenu, .groupmenu, .subchildmenu').first();
-                var isOpen = $item.hasClass('active') || $item.hasClass('_active') || ($submenu.length && visible($submenu.get(0)));
+                const $toggle = $(this);
+                const $item = $toggle.closest('li');
+                const $link = $item.children('a').first();
+                const text = normalizeText($link.text()) || 'Submenu';
+                const $submenu = $item.children('.submenu, .groupmenu, .subchildmenu').first();
+                const isOpen = $item.hasClass('active') || $item.hasClass('_active') || ($submenu.length && visible($submenu.get(0)));
 
                 $toggle.attr('aria-expanded', isOpen ? 'true' : 'false');
                 setLabel($toggle, (isOpen ? 'Recolher ' : 'Expandir ') + text);
@@ -135,10 +133,10 @@ define([
     }
 
     function syncSearch() {
-        var $form = $('#search_mini_form, form.form.minisearch').first();
-        var $input = $form.find('#search, #search-input-autocomplate, input[name="q"]').first();
-        var $panel = $('#search_autocomplete, .searchsuite-autocomplete').first();
-        var isOpen = $panel.length && visible($panel.get(0));
+        const $form = $('#search_mini_form, form.form.minisearch').first();
+        const $input = $form.find('#search, #search-input-autocomplate, input[name="q"]').first();
+        const $panel = $('#search_autocomplete, .searchsuite-autocomplete').first();
+        const isOpen = $panel.length && visible($panel.get(0));
 
         if (!$form.length) {
             return;
@@ -159,27 +157,27 @@ define([
         if ($panel.length) {
             $panel.attr('aria-hidden', isOpen ? 'false' : 'true');
             $panel.find('a[href]').each(function () {
-                var $a = $(this);
+                const $a = $(this);
                 setLabel($a, normalizeText($a.text()));
             });
         }
     }
 
     function syncToolbarAndFilters() {
-        var isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
-        var isPlpScope = document.body && (
+        const isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
+        const isPlpScope = document.body && (
             document.body.classList.contains('catalog-category-view') ||
             document.body.classList.contains('catalogsearch-result-index')
         );
 
         $('.toolbar.toolbar-products').each(function () {
-            var $toolbar = $(this);
+            const $toolbar = $(this);
             $toolbar.attr('data-awa-component', $toolbar.attr('data-awa-component') || 'plp-toolbar');
         });
 
         $('.toolbar-products .modes-mode, .toolbar-products .sorter-action, .toolbar-products .pages-item a, .toolbar-products .pages-item strong').each(function () {
-            var $el = $(this);
-            var text = normalizeText($el.text());
+            const $el = $(this);
+            let text = normalizeText($el.text());
             if (!text) {
                 if ($el.hasClass('mode-grid')) {
                     text = 'Visualização em grade';
@@ -193,12 +191,12 @@ define([
         });
 
         $('.filter-options-item').each(function () {
-            var $item = $(this);
-            var $title = $item.children('.filter-options-title').first();
-            var $content = $item.children('.filter-options-content').first();
-            var isOpen = $item.hasClass('active') || ($content.length && visible($content.get(0)));
-            var text = normalizeText($title.text());
-            var contentId;
+            const $item = $(this);
+            const $title = $item.children('.filter-options-title').first();
+            const $content = $item.children('.filter-options-content').first();
+            const isOpen = $item.hasClass('active') || ($content.length && visible($content.get(0)));
+            const text = normalizeText($title.text());
+            let contentId;
 
             if (!$title.length) {
                 return;
@@ -215,7 +213,7 @@ define([
             if ($content.length) {
                 contentId = $content.attr('id');
                 if (!contentId) {
-                    contentId = 'awa-filter-content-' + Math.random().toString(36).slice(2, 9);
+                    contentId = `awa-filter-content-${Math.random().toString(36).slice(2, 9)}`;
                     $content.attr('id', contentId);
                 }
                 $title.attr('aria-controls', contentId);
@@ -230,10 +228,10 @@ define([
         });
 
         if (isPlpScope) {
-            var $body = $('body');
-            var $filter = $('#layered-ajax-filter-block, .block.filter').first();
-            var $toolbarTop = $('.shop-tab-select .toolbar.toolbar-products').first();
-            var $filterToggle = $toolbarTop.find('.modes .modes-label').first();
+            const $body = $('body');
+            const $filter = $('#layered-ajax-filter-block, .block.filter').first();
+            const $toolbarTop = $('.shop-tab-select .toolbar.toolbar-products').first();
+            const $filterToggle = $toolbarTop.find('.modes .modes-label').first();
 
             if ($filter.length && $toolbarTop.length && $filterToggle.length) {
                 $filterToggle.attr({
@@ -267,8 +265,8 @@ define([
                         scheduleDecorate();
                     });
 
-                var collapsed = isMobile && $body.hasClass('awa-plp-filters-collapsed');
-                var label = collapsed ? 'Mostrar Filtros' : 'Ocultar Filtros';
+                const collapsed = isMobile && $body.hasClass('awa-plp-filters-collapsed');
+                const label = collapsed ? 'Mostrar Filtros' : 'Ocultar Filtros';
 
                 $filterToggle.text(label)
                     .attr('aria-expanded', collapsed ? 'false' : 'true');
@@ -279,9 +277,9 @@ define([
 
     function syncProductCards() {
         $('.products-grid .product-item-info, .products-grid .item-product').each(function () {
-            var $card = $(this);
-            var $nameLink = $card.find('.product-item-name a').first();
-            var name = normalizeText($nameLink.text());
+            const $card = $(this);
+            const $nameLink = $card.find('.product-item-name a').first();
+            const name = normalizeText($nameLink.text());
 
             $card.attr('data-awa-component', $card.attr('data-awa-component') || 'product-card');
             if (name) {
@@ -289,14 +287,14 @@ define([
             }
 
             $card.find('.actions-primary .action, .product-item-actions .action').each(function () {
-                var $btn = $(this);
-                var txt = normalizeText($btn.text()) || name;
+                const $btn = $(this);
+                const txt = normalizeText($btn.text()) || name;
                 if ($btn.hasClass('tocart')) {
-                    setLabel($btn, name ? ('Comprar ' + name) : 'Comprar produto');
+                    setLabel($btn, name ? `Comprar ${name}` : 'Comprar produto');
                 } else if ($btn.hasClass('towishlist')) {
-                    setLabel($btn, name ? ('Adicionar ' + name + ' aos favoritos') : 'Adicionar aos favoritos');
+                    setLabel($btn, name ? `Adicionar ${name} aos favoritos` : 'Adicionar aos favoritos');
                 } else if ($btn.hasClass('tocompare')) {
-                    setLabel($btn, name ? ('Comparar ' + name) : 'Comparar produto');
+                    setLabel($btn, name ? `Comparar ${name}` : 'Comparar produto');
                 } else {
                     setLabel($btn, txt);
                 }
@@ -306,16 +304,16 @@ define([
 
     function syncOwl() {
         $('.owl-prev, .owl-next').each(function () {
-            var $btn = $(this);
-            var isPrev = $btn.hasClass('owl-prev');
-            var label = isPrev ? 'Ver itens anteriores' : 'Ver próximos itens';
+            const $btn = $(this);
+            const isPrev = $btn.hasClass('owl-prev');
+            const label = isPrev ? 'Ver itens anteriores' : 'Ver próximos itens';
             setLabel($btn, label);
             $btn.attr('aria-disabled', $btn.hasClass('disabled') ? 'true' : 'false');
         });
 
         $('.owl-controls .owl-buttons div').each(function () {
-            var $el = $(this);
-            var isPrev = $el.hasClass('owl-prev');
+            const $el = $(this);
+            const isPrev = $el.hasClass('owl-prev');
             if (isPrev || $el.hasClass('owl-next')) {
                 setLabel($el, isPrev ? 'Ver itens anteriores' : 'Ver próximos itens');
             }
@@ -342,10 +340,10 @@ define([
 
         scheduled = true;
 
-        function flush() {
+        const flush = () => {
             scheduled = false;
             decorate();
-        }
+        };
 
         if (typeof window.requestAnimationFrame === 'function') {
             window.requestAnimationFrame(flush);
@@ -363,7 +361,7 @@ define([
         decorate();
 
         if (window.MutationObserver && !window[OBS_KEY]) {
-            window[OBS_KEY] = new window.MutationObserver(function () {
+            window[OBS_KEY] = new window.MutationObserver(() => {
                 scheduleDecorate();
             });
 

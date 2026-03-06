@@ -13,11 +13,18 @@ var config = {
     config: {
         mixins: {
             // P0-1: Inject PO Number into payment data
+            // P2-4.2: Inject Order Notes into payment data
             'Magento_Checkout/js/action/set-payment-information': {
-                'GrupoAwamotos_B2B/js/model/payment/po-number-assigner': true
+                'GrupoAwamotos_B2B/js/model/payment/po-number-assigner': true,
+                'GrupoAwamotos_B2B/js/model/payment/order-notes-assigner': true
             },
             'Magento_Checkout/js/action/set-payment-information-extended': {
-                'GrupoAwamotos_B2B/js/model/payment/po-number-assigner': true
+                'GrupoAwamotos_B2B/js/model/payment/po-number-assigner': true,
+                'GrupoAwamotos_B2B/js/model/payment/order-notes-assigner': true
+            },
+            // P2-4.1: Auto-fill empresa/IE na billing address
+            'Magento_Checkout/js/action/set-billing-address': {
+                'GrupoAwamotos_B2B/js/model/checkout/company-autofill': true
             }
         }
     }

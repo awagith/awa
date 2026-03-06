@@ -8,8 +8,8 @@ $storeHost = $storeHost !== '' ? $storeHost : 'awamotos.com';
 $safeBrowsingUrl = 'https://transparencyreport.google.com/safe-browsing/search?url=' . rawurlencode($storeHost);
 $sslLabsUrl = 'https://www.ssllabs.com/ssltest/analyze.html?d=' . rawurlencode($storeHost);
 ?>
-<div class="page_footer" role="contentinfo">
-    <svg class="awa-footer-sprite" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false">
+<div class="page_footer awa-footer--dark" role="contentinfo">
+    <svg class="awa-footer-sprite" xmlns="http://www.w3.org/2000/svg" width="0" height="0" role="presentation" aria-hidden="true" focusable="false">
         <symbol id="awa-icon-truck" viewBox="0 0 24 24">
             <path d="M3 6h11v9H3zM14 9h3.5l2.5 3V15h-6zM7.5 18.5a1.5 1.5 0 1 0 0-.01zm10 0a1.5 1.5 0 1 0 0-.01z" fill="currentColor"/>
         </symbol>
@@ -40,11 +40,49 @@ $sslLabsUrl = 'https://www.ssllabs.com/ssltest/analyze.html?d=' . rawurlencode($
             <path d="M6.1 13.7A6 6 0 0 1 5.8 12c0-.6.1-1.2.3-1.7L2.8 7.7A10 10 0 0 0 2 12c0 1.5.4 2.9.8 4.3l3.3-2.6Z" fill="currentColor"/>
             <path d="M12 5.9c2 0 3.4.9 4.2 1.6l2.9-2.8C17.2 3 14.8 2 12 2A10 10 0 0 0 2.8 7.7l3.3 2.6C6.9 7.8 9.2 5.9 12 5.9Z" fill="currentColor"/>
         </symbol>
+        <!-- Payment brand logos -->
+        <symbol id="awa-icon-visa" viewBox="0 0 48 32">
+            <path d="M20.3 10.2l-3 11.6h-3.5l3-11.6h3.5zm14.6 7.5l1.8-5.1 1.1 5.1h-2.9zm3.9 4.1h3.2l-2.8-11.6h-3c-.7 0-1.2.4-1.5 1l-5.2 10.6h3.6l.7-2h4.4l.6 2zm-9.2-3.8c0-3-4.2-3.2-4.2-4.6 0-.4.4-.8 1.3-.9.6-.1 2.3-.2 3.1.4l.6-2.5c-.8-.3-1.7-.5-3-.5-3.2 0-5.4 1.7-5.4 4.1 0 1.8 1.6 2.8 2.8 3.4 1.2.6 1.6 1 1.6 1.5 0 .8-1 1.2-1.8 1.2-1.6 0-2.5-.4-3.2-.8l-.6 2.6c.7.3 2 .6 3.4.6 3.3 0 5.4-1.7 5.4-4.4zm-16.4-7.8l-5.6 11.6h-3.7L1.3 12c-.1-.6-.3-.8-.8-1-.8-.4-2.1-.8-3.2-1l.1-.4h5.8c.7 0 1.4.5 1.5 1.4l1.4 7.7 3.6-9.1h3.5z" fill="currentColor"/>
+        </symbol>
+        <symbol id="awa-icon-mastercard" viewBox="0 0 48 32">
+            <circle cx="18" cy="16" r="10" fill="currentColor" opacity="0.7"/>
+            <circle cx="30" cy="16" r="10" fill="currentColor" opacity="0.7"/>
+            <path d="M24 8.6a10 10 0 0 0-3.6 7.4 10 10 0 0 0 3.6 7.4 10 10 0 0 0 3.6-7.4A10 10 0 0 0 24 8.6z" fill="currentColor"/>
+        </symbol>
+        <symbol id="awa-icon-elo" viewBox="0 0 48 32">
+            <path d="M17 9.5a2.5 2.5 0 0 1 2.3 1.5l5-2a8.5 8.5 0 0 0-15.3 3l5.3 1.3A2.5 2.5 0 0 1 17 9.5z" fill="currentColor"/>
+            <path d="M14.3 16.7l-5.3 1.3a8.5 8.5 0 0 0 8.4 5.5 8.5 8.5 0 0 0 6.9-3.5l-4.2-3.4a2.5 2.5 0 0 1-5.8.1z" fill="currentColor"/>
+            <path d="M25.4 11l-5 2a2.5 2.5 0 0 1 .1 3l4.2 3.4a8.5 8.5 0 0 0 .7-8.4z" fill="currentColor"/>
+            <path d="M31 12h9v2h-9z" fill="currentColor"/>
+            <path d="M31 15h11v2H31z" fill="currentColor"/>
+            <path d="M31 18h9v2h-9z" fill="currentColor"/>
+        </symbol>
+        <symbol id="awa-icon-amex" viewBox="0 0 48 32">
+            <rect x="2" y="4" width="44" height="24" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+            <text x="24" y="20" text-anchor="middle" font-size="11" font-weight="bold" fill="currentColor" font-family="sans-serif">AMEX</text>
+        </symbol>
+        <symbol id="awa-icon-hipercard" viewBox="0 0 48 32">
+            <rect x="2" y="4" width="44" height="24" rx="3" fill="none" stroke="currentColor" stroke-width="2"/>
+            <circle cx="18" cy="16" r="6" fill="currentColor" opacity="0.5"/>
+            <circle cx="30" cy="16" r="6" fill="currentColor" opacity="0.8"/>
+        </symbol>
+        <symbol id="awa-icon-mercadopago" viewBox="0 0 48 32">
+            <path d="M24 6c-8.8 0-16 4.5-16 10s7.2 10 16 10 16-4.5 16-10S32.8 6 24 6zm0 16c-5.5 0-10-2.7-10-6s4.5-6 10-6 10 2.7 10 6-4.5 6-10 6z" fill="currentColor"/>
+            <path d="M20 14l3 4 5-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </symbol>
+        <!-- Trust seal logos -->
+        <symbol id="awa-icon-reclame-aqui" viewBox="0 0 24 24">
+            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8z" fill="currentColor"/>
+            <path d="M12 6l1.5 3.5L17 11l-3.5 1.5L12 16l-1.5-3.5L7 11l3.5-1.5z" fill="currentColor"/>
+        </symbol>
+        <symbol id="awa-icon-ebit" viewBox="0 0 24 24">
+            <path d="M12 2l2.4 7.2H22l-6 4.8 2.4 7.2L12 16.8l-6.4 4.4 2.4-7.2-6-4.8h7.6z" fill="currentColor"/>
+        </symbol>
     </svg>
     <div class="container">
         <div class="border-top-container"></div>
     </div>
-    <section class="awa-footer-trust-bar" aria-label="<?= $escaper->escapeHtmlAttr(__('Diferenciais AWA Motos')) ?>">
+    <section class="awa-footer-trust-bar" data-footer-section="trust-bar" aria-label="<?= $escaper->escapeHtmlAttr(__('Diferenciais AWA Motos')) ?>">
         <div class="container">
             <div class="awa-footer-trust-grid">
                 <div class="awa-footer-trust-item">
@@ -85,11 +123,8 @@ $sslLabsUrl = 'https://www.ssllabs.com/ssltest/analyze.html?d=' . rawurlencode($
         <div class="container">
             <div class="footer-bottom-inner">
                 <div class="row">
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <?= $this->getChildHtml('copyright') ?>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12">
-                        <section class="awa-footer-payments-security" aria-labelledby="awa-footer-payments-title">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <section class="awa-footer-payments-security" data-footer-section="payments-security" aria-labelledby="awa-footer-payments-title">
                             <div class="awa-footer-payments-security__grid">
                                 <div class="awa-footer-payments-security__panel">
                                     <h5 id="awa-footer-payments-title" class="awa-footer-panel-title">
@@ -98,26 +133,47 @@ $sslLabsUrl = 'https://www.ssllabs.com/ssltest/analyze.html?d=' . rawurlencode($
                                     <div class="awa-footer-panel-section">
                                         <p class="awa-footer-panel-label"><?= $escaper->escapeHtml(__('Pagamentos Prioritários')) ?></p>
                                         <div class="awa-payment-chip-list" role="list" aria-label="<?= $escaper->escapeHtmlAttr(__('Pagamentos prioritários')) ?>">
-                                            <span class="awa-payment-chip awa-payment-chip--priority" role="listitem">
+                                            <span class="awa-payment-chip awa-payment-chip--priority" role="listitem" data-payment-type="pix">
                                                 <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#awa-icon-pix"/></svg>
                                                 <span>PIX</span>
                                             </span>
-                                            <span class="awa-payment-chip awa-payment-chip--priority" role="listitem">
+                                            <span class="awa-payment-chip awa-payment-chip--priority" role="listitem" data-payment-type="boleto">
                                                 <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#awa-icon-boleto"/></svg>
                                                 <span><?= $escaper->escapeHtml(__('Boleto')) ?></span>
                                             </span>
                                         </div>
                                     </div>
                                     <div class="awa-footer-panel-section">
-                                        <p class="awa-footer-panel-label"><?= $escaper->escapeHtml(__('Outras Formas de Pagamento')) ?></p>
-                                        <div class="awa-payment-chip-list" role="list" aria-label="<?= $escaper->escapeHtmlAttr(__('Outros meios de pagamento')) ?>">
-                                            <span class="awa-payment-chip" role="listitem">
-                                                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#awa-icon-card"/></svg>
-                                                <span><?= $escaper->escapeHtml(__('Cartão')) ?></span>
+                                        <p class="awa-footer-panel-label"><?= $escaper->escapeHtml(__('Bandeiras Aceitas')) ?></p>
+                                        <div class="awa-payment-chip-list awa-payment-chip-list--flags" role="list" aria-label="<?= $escaper->escapeHtmlAttr(__('Bandeiras de cartão aceitas')) ?>">
+                                            <span class="awa-payment-chip awa-payment-chip--flag" role="listitem" data-payment-type="visa">
+                                                <svg viewBox="0 0 48 32" aria-hidden="true"><use href="#awa-icon-visa"/></svg>
+                                                <span>Visa</span>
                                             </span>
-                                            <span class="awa-payment-chip" role="listitem">
-                                                <svg viewBox="0 0 24 24" aria-hidden="true"><use href="#awa-icon-card"/></svg>
-                                                <span><?= $escaper->escapeHtml(__('Parcelamento')) ?></span>
+                                            <span class="awa-payment-chip awa-payment-chip--flag" role="listitem" data-payment-type="mastercard">
+                                                <svg viewBox="0 0 48 32" aria-hidden="true"><use href="#awa-icon-mastercard"/></svg>
+                                                <span>Mastercard</span>
+                                            </span>
+                                            <span class="awa-payment-chip awa-payment-chip--flag" role="listitem" data-payment-type="elo">
+                                                <svg viewBox="0 0 48 32" aria-hidden="true"><use href="#awa-icon-elo"/></svg>
+                                                <span>Elo</span>
+                                            </span>
+                                            <span class="awa-payment-chip awa-payment-chip--flag" role="listitem" data-payment-type="amex">
+                                                <svg viewBox="0 0 48 32" aria-hidden="true"><use href="#awa-icon-amex"/></svg>
+                                                <span>Amex</span>
+                                            </span>
+                                            <span class="awa-payment-chip awa-payment-chip--flag" role="listitem" data-payment-type="hipercard">
+                                                <svg viewBox="0 0 48 32" aria-hidden="true"><use href="#awa-icon-hipercard"/></svg>
+                                                <span>Hipercard</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="awa-footer-panel-section">
+                                        <p class="awa-footer-panel-label"><?= $escaper->escapeHtml(__('Processado por')) ?></p>
+                                        <div class="awa-payment-chip-list" role="list" aria-label="<?= $escaper->escapeHtmlAttr(__('Gateway de pagamento')) ?>">
+                                            <span class="awa-payment-chip awa-payment-chip--gateway" role="listitem" data-payment-type="mercadopago">
+                                                <svg viewBox="0 0 48 32" aria-hidden="true"><use href="#awa-icon-mercadopago"/></svg>
+                                                <span>Mercado Pago</span>
                                             </span>
                                         </div>
                                     </div>
@@ -147,6 +203,30 @@ $sslLabsUrl = 'https://www.ssllabs.com/ssltest/analyze.html?d=' . rawurlencode($
                                             <span class="awa-security-badge__copy">
                                                 <strong>SSL</strong>
                                                 <small><?= $escaper->escapeHtml(__('Conexão criptografada ativa')) ?></small>
+                                            </span>
+                                        </a>
+                                        <a class="awa-security-badge awa-security-badge--ra"
+                                           href="https://www.reclameaqui.com.br/empresa/awa-motos/"
+                                           target="_blank"
+                                           rel="noopener noreferrer"
+                                           title="<?= $escaper->escapeHtmlAttr(__('Veja nossa reputação no Reclame Aqui')) ?>"
+                                           aria-label="<?= $escaper->escapeHtmlAttr(__('Abrir perfil AWA Motos no Reclame Aqui')) ?>">
+                                            <span class="awa-security-badge__icon awa-security-badge__icon--ra" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#awa-icon-reclame-aqui"/></svg></span>
+                                            <span class="awa-security-badge__copy">
+                                                <strong><?= $escaper->escapeHtml(__('Reclame Aqui')) ?></strong>
+                                                <small><?= $escaper->escapeHtml(__('Reputação verificada')) ?></small>
+                                            </span>
+                                        </a>
+                                        <a class="awa-security-badge awa-security-badge--ebit"
+                                           href="https://www.ebit.com.br/awa-motos"
+                                           target="_blank"
+                                           rel="noopener noreferrer"
+                                           title="<?= $escaper->escapeHtmlAttr(__('Veja nossa avaliação no E-bit')) ?>"
+                                           aria-label="<?= $escaper->escapeHtmlAttr(__('Abrir perfil AWA Motos no E-bit')) ?>">
+                                            <span class="awa-security-badge__icon awa-security-badge__icon--ebit" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="#awa-icon-ebit"/></svg></span>
+                                            <span class="awa-security-badge__copy">
+                                                <strong><?= $escaper->escapeHtml(__('E-bit')) ?></strong>
+                                                <small><?= $escaper->escapeHtml(__('Loja avaliada por consumidores')) ?></small>
                                             </span>
                                         </a>
                                     </div>

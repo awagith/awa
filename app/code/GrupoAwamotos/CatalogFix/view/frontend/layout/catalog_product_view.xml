@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * GrupoAwamotos CatalogFix
+ * Clears the "before=product.info.main" ordering from product.info.media.
+ *
+ * The vendor catalog layout defines product.info.media with before="product.info.main".
+ * The Ayo theme creates a second nested product.info.main inside product.col.info.
+ * When the layout engine sorts, product.info.media (still in its original container)
+ * tries to be before "product.info.main" which is now in product.col.info —
+ * causing: "Broken reference: parents are different: 'content' and 'product.col.info'"
+ *
+ * Fix: use <move> to reposition product.info.media within its original parent container
+ * with before="-" instead of before="product.info.main". This module layout runs before
+ * the theme layouts, so the theme then freely moves it to product.col.media without
+ * any conflicting cross-container ordering.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <move element="product.info.media" destination="content" before="-"/>
+    </body>
+</page>

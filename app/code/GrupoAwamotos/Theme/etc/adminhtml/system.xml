@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="grupoawamotos" translate="label" sortOrder="900">
+            <label>AWA Motos</label>
+        </tab>
+        <section id="grupoawamotos_theme" translate="label" sortOrder="10"
+                 showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Tema &amp; Contato</label>
+            <tab>grupoawamotos</tab>
+            <resource>Magento_Config::config</resource>
+            <group id="contact" translate="label" sortOrder="10"
+                   showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Informações de Contato</label>
+                <field id="whatsapp_number" translate="label comment" type="text" sortOrder="10"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>WhatsApp (número)</label>
+                    <comment>Formato internacional sem + e sem espaços. Ex: 5516997367588</comment>
+                    <validate>validate-digits</validate>
+                </field>
+                <field id="whatsapp_message" translate="label comment" type="text" sortOrder="20"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>WhatsApp (mensagem padrão)</label>
+                    <comment>Mensagem pré-preenchida ao abrir WhatsApp</comment>
+                </field>
+                <field id="phone" translate="label comment" type="text" sortOrder="30"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Telefone (formato E.164)</label>
+                    <comment>Ex: +5516997367588 — usado em JSON-LD e Schema.org</comment>
+                </field>
+                <field id="email" translate="label comment" type="text" sortOrder="40"
+                       showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>E-mail de contato</label>
+                    <validate>validate-email</validate>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

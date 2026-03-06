@@ -329,7 +329,7 @@ body .page-wrapper .awa-payment-chip--priority {
     border-radius: 14px !important;
     left: 0 !important;
     width: min(720px, calc(100vw - 32px)) !important;
-    margin-top: 8px !important;
+    margin-top: var(--awa-space-2) !important; /* P2-fluid: era 8px */
 }
 
 .searchsuite-autocomplete .title {
@@ -406,7 +406,7 @@ body.checkout-cart-index .cart-summary input[type='text'] {
         left: -8px !important;
         right: auto !important;
         width: calc(100vw - 16px) !important;
-        margin-top: 8px !important;
+        margin-top: var(--awa-space-2) !important; /* P2-fluid: era 8px */
         border-radius: 12px !important;
     }
 
@@ -488,7 +488,7 @@ body.checkout-cart-index .cart-summary input[type='text'] {
 }
 
 .modal-popup.ajaxsuite-popup-wrapper._show .modal-header .action-close::before {
-    font-size: 22px !important;
+    font-size: var(--awa-text-xl-plus) !important; /* P1-fluid: era 22px */
     line-height: 1 !important;
     font-weight: 500 !important;
     color: currentcolor !important;
@@ -537,7 +537,7 @@ body .page-wrapper #search_mini_form.form.minisearch,
 body .page-wrapper .block.block-search .form.minisearch.search-content {
     display: flex !important;
     align-items: stretch !important;
-    gap: 8px !important;
+    gap: var(--awa-space-2) !important; /* P2-fluid: era 8px */
 }
 
 body .page-wrapper .block.block-search .field.search,
@@ -714,7 +714,7 @@ body:not(.cms-index-index):not(.cms-home):not(.cms-homepage_ayo_home5) .page-wra
         max-width: 100% !important;
         flex: 0 0 100% !important;
         padding-inline: 0 !important;
-        margin: 0 0 10px !important;
+        margin: 0 0 var(--awa-space-2-5) !important; /* P2-fluid: era 0 0 10px */
     }
 
     body .page-wrapper .header .wp-header > [class*='col-']:first-child .logo,
@@ -754,7 +754,7 @@ body:not(.cms-index-index):not(.cms-home):not(.cms-homepage_ayo_home5) .page-wra
         display: flex !important;
         flex-wrap: wrap !important;
         align-items: center !important;
-        gap: 8px !important;
+        gap: var(--awa-space-2) !important; /* P2-fluid: era 8px */
     }
 
     :is(body.catalog-category-view, body.catalogsearch-result-index) .page-wrapper .action.nav-toggle {
@@ -784,7 +784,7 @@ body:not(.cms-index-index):not(.cms-home):not(.cms-homepage_ayo_home5) .page-wra
         position: static !important;
         float: none !important;
         clear: both !important;
-        margin-top: 8px !important;
+        margin-top: var(--awa-space-2) !important; /* P2-fluid: era 8px */
     }
 
     body:not(.cms-index-index):not(.cms-home):not(.cms-homepage_ayo_home5) .page-wrapper .action.nav-toggle {
@@ -885,7 +885,7 @@ body:not(.cms-index-index):not(.cms-home):not(.cms-homepage_ayo_home5) .page-wra
     overflow: hidden !important;
     border: 1px solid #e5e7eb !important;
     border-radius: 14px !important;
-    margin-bottom: 12px !important;
+    margin-bottom: var(--awa-space-3) !important; /* P2-fluid: era 12px */
 }
 
 :is(body.catalog-category-view, body.catalogsearch-result-index) .category-image .image,
@@ -898,7 +898,7 @@ body:not(.cms-index-index):not(.cms-home):not(.cms-homepage_ayo_home5) .page-wra
 }
 
 :is(body.catalog-category-view, body.catalogsearch-result-index) .shop-tab-select .toolbar.toolbar-products {
-    margin-top: 4px !important;
+    margin-top: var(--awa-space-1) !important; /* P2-fluid: era 4px */
 }
 
 @media (width <= 767px) {
@@ -995,7 +995,7 @@ body:not(.cms-index-index):not(.cms-home):not(.cms-homepage_ayo_home5) .page-wra
         display: grid !important;
         grid-template-columns: 1fr !important;
         align-items: center !important;
-        gap: 8px !important;
+        gap: var(--awa-space-2) !important; /* P2-fluid: era 8px */
     }
 
     :is(body.catalog-category-view, body.catalogsearch-result-index) .shop-tab-select .toolbar.toolbar-products .modes[data-awa-filter-toggle-ready='true'] + .toolbar-sorter.sorter,
@@ -1025,7 +1025,7 @@ body:not(.cms-index-index):not(.cms-home):not(.cms-homepage_ayo_home5) .page-wra
         display: grid !important;
         grid-template-columns: clamp(82px, 24vw, 108px) minmax(0, 1fr) !important;
         align-items: center !important;
-        gap: 8px !important;
+        gap: var(--awa-space-2) !important; /* P2-fluid: era 8px */
         width: 100% !important;
         max-width: 100% !important;
         min-width: 0 !important;
@@ -1086,7 +1086,7 @@ body:not(.cms-index-index):not(.cms-home):not(.cms-homepage_ayo_home5) .page-wra
         grid-template-areas: "search cart" !important;
         grid-template-rows: 44px !important;
         align-items: center !important;
-        gap: 8px !important;
+        gap: var(--awa-space-2) !important; /* P2-fluid: era 8px */
         grid-column: 2 !important;
         width: 100% !important;
         max-width: 100% !important;

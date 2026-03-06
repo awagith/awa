@@ -3,6 +3,7 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="css/awa-custom-plp-final-polish.css"/>
+        <css src="css/awa-page-catalog-listing.css"/>
     </head>
     <body>
     </body>

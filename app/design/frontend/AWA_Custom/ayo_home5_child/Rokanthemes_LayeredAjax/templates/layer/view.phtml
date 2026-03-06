@@ -1,4 +1,5 @@
-<?php if ($block->canShowBlock()): ?>
+<?php
+/** @var \Magento\LayeredNavigation\Block\Navigation\Category $block */ if ($block->canShowBlock()): ?>
     <div class="block filter" id="layered-ajax-filter-block">
 		<div class="block-content filter-content sidebar-shop sidebar-left">
             <?php if ($block->getLayer()->getState()->getFilters()): ?>

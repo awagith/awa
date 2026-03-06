@@ -92,7 +92,7 @@ class Index implements HttpPostActionInterface
      * @param \Magento\Sales\Model\Order $order
      * @return void
      */
-    private function processReorderItems($order): void
+    private function processReorderItems(\Magento\Sales\Model\Order $order): void
     {
         $added = 0;
         $errors = [];
@@ -121,7 +121,7 @@ class Index implements HttpPostActionInterface
      * @param \Magento\Sales\Model\Order\Item $item
      * @return bool|string True on success, error description on failure
      */
-    private function addItemToCart($item)
+    private function addItemToCart(\Magento\Sales\Model\Order\Item $item): bool|string
     {
         try {
             /** @var \Magento\Catalog\Model\Product $product */

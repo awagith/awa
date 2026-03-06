@@ -8,16 +8,68 @@
 ?>
 <?php $_product = $block->getProduct(); ?>
 <?php $buttonTitle = __('Add to Cart'); ?>
+<?php
+$copySkuInit = json_encode(
+    [
+        'js/awa-copy-control' => [
+            'selectors' => [
+                'source' => '[data-awa-role="copy-source"]',
+                'trigger' => '[data-awa-role="copy-trigger"]',
+                'label' => '[data-awa-role="copy-label"]',
+                'status' => '[data-awa-role="copy-status"]',
+            ],
+            'messages' => [
+                'copy' => (string) __('Copiar'),
+                'copied' => (string) __('Copiado'),
+                'error' => (string) __('Não foi possível copiar o SKU.'),
+                'unsupported' => (string) __('Copie manualmente o SKU.'),
+            ],
+            'flags' => [
+                'resetDelay' => 2000,
+            ],
+            'endpoints' => new \stdClass(),
+        ],
+    ],
+    JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT
+);
+$qtyControlConfig = [
+    'selectors' => [
+        'input' => '[data-awa-role="qty-input"]',
+        'trigger' => '[data-awa-role="qty-trigger"]',
+    ],
+    'messages' => [
+        'invalidQuantity' => (string) __('Quantidade inválida.'),
+    ],
+    'flags' => [
+        'dispatchEvents' => true,
+    ],
+    'endpoints' => new \stdClass(),
+];
+?>
 
 <?php /* =========================================================
          B2B TECHNICAL SUMMARY & SECONDARY ACTIONS
          ========================================================= */ ?>
-<div class="awa-b2b-pdp-technical-summary">
+<div class="awa-b2b-pdp-technical-summary"
+     data-awa-component="awa-copy-control"
+     data-mage-init='<?= /* @noEscape */ $copySkuInit ?>'>
     <table>
         <tbody>
             <tr>
                 <td><?= $block->escapeHtml(__('SKU')) ?></td>
-                <td><?= $block->escapeHtml($_product->getSku()) ?></td>
+                <td>
+                    <span class="awa-b2b-sku-inline">
+                        <span class="awa-b2b-sku-text" id="pdp-b2b-sku-text" data-awa-role="copy-source"><?= $block->escapeHtml($_product->getSku()) ?></span>
+                        <button type="button"
+                                class="awa-b2b-action-btn awa-btn-copy-sku"
+                                data-awa-role="copy-trigger"
+                                data-state="idle"
+                                aria-controls="pdp-b2b-sku-text">
+                            <span data-awa-role="copy-label"><?= $block->escapeHtml(__('Copiar')) ?></span>
+                        </button>
+                    </span>
+                    <span class="awa-sr-only" data-awa-role="copy-status" aria-live="polite"></span>
+                </td>
             </tr>
             <tr>
                 <td><?= $block->escapeHtml(__('Código de Barras (EAN)')) ?></td>
@@ -53,16 +105,36 @@
         <?php if ($block->shouldRenderQuantity()) :?>
         <div class="awa-catalog-qty-box field qty">
             <label class="label awa-sr-only" for="qty"><span><?= $block->escapeHtml(__('Qty')) ?></span></label>
-            <div class="control">
+            <div class="control awa-stepper-control" data-awa-role="qty-control">
+                <button type="button"
+                        class="awa-qty-btn awa-qty-minus"
+                        data-awa-role="qty-trigger"
+                        data-awa-direction="decrement"
+                        aria-controls="qty"
+                        aria-label="<?= $block->escapeHtmlAttr(__('Diminuir quantidade')) ?>">
+                    <span aria-hidden="true">-</span>
+                </button>
                 <input type="number"
                        name="qty"
                        id="qty"
-                       min="0"
+                       min="1"
+                       step="1"
+                       inputmode="numeric"
+                       pattern="[0-9]*"
                        value="<?= $block->getProductDefaultQty() * 1 ?>"
                        title="<?= $block->escapeHtmlAttr(__('Qty')) ?>"
                        class="input-text qty"
+                       data-awa-role="qty-input"
                        data-validate="<?= $block->escapeHtml(json_encode($block->getQuantityValidators())) ?>"
                        />
+                <button type="button"
+                        class="awa-qty-btn awa-qty-plus"
+                        data-awa-role="qty-trigger"
+                        data-awa-direction="increment"
+                        aria-controls="qty"
+                        aria-label="<?= $block->escapeHtmlAttr(__('Aumentar quantidade')) ?>">
+                    <span aria-hidden="true">+</span>
+                </button>
             </div>
         </div>
         <?php endif; ?>
@@ -81,7 +153,8 @@
 <script type="text/x-magento-init">
     {
         "#product_addtocart_form": {
-            "Magento_Catalog/js/validate-product": {}
+            "Magento_Catalog/js/validate-product": {},
+            "js/awa-qty-control": <?= /* @noEscape */ json_encode($qtyControlConfig, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>
         }
     }
 </script>

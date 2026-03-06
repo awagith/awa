@@ -1,4 +1,5 @@
 <?php
+/** @var \Rokanthemes\SearchbyCat\Block\Form $block */
 /**
  * Copyright © 2015 Magento. All rights reserved.
  * See COPYING.txt for license details.
@@ -19,7 +20,8 @@ $searchSuiteUrl = $block->getUrl('rokanthemes_searchsuiteautocomplete/ajax/index
     <div class="block-content">
         <form class="form minisearch search-content cat-search" id="search_mini_form" action="<?php echo $block->escapeUrl($helper->getResultUrl()) ?>" method="get">
             <div class="field-by-cat-search">
-                <select name="cat" id="choose_category" aria-label="<?php echo $block->escapeHtmlAttr(__('Filtrar por categoria')) ?>">
+                <select name="cat" id="choose_category" aria-label="<?php echo $block->escapeHtmlAttr(__('Filtrar por categoria')) ?>"
+                        data-mage-init='{"js/awa-search-category-chosen": {}}'>
                     <option value=""><?php echo $block->escapeHtml(__('Todas as Categorias')) ?></option>
                     <?php $categories = $block->getCategories();
                     foreach ($categories as $cat): ?>
@@ -31,7 +33,7 @@ $searchSuiteUrl = $block->getUrl('rokanthemes_searchsuiteautocomplete/ajax/index
                 <label class="label" for="search" data-role="minisearch-label">
                     <span><?php echo $block->escapeHtml(__('Buscar')) ?></span>
                 </label>
-                <div class="control">
+                <div class="control awa-b2b-searchbox">
                     <input id="search"
                            data-mage-init='{"quickSearch":{
                                "formSelector":"#search_mini_form",
@@ -70,8 +72,3 @@ $searchSuiteUrl = $block->getUrl('rokanthemes_searchsuiteautocomplete/ajax/index
         </form>
     </div>
 </div>
-<script type="text/javascript">
-    require(['jquery', 'rokanthemes/choose'], function ($) {
-        $("#choose_category").chosen();
-    });
-</script>

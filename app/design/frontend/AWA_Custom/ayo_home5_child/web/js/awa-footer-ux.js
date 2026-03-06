@@ -5,19 +5,19 @@
         return;
     }
     window.__awaRound3FooterUxInit = true;
-    var autocompleteObserverBound = false;
-    var ajaxsuiteObserverBound = false;
-    var newsletterObserverBound = false;
-    var ajaxsuiteGhostCloseTimer = null;
-    var newsletterGhostCloseTimer = null;
+    let autocompleteObserverBound = false;
+    let ajaxsuiteObserverBound = false;
+    let newsletterObserverBound = false;
+    let ajaxsuiteGhostCloseTimer = null;
+    let newsletterGhostCloseTimer = null;
 
     function isNodeActuallyVisible(node, minWidth, minHeight) {
         if (!node) {
             return false;
         }
 
-        var rect;
-        var style;
+        let rect;
+        let style;
 
         try {
             rect = node.getBoundingClientRect();
@@ -42,7 +42,7 @@
             return;
         }
 
-        node.addEventListener('keydown', function (event) {
+        node.addEventListener('keydown', (event) => {
             if (event.key !== 'Enter' && event.key !== ' ') {
                 return;
             }
@@ -55,7 +55,7 @@
     }
 
     function ensureCatalogA11y(root) {
-        var scope = root || document;
+        const scope = root || document;
 
         scope.querySelectorAll([
             '.toolbar .modes .modes-mode',
@@ -70,7 +70,7 @@
             '.wrapper.grid.products-grid .quickview-link',
             '.wrapper.grid.products-grid .btn-add-to-cart'
         ].join(',')).forEach(function (node) {
-            var text = (node.getAttribute('aria-label') || node.getAttribute('title') || node.textContent || '')
+            let text = (node.getAttribute('aria-label') || node.getAttribute('title') || node.textContent || '')
                 .replace(/\s+/g, ' ')
                 .trim();
 
@@ -92,7 +92,7 @@
             }
         });
 
-        scope.querySelectorAll('.filter-options-title').forEach(function (title) {
+        scope.querySelectorAll('.filter-options-title').forEach((title) => {
             if (!title.hasAttribute('tabindex')) {
                 title.setAttribute('tabindex', '0');
             }
@@ -103,9 +103,9 @@
             bindKeyboardClick(title);
         });
 
-        scope.querySelectorAll('.searchsuite-autocomplete [role=\"listbox\"]').forEach(function (listbox, index) {
+        scope.querySelectorAll('.searchsuite-autocomplete [role="listbox"]').forEach((listbox, index) => {
             if (!listbox.id) {
-                listbox.id = 'awa-searchsuite-listbox-' + (index + 1);
+                listbox.id = `awa-searchsuite-listbox-${index + 1}`;
             }
         });
     }
@@ -115,14 +115,14 @@
             return;
         }
 
-        var containers = document.querySelectorAll('#search_autocomplete, #searchsuite-autocomplete');
+        const containers = document.querySelectorAll('#search_autocomplete, #searchsuite-autocomplete');
 
         if (!containers.length) {
             return;
         }
 
-        containers.forEach(function (container) {
-            var observer = new MutationObserver(function () {
+        containers.forEach((container) => {
+            const observer = new MutationObserver(() => {
                 ensureCatalogA11y(container);
             });
 
@@ -141,13 +141,13 @@
             return false;
         }
 
-        var innerWrapper = shellContent.querySelector('#mb-ajaxsuite-popup-wrapper');
-        var authBlock = shellContent.querySelector('.block-authentication');
-        var wrapperSuccess = shellContent.querySelector('.wrapper-success');
-        var image = shellContent.querySelector('img');
-        var form = shellContent.querySelector('form');
-        var actionable = shellContent.querySelector('button, .action, a[href]');
-        var text = (shellContent.textContent || '').replace(/\s+/g, ' ').trim();
+        const innerWrapper = shellContent.querySelector('#mb-ajaxsuite-popup-wrapper');
+        const authBlock = shellContent.querySelector('.block-authentication');
+        const wrapperSuccess = shellContent.querySelector('.wrapper-success');
+        const image = shellContent.querySelector('img');
+        const form = shellContent.querySelector('form');
+        const actionable = shellContent.querySelector('button, .action, a[href]');
+        const text = (shellContent.textContent || '').replace(/\s+/g, ' ').trim();
 
         if (innerWrapper && (innerWrapper.children.length || (innerWrapper.textContent || '').replace(/\s+/g, '').length)) {
             return true;
@@ -157,11 +157,11 @@
     }
 
     function closeAjaxSuiteGhostPopup() {
-        var modalClose = document.querySelector('.modal-popup.ajaxsuite-popup-wrapper._show .modal-header .action-close');
-        var modalOverlay = document.querySelector('.modals-overlay');
-        var shell = document.getElementById('ajaxsuite-popup-wrapper');
-        var shellContent = shell ? shell.querySelector('#ajaxsuite-popup-content') : null;
-        var hasContent = hasVisibleAjaxSuiteContent(shellContent);
+        const modalClose = document.querySelector('.modal-popup.ajaxsuite-popup-wrapper._show .modal-header .action-close');
+        const modalOverlay = document.querySelector('.modals-overlay');
+        const shell = document.getElementById('ajaxsuite-popup-wrapper');
+        const shellContent = shell ? shell.querySelector('#ajaxsuite-popup-content') : null;
+        const hasContent = hasVisibleAjaxSuiteContent(shellContent);
 
         if (hasContent) {
             return;
@@ -187,11 +187,11 @@
     }
 
     function guardAjaxSuiteGhostPopup() {
-        var shell = document.getElementById('ajaxsuite-popup-wrapper');
-        var shellContent = shell ? shell.querySelector('#ajaxsuite-popup-content') : null;
-        var shellClose = shell ? shell.querySelector('#ajaxsuite-close') : null;
-        var modalOpen = !!document.querySelector('.modal-popup.ajaxsuite-popup-wrapper._show');
-        var hasContent = hasVisibleAjaxSuiteContent(shellContent);
+        const shell = document.getElementById('ajaxsuite-popup-wrapper');
+        const shellContent = shell ? shell.querySelector('#ajaxsuite-popup-content') : null;
+        const shellClose = shell ? shell.querySelector('#ajaxsuite-close') : null;
+        const modalOpen = !!document.querySelector('.modal-popup.ajaxsuite-popup-wrapper._show');
+        const hasContent = hasVisibleAjaxSuiteContent(shellContent);
 
         if (shellClose) {
             shellClose.setAttribute('aria-hidden', 'true');
@@ -209,7 +209,7 @@
             return;
         }
 
-        ajaxsuiteGhostCloseTimer = window.setTimeout(function () {
+        ajaxsuiteGhostCloseTimer = window.setTimeout(() => {
             ajaxsuiteGhostCloseTimer = null;
             closeAjaxSuiteGhostPopup();
         }, 180);
@@ -220,19 +220,19 @@
             return;
         }
 
-        var shellContent = document.querySelector('#ajaxsuite-popup-content');
-        var modalsWrapper = document.querySelector('.modals-wrapper');
+        const shellContent = document.querySelector('#ajaxsuite-popup-content');
+        const modalsWrapper = document.querySelector('.modals-wrapper');
 
         if (!shellContent && !modalsWrapper) {
             return;
         }
 
-        [shellContent, modalsWrapper].forEach(function (node) {
+        [shellContent, modalsWrapper].forEach((node) => {
             if (!node) {
                 return;
             }
 
-            var observer = new MutationObserver(function () {
+            const observer = new MutationObserver(() => {
                 guardAjaxSuiteGhostPopup();
             });
 
@@ -244,8 +244,8 @@
             });
         });
 
-        document.addEventListener('click', function (event) {
-            var target = event.target;
+        document.addEventListener('click', (event) => {
+            const target = event.target;
 
             if (!target) {
                 return;
@@ -260,7 +260,7 @@
     }
 
     function closeStaleMagentoModalOverlay() {
-        var modalOverlay = document.querySelector('.modals-overlay');
+        const modalOverlay = document.querySelector('.modals-overlay');
 
         if (!modalOverlay || !modalOverlay.classList.contains('_show')) {
             return;
@@ -280,8 +280,8 @@
     }
 
     function closeNewsletterGhostPopup() {
-        var popup = document.getElementById('newsletter_pop_up');
-        var bModalNodes = document.querySelectorAll('.b-modal');
+        const popup = document.getElementById('newsletter_pop_up');
+        const bModalNodes = document.querySelectorAll('.b-modal');
 
         if (popup) {
             popup.classList.remove('popup-closing', 'nl-popup-fallback-open');
@@ -298,7 +298,7 @@
             document.body.classList.remove('nl-popup-body-open');
         }
 
-        bModalNodes.forEach(function (overlay) {
+        bModalNodes.forEach((overlay) => {
             overlay.style.display = 'none';
             overlay.style.opacity = '0';
             overlay.classList.remove('_show');
@@ -306,18 +306,18 @@
     }
 
     function guardNewsletterGhostPopup() {
-        var popup = document.getElementById('newsletter_pop_up');
-        var card = popup ? popup.querySelector('.nl-popup-card') : null;
-        var popupVisible = isNodeActuallyVisible(popup, 40, 40);
-        var cardVisible = isNodeActuallyVisible(card, 120, 120);
-        var hasOpenMagentoModal = !!document.querySelector('.modal-popup._show');
+        const popup = document.getElementById('newsletter_pop_up');
+        const card = popup ? popup.querySelector('.nl-popup-card') : null;
+        const popupVisible = isNodeActuallyVisible(popup, 40, 40);
+        const cardVisible = isNodeActuallyVisible(card, 120, 120);
+        const hasOpenMagentoModal = !!document.querySelector('.modal-popup._show');
 
         if (popupVisible && !cardVisible) {
             if (newsletterGhostCloseTimer) {
                 return;
             }
 
-            newsletterGhostCloseTimer = window.setTimeout(function () {
+            newsletterGhostCloseTimer = window.setTimeout(() => {
                 newsletterGhostCloseTimer = null;
 
                 if (isNodeActuallyVisible(document.getElementById('newsletter_pop_up'), 40, 40) &&
@@ -337,7 +337,7 @@
         if (!popupVisible && !hasOpenMagentoModal) {
             closeStaleMagentoModalOverlay();
 
-            document.querySelectorAll('.b-modal').forEach(function (overlay) {
+            document.querySelectorAll('.b-modal').forEach((overlay) => {
                 if (isNodeActuallyVisible(overlay, 10, 10)) {
                     overlay.style.display = 'none';
                     overlay.style.opacity = '0';
@@ -351,13 +351,13 @@
             return;
         }
 
-        var popup = document.getElementById('newsletter_pop_up');
+        const popup = document.getElementById('newsletter_pop_up');
 
         if (!popup) {
             return;
         }
 
-        var rootObserver = new MutationObserver(function () {
+        const rootObserver = new MutationObserver(() => {
             guardNewsletterGhostPopup();
         });
 
@@ -368,7 +368,7 @@
             attributeFilter: ['class', 'style']
         });
 
-        var bodyObserver = new MutationObserver(function () {
+        const bodyObserver = new MutationObserver(() => {
             guardNewsletterGhostPopup();
         });
 
@@ -381,12 +381,12 @@
     }
 
     function ensureFooterA11y(root) {
-        var scope = root || document;
-        var buttons = scope.querySelectorAll('.page_footer .velaFooterTitle');
-        var links = scope.querySelectorAll('.page_footer a, .fixed-bottom a, .fixed-right a');
+        const scope = root || document;
+        const buttons = scope.querySelectorAll('.page_footer .velaFooterTitle');
+        const links = scope.querySelectorAll('.page_footer a, .fixed-bottom a, .fixed-right a');
 
-        buttons.forEach(function (button, index) {
-            var text = (button.textContent || '').trim();
+        buttons.forEach((button, index) => {
+            const text = (button.textContent || '').trim();
             if (text && !button.getAttribute('title')) {
                 button.setAttribute('title', text);
             }
@@ -394,24 +394,24 @@
                 button.setAttribute('aria-label', text);
             }
 
-            var content = button.parentElement ? button.parentElement.querySelector('.velaContent') : null;
+            const content = button.parentElement ? button.parentElement.querySelector('.velaContent') : null;
             if (!content) {
                 return;
             }
 
             if (!content.id) {
-                content.id = 'awa-footer-accordion-panel-' + (index + 1);
+                content.id = `awa-footer-accordion-panel-${index + 1}`;
             }
 
             button.setAttribute('aria-controls', content.id);
         });
 
-        links.forEach(function (link) {
+        links.forEach((link) => {
             if (link.getAttribute('title')) {
                 return;
             }
 
-            var label = (link.getAttribute('aria-label') || link.textContent || '').trim();
+            const label = (link.getAttribute('aria-label') || link.textContent || '').trim();
             if (label) {
                 link.setAttribute('title', label);
             }
@@ -425,9 +425,9 @@
             ['.fixed-right .shooping-cart a', 'Abrir carrinho'],
             ['.fixed-right .my-account a', 'Abrir minha conta'],
             ['#ajaxsuite-close', 'Fechar popup rápido']
-        ].forEach(function (entry) {
-            var node = scope.querySelector(entry[0]);
-            var label = entry[1];
+        ].forEach((entry) => {
+            const node = scope.querySelector(entry[0]);
+            const label = entry[1];
 
             if (!node) {
                 return;
@@ -442,7 +442,7 @@
             }
         });
 
-        var fixedScrollTop = scope.querySelector('.fixed-right .fixed-right-ul .scroll-top');
+        const fixedScrollTop = scope.querySelector('.fixed-right .fixed-right-ul .scroll-top');
 
         if (fixedScrollTop) {
             fixedScrollTop.setAttribute('role', 'button');
@@ -456,17 +456,17 @@
             bindKeyboardClick(fixedScrollTop);
         }
 
-        scope.querySelectorAll('.fixed-bottom .mobile-bottom-link a').forEach(function (link) {
+        scope.querySelectorAll('.fixed-bottom .mobile-bottom-link a').forEach((link) => {
             if (!link.getAttribute('title')) {
-                var mobileLabel = (link.getAttribute('aria-label') || link.textContent || '').trim();
+                const mobileLabel = (link.getAttribute('aria-label') || link.textContent || '').trim();
                 if (mobileLabel) {
                     link.setAttribute('title', mobileLabel);
                 }
             }
         });
 
-        scope.querySelectorAll('.b2b-login-option, .b2b-login-already a').forEach(function (link) {
-            var text = (link.textContent || '').replace(/\s+/g, ' ').trim();
+        scope.querySelectorAll('.b2b-login-option, .b2b-login-already a').forEach((link) => {
+            const text = (link.textContent || '').replace(/\s+/g, ' ').trim();
 
             if (text && !link.getAttribute('title')) {
                 link.setAttribute('title', text);
@@ -488,8 +488,8 @@
             '.b2b-login-link',
             '.b2b-benefits-toggle',
             '.progress-step'
-        ].join(',')).forEach(function (node) {
-            var text = (node.getAttribute('aria-label') || node.textContent || '').replace(/\s+/g, ' ').trim();
+        ].join(',')).forEach((node) => {
+            const text = (node.getAttribute('aria-label') || node.textContent || '').replace(/\s+/g, ' ').trim();
 
             if (text && !node.getAttribute('title')) {
                 node.setAttribute('title', text);
@@ -500,14 +500,14 @@
             }
         });
 
-        scope.querySelectorAll('.b2b-password-toggle, .b2b-register-password-toggle').forEach(function (toggle) {
-            var targetSelector = toggle.getAttribute('data-target');
-            var input = targetSelector ? scope.querySelector(targetSelector) : null;
-            var fieldLabel = '';
+        scope.querySelectorAll('.b2b-password-toggle, .b2b-register-password-toggle').forEach((toggle) => {
+            const targetSelector = toggle.getAttribute('data-target');
+            const input = targetSelector ? scope.querySelector(targetSelector) : null;
+            let fieldLabel = '';
 
             if (input) {
-                var field = input.closest('.b2b-field, .field');
-                var labelNode = field ? field.querySelector('label, .label span') : null;
+                const field = input.closest('.b2b-field, .field');
+                const labelNode = field ? field.querySelector('label, .label span') : null;
                 fieldLabel = labelNode ? (labelNode.textContent || '').replace(/\\s+/g, ' ').trim() : '';
             }
 
@@ -516,18 +516,18 @@
             }
 
             if (!toggle.getAttribute('title')) {
-                toggle.setAttribute('title', 'Mostrar ou ocultar ' + fieldLabel.toLowerCase());
+                toggle.setAttribute('title', `Mostrar ou ocultar ${fieldLabel.toLowerCase()}`);
             }
             if (!toggle.getAttribute('aria-label')) {
-                toggle.setAttribute('aria-label', 'Mostrar ou ocultar ' + fieldLabel.toLowerCase());
+                toggle.setAttribute('aria-label', `Mostrar ou ocultar ${fieldLabel.toLowerCase()}`);
             }
         });
 
-        scope.querySelectorAll('.progress-step').forEach(function (step, index) {
-            var stepText = (step.textContent || '').replace(/\\s+/g, ' ').trim();
+        scope.querySelectorAll('.progress-step').forEach((step, index) => {
+            let stepText = (step.textContent || '').replace(/\\s+/g, ' ').trim();
 
             if (!stepText) {
-                stepText = 'Etapa ' + String(index + 1);
+                stepText = `Etapa ${index + 1}`;
             }
 
             if (!step.getAttribute('aria-label')) {
@@ -538,7 +538,7 @@
             }
         });
 
-        var ajaxsuiteClose = scope.querySelector('#ajaxsuite-close');
+        const ajaxsuiteClose = scope.querySelector('#ajaxsuite-close');
 
         if (ajaxsuiteClose) {
             ajaxsuiteClose.setAttribute('role', 'button');
@@ -555,7 +555,7 @@
         bindNewsletterGhostObserver();
         guardAjaxSuiteGhostPopup();
         guardNewsletterGhostPopup();
-        window.setTimeout(function () {
+        window.setTimeout(() => {
             ensureFooterA11y(document);
             ensureCatalogA11y(document);
             bindAutocompleteObserver();

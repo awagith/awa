@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <!-- Stage preview da Home5 demo (en_5) em CMS-driven.
-         Desliga overrides AWA de homepage nesta URL para aproximar o visual do Ayo base. -->
+    <!-- stage preview da home5 demo (en_5) em cms-driven.
+         desliga overrides awa de homepage nesta url para aproximar o visual do ayo base. -->
     <head>
-        <!-- Remover camada AWA (global/home-specific) para preview demo -->
+        <!-- remover camada awa (global/home-specific) para preview demo -->
         <remove src="css/awa-institutional.css"/>
         <remove src="css/awa-core.css"/>
         <remove src="css/awa-layout.css"/>
@@ -42,6 +42,9 @@
         <remove src="css/awa-round6-b2b-gate-refine.css"/>
         <remove src="css/awa-round7-auth-refine.css"/>
         <remove src="css/awa-round8-plp-search-cart-refine.css"/>
+        <!-- consolidated css files (phase 2) -->
+        <remove src="css/awa-04-components.css"/>
+        <remove src="css/awa-05-pages.css"/>
     </head>
     <body>
         <attribute name="class" value="cms-home"/>
@@ -61,7 +64,7 @@
             </arguments>
         </referenceBlock>
 
-        <!-- Desliga loaders JS custom AWA nesta stage -->
+        <!-- desliga loaders js custom awa nesta stage -->
         <referenceBlock name="awa.master.fix.js" remove="true"/>
         <referenceBlock name="awa.round2.header.minicart.js" remove="true"/>
         <referenceBlock name="awa.custom.header.minicart.js" remove="true"/>

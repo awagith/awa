@@ -13,14 +13,14 @@ define([
             return $el.attr('id');
         }
 
-        var id = (prefix || 'awa-menu') + '-' + index;
+        const id = (prefix || 'awa-menu') + '-' + index;
         $el.attr('id', id);
 
         return id;
     }
 
     function syncMenuTree($root) {
-        var $menuList = $root.children('ul').first();
+        const $menuList = $root.children('ul').first();
 
         $root.attr({
             'data-awa-component': $root.attr('data-awa-component') || 'main-nav',
@@ -35,10 +35,10 @@ define([
         }
 
         $root.find('li').each(function (idx) {
-            var $item = $(this);
-            var $toggle = $item.children('.open-children-toggle').first();
-            var $submenu = $item.children('.submenu, .groupmenu, .subchildmenu').first();
-            var isOpen = $item.hasClass('active') || $item.hasClass('_active') || ($submenu.length && ($submenu.hasClass('opened') || $submenu.hasClass('active') || $submenu.is(':visible')));
+            const $item = $(this);
+            const $toggle = $item.children('.open-children-toggle').first();
+            const $submenu = $item.children('.submenu, .groupmenu, .subchildmenu').first();
+            const isOpen = $item.hasClass('active') || $item.hasClass('_active') || ($submenu.length && ($submenu.hasClass('opened') || $submenu.hasClass('active') || $submenu.is(':visible')));
 
             if (!$submenu.length) {
                 return;
@@ -62,8 +62,8 @@ define([
     }
 
     return function (config, element) {
-        var $root = $(element);
-        var observer;
+        const $root = $(element);
+        let observer;
 
         if (!$root.length || $root.data('awaMainNavCompatInit')) {
             return;
@@ -72,18 +72,18 @@ define([
         baseInit(config, element);
         syncMenuTree($root);
 
-        $root.on('click.awaMainNavCompat keyup.awaMainNavCompat mouseup.awaMainNavCompat', function () {
-            window.setTimeout(function () {
+        $root.on('click.awaMainNavCompat keyup.awaMainNavCompat mouseup.awaMainNavCompat', () => {
+            window.setTimeout(() => {
                 syncMenuTree($root);
             }, 0);
         });
 
-        $(window).on('resize.awaMainNavCompat', function () {
+        $(window).on('resize.awaMainNavCompat', () => {
             syncMenuTree($root);
         });
 
         if (typeof window.MutationObserver === 'function') {
-            observer = new window.MutationObserver(function () {
+            observer = new window.MutationObserver(() => {
                 syncMenuTree($root);
             });
 

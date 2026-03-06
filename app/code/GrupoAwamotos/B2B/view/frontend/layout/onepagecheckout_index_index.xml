@@ -33,6 +33,11 @@
                                                                     <item name="displayArea" xsi:type="string">beforeMethods</item>
                                                                     <item name="sortOrder" xsi:type="string">10</item>
                                                                 </item>
+                                                                <item name="b2b-order-notes" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">GrupoAwamotos_B2B/js/view/checkout/order-notes</item>
+                                                                    <item name="displayArea" xsi:type="string">beforeMethods</item>
+                                                                    <item name="sortOrder" xsi:type="string">15</item>
+                                                                </item>
                                                             </item>
                                                         </item>
                                                     </item>

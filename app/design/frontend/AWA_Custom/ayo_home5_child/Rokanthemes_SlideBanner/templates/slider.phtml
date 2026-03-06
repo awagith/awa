@@ -1,4 +1,5 @@
 <?php
+/** @var \Rokanthemes\SlideBanner\Block\Slider $block */
 /**
  * Copyright © 2015 Magento. All rights reserved.
  * See COPYING.txt for license details.
@@ -127,44 +128,14 @@ if ($banners = $block->getBannerCollection()):
         <?php } ?>
     </div>
 </div>
-<script>
-    require([
-        'jquery',
-        'mage/mage',
-        'rokanthemes/owl'
-    ], function ($) {
-        'use strict';
-
-        function doAnimations(elems) {
-            var animEndEv = 'webkitAnimationEnd animationend';
-            elems.each(function () {
-                var $this = $(this),
-                    $animationType = $this.data('animation');
-                if ($animationType) {
-                    $this.addClass($animationType).one(animEndEv, function () {
-                        $this.removeClass($animationType);
-                    });
-                }
-            });
+<script type="text/x-magento-init">
+{
+    "*": {
+        "js/awa-slider-init": {
+            "sliderId": <?php echo (int) $sliderId; ?>,
+            "owlConfig": <?php echo json_encode($owlConfig, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP); ?>
         }
-
-        var owlConfig = $.extend(true, {}, <?php echo json_encode($owlConfig, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>, {
-            afterInit: function (elem) {
-                var $firstSlide = elem.find('.owl-item').eq(0);
-                doAnimations($firstSlide.find('.text-banner').find("[data-animation ^= 'animated']"));
-            },
-            afterMove: function (elem) {
-                var $currentSlide = elem.find('.owl-item').eq(this.currentItem);
-                doAnimations($currentSlide.find('.text-banner').find("[data-animation ^= 'animated']"));
-            }
-        });
-
-        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            owlConfig.autoPlay = false;
-        }
-
-        $(".slider_<?php echo (int) $sliderId; ?> .owl").owlCarousel(owlConfig);
-        $(".slider_<?php echo (int) $sliderId; ?>_mobile .owl").owlCarousel(owlConfig);
-    });
+    }
+}
 </script>
 <?php endif; ?>

@@ -842,6 +842,94 @@
     box-shadow: 0 4px 12px rgb(255 111 0 / 40%);
 }
 
+/* P0-1: Credit validation feedback */
+.b2b-credit-remaining {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    margin: 12px 0;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #166534;
+}
+
+.b2b-credit-remaining strong {
+    color: #15803d;
+}
+
+.b2b-credit-insufficient {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    font-size: 13px;
+    color: #991b1b;
+}
+
+.b2b-credit-insufficient svg {
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.b2b-credit-insufficient strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 14px;
+    color: #dc2626;
+}
+
+.b2b-credit-insufficient p {
+    margin: 0;
+    line-height: 1.5;
+    color: #7f1d1d;
+}
+
+/* P0-2: PO Number field */
+.b2b-po-number-field {
+    margin: 16px 0;
+    padding-top: 14px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.b2b-po-number-field .label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+}
+
+.b2b-po-number-field .input-text {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    background: #fff;
+    color: #1f2937;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.b2b-po-number-field .input-text:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 0 2px rgb(25 118 210 / 15%);
+    outline: none;
+}
+
+.b2b-po-number-field .note {
+    display: block;
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+}
+
 .b2b-quote-button-container .b2b-quote-icon {
     font-size: 1.2rem;
 }
@@ -1245,5 +1333,463 @@
 
     .table-company-users td:last-child {
         border-bottom: none;
+    }
+}
+
+/* ==========================================================================
+   P0: PO Number Container (migrated from inline <style> in po-number.html)
+   ========================================================================== */
+
+.b2b-po-number-container {
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: var(--awa-bg-light, #f5f5f5);
+    border-radius: var(--awa-radius-md, 8px);
+    border: 1px solid var(--awa-border-light, #e0e0e0);
+}
+
+.b2b-po-number-wrapper .label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    color: var(--awa-text-primary, #333);
+    margin-bottom: 8px;
+}
+
+.b2b-po-number-wrapper .label .optional {
+    font-weight: 400;
+    font-size: 0.85em;
+    color: var(--awa-text-secondary, #666);
+}
+
+.b2b-po-number-wrapper .input-text {
+    width: 100%;
+    max-width: 350px;
+    padding: 10px 12px;
+    font-size: 14px;
+    border: 1px solid var(--awa-border, #ccc);
+    border-radius: var(--awa-radius-sm, 4px);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.b2b-po-number-wrapper .input-text:focus {
+    border-color: var(--awa-red, #d00);
+    box-shadow: 0 0 0 3px var(--awa-red-extra-light, rgb(221 0 0 / 10%));
+    outline: none;
+}
+
+.b2b-po-number-wrapper .field-note {
+    margin-top: 6px;
+}
+
+.b2b-po-number-wrapper .note {
+    font-size: 12px;
+    color: var(--awa-text-secondary, #666);
+    line-height: 1.4;
+}
+
+@media (prefers-color-scheme: dark) {
+    .b2b-po-number-container {
+        background-color: var(--awa-bg-dark, #2a2a2a);
+        border-color: var(--awa-border-dark, #444);
+    }
+}
+
+@media (width <= 767px) {
+    .b2b-po-number-container {
+        padding: 12px;
+        margin-bottom: 15px;
+    }
+
+    .b2b-po-number-wrapper .input-text {
+        max-width: 100%;
+    }
+}
+
+/* ==========================================================================
+   P0: B2B Terms (migrated from inline <style> in b2b-terms.html)
+   ========================================================================== */
+
+.b2b-terms-container {
+    margin-bottom: 20px;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #fef3c7 0%, #fef9c3 100%);
+    border-radius: var(--awa-radius-md, 8px);
+    border: 1px solid #fbbf24;
+}
+
+.b2b-terms-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.b2b-terms-field.choice {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+}
+
+.b2b-terms-field .checkbox {
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    min-height: 24px;
+    margin-top: 0;
+    padding: 10px;
+    accent-color: var(--awa-primary, #d00);
+    cursor: pointer;
+}
+
+.b2b-terms-field .label {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    font-weight: 500;
+    color: var(--awa-text-primary, #333);
+    cursor: pointer;
+    margin: 0;
+}
+
+.b2b-terms-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--awa-primary, #d00);
+    font-size: 0.9em;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.b2b-terms-link:hover {
+    color: var(--awa-primary-dark, #b91c1c);
+    text-decoration: underline;
+}
+
+.b2b-terms-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #16a34a;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.b2b-terms-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgb(0 0 0 / 60%);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: b2bTermsFadeIn 0.2s ease;
+}
+
+.b2b-terms-modal {
+    background: #fff;
+    border-radius: 12px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    animation: b2bTermsSlideUp 0.3s ease;
+}
+
+.b2b-terms-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--awa-border-light, #e5e7eb);
+}
+
+.b2b-terms-modal-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--awa-text-primary, #333);
+}
+
+.b2b-terms-modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    color: var(--awa-text-secondary, #666);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.b2b-terms-modal-close:hover {
+    background: var(--awa-bg-light, #f3f4f6);
+    color: var(--awa-text-primary, #333);
+}
+
+.b2b-terms-modal-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--awa-text-secondary, #4b5563);
+}
+
+.b2b-terms-modal-content h4 {
+    margin: 16px 0 8px;
+    font-weight: 600;
+    color: var(--awa-text-primary, #333);
+}
+
+.b2b-terms-modal-content p {
+    margin: 0 0 12px;
+}
+
+.b2b-terms-modal-content ul {
+    margin: 0 0 12px;
+    padding-left: 20px;
+}
+
+.b2b-terms-modal-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 16px 24px;
+    border-top: 1px solid var(--awa-border-light, #e5e7eb);
+    background: var(--awa-bg-light, #f9fafb);
+    border-radius: 0 0 12px 12px;
+}
+
+.b2b-terms-modal-footer .action.primary {
+    background: var(--awa-primary, #d00);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.b2b-terms-modal-footer .action.primary:hover {
+    background: var(--awa-primary-dark, #b91c1c);
+}
+
+.b2b-terms-modal-footer .action.secondary {
+    background: transparent;
+    color: var(--awa-text-secondary, #666);
+    border: 1px solid var(--awa-border-light, #d1d5db);
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.b2b-terms-modal-footer .action.secondary:hover {
+    background: var(--awa-bg-light, #f3f4f6);
+    border-color: var(--awa-text-secondary, #9ca3af);
+}
+
+@keyframes b2bTermsFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes b2bTermsSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (width <= 640px) {
+    .b2b-terms-modal {
+        max-height: 90vh;
+    }
+
+    .b2b-terms-modal-header {
+        padding: 16px;
+    }
+
+    .b2b-terms-modal-content {
+        padding: 16px;
+    }
+
+    .b2b-terms-modal-footer {
+        flex-direction: column;
+        padding: 16px;
+    }
+
+    .b2b-terms-modal-footer .action {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* ======================================================================
+   P2-4.2: ORDER NOTES
+   ====================================================================== */
+
+.b2b-order-notes-wrapper {
+    margin: 16px 0;
+    padding: 16px;
+    background: var(--awa-cc-surface, #fafafa);
+    border: 1px solid var(--awa-cc-border, #e0e0e0);
+    border-radius: var(--awa-radius-md, 8px);
+}
+
+.b2b-order-notes-wrapper .field {
+    margin-bottom: 0;
+}
+
+.b2b-order-notes-wrapper .label {
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--awa-cc-text, #333);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.b2b-order-notes-input {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px 12px;
+    font-size: 14px;
+    line-height: 1.5;
+    border: 1px solid var(--awa-cc-border, #ccc);
+    border-radius: var(--awa-radius-sm, 4px);
+    background: #fff;
+    color: var(--awa-cc-text, #333);
+    resize: vertical;
+    font-family: inherit;
+    transition: border-color 0.2s;
+}
+
+.b2b-order-notes-input:focus {
+    border-color: var(--awa-primary, #1979c3);
+    outline: none;
+    box-shadow: 0 0 0 2px rgb(25 121 195 / 15%);
+}
+
+.b2b-order-notes-input:focus-visible {
+    border-color: var(--primary-color, #b73337);
+    box-shadow: 0 0 0 3px rgb(183 51 55 / 16%);
+}
+
+.b2b-order-notes-counter {
+    display: block;
+    text-align: right;
+    font-size: 12px;
+    color: var(--awa-cc-muted, #999);
+    margin-top: 4px;
+}
+
+@media (width <= 768px) {
+    .b2b-order-notes-wrapper {
+        padding: 12px;
+        margin: 12px 0;
+    }
+}
+
+/* ======================================================================
+   P2-4.4: LOADING STATES - PLACE ORDER BUTTON
+   ====================================================================== */
+
+.b2b-place-order-btn.b2b-loading {
+    pointer-events: none;
+    opacity: 0.7;
+    position: relative;
+}
+
+.b2b-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: b2b-spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+}
+
+@keyframes b2b-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ======================================================================
+   P2-4.3: B2B SUCCESS BADGE
+   ====================================================================== */
+
+.b2b-success-badge {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+    border: 1px solid #81c784;
+    border-radius: var(--awa-radius-md, 8px);
+    padding: 20px 24px;
+    margin: 24px 0;
+    max-width: 600px;
+}
+
+.b2b-success-badge__icon {
+    flex-shrink: 0;
+    color: #2e7d32;
+    margin-top: 2px;
+}
+
+.b2b-success-badge__content {
+    flex: 1;
+    min-width: 0;
+}
+
+.b2b-success-badge__title {
+    display: block;
+    font-size: 16px;
+    font-weight: 600;
+    color: #1b5e20;
+    margin-bottom: 6px;
+}
+
+.b2b-success-badge__detail {
+    font-size: 14px;
+    color: #33691e;
+    margin: 0 0 4px;
+}
+
+.b2b-success-badge__note {
+    font-size: 13px;
+    color: #558b2f;
+    margin: 0;
+}
+
+.b2b-success-badge:focus-within {
+    box-shadow: 0 0 0 3px rgb(22 163 74 / 20%);
+}
+
+@media (max-width: 768px) {
+    .b2b-success-badge {
+        flex-direction: column;
+        gap: 10px;
+        padding: 16px;
     }
 }

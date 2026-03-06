@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="marketing_intelligence" translate="title" sortOrder="360" showInDefault="1">
+            <label>Marketing Intelligence</label>
+            <tab>grupoawamotos</tab>
+            <resource>GrupoAwamotos_MarketingIntelligence::config</resource>
+
+            <group id="general" translate="label" sortOrder="10" showInDefault="1">
+                <label>Geral</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1">
+                    <label>Módulo Habilitado</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
+            <group id="prospect_api" translate="label" sortOrder="20" showInDefault="1">
+                <label>Prospecção B2B (CNPJ.ws)</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Prospecção Habilitada</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="api_token" translate="label comment" type="obscure" sortOrder="20" showInDefault="1">
+                    <label>API Token (CNPJ.ws)</label>
+                    <comment><![CDATA[Token comercial para acessar a API CNPJ.ws. Obtenha em <a href="https://www.cnpj.ws" target="_blank">cnpj.ws</a>.]]></comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="cnaes" translate="label comment" type="textarea" sortOrder="30" showInDefault="1">
+                    <label>CNAEs para Prospecção</label>
+                    <comment><![CDATA[Um CNAE por linha (ex: 4541-2/01). Deixe vazio para usar os CNAEs padrão do CnaeClassifier (diretos + adjacentes).]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="ufs" translate="label comment" type="text" sortOrder="40" showInDefault="1">
+                    <label>UFs para Prospecção</label>
+                    <comment><![CDATA[Separadas por vírgula (ex: SP,MG,PR). Deixe vazio para buscar em todo o Brasil.]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="min_capital" translate="label comment" type="text" sortOrder="50" showInDefault="1">
+                    <label>Capital Social Mínimo (R$)</label>
+                    <comment>Filtrar empresas com capital social acima deste valor. Deixe vazio para não filtrar.</comment>
+                    <validate>validate-number</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="batch_size" translate="label comment" type="text" sortOrder="60" showInDefault="1">
+                    <label>Empresas por Execução</label>
+                    <comment>Quantas empresas buscar por execução de cron (padrão: 50).</comment>
+                    <validate>validate-digits</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="meta_audiences" translate="label" sortOrder="30" showInDefault="1">
+                <label>Audiências Meta (Custom/Lookalike)</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Sync de Audiências Habilitado</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="ad_account_id" translate="label comment" type="text" sortOrder="20" showInDefault="1">
+                    <label>Ad Account ID</label>
+                    <comment><![CDATA[ID da conta de anúncios Meta (formato: act_XXXXXXXXX).]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="system_user_token" translate="label comment" type="obscure" sortOrder="30" showInDefault="1">
+                    <label>System User Token (Marketing API)</label>
+                    <comment><![CDATA[Token de acesso do System User com permissões ads_management e business_management.]]></comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="auto_lookalike" translate="label comment" type="select" sortOrder="40" showInDefault="1">
+                    <label>Criar Lookalike Automaticamente</label>
+                    <comment>Cria audiência Lookalike automaticamente após sync de Custom Audience.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="lookalike_ratio" translate="label comment" type="text" sortOrder="50" showInDefault="1">
+                    <label>Lookalike Ratio (%)</label>
+                    <comment>Porcentagem de similaridade (1-10). Padrão: 2.</comment>
+                    <validate>validate-digits</validate>
+                    <depends>
+                        <field id="auto_lookalike">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="competitors" translate="label" sortOrder="40" showInDefault="1">
+                <label>Monitoramento de Concorrentes</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Monitoramento Habilitado</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="ad_library_token" translate="label comment" type="obscure" sortOrder="20" showInDefault="1">
+                    <label>Ad Library API Token</label>
+                    <comment><![CDATA[Token de acesso com permissão ads_read para Meta Ad Library API.]]></comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="search_terms" translate="label comment" type="textarea" sortOrder="30" showInDefault="1">
+                    <label>Termos de Busca</label>
+                    <comment><![CDATA[Um termo por linha para buscar anúncios na Ad Library (ex: peças moto, acessório moto).]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="offline_conversions" translate="label" sortOrder="50" showInDefault="1">
+                <label>Conversões Offline (ERP → Meta CAPI)</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Upload de Conversões Offline Habilitado</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="event_set_id" translate="label comment" type="text" sortOrder="20" showInDefault="1">
+                    <label>Offline Event Set ID</label>
+                    <comment><![CDATA[ID do conjunto de eventos offline no Meta Business Manager.]]></comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="include_erp_orders" translate="label comment" type="select" sortOrder="30" showInDefault="1">
+                    <label>Incluir Pedidos do ERP</label>
+                    <comment>Enviar pedidos confirmados pelo ERP como conversões offline.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

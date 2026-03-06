@@ -1,0 +1,201 @@
+/* ============================================================
+   AWA DESIGN SYSTEM - FORMS CANONICAL
+   ============================================================
+   Canonical storefront form foundation for the child theme.
+   Keeps vendor modules intact and centralises native control,
+   field spacing, focus and primary/secondary action rules.
+   ============================================================ */
+
+:root {
+    --awa-form-height: 48px;
+    --awa-form-height-sm: 40px;
+    --awa-form-pad-x: 16px;
+    --awa-form-pad-y: 12px;
+    --awa-form-border: var(--awa-gray-300, #d1d5db);
+    --awa-form-border-strong: var(--awa-gray-400, #9ca3af);
+    --awa-form-surface: var(--awa-bg-surface, #fff);
+    --awa-form-surface-disabled: #f5f7fa;
+    --awa-form-text: var(--awa-text-primary, #111827);
+    --awa-form-placeholder: var(--awa-text-muted, #6b7280);
+    --awa-form-focus: rgb(183 51 55 / 16%);
+    --awa-form-radius: var(--awa-radius-md, 12px);
+    --awa-form-shadow-focus: 0 0 0 3px var(--awa-form-focus);
+    --awa-field-gap: var(--awa-gap-md, 12px);
+    --awa-label-gap: var(--awa-gap-xs, 4px);
+    --awa-action-gap: var(--awa-gap-sm, 8px);
+}
+
+.page-wrapper .fieldset > .field,
+.page-wrapper .fieldset > .fields > .field,
+.page-wrapper .form.form-newsletter .field,
+.page-wrapper .form.contact .field,
+.page-wrapper .form.password.forget .field,
+.page-wrapper .form.create.account .field,
+.page-wrapper .form.form-login .field,
+.page-wrapper .form-address-edit .field {
+    margin-bottom: var(--awa-field-gap);
+}
+
+.page-wrapper .field .label,
+.page-wrapper .fieldset > .legend,
+.page-wrapper .form .legend {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--awa-label-gap);
+    margin-bottom: var(--awa-label-gap);
+    color: var(--awa-form-text);
+    font-size: var(--awa-text-sm, 14px);
+    font-weight: var(--awa-weight-semibold, 600);
+    line-height: 1.35;
+}
+
+.page-wrapper input:not([type="checkbox"], [type="radio"], [type="hidden"], [type="file"], [type="range"], .qty),
+.page-wrapper select,
+.page-wrapper textarea {
+    width: 100%;
+    min-height: var(--awa-form-height);
+    padding: var(--awa-form-pad-y) var(--awa-form-pad-x);
+    border: 1px solid var(--awa-form-border);
+    border-radius: var(--awa-form-radius);
+    background: var(--awa-form-surface);
+    color: var(--awa-form-text);
+    font-size: var(--awa-text-base, 16px);
+    line-height: 1.4;
+    box-sizing: border-box;
+    transition: border-color 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+.page-wrapper input[type="search"],
+.page-wrapper input[type="email"],
+.page-wrapper input[type="text"],
+.page-wrapper input[type="password"],
+.page-wrapper input[type="tel"],
+.page-wrapper input[type="number"]:not(.qty) {
+    appearance: none;
+}
+
+.page-wrapper textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.page-wrapper input::placeholder,
+.page-wrapper textarea::placeholder {
+    color: var(--awa-form-placeholder);
+    opacity: 1;
+}
+
+.page-wrapper input:focus,
+.page-wrapper input:focus-visible,
+.page-wrapper select:focus,
+.page-wrapper select:focus-visible,
+.page-wrapper textarea:focus,
+.page-wrapper textarea:focus-visible {
+    border-color: var(--primary-color, var(--awa-red, #b73337));
+    box-shadow: var(--awa-form-shadow-focus);
+    outline: 0;
+}
+
+.page-wrapper input:disabled,
+.page-wrapper select:disabled,
+.page-wrapper textarea:disabled,
+.page-wrapper button:disabled,
+.page-wrapper .action.disabled,
+.page-wrapper .action[disabled] {
+    cursor: not-allowed;
+    opacity: 0.72;
+    background: var(--awa-form-surface-disabled);
+}
+
+.page-wrapper .control,
+.page-wrapper .actions-toolbar,
+.page-wrapper .primary,
+.page-wrapper .secondary {
+    min-width: 0;
+}
+
+.page-wrapper .actions-toolbar,
+.page-wrapper .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--awa-action-gap);
+}
+
+.page-wrapper button,
+.page-wrapper .action,
+.page-wrapper .actions-toolbar .primary .action,
+.page-wrapper .actions-toolbar .secondary .action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--awa-gap-sm, 8px);
+    min-height: var(--awa-form-height);
+    padding-inline: 18px;
+    border-radius: var(--awa-radius-md, 12px);
+    font-size: var(--awa-text-sm, 14px);
+    font-weight: var(--awa-weight-semibold, 600);
+    line-height: 1.2;
+    text-decoration: none;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+    box-sizing: border-box;
+}
+
+.page-wrapper .action.primary,
+.page-wrapper button.action.primary,
+.page-wrapper .action.tocart,
+.page-wrapper button[type="submit"].primary,
+.page-wrapper .actions-toolbar .primary .action {
+    border: 1px solid var(--primary-color, var(--awa-red, #b73337));
+    background: var(--primary-color, var(--awa-red, #b73337));
+    color: var(--awa-text-on-primary, #fff);
+}
+
+.page-wrapper .action.primary:hover,
+.page-wrapper button.action.primary:hover,
+.page-wrapper .action.tocart:hover,
+.page-wrapper .actions-toolbar .primary .action:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgb(183 51 55 / 18%);
+}
+
+.page-wrapper .action.secondary,
+.page-wrapper button.action.secondary,
+.page-wrapper .actions-toolbar .secondary .action,
+.page-wrapper .action.primary.checkout,
+.page-wrapper .action-show-popup {
+    border: 1px solid var(--awa-form-border);
+    background: var(--awa-form-surface);
+    color: var(--awa-form-text);
+}
+
+.page-wrapper .action.secondary:hover,
+.page-wrapper button.action.secondary:hover,
+.page-wrapper .actions-toolbar .secondary .action:hover,
+.page-wrapper .action-show-popup:hover {
+    border-color: var(--awa-form-border-strong);
+    box-shadow: 0 8px 20px rgb(15 23 42 / 8%);
+}
+
+.page-wrapper .action:focus-visible,
+.page-wrapper button:focus-visible {
+    box-shadow: var(--awa-form-shadow-focus);
+    outline: 0;
+}
+
+@media (width <= 767px) {
+    .page-wrapper input:not([type="checkbox"], [type="radio"], [type="hidden"], [type="file"], [type="range"], .qty),
+    .page-wrapper select,
+    .page-wrapper textarea,
+    .page-wrapper button,
+    .page-wrapper .action,
+    .page-wrapper .actions-toolbar .primary .action,
+    .page-wrapper .actions-toolbar .secondary .action {
+        min-height: var(--awa-form-height-sm);
+    }
+
+    .page-wrapper .actions-toolbar,
+    .page-wrapper .actions {
+        align-items: stretch;
+    }
+}

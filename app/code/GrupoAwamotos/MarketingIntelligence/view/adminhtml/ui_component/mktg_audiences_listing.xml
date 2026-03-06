@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">mktg_audiences_listing.mktg_audiences_listing_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>mktg_audiences_listing_columns</spinner>
+        <deps>
+            <dep>mktg_audiences_listing.mktg_audiences_listing_data_source</dep>
+        </deps>
+    </settings>
+    <datasource name="mktg_audiences_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <updateurl path="mui/index/render"/>
+            <storageconfig>
+                <param name="indexField" xsi:type="string">audience_id</param>
+            </storageconfig>
+        </settings>
+    </datasource>
+    <listingtoolbar name="listing_top">
+        <bookmark name="bookmarks"/>
+        <columnscontrols name="columns_controls"/>
+        <filtersearch name="fulltext"/>
+        <filters name="listing_filters"/>
+        <paging name="listing_paging"/>
+    </listingtoolbar>
+    <columns name="mktg_audiences_listing_columns">
+        <selectionscolumn name="ids" sortorder="0">
+            <settings>
+                <indexfield>audience_id</indexfield>
+            </settings>
+        </selectionscolumn>
+        <column name="audience_id" sortorder="10">
+            <settings>
+                <filter>textrange</filter>
+                <label translate="true">id</label>
+                <sorting>desc</sorting>
+            </settings>
+        </column>
+        <column name="name" sortorder="20">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">nome</label>
+            </settings>
+        </column>
+        <column name="audience_type" sortorder="30">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">tipo</label>
+            </settings>
+        </column>
+        <column name="meta_audience_id" sortorder="40">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">meta audience id</label>
+            </settings>
+        </column>
+        <column name="customer_count" sortorder="50">
+            <settings>
+                <filter>textrange</filter>
+                <label translate="true">clientes</label>
+            </settings>
+        </column>
+        <column name="meta_match_rate" sortorder="60">
+            <settings>
+                <filter>textrange</filter>
+                <label translate="true">match rate %</label>
+            </settings>
+        </column>
+        <column name="auto_refresh" sortorder="70" component="Magento_Ui/js/grid/columns/select">
+            <settings>
+                <filter>select</filter>
+                <label translate="true">auto refresh</label>
+                <datatype>select</datatype>
+                <options>
+                    <option name="0" xsi:type="array">
+                        <item name="value" xsi:type="string">0</item>
+                        <item name="label" xsi:type="string" translate="true">não</item>
+                    </option>
+                    <option name="1" xsi:type="array">
+                        <item name="value" xsi:type="string">1</item>
+                        <item name="label" xsi:type="string" translate="true">sim</item>
+                    </option>
+                </options>
+            </settings>
+        </column>
+        <column name="status" sortorder="80">
+            <settings>
+                <filter>select</filter>
+                <label translate="true">status</label>
+                <datatype>select</datatype>
+                <options>
+                    <option name="active" xsi:type="array">
+                        <item name="value" xsi:type="string">active</item>
+                        <item name="label" xsi:type="string" translate="true">ativo</item>
+                    </option>
+                    <option name="paused" xsi:type="array">
+                        <item name="value" xsi:type="string">paused</item>
+                        <item name="label" xsi:type="string" translate="true">pausado</item>
+                    </option>
+                    <option name="error" xsi:type="array">
+                        <item name="value" xsi:type="string">error</item>
+                        <item name="label" xsi:type="string" translate="true">erro</item>
+                    </option>
+                </options>
+            </settings>
+        </column>
+        <column name="last_synced_at" sortorder="90" class="Magento\Ui\Component\Listing\Columns\Date">
+            <settings>
+                <filter>daterange</filter>
+                <label translate="true">último sync</label>
+                <datatype>date</datatype>
+            </settings>
+        </column>
+        <column name="created_at" sortorder="100" class="Magento\Ui\Component\Listing\Columns\Date">
+            <settings>
+                <filter>daterange</filter>
+                <label translate="true">criado em</label>
+                <datatype>date</datatype>
+            </settings>
+        </column>
+    </columns>
+</listing>
