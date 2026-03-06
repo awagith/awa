@@ -8,7 +8,6 @@ use GrupoAwamotos\MarketingIntelligence\Model\Service\CompetitorMonitor;
 use Magento\Backend\App\Action;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\App\Action\HttpPostActionInterface;
-use Magento\Framework\Controller\Result\RedirectFactory;
 use Psr\Log\LoggerInterface;
 
 class Scan extends Action implements HttpPostActionInterface
@@ -18,7 +17,6 @@ class Scan extends Action implements HttpPostActionInterface
     public function __construct(
         Context $context,
         private readonly CompetitorMonitor $competitorMonitor,
-        private readonly RedirectFactory $resultRedirectFactory,
         private readonly LoggerInterface $logger
     ) {
         parent::__construct($context);

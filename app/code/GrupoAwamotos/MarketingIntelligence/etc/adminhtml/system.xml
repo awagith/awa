@@ -69,7 +69,7 @@
                 </field>
                 <field id="ad_account_id" translate="label comment" type="text" sortOrder="20" showInDefault="1">
                     <label>Ad Account ID</label>
-                    <comment><![CDATA[ID da conta de anúncios Meta (formato: act_XXXXXXXXX).]]></comment>
+                    <comment><![CDATA[ID da conta de anúncios Meta (formato: act_xxxxxxxxx).]]></comment>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
@@ -84,7 +84,7 @@
                 </field>
                 <field id="auto_lookalike" translate="label comment" type="select" sortOrder="40" showInDefault="1">
                     <label>Criar Lookalike Automaticamente</label>
-                    <comment>Cria audiência Lookalike automaticamente após sync de Custom Audience.</comment>
+                    <comment>Cria audiência lookalike automaticamente após sync de custom audience.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <depends>
                         <field id="enabled">1</field>
@@ -96,6 +96,41 @@
                     <validate>validate-digits</validate>
                     <depends>
                         <field id="auto_lookalike">1</field>
+                    </depends>
+                </field>
+                <field id="validate_access" translate="label comment" type="button" sortOrder="60" showInDefault="1">
+                    <label>Validar Acesso Meta</label>
+                    <comment><![CDATA[Testa o token e a conta de anúncios, detecta permissões disponíveis (ads_read, ads_management).]]></comment>
+                    <frontend_model>GrupoAwamotos\MarketingIntelligence\Block\Adminhtml\System\Config\ValidateAccessButton</frontend_model>
+                </field>
+                <field id="api_permissions" translate="label" type="text" sortOrder="70" showInDefault="1">
+                    <label>Permissões Detectadas</label>
+                    <frontend_model>GrupoAwamotos\MarketingIntelligence\Block\Adminhtml\System\Config\ApiPermissions</frontend_model>
+                    <comment>Preenchido automaticamente ao clicar "Validar Acesso Meta".</comment>
+                </field>
+            </group>
+
+            <group id="insights_api" translate="label" sortOrder="35" showInDefault="1">
+                <label>Insights de Campanhas (Meta API)</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1">
+                    <label>Sync de Insights Habilitado</label>
+                    <comment>Busca métricas de campanhas via Meta Marketing API diariamente.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="date_range_days" translate="label comment" type="text" sortOrder="20" showInDefault="1">
+                    <label>Período de Busca (dias)</label>
+                    <comment>Quantos dias de histórico buscar a cada sync (máximo 90, padrão 30).</comment>
+                    <validate>validate-digits</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="auto_classify" translate="label comment" type="select" sortOrder="30" showInDefault="1">
+                    <label>Classificação Automática</label>
+                    <comment>Classifica campanhas como B2B, B2C, Remarketing ou Branding automaticamente.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
                     </depends>
                 </field>
             </group>
@@ -140,6 +175,46 @@
                     <label>Incluir Pedidos do ERP</label>
                     <comment>Enviar pedidos confirmados pelo ERP como conversões offline.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="alerts" translate="label" sortOrder="60" showInDefault="1">
+                <label>Alertas</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1">
+                    <label>Alertas Habilitados</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="spend_without_conversion_threshold" translate="label comment" type="text" sortOrder="20" showInDefault="1">
+                    <label>Gasto Diário B2B sem Conversão (R$)</label>
+                    <comment>Alerta se gasto B2B diário exceder este valor sem nenhum clique.</comment>
+                    <validate>validate-number</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="min_b2b_roas" translate="label comment" type="text" sortOrder="30" showInDefault="1">
+                    <label>ROAS B2B Mínimo (7 dias)</label>
+                    <comment>Alerta se ROAS B2B dos últimos 7 dias ficar abaixo deste valor.</comment>
+                    <validate>validate-number</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="max_quote_pending_days" translate="label comment" type="text" sortOrder="40" showInDefault="1">
+                    <label>Dias Máx. Cotação Pendente</label>
+                    <comment>Alerta se houver cotações B2B pendentes por mais que estes dias.</comment>
+                    <validate>validate-digits</validate>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="max_hot_prospect_idle_days" translate="label comment" type="text" sortOrder="50" showInDefault="1">
+                    <label>Dias Máx. Prospect Quente sem Contato</label>
+                    <comment>Alerta se prospects com score 70+ ficarem sem contato por mais que estes dias.</comment>
+                    <validate>validate-digits</validate>
                     <depends>
                         <field id="enabled">1</field>
                     </depends>

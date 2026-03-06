@@ -8,6 +8,9 @@ use GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\Prospect\CollectionF
 use GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\Audience\CollectionFactory as AudienceCollectionFactory;
 use GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\Competitor\CollectionFactory as CompetitorCollectionFactory;
 use GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\CompetitorAd\CollectionFactory as CompetitorAdCollectionFactory;
+use GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\CampaignInsight\CollectionFactory as InsightCollectionFactory;
+use GrupoAwamotos\MarketingIntelligence\Model\Service\BudgetAttributionService;
+use GrupoAwamotos\MarketingIntelligence\Model\Service\AlertService;
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -25,6 +28,9 @@ class Dashboard extends Template
         private readonly AudienceCollectionFactory $audienceCollectionFactory,
         private readonly CompetitorCollectionFactory $competitorCollectionFactory,
         private readonly CompetitorAdCollectionFactory $competitorAdCollectionFactory,
+        private readonly InsightCollectionFactory $insightCollectionFactory,
+        private readonly BudgetAttributionService $budgetAttribution,
+        private readonly AlertService $alertService,
         private readonly ScopeConfigInterface $scopeConfig,
         array $data = []
     ) {
@@ -328,6 +334,147 @@ class Dashboard extends Template
         ];
 
         return $map[$status] ?? ['label' => ucfirst($status), 'color' => '#6b7280'];
+    }
+
+    /**
+     * Get budget attribution breakdown for last 30 days.
+     *
+     * @return array<string, array{spend: float, impressions: int, clicks: int, roas: float|null, pct: float}>
+     */
+    public function getBudgetAttribution(): array
+    {
+        $since = date('Y-m-d', strtotime('-30 days'));
+        $until = date('Y-m-d');
+
+        return $this->budgetAttribution->getAttribution($since, $until);
+    }
+
+    /**
+     * Get budget attribution chart JSON.
+     *
+     * @return string
+     */
+    public function getBudgetChartJson(): string
+    {
+        $attribution = $this->getBudgetAttribution();
+
+        $labels = [];
+        $values = [];
+        $colors = [
+            'b2b' => '#2563eb',
+            'remarketing' => '#7c3aed',
+            'branding' => '#d97706',
+            'b2c' => '#059669',
+            'unclassified' => '#9ca3af',
+        ];
+
+        foreach ($attribution as $classification => $data) {
+            $labels[] = ucfirst($classification);
+            $values[] = $data['spend'];
+        }
+
+        $bgColors = [];
+        foreach ($attribution as $classification => $data) {
+            $bgColors[] = $colors[$classification] ?? '#6b7280';
+        }
+
+        $chartData = [
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'data' => $values,
+                    'backgroundColor' => $bgColors,
+                ],
+            ],
+        ];
+
+        return (string) json_encode($chartData, JSON_THROW_ON_ERROR);
+    }
+
+    /**
+     * Get B2B funnel data.
+     *
+     * @return array<string, array{label: string, count: int, color: string}>
+     */
+    public function getB2BFunnel(): array
+    {
+        $prospectCollection = $this->prospectCollectionFactory->create();
+        $totalProspects = $prospectCollection->getSize();
+
+        $contacted = $this->prospectCollectionFactory->create()
+            ->addFieldToFilter('prospect_status', ['in' => ['contacted', 'interested', 'converted']])
+            ->getSize();
+
+        $interested = $this->prospectCollectionFactory->create()
+            ->addFieldToFilter('prospect_status', ['in' => ['interested', 'converted']])
+            ->getSize();
+
+        $converted = $this->prospectCollectionFactory->create()
+            ->addFieldToFilter('prospect_status', 'converted')
+            ->getSize();
+
+        return [
+            'prospects' => ['label' => 'Prospects Captados', 'count' => $totalProspects, 'color' => '#2563eb'],
+            'contacted' => ['label' => 'Contatados', 'count' => $contacted, 'color' => '#d97706'],
+            'interested' => ['label' => 'Interessados', 'count' => $interested, 'color' => '#7c3aed'],
+            'converted' => ['label' => 'Convertidos', 'count' => $converted, 'color' => '#059669'],
+        ];
+    }
+
+    /**
+     * Get active alerts.
+     *
+     * @return array<int, array{type: string, severity: string, message: string, value: float|int|string, threshold: float|int|string}>
+     */
+    public function getAlerts(): array
+    {
+        return $this->alertService->checkAlerts();
+    }
+
+    /**
+     * Get insights summary by classification for last 30 days.
+     *
+     * @return array<string, array{campaigns: int, spend: float, impressions: int, clicks: int}>
+     */
+    public function getInsightsSummary(): array
+    {
+        $since = date('Y-m-d', strtotime('-30 days'));
+
+        $collection = $this->insightCollectionFactory->create();
+        $collection->addFieldToFilter('date_start', ['gteq' => $since]);
+        $select = $collection->getSelect();
+        $select->reset(\Magento\Framework\DB\Select::COLUMNS);
+        $select->columns([
+            'classification' => 'COALESCE(classification, \'unclassified\')',
+            'campaigns' => 'COUNT(DISTINCT campaign_id)',
+            'total_spend' => 'SUM(spend)',
+            'total_impressions' => 'SUM(impressions)',
+            'total_clicks' => 'SUM(clicks)',
+        ]);
+        $select->group('classification');
+
+        $result = [];
+        foreach ($collection->getConnection()->fetchAll($select) as $row) {
+            $cls = (string) $row['classification'];
+            $result[$cls] = [
+                'campaigns' => (int) $row['campaigns'],
+                'spend' => (float) $row['total_spend'],
+                'impressions' => (int) $row['total_impressions'],
+                'clicks' => (int) $row['total_clicks'],
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get create B2B segments URL.
+     *
+     * @return string
+     */
+    public function getCreateSegmentsUrl(): string
+    {
+        return $this->getUrl('marketingintelligence/audiences/createsegments');
     }
 
     /**

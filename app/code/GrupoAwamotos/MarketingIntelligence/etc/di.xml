@@ -1,15 +1,17 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <!-- Repository Preferences -->
+    <!-- Repository preferences -->
     <preference for="GrupoAwamotos\MarketingIntelligence\Api\ProspectRepositoryInterface"
                 type="GrupoAwamotos\MarketingIntelligence\Model\ProspectRepository"/>
     <preference for="GrupoAwamotos\MarketingIntelligence\Api\AudienceRepositoryInterface"
                 type="GrupoAwamotos\MarketingIntelligence\Model\AudienceRepository"/>
     <preference for="GrupoAwamotos\MarketingIntelligence\Api\CompetitorRepositoryInterface"
                 type="GrupoAwamotos\MarketingIntelligence\Model\CompetitorRepository"/>
+    <preference for="GrupoAwamotos\MarketingIntelligence\Api\CampaignInsightRepositoryInterface"
+                type="GrupoAwamotos\MarketingIntelligence\Model\CampaignInsightRepository"/>
 
-    <!-- Data Interface Preferences -->
+    <!-- Data interface preferences -->
     <preference for="GrupoAwamotos\MarketingIntelligence\Api\Data\ProspectInterface"
                 type="GrupoAwamotos\MarketingIntelligence\Model\Prospect"/>
     <preference for="GrupoAwamotos\MarketingIntelligence\Api\Data\AudienceInterface"
@@ -18,8 +20,10 @@
                 type="GrupoAwamotos\MarketingIntelligence\Model\Competitor"/>
     <preference for="GrupoAwamotos\MarketingIntelligence\Api\Data\CompetitorAdInterface"
                 type="GrupoAwamotos\MarketingIntelligence\Model\CompetitorAd"/>
+    <preference for="GrupoAwamotos\MarketingIntelligence\Api\Data\CampaignInsightInterface"
+                type="GrupoAwamotos\MarketingIntelligence\Model\CampaignInsight"/>
 
-    <!-- Service Classes -->
+    <!-- Service classes with logger injection -->
     <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\ProspectFetcher">
         <arguments>
             <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
@@ -45,8 +49,38 @@
             <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
         </arguments>
     </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\InsightsApiService">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\CampaignClassifier">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\BudgetAttributionService">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\CustomConversionManager">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\AlertService">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\MetaConfigValidator">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
 
-    <!-- Virtual Logger -->
+    <!-- Virtual logger -->
     <virtualType name="MarketingIntelligenceLogHandler"
                  type="Magento\Framework\Logger\Handler\Base">
         <arguments>
@@ -63,18 +97,19 @@
         </arguments>
     </virtualType>
 
-    <!-- UI Component Data Providers -->
+    <!-- UI Component data providers -->
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
                 <item name="mktg_prospects_listing_data_source" xsi:type="string">GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\Prospect\Grid\Collection</item>
                 <item name="mktg_audiences_listing_data_source" xsi:type="string">GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\Audience\Grid\Collection</item>
                 <item name="mktg_competitors_listing_data_source" xsi:type="string">GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\CompetitorAd\Grid\Collection</item>
+                <item name="mktg_campaign_insights_listing_data_source" xsi:type="string">GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\CampaignInsight\Grid\Collection</item>
             </argument>
         </arguments>
     </type>
 
-    <!-- Grid Collections (Virtual Types) -->
+    <!-- Grid collections (virtual types) -->
     <virtualType name="GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\Prospect\Grid\Collection"
                  type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
         <arguments>
@@ -94,6 +129,13 @@
         <arguments>
             <argument name="mainTable" xsi:type="string">grupoawamotos_mktg_competitor_ads</argument>
             <argument name="resourceModel" xsi:type="string">GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\CompetitorAd</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\CampaignInsight\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">grupoawamotos_mktg_campaign_insights</argument>
+            <argument name="resourceModel" xsi:type="string">GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\CampaignInsight</argument>
         </arguments>
     </virtualType>
 </config>

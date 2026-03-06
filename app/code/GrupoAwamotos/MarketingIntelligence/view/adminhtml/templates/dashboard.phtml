@@ -12,6 +12,11 @@ $recentAds = $block->getRecentAds(5);
 $scoreChartJson = $block->getScoreChartJson();
 $ufChartJson = $block->getUfChartJson();
 $isEnabled = $block->isEnabled();
+$budgetAttribution = $block->getBudgetAttribution();
+$budgetChartJson = $block->getBudgetChartJson();
+$b2bFunnel = $block->getB2BFunnel();
+$alerts = $block->getAlerts();
+$insightsSummary = $block->getInsightsSummary();
 ?>
 
 <style>
@@ -61,6 +66,25 @@ $isEnabled = $block->isEnabled();
     /* Chart Container */
     .mktg-chart-container { position: relative; height: 220px; }
 
+    /* Alert Cards */
+    .mktg-alerts { margin-bottom: 24px; }
+    .mktg-alert-card { display: flex; align-items: flex-start; gap: 12px; padding: 14px 18px; border-radius: 8px; margin-bottom: 8px; font-size: 13px; line-height: 1.5; }
+    .mktg-alert-high { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; }
+    .mktg-alert-medium { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+    .mktg-alert-low { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+    .mktg-alert-icon { font-size: 18px; flex-shrink: 0; }
+
+    /* Funnel */
+    .mktg-funnel { display: flex; flex-direction: column; gap: 6px; }
+    .mktg-funnel-step { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; }
+    .mktg-funnel-bar { height: 8px; border-radius: 4px; transition: width 0.3s; }
+    .mktg-funnel-count { font-size: 20px; font-weight: 800; min-width: 48px; }
+    .mktg-funnel-label { font-size: 13px; font-weight: 600; color: #475569; flex: 1; }
+
+    /* Budget summary table */
+    .mktg-budget-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+    .mktg-budget-row:last-child { border-bottom: none; }
+
     /* Responsive */
     @media (max-width: 1200px) {
         .mktg-kpi-grid { grid-template-columns: repeat(2, 1fr); }
@@ -84,6 +108,10 @@ $isEnabled = $block->isEnabled();
             <form action="<?= $block->escapeUrl($block->getScanCompetitorsUrl()) ?>" method="post" style="display:inline">
                 <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
                 <button type="submit" class="mktg-btn mktg-btn-warning">👁️ Varrer Concorrentes</button>
+            </form>
+            <form action="<?= $block->escapeUrl($block->getCreateSegmentsUrl()) ?>" method="post" style="display:inline">
+                <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                <button type="submit" class="mktg-btn mktg-btn-secondary">🎯 Criar Segmentos B2B</button>
             </form>
         </div>
     </div>
@@ -246,6 +274,103 @@ $isEnabled = $block->isEnabled();
             <?php endif; ?>
         </div>
     </div>
+
+    <!-- Alerts -->
+    <?php if (!empty($alerts)): ?>
+    <div class="mktg-section mktg-alerts">
+        <h3 class="mktg-section-title">🚨 Alertas Ativos (<?= count($alerts) ?>)</h3>
+        <?php foreach ($alerts as $alert):
+            $severityClass = 'mktg-alert-' . ($alert['severity'] ?? 'low');
+            $icon = match ($alert['severity'] ?? 'low') {
+                'high' => '🔴',
+                'medium' => '🟡',
+                default => '🔵',
+            };
+        ?>
+        <div class="mktg-alert-card <?= $block->escapeHtmlAttr($severityClass) ?>">
+            <span class="mktg-alert-icon"><?= /* @noEscape */ $icon ?></span>
+            <span><?= $block->escapeHtml($alert['message']) ?></span>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <!-- Budget Attribution + B2B Funnel -->
+    <div class="mktg-grid-2col">
+        <!-- Budget Attribution -->
+        <div class="mktg-section">
+            <h3 class="mktg-section-title">💰 Atribuição de Budget (30 dias)</h3>
+            <?php if (empty($budgetAttribution)): ?>
+                <p style="color:#64748b; text-align:center; padding:20px;">Nenhum dado de campanha. Execute a sincronização de insights.</p>
+            <?php else: ?>
+            <div style="display:flex;gap:20px;align-items:flex-start;">
+                <div class="mktg-chart-container" style="width:180px;height:180px;flex-shrink:0;">
+                    <canvas id="mktg-budget-chart"></canvas>
+                </div>
+                <div style="flex:1;">
+                    <?php foreach ($budgetAttribution as $cls => $data): ?>
+                    <div class="mktg-budget-row">
+                        <span style="font-weight:600;"><?= $block->escapeHtml(ucfirst($cls)) ?></span>
+                        <span>R$ <?= $block->escapeHtml(number_format($data['spend'], 2, ',', '.')) ?></span>
+                        <span style="color:#64748b;"><?= $block->escapeHtml(number_format($data['pct'], 1)) ?>%</span>
+                    </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+
+        <!-- B2B Funnel -->
+        <div class="mktg-section">
+            <h3 class="mktg-section-title">🎯 Funil B2B</h3>
+            <?php
+            $maxCount = max(array_column($b2bFunnel, 'count')) ?: 1;
+            ?>
+            <div class="mktg-funnel">
+                <?php foreach ($b2bFunnel as $step): ?>
+                <?php $pct = ($step['count'] / $maxCount) * 100; ?>
+                <div class="mktg-funnel-step" style="background: <?= $block->escapeHtmlAttr($step['color']) ?>08;">
+                    <div class="mktg-funnel-count" style="color:<?= $block->escapeHtmlAttr($step['color']) ?>">
+                        <?= (int) $step['count'] ?>
+                    </div>
+                    <div style="flex:1;">
+                        <div class="mktg-funnel-label"><?= $block->escapeHtml($step['label']) ?></div>
+                        <div class="mktg-funnel-bar" style="width:<?= (int) $pct ?>%;background:<?= $block->escapeHtmlAttr($step['color']) ?>"></div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Insights Summary -->
+    <?php if (!empty($insightsSummary)): ?>
+    <div class="mktg-section" style="margin-bottom:24px;">
+        <h3 class="mktg-section-title">📊 Resumo de Insights por Classificação (30 dias)</h3>
+        <table class="mktg-table">
+            <thead>
+                <tr>
+                    <th>Classificação</th>
+                    <th>Campanhas</th>
+                    <th>Gasto</th>
+                    <th>Impressões</th>
+                    <th>Cliques</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($insightsSummary as $cls => $row): ?>
+                <tr>
+                    <td><strong><?= $block->escapeHtml(ucfirst($cls)) ?></strong></td>
+                    <td><?= (int) $row['campaigns'] ?></td>
+                    <td>R$ <?= $block->escapeHtml(number_format($row['spend'], 2, ',', '.')) ?></td>
+                    <td><?= $block->escapeHtml(number_format($row['impressions'], 0, ',', '.')) ?></td>
+                    <td><?= $block->escapeHtml(number_format($row['clicks'], 0, ',', '.')) ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+    <?php endif; ?>
 </div>
 
 <!-- Chart.js CDN -->
@@ -286,6 +411,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 scales: {
                     x: { beginAtZero: true, ticks: { precision: 0 } }
                 }
+            }
+        });
+    }
+
+    // Budget Attribution - Doughnut Chart
+    var budgetData = <?= /* @noEscape */ $budgetChartJson ?>;
+    var budgetCtx = document.getElementById('mktg-budget-chart');
+    if (budgetCtx && budgetData.datasets[0].data.length > 0) {
+        new Chart(budgetCtx.getContext('2d'), {
+            type: 'doughnut',
+            data: budgetData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                cutout: '60%'
             }
         });
     }

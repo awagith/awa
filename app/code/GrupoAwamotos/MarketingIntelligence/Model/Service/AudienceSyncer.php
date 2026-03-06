@@ -260,6 +260,100 @@ class AudienceSyncer
      * @param array<string, mixed> $segmentRule
      * @return \Magento\Customer\Model\ResourceModel\Customer\Collection
      */
+    /**
+     * Create the 4 B2B pre-defined audience segments if they don't already exist.
+     *
+     * @return array<string, array{name: string, meta_id: string, count: int}> Created segments
+     */
+    public function createB2BSegments(): array
+    {
+        $definitions = $this->getB2BSegmentDefinitions();
+        $existing = $this->getExistingSegmentNames();
+        $created = [];
+
+        foreach ($definitions as $key => $def) {
+            if (in_array($def['name'], $existing, true)) {
+                $this->logger->info(sprintf('AudienceSyncer: B2B segment "%s" already exists, skipping.', $def['name']));
+                continue;
+            }
+
+            try {
+                $audience = $this->createCustomAudience($def['name'], $def['rule']);
+                $created[$key] = [
+                    'name' => $audience->getName(),
+                    'meta_id' => $audience->getMetaAudienceId(),
+                    'count' => $audience->getCustomerCount(),
+                ];
+            } catch (\Exception $e) {
+                $this->logger->error(sprintf(
+                    'AudienceSyncer: failed to create B2B segment "%s" — %s',
+                    $def['name'],
+                    $e->getMessage()
+                ));
+            }
+        }
+
+        return $created;
+    }
+
+    /**
+     * @return array<string, array{name: string, rule: array<string, mixed>}>
+     */
+    private function getB2BSegmentDefinitions(): array
+    {
+        return [
+            'approved_no_purchase' => [
+                'name' => 'AWA B2B — Aprovados Sem Compra (30d)',
+                'rule' => [
+                    'b2b_approval_status' => 'approved',
+                    'max_orders' => 0,
+                    'registered_days_ago' => 30,
+                ],
+            ],
+            'quote_abandoned' => [
+                'name' => 'AWA B2B — Cotações Abandonadas (7d+)',
+                'rule' => [
+                    'b2b_person_type' => 'pj',
+                    'has_pending_quote' => true,
+                    'quote_older_days' => 7,
+                ],
+            ],
+            'high_credit_low_usage' => [
+                'name' => 'AWA B2B — Crédito Alto / Uso Baixo',
+                'rule' => [
+                    'b2b_person_type' => 'pj',
+                    'min_credit_limit' => 50000,
+                    'max_credit_usage_pct' => 20,
+                ],
+            ],
+            'recent_b2b_purchasers' => [
+                'name' => 'AWA B2B — Compradores Recentes (90d)',
+                'rule' => [
+                    'b2b_person_type' => 'pj',
+                    'min_orders' => 1,
+                    'order_days_ago' => 90,
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @return string[] Existing audience names
+     */
+    private function getExistingSegmentNames(): array
+    {
+        $collection = $this->audienceCollectionFactory->create();
+        $names = [];
+        foreach ($collection as $audience) {
+            $names[] = $audience->getName();
+        }
+        return $names;
+    }
+
+    /**
+     * @param array<string, mixed> $segmentRule
+     * @return \Magento\Customer\Model\ResourceModel\Customer\Collection
+     */
     private function getCustomersBySegment(array $segmentRule): \Magento\Customer\Model\ResourceModel\Customer\Collection
     {
         $collection = $this->customerCollectionFactory->create();
@@ -277,14 +371,73 @@ class AudienceSyncer
             $collection->addAttributeToFilter('uf', ['in' => (array)$segmentRule['uf']]);
         }
 
-        if (!empty($segmentRule['min_orders'])) {
+        if (!empty($segmentRule['b2b_approval_status'])) {
+            $collection->addAttributeToFilter('b2b_approval_status', $segmentRule['b2b_approval_status']);
+        }
+
+        if (!empty($segmentRule['b2b_person_type'])) {
+            $collection->addAttributeToFilter('b2b_person_type', $segmentRule['b2b_person_type']);
+        }
+
+        // Filter by order count (min/max)
+        if (!empty($segmentRule['min_orders']) || isset($segmentRule['max_orders'])) {
+            $orderTable = $collection->getTable('sales_order');
             $collection->getSelect()->joinLeft(
-                ['orders' => $collection->getTable('sales_order')],
+                ['orders' => $orderTable],
                 'orders.customer_id = e.entity_id',
                 ['order_count' => 'COUNT(orders.entity_id)']
             );
+
+            if (!empty($segmentRule['order_days_ago'])) {
+                $since = date('Y-m-d', strtotime('-' . (int)$segmentRule['order_days_ago'] . ' days'));
+                $collection->getSelect()->where('orders.created_at >= ? OR orders.entity_id IS NULL', $since);
+            }
+
             $collection->getSelect()->group('e.entity_id');
-            $collection->getSelect()->having('order_count >= ?', (int)$segmentRule['min_orders']);
+
+            if (!empty($segmentRule['min_orders'])) {
+                $collection->getSelect()->having('order_count >= ?', (int)$segmentRule['min_orders']);
+            }
+            if (isset($segmentRule['max_orders'])) {
+                $collection->getSelect()->having('order_count <= ?', (int)$segmentRule['max_orders']);
+            }
+        }
+
+        // Filter by days since registration
+        if (!empty($segmentRule['registered_days_ago'])) {
+            $since = date('Y-m-d', strtotime('-' . (int)$segmentRule['registered_days_ago'] . ' days'));
+            $collection->addAttributeToFilter('created_at', ['gteq' => $since]);
+        }
+
+        // Filter by pending quotes older than N days
+        if (!empty($segmentRule['has_pending_quote']) && !empty($segmentRule['quote_older_days'])) {
+            $quoteTable = $collection->getTable('grupoawamotos_b2b_quote_request');
+            $cutoff = date('Y-m-d', strtotime('-' . (int)$segmentRule['quote_older_days'] . ' days'));
+            $collection->getSelect()->joinInner(
+                ['quotes' => $quoteTable],
+                'quotes.customer_id = e.entity_id AND quotes.status IN ("pending","quoted") AND quotes.created_at <= \'' . $cutoff . '\'',
+                []
+            );
+            $collection->getSelect()->group('e.entity_id');
+        }
+
+        // Filter by credit limit usage percentage
+        if (!empty($segmentRule['min_credit_limit'])) {
+            $creditTable = $collection->getTable('grupoawamotos_b2b_credit_limit');
+            $collection->getSelect()->joinInner(
+                ['credit' => $creditTable],
+                'credit.customer_id = e.entity_id',
+                []
+            );
+            $collection->getSelect()->where('credit.credit_limit >= ?', (float)$segmentRule['min_credit_limit']);
+
+            if (!empty($segmentRule['max_credit_usage_pct'])) {
+                $maxPct = (float)$segmentRule['max_credit_usage_pct'] / 100;
+                $collection->getSelect()->where(
+                    'credit.credit_used / credit.credit_limit <= ?',
+                    $maxPct
+                );
+            }
         }
 
         return $collection;
