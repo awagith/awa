@@ -27,6 +27,30 @@ class ContactInfo implements ArgumentInterface
         );
     }
 
+    public function hasWhatsApp(): bool
+    {
+        return $this->getWhatsAppDigits() !== '';
+    }
+
+    public function getWhatsAppDigits(): string
+    {
+        return $this->normalizePhone($this->getWhatsAppNumber());
+    }
+
+    public function getWhatsAppUrl(): string
+    {
+        $digits = $this->getWhatsAppDigits();
+        if ($digits === '') {
+            return '';
+        }
+
+        $query = trim($this->getWhatsAppMessage()) !== ''
+            ? '?text=' . rawurlencode($this->getWhatsAppMessage())
+            : '';
+
+        return 'https://wa.me/' . $digits . $query;
+    }
+
     public function getWhatsAppMessage(): string
     {
         return (string) $this->scopeConfig->getValue(
@@ -43,11 +67,50 @@ class ContactInfo implements ArgumentInterface
         );
     }
 
+    public function hasPhone(): bool
+    {
+        return $this->getPhoneDigits() !== '';
+    }
+
+    public function getPhoneDigits(): string
+    {
+        return $this->normalizePhone($this->getPhone());
+    }
+
+    public function getPhoneUrl(): string
+    {
+        $digits = $this->getPhoneDigits();
+
+        return $digits !== '' ? 'tel:+' . $digits : '';
+    }
+
     public function getEmail(): string
     {
         return (string) $this->scopeConfig->getValue(
             self::XML_PATH_EMAIL,
             ScopeInterface::SCOPE_STORE
         );
+    }
+
+    public function hasEmail(): bool
+    {
+        return trim($this->getEmail()) !== '';
+    }
+
+    public function getEmailUrl(): string
+    {
+        $email = trim($this->getEmail());
+
+        return $email !== '' ? 'mailto:' . $email : '';
+    }
+
+    public function hasAnyContact(): bool
+    {
+        return $this->hasWhatsApp() || $this->hasPhone() || $this->hasEmail();
+    }
+
+    private function normalizePhone(string $value): string
+    {
+        return (string) preg_replace('/\D+/', '', $value);
     }
 }

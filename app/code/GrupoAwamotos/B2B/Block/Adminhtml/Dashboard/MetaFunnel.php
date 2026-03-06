@@ -67,6 +67,14 @@ class MetaFunnel extends Template
     }
 
     /**
+     * Returns CSV export URL preserving selected period.
+     */
+    public function getExportCsvUrl(): string
+    {
+        return $this->getUrl('*/*/exportCsv', ['period' => $this->getPeriod()]);
+    }
+
+    /**
      * Returns the Meta CAPI event name for a given approval action.
      */
     public function getMetaEventLabel(string $action): string
@@ -217,6 +225,104 @@ class MetaFunnel extends Template
     }
 
     /**
+     * Returns advanced KPI highlights based on funnel and quote totals.
+     *
+     * @return array<string, string>
+     */
+    public function getAdvancedKpis(): array
+    {
+        $conn   = $this->resourceConnection->getConnection();
+        $period = $this->getPeriod();
+        $pc     = $this->buildDateCondition($period);
+
+        $logTable   = $this->resourceConnection->getTableName('grupoawamotos_b2b_customer_approval_log');
+        $quoteTable = $this->resourceConnection->getTableName('grupoawamotos_b2b_quote_request');
+
+        $registered = (int) $conn->fetchOne(
+            "SELECT COUNT(*) FROM {$logTable} WHERE action = 'registered'{$pc}"
+        );
+        $approved = (int) $conn->fetchOne(
+            "SELECT COUNT(*) FROM {$logTable} WHERE action = 'approved'{$pc}"
+        );
+        $rejected = (int) $conn->fetchOne(
+            "SELECT COUNT(*) FROM {$logTable} WHERE action = 'rejected'{$pc}"
+        );
+
+        $quotesTotal = (int) $conn->fetchOne(
+            "SELECT COUNT(*) FROM {$quoteTable} WHERE 1=1{$pc}"
+        );
+        $quotesConverted = (int) $conn->fetchOne(
+            "SELECT COUNT(*) FROM {$quoteTable} WHERE status IN ('accepted','converted'){$pc}"
+        );
+
+        $approvalRate = $registered > 0 ? round(($approved / $registered) * 100, 1) : 0.0;
+        $rejectionRate = $registered > 0 ? round(($rejected / $registered) * 100, 1) : 0.0;
+        $quoteConversionRate = $quotesTotal > 0 ? round(($quotesConverted / $quotesTotal) * 100, 1) : 0.0;
+
+        return [
+            'approval_rate' => number_format($approvalRate, 1, ',', '.') . '%',
+            'rejection_rate' => number_format($rejectionRate, 1, ',', '.') . '%',
+            'quote_conversion_rate' => number_format($quoteConversionRate, 1, ',', '.') . '%',
+            'total_interactions' => (string) ($registered + $approved + $rejected),
+        ];
+    }
+
+    /**
+     * Returns daily trend data for chart rendering.
+     *
+     * @return array<string, array<int, int|string>>
+     */
+    public function getDailyTimeline(): array
+    {
+        $conn = $this->resourceConnection->getConnection();
+        $logTable = $this->resourceConnection->getTableName('grupoawamotos_b2b_customer_approval_log');
+        $days = $this->getChartWindowDays();
+
+        $sql = "SELECT
+                    DATE(created_at) AS day,
+                    SUM(CASE WHEN action = 'registered' THEN 1 ELSE 0 END) AS registered,
+                    SUM(CASE WHEN action = 'approved' THEN 1 ELSE 0 END) AS approved,
+                    SUM(CASE WHEN action = 'rejected' THEN 1 ELSE 0 END) AS rejected
+                FROM {$logTable}
+                WHERE created_at >= DATE_SUB(NOW(), INTERVAL {$days} DAY)
+                GROUP BY DATE(created_at)
+                ORDER BY day ASC";
+
+        $rows = $conn->fetchAll($sql);
+        $indexed = [];
+        foreach ($rows as $row) {
+            $indexed[(string) $row['day']] = [
+                'registered' => (int) ($row['registered'] ?? 0),
+                'approved' => (int) ($row['approved'] ?? 0),
+                'rejected' => (int) ($row['rejected'] ?? 0),
+            ];
+        }
+
+        $labels = [];
+        $registeredSeries = [];
+        $approvedSeries = [];
+        $rejectedSeries = [];
+
+        $start = new \DateTimeImmutable(sprintf('-%d days', $days - 1));
+        $today = new \DateTimeImmutable('today');
+
+        for ($date = $start; $date <= $today; $date = $date->modify('+1 day')) {
+            $key = $date->format('Y-m-d');
+            $labels[] = $date->format('d/m');
+            $registeredSeries[] = $indexed[$key]['registered'] ?? 0;
+            $approvedSeries[] = $indexed[$key]['approved'] ?? 0;
+            $rejectedSeries[] = $indexed[$key]['rejected'] ?? 0;
+        }
+
+        return [
+            'labels' => $labels,
+            'registered' => $registeredSeries,
+            'approved' => $approvedSeries,
+            'rejected' => $rejectedSeries,
+        ];
+    }
+
+    /**
      * Returns the 25 most recent approval_log entries with customer and company data.
      *
      * @return array<int, array<string, mixed>>
@@ -259,5 +365,15 @@ class MetaFunnel extends Template
         }
 
         return " AND {$column} >= DATE_SUB(NOW(), INTERVAL {$period} DAY)";
+    }
+
+    /**
+     * Uses last 30 days as chart window when "all time" is selected.
+     */
+    private function getChartWindowDays(): int
+    {
+        $period = $this->getPeriod();
+
+        return $period === 0 ? 30 : $period;
     }
 }

@@ -5,15 +5,38 @@
  * @var \GrupoAwamotos\B2B\Block\Adminhtml\Dashboard\MetaFunnel $block
  */
 $kpis       = $block->getKpis();
+$advanced   = $block->getAdvancedKpis();
 $quotes     = $block->getQuoteStats();
 $log        = $block->getRecentLog();
+$timeline   = $block->getDailyTimeline();
 $period     = $block->getPeriod();
 $periodLabel = $block->getPeriodLabel();
+$exportUrl  = $block->getExportCsvUrl();
+
+$registeredSeries = $timeline['registered'] ?? [];
+$approvedSeries = $timeline['approved'] ?? [];
+$rejectedSeries = $timeline['rejected'] ?? [];
+$labels = $timeline['labels'] ?? [];
+
+$maxValue = 1;
+foreach ($registeredSeries as $value) {
+    $maxValue = max($maxValue, (int) $value);
+}
+foreach ($approvedSeries as $value) {
+    $maxValue = max($maxValue, (int) $value);
+}
+foreach ($rejectedSeries as $value) {
+    $maxValue = max($maxValue, (int) $value);
+}
 ?>
 <style>
 /* ── layout ─────────────────────────────────────────────── */
 .b2b-meta-dash { max-width: 1280px; padding: 20px 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 .b2b-meta-section { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 20px; padding: 20px 24px; }
+
+.b2b-meta-toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.b2b-meta-export-btn { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 7px; border: 1px solid #bfdbfe; background: #eff6ff; color: #1d4ed8; font-size: 12px; font-weight: 700; text-decoration: none; letter-spacing: .2px; }
+.b2b-meta-export-btn:hover { background: #dbeafe; border-color: #93c5fd; color: #1e40af; }
 
 /* ── header ─────────────────────────────────────────────── */
 .b2b-meta-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 24px; }
@@ -83,6 +106,31 @@ $periodLabel = $block->getPeriodLabel();
 
 /* ── funil arrow ────────────────────────────────────────── */
 .b2b-meta-funnel-hint { font-size: 11px; color: #94a3b8; text-align: center; margin-top: 10px; letter-spacing: .3px; }
+
+/* ── advanced kpis ──────────────────────────────────────── */
+.b2b-meta-advanced-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+@media (max-width: 900px) { .b2b-meta-advanced-grid { grid-template-columns: repeat(2, 1fr); } }
+.b2b-meta-advanced-card { border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc; padding: 12px 14px; }
+.b2b-meta-advanced-label { color: #64748b; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: .4px; }
+.b2b-meta-advanced-value { color: #0f172a; font-size: 20px; line-height: 1.2; font-weight: 800; margin-top: 4px; }
+
+/* ── timeline chart ─────────────────────────────────────── */
+.b2b-meta-chart-panel { border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; background: #fff; }
+.b2b-meta-chart-title { margin: 0 0 10px; color: #334155; font-size: 13px; font-weight: 700; }
+.b2b-meta-chart-legend { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 12px; font-size: 12px; color: #64748b; }
+.b2b-meta-legend-dot { width: 10px; height: 10px; border-radius: 99px; display: inline-block; margin-right: 5px; vertical-align: middle; }
+.b2b-meta-legend-registered { background: #6366f1; }
+.b2b-meta-legend-approved { background: #059669; }
+.b2b-meta-legend-rejected { background: #dc2626; }
+.b2b-meta-chart-scroll { overflow-x: auto; }
+.b2b-meta-chart-bars { min-width: 760px; display: grid; grid-template-columns: repeat(auto-fit, minmax(20px, 1fr)); align-items: end; gap: 8px; height: 190px; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+.b2b-meta-chart-group { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; align-items: end; height: 100%; }
+.b2b-meta-chart-bar { width: 100%; border-radius: 3px 3px 0 0; min-height: 2px; }
+.b2b-meta-chart-bar.registered { background: #818cf8; }
+.b2b-meta-chart-bar.approved { background: #34d399; }
+.b2b-meta-chart-bar.rejected { background: #f87171; }
+.b2b-meta-chart-labels { min-width: 760px; display: grid; grid-template-columns: repeat(auto-fit, minmax(20px, 1fr)); gap: 8px; margin-top: 8px; }
+.b2b-meta-chart-label { text-align: center; color: #94a3b8; font-size: 10px; }
 </style>
 
 <div class="b2b-meta-dash">
@@ -102,13 +150,18 @@ $periodLabel = $block->getPeriodLabel();
             </div>
         </div>
 
-        <div class="b2b-meta-period-group">
-            <?php foreach ([7 => '7 dias', 30 => '30 dias', 90 => '90 dias', 0 => 'Todos'] as $p => $label): ?>
-                <a href="<?= $block->escapeHtmlAttr($block->getPeriodUrl($p)) ?>"
-                   class="b2b-meta-period-btn <?= $period === $p ? 'active' : '' ?>">
-                    <?= $block->escapeHtml($label) ?>
-                </a>
-            <?php endforeach; ?>
+        <div class="b2b-meta-toolbar">
+            <div class="b2b-meta-period-group">
+                <?php foreach ([7 => '7 dias', 30 => '30 dias', 90 => '90 dias', 0 => 'Todos'] as $p => $label): ?>
+                    <a href="<?= $block->escapeUrl($block->getPeriodUrl($p)) ?>"
+                       class="b2b-meta-period-btn <?= $period === $p ? 'active' : '' ?>">
+                        <?= $block->escapeHtml($label) ?>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+            <a class="b2b-meta-export-btn" href="<?= $block->escapeUrl($exportUrl) ?>">
+                ⬇ Exportar CSV
+            </a>
         </div>
     </div>
 
@@ -161,13 +214,70 @@ $periodLabel = $block->getPeriodLabel();
         </div>
     </div>
 
+    <div class="b2b-meta-section">
+        <div class="b2b-meta-section-title">Indicadores Avançados</div>
+        <div class="b2b-meta-advanced-grid">
+            <div class="b2b-meta-advanced-card">
+                <div class="b2b-meta-advanced-label">Taxa Aprovação no Funil</div>
+                <div class="b2b-meta-advanced-value"><?= $block->escapeHtml($advanced['approval_rate']) ?></div>
+            </div>
+            <div class="b2b-meta-advanced-card">
+                <div class="b2b-meta-advanced-label">Taxa Rejeição no Funil</div>
+                <div class="b2b-meta-advanced-value"><?= $block->escapeHtml($advanced['rejection_rate']) ?></div>
+            </div>
+            <div class="b2b-meta-advanced-card">
+                <div class="b2b-meta-advanced-label">Conversão de Cotações</div>
+                <div class="b2b-meta-advanced-value"><?= $block->escapeHtml($advanced['quote_conversion_rate']) ?></div>
+            </div>
+            <div class="b2b-meta-advanced-card">
+                <div class="b2b-meta-advanced-label">Interações de Funil</div>
+                <div class="b2b-meta-advanced-value"><?= $block->escapeHtml($advanced['total_interactions']) ?></div>
+            </div>
+        </div>
+
+        <div class="b2b-meta-chart-panel">
+            <h3 class="b2b-meta-chart-title">Tendência Diária (cadastros, aprovações e rejeições)</h3>
+            <div class="b2b-meta-chart-legend">
+                <span><span class="b2b-meta-legend-dot b2b-meta-legend-registered"></span>Cadastros</span>
+                <span><span class="b2b-meta-legend-dot b2b-meta-legend-approved"></span>Aprovados</span>
+                <span><span class="b2b-meta-legend-dot b2b-meta-legend-rejected"></span>Rejeitados</span>
+            </div>
+
+            <div class="b2b-meta-chart-scroll">
+                <div class="b2b-meta-chart-bars">
+                    <?php foreach ($labels as $index => $label): ?>
+                        <?php
+                        $registered = (int) ($registeredSeries[$index] ?? 0);
+                        $approved = (int) ($approvedSeries[$index] ?? 0);
+                        $rejected = (int) ($rejectedSeries[$index] ?? 0);
+
+                        $registeredHeight = max(2, (int) round(($registered / $maxValue) * 100));
+                        $approvedHeight = max(2, (int) round(($approved / $maxValue) * 100));
+                        $rejectedHeight = max(2, (int) round(($rejected / $maxValue) * 100));
+                        ?>
+                        <div class="b2b-meta-chart-group">
+                            <div class="b2b-meta-chart-bar registered" style="height: <?= $block->escapeHtmlAttr((string) $registeredHeight) ?>%;" title="<?= $block->escapeHtmlAttr('Cadastros: ' . $registered) ?>"></div>
+                            <div class="b2b-meta-chart-bar approved" style="height: <?= $block->escapeHtmlAttr((string) $approvedHeight) ?>%;" title="<?= $block->escapeHtmlAttr('Aprovados: ' . $approved) ?>"></div>
+                            <div class="b2b-meta-chart-bar rejected" style="height: <?= $block->escapeHtmlAttr((string) $rejectedHeight) ?>%;" title="<?= $block->escapeHtmlAttr('Rejeitados: ' . $rejected) ?>"></div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div class="b2b-meta-chart-labels">
+                    <?php foreach ($labels as $label): ?>
+                        <div class="b2b-meta-chart-label"><?= $block->escapeHtml($label) ?></div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- ════════════════════════════════════════════════════════
          ATIVIDADE RECENTE — approval_log + cliente + empresa
     ═════════════════════════════════════════════════════════ -->
     <div class="b2b-meta-section">
         <div class="b2b-meta-section-title">
             Atividade Recente
-            <span class="b2b-count"><?= count($log) ?> registros</span>
+            <span class="b2b-count"><?= (int) count($log) ?> registros</span>
         </div>
 
         <?php if (empty($log)): ?>
