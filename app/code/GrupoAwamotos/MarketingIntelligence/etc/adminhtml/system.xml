@@ -61,6 +61,23 @@
                 </field>
             </group>
 
+            <group id="lead_ads" translate="label" sortOrder="25" showInDefault="1">
+                <label>Lead Ads (Webhook)</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1">
+                    <label>Webhook Lead Ads Habilitado</label>
+                    <comment>Recebe leads do Meta Lead Ads via webhook e salva como prospects.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="webhook_token" translate="label comment" type="obscure" sortOrder="20" showInDefault="1">
+                    <label>Token do Webhook</label>
+                    <comment><![CDATA[Token secreto para autenticar chamadas do webhook. Envie no header X-Webhook-Token ou param ?token=.]]></comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+            </group>
+
             <group id="meta_audiences" translate="label" sortOrder="30" showInDefault="1">
                 <label>Audiências Meta (Custom/Lookalike)</label>
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1">
@@ -96,6 +113,14 @@
                     <validate>validate-digits</validate>
                     <depends>
                         <field id="auto_lookalike">1</field>
+                    </depends>
+                </field>
+                <field id="customer_list_sync" translate="label comment" type="select" sortOrder="55" showInDefault="1">
+                    <label>Sync Lista de Clientes B2B</label>
+                    <comment>Envia clientes B2B aprovados como Custom Audience no Meta.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enabled">1</field>
                     </depends>
                 </field>
                 <field id="validate_access" translate="label comment" type="button" sortOrder="60" showInDefault="1">
@@ -181,6 +206,15 @@
                 </field>
             </group>
 
+            <group id="funnel_events" translate="label" sortOrder="55" showInDefault="1">
+                <label>Eventos de Funil B2B (CAPI)</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1">
+                    <label>Envio de Eventos de Funil Habilitado</label>
+                    <comment>Envia eventos customizados (QualifiedLead, ProposalSent, CreditApproved, InvoiceConfirmed, B2BRepurchase) via Conversions API.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+
             <group id="alerts" translate="label" sortOrder="60" showInDefault="1">
                 <label>Alertas</label>
                 <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1">
@@ -218,6 +252,15 @@
                     <depends>
                         <field id="enabled">1</field>
                     </depends>
+                </field>
+            </group>
+
+            <group id="signal_quality" translate="label" sortOrder="65" showInDefault="1">
+                <label>Qualidade de Sinal (Dataset Quality API)</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1">
+                    <label>Monitoramento de Qualidade Habilitado</label>
+                    <comment>Consulta a API de qualidade de dataset do Meta para monitorar score de match dos eventos CAPI.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
             </group>
         </section>

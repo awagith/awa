@@ -22,5 +22,15 @@
              method="execute">
             <schedule>0 */6 * * *</schedule>
         </job>
+        <job name="grupoawamotos_mktg_sync_insights"
+             instance="GrupoAwamotos\MarketingIntelligence\Cron\SyncInsights"
+             method="execute">
+            <schedule>0 2 * * *</schedule>
+        </job>
+        <job name="grupoawamotos_mktg_check_alerts"
+             instance="GrupoAwamotos\MarketingIntelligence\Cron\CheckAlerts"
+             method="execute">
+            <schedule>0 8 * * *</schedule>
+        </job>
     </group>
 </config>

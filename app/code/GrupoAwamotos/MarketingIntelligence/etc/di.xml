@@ -23,7 +23,7 @@
     <preference for="GrupoAwamotos\MarketingIntelligence\Api\Data\CampaignInsightInterface"
                 type="GrupoAwamotos\MarketingIntelligence\Model\CampaignInsight"/>
 
-    <!-- Service classes with logger injection -->
+    <!-- Existing service classes with logger injection -->
     <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\ProspectFetcher">
         <arguments>
             <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
@@ -75,6 +75,57 @@
         </arguments>
     </type>
     <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\MetaConfigValidator">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Phase 3: New service classes with logger injection -->
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\FunnelEventService">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\DatasetQualityService">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\CustomerListSyncer">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Phase 3: CAPI funnel observers with logger injection -->
+    <type name="GrupoAwamotos\MarketingIntelligence\Observer\SendQualifiedLead">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Observer\SendProposalSent">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Observer\SendCreditApproved">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Observer\SendInvoiceConfirmed">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Observer\SendRepurchase">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
+
+    <!-- Phase 3: LeadAds webhook controller with logger injection -->
+    <type name="GrupoAwamotos\MarketingIntelligence\Controller\Webhook\LeadAds">
         <arguments>
             <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
         </arguments>

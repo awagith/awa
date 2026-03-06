@@ -11,6 +11,7 @@ use GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\CompetitorAd\Collect
 use GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\CampaignInsight\CollectionFactory as InsightCollectionFactory;
 use GrupoAwamotos\MarketingIntelligence\Model\Service\BudgetAttributionService;
 use GrupoAwamotos\MarketingIntelligence\Model\Service\AlertService;
+use GrupoAwamotos\MarketingIntelligence\Model\Service\DatasetQualityService;
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -31,6 +32,7 @@ class Dashboard extends Template
         private readonly InsightCollectionFactory $insightCollectionFactory,
         private readonly BudgetAttributionService $budgetAttribution,
         private readonly AlertService $alertService,
+        private readonly DatasetQualityService $datasetQualityService,
         private readonly ScopeConfigInterface $scopeConfig,
         array $data = []
     ) {
@@ -492,5 +494,23 @@ class Dashboard extends Template
         ];
 
         return $map[$profile] ?? ['label' => ucfirst($profile), 'color' => '#6b7280'];
+    }
+
+    /**
+     * Get signal quality dashboard summary from Meta API.
+     *
+     * @return array{score: float, status: string, events: array, freshness: string}|null
+     */
+    public function getSignalQuality(): ?array
+    {
+        if (!$this->scopeConfig->isSetFlag('marketing_intelligence/signal_quality/enabled')) {
+            return null;
+        }
+
+        try {
+            return $this->datasetQualityService->getDashboardSummary();
+        } catch (\Exception $e) {
+            return null;
+        }
     }
 }

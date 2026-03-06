@@ -17,6 +17,7 @@ $budgetChartJson = $block->getBudgetChartJson();
 $b2bFunnel = $block->getB2BFunnel();
 $alerts = $block->getAlerts();
 $insightsSummary = $block->getInsightsSummary();
+$signalQuality = $block->getSignalQuality();
 ?>
 
 <style>
@@ -84,6 +85,15 @@ $insightsSummary = $block->getInsightsSummary();
     /* Budget summary table */
     .mktg-budget-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
     .mktg-budget-row:last-child { border-bottom: none; }
+
+    /* Signal Quality */
+    .mktg-signal-score { font-size: 48px; font-weight: 900; line-height: 1; }
+    .mktg-signal-status { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 4px; }
+    .mktg-signal-meter { height: 10px; border-radius: 5px; background: #e2e8f0; overflow: hidden; margin-top: 8px; }
+    .mktg-signal-fill { height: 100%; border-radius: 5px; transition: width 0.5s; }
+    .mktg-signal-event { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 13px; }
+    .mktg-signal-event:last-child { border-bottom: none; }
+    .mktg-freshness-badge { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; }
 
     /* Responsive */
     @media (max-width: 1200px) {
@@ -342,6 +352,90 @@ $insightsSummary = $block->getInsightsSummary();
             </div>
         </div>
     </div>
+
+    <!-- Signal Quality Panel -->
+    <?php if ($signalQuality !== null): ?>
+    <?php
+        $sqScore = $signalQuality['score'] ?? 0;
+        $sqStatus = $signalQuality['status'] ?? 'unknown';
+        $sqEvents = $signalQuality['events'] ?? [];
+        $sqFreshness = $signalQuality['freshness'] ?? 'unknown';
+        $sqStatusColors = [
+            'excellent' => '#059669',
+            'good' => '#2563eb',
+            'fair' => '#d97706',
+            'poor' => '#dc2626',
+        ];
+        $sqStatusLabels = [
+            'excellent' => 'Excelente',
+            'good' => 'Bom',
+            'fair' => 'Regular',
+            'poor' => 'Baixo',
+        ];
+        $sqFreshnessColors = [
+            'real-time' => '#059669',
+            'recent' => '#2563eb',
+            'stale' => '#d97706',
+            'outdated' => '#dc2626',
+        ];
+        $sqFreshnessLabels = [
+            'real-time' => 'Tempo Real',
+            'recent' => 'Recente',
+            'stale' => 'Atrasado',
+            'outdated' => 'Desatualizado',
+        ];
+        $sqColor = $sqStatusColors[$sqStatus] ?? '#6b7280';
+        $sqFColor = $sqFreshnessColors[$sqFreshness] ?? '#6b7280';
+    ?>
+    <div class="mktg-grid-2col">
+        <div class="mktg-section">
+            <h3 class="mktg-section-title">📡 Qualidade do Sinal (Meta Pixel)</h3>
+            <div style="display:flex;gap:24px;align-items:flex-start;">
+                <div style="text-align:center;min-width:120px;">
+                    <div class="mktg-signal-score" style="color:<?= $block->escapeHtmlAttr($sqColor) ?>">
+                        <?= $block->escapeHtml(number_format($sqScore, 1)) ?>
+                    </div>
+                    <div class="mktg-signal-status" style="color:<?= $block->escapeHtmlAttr($sqColor) ?>">
+                        <?= $block->escapeHtml($sqStatusLabels[$sqStatus] ?? $sqStatus) ?>
+                    </div>
+                    <div class="mktg-signal-meter" style="width:100px;margin:8px auto 0;">
+                        <div class="mktg-signal-fill" style="width:<?= (int) min($sqScore * 10, 100) ?>%;background:<?= $block->escapeHtmlAttr($sqColor) ?>"></div>
+                    </div>
+                    <div style="margin-top:8px;">
+                        <span class="mktg-freshness-badge" style="background:<?= $block->escapeHtmlAttr($sqFColor) ?>15;color:<?= $block->escapeHtmlAttr($sqFColor) ?>">
+                            <?= $block->escapeHtml($sqFreshnessLabels[$sqFreshness] ?? $sqFreshness) ?>
+                        </span>
+                    </div>
+                </div>
+                <div style="flex:1;">
+                    <div style="font-size:12px;font-weight:600;color:#64748b;text-transform:uppercase;margin-bottom:8px;">Eventos Recebidos</div>
+                    <?php if (!empty($sqEvents)):
+                        foreach ($sqEvents as $evt):
+                            $evtName = $block->escapeHtml((string) ($evt['event_name'] ?? ''));
+                            $evtScore = (float) ($evt['match_quality'] ?? 0);
+                            $evtColor = $evtScore >= 8 ? '#059669' : ($evtScore >= 6 ? '#2563eb' : ($evtScore >= 4 ? '#d97706' : '#dc2626'));
+                    ?>
+                    <div class="mktg-signal-event">
+                        <span><?= $evtName ?></span>
+                        <span style="font-weight:700;color:<?= $block->escapeHtmlAttr($evtColor) ?>"><?= $block->escapeHtml(number_format($evtScore, 1)) ?></span>
+                    </div>
+                    <?php endforeach; else: ?>
+                    <p style="color:#64748b;font-size:13px;">Nenhum evento registrado ainda.</p>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- Placeholder for future CAPI Funnel visualization -->
+        <div class="mktg-section">
+            <h3 class="mktg-section-title">🔄 Funil CAPI B2B</h3>
+            <p style="color:#64748b;font-size:13px;text-align:center;padding:20px;">
+                Eventos CAPI enviados: QualifiedLead, ProposalSent, CreditApproved, InvoiceConfirmed, B2BRepurchase.<br>
+                Os dados de volume aparecem no painel de Qualidade do Sinal acima.
+            </p>
+        </div>
+    </div>
+    <?php endif; ?>
 
     <!-- Insights Summary -->
     <?php if (!empty($insightsSummary)): ?>
