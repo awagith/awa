@@ -134,18 +134,26 @@
 }
 
 @media (width >= 992px) {
+    /* No desktop o menu de categorias é sempre visível (comportamento Mueller/sidebar) */
     .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown {
-        display: none;
-    }
-
-    .navigation.verticalmenu.navigation--mueller.awa-menu-expanded > .togge-menu.list-category-dropdown,
-    .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown.menu-open,
-    .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown.vmm-open {
         display: block !important;
+        overflow: visible !important;
+        position: relative;
     }
 
-    /* Submenu flyout panel — show on hover and when JS adds awa-mueller-open */
-    .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0 > .level0.submenu {
+    /* O botão "Todas as categorias" vira apenas título, sem comportamento de toggle */
+    .navigation.verticalmenu.navigation--mueller > .title-category-dropdown {
+        cursor: default;
+        pointer-events: none;
+    }
+
+    /* li.level0 precisa ser position:relative para o flyout ser posicionado corretamente */
+    .navigation.verticalmenu.navigation--mueller > .togge-menu > li.ui-menu-item.level0 {
+        position: relative !important;
+    }
+
+    /* Submenu flyout panel — estado inicial: oculto, posicionado à direita do li */
+    .navigation.verticalmenu.navigation--mueller > .togge-menu > li.ui-menu-item.level0 > .level0.submenu {
         position: absolute !important;
         left: 100% !important;
         top: 0 !important;
@@ -163,17 +171,13 @@
         transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
     }
 
-    .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0:hover > .level0.submenu,
-    .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0.awa-mueller-open > .level0.submenu,
-    .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0.vmm-active > .level0.submenu {
+    /* Submenu flyout — visível ao hover (CSS nativo) ou quando JS adiciona awa-mueller-open */
+    .navigation.verticalmenu.navigation--mueller > .togge-menu > li.ui-menu-item.level0:hover > .level0.submenu,
+    .navigation.verticalmenu.navigation--mueller > .togge-menu > li.ui-menu-item.level0.awa-mueller-open > .level0.submenu,
+    .navigation.verticalmenu.navigation--mueller > .togge-menu > li.ui-menu-item.level0.vmm-active > .level0.submenu {
         opacity: 1 !important;
         visibility: visible !important;
         transform: translateX(0) !important;
-    }
-
-    /* Make sure togge-menu allows overflow for the flyout panel */
-    .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown {
-        overflow: visible !important;
     }
 }
 
