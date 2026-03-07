@@ -130,6 +130,11 @@
             <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
         </arguments>
     </type>
+    <type name="GrupoAwamotos\MarketingIntelligence\Model\Service\GrowthExperimentsService">
+        <arguments>
+            <argument name="logger" xsi:type="object">MarketingIntelligenceLogger</argument>
+        </arguments>
+    </type>
 
     <!-- Virtual logger -->
     <virtualType name="MarketingIntelligenceLogHandler"

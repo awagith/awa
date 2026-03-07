@@ -12,6 +12,7 @@ use GrupoAwamotos\MarketingIntelligence\Model\ResourceModel\CampaignInsight\Coll
 use GrupoAwamotos\MarketingIntelligence\Model\Service\BudgetAttributionService;
 use GrupoAwamotos\MarketingIntelligence\Model\Service\AlertService;
 use GrupoAwamotos\MarketingIntelligence\Model\Service\DatasetQualityService;
+use GrupoAwamotos\MarketingIntelligence\Model\Service\GrowthExperimentsService;
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
@@ -33,6 +34,7 @@ class Dashboard extends Template
         private readonly BudgetAttributionService $budgetAttribution,
         private readonly AlertService $alertService,
         private readonly DatasetQualityService $datasetQualityService,
+        private readonly GrowthExperimentsService $growthExperimentsService,
         private readonly ScopeConfigInterface $scopeConfig,
         array $data = []
     ) {
@@ -511,6 +513,20 @@ class Dashboard extends Template
             return $this->datasetQualityService->getDashboardSummary();
         } catch (\Exception $e) {
             return null;
+        }
+    }
+
+    /**
+     * Get growth experiment suggestions for B2B campaigns.
+     *
+     * @return array<int, array{id: string, name: string, description: string, segment: string, audience_size: int, priority: string, meta_objective: string, status: string}>
+     */
+    public function getGrowthExperiments(): array
+    {
+        try {
+            return $this->growthExperimentsService->getExperiments();
+        } catch (\Exception $e) {
+            return [];
         }
     }
 }
