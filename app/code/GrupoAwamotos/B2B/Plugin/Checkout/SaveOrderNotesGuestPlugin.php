@@ -11,22 +11,22 @@ use Magento\Checkout\Api\GuestPaymentInformationManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Api\Data\PaymentInterface;
 use Magento\Quote\Api\Data\AddressInterface;
-use Magento\Quote\Model\QuoteIdMaskFactory;
+use Magento\Quote\Model\MaskedQuoteIdToQuoteIdInterface;
 use Psr\Log\LoggerInterface;
 
 class SaveOrderNotesGuestPlugin
 {
     private CartRepositoryInterface $cartRepository;
-    private QuoteIdMaskFactory $quoteIdMaskFactory;
+    private MaskedQuoteIdToQuoteIdInterface $maskedQuoteIdToQuoteId;
     private LoggerInterface $logger;
 
     public function __construct(
         CartRepositoryInterface $cartRepository,
-        QuoteIdMaskFactory $quoteIdMaskFactory,
+        MaskedQuoteIdToQuoteIdInterface $maskedQuoteIdToQuoteId,
         LoggerInterface $logger
     ) {
         $this->cartRepository = $cartRepository;
-        $this->quoteIdMaskFactory = $quoteIdMaskFactory;
+        $this->maskedQuoteIdToQuoteId = $maskedQuoteIdToQuoteId;
         $this->logger = $logger;
     }
 
@@ -90,25 +90,18 @@ class SaveOrderNotesGuestPlugin
                 return;
             }
 
-            // Strip HTML tags and trim
-            $orderNotes = trim(strip_tags((string) $orderNotes));
-            if ($orderNotes === '') {
+            $orderNotes = $this->sanitizeOrderNotes($orderNotes);
+            if ($orderNotes === null) {
                 return;
             }
 
-            // Limit to 500 chars
-            if (mb_strlen($orderNotes) > 500) {
-                $orderNotes = mb_substr($orderNotes, 0, 500);
-            }
-
-            // Decode masked quote ID
-            $quoteIdMask = $this->quoteIdMaskFactory->create()->load($cartId, 'masked_id');
-            $quoteId = (int) $quoteIdMask->getQuoteId();
+            $quoteId = (int) $this->maskedQuoteIdToQuoteId->execute($cartId);
 
             if ($quoteId === 0) {
                 return;
             }
 
+            /** @var \Magento\Quote\Model\Quote $quote */
             $quote = $this->cartRepository->getActive($quoteId);
             $quote->setData('b2b_order_notes', $orderNotes);
             $this->cartRepository->save($quote);
@@ -119,5 +112,30 @@ class SaveOrderNotesGuestPlugin
         } catch (\Exception $e) {
             $this->logger->error('[B2B] Erro ao salvar Order Notes (guest): ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Sanitize Order Notes: trim, limit length, strip dangerous content.
+     */
+    private function sanitizeOrderNotes(mixed $notes): ?string
+    {
+        if ($notes === null || $notes === '') {
+            return null;
+        }
+
+        $notes = trim((string) $notes);
+
+        if ($notes === '') {
+            return null;
+        }
+
+        $notes = strip_tags($notes);
+
+        if (mb_strlen($notes) > 500) {
+            $this->logger->warning('[B2B] Order Notes (guest) truncated — exceeded 500 chars');
+            $notes = mb_substr($notes, 0, 500);
+        }
+
+        return $notes;
     }
 }

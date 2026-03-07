@@ -67,58 +67,43 @@
         <referenceContainer name="header-wrapper" remove="true"/>
         <referenceContainer name="navigation.sections" remove="true"/>
 
-        <!-- compatibility sink for 3rd-party blocks that still target magento default
-             header/footer containers removed by ayo. kept display=false to avoid visual output. -->
         <referenceContainer name="page.wrapper">
-            <container name="awa.layout.compat" as="awa_layout_compat">
-                <container name="header"/>
-                <container name="notifications"/>
+            <container name="awa.after.header.compat"
+                       as="awa_after_header_compat"
+                       htmlTag="div"
+                       htmlClass="awa-after-header-compat"
+                       after="toki_header">
                 <container name="global.notices"/>
                 <container name="page.menu"/>
-                <container name="page.breadcrumbs"/>
                 <container name="page.formkey"/>
                 <container name="main.top"/>
                 <container name="page.messages"/>
                 <container name="page.main.actions"/>
-                <container name="footer"/>
             </container>
         </referenceContainer>
-        <referenceContainer name="awa.layout.compat" display="false"/>
 
         <referenceContainer name="footer-container">
+            <container name="awa.footer.compat"
+                       as="awa_footer_compat"
+                       htmlTag="div"
+                       htmlClass="awa-footer-compat-shell"
+                       before="toki_footer">
+                <container name="footer"/>
+            </container>
             <block class="Rokanthemes\Themeoption\Block\Themeoption" name="toki_footer" template="html/footer.phtml">
-                <block class="Magento\Cms\Block\Block" name="social_block">
-                    <arguments>
-                        <argument name="block_id" xsi:type="string">social_block</argument>
-                    </arguments>
-                </block>
                 <block class="Magento\Cms\Block\Block" name="footer-tags">
                     <arguments>
                         <argument name="block_id" xsi:type="string">footer-tags</argument>
                     </arguments>
                 </block>
-                <block class="Magento\Cms\Block\Block" name="footer_static5">
-                    <arguments>
-                        <argument name="block_id" xsi:type="string">footer_static5</argument>
-                    </arguments>
-                </block>
-                <block class="Magento\Cms\Block\Block" name="fixed_right">
-                    <arguments>
-                        <argument name="block_id" xsi:type="string">fixed_right</argument>
-                    </arguments>
-                </block>
-                <block class="Magento\Cms\Block\Block" name="footer_payment">
-                    <arguments>
-                        <argument name="block_id" xsi:type="string">footer_payment</argument>
-                    </arguments>
-                </block>
+                <block class="Magento\Framework\View\Element\Template"
+                       name="footer_static5"
+                       template="Rokanthemes_Themeoption::html/footer/footer-static5.phtml"/>
             </block>
         </referenceContainer>
 
         <move element="footer_links" destination="toki_footer"/>
         <move element="store_switcher" destination="toki_footer"/>
-        <!-- remove o bloco copyright do magento default para evitar conflito de alias
-             com toki_copyright (as="copyright") ja definido no tema pai ayo_default -->
         <referenceBlock name="copyright" remove="true"/>
 
         <referenceContainer name="report.bugs" remove="1"/>
@@ -135,7 +120,5 @@
                 </container>
             </container>
         </referenceContainer>
-
-        <!-- wishlist e compare sidebar restaurados — fidelidade ao demo ayo home5 -->
     </body>
 </page>

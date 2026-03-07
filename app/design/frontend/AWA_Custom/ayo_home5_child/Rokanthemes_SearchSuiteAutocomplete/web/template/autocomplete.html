@@ -1,4 +1,3 @@
-<!-- AWA Autocomplete v6 — 3-state: Discovery / Results / No-results -->
 <div id="searchsuite-autocomplete"
      class="searchsuite-autocomplete awa-ac"
      data-bind="visible: showPopup(),
@@ -11,10 +10,8 @@
      role="listbox"
      aria-label="Resultados da busca">
 
-    <!-- loading bar -->
     <div class="awa-ac-loading-bar" data-bind="visible: isSearching()" aria-hidden="true"></div>
 
-    <!-- STATE; 1: discovery (focused, empty query) -->
     <div class="awa-ac-discovery" data-bind="visible: shouldShowDiscovery()" aria-label="Sugestoes de busca">
         <div class="awa-ac-discovery-intro">
             <div class="awa-ac-section-title awa-ac-section-title--discovery">
@@ -25,11 +22,45 @@
             </p>
         </div>
 
-        <!-- recent searches (chips) -->
-        <!-- ko; 2: results (has query + results) -->
+        <!-- ko if: recentSearches().length > 0 -->
+        <div class="awa-ac-recent--discovery">
+            <div class="awa-ac-section-title awa-ac-section-title--recent">
+                Buscas recentes
+                <button class="awa-ac-clear-recent" type="button"
+                        data-bind="click: clearRecentSearches"
+                        title="Limpar buscas recentes">Limpar</button>
+            </div>
+            <div class="awa-ac-chips" data-bind="foreach: recentSearches">
+                <a class="awa-ac-chip" href="#"
+                   data-bind="click: $parent.clickRecentSearch.bind($parent)"
+                   role="option">
+                    <svg class="awa-ac-chip-icon" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+                        <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 1.2A5.8 5.8 0 1 1 2.2 8 5.8 5.8 0 0 1 8 2.2zm-.4 2.3v4l3.2 1.9.6-1-2.6-1.6V4.5h-1.2z" fill="currentColor"/>
+                    </svg>
+                    <span data-bind="text: term"></span>
+                </a>
+            </div>
+        </div>
+        <!-- /ko -->
+
+        <div class="awa-ac-keywords-section">
+            <div class="awa-ac-section-title">Mais buscados</div>
+            <ol class="awa-ac-keywords" data-bind="foreach: popularKeywords">
+                <li class="awa-ac-keywords-item">
+                    <a class="awa-ac-keywords-link" href="#"
+                       data-bind="click: $parent.clickKeyword.bind($parent),
+                                  attr: { id: 'awa-ac-item-' + $index() },
+                                  css: { 'awa-ac-nav-active': $parent.navIndex() === $index() }"
+                       role="option">
+                        <span data-bind="text: term"></span>
+                    </a>
+                </li>
+            </ol>
+        </div>
+    </div>
+
     <div class="awa-ac-results" data-bind="visible: hasQuery() && anyResultCount()">
         <div class="awa-ac-wrap">
-            <!-- left; column: Suggestions -->
             <div class="awa-ac-left" data-bind="visible: result.suggest.data().length > 0">
                 <div class="awa-ac-suggest">
                     <div class="awa-ac-section-title">
@@ -46,14 +77,13 @@
                                     <path d="M8.5 3a5.5 5.5 0 0 1 4.383 8.823l3.896 3.9a.75.75 0 0 1-1.06 1.06l-3.9-3.896A5.5 5.5 0 1 1 8.5 3zm0 1.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" fill="currentColor"/>
                                 </svg>
                                 <span data-bind="html: $parent.highlightMatch(title)"></span>
-                                <span class="awa-ac-suggest-count" data-bind="text: '(' + num_results + ')'"></span>
+                                <span class="awa-ac-suggest-count" data-bind="text: '(' + num_results + ')' "></span>
                             </a>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <!-- Right; column: Products -->
             <div class="awa-ac-right" data-bind="visible: result.product.data().length > 0">
                 <div class="awa-ac-section-title">
                     Produtos
@@ -95,7 +125,6 @@
         </div>
     </div>
 
-    <!-- STATE; 3: No results -->
     <div class="awa-ac-no-result" data-bind="visible: hasQuery() && !anyResultCount()">
         <svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">
             <path d="M8.5 3a5.5 5.5 0 0 1 4.383 8.823l3.896 3.9a.75.75 0 0 1-1.06 1.06l-3.9-3.896A5.5 5.5 0 1 1 8.5 3zm0 1.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" fill="currentColor"/>
@@ -112,7 +141,7 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
     $(document).on('submit', '[data-role="searchsuiteautocomplete-tocart-form"]', function (e) {
         e.preventDefault();
         var form = $(this),
-            btn  = form.find('button[type="submit"]'),
+            btn = form.find('button[type="submit"]'),
             orig = btn.html(),
             formKey = $('input[name="form_key"]').first().val();
 
@@ -130,11 +159,15 @@ require(['jquery', 'Magento_Customer/js/customer-data'], function ($, customerDa
             success: function () {
                 btn.html('<span class="awa-ac-added">Adicionado &#10003;</span>');
                 customerData.reload(['cart'], true);
-                setTimeout(function () { btn.prop('disabled', false).html(orig); }, 3000);
+                setTimeout(function () {
+                    btn.prop('disabled', false).html(orig);
+                }, 3000);
             },
             error: function () {
                 btn.html('<span class="awa-ac-add-error">Erro</span>');
-                setTimeout(function () { btn.prop('disabled', false).html(orig); }, 3000);
+                setTimeout(function () {
+                    btn.prop('disabled', false).html(orig);
+                }, 3000);
             }
         });
     });

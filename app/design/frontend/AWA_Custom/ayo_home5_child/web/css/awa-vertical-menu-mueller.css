@@ -133,7 +133,7 @@
     min-width: 0;
 }
 
-@media (width >= 992px) {
+@media (min-width: 992px) {
     /* No desktop o menu de categorias é sempre visível (comportamento Mueller/sidebar) */
     .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown {
         display: block !important;
@@ -150,10 +150,12 @@
     /* li.level0 precisa ser position:relative para o flyout ser posicionado corretamente */
     .navigation.verticalmenu.navigation--mueller > .togge-menu > li.ui-menu-item.level0 {
         position: relative !important;
+        overflow: visible !important;
     }
 
     /* Submenu flyout panel — estado inicial: oculto, posicionado à direita do li */
     .navigation.verticalmenu.navigation--mueller > .togge-menu > li.ui-menu-item.level0 > .level0.submenu {
+        display: block !important;
         position: absolute !important;
         left: 100% !important;
         top: 0 !important;
@@ -164,9 +166,10 @@
         border: 1px solid #e5e7eb;
         border-radius: 0 12px 12px 0;
         box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.12);
-        z-index: 999;
+        z-index: 9999;
         opacity: 0;
         visibility: hidden;
+        pointer-events: none;
         transform: translateX(8px);
         transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
     }
@@ -177,11 +180,12 @@
     .navigation.verticalmenu.navigation--mueller > .togge-menu > li.ui-menu-item.level0.vmm-active > .level0.submenu {
         opacity: 1 !important;
         visibility: visible !important;
+        pointer-events: auto !important;
         transform: translateX(0) !important;
     }
 }
 
-@media (width <= 991px) {
+@media (max-width: 991px) {
     .navigation.verticalmenu.navigation--mueller {
         border-radius: 16px;
         overflow: hidden;

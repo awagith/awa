@@ -132,17 +132,3 @@ $searchSuiteUrl = $block->getSearchUrl();
     }
 }
 </script>
-<script type="text/x-magento-init">
-{
-    "#search_mini_form": {
-        "js/awa-search-autocomplete-compat": {
-            "inputSelector": "#search",
-            "panelSelector": "#search_autocomplete",
-            "resultsRootSelector": ".searchsuite-autocomplete",
-            "fallbackEndpoint": "<?= $block->escapeUrl($searchSuiteUrl) ?>",
-            "searchResultUrl": "<?= $block->escapeUrl($searchHelper->getResultUrl()) ?>",
-            "minQueryLength": 2
-        }
-    }
-}
-</script>

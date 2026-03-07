@@ -10,7 +10,6 @@
      --awa-gap-md: 12px   (form fields, card padding)
      --awa-gap-lg: 16px   (product grid, section inner)
      --awa-gap-xl: 24px   (section separation, major blocks)
-     --awa-gap-2xl: 32px  (page-level vertical rhythm)
 
    Container:
      --awa-container-max: 1200px
@@ -23,27 +22,42 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-    /* Container */
+    /* ── Container ── */
     --awa-container-max: 1200px;
     --awa-container-pad: 16px;
+    --awa-container: var(--awa-container-max);
 
-    /* Gap scale (4px rhythm) */
+    /* ── Gap scale (4 px rhythm) ── */
     --awa-gap-xs:   4px;
     --awa-gap-sm:   8px;
     --awa-gap-md:  12px;
     --awa-gap-lg:  16px;
     --awa-gap-xl:  24px;
-    --awa-gap-2xl: 32px;
 
-    /* Section spacing (responsive) */
+    /* ── Space scale (aliases — same rhythm, Tailwind naming) ── */
+    --awa-space-1:    4px;
+    --awa-space-1-5:  6px;
+    --awa-space-2:    8px;
+    --awa-space-2-5: 10px;
+    --awa-space-3:   12px;
+    --awa-space-3-5: 14px;
+    --awa-space-3-75:15px;
+    --awa-space-4:   16px;
+    --awa-space-5:   20px;
+    --awa-space-6:   24px;
+    --awa-space-7:   28px;
+
+    /* ── Section spacing (responsive) ── */
     --awa-section-gap: clamp(16px, 2.4vw, 28px);
 
-    /* Product grid */
+    /* ── Product grid ── */
     --awa-grid-product-min: 200px;
     --awa-grid-product-gap: var(--awa-gap-lg);
     --awa-grid-product-cols: repeat(auto-fill, minmax(var(--awa-grid-product-min), 1fr));
 
-    /* Border radius scale */
+    /* ── Border radius scale ── */
+    --awa-radius:       var(--awa-radius-base);
+    --awa-radius-2xs:   2px;    /* fine detail, separator */
     --awa-radius-xs:    6px;    /* decorative accent, small badge */
     --awa-radius-sm:    8px;    /* thumbnail, tag */
     --awa-radius-base:  10px;   /* button, action, secondary card */
@@ -51,13 +65,132 @@
     --awa-radius-lg:   14px;    /* box service, trust item */
     --awa-radius-xl:   16px;    /* product card, newsletter wrapper */
     --awa-radius-pill: 999px;   /* icon circle, badge */
+    --awa-radius-full:  50%;    /* circular avatar, dot */
+    --awa-control-radius: var(--awa-radius-sm);
 
-    /* Typography */
-    --awa-text-xs:         12px;
-    --awa-text-sm:         14px;
-    --awa-text-base:       16px;
-    --awa-weight-semibold: 600;
-    --awa-weight-bold:     700;
+    /* ── Gray scale (Tailwind gray) ── */
+    --awa-gray-200: #e5e7eb;
+    --awa-gray-300: #d1d5db;
+    --awa-gray-400: #9ca3af;
+    --awa-gray-500: #6b7280;
+    --awa-gray-600: #4b5563;
+    --awa-gray-700: #374151;
+
+    /* ── Semantic colors ── */
+    --awa-bg-surface:      #fff;
+    --awa-bg-muted:        #f1f5f9;
+    --awa-text-primary: #333333;
+    --awa-text-muted: #666666;
+    --awa-text-on-primary: #fff;
+
+    /* ── Status colors ── */
+    --awa-success: #16a34a;
+    --awa-warning: #d97706;
+    --awa-danger:  #dc2626;
+    --awa-info:    #2563eb;
+
+    /* ── Brand variants ── */
+    --awa-red-light:       #f87171;
+    --awa-red-extra-light: #fef2f2;
+
+    /* ── Typography — size scale ── */
+    --awa-text-3xs:       0.625rem;   /* 10px */
+    --awa-text-2xs:       0.6875rem;  /* 11px */
+    --awa-text-xs:        0.75rem;    /* 12px */
+    --awa-text-xs-plus:   0.8125rem;  /* 13px */
+    --awa-text-sm:        0.875rem;   /* 14px */
+    --awa-text-md:        0.9375rem;  /* 15px */
+    --awa-text-base:      1rem;       /* 16px */
+    --awa-text-base-plus: 1.0625rem;  /* 17px */
+    --awa-text-lg:        1.125rem;   /* 18px */
+    --awa-text-xl:        1.25rem;    /* 20px */
+    --awa-text-xl-plus:   1.375rem;   /* 22px */
+    --awa-text-2xl:       1.5rem;     /* 24px */
+    --awa-text-3xl:       1.875rem;   /* 30px */
+    --awa-text-5xl:       3rem;       /* 48px */
+
+    /* ── Font families ── */
+    --awa-font-body:    'Source Sans 3', arial, sans-serif;
+    --awa-font-heading: 'Source Sans 3', arial, sans-serif;
+    --awa-font-mono:    'Courier New', courier, monospace;
+
+    /* ── Font weights ── */
+    --awa-weight-normal:    400;
+    --awa-weight-medium:    500;
+    --awa-weight-semibold:  600;
+    --awa-weight-bold:      700;
+
+    /* ── Line-height (leading) ── */
+    --awa-leading-none:        1;
+    --awa-leading-compact:     1.2;
+    --awa-leading-snug:        1.375;
+    --awa-leading-cozy:        1.4;
+    --awa-leading-normal:      1.5;
+    --awa-leading-base:        1.5;
+    --awa-leading-comfortable: 1.6;
+    --awa-leading-relaxed:     1.625;
+    --awa-leading-loose:       2;
+
+    /* ── Letter-spacing (tracking) ── */
+    --awa-tracking-tighter: -0.05em;
+    --awa-tracking-tight:   -0.025em;
+    --awa-tracking-normal:   0;
+    --awa-tracking-wide:     0.025em;
+
+    /* ── Shadows ── */
+    --awa-shadow:          0 1px 3px rgb(0 0 0 / 10%), 0 1px 2px rgb(0 0 0 / 6%);
+    --awa-shadow-red:      0 4px 14px rgb(183 51 55 / 15%);
+    --awa-shadow-dropdown: 0 10px 15px -3px rgb(0 0 0 / 10%), 0 4px 6px -4px rgb(0 0 0 / 5%);
+
+    /* ── Z-index scale (step 100) ── */
+    --awa-z-flyout:   300;
+    --awa-z-popup:    600;
+
+    /* ── Layout / component aliases ── */
+    --awa-touch-target: 44px;
+    --awa-plp-toolbar-top-offset: 0px;
+    --awa-b2b-mode-accent: var(--awa-brand-primary, #b73337);
+
+    /* ── Buttons ── */
+    --awa-btn-height-sm:  36px;
+    --awa-btn-height:     44px;
+    --awa-btn-height-lg:  48px;
+    --awa-btn-pad-compact:  8px 12px;
+    --awa-btn-pad-normal:  10px 20px;
+    --awa-btn-pad-large:   12px 28px;
+    --awa-btn-transition-fast: 0.15s;
+    --awa-btn-transition:      0.25s;
+    --awa-btn-transition-slow: 0.35s;
+
+    /* ── Carousel ── */
+    --awa-carousel-arrow-size:    44px;
+    --awa-carousel-arrow-border:  var(--awa-gray-300);
+    --awa-carousel-arrow-bg:      var(--awa-bg-surface);
+    --awa-carousel-dot-size:      10px;
+    --awa-carousel-dot-gap:       var(--awa-gap-sm);
+    --awa-carousel-dot-active-scale: 1.25;
+
+    /* ── Form inputs ── */
+    --awa-input-height:       44px;
+    --awa-input-height-lg:    48px;
+    --awa-input-padding:      10px 14px;
+    --awa-input-border:       var(--awa-gray-300);
+    --awa-input-border-focus: var(--awa-brand-primary, #b73337);
+    --awa-input-radius:       var(--awa-radius-md);
+    --awa-input-focus-shadow: 0 0 0 3px rgb(183 51 55 / 14%);
+    --awa-input-error-border: var(--awa-danger);
+    --awa-input-error-bg:     #fff7f7;
+
+    /* ── Brand opacity helpers ── */
+    --awa-brand-opacity-10: rgb(183 51 55 / 10%);
+    --awa-brand-opacity-15: rgb(183 51 55 / 15%);
+    --awa-brand-opacity-25: rgb(183 51 55 / 25%);
+
+    /* ── Footer grid ── */
+    --awa-footer-cols:     repeat(4, 1fr);
+    --awa-footer-cols-md:  repeat(2, 1fr);
+    --awa-footer-cols-sm:  1fr;
+    --awa-footer-gap:      var(--awa-gap-lg);
 }
 
 
@@ -175,14 +308,14 @@
 }
 
 .trust-badge-item .trust-badge-text strong {
-    font-size: .875rem;
+    font-size: var(--awa-text-sm);
     font-weight: 600;
     color: var(--awa-text-primary, #1a1a2e);
     line-height: 1.3;
 }
 
 .trust-badge-item .trust-badge-text span {
-    font-size: .75rem;
+    font-size: var(--awa-text-xs);
     color: var(--awa-text-muted, #6b7280);
     line-height: 1.3;
 }
@@ -345,7 +478,7 @@
     -webkit-box-orient: vertical !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
-    font-size: 12px !important;
+    font-size: var(--awa-text-xs) !important;
     line-height: 1.3 !important;
     margin: 0 0 4px !important;
 }
@@ -353,7 +486,7 @@
 /* SKU: compact */
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5)
     .categorytab-container .owl-item .awa-b2b-sku {
-    font-size: 11px !important;
+    font-size: var(--awa-text-2xs) !important;
     color: #888 !important;
     margin: 0 0 4px !important;
 }
@@ -361,7 +494,7 @@
 /* Price: compact */
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5)
     .categorytab-container .owl-item .info-price {
-    font-size: 12px !important;
+    font-size: var(--awa-text-xs) !important;
     margin: 0 !important;
 }
 
@@ -825,11 +958,11 @@ body.rokanthemes-onepagecheckout .fieldset {
     height: 36px !important;
     border-radius: 50% !important;
     background: rgb(255 255 255 / 95%) !important;
-    border: 1px solid #ddd !important;
-    color: #333 !important;
+    border: 1px solid var(--awa-carousel-arrow-border) !important;
+    color: var(--awa-text-main) !important;
     font-size: 0 !important;
     cursor: pointer !important;
-    transition: all 0.2s ease !important;
+    transition: all var(--awa-btn-transition) ease !important;
     box-shadow: 0 2px 6px rgb(0 0 0 / 12%) !important;
     opacity: 0 !important;
     padding: 0 !important;
@@ -854,14 +987,14 @@ body.rokanthemes-onepagecheckout .fieldset {
 .categorytab-container .owl-buttons .owl-next:hover {
     background: #e63946 !important;
     border-color: #e63946 !important;
-    color: #fff !important;
+    color: var(--awa-text-inverse) !important;
     box-shadow: 0 4px 12px rgb(230 57 70 / 30%) !important;
 }
 
 /* Arrow icons via CSS pseudo-elements */
 .categorytab-container .owl-buttons .owl-prev::after,
 .categorytab-container .owl-buttons .owl-next::after {
-    font-size: 18px !important;
+    font-size: var(--awa-text-lg) !important;
     line-height: 1 !important;
     font-family: inherit !important;
 }

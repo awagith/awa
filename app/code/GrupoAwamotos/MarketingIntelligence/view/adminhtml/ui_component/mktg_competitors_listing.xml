@@ -12,110 +12,116 @@
             <dep>mktg_competitors_listing.mktg_competitors_listing_data_source</dep>
         </deps>
     </settings>
-    <datasource name="mktg_competitors_listing_data_source" component="Magento_Ui/js/grid/provider">
+    <dataSource name="mktg_competitors_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
+            <argument name="name" xsi:type="string">mktg_competitors_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">ad_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+        </argument>
         <settings>
-            <updateurl path="mui/index/render"/>
-            <storageconfig>
+            <updateUrl path="mui/index/render"/>
+            <storageConfig>
                 <param name="indexField" xsi:type="string">ad_id</param>
-            </storageconfig>
+            </storageConfig>
         </settings>
-    </datasource>
-    <listingtoolbar name="listing_top">
+    </dataSource>
+    <listingToolbar name="listing_top">
         <bookmark name="bookmarks"/>
-        <columnscontrols name="columns_controls"/>
-        <filtersearch name="fulltext"/>
+        <columnsControls name="columns_controls"/>
+        <filterSearch name="fulltext"/>
         <filters name="listing_filters"/>
         <paging name="listing_paging"/>
-    </listingtoolbar>
+    </listingToolbar>
     <columns name="mktg_competitors_listing_columns">
-        <selectionscolumn name="ids" sortorder="0">
+        <selectionsColumn name="ids" sortOrder="0">
             <settings>
-                <indexfield>ad_id</indexfield>
+                <indexField>ad_id</indexField>
             </settings>
-        </selectionscolumn>
-        <column name="ad_id" sortorder="10">
+        </selectionsColumn>
+        <column name="ad_id" sortOrder="10">
             <settings>
-                <filter>textrange</filter>
-                <label translate="true">id</label>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
                 <sorting>desc</sorting>
             </settings>
         </column>
-        <column name="page_name" sortorder="20">
+        <column name="page_name" sortOrder="20">
             <settings>
                 <filter>text</filter>
-                <label translate="true">página</label>
+                <label translate="true">Página</label>
             </settings>
         </column>
-        <column name="ad_creative_title" sortorder="30">
+        <column name="ad_creative_title" sortOrder="30">
             <settings>
                 <filter>text</filter>
-                <label translate="true">título do anúncio</label>
+                <label translate="true">Título do Anúncio</label>
             </settings>
         </column>
-        <column name="ad_creative_body" sortorder="40">
+        <column name="ad_creative_body" sortOrder="40">
             <settings>
                 <filter>text</filter>
-                <label translate="true">texto</label>
+                <label translate="true">Texto</label>
                 <visible>false</visible>
             </settings>
         </column>
-        <column name="ad_creative_link" sortorder="50">
+        <column name="ad_creative_link" sortOrder="50">
             <settings>
                 <filter>text</filter>
-                <label translate="true">url destino</label>
+                <label translate="true">URL Destino</label>
                 <visible>false</visible>
             </settings>
         </column>
-        <column name="platforms" sortorder="60">
+        <column name="platforms" sortOrder="60">
             <settings>
                 <filter>text</filter>
-                <label translate="true">plataformas</label>
+                <label translate="true">Plataformas</label>
             </settings>
         </column>
-        <column name="ad_delivery_start" sortorder="70" class="Magento\Ui\Component\Listing\Columns\Date">
+        <column name="ad_delivery_start" sortOrder="70" class="Magento\Ui\Component\Listing\Columns\Date">
             <settings>
-                <filter>daterange</filter>
-                <label translate="true">início</label>
-                <datatype>date</datatype>
+                <filter>dateRange</filter>
+                <label translate="true">Início</label>
+                <dataType>date</dataType>
             </settings>
         </column>
-        <column name="ad_delivery_stop" sortorder="80" class="Magento\Ui\Component\Listing\Columns\Date">
+        <column name="ad_delivery_stop" sortOrder="80" class="Magento\Ui\Component\Listing\Columns\Date">
             <settings>
-                <filter>daterange</filter>
-                <label translate="true">fim</label>
-                <datatype>date</datatype>
+                <filter>dateRange</filter>
+                <label translate="true">Fim</label>
+                <dataType>date</dataType>
                 <visible>false</visible>
             </settings>
         </column>
-        <column name="is_active" sortorder="90" component="Magento_Ui/js/grid/columns/select">
+        <column name="is_active" sortOrder="90" component="Magento_Ui/js/grid/columns/select">
             <settings>
                 <filter>select</filter>
-                <label translate="true">ativo</label>
-                <datatype>select</datatype>
+                <label translate="true">Ativo</label>
+                <dataType>select</dataType>
                 <options>
                     <option name="0" xsi:type="array">
                         <item name="value" xsi:type="string">0</item>
-                        <item name="label" xsi:type="string" translate="true">não</item>
+                        <item name="label" xsi:type="string" translate="true">Não</item>
                     </option>
                     <option name="1" xsi:type="array">
                         <item name="value" xsi:type="string">1</item>
-                        <item name="label" xsi:type="string" translate="true">sim</item>
+                        <item name="label" xsi:type="string" translate="true">Sim</item>
                     </option>
                 </options>
             </settings>
         </column>
-        <column name="first_seen_at" sortorder="100" class="Magento\Ui\Component\Listing\Columns\Date">
+        <column name="first_seen_at" sortOrder="100" class="Magento\Ui\Component\Listing\Columns\Date">
             <settings>
-                <filter>daterange</filter>
-                <label translate="true">primeiro visto</label>
-                <datatype>date</datatype>
+                <filter>dateRange</filter>
+                <label translate="true">Primeiro Visto</label>
+                <dataType>date</dataType>
             </settings>
         </column>
-        <column name="last_seen_at" sortorder="110" class="Magento\Ui\Component\Listing\Columns\Date">
+        <column name="last_seen_at" sortOrder="110" class="Magento\Ui\Component\Listing\Columns\Date">
             <settings>
-                <filter>daterange</filter>
-                <label translate="true">último visto</label>
-                <datatype>date</datatype>
+                <filter>dateRange</filter>
+                <label translate="true">Último Visto</label>
+                <dataType>date</dataType>
             </settings>
         </column>
     </columns>

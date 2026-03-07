@@ -13,6 +13,12 @@
         </deps>
     </settings>
     <dataSource name="mktg_prospects_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
+            <argument name="name" xsi:type="string">mktg_prospects_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">prospect_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+        </argument>
         <settings>
             <updateUrl path="mui/index/render"/>
             <storageConfig>

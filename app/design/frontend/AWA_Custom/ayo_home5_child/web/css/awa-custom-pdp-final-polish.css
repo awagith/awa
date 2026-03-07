@@ -5,11 +5,11 @@
 
 body.catalog-product-view {
     --awa-pdp-final-surface: #fff;
-    --awa-pdp-final-surface-soft: #f7f7f7;
-    --awa-pdp-final-border: #e5e5e5;
-    --awa-pdp-final-border-strong: #d9d9d9;
-    --awa-pdp-final-text: #333;
-    --awa-pdp-final-muted: #666;
+    --awa-pdp-final-surface-soft: var(--awa-bg-muted, #f1f5f9);
+    --awa-pdp-final-border: var(--awa-gray-200, #e5e7eb);
+    --awa-pdp-final-border-strong: var(--awa-gray-300, #d1d5db);
+    --awa-pdp-final-text: var(--awa-text-primary, #111827);
+    --awa-pdp-final-muted: var(--awa-text-muted, #64748b);
     --awa-pdp-final-shadow-sm: 0 6px 18px rgb(15 23 42 / 4%);
     --awa-pdp-final-shadow-md: 0 14px 32px rgb(15 23 42 / 9%);
     --awa-pdp-final-focus: 0 0 0 3px rgb(183 51 55 / 16%);
@@ -33,7 +33,7 @@ body.catalog-product-view .product-info-main .page-title-wrapper .page-title {
 body.catalog-product-view .product-info-main .product.attribute.overview,
 body.catalog-product-view .product-info-main .short-description,
 body.catalog-product-view .product-info-main .product.attribute.description {
-    color: #666;
+    color: var(--awa-text-muted, #64748b);
     line-height: 1.58;
 }
 
@@ -46,7 +46,7 @@ body.catalog-product-view .product-info-main .product-info-price {
 
 body.catalog-product-view .product-info-main .price-box .price,
 body.catalog-product-view .product-info-main .special-price .price {
-    color: var(--primary-color, #b73337);
+    color: var(--awa-brand-primary);
     font-weight: 800;
 }
 
@@ -69,7 +69,7 @@ body.catalog-product-view .product-info-main .b2b-price-list-info {
 }
 
 body.catalog-product-view .product-info-main .b2b-list-label {
-    color: #333;
+    color: var(--awa-text-main);
     font-size: var(--awa-text-xs);
     font-weight: var(--awa-weight-bold);
     letter-spacing: 0.01em;
@@ -159,8 +159,8 @@ body.catalog-product-view .product-info-main .attr-product .info-qty .qty-down {
     min-width: 42px;
     border-radius: var(--awa-radius-base);
     border: 1px solid rgb(15 23 42 / 12%);
-    background: #fff;
-    color: #333;
+    background: var(--awa-bg-surface);
+    color: var(--awa-text-main);
 }
 
 body.catalog-product-view .product-info-main .attr-product .info-qty .qty-up:focus-visible,
@@ -191,7 +191,7 @@ body.catalog-product-view .b2b-tier-pricing {
 body.catalog-product-view .b2b-tier-table-wrap {
     border-radius: var(--awa-radius-base);
     border: 1px solid rgb(15 23 42 / 8%);
-    background: #fff;
+    background: var(--awa-bg-surface);
 }
 
 body.catalog-product-view .b2b-tier-table {
@@ -199,7 +199,7 @@ body.catalog-product-view .b2b-tier-table {
 }
 
 body.catalog-product-view .b2b-tier-table thead th {
-    color: #333;
+    color: var(--awa-text-main);
 }
 
 body.catalog-product-view .b2b-tier-table tbody tr:nth-child(even) td {
@@ -314,4 +314,3 @@ body.b2b-register-index .awa-pdp-sticky-cta {
         transition: none;
     }
 }
-\n/* AWA Phase 6: Compact Tech Specs Above Fold */\n.product-info-main .product.attribute.new-table {\n    margin-top: 20px;margin-top\n    border: 1px solid var(--awa-border);border\n    border-radius: var(--awa-radius-sm);border-radius\n    overflow: hidden;overflow\n    background: #fff;background\n}\n.product-info-main .product.attribute.new-table th {\n    background: #f7f7f7;background\n    color: var(--awa-dark);color\n    font-weight: var(--awa-weight-semibold);font-weight\n    padding: 8px 12px;padding\n    width: 40%;width\n    border-right: 1px solid var(--awa-border);border-right\n}\n.product-info-main .product.attribute.new-table td {\n    padding: 8px 12px;padding\n    color: #666;color\n}\n

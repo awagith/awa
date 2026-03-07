@@ -12,114 +12,120 @@
             <dep>mktg_audiences_listing.mktg_audiences_listing_data_source</dep>
         </deps>
     </settings>
-    <datasource name="mktg_audiences_listing_data_source" component="Magento_Ui/js/grid/provider">
+    <dataSource name="mktg_audiences_listing_data_source" component="Magento_Ui/js/grid/provider">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider</argument>
+            <argument name="name" xsi:type="string">mktg_audiences_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">audience_id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+        </argument>
         <settings>
-            <updateurl path="mui/index/render"/>
-            <storageconfig>
+            <updateUrl path="mui/index/render"/>
+            <storageConfig>
                 <param name="indexField" xsi:type="string">audience_id</param>
-            </storageconfig>
+            </storageConfig>
         </settings>
-    </datasource>
-    <listingtoolbar name="listing_top">
+    </dataSource>
+    <listingToolbar name="listing_top">
         <bookmark name="bookmarks"/>
-        <columnscontrols name="columns_controls"/>
-        <filtersearch name="fulltext"/>
+        <columnsControls name="columns_controls"/>
+        <filterSearch name="fulltext"/>
         <filters name="listing_filters"/>
         <paging name="listing_paging"/>
-    </listingtoolbar>
+    </listingToolbar>
     <columns name="mktg_audiences_listing_columns">
-        <selectionscolumn name="ids" sortorder="0">
+        <selectionsColumn name="ids" sortOrder="0">
             <settings>
-                <indexfield>audience_id</indexfield>
+                <indexField>audience_id</indexField>
             </settings>
-        </selectionscolumn>
-        <column name="audience_id" sortorder="10">
+        </selectionsColumn>
+        <column name="audience_id" sortOrder="10">
             <settings>
-                <filter>textrange</filter>
-                <label translate="true">id</label>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
                 <sorting>desc</sorting>
             </settings>
         </column>
-        <column name="name" sortorder="20">
+        <column name="name" sortOrder="20">
             <settings>
                 <filter>text</filter>
-                <label translate="true">nome</label>
+                <label translate="true">Nome</label>
             </settings>
         </column>
-        <column name="audience_type" sortorder="30">
+        <column name="audience_type" sortOrder="30">
             <settings>
                 <filter>text</filter>
-                <label translate="true">tipo</label>
+                <label translate="true">Tipo</label>
             </settings>
         </column>
-        <column name="meta_audience_id" sortorder="40">
+        <column name="meta_audience_id" sortOrder="40">
             <settings>
                 <filter>text</filter>
-                <label translate="true">meta audience id</label>
+                <label translate="true">Meta Audience ID</label>
             </settings>
         </column>
-        <column name="customer_count" sortorder="50">
+        <column name="customer_count" sortOrder="50">
             <settings>
-                <filter>textrange</filter>
-                <label translate="true">clientes</label>
+                <filter>textRange</filter>
+                <label translate="true">Clientes</label>
             </settings>
         </column>
-        <column name="meta_match_rate" sortorder="60">
+        <column name="meta_match_rate" sortOrder="60">
             <settings>
-                <filter>textrange</filter>
-                <label translate="true">match rate %</label>
+                <filter>textRange</filter>
+                <label translate="true">Match Rate %</label>
             </settings>
         </column>
-        <column name="auto_refresh" sortorder="70" component="Magento_Ui/js/grid/columns/select">
+        <column name="auto_refresh" sortOrder="70" component="Magento_Ui/js/grid/columns/select">
             <settings>
                 <filter>select</filter>
-                <label translate="true">auto refresh</label>
-                <datatype>select</datatype>
+                <label translate="true">Auto Refresh</label>
+                <dataType>select</dataType>
                 <options>
                     <option name="0" xsi:type="array">
                         <item name="value" xsi:type="string">0</item>
-                        <item name="label" xsi:type="string" translate="true">não</item>
+                        <item name="label" xsi:type="string" translate="true">Não</item>
                     </option>
                     <option name="1" xsi:type="array">
                         <item name="value" xsi:type="string">1</item>
-                        <item name="label" xsi:type="string" translate="true">sim</item>
+                        <item name="label" xsi:type="string" translate="true">Sim</item>
                     </option>
                 </options>
             </settings>
         </column>
-        <column name="status" sortorder="80">
+        <column name="status" sortOrder="80" component="Magento_Ui/js/grid/columns/select">
             <settings>
                 <filter>select</filter>
-                <label translate="true">status</label>
-                <datatype>select</datatype>
+                <label translate="true">Status</label>
+                <dataType>select</dataType>
                 <options>
-                    <option name="active" xsi:type="array">
+                    <option name="0" xsi:type="array">
                         <item name="value" xsi:type="string">active</item>
-                        <item name="label" xsi:type="string" translate="true">ativo</item>
+                        <item name="label" xsi:type="string" translate="true">Ativo</item>
                     </option>
-                    <option name="paused" xsi:type="array">
+                    <option name="1" xsi:type="array">
                         <item name="value" xsi:type="string">paused</item>
-                        <item name="label" xsi:type="string" translate="true">pausado</item>
+                        <item name="label" xsi:type="string" translate="true">Pausado</item>
                     </option>
-                    <option name="error" xsi:type="array">
+                    <option name="2" xsi:type="array">
                         <item name="value" xsi:type="string">error</item>
-                        <item name="label" xsi:type="string" translate="true">erro</item>
+                        <item name="label" xsi:type="string" translate="true">Erro</item>
                     </option>
                 </options>
             </settings>
         </column>
-        <column name="last_synced_at" sortorder="90" class="Magento\Ui\Component\Listing\Columns\Date">
+        <column name="last_synced_at" sortOrder="90" class="Magento\Ui\Component\Listing\Columns\Date">
             <settings>
-                <filter>daterange</filter>
-                <label translate="true">último sync</label>
-                <datatype>date</datatype>
+                <filter>dateRange</filter>
+                <label translate="true">Último Sync</label>
+                <dataType>date</dataType>
             </settings>
         </column>
-        <column name="created_at" sortorder="100" class="Magento\Ui\Component\Listing\Columns\Date">
+        <column name="created_at" sortOrder="100" class="Magento\Ui\Component\Listing\Columns\Date">
             <settings>
-                <filter>daterange</filter>
-                <label translate="true">criado em</label>
-                <datatype>date</datatype>
+                <filter>dateRange</filter>
+                <label translate="true">Criado Em</label>
+                <dataType>date</dataType>
             </settings>
         </column>
     </columns>

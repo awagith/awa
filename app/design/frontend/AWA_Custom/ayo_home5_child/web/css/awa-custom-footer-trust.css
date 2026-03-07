@@ -44,11 +44,11 @@
     align-items: center;
     justify-content: center;
     width: 42px;
-    height: 42px;
+    height: var(--awa-btn-height);
     border-radius: var(--awa-radius-pill);
     flex-shrink: 0;
     background: rgba(255 255 255 / 20%);
-    color: #fff;
+    color: var(--awa-text-inverse);
 }
 
 .page_footer .awa-footer-trust-icon svg {
@@ -65,7 +65,7 @@
 }
 
 .page_footer .awa-footer-trust-copy strong {
-    color: #fff;
+    color: var(--awa-text-inverse);
     font-size: var(--awa-text-sm);
     line-height: 1.25;
     font-weight: var(--awa-weight-bold);
@@ -93,13 +93,13 @@
 
 .page_footer .awa-footer-business-contact__intro {
     display: grid;
-    gap: 8px;
+    gap: var(--awa-gap-sm);
     align-content: start;
 }
 
 .page_footer .awa-footer-business-contact__eyebrow {
     color: rgba(255 255 255 / 72%);
-    font-size: 11px;
+    font-size: var(--awa-text-2xs);
     font-weight: var(--awa-weight-bold);
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -107,7 +107,7 @@
 
 .page_footer .awa-footer-business-contact__title {
     margin: 0;
-    color: #fff;
+    color: var(--awa-text-inverse);
     font-size: var(--awa-text-lg);
     line-height: 1.2;
     font-weight: var(--awa-weight-bold);
@@ -135,14 +135,14 @@
     border: 1px solid rgba(255 255 255 / 18%);
     border-radius: var(--awa-radius-base);
     background: rgba(255 255 255 / 8%);
-    color: #fff;
+    color: var(--awa-text-inverse);
     text-decoration: none;
     transition: border-color .25s ease, background-color .25s ease, transform .25s ease, box-shadow .25s ease;
 }
 
 .page_footer .awa-footer-business-contact__action:hover,
 .page_footer .awa-footer-business-contact__action:focus-visible {
-    color: #fff;
+    color: var(--awa-text-inverse);
     text-decoration: none;
     border-color: rgba(255 255 255 / 32%);
     background: rgba(255 255 255 / 12%);
@@ -161,22 +161,22 @@
     align-items: center;
     justify-content: center;
     width: 44px;
-    height: 44px;
+    height: var(--awa-btn-height);
     border-radius: 999px;
     background: rgba(255 255 255 / 18%);
-    color: #fff;
+    color: var(--awa-text-inverse);
     flex: 0 0 auto;
-    font-size: 18px;
+    font-size: var(--awa-text-lg);
 }
 
 .page_footer .awa-footer-business-contact__action-copy {
     display: grid;
-    gap: 4px;
+    gap: var(--awa-gap-xs);
     min-width: 0;
 }
 
 .page_footer .awa-footer-business-contact__action-copy strong {
-    color: #fff;
+    color: var(--awa-text-inverse);
     font-size: var(--awa-text-base);
     line-height: 1.25;
     font-weight: var(--awa-weight-bold);
@@ -210,7 +210,7 @@
 
 .page_footer .awa-footer-panel-title {
     margin: 0 0 10px;
-    color: #fff;
+    color: var(--awa-text-inverse);
     font-size: var(--awa-text-sm);
     line-height: 1.2;
     font-weight: var(--awa-weight-bold);
@@ -225,7 +225,7 @@
 .page_footer .awa-footer-panel-label {
     margin: 0 0 8px;
     color: rgba(255 255 255 / 70%);
-    font-size: 11px;
+    font-size: var(--awa-text-2xs);
     line-height: 1.3;
     font-weight: var(--awa-weight-bold);
     letter-spacing: 0.05em;
@@ -262,11 +262,11 @@
 .page_footer .awa-payment-chip--priority {
     background: rgba(255 255 255 / 20%);
     border-color: rgba(255 255 255 / 35%);
-    color: #fff;
+    color: var(--awa-text-inverse);
 }
 
 .page_footer .awa-payment-chip--priority svg {
-    color: #fff;
+    color: var(--awa-text-inverse);
 }
 
 /* --- Payment Flag Chips --- */
@@ -288,14 +288,14 @@
 .page_footer .awa-payment-chip--gateway {
     background: rgba(255 255 255 / 15%);
     border-color: rgba(255 255 255 / 28%);
-    color: #fff;
+    color: var(--awa-text-inverse);
     padding: 6px 12px;
 }
 
 .page_footer .awa-payment-chip--gateway svg {
     width: 24px !important;
     height: 16px !important;
-    color: #fff;
+    color: var(--awa-text-inverse);
     flex-shrink: 0;
 }
 
@@ -324,7 +324,7 @@
     border-radius: var(--awa-radius-sm);
     background: rgba(0 0 0 / 10%);
     padding: 10px;
-    color: #fff;
+    color: var(--awa-text-inverse);
     text-decoration: none;
     transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
@@ -346,7 +346,7 @@
     height: 36px;
     border-radius: var(--awa-radius-pill);
     background: rgba(255 255 255 / 20%);
-    color: #fff;
+    color: var(--awa-text-inverse);
     flex-shrink: 0;
 }
 
@@ -363,24 +363,20 @@
 }
 
 .page_footer .awa-security-badge__copy strong {
-    font-size: 13px;
+    font-size: var(--awa-text-xs-plus);
     line-height: 1.15;
     font-weight: var(--awa-weight-bold);
-    color: #fff;
+    color: var(--awa-text-inverse);
 }
 
 .page_footer .awa-security-badge__copy small {
-    font-size: 11px;
+    font-size: var(--awa-text-2xs);
     line-height: 1.25;
     color: rgba(255 255 255 / 70%);
 }
 
-.page_footer .awa-footer-payment-legacy[hidden] {
-    display: none !important;
-}
-
 .page_footer .velaFooterTitle {
-    min-height: 44px;
+    min-height: var(--awa-btn-height);
     min-width: 44px;
     display: inline-flex;
     align-items: center;
@@ -409,13 +405,13 @@
 .page_footer .velaFooterMenu .velaFooterLinks a:hover,
 .page_footer .aw-footer-legal a:hover,
 .page_footer .aw-footer-b2b-contact a:hover {
-    color: #fff;
+    color: var(--awa-text-inverse);
 }
 
 .page_footer .velaFooterMenu .velaFooterLinks a:focus-visible,
 .page_footer .aw-footer-legal a:focus-visible,
 .page_footer .aw-footer-b2b-contact a:focus-visible {
-    color: #fff;
+    color: var(--awa-text-inverse);
     outline: 2px solid rgba(255 255 255 / 70%);
     outline-offset: 2px;
 }
@@ -467,11 +463,11 @@
     }
 
     .page_footer .awa-footer-trust-copy strong {
-        font-size: 13px;
+        font-size: var(--awa-text-xs-plus);
     }
 
     .page_footer .awa-footer-trust-copy span {
-        font-size: 11px;
+        font-size: var(--awa-text-2xs);
     }
 
     .page_footer .awa-footer-payments-security {
@@ -483,7 +479,7 @@
     }
 
     .page_footer .velaFooterTitle {
-        min-height: 48px;
+        min-height: var(--awa-btn-height-lg);
         padding-top: 12px;
         padding-bottom: 12px;
     }
@@ -509,7 +505,7 @@
 
     .page_footer .awa-payment-chip--flag {
         padding: 4px 8px;
-        font-size: 11px;
+        font-size: var(--awa-text-2xs);
     }
 
     .page_footer .awa-payment-chip--flag svg {
@@ -551,24 +547,24 @@
 /* --- 375px: Small phones portrait --- */
 @media (width <= 375px) {
     .page_footer .awa-footer-trust-copy strong {
-        font-size: 12px;
+        font-size: var(--awa-text-xs);
     }
 
     .page_footer .awa-footer-trust-copy span {
-        font-size: 10px;
+        font-size: var(--awa-text-3xs);
     }
 
     .page_footer .aw-footer-trust-b2b .trust-number {
-        font-size: 1rem;
+        font-size: var(--awa-text-base);
     }
 
     .page_footer .awa-payment-chip-list--flags {
-        gap: 4px;
+        gap: var(--awa-gap-xs);
     }
 
     .page_footer .awa-payment-chip--flag {
         padding: 3px 6px;
-        font-size: 10px;
+        font-size: var(--awa-text-3xs);
     }
 
     .page_footer .awa-payment-chip--flag svg {
@@ -577,7 +573,7 @@
     }
 
     .page_footer .awa-footer-panel-title {
-        font-size: 13px;
+        font-size: var(--awa-text-xs-plus);
     }
 
     .page_footer .velaFooterTitle {

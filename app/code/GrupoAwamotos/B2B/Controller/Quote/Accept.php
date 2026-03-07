@@ -77,7 +77,7 @@ class Accept implements HttpPostActionInterface
             // Verify customer is logged in
             if (!$this->customerSession->isLoggedIn()) {
                 $this->messageManager->addErrorMessage(__('Faça login para aceitar a cotação.'));
-                return $redirect->setPath('customer/account/login');
+                return $redirect->setPath('b2b/account/login');
             }
 
             $requestId = (int) $this->request->getParam('id');

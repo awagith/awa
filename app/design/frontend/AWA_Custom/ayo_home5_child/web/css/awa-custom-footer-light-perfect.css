@@ -1,5 +1,0 @@
-/* Legacy handle kept to satisfy inherited layout references.
-   Visual footer styling is provided by awa-custom-footer-dark-gradient.css. */
-:root {
-    --awa-footer-light-perfect-legacy: 1;
-}

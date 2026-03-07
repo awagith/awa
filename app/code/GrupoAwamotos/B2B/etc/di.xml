@@ -11,15 +11,57 @@
     </type>
 
     <type name="Magento\Checkout\Api\PaymentInformationManagementInterface">
+        <plugin name="rokanthemes_opc_additional_data"
+                type="Rokanthemes\OnePageCheckout\Plugin\Checkout\Model\CustomerAdditionalData"
+                sortOrder="20"/>
         <plugin name="grupoawamotos_b2b_block_place_order"
                 type="GrupoAwamotos\B2B\Plugin\Checkout\BlockPlaceOrderPlugin"
-                sortOrder="10"/>
+                sortOrder="90"/>
+    </type>
+
+    <type name="Magento\Checkout\Model\PaymentInformationManagement">
+        <plugin name="grupoawamotos_b2b_block_place_order_model"
+                type="GrupoAwamotos\B2B\Plugin\Checkout\BlockPlaceOrderPlugin"
+                sortOrder="90"/>
     </type>
 
     <type name="Magento\Checkout\Api\GuestPaymentInformationManagementInterface">
+        <plugin name="rokanthemes_opc_guest_additional_data"
+                type="Rokanthemes\OnePageCheckout\Plugin\Checkout\Model\GuestAdditionalData"
+                sortOrder="20"/>
         <plugin name="grupoawamotos_b2b_block_guest_place_order"
                 type="GrupoAwamotos\B2B\Plugin\Checkout\BlockGuestPlaceOrderPlugin"
-                sortOrder="10"/>
+                sortOrder="90"/>
+    </type>
+
+    <type name="Magento\Checkout\Model\GuestPaymentInformationManagement">
+        <plugin name="grupoawamotos_b2b_block_guest_place_order_model"
+                type="GrupoAwamotos\B2B\Plugin\Checkout\BlockGuestPlaceOrderPlugin"
+                sortOrder="90"/>
+    </type>
+
+    <type name="Magento\Quote\Api\CartItemRepositoryInterface">
+        <plugin name="grupoawamotos_b2b_block_cart_item_save"
+                type="GrupoAwamotos\B2B\Plugin\Checkout\BlockCartItemSavePlugin"
+                sortOrder="90"/>
+    </type>
+
+    <type name="Magento\Quote\Model\Quote\Item\Repository">
+        <plugin name="grupoawamotos_b2b_block_cart_item_save_model"
+                type="GrupoAwamotos\B2B\Plugin\Checkout\BlockCartItemSavePlugin"
+                sortOrder="90"/>
+    </type>
+
+    <type name="Magento\Quote\Api\GuestCartItemRepositoryInterface">
+        <plugin name="grupoawamotos_b2b_block_guest_cart_item_save"
+                type="GrupoAwamotos\B2B\Plugin\Checkout\BlockGuestCartItemSavePlugin"
+                sortOrder="90"/>
+    </type>
+
+    <type name="Magento\Quote\Model\GuestCart\GuestCartItemRepository">
+        <plugin name="grupoawamotos_b2b_block_guest_cart_item_save_model"
+                type="GrupoAwamotos\B2B\Plugin\Checkout\BlockGuestCartItemSavePlugin"
+                sortOrder="90"/>
     </type>
 
     <type name="Magento\Framework\Console\CommandListInterface">

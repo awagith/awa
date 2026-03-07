@@ -6,7 +6,7 @@
 	}
 
 	.block-widget-rokanthemes-brand {
-		background: #fff;
+		background: var(--awa-bg-surface);
 		padding: 15px 0;
 		margin-bottom: 30px;
 	}
@@ -49,7 +49,7 @@
 	    margin-bottom: 48px;
 	}
 	.rating-summary .rating-result:before {
-		color: #c7c7c7;
+		color: var(--awa-gray-300, #d1d5db);
 	}
 	.custommenu.navigation li.level0:hover .submenu {
 		top: auto;
@@ -69,8 +69,8 @@
 		}
 	}
 	.cart-summary input[type="text"] {
-	    height: 45px;
-   		line-height: 45px;
+	    height: var(--awa-btn-height);
+   		line-height: var(--awa-btn-height);
 	}
 
 	.fotorama__thumb-border {
@@ -78,7 +78,7 @@
 	}
 	.cart.main.actions .action.continue, .cart.main.actions .action.clear, .cart.main.actions .action.update,
 	#discount-coupon-form .action.apply.primary {
-		font-size: 14px;
+		font-size: var(--awa-text-sm);
 		font-weight: 400;
 	}
 	@media (max-width: 1199px) and (min-width: 992px){
@@ -111,10 +111,10 @@
 	.checkout-onepage-success #maincontent .page-title-wrapper {
 		text-align: center;
 		    font-weight: 400;
-			 color: #222;
+			 color: var(--awa-text-primary, #111827);
 	}
 	.checkout-onepage-success .page-title-wrapper .page-title .base {
-		font-size: 24px;
+		font-size: var(--awa-text-2xl);
 	}
 	
 	.product-add-form .fieldset>.field:not(.choice)>.control {
@@ -126,7 +126,7 @@
 	    width: auto;
 	}
 	.wrapper_quickview_item .product-info-main .box-tocart .action.tocart {
-		font-size: 12px;
+		font-size: var(--awa-text-xs);
 		padding: 0 50px;
 		line-height: 1;
 	}
@@ -146,7 +146,7 @@
 	}
 	.multicheckout .action.primary {
 	    padding: 0 50px;
-    	font-size: 14px;
+    	font-size: var(--awa-text-sm);
 	}
 	.block-search .block-content button.action{
 		margin: 0;
@@ -160,7 +160,7 @@
 		right: 0;
 	}
 		.fancybox-close:after{
-			color: #b73337;
+			color: var(--awa-brand-primary);
 		font-size: 21px;
 		line-height: 38px;
 		display: block;
@@ -236,7 +236,7 @@
 		}
 		.velaServicesInner .boxServiceImage.boxServiceImage4 {
 			width: 48px;
-			height: 48px;
+			height: var(--awa-btn-height-lg);
 		}
 		.footer .rowFlexMargin {
 			margin-left: -15px;

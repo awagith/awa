@@ -5,6 +5,8 @@
         <remove src="css/awa-plp-final-polish.css"/>
         <css src="css/awa-custom-plp-final-polish.css"/>
         <css src="css/awa-page-catalog-listing.css"/>
+        <css src="css/b2b/pages/plp-search-cart-refine.css"/>
+        <css src="css/layers/pages/plp-search.css"/>
     </head>
     <body>
     </body>

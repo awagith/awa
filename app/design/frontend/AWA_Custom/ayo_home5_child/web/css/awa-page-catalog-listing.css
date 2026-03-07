@@ -2,15 +2,15 @@
     display: flex;
     align-items: baseline;
     flex-wrap: wrap;
-    gap: 4px;
+    gap: var(--awa-gap-xs);
     margin-bottom: 8px;
-    color: #64748b;
-    font-size: 11px;
+    color: var(--awa-text-muted);
+    font-size: var(--awa-text-2xs);
     font-weight: 500;
 }
 
 :is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-sku__label {
-    color: #9ca3af;
+    color: var(--awa-gray-400);
     letter-spacing: 0.05em;
     text-transform: uppercase;
 }
@@ -28,7 +28,7 @@
     overflow: hidden;
     border: 1px solid #d9d9d9;
     border-radius: 10px;
-    background: #fff;
+    background: var(--awa-bg-surface);
 }
 
 :is(body.catalog-category-view, body.catalogsearch-result-index) [data-role='tocart-form'][data-awa-component='awa-qty-control'] .awa-qty-btn {
@@ -47,7 +47,7 @@
 :is(body.catalog-category-view, body.catalogsearch-result-index) [data-role='tocart-form'][data-awa-component='awa-qty-control'] .awa-qty-btn:hover,
 :is(body.catalog-category-view, body.catalogsearch-result-index) [data-role='tocart-form'][data-awa-component='awa-qty-control'] .awa-qty-btn:focus-visible {
     background: #eef2f7;
-    color: var(--primary-color, #b73337);
+    color: var(--awa-brand-primary);
     outline: 0;
 }
 

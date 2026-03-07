@@ -13,7 +13,19 @@ define([
         fallbackDelay: 260,
         fallbackTimeout: 8000,
         fallbackSuggestLimit: 6,
-        fallbackProductLimit: 6
+        fallbackProductLimit: 6,
+        recentSearchStorageKey: 'awa_recent_searches',
+        maxRecentSearches: 6,
+        popularKeywords: [
+            'Bagageiro',
+            'Bauleto',
+            'Retrovisor',
+            'Protetor de motor',
+            'Suporte de celular',
+            'CG 160',
+            'Bros 160',
+            'XRE 300'
+        ]
     };
     const AUTO_BOOT_KEY = '__awaSearchCompatAutoBoot';
     const AUTO_OBSERVER_KEY = '__awaSearchCompatAutoObserver';
@@ -83,79 +95,112 @@ define([
         });
     }
 
-    function syncState($form, options) {
-        const $input = findScoped($form, options.inputSelector);
-        const $panel = findScoped($form, options.panelSelector);
-        const panelEl = $panel.get(0);
-        const $resultsRoot = findScoped($form, options.resultsRootSelector);
-        const hasPanel = $panel.length > 0;
-        const isVisible = hasPanel && visible(panelEl);
-        let hasResults = false;
+    function loadRecentSearches(options) {
+        let parsed = [];
 
-        if ($resultsRoot.length && visible($resultsRoot.get(0))) {
-            hasResults = $resultsRoot.find('li').length > 0;
-        } else if (hasPanel) {
-            hasResults = $.trim($panel.text()).length > 0 || $panel.children().length > 0;
+        try {
+            parsed = JSON.parse(window.localStorage.getItem(options.recentSearchStorageKey) || '[]');
+        } catch (e) {
+            parsed = [];
         }
 
-        $form.toggleClass('is-open', !!isVisible)
-            .toggleClass('has-results', !!hasResults)
-            .toggleClass('is-empty', !hasResults);
-
-        if ($input.length) {
-            $input.attr('aria-expanded', isVisible ? 'true' : 'false');
+        if (!$.isArray(parsed)) {
+            return [];
         }
 
-        if (hasPanel) {
-            $panel.attr('aria-hidden', isVisible ? 'false' : 'true');
-            $panel.toggleClass('is-open', !!isVisible)
-                .toggleClass('has-results', !!hasResults);
+        return parsed.filter(function (item) {
+            return item && typeof item.term === 'string' && $.trim(item.term) !== '';
+        }).slice(0, options.maxRecentSearches);
+    }
+
+    function saveRecentSearch(options, term) {
+        const normalizedTerm = $.trim(term || '');
+        let recentSearches;
+
+        if (normalizedTerm.length < options.minQueryLength) {
+            return;
         }
 
-        if ($resultsRoot.length) {
-            $resultsRoot.attr('data-awa-component', 'search-results')
-                .toggleClass('is-open', !!isVisible)
-                .toggleClass('has-results', !!hasResults);
+        recentSearches = loadRecentSearches(options).filter(function (item) {
+            return item.term.toLowerCase() !== normalizedTerm.toLowerCase();
+        });
 
-            $resultsRoot.find('ul').attr('role', 'listbox');
-            $resultsRoot.find('li').attr('role', 'option');
-            applyTitles($resultsRoot);
+        recentSearches.unshift({
+            term: normalizedTerm
+        });
+
+        try {
+            window.localStorage.setItem(
+                options.recentSearchStorageKey,
+                JSON.stringify(recentSearches.slice(0, options.maxRecentSearches))
+            );
+        } catch (e) {
+            // localStorage unavailable
         }
     }
 
-    function getFallbackPanel($form, options) {
-        const $panel = findScoped($form, options.panelSelector);
-
-        if ($panel.length) {
-            return $panel;
+    function clearRecentSearches(options) {
+        try {
+            window.localStorage.removeItem(options.recentSearchStorageKey);
+        } catch (e) {
+            // localStorage unavailable
         }
-
-        return findScoped($form, options.resultsRootSelector);
     }
 
-    function isMirasvitAutocompleteActive() {
-        return document.getElementById('searchAutocompletePlaceholder') !== null
-            || document.querySelector('.mst-searchautocomplete__autocomplete') !== null;
+    function buildSearchUrl(options, term) {
+        const searchResultUrl = (options.searchResultUrl || '/catalogsearch/result/').replace(/\/+$/, '');
+
+        return searchResultUrl + '/?q=' + encodeURIComponent(term);
     }
 
-    function hasNativeResults($form, options) {
-        const $resultsRoot = findScoped($form, options.resultsRootSelector);
-        const $panel = getFallbackPanel($form, options);
-        let $nativeItems = $();
+    function buildDiscoveryMarkup(options) {
+        const recentSearches = loadRecentSearches(options);
+        let html = '';
 
-        if (isMirasvitAutocompleteActive()) {
-            return true;
+        html += '<div class="awa-ac-discovery">';
+        html += '<div class="awa-ac-discovery-intro">';
+        html += '<div class="awa-ac-section-title awa-ac-section-title--discovery">talvez voce procure por...</div>';
+        html += '<p class="awa-ac-discovery-copy">atalhos rapidos para as buscas mais comuns da loja.</p>';
+        html += '</div>';
+
+        if (recentSearches.length) {
+            html += '<div class="awa-ac-recent--discovery">';
+            html += '<div class="awa-ac-section-title awa-ac-section-title--recent">';
+            html += '<span>Buscas recentes</span>';
+            html += '<button class="awa-ac-clear-recent" type="button" data-awa-action="clear-recent-searches">Limpar</button>';
+            html += '</div>';
+            html += '<div class="awa-ac-chips">';
+
+            recentSearches.forEach(function (item) {
+                html += '<a class="awa-ac-chip" href="' + escapeHtml(buildSearchUrl(options, item.term)) + '" data-awa-action="recent-search" data-term="' + escapeHtml(item.term) + '">';
+                html += '<svg class="awa-ac-chip-icon" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">';
+                html += '<path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm0 1.2A5.8 5.8 0 1 1 2.2 8 5.8 5.8 0 0 1 8 2.2zm-.4 2.3v4l3.2 1.9.6-1-2.6-1.6V4.5h-1.2z" fill="currentColor"/>';
+                html += '</svg>';
+                html += '<span>' + escapeHtml(item.term) + '</span>';
+                html += '</a>';
+            });
+
+            html += '</div>';
+            html += '</div>';
         }
 
-        if ($resultsRoot.length) {
-            $nativeItems = $nativeItems.add($resultsRoot.find('li').not('.awa-fallback-item'));
-        }
+        html += '<div class="awa-ac-keywords-section">';
+        html += '<div class="awa-ac-section-title">Mais buscados</div>';
+        html += '<ol class="awa-ac-keywords">';
 
-        if ($panel.length) {
-            $nativeItems = $nativeItems.add($panel.find('li').not('.awa-fallback-item'));
-        }
+        options.popularKeywords.forEach(function (term) {
+            html += '<li class="awa-ac-keywords-item">';
+            html += '<a class="awa-ac-keywords-link" href="' + escapeHtml(buildSearchUrl(options, term)) + '" data-awa-action="popular-keyword" data-term="' + escapeHtml(term) + '">';
+            html += '<span>' + escapeHtml(term) + '</span>';
+            html += '</a>';
+            html += '</li>';
+        });
 
-        return $nativeItems.length > 0;
+        html += '</ol>';
+        html += '</div>';
+        html += '</div>';
+
+        return html;
     }
 
     function extractSuggestItems(suggestRaw) {
@@ -227,60 +272,215 @@ define([
 
     function buildFallbackMarkup(normalized, options, query) {
         let html = '';
-        const searchResultUrl = (options.searchResultUrl || '/catalogsearch/result/').replace(/\/+$/, '');
 
-        if (normalized.suggest.length) {
-            html += '<div class="suggest">';
-            html += '<ul role="listbox">';
+        if (normalized.suggest.length || normalized.products.length) {
+            html += '<div class="awa-ac-results">';
+            html += '<div class="awa-ac-wrap">';
 
-            for (let i = 0; i < normalized.suggest.length && i < options.fallbackSuggestLimit; i += 1) {
-                const label = normalized.suggest[i];
-                html += '<li class="awa-fallback-item" role="option">';
-                html += '<a href="' + escapeHtml(searchResultUrl + '/?q=' + encodeURIComponent(label)) + '">' + escapeHtml(label) + '</a>';
-                html += '</li>';
-            }
+            if (normalized.suggest.length) {
+                html += '<div class="awa-ac-left">';
+                html += '<div class="awa-ac-suggest">';
+                html += '<div class="awa-ac-section-title">Sugestoes</div>';
+                html += '<ul role="listbox">';
 
-            html += '</ul>';
-            html += '</div>';
-        }
-
-        if (normalized.products.length) {
-            html += '<div class="product">';
-            html += '<ul role="listbox">';
-
-            for (let i = 0; i < normalized.products.length && i < options.fallbackProductLimit; i += 1) {
-                const product = normalized.products[i];
-                html += '<li class="awa-fallback-item" role="option">';
-
-                if (product.image) {
-                    html += '<div class="qs-option-image">';
-                    html += '<a href="' + escapeHtml(product.url || '#') + '">';
-                    html += '<img src="' + escapeHtml(product.image) + '" alt="' + escapeHtml(product.name || query) + '" loading="lazy" />';
+                normalized.suggest.slice(0, options.fallbackSuggestLimit).forEach(function (label) {
+                    html += '<li class="awa-fallback-item" role="option">';
+                    html += '<a href="' + escapeHtml(buildSearchUrl(options, label)) + '">';
+                    html += '<svg class="awa-ac-icon-search" viewBox="0 0 20 20" width="14" height="14" aria-hidden="true">';
+                    html += '<path d="M8.5 3a5.5 5.5 0 0 1 4.383 8.823l3.896 3.9a.75.75 0 0 1-1.06 1.06l-3.9-3.896A5.5 5.5 0 1 1 8.5 3zm0 1.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" fill="currentColor"/>';
+                    html += '</svg>';
+                    html += '<span>' + escapeHtml(label) + '</span>';
                     html += '</a>';
-                    html += '</div>';
-                }
+                    html += '</li>';
+                });
 
-                html += '<div class="qs-option-info">';
-                html += '<div class="qs-option-title"><a href="' + escapeHtml(product.url || '#') + '">' + escapeHtml(product.name || query) + '</a></div>';
-                if (product.priceText) {
-                    html += '<div class="qs-option-price">' + escapeHtml(product.priceText) + '</div>';
-                }
+                html += '</ul>';
                 html += '</div>';
-                html += '</li>';
+                html += '</div>';
             }
 
-            html += '</ul>';
+            if (normalized.products.length) {
+                html += '<div class="awa-ac-right">';
+                html += '<div class="awa-ac-section-title">Produtos</div>';
+                html += '<ul class="awa-ac-products" role="listbox">';
+
+                normalized.products.slice(0, options.fallbackProductLimit).forEach(function (product) {
+                    html += '<li class="awa-ac-product-item awa-fallback-item" role="option">';
+
+                    if (product.image) {
+                        html += '<a class="awa-ac-product-image" href="' + escapeHtml(product.url || '#') + '">';
+                        html += '<img src="' + escapeHtml(product.image) + '" alt="' + escapeHtml(product.name || query) + '" loading="lazy" />';
+                        html += '</a>';
+                    }
+
+                    html += '<div class="awa-ac-product-info' + (product.image ? '' : ' awa-ac-noimage') + '">';
+                    html += '<a class="awa-ac-product-name" href="' + escapeHtml(product.url || '#') + '">' + escapeHtml(product.name || query) + '</a>';
+
+                    if (product.priceText) {
+                        html += '<div class="awa-ac-product-price"><span class="price">' + escapeHtml(product.priceText) + '</span></div>';
+                    }
+
+                    html += '</div>';
+                    html += '</li>';
+                });
+
+                html += '</ul>';
+                html += '</div>';
+            }
+
+            html += '</div>';
             html += '</div>';
         }
 
         if (!html) {
-            html = '<div class="no-result">Nenhum resultado encontrado.</div>';
+            html = '<div class="awa-ac-no-result">'
+                + '<svg viewBox="0 0 20 20" width="20" height="20" aria-hidden="true">'
+                + '<path d="M8.5 3a5.5 5.5 0 0 1 4.383 8.823l3.896 3.9a.75.75 0 0 1-1.06 1.06l-3.9-3.896A5.5 5.5 0 1 1 8.5 3zm0 1.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8z" fill="currentColor"/>'
+                + '</svg>'
+                + '<span>Nenhum resultado encontrado.</span>'
+                + '</div>';
         }
 
         return html;
     }
 
-    function clearFallback($form, options) {
+    function getFallbackPanel($form, options) {
+        const $panel = findScoped($form, options.panelSelector);
+
+        if ($panel.length) {
+            return $panel;
+        }
+
+        return findScoped($form, options.resultsRootSelector);
+    }
+
+    function isMirasvitAutocompleteActive() {
+        return document.getElementById('searchAutocompletePlaceholder') !== null
+            || document.querySelector('.mst-searchautocomplete__autocomplete') !== null;
+    }
+
+    function hasNativeResults($form, options) {
+        const $resultsRoot = findScoped($form, options.resultsRootSelector);
+        const $panel = getFallbackPanel($form, options);
+        let $nativeItems = $();
+
+        if (isMirasvitAutocompleteActive()) {
+            return true;
+        }
+
+        if ($resultsRoot.length) {
+            $nativeItems = $nativeItems.add($resultsRoot.find('li').not('.awa-fallback-item'));
+        }
+
+        if ($panel.length) {
+            $nativeItems = $nativeItems.add($panel.find('li').not('.awa-fallback-item'));
+        }
+
+        return $nativeItems.length > 0;
+    }
+
+    function getNavigableItems($panel) {
+        return $panel.find(
+            '.awa-ac-keywords-link, .awa-ac-chip, .awa-ac-suggest ul li a, .awa-ac-product-item'
+        ).filter(':visible');
+    }
+
+    function clearActiveState($panel) {
+        $panel.find('.awa-ac-nav-active').removeClass('awa-ac-nav-active');
+    }
+
+    function updateAriaActiveDescendant($input, state) {
+        if (!$input.length) {
+            return;
+        }
+
+        if (state.navIndex >= 0 && state.$items && state.$items.length) {
+            $input.attr('aria-activedescendant', 'awa-ac-item-' + state.navIndex);
+            return;
+        }
+
+        $input.removeAttr('aria-activedescendant');
+    }
+
+    function syncNavIndex(state) {
+        if (!state.$panel || !state.$panel.length) {
+            state.navIndex = -1;
+            return;
+        }
+
+        state.$items = getNavigableItems(state.$panel);
+
+        if (!state.$items.length) {
+            state.navIndex = -1;
+            clearActiveState(state.$panel);
+            return;
+        }
+
+        if (state.navIndex >= state.$items.length) {
+            state.navIndex = state.$items.length - 1;
+        }
+    }
+
+    function applyNavState($form, state) {
+        const $input = findScoped($form, state.options.inputSelector);
+
+        if (!state.$panel || !state.$panel.length) {
+            return;
+        }
+
+        syncNavIndex(state);
+        clearActiveState(state.$panel);
+
+        if (state.navIndex < 0 || !state.$items || !state.$items.length) {
+            updateAriaActiveDescendant($input, state);
+            return;
+        }
+
+        state.$items.each(function (index) {
+            $(this).attr('id', 'awa-ac-item-' + index);
+        });
+
+        $(state.$items.get(state.navIndex)).addClass('awa-ac-nav-active');
+        updateAriaActiveDescendant($input, state);
+
+        if (typeof state.$items.get(state.navIndex).scrollIntoView === 'function') {
+            state.$items.get(state.navIndex).scrollIntoView({
+                block: 'nearest',
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    function renderPanelContent($form, state, html, panelState) {
+        const $panel = state.$panel;
+        const $input = findScoped($form, state.options.inputSelector);
+
+        if (!$panel || !$panel.length) {
+            return;
+        }
+
+        state.navIndex = -1;
+        $panel.html(html)
+            .removeAttr('hidden')
+            .show()
+            .attr('aria-hidden', 'false')
+            .attr('data-awa-panel-state', panelState)
+            .attr('data-awa-fallback-rendered', 'true');
+
+        if ($input.length) {
+            $input.attr('aria-expanded', 'true');
+        }
+
+        applyTitles($panel);
+        applyNavState($form, state);
+    }
+
+    function renderDiscovery($form, options, state) {
+        renderPanelContent($form, state, buildDiscoveryMarkup(options), 'discovery');
+        $form.addClass('is-open');
+    }
+
+    function clearFallback($form, options, state) {
         const $panel = getFallbackPanel($form, options);
         const $input = findScoped($form, options.inputSelector);
 
@@ -291,36 +491,30 @@ define([
         if ($panel.attr('data-awa-fallback-rendered') === 'true') {
             $panel.empty();
             $panel.removeAttr('data-awa-fallback-rendered');
+            $panel.removeAttr('data-awa-panel-state');
+            $panel.attr('hidden', 'hidden');
             $panel.hide();
             $panel.attr('aria-hidden', 'true');
-            if ($input.length) {
-                $input.attr('aria-expanded', 'false');
-            }
+        }
+
+        if ($input.length) {
+            $input.attr('aria-expanded', 'false');
+            $input.removeAttr('aria-activedescendant');
+        }
+
+        if (state) {
+            state.navIndex = -1;
+            state.$items = $();
         }
     }
 
     function renderFallback($form, options, payload, query) {
-        const $panel = getFallbackPanel($form, options);
-        const $input = findScoped($form, options.inputSelector);
-
-        if (!$panel.length) {
-            return;
-        }
-
+        const state = $form.data('awaSearchCompatState');
         const normalized = normalizeFallbackPayload(payload);
-        const html = buildFallbackMarkup(normalized, options, query);
+        const panelState = normalized.suggest.length || normalized.products.length ? 'results' : 'empty';
 
-        $panel.html(html)
-            .show()
-            .attr('aria-hidden', 'false')
-            .attr('data-awa-fallback-rendered', 'true');
-
-        if ($input.length) {
-            $input.attr('aria-expanded', 'true');
-        }
-
+        renderPanelContent($form, state, buildFallbackMarkup(normalized, options, query), panelState);
         $form.addClass('is-open');
-        applyTitles($panel);
     }
 
     function resolveFallbackEndpoint($form, options) {
@@ -342,6 +536,53 @@ define([
         return query + '::' + (categoryValue || '');
     }
 
+    function syncState($form, options) {
+        const $input = findScoped($form, options.inputSelector);
+        const $panel = findScoped($form, options.panelSelector);
+        const panelEl = $panel.get(0);
+        const $resultsRoot = findScoped($form, options.resultsRootSelector);
+        const hasPanel = $panel.length > 0;
+        const isVisible = hasPanel && visible(panelEl);
+        const query = $input.length ? $.trim($input.val() || '') : '';
+        let hasResults = false;
+
+        if ($resultsRoot.length && visible($resultsRoot.get(0))) {
+            hasResults = $resultsRoot.find('li').length > 0;
+        } else if (hasPanel) {
+            hasResults = $.trim($panel.text()).length > 0 || $panel.children().length > 0;
+        }
+
+        $form.toggleClass('is-open', !!isVisible)
+            .toggleClass('has-results', !!hasResults)
+            .toggleClass('is-empty', !hasResults)
+            .toggleClass('has-query', query.length >= options.minQueryLength)
+            .toggleClass('is-query-empty', query.length < options.minQueryLength);
+
+        $form.closest('.block-search')
+            .toggleClass('has-query', query.length >= options.minQueryLength)
+            .toggleClass('is-query-empty', query.length < options.minQueryLength);
+
+        if ($input.length) {
+            $input.attr('aria-expanded', isVisible ? 'true' : 'false');
+        }
+
+        if (hasPanel) {
+            $panel.attr('aria-hidden', isVisible ? 'false' : 'true');
+            $panel.toggleClass('is-open', !!isVisible)
+                .toggleClass('has-results', !!hasResults);
+        }
+
+        if ($resultsRoot.length) {
+            $resultsRoot.attr('data-awa-component', 'search-results')
+                .toggleClass('is-open', !!isVisible)
+                .toggleClass('has-results', !!hasResults);
+
+            $resultsRoot.find('ul').attr('role', 'listbox');
+            $resultsRoot.find('li').attr('role', 'option');
+            applyTitles($resultsRoot);
+        }
+    }
+
     function runFallbackRequest($form, options, state, query) {
         const endpoint = resolveFallbackEndpoint($form, options);
         const $category = $form.find('#choose_category');
@@ -352,7 +593,7 @@ define([
         };
 
         if (!endpoint || hasNativeResults($form, options)) {
-            clearFallback($form, options);
+            clearFallback($form, options, state);
             return;
         }
 
@@ -380,7 +621,7 @@ define([
             }
 
             if (!query || query.length < options.minQueryLength || hasNativeResults($form, options)) {
-                clearFallback($form, options);
+                clearFallback($form, options, state);
                 return;
             }
 
@@ -392,7 +633,7 @@ define([
                 return;
             }
 
-            clearFallback($form, options);
+            clearFallback($form, options, state);
             syncState($form, options);
         }).always(function () {
             state.xhr = null;
@@ -409,7 +650,8 @@ define([
         }
 
         if (!query || query.length < options.minQueryLength) {
-            clearFallback($form, options);
+            renderDiscovery($form, options, state);
+            syncState($form, options);
             return;
         }
 
@@ -421,7 +663,7 @@ define([
             return;
         }
 
-        state.timer = window.setTimeout(() => {
+        state.timer = window.setTimeout(function () {
             runFallbackRequest($form, options, state, query);
         }, options.fallbackDelay);
     }
@@ -439,15 +681,17 @@ define([
             xhr: null,
             cache: {},
             requestId: 0,
-            lastRequestId: 0
+            lastRequestId: 0,
+            navIndex: -1,
+            $items: $(),
+            $panel: $(),
+            options: options
         };
 
         if (!$form.length || $form.data('awaSearchCompatInit')) {
             return;
         }
 
-        // Mirasvit autocomplete is the primary provider in this storefront.
-        // Skip compat bootstrap entirely when its placeholder/template is present.
         if (document.getElementById('searchAutocompletePlaceholder') !== null) {
             return;
         }
@@ -504,17 +748,20 @@ define([
             'data-awa-initialized': 'true'
         }).addClass('is-ready');
 
+        fallbackState.$panel = getFallbackPanel($form, options);
+        $form.data('awaSearchCompatState', fallbackState);
+
         scheduleSync();
 
-        $form.on('focusin.awaSearchCompat input.awaSearchCompat keyup.awaSearchCompat', options.inputSelector, function (e) {
+        $form.on('focusin.awaSearchCompat input.awaSearchCompat keyup.awaSearchCompat', options.inputSelector, function (event) {
             const query = $.trim($(this).val() || '');
 
-            if (e.type === 'keyup' && e.key === 'Escape') {
+            if (event.type === 'keyup' && event.key === 'Escape') {
                 $form.removeClass('is-open');
-                clearFallback($form, options);
+                clearFallback($form, options, fallbackState);
             }
 
-            if (e.type === 'input' || e.type === 'keyup' || e.type === 'focusin') {
+            if (event.type === 'input' || event.type === 'keyup' || event.type === 'focusin') {
                 scheduleFallbackRequest($form, options, fallbackState, query);
             }
 
@@ -522,20 +769,94 @@ define([
         });
 
         $form.on('focusout.awaSearchCompat', options.inputSelector, function () {
-            window.setTimeout(() => {
+            window.setTimeout(function () {
+                const activeEl = document.activeElement;
+                const activePanelNode = getFallbackPanel($form, options).get(0);
+                const inputNode = findScoped($form, options.inputSelector).get(0);
+                const keepOpen = !!(activePanelNode && activeEl && activePanelNode.contains(activeEl)) || activeEl === inputNode;
+
+                if (!keepOpen && !$.trim(findScoped($form, options.inputSelector).val() || '')) {
+                    clearFallback($form, options, fallbackState);
+                }
+
                 scheduleSync();
             }, 100);
         });
 
-        $form.on('change.awaSearchCompat', '#choose_category', function () {
+        $form.on('submit.awaSearchCompat', function () {
+            saveRecentSearch(options, $.trim(findScoped($form, options.inputSelector).val() || ''));
+        });
+
+        $form.on('click.awaSearchCompat', '[data-awa-action="popular-keyword"], [data-awa-action="recent-search"]', function (event) {
+            const term = $.trim($(this).attr('data-term') || '');
             const $input = findScoped($form, options.inputSelector);
-            const query = $.trim($input.val() || '');
+
+            if (!term || !$input.length) {
+                return;
+            }
+
+            event.preventDefault();
+            $input.val(term).trigger('input').trigger('change').focus();
+            saveRecentSearch(options, term);
+        });
+
+        $form.on('click.awaSearchCompat', '[data-awa-action="clear-recent-searches"]', function (event) {
+            event.preventDefault();
+            clearRecentSearches(options);
+            renderDiscovery($form, options, fallbackState);
+            syncState($form, options);
+        });
+
+        $form.on('keydown.awaSearchCompat', options.inputSelector, function (event) {
+            const panelState = fallbackState.$panel.attr('data-awa-panel-state');
+            const maxIndex = fallbackState.$items.length - 1;
+            let $activeItem;
+
+            if (!fallbackState.$panel.length || fallbackState.$panel.attr('data-awa-fallback-rendered') !== 'true') {
+                return;
+            }
+
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                fallbackState.navIndex = fallbackState.navIndex < maxIndex ? fallbackState.navIndex + 1 : 0;
+                applyNavState($form, fallbackState);
+                return;
+            }
+
+            if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                fallbackState.navIndex = fallbackState.navIndex > 0 ? fallbackState.navIndex - 1 : maxIndex;
+                applyNavState($form, fallbackState);
+                return;
+            }
+
+            if (event.key === 'Enter' && fallbackState.navIndex >= 0 && fallbackState.$items.length) {
+                $activeItem = $(fallbackState.$items.get(fallbackState.navIndex));
+                event.preventDefault();
+
+                if ($activeItem.is('.awa-ac-product-item')) {
+                    $activeItem.find('.awa-ac-product-name, .awa-ac-product-image').first().trigger('click');
+                } else {
+                    $activeItem.trigger('click');
+                }
+
+                return;
+            }
+
+            if (event.key === 'Escape' && panelState === 'discovery') {
+                clearFallback($form, options, fallbackState);
+                syncState($form, options);
+            }
+        });
+
+        $form.on('change.awaSearchCompat', '#choose_category', function () {
+            const query = $.trim(findScoped($form, options.inputSelector).val() || '');
             scheduleFallbackRequest($form, options, fallbackState, query);
             scheduleSync();
         });
 
         if (typeof window.MutationObserver === 'function') {
-            observer = new window.MutationObserver(() => {
+            observer = new window.MutationObserver(function () {
                 scheduleSync();
             });
 
@@ -543,7 +864,7 @@ define([
             scopeNode = $form.closest('.block-search, .header .search, .top-search').get(0) || document.body;
 
             if (!panelNode && scopeNode) {
-                bodyObserver = new window.MutationObserver(() => {
+                bodyObserver = new window.MutationObserver(function () {
                     attachPanelObserver();
                     scheduleSync();
                 });
@@ -565,20 +886,26 @@ define([
 
     function bootAll(config) {
         const options = $.extend({}, DEFAULT_OPTIONS, config || {});
+
         $(SEARCH_FORM_SELECTOR).each(function () {
             initCompat(options, this);
         });
     }
 
     function shouldObserveMutation(mutations) {
-        for (let i = 0; i < mutations.length; i += 1) {
-            const mutation = mutations[i];
+        let i;
+        let j;
+        let mutation;
+        let addedNodes;
+
+        for (i = 0; i < mutations.length; i += 1) {
+            mutation = mutations[i];
             if (!mutation || !mutation.addedNodes || !mutation.addedNodes.length) {
                 continue;
             }
 
-            const addedNodes = mutation.addedNodes;
-            for (let j = 0; j < addedNodes.length; j += 1) {
+            addedNodes = mutation.addedNodes;
+            for (j = 0; j < addedNodes.length; j += 1) {
                 if (!addedNodes[j] || addedNodes[j].nodeType !== 1) {
                     continue;
                 }
@@ -614,7 +941,7 @@ define([
         });
 
         if (window.MutationObserver && document.body && !window[AUTO_OBSERVER_KEY]) {
-            window[AUTO_OBSERVER_KEY] = new window.MutationObserver((mutations) => {
+            window[AUTO_OBSERVER_KEY] = new window.MutationObserver(function (mutations) {
                 if (!shouldObserveMutation(mutations)) {
                     return;
                 }
@@ -632,6 +959,9 @@ define([
     autoBoot();
 
     return function (config, element) {
+        var form = typeof element === 'string' ? document.querySelector(element) : element;
+        if (form && form.__awaSearchCompatInit) { return; }
+        if (form) { form.__awaSearchCompatInit = true; }
         initCompat(config, element);
     };
 });

@@ -7,6 +7,7 @@
         <css src="css/awa-custom-pdp-conversion.css"/>
         <css src="css/awa-custom-pdp-final-polish.css"/>
         <css src="css/awa-page-catalog-product.css"/>
+        <css src="css/layers/pages/pdp.css"/>
     </head>
     <body>
         <!-- wishlist e compare restaurados - fidelidade ao demo ayo home5 -->

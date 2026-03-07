@@ -2,7 +2,13 @@
 /**
  * B2B Shortcuts & ERP Mockup Dashboard
  * Simula dados que viriam do painel ERP.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
  */
+$reorderUrl = $block->getUrl('b2b/reorder/history');
+$quickOrderUrl = $block->getUrl('b2b/quickorder');
+$addressUrl = $block->getUrl('customer/address/');
+$creditUrl = $block->getUrl('b2b/credit');
 $creditLimitTotal = 15000.00;
 $creditLimitUsed = 4500.00;
 $creditLimitAvailable = $creditLimitTotal - $creditLimitUsed;
@@ -32,24 +38,24 @@ $progressBarColor = $creditPercentage > 80 ? '#b73337' : '#10b981';
 </div>
 
 <div class="b2b-dashboard-shortcuts">
-    <a href="<?php echo $block->escapeUrl($block->getUrl('sales/order/history/')) ?>" class="b2b-shortcut-card">
+    <a href="<?= $block->escapeUrl($reorderUrl) ?>" class="b2b-shortcut-card">
         <i class="b2b-shortcut-icon fa fa-history" aria-hidden="true" style="font-family: 'FontAwesome'; font-style: normal;"></i>
-        <span class="b2b-shortcut-title"><?php echo __('Refazer Pedido') ?></span>
-        <span style="font-size: 12px; color: #64748b;"><?php echo __('Veja o histórico de compras') ?></span>
+        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__('Refazer Pedido')) ?></span>
+        <span style="font-size: 12px; color: #64748b;"><?= $block->escapeHtml(__('Veja o histórico de compras')) ?></span>
     </a>
-    <a href="<?php echo $block->escapeUrl($block->getUrl('b2b-compra-rapida')) ?>" class="b2b-shortcut-card">
+    <a href="<?= $block->escapeUrl($quickOrderUrl) ?>" class="b2b-shortcut-card">
         <i class="b2b-shortcut-icon fa fa-bolt" aria-hidden="true" style="font-family: 'FontAwesome'; font-style: normal;"></i>
-        <span class="b2b-shortcut-title"><?php echo __('Compra Rápida') ?></span>
-        <span style="font-size: 12px; color: #64748b;"><?php echo __('Cole SKUs em lote') ?></span>
+        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__('Compra Rápida')) ?></span>
+        <span style="font-size: 12px; color: #64748b;"><?= $block->escapeHtml(__('Cole SKUs em lote')) ?></span>
     </a>
-    <a href="<?php echo $block->escapeUrl($block->getUrl('customer/address/')) ?>" class="b2b-shortcut-card">
+    <a href="<?= $block->escapeUrl($addressUrl) ?>" class="b2b-shortcut-card">
         <i class="b2b-shortcut-icon fa fa-truck" aria-hidden="true" style="font-family: 'FontAwesome'; font-style: normal;"></i>
-        <span class="b2b-shortcut-title"><?php echo __('Meus Endereços') ?></span>
-        <span style="font-size: 12px; color: #64748b;"><?php echo __('Gerencie múltiplos destinos') ?></span>
+        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__('Meus Endereços')) ?></span>
+        <span style="font-size: 12px; color: #64748b;"><?= $block->escapeHtml(__('Gerencie múltiplos destinos')) ?></span>
     </a>
-    <a href="#" class="b2b-shortcut-card" onclick="alert('Feature em desenvolvimento pela ERP integration'); return false;">
+    <a href="<?= $block->escapeUrl($creditUrl) ?>" class="b2b-shortcut-card">
         <i class="b2b-shortcut-icon fa fa-file-text-o" aria-hidden="true" style="font-family: 'FontAwesome'; font-style: normal;"></i>
-        <span class="b2b-shortcut-title"><?php echo __('2ª Via de Boletos') ?></span>
-        <span style="font-size: 12px; color: #64748b;"><?php echo __('Acesse o Portal Financeiro') ?></span>
+        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__('Meu Crédito')) ?></span>
+        <span style="font-size: 12px; color: #64748b;"><?= $block->escapeHtml(__('Consulte limite e disponibilidade')) ?></span>
     </a>
 </div>

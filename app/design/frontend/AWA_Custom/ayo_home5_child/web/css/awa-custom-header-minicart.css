@@ -53,7 +53,7 @@ body .page-wrapper .awa-header-contact-links__item {
     padding: 4px 10px;
     border-radius: var(--awa-radius-pill, 999px);
     border: 1px solid var(--border-color, #e2e8f0);
-    background: #fff;
+    background: var(--awa-bg-surface);
     color: var(--text-color, #1e293b);
     font-size: var(--awa-text-xs);
     font-weight: var(--awa-weight-semibold);
@@ -71,7 +71,7 @@ body .page-wrapper .awa-header-contact-links__item:hover {
 
 body .page-wrapper .awa-header-contact-links__item:focus-visible {
     outline: none;
-    border-color: var(--primary-color, #b73337);
+    border-color: var(--awa-brand-primary);
     box-shadow: 0 0 0 3px rgb(183 51 55 / 18%);
 }
 
@@ -111,7 +111,7 @@ body .page-wrapper .top-account ul.header.links > li .counter.qty {
     border-radius: var(--awa-radius-pill);
     background: var(--primary-color);
     color: var(--bg-white);
-    font-size: 11px;
+    font-size: var(--awa-text-2xs);
     font-weight: var(--awa-weight-bold);
     line-height: 1;
     vertical-align: middle;
@@ -192,7 +192,7 @@ body .page-wrapper .top-account ul.header.links > li > a:hover {
 
 body .page-wrapper .top-account ul.header.links > li > a:focus-visible {
     outline: none;
-    border-color: var(--primary-color, #b73337);
+    border-color: var(--awa-brand-primary);
     box-shadow: 0 0 0 3px rgb(183 51 55 / 18%);
 }
 
@@ -256,7 +256,7 @@ body .page-wrapper .header .top-search .block-search #search_mini_form .actions 
     flex: 0 0 auto;
     display: flex;
     align-items: stretch;
-    height: 48px;
+    height: var(--awa-input-height-lg);
     align-self: stretch;
 }
 
@@ -270,8 +270,8 @@ body .page-wrapper .header .top-search > .block-search .actions {
     width: 52px !important;
     min-width: 52px !important;
     flex: 0 0 52px !important;
-    height: 48px !important;
-    max-height: 48px !important;
+    height: var(--awa-input-height-lg) !important;
+    max-height: var(--awa-input-height-lg) !important;
 }
 
 body .page-wrapper .header .top-search > .block-search .action.search,
@@ -292,9 +292,9 @@ body .page-wrapper .header .top-search .block-search .action.search {
     justify-content: center;
     width: 52px !important;
     min-width: 52px !important;
-    min-height: 48px;
-    height: 48px !important;
-    max-height: 48px !important;
+    min-height: var(--awa-input-height-lg);
+    height: var(--awa-input-height-lg) !important;
+    max-height: var(--awa-input-height-lg) !important;
     border-radius: 0 var(--awa-radius-lg, 12px) var(--awa-radius-lg, 12px) 0;
     border: 2px solid var(--primary-color);
     border-left: 0;
@@ -311,7 +311,7 @@ body .page-wrapper .header .top-search .block-search .action.search:hover {
 
 body .page-wrapper .header .top-search .block-search .action.search:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px var(--awa-focus-ring, rgb(183 51 55 / 25%));
+    box-shadow: 0 0 0 3px var(--awa-focus-ring, var(--awa-brand-opacity-25));
 }
 
 body .page-wrapper .header .top-search .block-search .action.search > span {
@@ -359,20 +359,20 @@ body .page-wrapper .header .top-search .block-search .action.search[data-awa-sea
 }
 
 body .page-wrapper .header .top-search .block-search input#search {
-    min-height: 48px;
-    height: 48px !important;
+    min-height: var(--awa-input-height-lg);
+    height: var(--awa-input-height-lg) !important;
     border-radius: var(--awa-radius-lg, 12px) 0 0 var(--awa-radius-lg, 12px);
     border: 2px solid var(--border-color, #e2e8f0);
     border-right: 0;
     padding: 12px 16px;
-    font-size: 0.9375rem;
+    font-size: var(--awa-text-md);
     background: var(--bg-white, #fff);
     transition: border-color var(--awa-transition-fast, 150ms cubic-bezier(0.4, 0, 0.2, 1)), box-shadow var(--awa-transition-fast, 150ms cubic-bezier(0.4, 0, 0.2, 1));
 }
 
 body .page-wrapper .header .top-search .block-search input#search:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px var(--primary-light, rgb(183 51 55 / 10%));
+    box-shadow: 0 0 0 3px var(--primary-light, var(--awa-brand-opacity-10));
     outline: 0;
 }
 
@@ -399,7 +399,7 @@ body .page-wrapper .header .top-search .minicart-wrapper {
 }
 
 body .page-wrapper .header .top-search .minicart-wrapper .action.showcart {
-    min-height: 48px;
+    min-height: var(--awa-input-height-lg);
     border-radius: var(--awa-radius-md, 10px);
     padding: 10px 12px;
     transition: color var(--awa-transition, 250ms cubic-bezier(0.4, 0, 0.2, 1)), box-shadow var(--awa-transition, 250ms cubic-bezier(0.4, 0, 0.2, 1)), background-color var(--awa-transition, 250ms cubic-bezier(0.4, 0, 0.2, 1));
@@ -412,7 +412,7 @@ body .page-wrapper .header .top-search .minicart-wrapper .action.showcart:hover 
 
 body .page-wrapper .header .top-search .minicart-wrapper .action.showcart:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px var(--awa-focus-ring, rgb(183 51 55 / 25%));
+    box-shadow: 0 0 0 3px var(--awa-focus-ring, var(--awa-brand-opacity-25));
 }
 
 body .page-wrapper .header .top-search .minicart-wrapper .counter.qty {
@@ -423,7 +423,7 @@ body .page-wrapper .header .top-search .minicart-wrapper .counter.qty {
     padding-inline: 6px;
     background: var(--primary-color);
     color: var(--bg-white);
-    font-size: 11px;
+    font-size: var(--awa-text-2xs);
     font-weight: var(--awa-font-weight-bold, 700);
     border-radius: var(--awa-radius-pill, 999px);
     box-shadow: 0 2px 6px rgb(183 51 55 / 30%);
@@ -448,7 +448,7 @@ body .page-wrapper .header .top-search .minicart-wrapper .block-minicart {
 body .page-wrapper .header .top-search .minicart-wrapper .block-minicart .action.viewcart,
 body .page-wrapper .header .top-search .minicart-wrapper .block-minicart .action.checkout {
     border-radius: var(--awa-radius-md, 10px);
-    min-height: 44px;
+    min-height: var(--awa-btn-height);
     font-weight: var(--awa-font-weight-semibold, 600);
     transition: background-color var(--awa-transition, 250ms cubic-bezier(0.4, 0, 0.2, 1)), border-color var(--awa-transition, 250ms cubic-bezier(0.4, 0, 0.2, 1)), box-shadow var(--awa-transition, 250ms cubic-bezier(0.4, 0, 0.2, 1));
 }
@@ -456,7 +456,7 @@ body .page-wrapper .header .top-search .minicart-wrapper .block-minicart .action
 body .page-wrapper .header .top-search .minicart-wrapper .block-minicart .action.viewcart:focus-visible,
 body .page-wrapper .header .top-search .minicart-wrapper .block-minicart .action.checkout:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px var(--awa-focus-ring, rgb(183 51 55 / 25%));
+    box-shadow: 0 0 0 3px var(--awa-focus-ring, var(--awa-brand-opacity-25));
 }
 
 body .page-wrapper .header .top-search .minicart-wrapper .block-minicart .action.viewcart:hover,
@@ -483,7 +483,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
 
 body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search .block-content,
 body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header .top-search > .block-search #search_mini_form {
-    min-height: 44px !important;
+    min-height: var(--awa-btn-height) !important;
 }
 
 /* Keep internal pages focused on main nav/content by hiding expanded vertical category rail */
@@ -500,7 +500,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     pointer-events: none !important;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
     body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header-control .menu_primary {
         flex: 0 0 83.333333% !important;
         width: 83.333333% !important;
@@ -509,7 +509,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
 }
 
 /* Sticky header condensed state (desktop sticky menu area only) */
-@media (min-width: 992px) {
+@media (width >= 992px) {
     body .page-wrapper .header-wrapper-sticky .container-header-sticky,
     body .page-wrapper .header-wrapper-sticky .logo-sticky img {
         transition: padding var(--awa-round2-transition), min-height var(--awa-round2-transition), max-height var(--awa-round2-transition), transform var(--awa-round2-transition);
@@ -538,7 +538,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     }
 }
 
-@media (max-width: 991px) {
+@media (width <= 991px) {
     body .page-wrapper .top-bar-right .top-info {
         justify-content: center;
         gap: var(--awa-gap-sm);
@@ -583,7 +583,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
         padding: 4px 8px;
         border-radius: var(--awa-radius-pill);
         border: 1px solid var(--awa-gray-200, #e5e7eb);
-        background: #fff;
+        background: var(--awa-bg-surface);
         color: var(--text-color);
         font-size: var(--awa-text-xs);
         line-height: 1.1;
@@ -593,7 +593,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     body .page-wrapper .awa-b2b-mode-badge {
         min-height: 32px;
         padding: 5px 9px;
-        font-size: 11px;
+        font-size: var(--awa-text-2xs);
     }
 
     body .page-wrapper .awa-b2b-mode-badge__tier {
@@ -601,7 +601,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     }
 }
 
-@media (max-width: 767px) {
+@media (width <= 767px) {
     body .page-wrapper .top-header .top-bar-right {
         padding-top: 2px;
     }
@@ -662,7 +662,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     body .page-wrapper .top-account ul.header.links > li > a {
         min-height: 28px;
         padding: 3px 7px;
-        font-size: 11px;
+        font-size: var(--awa-text-2xs);
     }
 
     body .page-wrapper .header .wp-header {
@@ -776,7 +776,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     body .page-wrapper .header .top-search .block-search .action.search,
     body .page-wrapper .header .top-search .block-search input#search,
     body .page-wrapper .header .top-search .minicart-wrapper .action.showcart {
-        min-height: 44px;
+        min-height: var(--awa-btn-height);
     }
 
     body .page-wrapper .header .top-search > .block-search .actions,
@@ -805,7 +805,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
         min-height: 40px;
         padding: 8px 10px;
         border-radius: var(--awa-radius-base);
-        background: #fff;
+        background: var(--awa-bg-surface);
         border: 1px solid var(--awa-gray-200, #e5e7eb);
     }
 
@@ -818,7 +818,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     }
 
     body .page-wrapper .header .top-search > .hoteline_header .hotline-label {
-        font-size: 11px;
+        font-size: var(--awa-text-2xs);
     }
 
     body .page-wrapper .header .top-search > .hoteline_header .hotline-number {
@@ -872,15 +872,15 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
         justify-content: center !important;
         width: 44px !important;
         min-width: 44px !important;
-        height: 44px !important;
+        height: var(--awa-btn-height) !important;
         margin: 8px 0 0 !important;
         position: static !important;
         float: none !important;
         clear: both !important;
         border-radius: var(--awa-radius-md) !important;
         border: 1px solid var(--awa-gray-200, #e5e7eb) !important;
-        background: #fff !important;
-        color: var(--primary-color, #b73337) !important;
+        background: var(--awa-bg-surface) !important;
+        color: var(--awa-brand-primary) !important;
         box-shadow: 0 4px 12px rgb(15 23 42 / 6%);
     }
 
@@ -935,8 +935,8 @@ body .page-wrapper .header .top-search .block-search form.form.minisearch .actio
     width: 48px !important;
     min-width: 48px !important;
     flex: 0 0 48px !important;
-    height: 44px !important;
-    max-height: 44px !important;
+    height: var(--awa-btn-height) !important;
+    max-height: var(--awa-btn-height) !important;
     display: flex !important;
     align-items: stretch !important;
 }
@@ -946,8 +946,8 @@ body .page-wrapper .header .top-search .block-search form.form.minisearch .actio
     width: 48px !important;
     min-width: 48px !important;
     flex: 0 0 48px !important;
-    height: 44px !important;
-    max-height: 44px !important;
+    height: var(--awa-btn-height) !important;
+    max-height: var(--awa-btn-height) !important;
 }
 
 body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header-control .action.nav-toggle,
@@ -957,7 +957,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     pointer-events: none !important;
 }
 
-@media (min-width: 768px) {
+@media (width >= 768px) {
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"],
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] > .container,
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .header-control.header-nav.header-nav-global.cms_home_1[data-awa-header-nav="true"] > .container > .row {
@@ -996,7 +996,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
 }
 
 /* Round21: mobile utility links priority + strict 44px search control height */
-@media (max-width: 767px) {
+@media (width <= 767px) {
     body .page-wrapper .top-account ul.header.links {
         justify-content: center !important;
         flex-wrap: wrap !important;
@@ -1028,9 +1028,9 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     body .page-wrapper .header .top-search > .block-search .actions,
     body .page-wrapper .header .top-search > .block-search .action.search,
     body .page-wrapper .header .top-search > .block-search .field.search input#search {
-        height: 44px !important;
-        min-height: 44px !important;
-        max-height: 44px !important;
+        height: var(--awa-btn-height) !important;
+        min-height: var(--awa-btn-height) !important;
+        max-height: var(--awa-btn-height) !important;
         box-sizing: border-box !important;
     }
 

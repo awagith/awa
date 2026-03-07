@@ -383,7 +383,7 @@
     function ensureFooterA11y(root) {
         const scope = root || document;
         const buttons = scope.querySelectorAll('.page_footer .velaFooterTitle');
-        const links = scope.querySelectorAll('.page_footer a, .fixed-bottom a, .fixed-right a');
+        const links = scope.querySelectorAll('.page_footer a, .fixed-bottom a');
 
         buttons.forEach((button, index) => {
             const text = (button.textContent || '').trim();
@@ -422,8 +422,6 @@
             ['.newletter_popup_close', 'Fechar popup de ofertas'],
             ['.newletter_popup_close_text', 'Fechar popup de ofertas'],
             ['.b2b-login-modal-close', 'Fechar modal de login'],
-            ['.fixed-right .shooping-cart a', 'Abrir carrinho'],
-            ['.fixed-right .my-account a', 'Abrir minha conta'],
             ['#ajaxsuite-close', 'Fechar popup rápido']
         ].forEach((entry) => {
             const node = scope.querySelector(entry[0]);
@@ -441,20 +439,6 @@
                 node.setAttribute('title', label);
             }
         });
-
-        const fixedScrollTop = scope.querySelector('.fixed-right .fixed-right-ul .scroll-top');
-
-        if (fixedScrollTop) {
-            fixedScrollTop.setAttribute('role', 'button');
-            fixedScrollTop.setAttribute('tabindex', '0');
-            if (!fixedScrollTop.getAttribute('aria-label')) {
-                fixedScrollTop.setAttribute('aria-label', 'Voltar ao topo');
-            }
-            if (!fixedScrollTop.getAttribute('title')) {
-                fixedScrollTop.setAttribute('title', 'Voltar ao topo');
-            }
-            bindKeyboardClick(fixedScrollTop);
-        }
 
         scope.querySelectorAll('.fixed-bottom .mobile-bottom-link a').forEach((link) => {
             if (!link.getAttribute('title')) {

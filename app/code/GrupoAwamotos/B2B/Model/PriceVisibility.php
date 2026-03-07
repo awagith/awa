@@ -209,8 +209,12 @@ class PriceVisibility implements PriceVisibilityInterface
         }
 
         // Substituir placeholders
-        $loginUrl = $this->urlBuilder->getUrl('customer/account/login');
-        $registerUrl = $this->urlBuilder->getUrl('customer/account/create');
+        $loginUrl = $this->config->isStrictB2B()
+            ? $this->urlBuilder->getUrl('b2b/account/login')
+            : $this->urlBuilder->getUrl('customer/account/login');
+        $registerUrl = $this->config->isEnabled()
+            ? $this->urlBuilder->getUrl('b2b/register')
+            : $this->urlBuilder->getUrl('customer/account/create');
 
         $message = str_replace(
             ['{{login_url}}', '{{register_url}}'],

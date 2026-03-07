@@ -148,6 +148,7 @@ class SafeVerticalmenu extends \Rokanthemes\VerticalMenu\Block\Verticalmenu
 
             $vcMenuCatLabel = (string)$childModel->getData('vc_menu_cat_label');
             $vcMenuFontIcon = (string)$childModel->getData('vc_menu_font_icon');
+            $vcMenuIconImg = $this->_helper->getVerticalIconimageUrl($childModel);
             $menuToken = 'menu-' . (int)$child->getId();
             $childName = $this->escapeHtml($child->getName());
             $childNameAttr = $this->escapeHtmlAttr($child->getName());
@@ -175,12 +176,19 @@ class SafeVerticalmenu extends \Rokanthemes\VerticalMenu\Block\Verticalmenu
                 . ($hasChildren ? ' aria-haspopup="true" aria-expanded="false"' : '')
                 . '>';
 
-            $iconClass = $this->sanitizeClassList($vcMenuFontIcon);
-            if ($iconClass !== '') {
-                $html .= '<em class="' . $this->escapeHtmlAttr('menu-thumb-icon ' . $iconClass) . '"></em>';
+            if ($vcMenuIconImg) {
+                $iconImgUrl = (string)$childModel->getImageUrl('vc_menu_icon_img');
+                if ($iconImgUrl !== '') {
+                    $html .= '<img class="menu-thumb-icon awa-mueller-icon awa-mueller-icon--image" src="' . $this->escapeUrl($iconImgUrl) . '" alt="' . $childNameAttr . '" loading="lazy"/>';
+                }
+            } else {
+                $iconClass = $this->sanitizeClassList($vcMenuFontIcon);
+                if ($iconClass !== '') {
+                    $html .= '<em class="' . $this->escapeHtmlAttr('menu-thumb-icon awa-mueller-icon awa-mueller-icon--font ' . $iconClass) . '"></em>';
+                }
             }
 
-            $html .= '<span>' . $childName;
+            $html .= '<span class="navigation__label">' . $childName;
 
             if ($vcMenuCatLabel !== '' && isset($this->_verticalmenuConfig['cat_labels'][$vcMenuCatLabel])) {
                 $labelKey = $this->sanitizeClassToken($vcMenuCatLabel);
@@ -354,10 +362,10 @@ class SafeVerticalmenu extends \Rokanthemes\VerticalMenu\Block\Verticalmenu
 
                 $iconClass = $this->sanitizeClassList($vc_menu_font_icon);
                 if ($iconClass !== '') {
-                    $html .= '<em class="' . $this->escapeHtmlAttr('menu-thumb-icon ' . $iconClass) . '"></em>';
+                    $html .= '<em class="' . $this->escapeHtmlAttr('menu-thumb-icon awa-mueller-icon awa-mueller-icon--font ' . $iconClass) . '"></em>';
                 }
 
-                $html .= '<span>' . $childName;
+                $html .= '<span class="navigation__label">' . $childName;
 
                 if ($vc_menu_cat_label !== '' && isset($this->_verticalmenuConfig['cat_labels'][$vc_menu_cat_label])) {
                     $labelKey = $this->sanitizeClassToken($vc_menu_cat_label);
@@ -494,16 +502,16 @@ class SafeVerticalmenu extends \Rokanthemes\VerticalMenu\Block\Verticalmenu
             if ($vc_menu_icon_img) {
                 $iconImgUrl = (string)$cat_model->getImageUrl('vc_menu_icon_img');
                 if ($iconImgUrl !== '') {
-                    $html .= '<img class="menu-thumb-icon" src="' . $this->escapeUrl($iconImgUrl) . '" alt="' . $categoryNameAttr . '"/>';
+                    $html .= '<img class="menu-thumb-icon awa-mueller-icon awa-mueller-icon--image" src="' . $this->escapeUrl($iconImgUrl) . '" alt="' . $categoryNameAttr . '" loading="lazy"/>';
                 }
             } else {
                 $iconClass = $this->sanitizeClassList($vc_menu_font_icon);
                 if ($iconClass !== '') {
-                    $html .= '<em class="' . $this->escapeHtmlAttr('menu-thumb-icon ' . $iconClass) . '"></em>';
+                    $html .= '<em class="' . $this->escapeHtmlAttr('menu-thumb-icon awa-mueller-icon awa-mueller-icon--font ' . $iconClass) . '"></em>';
                 }
             }
 
-            $html .= '<span>' . $categoryName . '</span>';
+            $html .= '<span class="navigation__label">' . $categoryName . '</span>';
 
             if ($vc_menu_cat_label !== '' && isset($this->_verticalmenuConfig['cat_labels'][$vc_menu_cat_label])) {
                 $labelKey = $this->sanitizeClassToken($vc_menu_cat_label);

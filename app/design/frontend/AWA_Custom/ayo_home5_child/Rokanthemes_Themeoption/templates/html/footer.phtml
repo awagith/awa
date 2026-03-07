@@ -1,12 +1,17 @@
 <?php
 /** @var Rokanthemes\Themeoption\Block\Themeoption $block */
 $helper = $this->helper('Rokanthemes\RokanBase\Helper\Data');
+$b2bConfig = $this->helper('GrupoAwamotos\\B2B\\Helper\\Config');
 $enableMenu = $helper->getConfigData('themeoption/footer/footer_menu_mobile');
-$footerPaymentLegacy = trim((string) $this->getChildHtml('footer_payment'));
+$footerLinks = trim((string) $this->getChildHtml('footer_links'));
+$storeSwitcher = trim((string) $this->getChildHtml('store_switcher'));
 $storeHost = (string) parse_url((string) $block->getBaseUrl(), PHP_URL_HOST);
 $storeHost = $storeHost !== '' ? $storeHost : 'awamotos.com';
 $safeBrowsingUrl = 'https://transparencyreport.google.com/safe-browsing/search?url=' . rawurlencode($storeHost);
 $sslLabsUrl = 'https://www.ssllabs.com/ssltest/analyze.html?d=' . rawurlencode($storeHost);
+$mobileAccountUrl = ($b2bConfig->isEnabled() && $b2bConfig->isStrictB2B())
+    ? $this->getUrl('b2b/account/login')
+    : $this->getUrl('customer/account/');
 ?>
 <div class="page_footer awa-footer--dark" role="contentinfo">
     <svg class="awa-footer-sprite" xmlns="http://www.w3.org/2000/svg" width="0" height="0" role="presentation" aria-hidden="true" focusable="false">
@@ -234,9 +239,14 @@ $sslLabsUrl = 'https://www.ssllabs.com/ssltest/analyze.html?d=' . rawurlencode($
                                 </div>
                             </div>
                         </section>
-                        <?php if ($footerPaymentLegacy !== ''): ?>
-                            <div class="awa-footer-payment-legacy" hidden aria-hidden="true">
-                                <?= /* @noEscape */ $footerPaymentLegacy ?>
+                        <?php if ($footerLinks !== '' || $storeSwitcher !== ''): ?>
+                            <div class="awa-footer-compat" data-awa-footer-compat="true">
+                                <?php if ($footerLinks !== ''): ?>
+                                    <div class="awa-footer-compat__links"><?= /* @noEscape */ $footerLinks ?></div>
+                                <?php endif; ?>
+                                <?php if ($storeSwitcher !== ''): ?>
+                                    <div class="awa-footer-compat__switcher"><?= /* @noEscape */ $storeSwitcher ?></div>
+                                <?php endif; ?>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -244,9 +254,6 @@ $sslLabsUrl = 'https://www.ssllabs.com/ssltest/analyze.html?d=' . rawurlencode($
             </div>
         </div>
     </div>
-</div>
-<div class="fixed-right" role="complementary" aria-label="<?= $escaper->escapeHtmlAttr(__('Links Rápidos')) ?>">
-    <?= $this->getChildHtml('fixed_right') ?>
 </div>
 <div class="shadow_bkg" role="presentation"></div>
 <div class="shadow_bkg_show" role="presentation"></div>
@@ -260,7 +267,7 @@ $sslLabsUrl = 'https://www.ssllabs.com/ssltest/analyze.html?d=' . rawurlencode($
         <ul class="mobile-bottom-link flex-layout space-between list-unstyled">
             <li><a href="<?= $escaper->escapeUrl($this->getUrl('')) ?>" aria-label="<?= $escaper->escapeHtmlAttr(__('Home')) ?>"><span class="icon icon-chrome" aria-hidden="true"></span><?= $escaper->escapeHtml(__('Home')) ?></a></li>
             <li><a href="#" class="toggle-nav-footer" role="button" aria-haspopup="true" aria-expanded="false" aria-label="<?= $escaper->escapeHtmlAttr(__('Abrir menu')) ?>"><span class="icon icon-menu" aria-hidden="true"></span><?= $escaper->escapeHtml(__('Menu')) ?></a></li>
-            <li><a href="<?= $escaper->escapeUrl($this->getUrl('customer/account/')) ?>" aria-label="<?= $escaper->escapeHtmlAttr(__('Minha Conta')) ?>"><span class="icon icon-users" aria-hidden="true"></span><?= $escaper->escapeHtml(__('Conta')) ?></a></li>
+            <li><a href="<?= $escaper->escapeUrl($mobileAccountUrl) ?>" aria-label="<?= $escaper->escapeHtmlAttr(__('Minha Conta')) ?>"><span class="icon icon-users" aria-hidden="true"></span><?= $escaper->escapeHtml(__('Conta')) ?></a></li>
             <li><a href="<?= $escaper->escapeUrl($this->getUrl('checkout/cart/')) ?>" aria-label="<?= $escaper->escapeHtmlAttr(__('Carrinho de Compras')) ?>"><span class="icon icon-shopping-cart" aria-hidden="true"></span><?= $escaper->escapeHtml(__('Carrinho')) ?></a></li>
         </ul>
     </div>

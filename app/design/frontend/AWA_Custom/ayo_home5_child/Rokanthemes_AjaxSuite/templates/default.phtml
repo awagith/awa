@@ -7,7 +7,10 @@ declare(strict_types=1);
  * - Ensure window.logoUrl is JSON-safe (no control chars/newlines)
  *
  * @var \Rokanthemes\AjaxSuite\Block\Js $block
+ * @var \GrupoAwamotos\B2B\ViewModel\AjaxSuiteConfig|null $viewModel
  */
+
+$viewModel = $block->getData('view_model');
 
 $sanitize = static function (?string $value): string {
     $sanitized = (string) $value;
@@ -28,9 +31,7 @@ if ($logoConfig !== '') {
 }
 
 $logoLink = $sanitize($logoLink);
-/** @var \GrupoAwamotos\B2B\Helper\Config $b2bConfig */
-$b2bConfig = $this->helper('GrupoAwamotos\\B2B\\Helper\\Config');
-$loginUrl = ($b2bConfig->isEnabled() && $b2bConfig->isStrictB2B())
+$loginUrl = ($viewModel && $viewModel->shouldUseB2BLogin())
     ? $block->getUrl('b2b/account/login')
     : $block->getUrl('customer/account/login');
 ?>

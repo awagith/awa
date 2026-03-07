@@ -37,6 +37,11 @@ php bin/magento indexer:reindex
 echo "✅ Reindex complete"
 
 echo ""
+echo "📦 Step 7/7: Corrigindo permissões..."
+sudo bash "$(dirname "$0")/scripts/fix-permissions-awa.sh"
+echo "✅ Permissões corrigidas"
+
+echo ""
 echo "============================================"
 echo "✅ DEPLOY COMPLETO! Todas as etapas concluídas."
 echo "============================================"

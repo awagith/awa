@@ -13,6 +13,16 @@ $renderCmsBlock = static function (string $blockId) use ($layout): string {
 	return trim((string)$cmsBlock->toHtml());
 };
 
+$renderTemplate = static function (string $template) use ($layout): string {
+	/** @var \Magento\Framework\View\Element\Template|null $templateBlock */
+	$templateBlock = $layout->createBlock('Magento\Framework\View\Element\Template');
+	if (!$templateBlock) {
+		return '';
+	}
+
+	return trim((string)$templateBlock->setTemplate($template)->toHtml());
+};
+
 /** @var \Rokanthemes\SlideBanner\Block\Slider|null $heroSliderBlock */
 $heroSliderBlock = $layout->createBlock('Rokanthemes\SlideBanner\Block\Slider');
 $heroSliderHtml = '';
@@ -24,13 +34,13 @@ $heroFallbackHtml = $renderCmsBlock('home_hero');
 $schemaOrgHtml = $renderCmsBlock('home_schema_org');
 $benefitsHtml = $renderCmsBlock('block_top');
 $bannerMidHtml = $renderCmsBlock('banner_mid_home5');
-$notificationHtml = $renderCmsBlock('notification_home5');
+$notificationHtml = $renderTemplate('Magento_Cms::home/notification-ticker.phtml');
 $bestSellersHtml = $renderCmsBlock('category1_home5');
 $popularCategoriesHtml = $renderCmsBlock('category2_home5');
 $featuredCategoriesHtml = $renderCmsBlock('featured_categories');
 $fitmentSearchHtml = $renderCmsBlock('home_fitment_search');
 $launchesHtml = $renderCmsBlock('home_new_products');
-$trustBadgesHtml = $renderCmsBlock('trust_badges_homepage');
+$trustBadgesHtml = $renderTemplate('Magento_Cms::home/trust-stack.phtml');
 $faqQuickHtml = $renderCmsBlock('home_faq_quick');
 
 /** @var \Magento\Framework\View\Element\Template|null $productTabBlock */

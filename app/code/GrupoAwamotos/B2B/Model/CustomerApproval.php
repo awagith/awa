@@ -244,6 +244,7 @@ class CustomerApproval implements CustomerApprovalInterface
                 return false;
             }
 
+            /** @var \Magento\Store\Model\Store $store */
             $store = $this->storeManager->getStore();
 
             $cnpj = $this->getCustomerAttributeValue($customer, 'b2b_cnpj') ?? 'N/A';
@@ -286,6 +287,7 @@ class CustomerApproval implements CustomerApprovalInterface
     {
         try {
             $customer = $this->customerRepository->getById($customerId);
+            /** @var \Magento\Store\Model\Store $store */
             $store = $this->storeManager->getStore($customer->getStoreId());
 
             $transport = $this->transportBuilder
@@ -299,7 +301,7 @@ class CustomerApproval implements CustomerApprovalInterface
                     'customer_name' => $customer->getFirstname(),
                     'store_name' => $store->getName(),
                     'store_url' => $store->getBaseUrl(),
-                    'login_url' => $store->getBaseUrl() . 'customer/account/login',
+                    'login_url' => $store->getBaseUrl() . 'b2b/account/login',
                 ])
                 ->setFromByScope('general')
                 ->addTo($customer->getEmail(), $customer->getFirstname() . ' ' . $customer->getLastname())
@@ -321,6 +323,7 @@ class CustomerApproval implements CustomerApprovalInterface
     {
         try {
             $customer = $this->customerRepository->getById($customerId);
+            /** @var \Magento\Store\Model\Store $store */
             $store = $this->storeManager->getStore($customer->getStoreId());
 
             $transport = $this->transportBuilder

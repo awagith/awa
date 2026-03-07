@@ -59,7 +59,7 @@ class Index implements HttpPostActionInterface
         }
 
         if (!$this->customerSession->isLoggedIn()) {
-            return $redirect->setPath('customer/account/login');
+            return $redirect->setPath('b2b/account/login');
         }
 
         $orderId = (int) $this->request->getParam('order_id');

@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <css src="GrupoAwamotos_B2B::css/b2b-marketing.css"/>
-    </head>
+    <update handle="b2b_marketing_styles"/>
     <body>
         <referenceContainer name="order.success.additional.info">
             <block class="GrupoAwamotos\B2B\Block\Checkout\SuccessBadge"

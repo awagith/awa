@@ -12,6 +12,7 @@
         <css src="css/awa-fixes-home.css"/>
         <css src="css/awa-design-system-layout.css"/>
         <css src="css/awa-custom-home-final-polish.css"/>
+        <css src="css/layers/pages/home.css"/>
     </head>
     <body>
         <attribute name="class" value="awa-home-premium-conservative"/>

@@ -1,58 +1,125 @@
 :root {
+    /* ═══ MARCA ═══ */
     --awa-color-primary: #b73337;
     --awa-color-primary-dark: #8e2629;
-    --awa-color-text-primary: #333;
-    --awa-color-button-text: #fff;
-    --awa-color-link: #b73337;
-    --awa-color-link-hover: #8e2629;
-    --awa-color-bg: #fff;
-    --awa-color-bg-soft: #f7f7f7;
-    --awa-color-border: #e5e5e5;
-    --awa-color-text-secondary: #666;
-    --awa-color-disabled: #bdbdbd;
-    --awa-color-success: #2e7d32;
-    --awa-color-warning: #f9a825;
-    --awa-color-error: #c62828;
+    --awa-brand-primary: var(--awa-color-primary);
+    --awa-brand-hover: var(--awa-color-primary-dark);
+    --awa-brand-opacity-10: rgb(183 51 55 / 10%);
+    --awa-brand-opacity-15: rgb(183 51 55 / 15%);
+    --awa-brand-opacity-25: rgb(183 51 55 / 25%);
+    --awa-b2b-mode-accent: var(--awa-brand-primary);
+
+    /* ═══ CORES SEMÂNTICAS ═══ */
+    --awa-bg-surface: #fff;
+    --awa-bg-muted: #f1f5f9;
+    --awa-text-primary: #333333;
+    --awa-text-main: #333333;
+    --awa-text-muted: #666666;
+    --awa-text-inverse: #fff;
+    --awa-color-danger: #dc2626;
+    --awa-input-error-bg: rgb(220 38 38 / 5%);
+    --awa-input-error-border: #dc2626;
+
+    /* ═══ CINZAS ═══ */
+    --awa-gray-200: #e2e8f0;
+    --awa-gray-300: #d1d5db;
+    --awa-gray-400: #94a3b8;
+    --awa-gray-600: #666666;
+    --awa-gray-700: #374151;
+
+    /* ═══ ALIASES (compat) ═══ */
+    --awa-color-text-primary: var(--awa-text-primary);
+    --awa-color-bg: var(--awa-bg-surface);
+    --awa-color-bg-soft: var(--awa-bg-muted);
+    --awa-color-border: var(--awa-gray-200);
+    --awa-color-text-secondary: var(--awa-text-muted);
     --primary-color: var(--awa-color-primary);
     --primary-hover: var(--awa-color-primary-dark);
-    --primary-light: rgb(183 51 55 / 10%);
+    --primary-light: var(--awa-brand-opacity-10);
     --text-color: var(--awa-color-text-primary);
     --text-muted: var(--awa-color-text-secondary);
     --bg-white: var(--awa-color-bg);
     --bg-surface: var(--awa-color-bg-soft);
     --border-color: var(--awa-color-border);
-    --border-hover: #d9d9d9;
-    --awa-focus-ring: rgb(183 51 55 / 25%);
+    --border-hover: var(--awa-gray-300);
+    --awa-focus-ring: var(--awa-brand-opacity-25);
     --awa-red: var(--awa-color-primary);
     --awa-red-dark: var(--awa-color-primary-dark);
     --awa-dark: var(--awa-color-text-primary);
     --awa-border: var(--awa-color-border);
     --awa-gray-100: var(--awa-color-bg-soft);
-    --awa-font-family: var(--awa-font-body, 'Source Sans 3', Arial, sans-serif);
+    --awa-footer-bg-tertiary: var(--awa-color-text-primary);
+    --footer-bg-tertiary: var(--awa-footer-bg-tertiary);
+
+    /* ═══ TIPOGRAFIA ═══ */
+    --awa-font-body: 'Source Sans 3', arial, sans-serif;
+    --awa-font-family: var(--awa-font-body);
+    --awa-text-3xs: 0.625rem;
+    --awa-text-2xs: 0.6875rem;
+    --awa-text-xs: 0.75rem;
+    --awa-text-xs-plus: 0.8125rem;
+    --awa-text-sm: 0.875rem;
+    --awa-text-base: 1rem;
+    --awa-text-base-plus: 1.0625rem;
+    --awa-text-md: 1.125rem;
+    --awa-text-lg: 1.25rem;
+    --awa-text-xl: 1.5rem;
+    --awa-text-xl-plus: 1.625rem;
+    --awa-text-2xl: 1.75rem;
+    --awa-weight-semibold: 600;
+    --awa-weight-bold: 700;
+    --awa-font-weight-medium: 500;
+    --awa-font-weight-semibold: 600;
+    --awa-font-weight-bold: 700;
+    --awa-font-weight-extrabold: 800;
+
+    /* ═══ ESPAÇAMENTO ═══ */
+    --awa-gap-xs: 4px;
+    --awa-gap-sm: 8px;
+    --awa-gap-md: 16px;
+    --awa-gap-lg: 24px;
+    --awa-gap-xl: 32px;
+    --awa-space-6: 1.5rem;
+    --awa-section-gap: clamp(32px, 4vw, 48px);
+
+    /* ═══ RAIOS ═══ */
+    --awa-radius-base: 8px;
     --awa-radius-xs: 4px;
     --awa-radius-sm: 6px;
     --awa-radius-md: 10px;
     --awa-radius-lg: 10px;
     --awa-radius-xl: 12px;
     --awa-radius-pill: 999px;
+
+    /* ═══ SOMBRAS ═══ */
     --awa-shadow-xs: 0 2px 4px rgb(15 23 42 / 4%);
     --awa-shadow-sm: 0 4px 10px rgb(15 23 42 / 6%);
     --awa-shadow-md: 0 8px 20px rgb(15 23 42 / 8%);
     --awa-shadow-lg: 0 12px 30px rgb(15 23 42 / 12%);
     --awa-shadow-hover: 0 16px 36px rgb(15 23 42 / 14%);
     --awa-shadow-card: 0 8px 24px rgb(15 23 42 / 6%);
-    --awa-shadow-card-hover: 0 12px 32px rgb(15 23 42 / 10%);
+
+    /* ═══ TRANSIÇÕES ═══ */
     --awa-ease: cubic-bezier(0.4, 0, 0.2, 1);
     --awa-duration-fast: 150ms;
     --awa-duration: 250ms;
-    --awa-duration-slow: 350ms;
     --awa-transition: var(--awa-duration) var(--awa-ease);
     --awa-transition-fast: var(--awa-duration-fast) var(--awa-ease);
-    --awa-font-weight-normal: 400;
-    --awa-font-weight-medium: 500;
-    --awa-font-weight-semibold: 600;
-    --awa-font-weight-bold: 700;
-    --awa-font-weight-extrabold: 800;
+    --awa-btn-transition: var(--awa-duration);
+    --awa-btn-transition-slow: 350ms;
+
+    /* ═══ DIMENSÕES (inputs, botões, layout) ═══ */
+    --awa-input-height: 44px;
+    --awa-input-height-lg: 48px;
+    --awa-input-padding: 10px 14px;
+    --awa-input-focus-shadow: 0 0 0 3px var(--awa-brand-opacity-25);
+    --awa-btn-height: 42px;
+    --awa-btn-height-lg: 48px;
+    --awa-btn-pad-normal: 10px 20px;
+    --awa-carousel-arrow-size: 40px;
+    --awa-container-max: 1280px;
+    --awa-grid-product-cols: repeat(auto-fill, minmax(220px, 1fr));
+    --awa-plp-toolbar-top-offset: 0px;
 }
 
 /* ============================================================
@@ -167,7 +234,7 @@ body.not-logged-in .product-info-price::after {
     padding: 10px;
     background: var(--bg-surface);
     border-left: 3px solid var(--primary-color);
-    font-size: 13px;
+    font-size: var(--awa-text-xs-plus);
     font-weight: var(--awa-font-weight-bold);
     color: var(--awa-dark);
 }
@@ -197,7 +264,7 @@ body.not-logged-in .product-info-price::after {
 }
 
 .account .page-title-wrapper .page-title {
-    font-size: 24px;
+    font-size: var(--awa-text-2xl);
     font-weight: var(--awa-font-weight-extrabold);
     color: var(--awa-dark);
     margin-bottom: 24px;
@@ -431,7 +498,7 @@ body {
     .price-box .old-price .price,
     .cart .old-price .price
 ) {
-    color: #777;
+    color: var(--awa-text-muted, #666666);
 }
 
 :where(
@@ -481,7 +548,7 @@ body {
     border: 1px solid var(--border-color);
     min-height: 44px;
     padding: 10px 14px;
-    font-size: 0.9375rem;
+    font-size: var(--awa-text-md);
     transition: border-color var(--awa-transition-fast), box-shadow var(--awa-transition-fast);
     background-color: var(--bg-white);
 }
@@ -550,7 +617,7 @@ body.checkout-cart-index .cart-summary .action.checkout,
 body.checkout-index-index .checkout-methods-items .action.checkout,
 body.checkout-index-index .payment-method-content .action.primary.checkout {
     min-height: 48px;
-    font-size: 1rem;
+    font-size: var(--awa-text-base);
     font-weight: var(--awa-font-weight-bold);
     letter-spacing: 0.01em;
     border-radius: var(--awa-radius-lg);
@@ -654,7 +721,7 @@ body.checkout-index-index .ajaxsuite-popup-wrapper .action-secondary:focus-visib
         .checkout-methods-items .action.checkout
     ) {
         min-height: 48px;
-        font-size: 1rem;
+        font-size: var(--awa-text-base);
         border-radius: var(--awa-radius-lg);
     }
 
@@ -691,7 +758,7 @@ body.checkout-index-index .ajaxsuite-popup-wrapper .action-secondary:focus-visib
     transform: translateX(-50%);
     z-index: 9999;
     background: var(--primary-color);
-    color: #fff;
+    color: var(--awa-text-inverse);
     padding: 12px 24px;
     font-weight: var(--awa-font-weight-bold);
     border-radius: var(--awa-radius-sm);
