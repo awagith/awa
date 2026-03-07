@@ -17,7 +17,8 @@ define([
             mobilePanelMaxDepth: 3,
             disableOverlay: true,
             limitShow: 0,
-            keepOpenOnHomeDesktop: false
+            keepOpenOnHomeDesktop: false,
+            alwaysExpandedDesktop: false
         }, config || {});
         const uid = (Date.now().toString(36) + Math.random().toString(36).slice(2, 8)).replace(/[^a-z0-9_-]/gi, '');
         const ns = '.awaMuellerMenu-' + uid;
@@ -53,7 +54,13 @@ define([
         }
 
         function keepDesktopMenuExpanded() {
-            return isDesktop() && !!settings.keepOpenOnHomeDesktop && isHomeContext();
+            if (!isDesktop()) {
+                return false;
+            }
+            if (!!settings.alwaysExpandedDesktop) {
+                return true;
+            }
+            return !!settings.keepOpenOnHomeDesktop && isHomeContext();
         }
 
         function isPanelSlideMobileMode() {
@@ -88,16 +95,42 @@ define([
             getTopItems().each(function () {
                 const $item = $(this);
                 const $link = $item.children('a.level-top');
+                const $existingImage = $link.children('img.menu-thumb-icon').first();
+                const $existingFontIcon = $link.children('em.menu-thumb-icon').first();
 
                 if (!$link.length) {
                     return;
                 }
 
-                $link.find('.awa-mueller-cat-icon, .menu-thumb-icon, img.menu-thumb-icon').remove();
+                $link.children('.awa-mueller-cat-icon').remove();
                 const titleText = $.trim($link.find('> span').first().text()) || $.trim($link.text());
+
+                if ($existingImage.length) {
+                    $existingImage
+                        .addClass('awa-mueller-icon awa-mueller-icon--image')
+                        .attr('loading', $existingImage.attr('loading') || 'lazy');
+                    $item.attr('data-awa-icon-source', 'image');
+                    return;
+                }
+
+                if ($existingFontIcon.length) {
+                    $existingFontIcon.addClass('awa-mueller-icon awa-mueller-icon--font');
+                    $item.attr('data-awa-icon-source', 'font');
+                    return;
+                }
+
                 const iconType = categoryIcons.resolveIconType(titleText, 'package');
-                $item.attr('data-awa-icon', iconType);
-                $link.prepend(categoryIcons.buildIconSvg(iconType, MUELLER_ICON_OPTIONS));
+                const iconMarkup = categoryIcons.buildIconSvg(iconType, MUELLER_ICON_OPTIONS);
+
+                if (!iconMarkup) {
+                    return;
+                }
+
+                $item.attr({
+                    'data-awa-icon': iconType,
+                    'data-awa-icon-source': 'fallback-svg'
+                });
+                $link.prepend(iconMarkup);
             });
         }
 
