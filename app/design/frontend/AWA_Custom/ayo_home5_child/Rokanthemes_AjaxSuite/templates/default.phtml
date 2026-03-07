@@ -28,6 +28,11 @@ if ($logoConfig !== '') {
 }
 
 $logoLink = $sanitize($logoLink);
+/** @var \GrupoAwamotos\B2B\Helper\Config $b2bConfig */
+$b2bConfig = $this->helper('GrupoAwamotos\\B2B\\Helper\\Config');
+$loginUrl = ($b2bConfig->isEnabled() && $b2bConfig->isStrictB2B())
+    ? $block->getUrl('b2b/account/login')
+    : $block->getUrl('customer/account/login');
 ?>
 <script>
     window.logoUrl = <?= /* @noEscape */ json_encode($logoLink, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
@@ -37,7 +42,7 @@ $logoLink = $sanitize($logoLink);
 $ajaxSuiteConfig = [
     '*' => [
         'rokanthemes/ajaxsuite' => [
-            'loginUrl' => $block->getUrl('customer/account/login'),
+            'loginUrl' => $loginUrl,
             'customerId' => (string) $block->getCustomerId(),
             'ajaxCart' => [
                 'enabled' => (bool) $block->getSettingStatus('ajaxcart'),

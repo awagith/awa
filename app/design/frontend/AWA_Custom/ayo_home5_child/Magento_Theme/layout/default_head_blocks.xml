@@ -2,32 +2,18 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <remove src="css/awa-round2-brand-bridge.css"/>
-        <remove src="css/awa-round2-header-minicart.css"/>
-        <remove src="css/awa-round3-footer-trust.css"/>
-        <remove src="css/awa-round4-global-brand.css"/>
-        <remove src="css/awa-round5-ux-refine.css"/>
-        <remove src="css/awa-round6-b2b-gate-refine.css"/>
-        <remove src="css/awa-round7-auth-refine.css"/>
-        <remove src="css/awa-round8-plp-search-cart-refine.css"/>
-        <remove src="css/awa-premium-finish.css"/>
-
-        <css src="css/awa-core.css"/>
-        <css src="css/awa-layout.css"/>
-        <css src="css/awa-components.css"/>
-        <css src="css/awa-consistency.css"/>
-        <css src="css/awa-consistency-ui.css"/>
-        <css src="css/awa-fixes.css"/>
-        <css src="css/awa-grid-unified.css"/>
-
+        <css src="css/awa-vertical-menu-mueller.css"/>
         <css src="css/awa-custom-brand-bridge.css"/>
         <css src="css/awa-custom-header-minicart.css"/>
         <css src="css/awa-custom-footer-trust.css"/>
         <css src="css/awa-custom-global-brand.css"/>
         <css src="css/awa-custom-ux-refine.css"/>
-        <css src="css/awa-custom-b2b-gate-refine.css"/>
-        <css src="css/awa-custom-auth-refine.css"/>
-        <css src="css/awa-custom-plp-search-cart-refine.css"/>
+        <css src="css/b2b/gate/refine.css"/>
+        <css src="css/layers/tokens.css"/>
+        <css src="css/layers/base.css"/>
+        <css src="css/layers/components.css"/>
+        <css src="css/layers/utilities.css"/>
+        <css src="css/layers/legacy-bridge.css"/>
     </head>
     <body>
         <referenceBlock name="awa.round2.header.minicart.js" remove="true"/>

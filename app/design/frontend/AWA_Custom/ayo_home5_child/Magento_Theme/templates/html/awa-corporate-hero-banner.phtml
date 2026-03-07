@@ -4,6 +4,10 @@
  * AWA B2B — Corporate Hero Banner (Static)
  * Substitui o slider antigo por uma imagem única e estática de impacto corporativo.
  */
+
+/** @var \GrupoAwamotos\B2B\Helper\Config $b2bConfig */
+$b2bConfig = $this->helper('GrupoAwamotos\\B2B\\Helper\\Config');
+$registerUrl = $b2bConfig->isEnabled() ? $block->getUrl('b2b/register') : $block->getUrl('customer/account/create');
 ?>
 <div class="awa-corporate-hero" data-awa-component="corporate-hero">
     <div class="awa-corporate-hero__wrapper">
@@ -26,7 +30,7 @@
                         Abasteça sua loja com as melhores marcas. Entrega imediata em todo território nacional.
                     </p>
                     <div class="awa-corporate-hero__actions">
-                        <a href="<?= $block->escapeUrl($block->getUrl('customer/account/create')) ?>" class="action primary awa-btn-primary">
+                        <a href="<?= $block->escapeUrl($registerUrl) ?>" class="action primary awa-btn-primary">
                             <span>Abra sua conta B2B</span>
                         </a>
                         <a href="<?= $block->escapeUrl($block->getUrl('catalogsearch/advanced')) ?>" class="action secondary awa-btn-ghost">
