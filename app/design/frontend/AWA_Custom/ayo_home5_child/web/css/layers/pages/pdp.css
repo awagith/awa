@@ -261,3 +261,248 @@ body.catalog-product-view .block.crosssell {
         scrollbar-width: none;
     }
 }
+
+/* ── Tier Prices (Preços por Volume) ─────────────────────────── */
+body.catalog-product-view .awa-b2b-tier-prices-wrapper {
+    margin-top: var(--awa-layer-space-md);
+    border: 1px solid #e2e8f0;
+    border-radius: var(--awa-layer-radius-md);
+    overflow: hidden;
+    background: #f8fafc;
+}
+
+body.catalog-product-view .awa-b2b-tier-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #475569;
+    padding: 10px var(--awa-layer-space-md);
+    background: #f1f5f9;
+    border-bottom: 1px solid #e2e8f0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+body.catalog-product-view .awa-b2b-tier-title::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--awa-layer-color-success, #2e7d32);
+    flex-shrink: 0;
+}
+
+body.catalog-product-view .awa-b2b-tier-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+body.catalog-product-view .awa-b2b-tier-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.8125rem;
+}
+
+body.catalog-product-view .awa-b2b-tier-table thead tr {
+    background: transparent;
+}
+
+body.catalog-product-view .awa-b2b-tier-table thead th {
+    padding: 8px var(--awa-layer-space-md);
+    text-align: left;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+body.catalog-product-view .awa-b2b-tier-table tbody tr {
+    transition: background 120ms ease;
+    cursor: default;
+}
+
+body.catalog-product-view .awa-b2b-tier-table tbody tr:hover {
+    background: #f0fdf4;
+}
+
+body.catalog-product-view .awa-b2b-tier-table tbody tr:not(:last-child) {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+body.catalog-product-view .awa-b2b-tier-table tbody td {
+    padding: 10px var(--awa-layer-space-md);
+    font-weight: 500;
+    color: #1e293b;
+    vertical-align: middle;
+}
+
+body.catalog-product-view .awa-b2b-tier-table tbody td:first-child {
+    font-weight: 600;
+    color: #334155;
+}
+
+/* Preço na célula */
+body.catalog-product-view .awa-tier-price-amount .price {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: var(--awa-layer-color-primary);
+}
+
+/* Badge de desconto */
+body.catalog-product-view .awa-tier-save-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+    white-space: nowrap;
+}
+
+/* ── Stock Status Indicator ──────────────────────────────────── */
+body.catalog-product-view .stock {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: var(--awa-layer-space-xs);
+}
+
+body.catalog-product-view .stock::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+body.catalog-product-view .stock.available {
+    background: #f0fdf4;
+    color: #166534;
+    border: 1px solid #bbf7d0;
+}
+
+body.catalog-product-view .stock.available::before {
+    background: #22c55e;
+    box-shadow: 0 0 0 2px #dcfce7;
+}
+
+body.catalog-product-view .stock.unavailable {
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+body.catalog-product-view .stock.unavailable::before {
+    background: #ef4444;
+}
+
+/* ── Sticky Buy Box (Mobile) ─────────────────────────────────── */
+@media (width <= 767px) {
+    body.catalog-product-view .awa-sticky-buy-bar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+        background: #fff;
+        border-top: 2px solid var(--awa-layer-color-primary);
+        padding: 12px var(--awa-layer-space-md);
+        display: flex;
+        align-items: center;
+        gap: var(--awa-layer-space-sm);
+        box-shadow: 0 -4px 20px rgba(0,0,0,0.12);
+        transform: translateY(100%);
+        transition: transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    body.catalog-product-view .awa-sticky-buy-bar.awa-sticky-buy-bar--visible {
+        transform: translateY(0);
+    }
+
+    body.catalog-product-view .awa-sticky-buy-bar__price {
+        flex: 1;
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: var(--awa-layer-color-primary);
+        line-height: 1;
+    }
+
+    body.catalog-product-view .awa-sticky-buy-bar__price small {
+        display: block;
+        font-size: 0.6875rem;
+        font-weight: 400;
+        color: var(--awa-layer-color-muted);
+        margin-bottom: 2px;
+    }
+
+    body.catalog-product-view .awa-sticky-buy-bar__btn {
+        flex: 0 0 auto;
+        min-width: 160px;
+        min-height: 46px;
+        font-size: 0.9375rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 var(--awa-layer-space-md);
+        background: var(--awa-layer-color-primary);
+        color: #fff;
+        border: none;
+        border-radius: var(--awa-layer-radius-sm);
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 150ms ease;
+    }
+
+    body.catalog-product-view .awa-sticky-buy-bar__btn:hover,
+    body.catalog-product-view .awa-sticky-buy-bar__btn:active {
+        background: var(--awa-layer-color-primary-dark, #8e2629);
+    }
+
+    /* Espaço inferior para não cobrir conteúdo */
+    body.catalog-product-view.awa-has-sticky-bar .page-footer {
+        padding-bottom: 80px;
+    }
+}
+
+/* ── Copy SKU button ─────────────────────────────────────────── */
+body.catalog-product-view .awa-btn-copy-sku {
+    font-size: 0.6875rem;
+    padding: 2px 8px;
+    min-height: 24px;
+    border-radius: 4px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    cursor: pointer;
+    transition: all 120ms ease;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+body.catalog-product-view .awa-btn-copy-sku:hover {
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    border-color: var(--awa-layer-color-primary);
+}
+
+body.catalog-product-view .awa-btn-copy-sku[data-state="copied"] {
+    background: #dcfce7;
+    color: #166534;
+    border-color: #bbf7d0;
+}

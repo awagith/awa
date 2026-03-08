@@ -1,0 +1,340 @@
+/* ===================================================================
+   AWA CSS Layers — Footer B2B
+   Complementa awa-custom-footer-trust.css com tokens do Design System
+   Nunca sobrescreve variáveis do arquivo pai
+   =================================================================== */
+
+/* ── Wrapper geral ───────────────────────────────────────────── */
+body .page-wrapper .page_footer {
+    color: rgba(255, 255, 255, 0.88);
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+/* ── Footer principal: colunas ───────────────────────────────── */
+body .page-wrapper .page_footer .footer-main-content {
+    padding-block: clamp(32px, 5vw, 56px);
+}
+
+body .page-wrapper .page_footer .footer-columns {
+    display: grid;
+    grid-template-columns: 2fr repeat(3, 1fr);
+    gap: clamp(24px, 4vw, 48px);
+    align-items: start;
+}
+
+@media (width <= 1023px) {
+    body .page-wrapper .page_footer .footer-columns {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (width <= 599px) {
+    body .page-wrapper .page_footer .footer-columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Logo no footer ──────────────────────────────────────────── */
+body .page-wrapper .page_footer .footer-brand img {
+    max-height: 40px;
+    width: auto;
+    filter: brightness(0) invert(1);
+    opacity: 0.9;
+    margin-bottom: var(--awa-layer-space-md);
+}
+
+body .page-wrapper .page_footer .footer-brand-desc {
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.65);
+    max-width: 260px;
+    line-height: 1.65;
+}
+
+/* ── Título de coluna ────────────────────────────────────────── */
+body .page-wrapper .page_footer .footer-col-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 14px;
+}
+
+/* ── Links do footer ─────────────────────────────────────────── */
+body .page-wrapper .page_footer .footer-links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+body .page-wrapper .page_footer .footer-links a {
+    color: rgba(255, 255, 255, 0.75);
+    text-decoration: none;
+    font-size: 0.875rem;
+    transition: color 150ms ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+body .page-wrapper .page_footer .footer-links a:hover,
+body .page-wrapper .page_footer .footer-links a:focus-visible {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* ── Contato institucional ───────────────────────────────────── */
+body .page-wrapper .page_footer .footer-contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    font-size: 0.8125rem;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+body .page-wrapper .page_footer .footer-contact-item strong {
+    display: block;
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.875rem;
+}
+
+body .page-wrapper .page_footer .footer-contact-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    margin-top: 3px;
+    opacity: 0.65;
+}
+
+/* ── Redes sociais ───────────────────────────────────────────── */
+body .page-wrapper .page_footer .footer-social {
+    display: flex;
+    gap: 10px;
+    margin-top: var(--awa-layer-space-md);
+    flex-wrap: wrap;
+}
+
+body .page-wrapper .page_footer .footer-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    transition: background 150ms ease, border-color 150ms ease, transform 150ms ease;
+}
+
+body .page-wrapper .page_footer .footer-social a:hover,
+body .page-wrapper .page_footer .footer-social a:focus-visible {
+    background: var(--awa-layer-color-primary);
+    border-color: var(--awa-layer-color-primary);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+body .page-wrapper .page_footer .footer-social svg,
+body .page-wrapper .page_footer .footer-social i {
+    width: 16px;
+    height: 16px;
+    display: block;
+}
+
+/* ── Newsletter no footer ────────────────────────────────────── */
+body .page-wrapper .page_footer .footer-newsletter-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+body .page-wrapper .page_footer .footer-newsletter-form .input-text {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    border-radius: var(--awa-layer-radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    transition: border-color 150ms ease, background 150ms ease;
+}
+
+body .page-wrapper .page_footer .footer-newsletter-form .input-text::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+body .page-wrapper .page_footer .footer-newsletter-form .input-text:focus {
+    outline: none;
+    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+body .page-wrapper .page_footer .footer-newsletter-form .action.subscribe {
+    padding: 10px 16px;
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--awa-layer-radius-sm);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 150ms ease;
+}
+
+body .page-wrapper .page_footer .footer-newsletter-form .action.subscribe:hover {
+    background: #8e2629;
+}
+
+/* ── Barra de meios de pagamento ─────────────────────────────── */
+body .page-wrapper .page_footer .footer-payment-bar {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-block: var(--awa-layer-space-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--awa-layer-space-md);
+}
+
+body .page-wrapper .page_footer .footer-payment-icons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+body .page-wrapper .page_footer .footer-payment-icon {
+    height: 22px;
+    width: auto;
+    opacity: 0.7;
+    filter: brightness(0) invert(1);
+    transition: opacity 150ms ease;
+}
+
+body .page-wrapper .page_footer .footer-payment-icon:hover {
+    opacity: 1;
+}
+
+/* ── Copyright / CNPJ ────────────────────────────────────────── */
+body .page-wrapper .page_footer .footer-copyright {
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-block: var(--awa-layer-space-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+body .page-wrapper .page_footer .footer-copyright-text {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.45);
+    line-height: 1.5;
+}
+
+body .page-wrapper .page_footer .footer-copyright-text a {
+    color: rgba(255, 255, 255, 0.55);
+    text-decoration: none;
+    transition: color 150ms ease;
+}
+
+body .page-wrapper .page_footer .footer-copyright-text a:hover {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+body .page-wrapper .page_footer .footer-legal-links {
+    display: flex;
+    gap: var(--awa-layer-space-md);
+    flex-wrap: wrap;
+}
+
+body .page-wrapper .page_footer .footer-legal-links a {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.45);
+    text-decoration: none;
+    transition: color 150ms ease;
+}
+
+body .page-wrapper .page_footer .footer-legal-links a:hover {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+/* ── Selos e certificações B2B ───────────────────────────────── */
+body .page-wrapper .page_footer .footer-seals {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+body .page-wrapper .page_footer .footer-seal {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    padding: 4px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 4px;
+}
+
+/* ── Overrides do Magento Newsletter no footer ───────────────── */
+body .page-wrapper .page_footer .block.newsletter {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+body .page-wrapper .page_footer .block.newsletter .form.subscribe {
+    display: flex;
+    gap: 8px;
+}
+
+body .page-wrapper .page_footer .block.newsletter .field.newsletter {
+    flex: 1;
+    margin: 0;
+}
+
+/* ── Footer mobile ───────────────────────────────────────────── */
+@media (width <= 767px) {
+    body .page-wrapper .page_footer .footer-payment-bar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    body .page-wrapper .page_footer .footer-copyright {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    body .page-wrapper .page_footer .footer-legal-links {
+        gap: 12px;
+    }
+
+    body .page-wrapper .page_footer .footer-newsletter-form {
+        flex-direction: column;
+    }
+
+    body .page-wrapper .page_footer .footer-newsletter-form .action.subscribe {
+        width: 100%;
+        text-align: center;
+    }
+}

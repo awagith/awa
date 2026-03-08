@@ -23,6 +23,12 @@
                     <argument name="load_pdp_sticky_cta_js" xsi:type="boolean">true</argument>
                 </arguments>
             </block>
+
+            <!-- AWA Sticky Buy Bar: mobile-only, ativado via JS -->
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.pdp.sticky.bar"
+                   template="Magento_Theme::html/pdp-sticky-bar.phtml"
+                   after="awa.custom.pdp.sticky.cta.js"/>
         </referenceContainer>
 
         <!-- AWA Phase 5: Prominent B2B SKU on PDP -->
@@ -54,7 +60,7 @@
         </referenceContainer>
 
         <!-- AWA Phase 5: UI/UX Pro Max - Trust & Authority Badges under Add to Cart -->
-        <referenceContainer name="product.info.extrahint">
+        <referenceContainer name="product.extrahint">
             <block class="Magento\Framework\View\Element\Template"
                    name="awa.trust.badges"
                    template="Magento_Theme::html/awa-trust-badges.phtml"

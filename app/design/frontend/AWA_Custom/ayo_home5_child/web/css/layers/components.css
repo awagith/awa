@@ -805,3 +805,164 @@ body .page-wrapper .no-items-message {
     color: #a16207;
     border-color: #fde68a;
 }
+
+/* ── Announcement / Topbar ───────────────────────────────────── */
+.awa-announcement-bar {
+    position: relative;
+    z-index: 110;
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    text-align: center;
+    padding: 8px var(--awa-layer-space-md);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+    overflow: hidden;
+}
+
+.awa-announcement-bar a {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 700;
+}
+
+.awa-announcement-bar a:hover {
+    opacity: 0.85;
+}
+
+.awa-announcement-bar__close {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: rgba(255,255,255,0.8);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 150ms ease;
+    padding: 0;
+    line-height: 1;
+    font-size: 1.125rem;
+}
+
+.awa-announcement-bar__close:hover {
+    background: rgba(0,0,0,0.2);
+    color: #fff;
+}
+
+.awa-announcement-bar--info {
+    background: #1d4ed8;
+}
+
+.awa-announcement-bar--success {
+    background: #166534;
+}
+
+.awa-announcement-bar--warning {
+    background: #92400e;
+}
+
+/* Variante B2B: faixa dupla (frete + B2B) */
+.awa-announcement-bar--ticker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(16px, 3vw, 40px);
+    flex-wrap: wrap;
+    padding: 7px var(--awa-layer-space-md);
+}
+
+.awa-announcement-bar__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.awa-announcement-bar__item::after {
+    content: '|';
+    opacity: 0.4;
+    margin-left: clamp(8px, 2vw, 20px);
+}
+
+.awa-announcement-bar__item:last-child::after {
+    display: none;
+}
+
+.awa-announcement-bar__icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    opacity: 0.9;
+}
+
+@media (width <= 599px) {
+    .awa-announcement-bar--ticker {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .awa-announcement-bar__item::after {
+        display: none;
+    }
+}
+
+/* ── Stock Badge PLP ─────────────────────────────────────────── */
+.products-grid .stock.available,
+.products-list .stock.available {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #166534;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    line-height: 1;
+}
+
+.products-grid .stock.available::before,
+.products-list .stock.available::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    flex-shrink: 0;
+}
+
+.products-grid .stock.unavailable,
+.products-list .stock.unavailable {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #991b1b;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    line-height: 1;
+}
+
+.products-grid .stock.unavailable::before,
+.products-list .stock.unavailable::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ef4444;
+    flex-shrink: 0;
+}

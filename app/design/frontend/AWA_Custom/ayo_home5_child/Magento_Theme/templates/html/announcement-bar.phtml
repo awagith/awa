@@ -1,0 +1,32 @@
+<?php
+/**
+ * AWA Announcement Bar — barra de avisos/promoções no topo da loja.
+ * Gerenciada via CMS Block "awa-announcement-bar" (identifier).
+ * Se o bloco não existir ou estiver vazio, a barra não renderiza.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ */
+declare(strict_types=1);
+
+$cmsContent = trim((string) $block->getLayout()
+    ->createBlock(\Magento\Cms\Block\Block::class)
+    ->setBlockId('awa-announcement-bar')
+    ->toHtml());
+
+if (!$cmsContent) {
+    return;
+}
+?>
+<div class="awa-announcement-bar awa-announcement-bar--ticker"
+     id="awa-announcement-bar"
+     role="banner"
+     aria-label="<?= $block->escapeHtmlAttr(__('Avisos e promoções')) ?>"
+     data-mage-init='{"GrupoAwamotos_Theme/js/announcement-bar": {}}'>
+    <?= /* @noEscape */ $cmsContent ?>
+    <button type="button"
+            class="awa-announcement-bar__close"
+            aria-label="<?= $block->escapeHtmlAttr(__('Fechar aviso')) ?>"
+            data-action="close-announcement">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>

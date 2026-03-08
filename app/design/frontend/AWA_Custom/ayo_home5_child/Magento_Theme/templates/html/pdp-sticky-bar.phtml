@@ -1,0 +1,20 @@
+<?php
+/**
+ * AWA PDP Sticky Buy Bar — ativada via JS apenas em mobile.
+ * O bloco é injetado no DOM; o JS o posiciona e ativa via IntersectionObserver.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ */
+declare(strict_types=1);
+
+if (!$block->getRequest()->getFullActionName() === 'catalog_product_view') {
+    return;
+}
+?>
+<script type="text/x-magento-init">
+{
+    "body": {
+        "GrupoAwamotos_Theme/js/pdp-sticky-bar": {}
+    }
+}
+</script>

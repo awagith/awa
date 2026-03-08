@@ -11,6 +11,8 @@ var config = {
         }
     },
     paths: {
-        'rokanthemes/timecircles': 'js/rokanthemes/timecircles'
+        'rokanthemes/timecircles': 'js/rokanthemes/timecircles',
+        'GrupoAwamotos_Theme/js/announcement-bar': 'js/announcement-bar',
+        'GrupoAwamotos_Theme/js/pdp-sticky-bar': 'js/pdp-sticky-bar'
     }
 };
