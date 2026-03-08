@@ -1,0 +1,311 @@
+/* ================================================================
+   AWA CSS LAYERS — BUTTONS
+   ================================================================
+   Sistema canônico de botões para toda a loja AWA Motos B2B.
+   Mobile-first. Sem !important (exceto reset pós-ThemeOption).
+   Usa tokens de awa-custom-global-brand.css.
+
+   Hierarquia:
+   .action.primary / .btn-primary   → CTA principal (vermelho)
+   .action.secondary / .btn-secondary → secundário (borda)
+   .btn-ghost                        → ghost/link style
+   .btn-danger                       → destrutivo
+   .btn-sm / .btn-lg                 → tamanhos
+
+   Estados: default | hover | active | focus-visible | disabled | loading
+   ================================================================ */
+
+/* ── Reset base para qualquer button/action ───────────────────── */
+body .page-wrapper button,
+body .page-wrapper .action,
+body .page-wrapper [role="button"] {
+    cursor: pointer;
+    font-family: var(--awa-font-body, 'Source Sans 3', arial, sans-serif);
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--awa-gap-sm, 8px);
+    border: 1px solid transparent;
+    border-radius: var(--awa-radius-md, 10px);
+    font-weight: var(--awa-weight-semibold, 600);
+    font-size: var(--awa-text-sm, 0.875rem);
+    line-height: 1;
+    padding: 0 var(--awa-space-5, 20px);
+    min-height: var(--awa-btn-height, 42px);
+    text-decoration: none;
+    transition:
+        background var(--awa-transition-fast, 150ms ease),
+        border-color var(--awa-transition-fast, 150ms ease),
+        color var(--awa-transition-fast, 150ms ease),
+        box-shadow var(--awa-transition-fast, 150ms ease),
+        transform var(--awa-transition-fast, 150ms ease);
+    white-space: nowrap;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* ── Botão Primário ────────────────────────────────────────────── */
+body .page-wrapper .action.primary,
+body .page-wrapper button.action.primary,
+body .page-wrapper .btn-primary {
+    background: var(--awa-color-primary, #b73337);
+    border-color: var(--awa-color-primary, #b73337);
+    color: #fff;
+}
+
+body .page-wrapper .action.primary:hover,
+body .page-wrapper button.action.primary:hover,
+body .page-wrapper .btn-primary:hover {
+    background: var(--awa-color-primary-dark, #8e2629);
+    border-color: var(--awa-color-primary-dark, #8e2629);
+    color: #fff;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgb(183 51 55 / 30%);
+}
+
+body .page-wrapper .action.primary:active,
+body .page-wrapper button.action.primary:active,
+body .page-wrapper .btn-primary:active {
+    background: var(--awa-color-primary-dark, #8e2629);
+    border-color: var(--awa-color-primary-dark, #8e2629);
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+body .page-wrapper .action.primary:focus-visible,
+body .page-wrapper button.action.primary:focus-visible,
+body .page-wrapper .btn-primary:focus-visible {
+    outline: 2px solid var(--awa-color-primary, #b73337);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgb(183 51 55 / 20%);
+    transform: none;
+}
+
+body .page-wrapper .action.primary:disabled,
+body .page-wrapper button.action.primary:disabled,
+body .page-wrapper .action.primary[disabled],
+body .page-wrapper .btn-primary:disabled,
+body .page-wrapper .btn-primary[disabled] {
+    background: var(--awa-gray-300, #d1d5db);
+    border-color: var(--awa-gray-300, #d1d5db);
+    color: var(--awa-gray-400, #9ca3af);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+    pointer-events: none;
+}
+
+/* ── Botão Secundário ─────────────────────────────────────────── */
+body .page-wrapper .action.secondary,
+body .page-wrapper button.action.secondary,
+body .page-wrapper .btn-secondary {
+    background: transparent;
+    border-color: var(--awa-color-primary, #b73337);
+    color: var(--awa-color-primary, #b73337);
+}
+
+body .page-wrapper .action.secondary:hover,
+body .page-wrapper button.action.secondary:hover,
+body .page-wrapper .btn-secondary:hover {
+    background: rgb(183 51 55 / 6%);
+    border-color: var(--awa-color-primary-dark, #8e2629);
+    color: var(--awa-color-primary-dark, #8e2629);
+    text-decoration: none;
+}
+
+body .page-wrapper .action.secondary:active,
+body .page-wrapper button.action.secondary:active,
+body .page-wrapper .btn-secondary:active {
+    background: rgb(183 51 55 / 10%);
+}
+
+body .page-wrapper .action.secondary:focus-visible,
+body .page-wrapper button.action.secondary:focus-visible,
+body .page-wrapper .btn-secondary:focus-visible {
+    outline: 2px solid var(--awa-color-primary, #b73337);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgb(183 51 55 / 15%);
+}
+
+body .page-wrapper .action.secondary:disabled,
+body .page-wrapper button.action.secondary:disabled,
+body .page-wrapper .btn-secondary:disabled {
+    border-color: var(--awa-gray-300, #d1d5db);
+    color: var(--awa-gray-400, #9ca3af);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ── Botão Ghost / Link-style ─────────────────────────────────── */
+body .page-wrapper .btn-ghost,
+body .page-wrapper .action.ghost {
+    background: transparent;
+    border-color: var(--awa-gray-300, #d1d5db);
+    color: var(--awa-text-primary, #333333);
+}
+
+body .page-wrapper .btn-ghost:hover,
+body .page-wrapper .action.ghost:hover {
+    background: var(--awa-bg-muted, #f1f5f9);
+    border-color: var(--awa-gray-400, #9ca3af);
+    color: var(--awa-text-primary, #333333);
+    text-decoration: none;
+}
+
+body .page-wrapper .btn-ghost:focus-visible,
+body .page-wrapper .action.ghost:focus-visible {
+    outline: 2px solid var(--awa-color-primary, #b73337);
+    outline-offset: 3px;
+}
+
+/* ── Botão Link-only (sem borda/bg) ──────────────────────────── */
+body .page-wrapper .btn-link,
+body .page-wrapper .action.towishlist,
+body .page-wrapper .action.tocompare {
+    background: transparent;
+    border-color: transparent;
+    color: var(--awa-color-primary, #b73337);
+    padding-inline: var(--awa-gap-sm, 8px);
+    min-height: 0;
+    font-size: var(--awa-text-xs, 0.75rem);
+}
+
+body .page-wrapper .btn-link:hover,
+body .page-wrapper .action.towishlist:hover,
+body .page-wrapper .action.tocompare:hover {
+    background: transparent;
+    color: var(--awa-color-primary-dark, #8e2629);
+    text-decoration: underline;
+}
+
+/* ── Tamanhos ─────────────────────────────────────────────────── */
+body .page-wrapper .btn-sm {
+    font-size: var(--awa-text-xs, 0.75rem);
+    min-height: 34px;
+    padding: 0 var(--awa-space-3, 12px);
+    border-radius: var(--awa-radius-sm, 6px);
+}
+
+body .page-wrapper .btn-lg {
+    font-size: var(--awa-text-base, 1rem);
+    min-height: var(--awa-btn-height-lg, 48px);
+    padding: 0 var(--awa-space-7, 28px);
+    border-radius: var(--awa-radius-lg, 14px);
+}
+
+/* ── Botão full-width ─────────────────────────────────────────── */
+body .page-wrapper .btn-block {
+    width: 100%;
+    display: flex;
+}
+
+/* ── Botão com ícone ──────────────────────────────────────────── */
+body .page-wrapper .btn-icon-only {
+    padding: 0;
+    width: var(--awa-btn-height, 42px);
+    border-radius: var(--awa-radius-pill, 999px);
+}
+
+/* ── Add-to-Cart principal ────────────────────────────────────── */
+body .page-wrapper .action.tocart,
+body .page-wrapper button.tocart {
+    background: var(--awa-color-primary, #b73337);
+    border-color: var(--awa-color-primary, #b73337);
+    color: #fff;
+    font-weight: var(--awa-weight-bold, 700);
+    font-size: var(--awa-text-base, 1rem);
+    min-height: var(--awa-btn-height-lg, 48px);
+    width: 100%;
+    border-radius: var(--awa-radius-md, 10px);
+}
+
+body .page-wrapper .action.tocart:hover,
+body .page-wrapper button.tocart:hover {
+    background: var(--awa-color-primary-dark, #8e2629);
+    border-color: var(--awa-color-primary-dark, #8e2629);
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 4px 14px rgb(183 51 55 / 30%);
+    transform: translateY(-1px);
+}
+
+body .page-wrapper .action.tocart:focus-visible,
+body .page-wrapper button.tocart:focus-visible {
+    outline: 2px solid var(--awa-color-primary, #b73337);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 4px rgb(183 51 55 / 20%);
+    transform: none;
+}
+
+/* ── Quick-add / card CTA (PLP) ──────────────────────────────── */
+body .page-wrapper .product-item-actions .action.tocart,
+body .page-wrapper .product-item-actions button.tocart {
+    min-height: 38px;
+    font-size: var(--awa-text-sm, 0.875rem);
+    padding: 0 var(--awa-space-3, 12px);
+    width: 100%;
+}
+
+/* ── Botão B2B: Solicitar Cotação ────────────────────────────── */
+body .page-wrapper .awa-b2b-quote-btn {
+    background: transparent;
+    border-color: var(--awa-color-primary, #b73337);
+    color: var(--awa-color-primary, #b73337);
+    font-size: var(--awa-text-xs, 0.75rem);
+    min-height: 34px;
+    padding: 0 var(--awa-space-3, 12px);
+    border-radius: var(--awa-radius-sm, 6px);
+    width: 100%;
+}
+
+body .page-wrapper .awa-b2b-quote-btn:hover {
+    background: rgb(183 51 55 / 6%);
+    border-color: var(--awa-color-primary-dark, #8e2629);
+    color: var(--awa-color-primary-dark, #8e2629);
+    text-decoration: none;
+}
+
+/* ── Botão loading / spinner ──────────────────────────────────── */
+body .page-wrapper .btn-loading,
+body .page-wrapper .action.loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.75;
+}
+
+body .page-wrapper .btn-loading::after,
+body .page-wrapper .action.loading::after {
+    content: "";
+    width: 14px;
+    height: 14px;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: awa-spin 0.6s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes awa-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Mobile: tap-targets mínimos ─────────────────────────────── */
+@media (max-width: 767px) {
+    body .page-wrapper button,
+    body .page-wrapper .action,
+    body .page-wrapper [role="button"] {
+        min-height: 44px; /* WCAG 2.5.5 */
+    }
+
+    body .page-wrapper .btn-sm {
+        min-height: 38px;
+    }
+
+    body .page-wrapper .action.tocart,
+    body .page-wrapper button.tocart {
+        min-height: 52px;
+        font-size: var(--awa-text-base-plus, 1.0625rem);
+    }
+}

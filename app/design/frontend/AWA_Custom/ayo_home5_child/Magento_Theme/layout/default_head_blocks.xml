@@ -11,9 +11,14 @@
         <css src="css/b2b/gate/refine.css"/>
         <css src="css/layers/tokens.css"/>
         <css src="css/layers/base.css"/>
+        <css src="css/layers/layout.css"/>
+        <css src="css/layers/typography.css"/>
+        <css src="css/layers/forms.css"/>
+        <css src="css/layers/buttons.css"/>
         <css src="css/layers/components.css"/>
         <css src="css/layers/utilities.css"/>
         <css src="css/layers/legacy-bridge.css"/>
+        <css src="css/awa-carousel-normalize.css"/>
     </head>
     <body>
         <referenceBlock name="awa.round2.header.minicart.js" remove="true"/>
@@ -39,10 +44,6 @@
                    name="awa.whatsapp.fab"
                    template="Magento_Theme::html/awa-whatsapp-fab.phtml"
                    after="-"/>
-            <block class="Magento\Framework\View\Element\Template"
-                   name="awa.quote.modal"
-                   template="Magento_Theme::html/awa-quote-modal.phtml"
-                   after="awa.whatsapp.fab"/>
         </referenceContainer>
 
         <referenceContainer name="before.body.end">

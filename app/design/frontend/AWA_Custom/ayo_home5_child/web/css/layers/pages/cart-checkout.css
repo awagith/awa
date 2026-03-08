@@ -1,11 +1,248 @@
-/* AWA CSS Layers - Cart + Checkout */
+/* AWA CSS Layers - Cart + Checkout
+   ================================================================
+   Estilo completo para carrinho (checkout-cart-index) e
+   checkout (checkout-index-index / rokanthemes-onepagecheckout).
+   Mobile-first. Sem !important.
+   ================================================================ */
+
+/* ── Containers principais ───────────────────────────────────── */
+body.checkout-cart-index .page-main,
+body.checkout-index-index .page-main,
+body.rokanthemes-onepagecheckout-index-index .page-main {
+    padding-top: clamp(16px, 2vw, 24px);
+    padding-bottom: clamp(24px, 3vw, 40px);
+}
+
 body.checkout-cart-index .cart-container,
 body.checkout-index-index .checkout-container,
 body.rokanthemes-onepagecheckout-index-index .checkout-container {
     display: grid;
+    grid-template-columns: 1fr;
     gap: var(--awa-layer-space-lg);
+    align-items: start;
 }
 
-body.checkout-cart-index .cart.table-wrapper .product-item-details {
+@media (width >= 1024px) {
+    body.checkout-cart-index .cart-container,
+    body.checkout-index-index .checkout-container,
+    body.rokanthemes-onepagecheckout-index-index .checkout-container {
+        grid-template-columns: 1fr 380px;
+    }
+}
+
+/* ── Tabela de itens do carrinho ─────────────────────────────── */
+body.checkout-cart-index .cart.table-wrapper {
+    overflow-x: auto;
+    border-radius: var(--awa-layer-radius-md);
+    border: 1px solid var(--awa-layer-color-border);
+    background: var(--awa-layer-surface);
+}
+
+body.checkout-cart-index .cart.items {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+body.checkout-cart-index .cart.items thead th {
+    padding: var(--awa-layer-space-md) var(--awa-layer-space-lg);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--awa-layer-color-muted);
+    border-bottom: 1px solid var(--awa-layer-color-border);
+    background: var(--awa-layer-surface-soft);
+    white-space: nowrap;
+}
+
+body.checkout-cart-index .cart.items td {
+    padding: var(--awa-layer-space-md) var(--awa-layer-space-lg);
+    border-bottom: 1px solid var(--awa-layer-color-border);
+    vertical-align: middle;
+}
+
+body.checkout-cart-index .cart.items .item-info:last-child td {
+    border-bottom: none;
+}
+
+body.checkout-cart-index .cart.items .product-item-photo {
+    width: 72px;
+    flex-shrink: 0;
+}
+
+body.checkout-cart-index .cart.items .product-item-photo img {
+    width: 72px;
+    height: 72px;
+    object-fit: contain;
+    border-radius: var(--awa-layer-radius-sm);
+    border: 1px solid var(--awa-layer-color-border);
+    background: var(--awa-layer-surface-soft);
+}
+
+body.checkout-cart-index .cart.items .product-item-details {
+    display: flex;
+    flex-direction: column;
     gap: var(--awa-layer-space-xs);
+}
+
+body.checkout-cart-index .cart.items .product-item-name a {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-text);
+    text-decoration: none;
+}
+
+body.checkout-cart-index .cart.items .product-item-name a:hover {
+    color: var(--awa-layer-color-primary);
+}
+
+body.checkout-cart-index .cart.items .price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--awa-layer-color-primary);
+}
+
+body.checkout-cart-index .cart.items .qty .input-text {
+    width: 56px;
+    text-align: center;
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-sm);
+    padding: 6px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+body.checkout-cart-index .action.delete span,
+body.checkout-cart-index .action-delete span {
+    font-size: 0;
+}
+
+/* ── Resumo do carrinho / Order Summary ──────────────────────── */
+body.checkout-cart-index .cart-summary,
+body.checkout-index-index .opc-sidebar,
+body.rokanthemes-onepagecheckout-index-index .opc-sidebar {
+    background: var(--awa-layer-surface);
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-md);
+    box-shadow: var(--awa-layer-shadow-1);
+    padding: var(--awa-layer-space-lg);
+    position: sticky;
+    top: 96px;
+}
+
+body.checkout-cart-index .cart-summary .title,
+body.checkout-index-index .opc-block-summary .title,
+body.rokanthemes-onepagecheckout-index-index .opc-block-summary .title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--awa-layer-color-text);
+    margin: 0 0 var(--awa-layer-space-md);
+    padding-bottom: var(--awa-layer-space-md);
+    border-bottom: 1px solid var(--awa-layer-color-border);
+}
+
+body.checkout-cart-index .totals tbody tr,
+body.checkout-index-index .table-totals tbody tr,
+body.rokanthemes-onepagecheckout-index-index .table-totals tbody tr {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-block: var(--awa-layer-space-xs);
+    font-size: 0.875rem;
+    color: var(--awa-layer-color-text);
+}
+
+body.checkout-cart-index .grand.totals th,
+body.checkout-cart-index .grand.totals td,
+body.checkout-index-index .table-totals .grand td,
+body.checkout-index-index .table-totals .grand th,
+body.rokanthemes-onepagecheckout-index-index .table-totals .grand td,
+body.rokanthemes-onepagecheckout-index-index .table-totals .grand th {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--awa-layer-color-text);
+    padding-top: var(--awa-layer-space-sm);
+    border-top: 1px solid var(--awa-layer-color-border);
+}
+
+/* Botão de checkout */
+body.checkout-cart-index .checkout-methods-items .primary .checkout,
+body.checkout-cart-index .cart-summary .checkout,
+body.checkout-index-index .action.primary.checkout,
+body.rokanthemes-onepagecheckout-index-index .action.primary {
+    width: 100%;
+    justify-content: center;
+    margin-top: var(--awa-layer-space-md);
+}
+
+/* Campo de cupom */
+body.checkout-cart-index .block.discount .fieldset,
+body.checkout-index-index .form-discount .fieldset {
+    display: flex;
+    gap: var(--awa-layer-space-sm);
+    align-items: flex-end;
+}
+
+body.checkout-cart-index .block.discount input,
+body.checkout-index-index .form-discount input {
+    flex: 1;
+}
+
+/* ── Steps do checkout ──────────────────────────────────────── */
+body.checkout-index-index .opc-progress-bar,
+body.rokanthemes-onepagecheckout-index-index .opc-progress-bar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: var(--awa-layer-space-xl);
+    counter-reset: step;
+}
+
+body.checkout-index-index .opc-progress-bar-item,
+body.rokanthemes-onepagecheckout-index-index .opc-progress-bar-item {
+    flex: 1;
+    text-align: center;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-muted);
+    position: relative;
+}
+
+body.checkout-index-index .opc-progress-bar-item._active,
+body.rokanthemes-onepagecheckout-index-index .opc-progress-bar-item._active {
+    color: var(--awa-layer-color-primary);
+}
+
+body.checkout-index-index .opc-progress-bar-item._complete,
+body.rokanthemes-onepagecheckout-index-index .opc-progress-bar-item._complete {
+    color: #2e7d32;
+}
+
+/* Step blocks */
+body.checkout-index-index .checkout-shipping-address,
+body.checkout-index-index .checkout-payment-method,
+body.rokanthemes-onepagecheckout-index-index .checkout-shipping-address,
+body.rokanthemes-onepagecheckout-index-index .checkout-payment-method {
+    background: var(--awa-layer-surface);
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-md);
+    padding: var(--awa-layer-space-lg);
+    margin-bottom: var(--awa-layer-space-lg);
+}
+
+/* ── Mobile adjustments ─────────────────────────────────────── */
+@media (width <= 767px) {
+    body.checkout-cart-index .cart-container {
+        grid-template-columns: 1fr;
+    }
+
+    body.checkout-cart-index .cart.items .col.price,
+    body.checkout-cart-index .cart.items .col.subtotal {
+        text-align: right;
+    }
+
+    body.checkout-cart-index .cart-summary,
+    body.checkout-index-index .opc-sidebar {
+        position: static;
+    }
 }

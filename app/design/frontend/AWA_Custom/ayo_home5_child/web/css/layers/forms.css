@@ -1,0 +1,334 @@
+/* ================================================================
+   AWA CSS LAYERS — FORMS
+   ================================================================
+   Sistema canônico de formulários para toda a loja AWA Motos B2B.
+   Mobile-first. Usa tokens de awa-custom-global-brand.css.
+
+   Cobre:
+   - inputs, textareas, selects
+   - labels, hints, erros
+   - checkboxes, radios (customizados)
+   - field wrappers, fieldsets
+   - mensagens de validação
+   - estados: default, focus, error, disabled, readonly
+   ================================================================ */
+
+/* ── Reset e base para todos os inputs ───────────────────────── */
+body .page-wrapper input[type="text"],
+body .page-wrapper input[type="email"],
+body .page-wrapper input[type="password"],
+body .page-wrapper input[type="tel"],
+body .page-wrapper input[type="number"],
+body .page-wrapper input[type="search"],
+body .page-wrapper input[type="url"],
+body .page-wrapper input[type="date"],
+body .page-wrapper textarea,
+body .page-wrapper select,
+body .page-wrapper .input-text {
+    font-family: var(--awa-font-body, 'Source Sans 3', arial, sans-serif);
+    font-size: var(--awa-text-sm, 0.875rem);
+    color: var(--awa-text-primary, #333333);
+    background: #fff;
+    border: 1px solid var(--awa-gray-300, #d1d5db);
+    border-radius: var(--awa-radius-md, 10px);
+    padding: var(--awa-input-padding, 10px 14px);
+    height: var(--awa-input-height, 44px);
+    width: 100%;
+    box-sizing: border-box;
+    line-height: 1.5;
+    transition:
+        border-color var(--awa-transition-fast, 150ms ease),
+        box-shadow var(--awa-transition-fast, 150ms ease);
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+}
+
+body .page-wrapper textarea {
+    height: auto;
+    min-height: 110px;
+    resize: vertical;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    line-height: 1.6;
+}
+
+/* ── Placeholder ─────────────────────────────────────────────── */
+body .page-wrapper ::placeholder {
+    color: var(--awa-gray-400, #9ca3af);
+    opacity: 1;
+}
+
+/* ── Focus ────────────────────────────────────────────────────── */
+body .page-wrapper input[type="text"]:focus,
+body .page-wrapper input[type="email"]:focus,
+body .page-wrapper input[type="password"]:focus,
+body .page-wrapper input[type="tel"]:focus,
+body .page-wrapper input[type="number"]:focus,
+body .page-wrapper input[type="search"]:focus,
+body .page-wrapper input[type="url"]:focus,
+body .page-wrapper input[type="date"]:focus,
+body .page-wrapper textarea:focus,
+body .page-wrapper select:focus,
+body .page-wrapper .input-text:focus {
+    border-color: var(--awa-color-primary, #b73337);
+    box-shadow: var(--awa-input-focus-shadow, 0 0 0 3px rgb(183 51 55 / 20%));
+    outline: none;
+}
+
+body .page-wrapper input:focus-visible,
+body .page-wrapper textarea:focus-visible,
+body .page-wrapper select:focus-visible {
+    border-color: var(--awa-color-primary, #b73337);
+    box-shadow: var(--awa-input-focus-shadow, 0 0 0 3px rgb(183 51 55 / 20%));
+    outline: none;
+}
+
+/* ── Estado de erro ───────────────────────────────────────────── */
+body .page-wrapper .mage-error,
+body .page-wrapper input.mage-error,
+body .page-wrapper textarea.mage-error,
+body .page-wrapper select.mage-error,
+body .page-wrapper .field-error input,
+body .page-wrapper .field-error textarea,
+body .page-wrapper .field-error select {
+    border-color: var(--awa-color-danger, #dc2626);
+    background: rgb(220 38 38 / 4%);
+    box-shadow: none;
+}
+
+body .page-wrapper .mage-error:focus,
+body .page-wrapper input.mage-error:focus {
+    box-shadow: 0 0 0 3px rgb(220 38 38 / 20%);
+}
+
+/* Mensagem de erro inline */
+body .page-wrapper div.mage-error,
+body .page-wrapper .field-error span,
+body .page-wrapper .field .message.error {
+    font-size: var(--awa-text-xs, 0.75rem);
+    color: var(--awa-color-danger, #dc2626);
+    font-weight: 500;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1.4;
+}
+
+/* ── Estado disabled / readonly ──────────────────────────────── */
+body .page-wrapper input:disabled,
+body .page-wrapper textarea:disabled,
+body .page-wrapper select:disabled,
+body .page-wrapper input[readonly],
+body .page-wrapper textarea[readonly] {
+    background: var(--awa-bg-muted, #f1f5f9);
+    border-color: var(--awa-gray-200, #e5e7eb);
+    color: var(--awa-text-muted, #666666);
+    cursor: not-allowed;
+}
+
+/* ── Select customizado ───────────────────────────────────────── */
+body .page-wrapper select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 36px;
+    cursor: pointer;
+}
+
+/* ── Labels ───────────────────────────────────────────────────── */
+body .page-wrapper .field > label,
+body .page-wrapper .field > .label,
+body .page-wrapper .fieldset > .field > label {
+    font-size: var(--awa-text-sm, 0.875rem);
+    font-weight: var(--awa-weight-semibold, 600);
+    color: var(--awa-text-primary, #333333);
+    display: block;
+    margin-bottom: 6px;
+    line-height: 1.4;
+}
+
+body .page-wrapper .field > label span.required,
+body .page-wrapper .field > label em {
+    color: var(--awa-color-danger, #dc2626);
+    font-style: normal;
+    margin-left: 2px;
+}
+
+/* Hint/nota de apoio */
+body .page-wrapper .field-note,
+body .page-wrapper .note,
+body .page-wrapper .field .additional {
+    font-size: var(--awa-text-xs, 0.75rem);
+    color: var(--awa-text-muted, #666666);
+    margin-top: 4px;
+    line-height: 1.4;
+}
+
+/* ── Wrappers de campo ────────────────────────────────────────── */
+body .page-wrapper .field,
+body .page-wrapper .form-group {
+    margin-bottom: var(--awa-gap-md, 16px);
+}
+
+body .page-wrapper .field:last-child,
+body .page-wrapper .form-group:last-child {
+    margin-bottom: 0;
+}
+
+body .page-wrapper .fieldset {
+    border: 1px solid var(--awa-gray-200, #e5e7eb);
+    border-radius: var(--awa-radius-lg, 14px);
+    padding: var(--awa-gap-lg, 24px);
+    margin-bottom: var(--awa-gap-lg, 24px);
+}
+
+body .page-wrapper .fieldset > .legend {
+    font-size: var(--awa-text-sm, 0.875rem);
+    font-weight: var(--awa-weight-bold, 700);
+    color: var(--awa-text-primary, #333333);
+    padding: 0 var(--awa-gap-sm, 8px);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ── Checkbox e Radio customizados ──────────────────────────────  */
+body .page-wrapper input[type="checkbox"],
+body .page-wrapper input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    min-width: 18px;
+    padding: 0;
+    border: 1.5px solid var(--awa-gray-300, #d1d5db);
+    background: #fff;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    transition: border-color var(--awa-transition-fast, 150ms ease), background var(--awa-transition-fast, 150ms ease);
+    -webkit-appearance: none;
+    appearance: none;
+    position: relative;
+    flex-shrink: 0;
+}
+
+body .page-wrapper input[type="checkbox"] {
+    border-radius: 4px;
+}
+
+body .page-wrapper input[type="radio"] {
+    border-radius: 50%;
+}
+
+body .page-wrapper input[type="checkbox"]:checked,
+body .page-wrapper input[type="radio"]:checked {
+    background: var(--awa-color-primary, #b73337);
+    border-color: var(--awa-color-primary, #b73337);
+}
+
+body .page-wrapper input[type="checkbox"]:checked::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E") center no-repeat;
+    background-size: 12px;
+}
+
+body .page-wrapper input[type="radio"]:checked::after {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    background: #fff;
+    border-radius: 50%;
+}
+
+body .page-wrapper input[type="checkbox"]:focus-visible,
+body .page-wrapper input[type="radio"]:focus-visible {
+    outline: 2px solid var(--awa-color-primary, #b73337);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgb(183 51 55 / 15%);
+}
+
+body .page-wrapper input[type="checkbox"]:disabled,
+body .page-wrapper input[type="radio"]:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Linha de checkbox/radio + label ─────────────────────────── */
+body .page-wrapper .choice,
+body .page-wrapper .field-choice {
+    display: flex;
+    align-items: center;
+    gap: var(--awa-gap-sm, 8px);
+    cursor: pointer;
+}
+
+body .page-wrapper .choice label,
+body .page-wrapper .field-choice label {
+    margin-bottom: 0;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+/* ── Campo de busca (header) ──────────────────────────────────── */
+body .page-wrapper .block-search .control #search {
+    border-radius: var(--awa-radius-md, 10px) 0 0 var(--awa-radius-md, 10px);
+    border-right: none;
+    height: var(--awa-btn-height, 42px);
+    padding-left: 16px;
+    font-size: var(--awa-text-sm, 0.875rem);
+}
+
+body .page-wrapper .block-search .action.search {
+    border-radius: 0 var(--awa-radius-md, 10px) var(--awa-radius-md, 10px) 0;
+    height: var(--awa-btn-height, 42px);
+    min-height: var(--awa-btn-height, 42px);
+    padding: 0 16px;
+    background: var(--awa-color-primary, #b73337);
+    border: 1px solid var(--awa-color-primary, #b73337);
+    border-left: none;
+    color: #fff;
+}
+
+/* ── Qty input (cart/pdp) ─────────────────────────────────────── */
+body .page-wrapper .input-text.qty,
+body .page-wrapper input[name="qty"] {
+    width: 64px;
+    text-align: center;
+    padding: var(--awa-space-2, 8px) var(--awa-space-2, 8px);
+    height: var(--awa-input-height, 44px);
+    border-radius: var(--awa-radius-sm, 6px);
+    font-size: var(--awa-text-sm, 0.875rem);
+    font-weight: var(--awa-weight-semibold, 600);
+    -moz-appearance: textfield;
+}
+
+body .page-wrapper .input-text.qty::-webkit-inner-spin-button,
+body .page-wrapper input[name="qty"]::-webkit-inner-spin-button,
+body .page-wrapper .input-text.qty::-webkit-outer-spin-button,
+body .page-wrapper input[name="qty"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* ── Mobile: inputs confortáveis ─────────────────────────────── */
+@media (max-width: 767px) {
+    body .page-wrapper input[type="text"],
+    body .page-wrapper input[type="email"],
+    body .page-wrapper input[type="password"],
+    body .page-wrapper input[type="tel"],
+    body .page-wrapper input[type="number"],
+    body .page-wrapper textarea,
+    body .page-wrapper select,
+    body .page-wrapper .input-text {
+        height: 48px; /* WCAG tap target */
+        font-size: 1rem; /* evitar zoom no iOS (< 16px faz zoom) */
+    }
+
+    body .page-wrapper textarea {
+        height: auto;
+        min-height: 120px;
+    }
+}

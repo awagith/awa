@@ -1,0 +1,543 @@
+/* ================================================================
+   AWA CSS LAYERS — LAYOUT
+   ================================================================
+   Sistema de layout para seções, grids e estrutura de página.
+   Mobile-first. Usa var(--awa-container) do tema pai.
+   Container responsivo: 1200px | 1400px ≥1399px | 1600px ≥1600px
+
+   Estrutura de seção canônica:
+   .awa-section            → wrapper semântico com padding
+   .awa-section__container → limita largura + centraliza
+   .awa-section__header    → título + subtítulo da seção
+   .awa-section__grid      → grid interno configurável
+   ================================================================ */
+
+/* ── Container principal de página ───────────────────────────── */
+body .page-wrapper .page-main {
+    flex: 1;
+}
+
+body .page-wrapper .page-main > .page-title-wrapper {
+    padding-inline: var(--awa-container-pad, 16px);
+}
+
+/* ── Section wrapper genérico ─────────────────────────────────── */
+body .page-wrapper .awa-section {
+    padding-block: var(--awa-section-gap, clamp(24px, 3vw, 40px));
+}
+
+body .page-wrapper .awa-section--sm {
+    padding-block: clamp(16px, 2vw, 24px);
+}
+
+body .page-wrapper .awa-section--lg {
+    padding-block: clamp(40px, 5vw, 72px);
+}
+
+/* Seção com fundo alternado */
+body .page-wrapper .awa-section--alt {
+    background: var(--awa-bg-muted, #f1f5f9);
+}
+
+body .page-wrapper .awa-section--dark {
+    background: var(--awa-text-primary, #333333);
+    color: #fff;
+}
+
+/* ── Container com max-width centralizado ─────────────────────── */
+body .page-wrapper .awa-container {
+    width: 100%;
+    max-width: var(--awa-container, 1200px);
+    margin-inline: auto;
+    padding-inline: var(--awa-container-pad, 16px);
+    box-sizing: border-box;
+}
+
+/* ── Header de seção (título + subtítulo) ─────────────────────── */
+body .page-wrapper .awa-section__header {
+    margin-bottom: var(--awa-gap-lg, 24px);
+    text-align: center;
+}
+
+body .page-wrapper .awa-section__title {
+    font-size: clamp(1.25rem, 2.5vw, 1.875rem);
+    font-weight: var(--awa-weight-bold, 700);
+    color: var(--awa-text-primary, #333333);
+    margin: 0 0 0.35em;
+    line-height: 1.25;
+}
+
+body .page-wrapper .awa-section__subtitle {
+    font-size: var(--awa-text-sm, 0.875rem);
+    color: var(--awa-text-muted, #666666);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ── Grids canônicos ──────────────────────────────────────────── */
+
+/* Grid de produtos (auto-fill responsivo) */
+body .page-wrapper .awa-grid-products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--awa-grid-product-min, 200px), 1fr));
+    gap: var(--awa-grid-product-gap, 16px);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Grid de categorias 2-3-4-5 colunas */
+body .page-wrapper .awa-grid-categories {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--awa-gap-md, 16px);
+}
+
+@media (min-width: 640px) {
+    body .page-wrapper .awa-grid-categories {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    body .page-wrapper .awa-grid-categories {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (min-width: 1280px) {
+    body .page-wrapper .awa-grid-categories {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+
+/* Grid de benefícios/serviços (horizontal) */
+body .page-wrapper .awa-grid-benefits {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--awa-gap-md, 16px);
+}
+
+@media (min-width: 480px) {
+    body .page-wrapper .awa-grid-benefits {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 768px) {
+    body .page-wrapper .awa-grid-benefits {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Grid 2 colunas simétrico */
+body .page-wrapper .awa-grid-2col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--awa-gap-lg, 24px);
+}
+
+@media (min-width: 768px) {
+    body .page-wrapper .awa-grid-2col {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Grid 3 colunas */
+body .page-wrapper .awa-grid-3col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--awa-gap-lg, 24px);
+}
+
+@media (min-width: 600px) {
+    body .page-wrapper .awa-grid-3col {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    body .page-wrapper .awa-grid-3col {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ── Sidebar layout (2 colunas assimétricas) ──────────────────── */
+body .page-wrapper .awa-layout-sidebar {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--awa-gap-lg, 24px);
+    align-items: start;
+}
+
+@media (min-width: 768px) {
+    body .page-wrapper .awa-layout-sidebar {
+        grid-template-columns: 240px 1fr;
+    }
+}
+
+@media (min-width: 1200px) {
+    body .page-wrapper .awa-layout-sidebar {
+        grid-template-columns: 260px 1fr;
+    }
+}
+
+/* ── Flex utilitários de layout ────────────────────────────────── */
+body .page-wrapper .awa-flex {
+    display: flex;
+    align-items: center;
+    gap: var(--awa-gap-md, 16px);
+}
+
+body .page-wrapper .awa-flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--awa-gap-sm, 8px);
+}
+
+body .page-wrapper .awa-flex-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--awa-gap-sm, 8px);
+}
+
+body .page-wrapper .awa-flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--awa-gap-sm, 8px);
+}
+
+/* ── Espaçamento vertical entre elementos ─────────────────────── */
+body .page-wrapper .awa-stack > * + * {
+    margin-top: var(--awa-stack-gap, var(--awa-gap-md, 16px));
+}
+
+body .page-wrapper .awa-stack--sm > * + * {
+    --awa-stack-gap: var(--awa-gap-sm, 8px);
+}
+
+body .page-wrapper .awa-stack--lg > * + * {
+    --awa-stack-gap: var(--awa-gap-lg, 24px);
+}
+
+/* ── Cards genéricos ──────────────────────────────────────────── */
+body .page-wrapper .awa-card {
+    background: #fff;
+    border: 1px solid var(--awa-gray-200, #e5e7eb);
+    border-radius: var(--awa-radius-xl, 16px);
+    padding: var(--awa-gap-lg, 24px);
+    box-shadow: var(--awa-shadow-sm, 0 4px 10px rgb(15 23 42 / 6%));
+}
+
+body .page-wrapper .awa-card--hover {
+    transition: box-shadow var(--awa-transition, 250ms ease), transform var(--awa-transition, 250ms ease);
+}
+
+body .page-wrapper .awa-card--hover:hover {
+    box-shadow: var(--awa-shadow-hover, 0 16px 36px rgb(15 23 42 / 14%));
+    transform: translateY(-2px);
+}
+
+/* ── Divisor visual ───────────────────────────────────────────── */
+body .page-wrapper .awa-divider {
+    height: 1px;
+    background: var(--awa-gray-200, #e5e7eb);
+    border: none;
+    margin-block: var(--awa-gap-lg, 24px);
+}
+
+/* ── Badges ───────────────────────────────────────────────────── */
+body .page-wrapper .awa-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--awa-text-2xs, 0.6875rem);
+    font-weight: var(--awa-weight-bold, 700);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    line-height: 1;
+    padding: 3px 8px;
+    border-radius: var(--awa-radius-pill, 999px);
+    white-space: nowrap;
+}
+
+body .page-wrapper .awa-badge--primary {
+    background: var(--awa-color-primary, #b73337);
+    color: #fff;
+}
+
+body .page-wrapper .awa-badge--secondary {
+    background: rgb(183 51 55 / 10%);
+    color: var(--awa-color-primary, #b73337);
+    border: 1px solid rgb(183 51 55 / 20%);
+}
+
+body .page-wrapper .awa-badge--success {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+body .page-wrapper .awa-badge--warning {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+body .page-wrapper .awa-badge--neutral {
+    background: var(--awa-bg-muted, #f1f5f9);
+    color: var(--awa-text-muted, #666666);
+}
+
+/* ── Tables ───────────────────────────────────────────────────── */
+body .page-wrapper .awa-table,
+body .page-wrapper table.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--awa-text-sm, 0.875rem);
+    color: var(--awa-text-primary, #333333);
+}
+
+body .page-wrapper .awa-table th,
+body .page-wrapper table.data-table th {
+    font-weight: var(--awa-weight-semibold, 600);
+    text-align: left;
+    padding: 10px 14px;
+    border-bottom: 2px solid var(--awa-gray-200, #e5e7eb);
+    color: var(--awa-gray-700, #374151);
+    font-size: var(--awa-text-xs, 0.75rem);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    background: var(--awa-bg-muted, #f1f5f9);
+}
+
+body .page-wrapper .awa-table td,
+body .page-wrapper table.data-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--awa-gray-200, #e5e7eb);
+    vertical-align: middle;
+    line-height: 1.5;
+}
+
+body .page-wrapper .awa-table tr:last-child td,
+body .page-wrapper table.data-table tr:last-child td {
+    border-bottom: none;
+}
+
+body .page-wrapper .awa-table tr:hover td,
+body .page-wrapper table.data-table tbody tr:hover td {
+    background: var(--awa-bg-muted, #f1f5f9);
+}
+
+/* Tabela responsiva (scroll horizontal no mobile) */
+body .page-wrapper .awa-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--awa-gray-200, #e5e7eb);
+    border-radius: var(--awa-radius-lg, 14px);
+}
+
+/* ── Alerts / mensagens de sistema ───────────────────────────── */
+body .page-wrapper .awa-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--awa-gap-sm, 8px);
+    padding: 14px 16px;
+    border-radius: var(--awa-radius-md, 10px);
+    font-size: var(--awa-text-sm, 0.875rem);
+    line-height: 1.5;
+    font-weight: 500;
+    border-left: 3px solid;
+}
+
+body .page-wrapper .awa-alert--success {
+    background: #f0fdf4;
+    color: #15803d;
+    border-color: #16a34a;
+}
+
+body .page-wrapper .awa-alert--error {
+    background: #fef2f2;
+    color: #dc2626;
+    border-color: #dc2626;
+}
+
+body .page-wrapper .awa-alert--warning {
+    background: #fffbeb;
+    color: #d97706;
+    border-color: #d97706;
+}
+
+body .page-wrapper .awa-alert--info {
+    background: #eff6ff;
+    color: #1d4ed8;
+    border-color: #2563eb;
+}
+
+/* ── Paginação ───────────────────────────────────────────────── */
+body .page-wrapper .pages {
+    margin-top: var(--awa-gap-lg, 24px);
+}
+
+body .page-wrapper .pages .items {
+    display: flex;
+    align-items: center;
+    gap: var(--awa-gap-xs, 4px);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+body .page-wrapper .pages .item {
+    display: flex;
+}
+
+body .page-wrapper .pages .item .page,
+body .page-wrapper .pages .item .action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding: 0 var(--awa-gap-sm, 8px);
+    border: 1px solid var(--awa-gray-200, #e5e7eb);
+    border-radius: var(--awa-radius-sm, 6px);
+    font-size: var(--awa-text-sm, 0.875rem);
+    font-weight: var(--awa-weight-semibold, 600);
+    color: var(--awa-text-primary, #333333);
+    text-decoration: none;
+    transition: all var(--awa-transition-fast, 150ms ease);
+    background: #fff;
+}
+
+body .page-wrapper .pages .item .page:hover,
+body .page-wrapper .pages .item .action:hover {
+    background: var(--awa-bg-muted, #f1f5f9);
+    border-color: var(--awa-gray-300, #d1d5db);
+    color: var(--awa-text-primary, #333333);
+    text-decoration: none;
+}
+
+body .page-wrapper .pages .item.current .page {
+    background: var(--awa-color-primary, #b73337);
+    border-color: var(--awa-color-primary, #b73337);
+    color: #fff;
+    cursor: default;
+}
+
+/* ── Empty state ─────────────────────────────────────────────── */
+body .page-wrapper .awa-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: clamp(40px, 8vw, 80px) var(--awa-gap-lg, 24px);
+    color: var(--awa-text-muted, #666666);
+    gap: var(--awa-gap-md, 16px);
+}
+
+body .page-wrapper .awa-empty-state__icon {
+    font-size: 48px;
+    opacity: 0.4;
+}
+
+body .page-wrapper .awa-empty-state__title {
+    font-size: var(--awa-text-md, 1.125rem);
+    font-weight: var(--awa-weight-semibold, 600);
+    color: var(--awa-text-primary, #333333);
+    margin: 0;
+}
+
+body .page-wrapper .awa-empty-state__text {
+    font-size: var(--awa-text-sm, 0.875rem);
+    margin: 0;
+    max-width: 360px;
+}
+
+/* ── Accordion / Toggle ──────────────────────────────────────── */
+body .page-wrapper .awa-accordion {
+    border: 1px solid var(--awa-gray-200, #e5e7eb);
+    border-radius: var(--awa-radius-lg, 14px);
+    overflow: hidden;
+}
+
+body .page-wrapper .awa-accordion__item {
+    border-bottom: 1px solid var(--awa-gray-200, #e5e7eb);
+}
+
+body .page-wrapper .awa-accordion__item:last-child {
+    border-bottom: none;
+}
+
+body .page-wrapper .awa-accordion__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 14px 20px;
+    background: transparent;
+    border: none;
+    font-size: var(--awa-text-sm, 0.875rem);
+    font-weight: var(--awa-weight-semibold, 600);
+    color: var(--awa-text-primary, #333333);
+    text-align: left;
+    cursor: pointer;
+    min-height: 52px;
+    transition: background var(--awa-transition-fast, 150ms ease);
+}
+
+body .page-wrapper .awa-accordion__trigger:hover {
+    background: var(--awa-bg-muted, #f1f5f9);
+}
+
+body .page-wrapper .awa-accordion__content {
+    padding: 0 20px 16px;
+    font-size: var(--awa-text-sm, 0.875rem);
+    color: var(--awa-text-muted, #666666);
+    line-height: 1.6;
+}
+
+/* ── Skeleton / loading placeholder ─────────────────────────── */
+.awa-skeleton {
+    background: linear-gradient(90deg, var(--awa-gray-200, #e5e7eb) 25%, var(--awa-gray-300, #d1d5db) 50%, var(--awa-gray-200, #e5e7eb) 75%);
+    background-size: 200% 100%;
+    animation: awa-skeleton-shimmer 1.5s infinite;
+    border-radius: var(--awa-radius-sm, 6px);
+}
+
+@keyframes awa-skeleton-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* ── Responsividade geral ─────────────────────────────────────── */
+@media (max-width: 767px) {
+    body .page-wrapper .awa-section {
+        padding-block: var(--awa-section-gap, clamp(20px, 4vw, 32px));
+    }
+
+    body .page-wrapper .awa-grid-products {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--awa-gap-sm, 8px);
+    }
+
+    body .page-wrapper .awa-card {
+        padding: var(--awa-gap-md, 16px);
+    }
+
+    body .page-wrapper .pages .item .page,
+    body .page-wrapper .pages .item .action {
+        min-width: 40px;
+        height: 40px;
+    }
+}
+
+@media (max-width: 359px) {
+    body .page-wrapper .awa-grid-products {
+        grid-template-columns: 1fr;
+    }
+}
