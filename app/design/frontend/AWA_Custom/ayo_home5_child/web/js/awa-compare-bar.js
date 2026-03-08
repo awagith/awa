@@ -1,146 +1,166 @@
 /**
- * AWA Motos — Compare Bar
- * Barra flutuante de comparação de produtos, sincronizada com a sidebar de comparação do Magento.
- * Exibe até 4 produtos na barra inferior e controla o link de comparação.
+ * AWA Motos — Compare Bar (v2)
+ * Barra sticky inferior de comparação de produtos.
+ * Sincroniza com o widget nativo do Magento via MutationObserver.
+ * Inicializado via x-magento-init com selector "*".
  */
-define(['jquery', 'Magento_Catalog/js/product/list/toolbar'], function ($) {
+define(['jquery'], function ($) {
     'use strict';
 
-    var STORAGE_KEY  = 'mage-compare-' + window.MAGE_STORE_ID || 'mage-compare';
-    var BAR_SELECTOR = '.awa-compare-bar';
+    var BAR_ID       = '#awa-compare-bar';
+    var ITEMS_ID     = '#awa-compare-bar-items';
+    var COUNT_ID     = '#awa-compare-bar-count';
+    var CLEAR_ID     = '#awa-compare-bar-clear';
     var MAX_COMPARE  = 4;
 
     /**
-     * Read compare items from Magento's compareProducts cookie/localStorage
-     * Fall back to reading DOM (compare sidebar)
-     * @return {Array<{id, name}>}
+     * Lê os itens da lista de comparação via DOM do sidebar/widget Magento
+     * @return {Array<{id: string, name: string}>}
      */
     function readCompareItems() {
         var items = [];
 
-        // Try reading from compare sidebar widgets
-        $('.block-compare .product-item .product-item-name a').each(function () {
-            items.push({
-                id: $(this).closest('[data-product-id]').data('productId') || '',
-                name: $(this).text().trim()
-            });
+        // Tenta ler do sidebar de comparação nativo do Magento
+        $('.block-compare .product-item').each(function () {
+            var $li     = $(this);
+            var $name   = $li.find('.product-item-name a');
+            var $img    = $li.find('.product-image-photo');
+            var name    = $name.text().trim();
+            var id      = $li.data('productId')
+                       || $li.find('[data-product-id]').data('productId')
+                       || '';
+            var imgSrc  = $img.attr('src') || '';
+
+            if (name) {
+                items.push({ id: String(id), name: name, img: imgSrc });
+            }
         });
+
+        // Fallback: ler do input oculto de count do Magento
+        if (!items.length) {
+            var $counter = $('.block-compare .counter.qty');
+            if ($counter.length && parseInt($counter.text(), 10) > 0) {
+                // Não temos os detalhes, mostra count apenas
+                return [];
+            }
+        }
 
         return items.slice(0, MAX_COMPARE);
     }
 
     /**
-     * Render the compare bar
+     * Renderiza os itens na barra e controla visibilidade
      * @param {Array} items
      */
     function renderBar(items) {
-        var $bar = $(BAR_SELECTOR);
+        var $bar   = $(BAR_ID);
+        var $items = $(ITEMS_ID);
+        var $count = $(COUNT_ID);
 
         if (!$bar.length) {
             return;
         }
 
-        var $itemsContainer = $bar.find('.awa-compare-bar__items');
-        var $compareBtn    = $bar.find('.awa-compare-bar__compare-btn');
-
-        $itemsContainer.empty();
+        $items.empty();
 
         if (!items.length) {
-            $bar.removeClass('is-visible');
+            $bar.removeAttr('hidden').removeClass('is-visible');
+            setTimeout(function () {
+                if (!$bar.hasClass('is-visible')) {
+                    $bar.attr('hidden', '');
+                }
+            }, 320);
             return;
         }
 
+        // Mostra o elemento e anima entrada
+        $bar.removeAttr('hidden');
+        requestAnimationFrame(function () {
+            $bar.addClass('is-visible');
+        });
+
+        // Atualiza contador
+        $count.text(items.length);
+
+        // Renderiza cada item
         items.forEach(function (item) {
-            $itemsContainer.append(
-                '<div class="awa-compare-bar__item">'
-                + '<span class="awa-compare-bar__item-name">' + $('<span>').text(item.name).html() + '</span>'
-                + '<button class="awa-compare-bar__item-remove" aria-label="Remover ' + $('<span>').text(item.name).html() + ' da comparação" data-remove-id="' + item.id + '">✕</button>'
+            var safeName = $('<span>').text(item.name).html();
+            var imgHtml  = item.img
+                ? '<img src="' + $('<span>').text(item.img).html() + '" alt="' + safeName + '" class="awa-compare-bar__item-img" loading="lazy">'
+                : '<span class="awa-compare-bar__slot" aria-hidden="true">+</span>';
+
+            $items.append(
+                '<div class="awa-compare-bar__item" data-product-id="' + $('<span>').text(item.id).html() + '">'
+                + imgHtml
+                + '<span class="awa-compare-bar__item-name" title="' + safeName + '">' + safeName + '</span>'
+                + '<button type="button" class="awa-compare-bar__item-remove" aria-label="Remover ' + safeName + ' da comparação" data-remove-id="' + $('<span>').text(item.id).html() + '">&#x2715;</button>'
                 + '</div>'
             );
         });
-
-        // Disable compare if less than 2 items
-        if (items.length < 2) {
-            $compareBtn.attr('disabled', true).addClass('is-disabled');
-        } else {
-            $compareBtn.removeAttr('disabled').removeClass('is-disabled');
-        }
-
-        $bar.addClass('is-visible');
     }
 
     /**
-     * Sync bar state with Magento compare widget
+     * Sincroniza a barra com o estado atual de comparação
      */
     function syncBar() {
         var items = readCompareItems();
         renderBar(items);
     }
 
-    return function (config, element) {
-        var $bar = $(element);
+    /**
+     * Instala MutationObserver no container de comparação nativo
+     */
+    function watchCompareWidget() {
+        var target = document.querySelector('.block-compare .block-content')
+                  || document.querySelector('.block-compare');
 
-        // Initial render
-        syncBar();
-
-        // Watch for Magento compare list changes (Ajax)
-        $(document).on('ajax:updateCompare', function () {
-            setTimeout(syncBar, 300);
-        });
-
-        // Observe mutations in compare sidebar
-        var sidebarTarget = document.querySelector('.block-compare .block-content');
-
-        if (sidebarTarget && window.MutationObserver) {
+        if (target && window.MutationObserver) {
             var observer = new MutationObserver(function () {
-                setTimeout(syncBar, 100);
+                setTimeout(syncBar, 150);
+            });
+            observer.observe(target, { childList: true, subtree: true });
+        }
+    }
+
+    return function (config) {
+        // Aguarda DOM pronto
+        $(function () {
+            syncBar();
+            watchCompareWidget();
+
+            // Magento dispara este evento após update de compare via Ajax
+            $(document).on('ajax:updateCompare customer-data:reload', function () {
+                setTimeout(syncBar, 400);
             });
 
-            observer.observe(sidebarTarget, { childList: true, subtree: true });
-        }
+            // Botão limpar
+            $(document).on('click', CLEAR_ID, function (e) {
+                e.preventDefault();
+                var $native = $('.block-compare .action.clear');
+                if ($native.length) {
+                    $native[0].click();
+                }
+                $(BAR_ID).removeClass('is-visible');
+                setTimeout(function () {
+                    $(BAR_ID).attr('hidden', '');
+                }, 320);
+            });
 
-        // Clear button in bar
-        $bar.on('click', '.awa-compare-bar__clear-btn', function (e) {
-            e.preventDefault();
+            // Remover item individual
+            $(document).on('click', '.awa-compare-bar__item-remove', function () {
+                var pid = $(this).data('removeId');
+                if (!pid) { return; }
 
-            // Trigger Magento's native clear compare action
-            var $clearLink = $('.block-compare .action.clear');
-
-            if ($clearLink.length) {
-                $clearLink[0].click();
-            }
-
-            $bar.removeClass('is-visible');
-        });
-
-        // Remove individual item
-        $bar.on('click', '.awa-compare-bar__item-remove', function () {
-            var productId = $(this).data('removeId');
-
-            if (productId) {
-                // Trigger native remove
-                var $removeLink = $('.block-compare [data-post*="' + productId + '"]');
-
-                if ($removeLink.length) {
-                    $removeLink[0].click();
+                // Encontra o botão nativo de remover do sidebar
+                var $native = $('.block-compare .action.delete[data-post*="' + pid + '"]');
+                if ($native.length) {
+                    $native[0].click();
                 } else {
-                    // Fallback: re-read and re-render
+                    // Fallback: remove localmente e re-sincroniza
+                    $(this).closest('.awa-compare-bar__item').remove();
                     setTimeout(syncBar, 300);
                 }
-            }
-        });
-
-        // Compare button
-        $bar.on('click', '.awa-compare-bar__compare-btn', function (e) {
-            var $btn = $(this);
-
-            if ($btn.hasClass('is-disabled') || $btn.attr('disabled')) {
-                e.preventDefault();
-                return;
-            }
-
-            // Navigate to compare page
-            window.location.href = config.compareUrl || '/catalog/product_compare/index/';
+            });
         });
     };
 });

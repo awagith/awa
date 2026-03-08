@@ -1,0 +1,37 @@
+<?php
+/**
+ * AWA Compare Bar — sticky compare tray enterprise
+ *
+ * @var \Magento\Catalog\Block\Product\Compare\ListCompare $block
+ */
+declare(strict_types=1);
+?>
+<div class="awa-compare-bar" id="awa-compare-bar" role="region" aria-label="<?= $block->escapeHtmlAttr(__('Comparação de produtos')) ?>" hidden>
+    <div class="awa-compare-bar__inner">
+        <div class="awa-compare-bar__items" id="awa-compare-bar-items">
+            <!-- Preenchido via JS (awa-compare-bar.js) -->
+        </div>
+        <div class="awa-compare-bar__actions">
+            <a href="<?= $block->escapeUrl($block->getUrl('catalog/product_compare/index')) ?>"
+               class="awa-compare-bar__btn awa-compare-bar__btn--primary"
+               id="awa-compare-bar-go">
+                <?= $block->escapeHtml(__('Comparar')) ?>
+                <span class="awa-compare-bar__count" id="awa-compare-bar-count">0</span>
+            </a>
+            <button type="button"
+                    class="awa-compare-bar__btn awa-compare-bar__btn--ghost"
+                    id="awa-compare-bar-clear"
+                    aria-label="<?= $block->escapeHtmlAttr(__('Limpar comparação')) ?>">
+                <?= $block->escapeHtml(__('Limpar')) ?>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "AWA_Custom/js/awa-compare-bar": {}
+    }
+}
+</script>

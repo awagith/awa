@@ -866,3 +866,258 @@
     color: #fff;
     text-decoration: none;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   REFINAMENTOS ENTERPRISE — Toolbar, Product Card, Sidebar B2B
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Toolbar enterprise ──────────────────────────────────────── */
+.catalog-category-view .toolbar.toolbar-products,
+.catalogsearch-result-index .toolbar.toolbar-products {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--awa-layer-space-md, 16px);
+    flex-wrap: wrap;
+    padding: 12px 16px;
+    background: #fff;
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-base, 8px);
+    margin-bottom: var(--awa-layer-space-lg, 24px);
+}
+
+.catalog-category-view .toolbar-amount,
+.catalogsearch-result-index .toolbar-amount {
+    font-size: 0.875rem;
+    color: var(--awa-layer-color-text-secondary, #666);
+    white-space: nowrap;
+}
+
+.catalog-category-view .toolbar-amount .toolbar-number,
+.catalogsearch-result-index .toolbar-amount .toolbar-number {
+    font-weight: 700;
+    color: var(--awa-layer-color-text-primary, #333);
+}
+
+/* Sorter enterprise */
+.catalog-category-view .toolbar-sorter,
+.catalogsearch-result-index .toolbar-sorter {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.catalog-category-view .toolbar-sorter .sorter-label,
+.catalogsearch-result-index .toolbar-sorter .sorter-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-text-secondary, #666);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.catalog-category-view .toolbar-sorter select,
+.catalogsearch-result-index .toolbar-sorter select {
+    padding: 7px 32px 7px 12px;
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    font-size: 0.875rem;
+    background: #fff;
+    color: var(--awa-layer-color-text-primary, #333);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    transition: border-color 200ms;
+    min-height: 36px;
+}
+
+.catalog-category-view .toolbar-sorter select:focus,
+.catalogsearch-result-index .toolbar-sorter select:focus {
+    outline: none;
+    border-color: var(--awa-layer-color-primary, #b73337);
+    box-shadow: 0 0 0 3px rgba(183, 51, 55, 0.1);
+}
+
+/* View mode switcher */
+.catalog-category-view .toolbar .modes,
+.catalogsearch-result-index .toolbar .modes {
+    display: flex;
+    gap: 4px;
+}
+
+.catalog-category-view .toolbar .modes-mode,
+.catalogsearch-result-index .toolbar .modes-mode {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    color: var(--awa-layer-color-text-secondary, #666);
+    background: #fff;
+    transition: all 180ms;
+    text-decoration: none;
+}
+
+.catalog-category-view .toolbar .modes-mode.active,
+.catalogsearch-result-index .toolbar .modes-mode.active,
+.catalog-category-view .toolbar .modes-mode:hover,
+.catalogsearch-result-index .toolbar .modes-mode:hover {
+    border-color: var(--awa-layer-color-primary, #b73337);
+    color: var(--awa-layer-color-primary, #b73337);
+    background: #fff5f5;
+}
+
+/* ── Pagination enterprise ───────────────────────────────────── */
+.catalog-category-view .toolbar-bottom,
+.catalogsearch-result-index .toolbar-bottom {
+    border-top: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    padding-top: var(--awa-layer-space-xl, 32px);
+    margin-top: var(--awa-layer-space-xl, 32px);
+}
+
+.catalog-category-view .pages,
+.catalogsearch-result-index .pages {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.catalog-category-view .pages .page,
+.catalogsearch-result-index .pages .page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--awa-layer-color-text-primary, #333);
+    text-decoration: none;
+    transition: all 180ms;
+}
+
+.catalog-category-view .pages .page:hover,
+.catalogsearch-result-index .pages .page:hover {
+    border-color: var(--awa-layer-color-primary, #b73337);
+    color: var(--awa-layer-color-primary, #b73337);
+    background: #fff5f5;
+}
+
+.catalog-category-view .pages .page.current,
+.catalogsearch-result-index .pages .page.current {
+    background: var(--awa-layer-color-primary, #b73337);
+    border-color: var(--awa-layer-color-primary, #b73337);
+    color: #fff;
+    font-weight: 700;
+}
+
+.catalog-category-view .pages .action,
+.catalogsearch-result-index .pages .action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    color: var(--awa-layer-color-text-secondary, #666);
+    background: #fff;
+    text-decoration: none;
+    transition: all 180ms;
+}
+
+.catalog-category-view .pages .action:hover,
+.catalogsearch-result-index .pages .action:hover {
+    border-color: var(--awa-layer-color-primary, #b73337);
+    color: var(--awa-layer-color-primary, #b73337);
+}
+
+/* ── Product card hover enterprise ──────────────────────────── */
+.catalog-category-view .product-item,
+.catalogsearch-result-index .product-item {
+    position: relative;
+    transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.catalog-category-view .product-item:hover,
+.catalogsearch-result-index .product-item:hover {
+    transform: translateY(-2px);
+    z-index: 2;
+}
+
+.catalog-category-view .product-item .product-item-info,
+.catalogsearch-result-index .product-item .product-item-info {
+    border: 1px solid transparent;
+    transition: border-color 200ms, box-shadow 200ms;
+    border-radius: var(--awa-layer-radius-base, 8px);
+    height: 100%;
+}
+
+.catalog-category-view .product-item:hover .product-item-info,
+.catalogsearch-result-index .product-item:hover .product-item-info {
+    border-color: var(--awa-layer-color-border, #e5e5e5);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Sidebar / filter panel desktop ─────────────────────────── */
+@media (min-width: 1024px) {
+    .catalog-category-view .sidebar.sidebar-main,
+    .catalogsearch-result-index .sidebar.sidebar-main {
+        position: sticky;
+        top: 80px;
+        max-height: calc(100vh - 100px);
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--awa-layer-color-border, #e5e5e5) transparent;
+    }
+
+    .catalog-category-view .sidebar.sidebar-main::-webkit-scrollbar,
+    .catalogsearch-result-index .sidebar.sidebar-main::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .catalog-category-view .sidebar.sidebar-main::-webkit-scrollbar-thumb,
+    .catalogsearch-result-index .sidebar.sidebar-main::-webkit-scrollbar-thumb {
+        background: var(--awa-layer-color-border, #e5e5e5);
+        border-radius: 2px;
+    }
+}
+
+/* ── Mobile: filtros em offcanvas / drawer ───────────────────── */
+@media (max-width: 767px) {
+    .catalog-category-view .toolbar.toolbar-products,
+    .catalogsearch-result-index .toolbar.toolbar-products {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
+    .catalog-category-view .toolbar-amount,
+    .catalogsearch-result-index .toolbar-amount {
+        display: none;
+    }
+
+    .catalog-category-view .toolbar .modes,
+    .catalogsearch-result-index .toolbar .modes {
+        display: none;
+    }
+
+    .catalog-category-view .pages .page,
+    .catalogsearch-result-index .pages .page {
+        min-width: 32px;
+        height: 32px;
+        font-size: 0.8125rem;
+    }
+
+    .catalog-category-view .pages .action,
+    .catalogsearch-result-index .pages .action {
+        width: 32px;
+        height: 32px;
+    }
+}

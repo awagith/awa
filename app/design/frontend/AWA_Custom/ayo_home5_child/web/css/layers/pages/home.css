@@ -345,3 +345,356 @@ body.cms-homepage_ayo_home5 .page-wrapper .top-home-content--trust-close {
         min-height: var(--awa-btn-height, 44px);
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   HOME — B2B Enterprise Refinements
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Benefits bar / USP strip ───────────────────────────────── */
+.awa-benefits-bar {
+    background: var(--awa-layer-surface-soft, #f7f7f7);
+    border-top: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-bottom: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    padding: 14px 0;
+}
+
+.awa-benefits-bar__list {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(16px, 3vw, 40px);
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.awa-benefits-bar__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-text-primary, #333);
+    white-space: nowrap;
+}
+
+.awa-benefits-bar__icon {
+    width: 18px;
+    height: 18px;
+    color: var(--awa-layer-color-primary, #b73337);
+    flex-shrink: 0;
+}
+
+/* ── Hero section enterprise ─────────────────────────────────── */
+.awa-hero-section {
+    position: relative;
+    overflow: hidden;
+}
+
+.awa-hero-section .awa-hero-cta-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.awa-hero-section .awa-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: var(--awa-layer-radius-full, 9999px);
+    background: rgba(183, 51, 55, 0.1);
+    color: var(--awa-layer-color-primary, #b73337);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+/* ── Category cards grid ─────────────────────────────────────── */
+.awa-category-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: var(--awa-layer-space-md, 16px);
+}
+
+.awa-category-card {
+    position: relative;
+    border-radius: var(--awa-layer-radius-lg, 12px);
+    overflow: hidden;
+    aspect-ratio: 4/3;
+    background: var(--awa-layer-surface-soft, #f7f7f7);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+    cursor: pointer;
+    text-decoration: none;
+    display: block;
+}
+
+.awa-category-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.awa-category-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 400ms ease;
+}
+
+.awa-category-card:hover .awa-category-card__image {
+    transform: scale(1.04);
+}
+
+.awa-category-card__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 60%);
+}
+
+.awa-category-card__label {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 14px;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.awa-category-card__count {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 400;
+    opacity: 0.85;
+    margin-top: 2px;
+}
+
+/* ── Feature strip (destaques comerciais) ───────────────────── */
+.awa-feature-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--awa-layer-space-lg, 24px);
+}
+
+.awa-feature-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--awa-layer-space-sm, 8px);
+    padding: var(--awa-layer-space-lg, 24px);
+    background: #fff;
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-lg, 12px);
+    transition: border-color 200ms, box-shadow 200ms;
+}
+
+.awa-feature-item:hover {
+    border-color: var(--awa-layer-color-primary, #b73337);
+    box-shadow: 0 4px 12px rgba(183, 51, 55, 0.08);
+}
+
+.awa-feature-item__icon-wrap {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--awa-layer-radius-base, 8px);
+    background: rgba(183, 51, 55, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--awa-layer-color-primary, #b73337);
+}
+
+.awa-feature-item__title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--awa-layer-color-text-primary, #333);
+    margin: 0;
+}
+
+.awa-feature-item__desc {
+    font-size: 0.875rem;
+    color: var(--awa-layer-color-text-secondary, #666);
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* ── B2B CTA block ───────────────────────────────────────────── */
+.awa-b2b-cta-block {
+    background: linear-gradient(135deg, #b73337 0%, #8e2629 100%);
+    border-radius: var(--awa-layer-radius-xl, 16px);
+    padding: clamp(32px, 4vw, 56px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--awa-layer-space-xl, 32px);
+    flex-wrap: wrap;
+    color: #fff;
+}
+
+.awa-b2b-cta-block__content {
+    flex: 1 1 320px;
+}
+
+.awa-b2b-cta-block__eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.8;
+    margin-bottom: 8px;
+}
+
+.awa-b2b-cta-block__title {
+    font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 10px;
+}
+
+.awa-b2b-cta-block__desc {
+    font-size: 0.9375rem;
+    opacity: 0.9;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.awa-b2b-cta-block__actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.awa-b2b-cta-block .awa-btn-white {
+    padding: 12px 24px;
+    background: #fff;
+    color: #b73337;
+    border-radius: var(--awa-layer-radius-base, 8px);
+    font-weight: 700;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition: box-shadow 200ms;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.awa-b2b-cta-block .awa-btn-white:hover {
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.4);
+    text-decoration: none;
+    color: #8e2629;
+}
+
+.awa-b2b-cta-block .awa-btn-outline-white {
+    padding: 12px 24px;
+    border: 2px solid rgba(255,255,255,0.5);
+    color: #fff;
+    border-radius: var(--awa-layer-radius-base, 8px);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    text-decoration: none;
+    transition: border-color 200ms, background 200ms;
+    white-space: nowrap;
+}
+
+.awa-b2b-cta-block .awa-btn-outline-white:hover {
+    border-color: #fff;
+    background: rgba(255,255,255,0.1);
+    text-decoration: none;
+    color: #fff;
+}
+
+/* ── Section heading enterprise ──────────────────────────────── */
+.awa-section-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--awa-layer-space-md, 16px);
+    margin-bottom: var(--awa-layer-space-xl, 32px);
+    flex-wrap: wrap;
+}
+
+.awa-section-heading__left {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.awa-section-heading__eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--awa-layer-color-primary, #b73337);
+}
+
+.awa-section-heading__title {
+    font-size: clamp(1.25rem, 2vw, 1.625rem);
+    font-weight: 800;
+    color: var(--awa-layer-color-text-primary, #333);
+    margin: 0;
+}
+
+.awa-section-heading__see-all {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-primary, #b73337);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    transition: gap 200ms;
+}
+
+.awa-section-heading__see-all:hover {
+    text-decoration: none;
+    gap: 8px;
+}
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 767px) {
+    .awa-b2b-cta-block {
+        flex-direction: column;
+        padding: 28px 20px;
+    }
+
+    .awa-b2b-cta-block__actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .awa-b2b-cta-block .awa-btn-white,
+    .awa-b2b-cta-block .awa-btn-outline-white {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .awa-category-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .awa-feature-strip {
+        grid-template-columns: 1fr;
+    }
+
+    .awa-section-heading__see-all span {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .awa-category-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

@@ -15,6 +15,7 @@ var config = {
         'GrupoAwamotos_Theme/js/announcement-bar': 'js/announcement-bar',
         'GrupoAwamotos_Theme/js/pdp-sticky-bar': 'js/pdp-sticky-bar',
         'AWA_Custom/js/recently-viewed': 'js/awa-recently-viewed',
-        'AWA_Custom/js/compare-bar': 'js/awa-compare-bar'
+        'AWA_Custom/js/compare-bar': 'js/awa-compare-bar',
+        'AWA_Custom/js/awa-compare-bar': 'js/awa-compare-bar'
     }
 };

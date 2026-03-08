@@ -9,6 +9,12 @@
                    name="awa.announcement.bar"
                    template="Magento_Theme::html/announcement-bar.phtml"
                    before="-"/>
+            <!-- Compare bar: sticky tray at bottom, preenchida via JS -->
+            <block class="Magento\Catalog\Block\Product\Compare\ListCompare"
+                   name="awa.compare.bar"
+                   template="Magento_Catalog::product/compare/awa-compare-bar.phtml"
+                   after="-"/>
         </referenceContainer>
     </body>
 </page>
+

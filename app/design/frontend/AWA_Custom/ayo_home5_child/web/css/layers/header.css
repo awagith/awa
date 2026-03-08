@@ -845,3 +845,195 @@
     color: var(--awa-layer-color-text-secondary, #666);
     font-size: 0.9rem;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   SEARCH BAR — enterprise refinements
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Search by category (Rokanthemes SearchbyCat) */
+.block-search .search-by-cat-wrapper,
+.aw-search-by-cat {
+    display: flex;
+    align-items: stretch;
+    border: 2px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-base, 8px);
+    overflow: hidden;
+    background: #fff;
+    transition: border-color 250ms, box-shadow 250ms;
+}
+
+.block-search .search-by-cat-wrapper:focus-within,
+.aw-search-by-cat:focus-within {
+    border-color: var(--awa-layer-color-primary, #b73337);
+    box-shadow: 0 0 0 3px rgba(183, 51, 55, 0.1);
+}
+
+/* Category select inside search */
+.block-search .search-by-cat-wrapper select,
+.aw-search-by-cat select {
+    border: none;
+    border-right: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    outline: none;
+    padding: 0 32px 0 12px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-text-primary, #333);
+    background: #f8fafc;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    min-height: 44px;
+    min-width: 140px;
+    max-width: 180px;
+    cursor: pointer;
+}
+
+/* Search input */
+.block-search input[type="text"],
+.block-search input[type="search"] {
+    border: none;
+    outline: none;
+    padding: 12px 16px;
+    font-size: 0.9375rem;
+    color: var(--awa-layer-color-text-primary, #333);
+    background: transparent;
+    flex: 1;
+    min-height: 44px;
+    min-width: 0;
+}
+
+.block-search input::placeholder {
+    color: var(--awa-layer-color-text-secondary, #999);
+    font-size: 0.9rem;
+}
+
+/* Search submit button */
+.block-search .action.search,
+.block-search button[type="submit"] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 52px;
+    background: var(--awa-layer-color-primary, #b73337);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 200ms;
+    padding: 0 18px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    min-height: 44px;
+}
+
+.block-search .action.search:hover,
+.block-search button[type="submit"]:hover {
+    background: #8e2629;
+}
+
+/* Autocomplete dropdown */
+.search-autocomplete,
+#search_autocomplete {
+    background: #fff;
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-base, 8px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    overflow: hidden;
+    z-index: 900;
+}
+
+.search-autocomplete ul,
+#search_autocomplete ul {
+    list-style: none;
+    margin: 0;
+    padding: 6px 0;
+}
+
+.search-autocomplete ul li,
+#search_autocomplete ul li {
+    padding: 10px 16px;
+    font-size: 0.875rem;
+    color: var(--awa-layer-color-text-primary, #333);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 150ms;
+}
+
+.search-autocomplete ul li:hover,
+#search_autocomplete ul li:hover,
+.search-autocomplete ul li.selected,
+#search_autocomplete ul li.selected {
+    background: #fff5f5;
+    color: var(--awa-layer-color-primary, #b73337);
+}
+
+.search-autocomplete ul li .amount,
+#search_autocomplete ul li .amount {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: var(--awa-layer-color-text-secondary, #999);
+    font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   B2B TOP BAR — conta e acesso rápido enterprise
+   ═══════════════════════════════════════════════════════════════ */
+
+.awa-header-contact-links {
+    display: flex;
+    align-items: center;
+    gap: var(--awa-layer-space-md, 16px);
+    font-size: 0.8125rem;
+    color: var(--awa-layer-color-text-secondary, #666);
+}
+
+.awa-header-contact-links a {
+    color: inherit;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 180ms;
+}
+
+.awa-header-contact-links a:hover {
+    color: var(--awa-layer-color-primary, #b73337);
+}
+
+.awa-header-contact-links .separator {
+    width: 1px;
+    height: 14px;
+    background: var(--awa-layer-color-border, #e5e5e5);
+    display: block;
+}
+
+/* ── Account link pill ───────────────────────────────────────── */
+.header .customer-welcome .customer-name,
+.header .authorization-link a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: var(--awa-layer-radius-full, 9999px);
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-text-primary, #333);
+    transition: all 180ms;
+    text-decoration: none;
+}
+
+.header .customer-welcome .customer-name:hover,
+.header .authorization-link a:hover {
+    border-color: var(--awa-layer-color-primary, #b73337);
+    color: var(--awa-layer-color-primary, #b73337);
+    background: #fff5f5;
+}
+
+@media (max-width: 767px) {
+    .awa-header-contact-links {
+        display: none;
+    }
+}
