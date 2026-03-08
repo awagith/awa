@@ -182,7 +182,7 @@ body .page-wrapper .product-item,
 body .page-wrapper .cart-summary,
 body .page-wrapper .opc-block-summary,
 body .page-wrapper .modal-popup .modal-inner-wrap {
-    border-radius: var(--awa-control-radius);
+    border-radius: var(--aw-radius-lg, 16px);
 }
 
 body .page-wrapper .column.main > .block,

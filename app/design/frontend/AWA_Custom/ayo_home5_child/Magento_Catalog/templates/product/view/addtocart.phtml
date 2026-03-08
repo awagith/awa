@@ -9,6 +9,7 @@
 <?php $_product = $block->getProduct(); ?>
 <?php $buttonTitle = __('Add to Cart'); ?>
 <?php
+$quoteUrl = $block->getUrl('b2b/quote/index', ['product_id' => (int) $_product->getId()]);
 $copySkuInit = json_encode(
     [
         'js/awa-copy-control' => [
@@ -93,9 +94,9 @@ $qtyControlConfig = [
                 <?= $block->escapeHtml(__('Baixar PDF')) ?>
             </button>
         <?php endif; ?>
-        <button type="button" class="awa-b2b-action-btn">
-            <?= $block->escapeHtml(__('Criar Tabela')) ?>
-        </button>
+        <a href="<?= $block->escapeUrl($quoteUrl) ?>" class="awa-b2b-action-btn">
+            <?= $block->escapeHtml(__('Solicitar Cotacao')) ?>
+        </a>
     </div>
 </div>
 

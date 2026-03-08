@@ -5,9 +5,9 @@
  */
 
 body.b2b-register-index {
-    --b2b-reg-ayo-primary: var(--aw-primary, #b73337);
-    --b2b-reg-ayo-primary-dark: var(--aw-primary-dark, #8e2629);
-    --b2b-reg-ayo-primary-darker: #6d1d1f;
+    --b2b-reg-ayo-primary: var(--aw-primary);
+    --b2b-reg-ayo-primary-dark: var(--aw-primary-dark);
+    --b2b-reg-ayo-primary-darker: var(--aw-primary-darker);
     --b2b-reg-ayo-soft: #fff1f2;
     --b2b-reg-ayo-soft-strong: #fee2e2;
     --b2b-reg-ayo-soft-accent: #fecaca;

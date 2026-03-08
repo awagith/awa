@@ -2711,21 +2711,26 @@ body .page-wrapper .owl-carousel {
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .rokan-product-heading h2 {
     font-size: clamp(1.4rem, 1vw + 1rem, 1.75rem);
-    font-weight: var(--awa-weight-bold);
+    font-weight: 700;
     letter-spacing: var(--awa-tracking-tighter);
     line-height: var(--awa-leading-snug);
     margin: 0 0 var(--awa-space-2);
-    color: var(--awa-dark);
+    color: var(--awa-hc-text-1);
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .rokan-product-heading .sup-title {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 0 var(--awa-space-2-5);
+    border-radius: 999px;
+    background: rgb(183 51 55 / 8%);
+    color: var(--primary-color, #b73337);
     font-size: var(--awa-text-xs);
-    font-weight: var(--awa-weight-bold);
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--awa-red);
+    letter-spacing: 0.04em;
     margin-bottom: var(--awa-space-1);
-    display: block;
 }
 
 /* ============================================================
@@ -5341,20 +5346,20 @@ body .page-wrapper .banner-slider2--fallback .subtitle {
     background-color: var(--awa-bg-muted, #f5f7fa);
 }
 
-/* Seções de destaque (B2B, trust) mantêm fundo escuro premium */
+/* Seções de destaque (B2B, trust) — fundo claro para visual limpo estilo Ayo */
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section--highlight {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%) !important;
-    color: #fff;
+    background: var(--awa-bg-muted, #f5f7fa) !important;
+    color: var(--awa-text-main, #333);
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section--highlight h2,
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section--highlight .ayo-home5-label {
-    color: #fff;
+    color: var(--awa-dark, #1a1a2e);
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section--highlight p,
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .awa-home-section--highlight .description {
-    color: rgb(255 255 255 / 75%);
+    color: var(--awa-text-secondary, #6c757d);
 }
 
 /* ----- MP-04: Section Headings — Motorola-Style ----- */
@@ -5637,18 +5642,11 @@ body .page-wrapper .banner-slider2--fallback .subtitle {
 
 /* ----- MP-07: Floating Buttons Stack Fix ----- */
 
-/* Evitar sobreposição entre WhatsApp, Cotação e Back-to-top */
+/* Evitar sobreposição entre WhatsApp e Back-to-top */
 body .page-wrapper #awa-back-to-top {
-    bottom: 160px !important;
+    bottom: 80px !important;
     right: 16px !important;
     z-index: 999 !important;
-}
-
-body .awa-quote-fab__btn,
-body .page-wrapper .awa-quote-fab__btn {
-    bottom: 104px !important;
-    right: 16px !important;
-    z-index: 998 !important;
 }
 
 body .awa-whatsapp-fab__link,
@@ -5661,16 +5659,10 @@ body .page-wrapper .awa-whatsapp-fab__link {
 /* No mobile, the stack needs tighter spacing */
 @media (width <= 767px) {
     body .page-wrapper #awa-back-to-top {
-        bottom: 140px !important;
+        bottom: 72px !important;
         right: 12px !important;
         width: 40px !important;
         height: 40px !important;
-    }
-
-    body .awa-quote-fab__btn,
-    body .page-wrapper .awa-quote-fab__btn {
-        bottom: 88px !important;
-        right: 12px !important;
     }
 
     body .awa-whatsapp-fab__link,

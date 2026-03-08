@@ -3,31 +3,78 @@
 $layout = $this->getLayout();
 
 $renderCmsBlock = static function (string $blockId) use ($layout): string {
-	/** @var \Magento\Cms\Block\Block|null $cmsBlock */
-	$cmsBlock = $layout->createBlock('Magento\Cms\Block\Block');
-	if (!$cmsBlock) {
-		return '';
-	}
+    /** @var \Magento\Cms\Block\Block|null $cmsBlock */
+    $cmsBlock = $layout->createBlock('Magento\Cms\Block\Block');
+    if (!$cmsBlock) {
+        return '';
+    }
 
-	$cmsBlock->setBlockId($blockId);
-	return trim((string)$cmsBlock->toHtml());
+    $cmsBlock->setBlockId($blockId);
+
+    return trim((string) $cmsBlock->toHtml());
 };
 
 $renderTemplate = static function (string $template) use ($layout): string {
-	/** @var \Magento\Framework\View\Element\Template|null $templateBlock */
-	$templateBlock = $layout->createBlock('Magento\Framework\View\Element\Template');
-	if (!$templateBlock) {
-		return '';
-	}
+    /** @var \Magento\Framework\View\Element\Template|null $templateBlock */
+    $templateBlock = $layout->createBlock('Magento\Framework\View\Element\Template');
+    if (!$templateBlock) {
+        return '';
+    }
 
-	return trim((string)$templateBlock->setTemplate($template)->toHtml());
+    return trim((string) $templateBlock->setTemplate($template)->toHtml());
+};
+
+$renderHomeShelf = static function (array $shelfConfig) use ($layout): string {
+    $type = (string) ($shelfConfig['type'] ?? '');
+    $blockData = $shelfConfig['block_data'] ?? [];
+    $blockClass = '';
+    $template = null;
+
+    switch ($type) {
+        case 'bestseller':
+            $blockClass = 'GrupoAwamotos\\Theme\\Block\\Widget\\HomeBestseller';
+            $template = 'GrupoAwamotos_Theme::home/product-shelf.phtml';
+            break;
+
+        case 'newproduct':
+            $blockClass = 'GrupoAwamotos\\Theme\\Block\\Widget\\HomeNewproduct';
+            $template = 'GrupoAwamotos_Theme::home/product-shelf.phtml';
+            break;
+
+        case 'category':
+            $blockClass = 'Rokanthemes\\Categorytab\\Block\\CateWidget';
+            $template = isset($blockData['template']) ? (string) $blockData['template'] : 'GrupoAwamotos_Theme::home/category-shelf.phtml';
+            unset($blockData['template']);
+            break;
+
+        default:
+            return '';
+    }
+
+    /** @var \Magento\Framework\View\Element\Template|null $block */
+    $block = $layout->createBlock($blockClass);
+    if (!$block) {
+        return '';
+    }
+
+    $block->addData($blockData);
+    if ($template !== null) {
+        $block->setTemplate($template);
+    }
+
+    $html = trim((string) $block->toHtml());
+    if ($html === '' || strpos($html, 'There are no products matching the selection.') !== false) {
+        return '';
+    }
+
+    return $html;
 };
 
 /** @var \Rokanthemes\SlideBanner\Block\Slider|null $heroSliderBlock */
 $heroSliderBlock = $layout->createBlock('Rokanthemes\SlideBanner\Block\Slider');
 $heroSliderHtml = '';
 if ($heroSliderBlock) {
-	$heroSliderHtml = trim((string)$heroSliderBlock->setslider_id('homepageslider')->toHtml());
+    $heroSliderHtml = trim((string) $heroSliderBlock->setslider_id('homepageslider')->toHtml());
 }
 
 $heroFallbackHtml = $renderCmsBlock('home_hero');
@@ -35,350 +82,365 @@ $schemaOrgHtml = $renderCmsBlock('home_schema_org');
 $benefitsHtml = $renderCmsBlock('block_top');
 $bannerMidHtml = $renderCmsBlock('banner_mid_home5');
 $notificationHtml = $renderTemplate('Magento_Cms::home/notification-ticker.phtml');
-$bestSellersHtml = $renderCmsBlock('category1_home5');
 $popularCategoriesHtml = $renderCmsBlock('category2_home5');
 $featuredCategoriesHtml = $renderCmsBlock('featured_categories');
 $fitmentSearchHtml = $renderCmsBlock('home_fitment_search');
-$launchesHtml = $renderCmsBlock('home_new_products');
 $trustBadgesHtml = $renderTemplate('Magento_Cms::home/trust-stack.phtml');
 $faqQuickHtml = $renderCmsBlock('home_faq_quick');
-
-/** @var \Magento\Framework\View\Element\Template|null $productTabBlock */
-$productTabBlock = $layout->createBlock('Rokanthemes\ProductTab\Block\Producttab');
-$productTabHtml = '';
-if ($productTabBlock) {
-	$productTabHtml = trim((string)$productTabBlock->toHtml());
-}
 
 /** @var \Rokanthemes\Blog\Block\Sidebar\Recent|null $blogBlock */
 $blogBlock = $layout->createBlock('Rokanthemes\Blog\Block\Sidebar\Recent');
 $blogHtml = '';
 if ($blogBlock) {
-	$blogBlock->setPageSize(4);
-	$blogBlock->setTemplate('Rokanthemes_Blog::sidebar/recent.phtml');
-	$blogHtml = trim((string)$blogBlock->toHtml());
+    $blogBlock->setPageSize(4);
+    $blogBlock->setTemplate('Rokanthemes_Blog::sidebar/recent.phtml');
+    $blogHtml = trim((string) $blogBlock->toHtml());
 }
 
 /** @var \Rokanthemes\Testimonials\Block\Testimonials|null $testimonialsBlock */
 $testimonialsBlock = $layout->createBlock('Rokanthemes\Testimonials\Block\Testimonials');
 $testimonialsHtml = '';
 if ($testimonialsBlock) {
-	$testimonialsHtml = trim((string)$testimonialsBlock->toHtml());
+    $testimonialsHtml = trim((string) $testimonialsBlock->toHtml());
 }
 
 /** @var \GrupoAwamotos\B2B\Block\PromoBlock|null $b2bPromoBlock */
 $b2bPromoBlock = $layout->createBlock('GrupoAwamotos\\B2B\\Block\\PromoBlock');
 $b2bPromoHtml = '';
 if ($b2bPromoBlock) {
-	$b2bPromoHtml = trim((string)$b2bPromoBlock->toHtml());
+    $b2bPromoHtml = trim((string) $b2bPromoBlock->toHtml());
 }
 
 /** @var \Rokanthemes\Superdeals\Block\ProductByCat|null $hotDealBlock */
 $hotDealBlock = $layout->createBlock('Rokanthemes\Superdeals\Block\ProductByCat');
 $hotDealHtml = '';
 if ($hotDealBlock) {
-	$hotDealHtml = trim((string)$hotDealBlock->setTemplate('Rokanthemes_Superdeals::category.phtml')->toHtml());
+    $hotDealHtml = trim((string) $hotDealBlock->setTemplate('Rokanthemes_Superdeals::category.phtml')->toHtml());
 }
 
-/* Phase 9: "Busque por Categorias" — B2B Enterprise Category Carousel */
-$categoryCarouselCategories = [
-	['id' => 141, 'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="22" width="36" height="24" rx="4"/><rect x="14" y="22" width="36" height="8" rx="4" fill="currentColor" opacity="0.12"/><path d="M26 22v-4a6 6 0 0112 0v4"/><rect x="27" y="32" width="10" height="8" rx="2"/><path d="M32 40v3"/><path d="M22 46v4"/><path d="M42 46v4"/><path d="M18 50h28" stroke-width="2.5"/></svg>', 'name' => 'Bauletos'],
-	['id' => 154, 'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 30c5-8 13-12 24-12s19 4 24 12"/><circle cx="8" cy="30" r="4" fill="currentColor" opacity="0.15"/><circle cx="56" cy="30" r="4" fill="currentColor" opacity="0.15"/><rect x="27" y="22" width="10" height="16" rx="3"/><path d="M27 30h-10"/><path d="M37 30h10"/><path d="M30 38v6"/><path d="M34 38v6"/></svg>', 'name' => 'Guidões'],
-	['id' => 146, 'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="26" cy="26" rx="15" ry="17"/><ellipse cx="26" cy="26" rx="10" ry="12" fill="currentColor" opacity="0.1"/><circle cx="26" cy="26" r="3" fill="currentColor" opacity="0.2"/><path d="M38 36l14 14" stroke-width="2.5"/><path d="M52 50l-5 0 0-5"/></svg>', 'name' => 'Retrovisores'],
-	['id' => 159, 'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 14h28"/><path d="M18 14c-2 10-4 24-4 36h36c0-12-2-26-4-36"/><path d="M14 50h36" stroke-width="2.5"/><path d="M22 28h20"/><ellipse cx="32" cy="38" rx="7" ry="5" fill="currentColor" opacity="0.12"/><path d="M28 14v-4"/><path d="M36 14v-4"/></svg>', 'name' => 'Carcaças'],
-	['id' => 164, 'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="14" y="28" width="36" height="10" rx="3" fill="currentColor" opacity="0.1"/><rect x="14" y="28" width="36" height="10" rx="3"/><path d="M18 28v-8l14-7 14 7v8"/><path d="M22 33h20"/><path d="M14 38l-4 14"/><path d="M50 38l4 14"/><circle cx="10" cy="54" r="2.5" fill="currentColor" opacity="0.2"/><circle cx="54" cy="54" r="2.5" fill="currentColor" opacity="0.2"/></svg>', 'name' => 'Pedal'],
-	['id' => 165, 'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="32" cy="32" r="20"/><circle cx="32" cy="32" r="14" fill="currentColor" opacity="0.08"/><circle cx="32" cy="32" r="8"/><circle cx="32" cy="32" r="3" fill="currentColor" opacity="0.2"/><path d="M32 12v-2"/><path d="M32 54v-2"/><path d="M12 32h-2"/><path d="M54 32h-2"/></svg>', 'name' => 'Lentes de Freio'],
-	['id' => 120, 'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 32h52" stroke-width="2.5"/><rect x="26" y="26" width="12" height="12" rx="3" fill="currentColor" opacity="0.12"/><rect x="26" y="26" width="12" height="12" rx="3"/><path d="M18 32v-10a4 4 0 014-4h4"/><path d="M46 32v-10a4 4 0 00-4-4h-4"/><circle cx="6" cy="32" r="3.5" fill="currentColor" opacity="0.15"/><circle cx="58" cy="32" r="3.5" fill="currentColor" opacity="0.15"/></svg>', 'name' => 'Barras de Guidão'],
-	['id' => 54,  'icon' => '<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="32" height="34" rx="3"/><path d="M16 16l8-6h16l8 6"/><rect x="16" y="16" width="32" height="10" rx="3" fill="currentColor" opacity="0.1"/><circle cx="24" cy="32" r="3"/><circle cx="40" cy="32" r="3"/><circle cx="24" cy="42" r="3"/><circle cx="40" cy="42" r="3"/><path d="M12 50h40" stroke-width="2.5"/></svg>', 'name' => 'Suportes'],
-];
-
-// Build category URLs + product counts via ViewModel (DI)
 /** @var \GrupoAwamotos\Theme\ViewModel\CategoryCarouselData|null $categoryCarouselVm */
 $categoryCarouselVm = $this->getData('category_carousel_data');
+/** @var \GrupoAwamotos\Theme\ViewModel\HomeMerchandising|null $homeMerchandisingVm */
+$homeMerchandisingVm = $this->getData('home_merchandising');
+$categoryCarouselCategories = $homeMerchandisingVm ? $homeMerchandisingVm->getCategoryCarouselCategories() : [];
+$applicationShortcuts = $homeMerchandisingVm ? $homeMerchandisingVm->getApplicationShortcuts() : [];
+$homeShelves = $homeMerchandisingVm ? $homeMerchandisingVm->getHomeShelves() : [];
+$renderedShelves = [];
+$renderedShelvesByKey = [];
+
 if ($categoryCarouselVm) {
-	foreach ($categoryCarouselCategories as &$cat) {
-		$catData = $categoryCarouselVm->getCategoryData((int) $cat['id']);
-		$cat['url'] = $catData['url'];
-		$cat['name'] = $catData['name'];
-		$cat['count'] = $catData['count'];
-	}
-	unset($cat);
+    foreach ($categoryCarouselCategories as &$cat) {
+        $catData = $categoryCarouselVm->getCategoryData((int) $cat['id']);
+        $cat['url'] = $catData['url'] !== '' ? $catData['url'] : '#';
+        $cat['name'] = $catData['name'] !== '' ? $catData['name'] : $cat['name'];
+        $cat['count'] = $catData['count'];
+    }
+    unset($cat);
 }
 
+foreach ($homeShelves as $shelfConfig) {
+    $shelfHtml = $renderHomeShelf($shelfConfig);
+    if ($shelfHtml === '') {
+        continue;
+    }
 
+    $renderedShelf = $shelfConfig + ['html' => $shelfHtml];
+    $renderedShelves[] = $renderedShelf;
+    $renderedShelvesByKey[(string) ($shelfConfig['key'] ?? '')] = $renderedShelf;
+}
 
 if ($benefitsHtml !== '' && strpos($benefitsHtml, 'velaServicesInner--home5') === false) {
-	$patchedBenefitsHtml = preg_replace(
-		'/class=(["\'])velaServicesInner\b([^"\']*)\1/',
-		'class=$1velaServicesInner$2 velaServicesInner--home5$1',
-		$benefitsHtml,
-		1
-	);
-	if (is_string($patchedBenefitsHtml) && $patchedBenefitsHtml !== '') {
-		$benefitsHtml = $patchedBenefitsHtml;
-	}
+    $patchedBenefitsHtml = preg_replace(
+        '/class=(["\'])velaServicesInner\b([^"\']*)\1/',
+        'class=$1velaServicesInner$2 velaServicesInner--home5$1',
+        $benefitsHtml,
+        1
+    );
+    if (is_string($patchedBenefitsHtml) && $patchedBenefitsHtml !== '') {
+        $benefitsHtml = $patchedBenefitsHtml;
+    }
 }
 ?>
 
 <?php if ($schemaOrgHtml !== ''): ?>
-	<?php echo $schemaOrgHtml; ?>
+    <?php echo $schemaOrgHtml; ?>
 <?php endif; ?>
 
-<div class="ayo-home5-wrapper ayo-home5-wrapper--template-driven" role="main" aria-label="<?php echo $this->escapeHtmlAttr(__('Conteúdo principal da página inicial')); ?>">
-<!-- ① Hero Slider (above-the-fold) -->
-<div class="top-home-content top-home-content--above-fold">
-	<?php if ($heroSliderHtml !== ''): ?>
-		<div class="banner-slider banner-slider2">
-			<?php echo $heroSliderHtml; ?>
-		</div>
-	<?php elseif ($heroFallbackHtml !== ''): ?>
-		<div class="banner-slider banner-slider2 banner-slider2--fallback">
-			<?php echo $heroFallbackHtml; ?>
-		</div>
-	<?php endif; ?>
-</div>
-
-<!-- ①.a Phase 4.5: Barra de Benefícios 100% Width (Estilo Motorola Empresas) -->
-<div class="awa-benefits-bar">
-    <div class="awa-benefits-container">
-        <div class="awa-benefit-item">
-            <svg class="awa-benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
-            <div class="awa-benefit-text">
-                <span class="awa-benefit-title">Compra Garantida</span>
-                <span class="awa-benefit-desc">Com o fabricante oficial</span>
+<div class="ayo-home5-wrapper ayo-home5-wrapper--template-driven" role="main" aria-label="<?php echo $this->escapeHtmlAttr(__('Conteudo principal da pagina inicial')); ?>">
+    <div class="top-home-content top-home-content--above-fold">
+        <?php if ($heroSliderHtml !== ''): ?>
+            <div class="banner-slider banner-slider2">
+                <?php echo $heroSliderHtml; ?>
             </div>
-        </div>
-
-        <div class="awa-benefit-item">
-            <svg class="awa-benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-            <div class="awa-benefit-text">
-                <span class="awa-benefit-title">Desconto Progressivo</span>
-                <span class="awa-benefit-desc">Compre mais, pague menos</span>
+        <?php elseif ($heroFallbackHtml !== ''): ?>
+            <div class="banner-slider banner-slider2 banner-slider2--fallback">
+                <?php echo $heroFallbackHtml; ?>
             </div>
-        </div>
+        <?php endif; ?>
+    </div>
 
-        <div class="awa-benefit-item">
-            <svg class="awa-benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-            <div class="awa-benefit-text">
-                <span class="awa-benefit-title">Até 10x sem Juros</span>
-                <span class="awa-benefit-desc">Nos cartões de crédito</span>
+    <?php if ($benefitsHtml === ''): ?>
+    <div class="awa-benefits-bar">
+        <div class="awa-benefits-container">
+            <div class="awa-benefit-item">
+                <svg class="awa-benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+                <div class="awa-benefit-text">
+                    <span class="awa-benefit-title">Compra Garantida</span>
+                    <span class="awa-benefit-desc">Com o fabricante oficial</span>
+                </div>
             </div>
-        </div>
 
-        <div class="awa-benefit-item">
-            <svg class="awa-benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
-            <div class="awa-benefit-text">
-                <span class="awa-benefit-title">10% OFF no PIX</span>
-                <span class="awa-benefit-desc">Pagando à vista</span>
+            <div class="awa-benefit-item">
+                <svg class="awa-benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                <div class="awa-benefit-text">
+                    <span class="awa-benefit-title">Desconto Progressivo</span>
+                    <span class="awa-benefit-desc">Compre mais, pague menos</span>
+                </div>
+            </div>
+
+            <div class="awa-benefit-item">
+                <svg class="awa-benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+                <div class="awa-benefit-text">
+                    <span class="awa-benefit-title">Ate 10x sem Juros</span>
+                    <span class="awa-benefit-desc">Nos cartoes de credito</span>
+                </div>
+            </div>
+
+            <div class="awa-benefit-item">
+                <svg class="awa-benefit-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+                <div class="awa-benefit-text">
+                    <span class="awa-benefit-title">10% OFF no PIX</span>
+                    <span class="awa-benefit-desc">Pagando a vista</span>
+                </div>
             </div>
         </div>
     </div>
-</div>
+    <?php endif; ?>
 
-<!-- ①b Phase 9: "Busque por Categorias" — B2B Enterprise Carousel -->
-<section class="top-home-content top-home-content--category-carousel awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Busque por Categorias')); ?>">
-	<div class="container">
-		<header class="awa-category-carousel__header">
-			<h2><?php echo $this->escapeHtml(__('Busque por Categorias')); ?></h2>
-			<p><?php echo $this->escapeHtml(__('Encontre peças e acessórios para sua moto')); ?></p>
-		</header>
-		<div class="awa-category-carousel__viewport">
-			<div class="awa-category-carousel__track" id="awa-cat-carousel" data-count="<?php echo count($categoryCarouselCategories); ?>"
-				 data-mage-init='{"js/awa-home-category-carousel": {"mobileBreakpoint": 768}}'>
-				<?php foreach ($categoryCarouselCategories as $idx => $cat): ?>
-				<a href="<?php echo $this->escapeUrl($cat['url'] ?? '#'); ?>" class="awa-category-carousel__item" title="<?php echo $this->escapeHtmlAttr($cat['name']); ?>" style="--item-index: <?php echo (int) $idx; ?>">
-					<div class="awa-category-carousel__icon">
-						<?php echo $cat['icon']; ?>
-					</div>
-					<span class="awa-category-carousel__label"><?php echo $this->escapeHtml($cat['name']); ?></span>
-					<?php if (!empty($cat['count'])): ?>
-					<span class="awa-category-carousel__count"><?php echo (int) $cat['count']; ?> <?php echo $this->escapeHtml(__('produtos')); ?></span>
-					<?php endif; ?>
-				</a>
-				<?php endforeach; ?>
-			</div>
-			<button class="awa-category-carousel__prev" aria-label="<?php echo $this->escapeHtmlAttr(__('Anterior')); ?>" type="button">
-				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-			</button>
-			<button class="awa-category-carousel__next" aria-label="<?php echo $this->escapeHtmlAttr(__('Próximo')); ?>" type="button">
-				<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-			</button>
-		</div>
-		<div class="awa-category-carousel__dots" id="awa-cat-dots" aria-hidden="true"></div>
-		<div class="awa-category-carousel__cta">
-			<a href="<?php echo $this->escapeUrl($this->getUrl('catalogsearch/advanced/')); ?>" class="awa-category-carousel__cta-link">
-				<?php echo $this->escapeHtml(__('Ver todas as categorias')); ?>
-				<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-			</a>
-		</div>
-	</div>
-</section>
+    <?php if ($benefitsHtml !== '' || $bannerMidHtml !== '' || $hotDealHtml !== ''): ?>
+    <section class="top-home-content top-home-content--trust-and-offers awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Confianca e ofertas')); ?>">
+        <div class="container top-home-content__trust-offers-grid" data-role="trust-offers-grid">
+            <?php if ($benefitsHtml !== ''): ?>
+                <?php echo $benefitsHtml; ?>
+            <?php endif; ?>
 
+            <?php if ($bannerMidHtml !== ''): ?>
+                <div class="banner_mid_1 top-home-content__trust-offers-banner" data-role="trust-offers-banner">
+                    <?php echo $bannerMidHtml; ?>
+                </div>
+            <?php endif; ?>
 
-<!-- ② Benefits + Super Deals -->
-<?php if ($benefitsHtml !== '' || $hotDealHtml !== ''): ?>
-<section class="top-home-content top-home-content--trust-and-offers awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Confiança e ofertas')); ?>">
-	<div class="container top-home-content__trust-offers-grid" data-role="trust-offers-grid">
-		<?php if ($benefitsHtml !== ''): ?>
-			<?php echo $benefitsHtml; ?>
-		<?php endif; ?>
+            <?php if ($hotDealHtml !== ''): ?>
+                <div class="hot-deal top-home-content__trust-offers-deals" data-role="trust-offers-deals">
+                    <?php echo $hotDealHtml; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
+    <?php endif; ?>
 
-		<?php if ($hotDealHtml !== ''): ?>
-			<div class="hot-deal top-home-content__trust-offers-deals" data-role="trust-offers-deals">
-				<?php echo $hotDealHtml; ?>
-			</div>
-		<?php endif; ?>
-	</div>
-</section>
-<?php endif; ?>
+    <?php if ($notificationHtml !== ''): ?>
+    <div class="block_notification awa-home-section awa-home-section--compact ayo-home5-section">
+        <div class="container">
+            <div class="awa-ticker-wrap" aria-label="<?php echo $this->escapeHtmlAttr(__('Notificacoes')); ?>">
+                <div class="awa-ticker-content">
+                    <?php echo $notificationHtml; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
 
-<!-- ③ Notification Ticker (transição ofertas → catálogo) -->
-<?php if ($notificationHtml !== ''): ?>
-<div class="block_notification awa-home-section awa-home-section--compact ayo-home5-section">
-	<div class="container">
-		<div class="awa-ticker-wrap" aria-label="<?php echo $this->escapeHtmlAttr(__('Notificações')); ?>">
-			<div class="awa-ticker-content">
-				<?php echo $notificationHtml; ?>
-			</div>
-		</div>
-	</div>
-</div>
-<?php endif; ?>
+    <?php if ($categoryCarouselCategories !== []): ?>
+    <section class="top-home-content top-home-content--category-carousel awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Busque por Categorias')); ?>">
+        <div class="container">
+            <header class="awa-category-carousel__header">
+                <h2><?php echo $this->escapeHtml(__('Busque por Categorias')); ?></h2>
+                <p><?php echo $this->escapeHtml(__('Encontre pecas e acessorios para sua moto')); ?></p>
+            </header>
+            <div class="awa-category-carousel__viewport">
+                <div class="awa-category-carousel__track" id="awa-cat-carousel" data-count="<?php echo count($categoryCarouselCategories); ?>"
+                     data-mage-init='{"js/awa-home-category-carousel": {"mobileBreakpoint": 768}}'>
+                    <?php foreach ($categoryCarouselCategories as $idx => $cat): ?>
+                    <a href="<?php echo $this->escapeUrl($cat['url'] ?? '#'); ?>" class="awa-category-carousel__item" title="<?php echo $this->escapeHtmlAttr($cat['name']); ?>" style="--item-index: <?php echo (int) $idx; ?>">
+                        <div class="awa-category-carousel__icon">
+                            <?php echo $cat['icon']; ?>
+                        </div>
+                        <span class="awa-category-carousel__label"><?php echo $this->escapeHtml($cat['name']); ?></span>
+                        <?php if (!empty($cat['count'])): ?>
+                        <span class="awa-category-carousel__count"><?php echo (int) $cat['count']; ?> <?php echo $this->escapeHtml(__('produtos')); ?></span>
+                        <?php endif; ?>
+                    </a>
+                    <?php endforeach; ?>
+                </div>
+                <button class="awa-category-carousel__prev" aria-label="<?php echo $this->escapeHtmlAttr(__('Anterior')); ?>" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <button class="awa-category-carousel__next" aria-label="<?php echo $this->escapeHtmlAttr(__('Proximo')); ?>" type="button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+            </div>
+            <div class="awa-category-carousel__dots" id="awa-cat-dots" aria-hidden="true"></div>
+            <div class="awa-category-carousel__cta">
+                <a href="<?php echo $this->escapeUrl($this->getUrl('catalogsearch/advanced/')); ?>" class="awa-category-carousel__cta-link">
+                    <?php echo $this->escapeHtml(__('Ver todas as categorias')); ?>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+                </a>
+            </div>
+        </div>
+    </section>
+    <?php endif; ?>
 
-<!-- ④ Mais Vendidos -->
-<?php if ($bestSellersHtml !== ''): ?>
-<section class="top-home-content top-home-content--bestsellers awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Mais Vendidos')); ?>">
-	<div class="container">
-		<?php echo $bestSellersHtml; ?>
-	</div>
-</section>
-<?php endif; ?>
+    <?php foreach (['bestsellers', 'bauletos', 'guidoes'] as $shelfKey): ?>
+    <?php $shelf = $renderedShelvesByKey[$shelfKey] ?? null; ?>
+    <?php if (!is_array($shelf)): ?>
+        <?php continue; ?>
+    <?php endif; ?>
+    <section class="top-home-content top-home-content--merch awa-home-section ayo-home5-section <?php echo $this->escapeHtmlAttr((string) $shelf['section_class']); ?>" aria-label="<?php echo $this->escapeHtmlAttr(__((string) $shelf['aria_label'])); ?>">
+        <div class="container">
+            <header class="awa-intent-heading ayo-home5-heading">
+                <span class="ayo-home5-label"><?php echo $this->escapeHtml(__((string) $shelf['label'])); ?></span>
+                <h2><?php echo $this->escapeHtml(__((string) $shelf['title'])); ?></h2>
+                <span class="ayo-home5-divider"></span>
+            </header>
+            <?php echo $shelf['html']; ?>
+        </div>
+    </section>
+    <?php endforeach; ?>
 
-<!-- ④b Product Tabs (Lançamentos, Mais Vendidos, Destaques, Promoções) -->
-<?php if ($productTabHtml !== ''): ?>
-<section class="top-home-content top-home-content--product-tabs awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Vitrines de Produtos')); ?>">
-	<div class="container">
-		<?php echo $productTabHtml; ?>
-	</div>
-</section>
-<?php endif; ?>
+    <?php if ($fitmentSearchHtml !== ''): ?>
+    <section class="top-home-content top-home-content--fitment-search awa-home-section ayo-home5-section ayo-home5-section--fitment" aria-label="<?php echo $this->escapeHtmlAttr(__('Busca por aplicacao')); ?>">
+        <div class="container">
+            <header class="ayo-home5-heading">
+                <span class="ayo-home5-label"><?php echo $this->escapeHtml(__('Encontre a peca certa')); ?></span>
+                <h2><?php echo $this->escapeHtml(__('Busca por aplicacao')); ?></h2>
+                <span class="ayo-home5-divider"></span>
+            </header>
+            <?php echo $fitmentSearchHtml; ?>
+        </div>
+    </section>
+    <?php endif; ?>
 
-<!-- ⑤ B2B / Atacado — Banner promocional para visitantes/não-B2B -->
-<?php if ($b2bPromoHtml !== ''): ?>
-<section class="top-home-content top-home-content--b2b-promo awa-home-section awa-home-section--highlight ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Atacado e Revenda')); ?>">
-	<div class="container">
-		<?php echo $b2bPromoHtml; ?>
-	</div>
-</section>
-<?php endif; ?>
+    <?php if ($applicationShortcuts !== []): ?>
+    <section class="top-home-content top-home-content--application-shortcuts awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Aplicacoes em alta')); ?>">
+        <div class="container">
+            <header class="awa-intent-heading ayo-home5-heading">
+                <span class="ayo-home5-label"><?php echo $this->escapeHtml(__('Modelos em alta')); ?></span>
+                <h2><?php echo $this->escapeHtml(__('Aplicacoes em alta')); ?></h2>
+                <span class="ayo-home5-divider"></span>
+            </header>
+            <div class="awa-application-shortcuts" role="list">
+                <?php foreach ($applicationShortcuts as $shortcut): ?>
+                <a class="awa-application-shortcuts__card" role="listitem" href="<?php echo $this->escapeUrl($shortcut['url']); ?>" title="<?php echo $this->escapeHtmlAttr($shortcut['title']); ?>">
+                    <span class="awa-application-shortcuts__segment"><?php echo $this->escapeHtml($shortcut['segment']); ?></span>
+                    <strong class="awa-application-shortcuts__title"><?php echo $this->escapeHtml($shortcut['title']); ?></strong>
+                    <span class="awa-application-shortcuts__description"><?php echo $this->escapeHtml($shortcut['description']); ?></span>
+                    <span class="awa-application-shortcuts__cta">
+                        <?php echo $this->escapeHtml(__('Buscar pecas')); ?>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
+                    </span>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+    <?php endif; ?>
 
-<!-- ⑥ Busca por Aplicação (fitment CMS baseline) -->
-<?php if ($fitmentSearchHtml !== ''): ?>
-<section class="top-home-content top-home-content--fitment-search awa-home-section ayo-home5-section ayo-home5-section--fitment" aria-label="<?php echo $this->escapeHtmlAttr(__('Busca por aplicação')); ?>">
-	<div class="container">
-		<header class="ayo-home5-heading">
-			<span class="ayo-home5-label"><?php echo $this->escapeHtml(__('Encontre a peça certa')); ?></span>
-			<h2><?php echo $this->escapeHtml(__('Busca por aplicação')); ?></h2>
-			<span class="ayo-home5-divider"></span>
-		</header>
-		<?php echo $fitmentSearchHtml; ?>
-	</div>
-</section>
-<?php endif; ?>
+    <?php $launchShelf = $renderedShelvesByKey['launches'] ?? null; ?>
+    <?php if (is_array($launchShelf)): ?>
+    <section class="top-home-content top-home-content--merch awa-home-section ayo-home5-section <?php echo $this->escapeHtmlAttr((string) $launchShelf['section_class']); ?>" aria-label="<?php echo $this->escapeHtmlAttr(__((string) $launchShelf['aria_label'])); ?>">
+        <div class="container">
+            <header class="awa-intent-heading ayo-home5-heading">
+                <span class="ayo-home5-label"><?php echo $this->escapeHtml(__((string) $launchShelf['label'])); ?></span>
+                <h2><?php echo $this->escapeHtml(__((string) $launchShelf['title'])); ?></h2>
+                <span class="ayo-home5-divider"></span>
+            </header>
+            <?php echo $launchShelf['html']; ?>
+        </div>
+    </section>
+    <?php endif; ?>
 
-<!-- ⑦ Lançamentos / Novidades -->
-<?php if ($launchesHtml !== ''): ?>
-<section class="top-home-content top-home-content--launches awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Lançamentos')); ?>">
-	<div class="container">
-		<div class="ayo-home5-launches">
-			<header class="awa-intent-heading ayo-home5-heading">
-				<span class="ayo-home5-label"><?php echo $this->escapeHtml(__('Lançamentos')); ?></span>
-				<h2><?php echo $this->escapeHtml(__('Novidades')); ?></h2>
-				<span class="ayo-home5-divider"></span>
-			</header>
-			<?php echo $launchesHtml; ?>
-		</div>
-	</div>
-</section>
-<?php endif; ?>
+    <?php if ($popularCategoriesHtml !== ''): ?>
+    <section class="top-home-content top-home-content--popular-categories awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Categorias Populares')); ?>">
+        <div class="container">
+            <?php echo $popularCategoriesHtml; ?>
+        </div>
+    </section>
+    <?php endif; ?>
 
-<!-- ⑧ Categorias Populares -->
-<?php if ($popularCategoriesHtml !== ''): ?>
-<section class="top-home-content top-home-content--popular-categories awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Categorias Populares')); ?>">
-	<div class="container">
-		<?php echo $popularCategoriesHtml; ?>
-	</div>
-</section>
-<?php endif; ?>
+    <?php if ($popularCategoriesHtml === '' && $featuredCategoriesHtml !== ''): ?>
+    <section class="top-home-content top-home-content--featured-categories awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Compre por categoria')); ?>">
+        <div class="container">
+            <header class="ayo-home5-heading">
+                <span class="ayo-home5-label"><?php echo $this->escapeHtml(__('Colecoes')); ?></span>
+                <h2><?php echo $this->escapeHtml(__('Compre por categoria')); ?></h2>
+                <span class="ayo-home5-divider"></span>
+            </header>
+            <?php echo $featuredCategoriesHtml; ?>
+        </div>
+    </section>
+    <?php endif; ?>
 
-<!-- ⑨ Coleções (fallback CMS baseline quando category2_home5 não existir) -->
-<?php if ($popularCategoriesHtml === '' && $featuredCategoriesHtml !== ''): ?>
-<section class="top-home-content top-home-content--featured-categories awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Compre por categoria')); ?>">
-	<div class="container">
-		<header class="ayo-home5-heading">
-			<span class="ayo-home5-label"><?php echo $this->escapeHtml(__('Coleções')); ?></span>
-			<h2><?php echo $this->escapeHtml(__('Compre por categoria')); ?></h2>
-			<span class="ayo-home5-divider"></span>
-		</header>
-		<?php echo $featuredCategoriesHtml; ?>
-	</div>
-</section>
-<?php endif; ?>
+    <?php if ($blogHtml !== ''): ?>
+    <section class="top-home-content top-home-content--blog awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Blog')); ?>">
+        <div class="container">
+            <header class="ayo-home5-heading">
+                <span class="ayo-home5-label"><?php echo $this->escapeHtml(__('Blog')); ?></span>
+                <h2><?php echo $this->escapeHtml(__('Ultimos artigos')); ?></h2>
+                <span class="ayo-home5-divider"></span>
+            </header>
+            <?php echo $blogHtml; ?>
+            <div class="awa-blog-cta">
+                <a href="<?php echo $this->escapeUrl($this->getUrl('blog')); ?>" class="action secondary" title="<?php echo $this->escapeHtmlAttr(__('Ver todos os artigos')); ?>">
+                    <?php echo $this->escapeHtml(__('Ver todos os artigos')); ?>
+                    <span aria-hidden="true">&rarr;</span>
+                </a>
+            </div>
+        </div>
+    </section>
+    <?php endif; ?>
 
-<!-- ⑨b Blog — Últimos Posts -->
-<?php if ($blogHtml !== ''): ?>
-<section class="top-home-content top-home-content--blog awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Blog')); ?>">
-	<div class="container">
-		<header class="ayo-home5-heading">
-			<span class="ayo-home5-label"><?php echo $this->escapeHtml(__('Blog')); ?></span>
-			<h2><?php echo $this->escapeHtml(__('Últimos artigos')); ?></h2>
-			<span class="ayo-home5-divider"></span>
-		</header>
-		<?php echo $blogHtml; ?>
-		<div class="awa-blog-cta">
-			<a href="<?php echo $this->escapeUrl($this->getUrl('blog')); ?>" class="action secondary" title="<?php echo $this->escapeHtmlAttr(__('Ver todos os artigos')); ?>">
-				<?php echo $this->escapeHtml(__('Ver todos os artigos')); ?> →
-			</a>
-		</div>
-	</div>
-</section>
-<?php endif; ?>
+    <?php if ($testimonialsHtml !== ''): ?>
+    <section class="top-home-content top-home-content--testimonials awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Depoimentos')); ?>">
+        <div class="container">
+            <header class="ayo-home5-heading">
+                <span class="ayo-home5-label"><?php echo $this->escapeHtml(__('Depoimentos')); ?></span>
+                <h2><?php echo $this->escapeHtml(__('O que nossos clientes dizem')); ?></h2>
+                <span class="ayo-home5-divider"></span>
+            </header>
+            <?php echo $testimonialsHtml; ?>
+        </div>
+    </section>
+    <?php endif; ?>
 
-<!-- ⑨c Depoimentos de Clientes -->
-<?php if ($testimonialsHtml !== ''): ?>
-<section class="top-home-content top-home-content--testimonials awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Depoimentos')); ?>">
-	<div class="container">
-		<header class="ayo-home5-heading">
-			<span class="ayo-home5-label"><?php echo $this->escapeHtml(__('Depoimentos')); ?></span>
-			<h2><?php echo $this->escapeHtml(__('O que nossos clientes dizem')); ?></h2>
-			<span class="ayo-home5-divider"></span>
-		</header>
-		<?php echo $testimonialsHtml; ?>
-	</div>
-</section>
-<?php endif; ?>
+    <?php if ($b2bPromoHtml !== ''): ?>
+    <section class="top-home-content top-home-content--b2b-promo awa-home-section awa-home-section--highlight ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Atacado e Revenda')); ?>">
+        <div class="container">
+            <?php echo $b2bPromoHtml; ?>
+        </div>
+    </section>
+    <?php endif; ?>
 
-<!-- ⑩ Trust Badges + FAQ (fechamento com confiança) -->
-<?php if ($trustBadgesHtml !== '' || $faqQuickHtml !== ''): ?>
-<section class="top-home-content top-home-content--trust-close awa-home-section awa-home-section--highlight ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Confiança e Perguntas Frequentes')); ?>">
-	<div class="container">
-		<?php if ($trustBadgesHtml !== ''): ?>
-			<div class="awa-trust-badges-wrap">
-				<?php echo $trustBadgesHtml; ?>
-			</div>
-		<?php endif; ?>
+    <?php if ($trustBadgesHtml !== '' || $faqQuickHtml !== ''): ?>
+    <section class="top-home-content top-home-content--trust-close awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Confianca e Perguntas Frequentes')); ?>">
+        <div class="container">
+            <?php if ($trustBadgesHtml !== ''): ?>
+                <div class="awa-trust-badges-wrap">
+                    <?php echo $trustBadgesHtml; ?>
+                </div>
+            <?php endif; ?>
 
-		<?php if ($faqQuickHtml !== ''): ?>
-			<div class="awa-faq-quick-wrap">
-				<header class="awa-intent-heading ayo-home5-heading">
-					<span class="ayo-home5-label"><?php echo $this->escapeHtml(__('Suporte')); ?></span>
-					<h2><?php echo $this->escapeHtml(__('Perguntas Frequentes')); ?></h2>
-					<span class="ayo-home5-divider"></span>
-				</header>
-				<?php echo $faqQuickHtml; ?>
-			</div>
-		<?php endif; ?>
-	</div>
-</section>
-<?php endif; ?>
+            <?php if ($faqQuickHtml !== ''): ?>
+                <div class="awa-faq-quick-wrap">
+                    <header class="awa-intent-heading ayo-home5-heading">
+                        <span class="ayo-home5-label"><?php echo $this->escapeHtml(__('Suporte')); ?></span>
+                        <h2><?php echo $this->escapeHtml(__('Perguntas Frequentes')); ?></h2>
+                        <span class="ayo-home5-divider"></span>
+                    </header>
+                    <?php echo $faqQuickHtml; ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </section>
+    <?php endif; ?>
 </div>

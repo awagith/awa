@@ -1,0 +1,128 @@
+<?php
+/**
+ * AWA B2B quick order.
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ */
+$addUrl = $block->getUrl('b2b/quickorder/add');
+$quickOrderConfig = [
+    'addUrl' => $addUrl,
+    'initialRows' => 5,
+    'messages' => [
+        'addToCart' => (string) __('Adicionar ao Carrinho'),
+        'processing' => (string) __('Processando...'),
+        'skuRequired' => (string) __('Informe pelo menos um SKU.'),
+        'requestError' => (string) __('Erro ao processar pedido. Tente novamente.'),
+        'removeRow' => (string) __('Remover'),
+        'skuPlaceholder' => (string) __('Ex: SKU-001'),
+        'csvDropHint' => (string) __('Arraste um arquivo CSV aqui ou clique para selecionar'),
+        'csvFormatHint' => (string) __('Formato: SKU, Quantidade (uma linha por produto)'),
+        'csvLoaded' => (string) __('%1 produto(s) carregado(s) do CSV.'),
+        'csvEmpty' => (string) __('O arquivo CSV nao contem produtos validos.'),
+        'csvInvalidFile' => (string) __('Selecione um arquivo .csv valido.'),
+    ],
+];
+?>
+<div class="b2b-quickorder b2b-page-shell awa-b2b-flow-page awa-b2b-flow-page--quickorder"
+     data-mage-init='<?= /* @noEscape */ json_encode(['GrupoAwamotos_B2B/js/quickorder' => $quickOrderConfig]) ?>'>
+    <header class="awa-b2b-flow-hero">
+        <div>
+            <p class="awa-b2b-flow-hero__eyebrow"><?= $block->escapeHtml(__('Pedido em lote')) ?></p>
+            <h1 class="awa-b2b-flow-hero__title"><?= $block->escapeHtml(__('Pedido rapido por SKU')) ?></h1>
+            <p class="awa-b2b-flow-hero__lead">
+                <?= $block->escapeHtml(__('Monte pedidos por codigo, importe CSV e jogue volumes grandes para o carrinho com menos atrito.')) ?>
+            </p>
+        </div>
+        <div class="awa-b2b-flow-hero__meta">
+            <span><?= $block->escapeHtml(__('Ideal para reposicao recorrente')) ?></span>
+            <span><?= $block->escapeHtml(__('Upload CSV suportado')) ?></span>
+            <span><?= $block->escapeHtml(__('Mesmo JS operacional do modulo')) ?></span>
+        </div>
+    </header>
+
+    <div class="awa-b2b-flow-grid awa-b2b-flow-grid--two">
+        <section class="awa-b2b-flow-panel awa-b2b-flow-panel--soft">
+            <div class="awa-b2b-flow-panel__header">
+                <div>
+                    <p class="awa-b2b-flow-panel__eyebrow"><?= $block->escapeHtml(__('Importacao')) ?></p>
+                    <h2 class="awa-b2b-flow-panel__title"><?= $block->escapeHtml(__('Carregar lista por CSV')) ?></h2>
+                </div>
+            </div>
+            <div class="quickorder-csv-zone" id="quickorder-csv-zone">
+                <div class="csv-dropzone" id="csv-dropzone" role="button" tabindex="0"
+                     aria-label="<?= $block->escapeHtmlAttr(__('Importar produtos via CSV')) ?>">
+                    <div class="csv-dropzone__icon" aria-hidden="true">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="12" y1="18" x2="12" y2="12"/>
+                            <polyline points="9 15 12 12 15 15"/>
+                        </svg>
+                    </div>
+                    <p class="csv-dropzone__text"><?= $block->escapeHtml(__('Arraste um arquivo CSV aqui ou clique para selecionar')) ?></p>
+                    <p class="csv-dropzone__hint"><?= $block->escapeHtml(__('Formato: SKU, Quantidade. Uma linha por produto.')) ?></p>
+                    <input type="file" id="csv-file-input" accept=".csv,text/csv" class="csv-dropzone__input" aria-hidden="true" />
+                </div>
+                <div class="csv-actions">
+                    <a href="#" id="csv-download-sample" class="csv-sample-link">
+                        <span><?= $block->escapeHtml(__('Baixar modelo CSV')) ?></span>
+                    </a>
+                    <span class="csv-status" id="csv-status" role="status" aria-live="polite"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="awa-b2b-flow-panel">
+            <div class="awa-b2b-flow-panel__header">
+                <div>
+                    <p class="awa-b2b-flow-panel__eyebrow"><?= $block->escapeHtml(__('Boas praticas')) ?></p>
+                    <h2 class="awa-b2b-flow-panel__title"><?= $block->escapeHtml(__('Como acelerar o lote')) ?></h2>
+                </div>
+            </div>
+            <ul class="awa-b2b-flow-checklist" role="list">
+                <li><strong><?= $block->escapeHtml(__('Use SKUs consolidados')) ?></strong><span><?= $block->escapeHtml(__('Evite variacoes de digitacao para somar quantidades corretamente.')) ?></span></li>
+                <li><strong><?= $block->escapeHtml(__('Padronize o CSV')) ?></strong><span><?= $block->escapeHtml(__('Mantenha duas colunas: SKU e quantidade.')) ?></span></li>
+                <li><strong><?= $block->escapeHtml(__('Revise antes do envio')) ?></strong><span><?= $block->escapeHtml(__('O resultado destaca erros por linha sem quebrar o restante do lote.')) ?></span></li>
+            </ul>
+        </section>
+    </div>
+
+    <section class="awa-b2b-flow-panel awa-b2b-flow-panel--form">
+        <div class="awa-b2b-flow-panel__header">
+            <div>
+                <p class="awa-b2b-flow-panel__eyebrow"><?= $block->escapeHtml(__('Entrada manual')) ?></p>
+                <h2 class="awa-b2b-flow-panel__title"><?= $block->escapeHtml(__('Montar pedido no navegador')) ?></h2>
+            </div>
+        </div>
+
+        <div class="quickorder-form-container" id="quickorder-container">
+            <div class="quickorder-rows" id="quickorder-rows">
+                <div class="quickorder-header-row">
+                    <span class="col-sku"><?= $block->escapeHtml(__('SKU')) ?></span>
+                    <span class="col-qty"><?= $block->escapeHtml(__('Qtd')) ?></span>
+                    <span class="col-action"></span>
+                </div>
+            </div>
+
+            <div class="quickorder-add-row">
+                <button type="button" id="quickorder-add-row" class="action secondary">
+                    <span>+ <?= $block->escapeHtml(__('Adicionar linha')) ?></span>
+                </button>
+            </div>
+
+            <div class="quickorder-results" id="quickorder-results" style="display:none;">
+                <div class="results-success" id="quickorder-success"></div>
+                <div class="results-errors" id="quickorder-errors"></div>
+            </div>
+
+            <div class="quickorder-actions">
+                <button type="button" id="quickorder-submit" class="action primary">
+                    <span><?= $block->escapeHtml(__('Adicionar ao Carrinho')) ?></span>
+                </button>
+                <a href="<?= $block->escapeUrl($block->getUrl('checkout/cart')) ?>" class="action secondary">
+                    <span><?= $block->escapeHtml(__('Ver Carrinho')) ?></span>
+                </a>
+            </div>
+        </div>
+    </section>
+</div>

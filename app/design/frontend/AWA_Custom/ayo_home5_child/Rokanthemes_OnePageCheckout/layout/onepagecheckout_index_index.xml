@@ -4,5 +4,6 @@
     <head>
         <css src="css/b2b/pages/cart-checkout-premium.css"/>
         <css src="css/layers/pages/cart-checkout.css"/>
+        <css src="Rokanthemes_OnePageCheckout::css/checkout-responsive.css"/>
     </head>
 </page>

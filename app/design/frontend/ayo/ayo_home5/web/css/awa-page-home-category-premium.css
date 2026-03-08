@@ -381,7 +381,7 @@ body .page-wrapper .products-grid .product-item-info,
 body .page-wrapper .wrapper.grid .item-product {
     background: var(--awa-hc-surface-1) !important;
     border: 1px solid var(--awa-hc-border) !important;
-    border-radius: 16px !important;
+    border-radius: var(--aw-radius-lg, 16px) !important;
     box-shadow: var(--awa-hc-shadow-1);
     transition: transform var(--awa-hc-transition, 0.28s ease), box-shadow var(--awa-hc-transition, 0.28s ease), border-color var(--awa-hc-transition, 0.28s ease);
     overflow: hidden;
@@ -490,7 +490,7 @@ body .page-wrapper .owl-nav .owl-next:focus-visible {
 
 body .page-wrapper .owl-controls .owl-page span,
 body .page-wrapper .owl-dots .owl-dot span {
-    background: #cbd5e1 !important;
+    background: var(--awa-gray-300, #d1d5db) !important;
     transition: background-color var(--awa-hc-transition, 0.28s ease), transform var(--awa-hc-transition, 0.28s ease);
 }
 
@@ -748,8 +748,8 @@ body.cms-home .page-wrapper .hot-deal .rokan-product-heading {
 
 body.cms-index-index .page-wrapper .hot-deal .rokan-product-heading h2,
 body.cms-home .page-wrapper .hot-deal .rokan-product-heading h2 {
-    color: var(--awa-hc-text-1) !important;
-    font-weight: 800;
+    color: var(--awa-hc-text-1);
+    font-weight: 700;
     line-height: 1.15;
     margin: 0;
 }

@@ -30,7 +30,7 @@ if (!empty($_config['general']['enable'])):
         <span><?= $block->escapeHtml(__('Categories')) ?></span>
     </h2>
     <ul id="<?= $block->escapeHtmlAttr($menuId) ?>"
-        class="togge-menu list-category-dropdown"
+        class="navigation__list togge-menu list-category-dropdown"
         data-limit-show="<?= $limitShow ?>">
         <?= /** @noEscape */ $_menu ?>
         <?php
@@ -59,7 +59,7 @@ if (!empty($_config['general']['enable'])):
 <script type="text/x-magento-init">
 {
     "[data-role='awa-vertical-menu']": {
-        "js/vertical-menu-init": {
+        "js/awa-vertical-menu-compat": {
             "desktopBreakpoint": 992,
             "overlaySelector": ".shadow_bkg_show",
             "limitShow": <?= (int)$limitShow ?>

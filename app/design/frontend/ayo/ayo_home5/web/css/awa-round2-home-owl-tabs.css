@@ -64,6 +64,8 @@
     background: var(--primary-hover);
     border-color: var(--primary-hover);
     color: var(--bg-white);
+    box-shadow: 0 4px 14px rgb(183 51 55 / 12%);
+    transform: scale(1.06);
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.list-tab-product, .tab_product) .owl-carousel .owl-nav button.owl-prev:focus-visible,
@@ -73,7 +75,7 @@
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.list-tab-product, .tab_product) .owl-carousel .owl-dot span {
-    background: color-mix(in srgb, var(--primary-color) 22%, white);
+    background: var(--awa-gray-300, #d1d5db);
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper :is(.list-tab-product, .tab_product) .owl-carousel .owl-dot.active span {

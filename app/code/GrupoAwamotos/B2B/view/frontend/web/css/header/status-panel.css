@@ -8,20 +8,20 @@
    CSS Variables
    =========================================================================== */
 .b2b-status-panel {
-    --b2b-primary: #b73337;
-    --b2b-primary-dark: #8e2629;
-    --b2b-primary-darker: #6d1d1f;
+    --b2b-primary: var(--aw-primary);
+    --b2b-primary-dark: var(--aw-primary-dark);
+    --b2b-primary-darker: var(--aw-primary-darker);
     --b2b-success: #059669;
     --b2b-warning: #d97706;
-    --b2b-text: var(--awa-text-primary, #333333);
-    --b2b-text-muted: var(--awa-text-muted, #666666);
+    --b2b-text: var(--awa-text-primary, #333);
+    --b2b-text-muted: var(--awa-text-muted, #666);
     --b2b-border: #e5e7eb;
     --b2b-border-soft: #f2c7c9;
-    --b2b-bg: #ffffff;
+    --b2b-bg: #fff;
     --b2b-bg-hover: #f9fafb;
     --b2b-soft: #fff7f7;
     --b2b-soft-strong: #feeef0;
-    --b2b-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    --b2b-shadow: 0 10px 40px rgb(0 0 0 / 15%);
     --b2b-radius: 12px;
     --b2b-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -60,8 +60,8 @@
     align-items: center;
     gap: 10px;
     padding: 6px 12px;
-    background: linear-gradient(135deg, rgba(183, 51, 55, 0.08) 0%, rgba(183, 51, 55, 0.04) 100%);
-    border: 1px solid rgba(183, 51, 55, 0.15);
+    background: linear-gradient(135deg, rgb(183 51 55 / 8%) 0%, rgb(183 51 55 / 4%) 100%);
+    border: 1px solid rgb(183 51 55 / 15%);
     border-radius: 10px;
     cursor: pointer;
     transition: var(--b2b-transition);
@@ -70,10 +70,10 @@
 }
 
 .b2b-status-trigger:hover {
-    background: linear-gradient(135deg, rgba(183, 51, 55, 0.12) 0%, rgba(183, 51, 55, 0.08) 100%);
-    border-color: rgba(183, 51, 55, 0.25);
+    background: linear-gradient(135deg, rgb(183 51 55 / 12%) 0%, rgb(183 51 55 / 8%) 100%);
+    border-color: rgb(183 51 55 / 25%);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(183, 51, 55, 0.15);
+    box-shadow: 0 4px 12px rgb(183 51 55 / 15%);
 }
 
 .b2b-status-trigger:focus-visible {
@@ -92,7 +92,7 @@
 }
 
 .b2b-status-trigger[aria-expanded="true"] .status-badge {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgb(255 255 255 / 20%);
     color: #fff;
 }
 
@@ -139,7 +139,7 @@
 }
 
 .b2b-status-trigger[aria-expanded="true"] .status-greeting {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgb(255 255 255 / 80%);
 }
 
 /* Company name in trigger */
@@ -156,7 +156,7 @@
 }
 
 .b2b-status-trigger[aria-expanded="true"] .status-company {
-    color: rgba(255, 255, 255, 0.65);
+    color: rgb(255 255 255 / 65%);
 }
 
 .status-group {
@@ -180,7 +180,7 @@
 }
 
 .b2b-status-trigger[aria-expanded="true"] .status-discount {
-    background: rgba(255, 255, 255, 0.25);
+    background: rgb(255 255 255 / 25%);
 }
 
 /* Arrow */
@@ -512,17 +512,17 @@
     align-items: center;
     gap: 10px;
     padding: 8px 14px;
-    background: linear-gradient(135deg, var(--b2b-primary, #b73337) 0%, var(--b2b-primary-dark, #8e2629) 100%);
+    background: linear-gradient(135deg, var(--b2b-primary) 0%, var(--b2b-primary-dark) 100%);
     border-radius: 10px;
     color: #fff;
     text-decoration: none;
     transition: var(--b2b-transition, 0.25s ease);
-    box-shadow: 0 2px 8px rgba(183, 51, 55, 0.3);
+    box-shadow: 0 2px 8px rgb(183 51 55 / 30%);
 }
 
 .b2b-register-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(183, 51, 55, 0.4);
+    box-shadow: 0 6px 20px rgb(183 51 55 / 40%);
     background: linear-gradient(135deg, #c53d42 0%, #9a2c2f 100%);
     color: #fff;
 }
@@ -564,7 +564,7 @@
    =========================================================================== */
 
 /* Tablet */
-@media screen and (max-width: 991px) {
+@media screen and (width <= 991px) {
     .b2b-status-dropdown {
         width: 300px;
         right: -10px;
@@ -581,7 +581,7 @@
 }
 
 /* Mobile */
-@media screen and (max-width: 767px) {
+@media screen and (width <= 767px) {
     .b2b-status-panel {
         position: static;
     }
@@ -608,10 +608,7 @@
     /* Bottom sheet on mobile */
     .b2b-status-dropdown {
         position: fixed;
-        top: auto;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        inset: auto 0 0;
         width: 100%;
         max-height: 80vh;
         border-radius: 20px 20px 0 0;
@@ -640,7 +637,7 @@
     }
 }
 
-@media screen and (max-width: 480px) {
+@media screen and (width <= 480px) {
     .b2b-status-dropdown {
         max-height: 85vh;
         overflow-y: auto;
@@ -685,6 +682,7 @@
     0%, 100% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(1.05);
     }
@@ -695,12 +693,12 @@
 }
 
 /* Mobile overlay backdrop */
-@media screen and (max-width: 767px) {
+@media screen and (width <= 767px) {
     .b2b-status-panel.is-open::before {
         content: '';
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.4);
+        background: rgb(0 0 0 / 40%);
         z-index: calc(var(--awa-z-overlay, 1000) - 1);
         animation: b2b-fade-in 0.2s ease;
     }

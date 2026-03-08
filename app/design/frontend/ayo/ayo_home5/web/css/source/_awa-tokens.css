@@ -1,0 +1,56 @@
+/**
+ * AWA Design System — Global Tokens
+ * Single source of truth para o design system AWA Motos.
+ *
+ * Todos os módulos GrupoAwamotos consomem --aw-* via seus tokens locais.
+ * Valores sincronizados com _variables_themes.less (@links, @linkshover, etc.)
+ *
+ * Se cores forem alteradas no admin (Rokanthemes → Theme Settings → Custom Color),
+ * o override em theme_option.phtml re-define estes tokens com !important.
+ */
+
+:root {
+    /* ── Paleta primária ── */
+    --aw-primary: #b73337;
+    --aw-primary-dark: #8e2629;
+    --aw-primary-darker: #6d1d1f;
+
+    /* ── Texto ── */
+    --aw-text: #333;
+    --aw-text-muted: #6b7280;
+
+    /* ── Bordas ── */
+    --aw-border: #e5e7eb;
+    --aw-border-light: #f3f4f6;
+
+    /* ── Superfícies ── */
+    --aw-surface: #f8fafc;
+    --aw-bg: #fff;
+    --aw-bg-alt: #f5f5f5;
+
+    /* ── Controles (inputs, botões) ── */
+    --aw-control-height: 48px;
+    --aw-control-radius: 4px;
+
+    /* ── Border radius ── */
+    --aw-radius-sm: 8px;
+    --aw-radius-md: 12px;
+    --aw-radius-lg: 16px;
+
+    /* ── Sombras ── */
+    --aw-shadow-sm: 0 1px 2px rgb(0 0 0 / 5%);
+    --aw-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 10%);
+    --aw-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 10%);
+
+    /* ── Tipografia ── */
+    --aw-font: 'Poppins', sans-serif;
+
+    /* ── Transição ── */
+    --aw-transition: 0.3s ease;
+
+    /* ── Z-index layers ── */
+    --aw-z-dropdown: 10100;
+    --aw-z-overlay: 10150;
+    --aw-z-modal: 10200;
+    --aw-z-toast: 10300;
+}

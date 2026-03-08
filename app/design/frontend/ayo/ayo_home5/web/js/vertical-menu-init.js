@@ -1,664 +1,273 @@
 /**
- * AWA Motos — Vertical Menu Toggle Controller
- *
- * Manages the sidebar vertical-menu lifecycle:
- *  - Desktop >= 992 px : hover/focus opens category dropdown (Home 5 default behavior)
- *  - Mobile  <  992 px : animated drawer + overlay + submenu accordions
- *
- * The native Rokanthemes VerticalMenu jQuery plugin is still initialised for
- * its flyout-positioning logic (hover on desktop).  AWA does NOT duplicate
- * that behaviour; it only adds: open/close of the category list,
- * expand/collapse "Show More", and mobile submenu toggles when the
- * Rokanthemes widget is absent.
- *
- * @module js/vertical-menu-init
+ * AWA Motos — Vertical Menu Init (Mueller Pattern)
+ * Desktop: hover with delay + overflow detection
+ * Mobile:  off-canvas drawer + drill-down navigation
  */
 define([
-    'jquery',
-    'rokanthemes/verticalmenu'
+    'jquery'
 ], function ($) {
     'use strict';
 
-    /* ================================================================ */
-    /*  Helpers (shared across instances)                               */
-    /* ================================================================ */
-
-    /**
-     * Initialise the Rokanthemes VerticalMenu plugin (idempotent).
-     * @param  {jQuery} $menus
-     * @return {boolean} true when at least one widget is active
-     */
-    function initRokanWidget($menus) {
-        if (!$.isFunction($.fn.VerticalMenu)) {
-            return false;
-        }
-
-        var ok = false;
-
-        $menus.each(function () {
-            var $m = $(this);
-
-            if (!$m.data('awaRokanInit')) {
-                $m.VerticalMenu();
-                $m.data('awaRokanInit', 1);
-            }
-
-            ok = true;
-        });
-
-        return ok;
-    }
-
-    /** Trailing-edge debounce. */
-    function debounce(fn, ms) {
-        var t;
-
-        return function () {
-            var ctx  = this;
-            var args = arguments;
-
-            clearTimeout(t);
-            t = setTimeout(function () { fn.apply(ctx, args); }, ms || 120);
-        };
-    }
-
-    /** Remove empty CMS placeholder <li> nodes the block renderer may inject. */
-    function pruneEmptyBlocks($list) {
-        if (!$list || !$list.length) {
-            return;
-        }
-
-        var has = 'img[src],picture source[srcset],video source[src],iframe[src],a[href],.block,.cms-block';
-
-        $list.find('> li.vertical-menu-custom-block, > li.vertical-bg-img').each(function () {
-            var $li = $(this);
-
-            if (!$.trim($li.text()).length && !$li.find(has).length) {
-                $li.remove();
-            }
-        });
-    }
-
-    /* ================================================================ */
-    /*  Component (called once per x-magento-init match)                */
-    /* ================================================================ */
-
     return function (config, element) {
         var $nav        = $(element);
-        var $title      = $nav.find('.title-category-dropdown');
-        var $list       = $nav.find('.togge-menu');
-        var $expandLink = $nav.find('.vm-toggle-categories');
-        var $items      = $nav.find('.ui-menu-item.level0');
+        var $trigger    = $nav.find('[data-role="awa-vertical-menu-trigger"]');
+        var $menuList   = $nav.find('.navigation__list').first();
+        var desktopBP   = config.desktopBreakpoint || 992;
+        var limitShow   = config.limitShow || 0;
+        var hoverDelay  = 150;
+        var hoverTimer  = null;
+        var $overlay    = null;
 
-        /* ---- config ------------------------------------------------ */
-        var safeUid = ($nav.attr('id') || $title.attr('aria-controls') || 'avm-' + Math.random().toString(36).slice(2))
-                          .replace(/[^a-zA-Z0-9_-]/g, '');
-        var overlaySelector   = (config && config.overlaySelector) || '.shadow_bkg_show';
-        var desktopBreakpoint = parseInt(config && config.desktopBreakpoint, 10) || 992;
-        var limitItemShow     = parseInt($list.attr('data-limit-show'), 10)
-                                || parseInt(config && config.limitShow, 10) || 0;
-        var childPanelSelector = '.submenu, ul.level0, .subchildmenu';
-        var NS = '.awaVM-' + safeUid;
-
-        /* ---- guard: never double-init ------------------------------ */
-        if (!$nav.length || $nav.data('awaVMInit')) {
+        if ($nav.data('awaVMInit')) {
             return;
         }
-
         $nav.data('awaVMInit', 1);
-        $nav.attr('data-awa-verticalmenu-owner', 'vertical-menu-init');
-
-        /* ---- Rokanthemes flyout widget ------------------------------ */
-        var rokanActive = initRokanWidget(
-            $nav.filter('.verticalmenu').add($nav.find('.verticalmenu'))
-        );
-
-        pruneEmptyBlocks($list);
-
-        /* ---- viewport ---------------------------------------------- */
-        var mql = window.matchMedia
-            ? window.matchMedia('(min-width: ' + desktopBreakpoint + 'px)')
-            : null;
 
         function isDesktop() {
-            return mql ? mql.matches : window.innerWidth >= desktopBreakpoint;
+            return window.innerWidth >= desktopBP;
         }
 
-        function isHomeContext() {
-            var body = document.body;
-            if (!body) {
-                return false;
-            }
+        // ── Overlay (lazy-created, appended to body) ──
 
-            return body.classList.contains('cms-index-index')
-                || body.classList.contains('cms-home')
-                || body.classList.contains('cms-homepage_ayo_home5')
-                || body.classList.contains('cms-homepage_ayo_home5_demo_stage');
+        function getOverlay() {
+            if (!$overlay || !$overlay.length) {
+                $overlay = $('<div class="awa-vm-overlay"></div>');
+                $('body').append($overlay);
+                $overlay.on('click.awaVM', closeDrawer);
+            }
+            return $overlay;
         }
 
-        function keepDesktopMenuExpanded() {
-            return isDesktop() && isHomeContext();
-        }
-
-        /* ============================================================ */
-        /*  Open / Close                                                */
-        /* ============================================================ */
-
-        function openMenu() {
-            $list.addClass('menu-open');
-            $title.addClass('active').attr('aria-expanded', 'true');
-
-            if (isDesktop()) {
-                /* Clear stale inline display from mobile fadeOut()/hide() after viewport switch. */
-                $list.stop(true, true).removeAttr('style').show();
-                $('body').removeClass('background_shadow_show');
-            } else {
-                $list.stop(true, true).fadeIn(200);
-                $('body').addClass('background_shadow_show');
-            }
-        }
-
-        function closeMenu() {
-            $list.removeClass('menu-open');
-            $title.removeClass('active').attr('aria-expanded', 'false');
-
-            if (isDesktop()) {
-                $list.stop(true, true).hide();
-            } else {
-                $list.stop(true, true).fadeOut(200);
-            }
-
-            $('body').removeClass('background_shadow_show');
-        }
-
-        function isOpen() {
-            return $list.hasClass('menu-open');
-        }
-
-        /* ============================================================ */
-        /*  Mobile sub-menu toggles                                     */
-        /* ============================================================ */
-
-        function ensureMobileToggles() {
-            $nav.find('.ui-menu-item.parent, .ui-menu-item.level0.parent').each(function () {
-                var $li = $(this);
-                var $t  = $li.children('.open-children-toggle');
-
-                if (!$t.length) {
-                    $li.append(
-                        '<div class="open-children-toggle" role="button"' +
-                        ' aria-label="Expandir subcategorias" aria-expanded="false" tabindex="0"></div>'
-                    );
-                } else {
-                    $t.attr({
-                        'role':          'button',
-                        'tabindex':      '0',
-                        'aria-label':    $t.attr('aria-label') || 'Expandir subcategorias',
-                        'aria-expanded': $t.attr('aria-expanded') || 'false'
-                    });
-                }
-            });
-        }
-
-        function getParentItems($root) {
-            return ($root || $nav).find('.ui-menu-item.parent, .ui-menu-item.level0.parent');
-        }
-
-        function getDirectChildPanels($item) {
-            return $item.children(childPanelSelector);
-        }
-
-        function getFirstDirectChildPanel($item) {
-            return getDirectChildPanels($item).first();
-        }
-
-        function resetParentItemState($item, animateNested) {
-            var nestedAnimate = !!animateNested;
-
-            $item.removeClass('_active');
-            $item.children('a').removeClass('ui-state-active');
-            $item.children('.open-children-toggle').attr('aria-expanded', 'false');
-
-            getDirectChildPanels($item).each(function () {
-                var $panel = $(this);
-
-                $panel.removeClass('opened');
-
-                if ($panel.hasClass('subchildmenu')) {
-                    if (nestedAnimate) {
-                        $panel.stop(true, true).slideUp(200);
-                    } else {
-                        $panel.stop(true, true).removeAttr('style');
-                    }
-                } else {
-                    $panel.removeAttr('style');
-                }
-            });
-
-            getParentItems($item).each(function () {
-                var $child = $(this);
-
-                if ($child[0] === $item[0]) {
-                    return;
-                }
-
-                $child.removeClass('_active');
-                $child.children('a').removeClass('ui-state-active');
-                $child.children('.open-children-toggle').attr('aria-expanded', 'false');
-                $child.children(childPanelSelector).removeClass('opened').removeAttr('style');
-            });
-        }
-
-        function closeSiblingParentItems($item, animateNested) {
-            $item.siblings('.ui-menu-item.parent, .ui-menu-item.level0.parent').each(function () {
-                resetParentItemState($(this), animateNested);
-            });
-        }
-
-        function syncParentItemStateFromPanels($item) {
-            var $panel = getFirstDirectChildPanel($item);
-            var opened = $panel.length && $panel.hasClass('opened');
-
-            $item.toggleClass('_active', !!opened);
-            $item.children('a').toggleClass('ui-state-active', !!opened);
-            $item.children('.open-children-toggle').attr('aria-expanded', opened ? 'true' : 'false');
-        }
-
-        function syncAllMobileParentStates() {
-            getParentItems().each(function () {
-                syncParentItemStateFromPanels($(this));
-            });
-        }
-
-        function focusFirstCategoryLink() {
-            var $first = $list.children('.ui-menu-item.level0:visible').children('a').first();
-
-            if ($first.length) {
-                $first.trigger('focus');
-            }
-        }
-
-        function bindRokanMobileBridgeHandlers() {
-            var $toggles = $nav.find('.open-children-toggle');
-
-            $toggles.off('click' + NS + ' keydown' + NS);
-
-            $toggles.on('click' + NS, function () {
-                var $t = $(this);
-                var $p = $t.parent();
-
-                if (isDesktop()) {
-                    return;
-                }
-
-                window.setTimeout(function () {
-                    var $panel = getFirstDirectChildPanel($p);
-                    var opened = $panel.length && $panel.hasClass('opened');
-
-                    if (opened) {
-                        closeSiblingParentItems($p, true);
-                    }
-
-                    syncParentItemStateFromPanels($p);
-                    syncAllMobileParentStates();
-                }, 0);
-            });
-
-            $toggles.on('keydown' + NS, function (e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    $(this).trigger('click');
-                    return;
-                }
-
-                if (e.key === 'Escape' && !isDesktop()) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    resetParentItemState($(this).parent(), true);
-                }
-            });
-        }
-
-        /** Reset accordion & visibility when viewport crosses the breakpoint. */
-        function syncOnResize() {
-            if (isDesktop()) {
-                /* Clean up mobile accordion + stale Rokanthemes "opened" class */
-                getParentItems().each(function () {
-                    resetParentItemState($(this), false);
-                });
-
-                /* Re-sync list visibility to current state */
-                $list.stop(true, true).removeAttr('style');
-
-                if (keepDesktopMenuExpanded()) {
-                    $list.addClass('menu-open');
-                }
-
-                if (isOpen()) {
-                    $list.show();
-                    $title.addClass('active').attr('aria-expanded', 'true');
-                } else {
-                    $list.hide();
-                    $title.removeClass('active').attr('aria-expanded', 'false');
-                }
-
-                $('body').removeClass('background_shadow_show');
-            } else {
-                /* Entering mobile → collapse */
-                $list.removeClass('menu-open').hide();
-                $title.removeClass('active').attr('aria-expanded', 'false');
-                $('body').removeClass('background_shadow_show');
-            }
-        }
-
-        /* ============================================================ */
-        /*  Event binding                                               */
-        /* ============================================================ */
-
-        /* ---- title click (main toggle) ----------------------------- */
-        $title.on('click' + NS, function (e) {
-            e.preventDefault();
-
-            if (isDesktop()) {
-                if (keepDesktopMenuExpanded()) {
-                    openMenu();
-                    return;
-                }
-
-                isOpen() ? closeMenu() : openMenu();
-                return;
-            }
-
-            isOpen() ? closeMenu() : openMenu();
-        });
-
-        $title.on('keydown' + NS, function (e) {
-            if (e.key === 'Escape') {
-                e.preventDefault();
-                closeMenu();
-                return;
-            }
-
-            if (e.key === 'ArrowDown' && isDesktop()) {
-                e.preventDefault();
-                openMenu();
-                focusFirstCategoryLink();
-                return;
-            }
-
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                if (isDesktop()) {
-                    openMenu();
-                    focusFirstCategoryLink();
-                    return;
-                }
-                $title.trigger('click' + NS);
-            }
-        });
-
-        /* ---- desktop hover/focus (Home 5 default behavior) ---------- */
-        $nav.on('mouseenter' + NS, function () {
-            if (isDesktop()) {
-                openMenu();
-            }
-        });
-
-        $nav.on('mouseleave' + NS, function () {
-            var root = $nav.get(0);
-            var active = document.activeElement;
-
-            if (!isDesktop()) {
-                return;
-            }
-
-            if (root && active && root.contains(active)) {
-                return;
-            }
-
-            if (keepDesktopMenuExpanded()) {
-                openMenu();
-                return;
-            }
-
-            closeMenu();
-        });
-
-        $nav.on('focusin' + NS, function () {
-            if (isDesktop()) {
-                openMenu();
-            }
-        });
-
-        $nav.on('focusout' + NS, function () {
-            if (!isDesktop()) {
-                return;
-            }
-
-            window.setTimeout(function () {
-                var root = $nav.get(0);
-                var active = document.activeElement;
-
-                if (root && active && root.contains(active)) {
-                    return;
-                }
-
-                if (keepDesktopMenuExpanded()) {
-                    openMenu();
-                    return;
-                }
-
-                closeMenu();
-            }, 0);
-        });
-
-        $nav.on('keydown' + NS, function (e) {
-            if (e.key !== 'Escape') {
-                return;
-            }
-
-            if (!isDesktop() && !isOpen()) {
-                return;
-            }
-
-            if (keepDesktopMenuExpanded()) {
-                openMenu();
-                return;
-            }
-
-            e.stopPropagation();
-            closeMenu();
-            $title.trigger('focus');
-        });
-
-        if (rokanActive) {
-            /* Keyboard desktop should reuse Rokanthemes flyout-positioning handlers. */
-            $nav.on('focusin' + NS, 'li.level0.parent, li.classic .subchildmenu > li.parent', function () {
-                if (isDesktop()) {
-                    $(this).triggerHandler('mouseenter');
-                }
-            });
-        }
-
-        /* ---- mobile submenu accordion (only when Rokanthemes absent) */
-        if (!rokanActive) {
-            $nav.on('click' + NS, '.open-children-toggle', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                if (isDesktop()) {
-                    return;
-                }
-
-                var $t = $(this);
-                var $p = $t.parent();
-                var expanding = !$p.hasClass('_active');
-
-                if (expanding) {
-                    closeSiblingParentItems($p, true);
-                }
-
-                $p.toggleClass('_active');
-                $t.attr('aria-expanded', expanding ? 'true' : 'false');
-                $p.children(childPanelSelector).stop(true, true).slideToggle(200);
-            });
-
-            $nav.on('keydown' + NS, '.open-children-toggle', function (e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    $(this).trigger('click');
-                    return;
-                }
-
-                if (e.key === 'Escape' && !isDesktop()) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    resetParentItemState($(this).parent(), true);
-                }
-            });
-        } else {
-            /* Rokanthemes binds direct click handlers with stopPropagation().
-               Bridge must be direct too, otherwise delegated handlers on $nav won't fire. */
-            bindRokanMobileBridgeHandlers();
-        }
-
-        /* ---- "Show more / Show less" -------------------------------- */
-        (function initExpandLink() {
-            if (limitItemShow <= 0) {
-                $expandLink.closest('.expand-category-link').hide();
-                return;
-            }
-
-            if ($items.length <= limitItemShow) {
-                $expandLink.closest('.expand-category-link').hide();
-                return;
-            }
-
-            $items.each(function (i) {
-                if (i >= limitItemShow) {
-                    $(this).addClass('orther-link').hide();
-                }
-            });
-
-            $expandLink.closest('.expand-category-link').show();
-
-            $expandLink.on('click' + NS, function (e) {
-                e.preventDefault();
-
-                var $a        = $(this);
-                var $hidden   = $nav.find('.ui-menu-item.level0.orther-link');
-                var expanding = !$a.hasClass('expanding');
-
-                $a.toggleClass('expanding', expanding)
-                   .closest('.expand-category-link').toggleClass('expanding', expanding);
-
-                if ($a.data('show-text') && $a.data('hide-text')) {
-                    $a.find('span').text(expanding ? $a.data('hide-text') : $a.data('show-text'));
-                }
-
-                $a.attr('aria-expanded', expanding ? 'true' : 'false');
-                $hidden.stop(true, true)[expanding ? 'fadeIn' : 'fadeOut'](180);
-            }).on('keydown' + NS, function (e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    $(this).trigger('click');
-                    return;
-                }
-
-                if (e.key === 'Escape' && $(this).hasClass('expanding')) {
-                    e.preventDefault();
-                    $(this).trigger('click');
-                }
-            });
-        })();
-
-        /* ---- overlay click → close (mobile) ------------------------ */
-        $(overlaySelector).on('click' + NS, function () {
-            if (!isDesktop()) {
-                closeMenu();
-            }
-        });
-
-        /* ---- resize ------------------------------------------------ */
-        $(window).on('resize' + NS, debounce(function () {
-            ensureMobileToggles();
-            if (rokanActive) {
-                bindRokanMobileBridgeHandlers();
-            }
-            syncOnResize();
-        }, 120));
-
-        /* ---- cleanup on DOM removal -------------------------------- */
-        $nav.on('remove' + NS, function () {
-            $(window).off(NS);
-            $(overlaySelector).off(NS);
-        });
-
-        /* ============================================================ */
-        /*  ARIA fix — prevent tabs-widget aria-hidden from hiding      */
-        /*  the focusable trigger h2 from assistive technology.         */
-        /*                                                              */
-        /*  Magento tabs widget marks closed panels aria-hidden="true". */
-        /*  Since FIX-53 CSS hides the tab-trigger visually (not via   */
-        /*  JS), the panel is never "opened" by the widget, so it keeps */
-        /*  aria-hidden on the ancestor while our h2 (tabindex="0") is  */
-        /*  focusable — a WCAG 1.3.1 / ARIA violation.                 */
-        /*                                                              */
-        /*  Fix: remove aria-hidden from every ancestor panel on init,  */
-        /*  and observe for re-injection via MutationObserver.          */
-        /* ============================================================ */
-
-        function fixSectionAriaHidden() {
-            /* Collect the two relevant ancestor layers:
-               1. The Magento tabs content panel (data-role="content" / .section-item-content)
-               2. The outer sections wrapper (#nav-sections / .sections.nav-sections) */
-            var $panels = $nav
-                .closest('[data-role="content"], .section-item-content')
-                .add($nav.closest('#nav-sections, .sections.nav-sections.category-dropdown'));
-
-            if (!$panels.length) {
-                return;
-            }
-
-            /* Remove on current render */
-            $panels.removeAttr('aria-hidden');
-
-            /* Guard against the tabs widget re-adding it after init */
-            if (typeof MutationObserver === 'undefined') {
-                return;
-            }
-
-            $panels.each(function () {
-                var el  = this;
-                var obs = new MutationObserver(function (mutations) {
-                    var i, m;
-
-                    for (i = 0; i < mutations.length; i++) {
-                        m = mutations[i];
-
-                        if (m.attributeName === 'aria-hidden'
-                                && el.getAttribute('aria-hidden') !== null) {
-                            el.removeAttribute('aria-hidden');
+        // ── Desktop: Hover mega menu ──
+
+        function initDesktopHover() {
+            $nav.find('.navigation__item--parent')
+                .off('mouseenter.awaVM mouseleave.awaVM')
+                .on('mouseenter.awaVM', function () {
+                    var $item = $(this);
+                    clearTimeout(hoverTimer);
+
+                    // Clear siblings immediately
+                    $item.siblings('.is-hovered')
+                         .removeClass('is-hovered')
+                         .children('.navigation__submenu')
+                         .css('display', '')
+                         .removeClass('mega-menu--flip');
+
+                    hoverTimer = setTimeout(function () {
+                        if (!isDesktop()) {
+                            return;
                         }
-                    }
+                        $item.addClass('is-hovered');
+                        var $sub = $item.children('.navigation__submenu');
+                        if ($sub.length) {
+                            $sub.css('display', 'block');
+                            checkOverflow($sub);
+                        }
+                    }, hoverDelay);
+                })
+                .on('mouseleave.awaVM', function () {
+                    var $item = $(this);
+                    clearTimeout(hoverTimer);
+                    hoverTimer = setTimeout(function () {
+                        $item.removeClass('is-hovered');
+                        $item.children('.navigation__submenu')
+                             .css('display', '')
+                             .removeClass('mega-menu--flip');
+                    }, hoverDelay);
                 });
+        }
 
-                obs.observe(el, { attributes: true, attributeFilter: ['aria-hidden'] });
+        function checkOverflow($sub) {
+            if (!$sub.length || !$nav.length) {
+                return;
+            }
+            var navRect   = $nav[0].getBoundingClientRect();
+            var subWidth  = $sub.outerWidth();
+            var winWidth  = window.innerWidth;
 
-                /* Disconnect when the nav is removed from the DOM */
-                $nav.one('remove' + NS, function () { obs.disconnect(); });
+            if (navRect.right + subWidth > winWidth) {
+                $sub.addClass('mega-menu--flip');
+            } else {
+                $sub.removeClass('mega-menu--flip');
+            }
+        }
+
+        // ── Mobile: Drawer open/close ──
+
+        function openDrawer() {
+            $menuList.addClass('is-active');
+            getOverlay().addClass('is-active');
+            $('body').addClass('awa-vm-open');
+            $trigger.attr('aria-expanded', 'true');
+        }
+
+        function closeDrawer() {
+            $menuList.removeClass('is-active');
+            // Close all open sub-panels
+            $nav.find('.navigation__submenu.is-active').removeClass('is-active');
+            if ($overlay) {
+                $overlay.removeClass('is-active');
+            }
+            $('body').removeClass('awa-vm-open');
+            $trigger.attr('aria-expanded', 'false');
+        }
+
+        function initMobileDrawer() {
+            // Inject close button at top of drawer (once)
+            if (!$menuList.children('.awa-vm-close').length) {
+                var $closeBtn = $(
+                    '<button class="awa-vm-close" type="button" aria-label="Fechar menu">' +
+                        '<span>Categorias</span>' +
+                        '<span class="awa-vm-close__icon">&times;</span>' +
+                    '</button>'
+                );
+                $menuList.prepend($closeBtn);
+                $closeBtn.on('click.awaVM', closeDrawer);
+            }
+        }
+
+        // ── Mobile: Drill-down back buttons ──
+
+        function initBackButtons() {
+            $nav.find('.navigation__submenu').each(function () {
+                var $sub = $(this);
+                if ($sub.children('.btn-back-menu').length) {
+                    return;
+                }
+                var title = $sub.attr('data-menu-title') || 'Voltar';
+                // Sanitize title via text node (XSS-safe)
+                var safeTitle = $('<span>').text(title).html();
+                var $back = $('<div class="btn-back-menu">' + safeTitle + '</div>');
+                $sub.prepend($back);
+
+                $back.on('click.awaVM', function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    $sub.removeClass('is-active');
+                });
             });
         }
 
-        /* ============================================================ */
-        /*  Boot                                                        */
-        /* ============================================================ */
+        // ── Mobile: Drill-down forward ──
 
-        ensureMobileToggles();
-        if (rokanActive) {
-            bindRokanMobileBridgeHandlers();
+        function initMobileDrillDown() {
+            // Toggle button clicks
+            $nav.find('.navigation__toggle')
+                .off('click.awaVM')
+                .on('click.awaVM', function (e) {
+                    if (isDesktop()) {
+                        return;
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var $sub = $(this).closest('.navigation__item')
+                                      .children('.navigation__submenu');
+                    if ($sub.length) {
+                        $sub.addClass('is-active');
+                    }
+                });
+
+            // Parent link clicks on mobile → drill down instead of navigate
+            $nav.find('.navigation__item--parent > a')
+                .off('click.awaVM')
+                .on('click.awaVM', function (e) {
+                    if (isDesktop()) {
+                        return;
+                    }
+                    e.preventDefault();
+                    var $sub = $(this).closest('.navigation__item')
+                                      .children('.navigation__submenu');
+                    if ($sub.length) {
+                        $sub.addClass('is-active');
+                    }
+                });
         }
-        syncOnResize();
-        fixSectionAriaHidden();
+
+        // ── Trigger (header) click ──
+
+        $trigger.off('click.awaVM keyup.awaVM')
+            .on('click.awaVM', function (e) {
+                e.preventDefault();
+                if (isDesktop()) {
+                    $menuList.slideToggle(200);
+                } else {
+                    openDrawer();
+                }
+            })
+            .on('keyup.awaVM', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    $(this).trigger('click.awaVM');
+                }
+            });
+
+        // ── Show More / Show Less ──
+
+        if (limitShow > 0) {
+            var $items = $menuList.children('.navigation__item');
+            if ($items.length > limitShow) {
+                $items.slice(limitShow).hide();
+                var $expandLink = $nav.find('.expand-category-link a');
+                $nav.find('.expand-category-link').show();
+
+                $expandLink.off('click.awaVM').on('click.awaVM', function (e) {
+                    e.preventDefault();
+                    var $link = $(this);
+                    if ($link.hasClass('expanded')) {
+                        $items.slice(limitShow).slideUp(200);
+                        $link.removeClass('expanded');
+                        $link.attr('aria-expanded', 'false');
+                        $link.find('span').text($link.data('show-text') || 'Show More');
+                    } else {
+                        $items.slice(limitShow).slideDown(200);
+                        $link.addClass('expanded');
+                        $link.attr('aria-expanded', 'true');
+                        $link.find('span').text($link.data('hide-text') || 'Show Less');
+                    }
+                });
+            } else {
+                $nav.find('.expand-category-link').hide();
+            }
+        }
+
+        // ── Init + resize handler ──
+
+        function init() {
+            if (isDesktop()) {
+                initDesktopHover();
+            } else {
+                initMobileDrawer();
+                initBackButtons();
+                initMobileDrillDown();
+            }
+        }
+
+        var resizeTimer;
+        $(window).off('resize.awaVM').on('resize.awaVM', function () {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function () {
+                if (isDesktop()) {
+                    // Leaving mobile → clean up
+                    closeDrawer();
+                    $nav.find('.is-hovered').removeClass('is-hovered');
+                    $nav.find('.navigation__submenu')
+                        .css('display', '')
+                        .removeClass('mega-menu--flip');
+                    initDesktopHover();
+                } else {
+                    // Leaving desktop → clean up
+                    $nav.find('.is-hovered').removeClass('is-hovered');
+                    $nav.find('.navigation__submenu')
+                        .css('display', '')
+                        .removeClass('mega-menu--flip');
+                    initMobileDrawer();
+                    initBackButtons();
+                    initMobileDrillDown();
+                }
+            }, 200);
+        });
+
+        init();
     };
 });

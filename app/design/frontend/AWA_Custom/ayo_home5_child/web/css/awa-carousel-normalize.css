@@ -1,0 +1,152 @@
+/* ===========================================
+   AWA MOTOS — Carousel Normalize (Global)
+   Normalização de OWL Carousel v1 em todos os
+   módulos Rokanthemes (ProductTab, Categorytab,
+   SlideBanner, Brand, etc.)
+
+   Garante padding, gap, arrows e pagination
+   consistentes em toda a loja.
+
+   CARREGADO VIA: default_head_blocks.xml
+=========================================== */
+
+/* ─── OWL WRAPPER ─── */
+body .page-wrapper .owl-carousel {
+    position: relative;
+}
+
+body .page-wrapper .owl-carousel .owl-wrapper-outer {
+    overflow: hidden;
+}
+
+/* ─── ITEM SPACING ─── */
+body .page-wrapper .owl-carousel .owl-item {
+    box-sizing: border-box;
+}
+
+/* ─── NAV ARROWS (GLOBAL) ─── */
+body .page-wrapper .owl-carousel .owl-buttons {
+    position: static;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+body .page-wrapper .owl-carousel .owl-buttons div {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--awa-bg-surface);
+    border: 1px solid var(--awa-gray-200);
+    border-radius: 50%;
+    color: var(--awa-gray-700);
+    font-size: 18px;
+    cursor: pointer;
+    box-shadow: var(--awa-shadow-sm);
+    opacity: 1;
+    filter: none;
+    margin: 0;
+    padding: 0;
+    z-index: 2;
+    transition: background 0.2s, border-color 0.2s, box-shadow 0.2s, color 0.2s;
+    border-radius: 50%;
+    border-radius: 50%;
+}
+
+body .page-wrapper .owl-carousel .owl-buttons .owl-prev {
+    left: -12px;
+}
+
+body .page-wrapper .owl-carousel .owl-buttons .owl-next {
+    right: -12px;
+}
+
+body .page-wrapper .owl-carousel .owl-buttons div:hover {
+    background: var(--awa-red);
+    border-color: var(--awa-red);
+    color: #fff;
+    box-shadow: var(--awa-shadow-md);
+}
+
+/* ─── PAGINATION DOTS (GLOBAL) ─── */
+body .page-wrapper .owl-carousel .owl-controls {
+    margin-top: var(--awa-space-4);
+    text-align: center;
+}
+
+body .page-wrapper .owl-carousel .owl-controls .owl-page {
+    display: inline-block;
+}
+
+body .page-wrapper .owl-carousel .owl-controls .owl-page span {
+    width: 8px;
+    height: 8px;
+    margin: 4px 5px;
+    background: var(--awa-gray-300);
+    border-radius: 50%;
+    opacity: 1;
+    filter: none;
+    transition: background 0.2s;
+}
+
+body .page-wrapper .owl-carousel .owl-controls .owl-page.active span,
+body .page-wrapper .owl-carousel .owl-controls .owl-page:hover span {
+    background: var(--awa-red);
+    opacity: 1;
+    filter: none;
+}
+
+/* ─── OWL LOADING ─── */
+body .page-wrapper .owl-item.loading {
+    min-height: 120px;
+    background: var(--awa-gray-50) url() no-repeat center center;
+}
+
+/* ============================================================
+   BREAKPOINTS RESPONSIVOS
+   ============================================================ */
+
+/* Tablet (≤ 991px) */
+@media (width <= 991px) {
+    body .page-wrapper .owl-carousel .owl-buttons div {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+    }
+
+    body .page-wrapper .owl-carousel .owl-buttons .owl-prev {
+        left: -8px;
+    }
+
+    body .page-wrapper .owl-carousel .owl-buttons .owl-next {
+        right: -8px;
+    }
+}
+
+/* Mobile (≤ 680px) */
+@media (width <= 680px) {
+    body .page-wrapper .owl-carousel .owl-buttons div {
+        width: 28px;
+        height: 28px;
+        font-size: 14px;
+    }
+
+    body .page-wrapper .owl-carousel .owl-buttons .owl-prev {
+        left: -4px;
+    }
+
+    body .page-wrapper .owl-carousel .owl-buttons .owl-next {
+        right: -4px;
+    }
+
+    body .page-wrapper .owl-carousel .owl-controls .owl-page span {
+        width: 6px;
+        height: 6px;
+        margin: 3px 4px;
+    }
+}

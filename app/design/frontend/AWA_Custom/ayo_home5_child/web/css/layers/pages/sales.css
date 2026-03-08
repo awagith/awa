@@ -606,3 +606,290 @@
         grid-template-columns: 1fr;
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   6. ORDER VIEW DETAIL — native Magento block styling (B2B)
+   ═══════════════════════════════════════════════════════════════ */
+
+.sales-order-view .page-main {
+    padding-top: 24px;
+}
+
+.sales-order-view .page-title-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--awa-layer-space-lg);
+    flex-wrap: wrap;
+    margin-bottom: var(--awa-layer-space-xl);
+}
+
+.sales-order-view .page-title-wrapper .page-title {
+    margin: 0;
+    font-size: clamp(1.25rem, 3vw, 1.625rem);
+    font-weight: 700;
+    color: var(--awa-layer-color-text-primary);
+    line-height: 1.2;
+}
+
+.sales-order-view .order-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: var(--awa-layer-radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    background: #dbeafe;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+    margin-top: 6px;
+}
+
+.sales-order-view .order-date {
+    font-size: 0.85rem;
+    color: var(--awa-layer-color-text-secondary);
+    margin-top: 4px;
+}
+
+/* Action buttons row */
+.sales-order-view .order-actions-toolbar {
+    display: flex;
+    gap: var(--awa-layer-space-sm);
+    flex-wrap: wrap;
+    margin: 0 0 var(--awa-layer-space-xl);
+}
+
+.sales-order-view .order-actions-toolbar .action {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: var(--awa-layer-radius-base);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 200ms ease;
+    min-height: 44px;
+}
+
+.sales-order-view .order-actions-toolbar .action.order {
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    border: 1px solid var(--awa-layer-color-primary);
+}
+
+.sales-order-view .order-actions-toolbar .action.order:hover {
+    background: #8e2629;
+    border-color: #8e2629;
+}
+
+.sales-order-view .order-actions-toolbar .action.print {
+    background: transparent;
+    color: var(--awa-layer-color-text-primary);
+    border: 1px solid var(--awa-layer-color-border);
+}
+
+.sales-order-view .order-actions-toolbar .action.print:hover {
+    border-color: var(--awa-layer-color-primary);
+    color: var(--awa-layer-color-primary);
+}
+
+/* Order items table */
+.sales-order-view .table-wrapper.order-items {
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-lg);
+    overflow: hidden;
+    margin-bottom: var(--awa-layer-space-xl);
+}
+
+.sales-order-view .table-order-items {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.sales-order-view .table-order-items caption {
+    font-weight: 700;
+    text-align: left;
+    padding: 16px 20px 14px;
+    font-size: 1rem;
+    background: var(--awa-layer-color-bg-soft);
+    border-bottom: 1px solid var(--awa-layer-color-border);
+    color: var(--awa-layer-color-text-primary);
+    caption-side: top;
+}
+
+.sales-order-view .table-order-items thead tr {
+    background: #f8fafc;
+}
+
+.sales-order-view .table-order-items thead th {
+    padding: 10px 16px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--awa-layer-color-text-secondary);
+    border-bottom: 1px solid var(--awa-layer-color-border);
+    text-align: left;
+}
+
+.sales-order-view .table-order-items thead th.col.price,
+.sales-order-view .table-order-items thead th.col.qty,
+.sales-order-view .table-order-items thead th.col.subtotal {
+    text-align: right;
+}
+
+.sales-order-view .table-order-items tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--awa-layer-color-border);
+    vertical-align: middle;
+    color: var(--awa-layer-color-text-primary);
+}
+
+.sales-order-view .table-order-items tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.sales-order-view .table-order-items tbody tr:hover td {
+    background: #fafafa;
+}
+
+.sales-order-view .table-order-items .col.name .product-item-name {
+    font-weight: 600;
+    color: var(--awa-layer-color-text-primary);
+    text-decoration: none;
+    display: block;
+    margin-bottom: 2px;
+}
+
+.sales-order-view .table-order-items .col.name .product-item-name:hover {
+    color: var(--awa-layer-color-primary);
+}
+
+.sales-order-view .table-order-items .col.sku {
+    font-family: "SF Mono", "Fira Code", monospace;
+    font-size: 0.8125rem;
+    color: var(--awa-layer-color-text-secondary);
+}
+
+.sales-order-view .table-order-items .col.price,
+.sales-order-view .table-order-items .col.subtotal {
+    text-align: right;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.sales-order-view .table-order-items .col.qty {
+    text-align: right;
+}
+
+/* Totals */
+.sales-order-view .data.table.totals {
+    width: 100%;
+    max-width: 380px;
+    margin-left: auto;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.sales-order-view .data.table.totals .mark {
+    text-align: right;
+    padding: 8px 16px;
+    color: var(--awa-layer-color-text-secondary);
+    font-weight: 500;
+}
+
+.sales-order-view .data.table.totals .amount {
+    text-align: right;
+    padding: 8px 0;
+    font-weight: 600;
+    color: var(--awa-layer-color-text-primary);
+    white-space: nowrap;
+}
+
+.sales-order-view .data.table.totals tr.grand_total .mark,
+.sales-order-view .data.table.totals tr.grand_total .amount {
+    font-size: 1rem;
+    font-weight: 700;
+    border-top: 2px solid var(--awa-layer-color-border);
+    padding-top: 14px;
+}
+
+/* Addresses block */
+.sales-order-view .block.block-order-details-view {
+    background: var(--awa-layer-color-bg-soft);
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-lg);
+    padding: var(--awa-layer-space-xl);
+    margin-top: var(--awa-layer-space-xl);
+}
+
+.sales-order-view .block.block-order-details-view .block-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--awa-layer-color-text-primary);
+    margin-bottom: var(--awa-layer-space-lg);
+    padding-bottom: var(--awa-layer-space-sm);
+    border-bottom: 1px solid var(--awa-layer-color-border);
+}
+
+.sales-order-view .block.block-order-details-view .block-content {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--awa-layer-space-xl);
+}
+
+.sales-order-view .block.block-order-details-view .box-title span {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--awa-layer-color-text-secondary);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.sales-order-view .block.block-order-details-view .box-content {
+    font-size: 0.875rem;
+    line-height: 1.65;
+    color: var(--awa-layer-color-text-primary);
+}
+
+/* Back link */
+.sales-order-view .actions-toolbar .action.back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--awa-layer-color-primary);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    min-height: 44px;
+    padding: 10px 0;
+}
+
+.sales-order-view .actions-toolbar .action.back:hover {
+    color: #8e2629;
+}
+
+@media (max-width: 767px) {
+    .sales-order-view .page-title-wrapper {
+        flex-direction: column;
+        gap: var(--awa-layer-space-sm);
+    }
+
+    .sales-order-view .table-order-items {
+        display: block;
+        overflow-x: auto;
+    }
+
+    .sales-order-view .block.block-order-details-view .block-content {
+        grid-template-columns: 1fr;
+    }
+
+    .sales-order-view .data.table.totals {
+        max-width: 100%;
+    }
+}

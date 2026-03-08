@@ -1,7 +1,9 @@
-/* eslint no-unused-vars: off */
-
 /**
- * AWA MOTOS — RequireJS overrides for VerticalMenu (theme scope)
- * Config mínimo estável.
+ * AWA Motos — RequireJS overrides for VerticalMenu (theme scope)
+ * Redirects Rokanthemes verticalmenu.js to noop; AWA JS handles everything.
  */
-var config = {};
+var config = {
+    paths: {
+        'rokanthemes/verticalmenu': 'js/awa-verticalmenu-noop'
+    }
+};

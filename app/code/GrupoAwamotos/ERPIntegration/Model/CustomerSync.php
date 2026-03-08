@@ -563,6 +563,10 @@ class CustomerSync implements CustomerSyncInterface
         // Atributos custom
         $customer->setCustomAttribute('erp_code', (int)$erpData['CODIGO']);
 
+        // Clientes vindos do SECTRA são clientes já aprovados — marcar como approved
+        // para não ficarem presos no fluxo de aprovação manual do B2B
+        $customer->setCustomAttribute('b2b_approval_status', 'approved');
+
         if (!empty($erpData['INSCEST'])) {
             $customer->setCustomAttribute('inscricao_estadual', $erpData['INSCEST']);
         }
@@ -615,6 +619,14 @@ class CustomerSync implements CustomerSyncInterface
         $existingErpCode = $customer->getCustomAttribute('erp_code');
         if (!$existingErpCode || !$existingErpCode->getValue()) {
             $customer->setCustomAttribute('erp_code', (int)$erpData['CODIGO']);
+            $updated = true;
+        }
+
+        // Garantir que clientes vinculados ao SECTRA estejam aprovados
+        $approvalStatus = $customer->getCustomAttribute('b2b_approval_status');
+        $currentStatus = $approvalStatus ? $approvalStatus->getValue() : null;
+        if ($currentStatus === 'pending') {
+            $customer->setCustomAttribute('b2b_approval_status', 'approved');
             $updated = true;
         }
 

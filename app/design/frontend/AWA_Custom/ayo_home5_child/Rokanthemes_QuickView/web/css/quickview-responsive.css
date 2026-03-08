@@ -1,0 +1,266 @@
+/* ===========================================
+   AWA MOTOS — QuickView Responsive Override
+   Sobrescreve rokan_quickview.css do vendor Rokanthemes
+
+   PROBLEMAS CORRIGIDOS:
+   - #quick-window width: 900px fixo (overflow em < 900px)
+   - .product-img-box width: 230px fixo
+   - Zero media queries, float-based
+   - Close button posicionado fora do viewport em mobile
+
+   CARREGADO VIA: layout/default.xml
+=========================================== */
+
+/* ─── OVERLAY / BACKDROP ─── */
+body .page-wrapper #quick-window-overlay,
+body .page-wrapper .quickview-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--awa-overlay, rgb(0 0 0 / 80%));
+    z-index: 998;
+}
+
+/* ─── MODAL CONTAINER ─── */
+body .page-wrapper #quick-window {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+    z-index: 999;
+    background: var(--awa-bg-surface, #fff);
+    border-radius: var(--awa-radius-lg, 12px);
+    box-shadow: var(--awa-shadow-lg);
+    padding: var(--awa-space-6, 24px);
+}
+
+/* ─── CLOSE BUTTON ─── */
+body .page-wrapper #quickview-close,
+body .page-wrapper #quick-window .quickview-close {
+    position: absolute;
+    top: var(--awa-space-3, 12px);
+    right: var(--awa-space-3, 12px);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--awa-gray-100);
+    border: 1px solid var(--awa-gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 1001;
+    transition: background 0.2s;
+    font-size: 18px;
+    line-height: 1;
+}
+
+body .page-wrapper #quickview-close:hover,
+body .page-wrapper #quick-window .quickview-close:hover {
+    background: var(--awa-gray-200);
+}
+
+/* ─── PRODUCT LAYOUT (2-column → stack) ─── */
+body .page-wrapper #quick-window .product-img-box {
+    float: none;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto var(--awa-space-4);
+}
+
+body .page-wrapper #quick-window .product-img-box img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: var(--awa-radius-md, 8px);
+}
+
+body .page-wrapper #quick-window .product-shop {
+    float: none;
+    width: 100%;
+    padding: 0;
+}
+
+/* Desktop: side-by-side layout */
+@media (width >= 768px) {
+    body .page-wrapper #quick-window {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: var(--awa-space-6, 24px);
+    }
+
+    body .page-wrapper #quick-window .product-img-box {
+        flex: 0 0 45%;
+        max-width: 45%;
+        margin: 0;
+    }
+
+    body .page-wrapper #quick-window .product-shop {
+        flex: 1 1 0%;
+        min-width: 0;
+    }
+}
+
+/* ─── TABS INSIDE QUICKVIEW ─── */
+body .page-wrapper #quick-window .tab-bar {
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--awa-gray-200);
+    margin-bottom: var(--awa-space-3);
+}
+
+body .page-wrapper #quick-window .tab-bar li a {
+    float: none;
+    display: inline-block;
+    padding: var(--awa-space-2) var(--awa-space-4);
+    color: var(--awa-gray-600);
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    text-decoration: none;
+}
+
+body .page-wrapper #quick-window .tab-bar li.active a,
+body .page-wrapper #quick-window .tab-bar li a:hover {
+    color: var(--awa-red);
+    border-bottom-color: var(--awa-red);
+}
+
+/* ─── CONTENT BOXES ─── */
+body .page-wrapper #quick-window #box-one,
+body .page-wrapper #quick-window #box-two,
+body .page-wrapper #quick-window #box-three {
+    width: 100%;
+}
+
+/* ─── FORM INPUTS ─── */
+body .page-wrapper #quick-window .tags-tab-quickview input {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* ─── PRICE ─── */
+body .page-wrapper #quick-window .price-box {
+    margin: var(--awa-space-3) 0;
+}
+
+/* ─── ADD TO CART ─── */
+body .page-wrapper #quick-window .action.tocart {
+    width: 100%;
+    padding: var(--awa-space-3);
+    border-radius: var(--awa-radius-sm, 4px);
+}
+
+/* ============================================================
+   BREAKPOINTS RESPONSIVOS
+   ============================================================ */
+
+/* Tablet (≤ 991px) */
+@media (width <= 991px) {
+    body .page-wrapper #quick-window {
+        width: 95vw;
+        max-width: 700px;
+        padding: var(--awa-space-5, 20px);
+    }
+}
+
+/* Mobile (≤ 680px) */
+@media (width <= 680px) {
+    body .page-wrapper #quick-window {
+        width: 100vw;
+        max-width: 100vw;
+        height: 100vh;
+        max-height: 100vh;
+        border-radius: 0;
+        top: 0;
+        left: 0;
+        transform: none;
+        padding: var(--awa-space-4, 16px);
+        padding-top: 48px; /* space for close button */
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    body .page-wrapper #quickview-close,
+    body .page-wrapper #quick-window .quickview-close {
+        top: var(--awa-space-2, 8px);
+        right: var(--awa-space-2, 8px);
+    }
+
+    body .page-wrapper #quick-window .product-img-box {
+        max-width: 280px;
+    }
+}
+
+/* ─── OPERATIONAL READABILITY ─── */
+body .page-wrapper #quick-window .quick-view-content {
+    display: grid;
+    gap: var(--awa-space-5, 20px);
+}
+
+body .page-wrapper #quick-window .product-shop .product-info-main {
+    display: grid;
+    gap: var(--awa-space-4, 16px);
+}
+
+body .page-wrapper #quick-window .product-shop .page-title-wrapper .page-title,
+body .page-wrapper #quick-window .product-shop .product-name {
+    color: #0f172a;
+    font-size: clamp(22px, 2vw, 28px);
+    line-height: 1.1;
+}
+
+body .page-wrapper #quick-window .product-shop .price-box,
+body .page-wrapper #quick-window .product-shop .product-info-price {
+    padding: 12px 14px;
+    border: 1px solid var(--awa-gray-200);
+    border-radius: var(--awa-radius-md, 10px);
+    background: #fff;
+}
+
+body .page-wrapper #quick-window .product-shop .box-tocart,
+body .page-wrapper #quick-window .product-shop .product-add-form {
+    padding: 14px;
+    border: 1px solid var(--awa-gray-200);
+    border-radius: var(--awa-radius-md, 10px);
+    background: linear-gradient(180deg, #fff 0%, #fbfdff 100%);
+}
+
+body .page-wrapper #quick-window .product-shop .action.tocart {
+    min-height: 44px;
+}
+
+body .page-wrapper #quick-window .product-shop .awa-b2b-sku {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+body .page-wrapper #quick-window .product-shop .awa-b2b-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+body .page-wrapper #quick-window .product-shop .awa-b2b-card-meta__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 9px;
+    border: 1px solid var(--awa-gray-200);
+    border-radius: 999px;
+    background: #f8fafc;
+    color: #334155;
+    font-size: 11px;
+    font-weight: 700;
+}

@@ -1,0 +1,117 @@
+/* ===========================================
+   AWA MOTOS — CustomMenu Responsive Override
+   Sobrescreve _module.less do vendor Rokanthemes
+
+   PROBLEMAS CORRIGIDOS:
+   - width: 871px hardcoded no submenu fullwidth
+   - min-width: 230px no submenu
+   - Float-based columns (50/25/20/16.66%)
+   - Megamenu overflow em viewports < 900px
+
+   CARREGADO VIA: layout/default.xml
+=========================================== */
+
+/* ─── SUBMENU CONTAINER ─── */
+body .page-wrapper .navigation .custommenu .submenu,
+body .page-wrapper .navigation .custommenu .subMenu {
+    min-width: min(230px, 90vw);
+    max-width: min(871px, calc(100vw - 40px));
+    width: auto;
+    box-sizing: border-box;
+    overflow: visible;
+}
+
+/* ─── FULLWIDTH SUBMENU ─── */
+body .page-wrapper .navigation .custommenu .submenu.full-width,
+body .page-wrapper .navigation .custommenu .subMenu.full-width,
+body .page-wrapper .navigation .custommenu .submenu.fullwidth,
+body .page-wrapper .navigation .custommenu .subMenu.fullwidth {
+    width: min(871px, calc(100vw - 40px));
+    max-width: calc(100vw - 40px);
+}
+
+/* ─── SUBMENU COLUMNS (replace float) ─── */
+body .page-wrapper .navigation .custommenu .submenu .col,
+body .page-wrapper .navigation .custommenu .subMenu .col,
+body .page-wrapper .navigation .custommenu .submenu .megamenu-col,
+body .page-wrapper .navigation .custommenu .subMenu .megamenu-col {
+    float: none;
+    display: inline-block;
+    vertical-align: top;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+/* ─── STATIC BLOCK CONTENT ─── */
+body .page-wrapper .navigation .custommenu .submenu .static-content,
+body .page-wrapper .navigation .custommenu .subMenu .static-content {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+body .page-wrapper .navigation .custommenu .submenu .static-content img,
+body .page-wrapper .navigation .custommenu .subMenu .static-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ============================================================
+   BREAKPOINTS RESPONSIVOS
+   ============================================================ */
+
+/* Tablet (≤ 991px) */
+@media (width <= 991px) {
+    body .page-wrapper .navigation .custommenu .submenu,
+    body .page-wrapper .navigation .custommenu .subMenu {
+        position: static;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-shadow: none;
+        border: none;
+    }
+
+    body .page-wrapper .navigation .custommenu .submenu.full-width,
+    body .page-wrapper .navigation .custommenu .subMenu.full-width,
+    body .page-wrapper .navigation .custommenu .submenu.fullwidth,
+    body .page-wrapper .navigation .custommenu .subMenu.fullwidth {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Stack columns vertically */
+    body .page-wrapper .navigation .custommenu .submenu .col,
+    body .page-wrapper .navigation .custommenu .subMenu .col,
+    body .page-wrapper .navigation .custommenu .submenu .megamenu-col,
+    body .page-wrapper .navigation .custommenu .subMenu .megamenu-col {
+        display: block;
+        width: 100%;
+        padding: 0;
+    }
+
+    /* Accordion-style nested menus */
+    body .page-wrapper .navigation .custommenu > li {
+        display: block;
+        width: 100%;
+    }
+
+    body .page-wrapper .navigation .custommenu > li > a {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--awa-space-3, 12px) var(--awa-space-4, 16px);
+        border-bottom: 1px solid var(--awa-gray-200, #e9ecef);
+    }
+}
+
+/* Mobile (≤ 680px) */
+@media (width <= 680px) {
+    body .page-wrapper .navigation .custommenu > li > a {
+        padding: var(--awa-space-3, 12px) var(--awa-space-3, 12px);
+        font-size: var(--awa-text-sm, 14px);
+    }
+
+    body .page-wrapper .navigation .custommenu .submenu .static-content {
+        display: none;
+    }
+}

@@ -1618,3 +1618,241 @@ body .page-wrapper .no-items-message {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   404 / NOROUTE PAGE
+   ═══════════════════════════════════════════════════════════════ */
+
+.awa-404-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 480px;
+    padding: 64px var(--awa-layer-space-lg);
+}
+
+.awa-404-page__content {
+    text-align: center;
+    max-width: 520px;
+}
+
+.awa-404-page__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    background: #fee2e2;
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    color: var(--awa-layer-color-primary);
+}
+
+.awa-404-page__title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-weight: 700;
+    color: var(--awa-layer-color-text-primary);
+    margin: 0 0 12px;
+    line-height: 1.2;
+}
+
+.awa-404-page__text {
+    font-size: 1rem;
+    color: var(--awa-layer-color-text-secondary);
+    line-height: 1.65;
+    margin: 0 0 28px;
+}
+
+.awa-404-page__search {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-base);
+    overflow: hidden;
+    margin-bottom: 28px;
+    transition: border-color 200ms;
+}
+
+.awa-404-page__search:focus-within {
+    border-color: var(--awa-layer-color-primary);
+    box-shadow: 0 0 0 3px rgba(183, 51, 55, 0.12);
+}
+
+.awa-404-page__search input[type="search"] {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 12px 16px;
+    font-size: 0.9375rem;
+    background: #fff;
+    color: var(--awa-layer-color-text-primary);
+    min-height: 48px;
+}
+
+.awa-404-page__search button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 20px;
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 200ms;
+    min-width: 52px;
+    min-height: 48px;
+}
+
+.awa-404-page__search button:hover {
+    background: #8e2629;
+}
+
+.awa-404-page__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    justify-content: center;
+}
+
+.awa-404-page__links a {
+    font-size: 0.875rem;
+    color: var(--awa-layer-color-primary);
+    text-decoration: none;
+    font-weight: 500;
+    padding: 6px 12px;
+    border-radius: var(--awa-layer-radius-sm);
+    border: 1px solid rgba(183, 51, 55, 0.2);
+    transition: all 180ms;
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.awa-404-page__links a:hover {
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    border-color: var(--awa-layer-color-primary);
+}
+
+@media (max-width: 480px) {
+    .awa-404-page {
+        padding: 40px var(--awa-layer-space-md);
+        min-height: 360px;
+    }
+
+    .awa-404-page__links {
+        gap: 8px;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ACCOUNT LINK BADGES — header/nav conta B2B
+   ═══════════════════════════════════════════════════════════════ */
+
+.awa-b2b-badge-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    border-radius: 9px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ORDER TRACKING / SHIPMENT STATUS MINI-WIDGET
+   ═══════════════════════════════════════════════════════════════ */
+
+.awa-track-shipment {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: var(--awa-layer-radius-base);
+    font-size: 0.8125rem;
+    color: #1d4ed8;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 180ms;
+}
+
+.awa-track-shipment:hover {
+    background: #dbeafe;
+}
+
+.awa-track-shipment svg {
+    flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   PRODUCT INFO — inline highlights (PDP/PLP)
+   ═══════════════════════════════════════════════════════════════ */
+
+.awa-product-highlights {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+}
+
+.awa-product-highlight {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    background: #f8fafc;
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-sm);
+    font-size: 0.8125rem;
+    color: var(--awa-layer-color-text-secondary);
+    font-weight: 500;
+}
+
+.awa-product-highlight svg {
+    color: var(--awa-layer-color-primary);
+    flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CUSTOMER ACCOUNT — section dividers
+   ═══════════════════════════════════════════════════════════════ */
+
+.customer-account .page-title-wrapper {
+    border-bottom: 1px solid var(--awa-layer-color-border);
+    padding-bottom: var(--awa-layer-space-md);
+    margin-bottom: var(--awa-layer-space-xl);
+}
+
+.customer-account .block-title,
+.sales-guest-view .block-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--awa-layer-color-text-primary);
+    margin-bottom: var(--awa-layer-space-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--awa-layer-space-sm);
+}
+
+.customer-account .block-title .action,
+.customer-account .block-title a {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--awa-layer-color-primary);
+    text-decoration: none;
+}
+
+.customer-account .block-title .action:hover,
+.customer-account .block-title a:hover {
+    color: #8e2629;
+}

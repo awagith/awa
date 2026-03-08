@@ -1,17 +1,17 @@
 /**
  * AWA Motos — Recently Viewed Products
  * Persiste até 4 produtos visitados no localStorage e renderiza no bloco widget.
+ *
+ * Uso via x-magento-init:
+ *   Track: {"*": {"AWA_Custom/js/recently-viewed": {"action":"track","product":{...}}}}
+ *   Widget: {"#container": {"AWA_Custom/js/recently-viewed": {"action":"widget","excludeId":123}}}
  */
-define(['jquery', 'mage/url', 'Magento_Customer/js/customer-data'], function ($, urlBuilder, customerData) {
+define(['jquery'], function ($) {
     'use strict';
 
     var STORAGE_KEY = 'awa_recently_viewed';
-    var MAX_ITEMS = 4;
+    var MAX_ITEMS   = 4;
 
-    /**
-     * Retrieve list from localStorage
-     * @return {Array}
-     */
     function getItems() {
         try {
             return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
@@ -20,102 +20,96 @@ define(['jquery', 'mage/url', 'Magento_Customer/js/customer-data'], function ($,
         }
     }
 
-    /**
-     * Save list to localStorage
-     * @param {Array} items
-     */
     function saveItems(items) {
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-        } catch (e) {
-            // Quota exceeded or private mode — fail silently
-        }
+        } catch (e) { /* quota exceeded or private mode */ }
     }
 
-    /**
-     * Track a product page view
-     * @param {Object} product {id, name, url, imageUrl, price}
-     */
     function trackProduct(product) {
         if (!product || !product.id) {
             return;
         }
-
-        var items = getItems();
-
-        // Remove if already exists (move to front)
-        items = items.filter(function (item) {
+        var items = getItems().filter(function (item) {
             return item.id !== product.id;
         });
-
-        // Prepend current product
         items.unshift(product);
-
-        // Keep only MAX_ITEMS
-        items = items.slice(0, MAX_ITEMS);
-
-        saveItems(items);
+        saveItems(items.slice(0, MAX_ITEMS));
     }
 
-    /**
-     * Render recently viewed block
-     * @param {jQuery} $container
-     */
-    function renderBlock($container) {
-        var items = getItems();
+    function escapeHtml(str) {
+        return $('<div>').text(String(str || '')).html();
+    }
+
+    function renderWidget($container, config) {
+        var excludeId = config.excludeId || 0;
+        var maxItems  = config.maxItems || MAX_ITEMS;
+        var items = getItems().filter(function (item) {
+            return item.id !== excludeId;
+        }).slice(0, maxItems);
 
         if (!items.length) {
             $container.hide();
             return;
         }
 
-        var html = '<div class="awa-recently-viewed">'
-            + '<h3 class="awa-recently-viewed__title">Vistos recentemente</h3>'
-            + '<div class="awa-recently-viewed__grid">';
+        var $grid = $container.find('#awa-rv-grid');
+        if (!$grid.length) {
+            $grid = $container.find('.awa-recently-viewed__grid');
+        }
 
+        var html = '';
         items.forEach(function (item) {
             html += '<div class="awa-recently-viewed__item">'
-                + '<a href="' + $('<div>').text(item.url).html() + '" class="awa-recently-viewed__link">'
+                + '<a href="' + escapeHtml(item.url) + '" class="awa-recently-viewed__link">'
                 + '<div class="awa-recently-viewed__image-wrap">'
-                + '<img src="' + $('<div>').text(item.imageUrl || '').html() + '" alt="' + $('<div>').text(item.name).html() + '" loading="lazy" class="awa-recently-viewed__image"/>'
+                + (item.imageUrl
+                    ? '<img src="' + escapeHtml(item.imageUrl) + '" alt="' + escapeHtml(item.name) + '" loading="lazy" class="awa-recently-viewed__image"/>'
+                    : '<div class="awa-recently-viewed__image-placeholder"></div>')
                 + '</div>'
                 + '<div class="awa-recently-viewed__info">'
-                + '<span class="awa-recently-viewed__name">' + $('<div>').text(item.name).html() + '</span>'
-                + (item.price ? '<span class="awa-recently-viewed__price">' + $('<div>').text(item.price).html() + '</span>' : '')
+                + '<span class="awa-recently-viewed__name">' + escapeHtml(item.name) + '</span>'
+                + (item.sku ? '<span class="awa-recently-viewed__sku">SKU: ' + escapeHtml(item.sku) + '</span>' : '')
+                + (item.price ? '<span class="awa-recently-viewed__price">' + escapeHtml(item.price) + '</span>' : '')
                 + '</div>'
                 + '</a>'
                 + '</div>';
         });
 
-        html += '</div></div>';
-
-        $container.html(html).show();
+        $grid.html(html);
+        $container.show();
     }
 
-    return {
-        /**
-         * Initialize on PDP — call with product data
-         * @param {Object} config
-         */
-        initTracker: function (config) {
-            if (config && config.product) {
-                trackProduct(config.product);
-            }
-        },
+    /**
+     * Magento component entry point.
+     * Called by x-magento-init as: component(config, element)
+     * For "*" selector, element is undefined.
+     */
+    return function (config, element) {
+        var action = config.action || 'widget';
 
-        /**
-         * Initialize the widget block renderer
-         * @param {Object} config
-         * @param {HTMLElement} element
-         */
-        initWidget: function (config, element) {
-            var $container = $(element);
-            renderBlock($container);
-        },
+        if (action === 'track') {
+            trackProduct(config.product || null);
+            return;
+        }
 
-        /**
-         * Expose getItems for external use
-         */
-        getItems: getItems
+        if (action === 'widget' && element) {
+            $(function () {
+                renderWidget($(element), config);
+            });
+            return;
+        }
+
+        // Legacy API: initTracker / initWidget
+        return {
+            initTracker: function (cfg) {
+                trackProduct((cfg || {}).product || null);
+            },
+            initWidget: function (cfg, el) {
+                $(function () { renderWidget($(el), cfg || {}); });
+            },
+            getItems: getItems
+        };
     };
 });
+

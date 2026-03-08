@@ -32,7 +32,7 @@ $blockLoaderUrl = $sanitizeUrl($block->getViewFileUrl('images/loader-1.gif'));
             <span class="total-mini-cart-item">
             <!-- ko if: getCartParam('summary_count') -->
                 <span class="awa-minicart-qty"><!-- ko text: getCartParam('summary_count') --><!-- /ko --></span>
-                <span class="awa-minicart-subtotal" data-awa-role="minicart-subtotal"><!-- ko html: getCartParam('subtotal') --><!-- /ko --></span>
+                <span class="awa-minicart-subtotal" data-awa-role="minicart-subtotal" data-bind="html: getCartParam('subtotal')"></span>
             <!-- /ko -->
             <!-- ko if: !getCartParam('summary_count') -->
                 <span class="awa-minicart-qty">0</span>

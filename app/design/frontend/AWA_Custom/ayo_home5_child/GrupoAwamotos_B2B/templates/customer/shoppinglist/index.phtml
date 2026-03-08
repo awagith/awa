@@ -1,0 +1,121 @@
+<?php
+/**
+ * AWA B2B shopping lists.
+ *
+ * @var \GrupoAwamotos\B2B\Block\Customer\ShoppingList\ListBlock $block
+ * @var \GrupoAwamotos\B2B\ViewModel\ShoppingListViewModel $viewModel
+ */
+$viewModel = $block->getData('view_model');
+$lists = $viewModel->getCustomerLists();
+?>
+<div class="b2b-shoppinglist-index b2b-page-shell awa-b2b-flow-page awa-b2b-flow-page--shoppinglist"
+     data-mage-init='<?= /* @noEscape */ json_encode(['GrupoAwamotos_B2B/js/shoppinglist/index' => new \stdClass()]) ?>'>
+    <header class="awa-b2b-flow-hero">
+        <div>
+            <p class="awa-b2b-flow-hero__eyebrow"><?= $block->escapeHtml(__('Reposicao recorrente')) ?></p>
+            <h1 class="awa-b2b-flow-hero__title"><?= $block->escapeHtml(__('Listas de compras da operacao')) ?></h1>
+            <p class="awa-b2b-flow-hero__lead">
+                <?= $block->escapeHtml(__('Organize mixes por filial, giro, campanha ou atendimento e reative compras com menos cliques.')) ?>
+            </p>
+        </div>
+        <div class="awa-b2b-flow-hero__meta">
+            <span><?= $block->escapeHtml(__('Listas ativas %1', (int) $lists->getSize())) ?></span>
+            <span><?= $block->escapeHtml(__('Criacao rapida no mesmo fluxo')) ?></span>
+        </div>
+    </header>
+
+    <section class="awa-b2b-flow-panel awa-b2b-flow-panel--top-actions">
+        <div class="awa-b2b-flow-panel__header">
+            <div>
+                <p class="awa-b2b-flow-panel__eyebrow"><?= $block->escapeHtml(__('Gestao')) ?></p>
+                <h2 class="awa-b2b-flow-panel__title"><?= $block->escapeHtml(__('Criar e administrar listas')) ?></h2>
+            </div>
+            <button type="button" id="btn-create-list" class="action primary" title="<?= $block->escapeHtmlAttr(__('Nova Lista')) ?>">
+                <span><?= $block->escapeHtml(__('Criar nova lista')) ?></span>
+            </button>
+        </div>
+
+        <div class="shoppinglist-create-form" id="create-list-form" style="display:none;">
+            <form action="<?= $block->escapeUrl($block->getCreateUrl()) ?>" method="post" data-mage-init='{"validation":{}}'>
+                <?= $block->getBlockHtml('formkey') ?>
+                <div class="field required">
+                    <label for="list-name" class="label"><span><?= $block->escapeHtml(__('Nome da lista')) ?></span></label>
+                    <div class="control">
+                        <input type="text" id="list-name" name="name" required data-validate="{required:true}"
+                               placeholder="<?= $block->escapeHtmlAttr(__('Ex: Giro oficina Honda')) ?>" />
+                    </div>
+                </div>
+                <div class="field">
+                    <label for="list-description" class="label"><span><?= $block->escapeHtml(__('Descricao')) ?></span></label>
+                    <div class="control">
+                        <textarea id="list-description" name="description" rows="2"
+                                  placeholder="<?= $block->escapeHtmlAttr(__('Use a descricao para explicar uso, filial ou campanha.')) ?>"></textarea>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button type="submit" class="action primary"><span><?= $block->escapeHtml(__('Criar')) ?></span></button>
+                    <button type="button" class="action secondary" id="btn-cancel-create"><span><?= $block->escapeHtml(__('Cancelar')) ?></span></button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <?php if ($lists->getSize() === 0): ?>
+        <section class="awa-b2b-flow-panel awa-b2b-empty-state">
+            <div class="awa-b2b-empty-state__copy">
+                <p class="awa-b2b-flow-panel__eyebrow"><?= $block->escapeHtml(__('Primeira lista')) ?></p>
+                <h2 class="awa-b2b-flow-panel__title"><?= $block->escapeHtml(__('Nenhuma lista criada ainda')) ?></h2>
+                <p><?= $block->escapeHtml(__('Crie sua primeira lista para separar mixes de reposicao, revisao e compras recorrentes.')) ?></p>
+            </div>
+        </section>
+    <?php else: ?>
+        <section class="awa-b2b-flow-panel">
+            <div class="awa-b2b-flow-panel__header">
+                <div>
+                    <p class="awa-b2b-flow-panel__eyebrow"><?= $block->escapeHtml(__('Listas ativas')) ?></p>
+                    <h2 class="awa-b2b-flow-panel__title"><?= $block->escapeHtml(__('Portifolio de reposicao')) ?></h2>
+                </div>
+            </div>
+            <div class="shoppinglist-grid awa-b2b-list-grid">
+                <?php foreach ($lists as $list): ?>
+                    <?php $itemCount = $viewModel->getItemsCount((int) $list->getId()); ?>
+                    <article class="shoppinglist-card awa-b2b-list-card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="list-name">
+                                    <a href="<?= $block->escapeUrl($block->getViewUrl((int) $list->getId())) ?>">
+                                        <?= $block->escapeHtml($list->getName()) ?>
+                                    </a>
+                                </h3>
+                                <p class="awa-b2b-list-card__eyebrow"><?= $block->escapeHtml(__('Operacao recorrente')) ?></p>
+                            </div>
+                            <?php if ($list->getData('is_default')): ?>
+                                <span class="default-badge"><?= $block->escapeHtml(__('Padrao')) ?></span>
+                            <?php endif; ?>
+                        </div>
+                        <?php if ($list->getData('description')): ?>
+                            <p class="list-description"><?= $block->escapeHtml($list->getData('description')) ?></p>
+                        <?php endif; ?>
+                        <div class="card-meta">
+                            <span class="item-count"><?= $block->escapeHtml(__('%1 itens', (int) $itemCount)) ?></span>
+                            <span class="list-total"><?= /* @noEscape */ $viewModel->getListTotal((int) $list->getId()) ?></span>
+                        </div>
+                        <div class="card-actions">
+                            <a href="<?= $block->escapeUrl($block->getViewUrl((int) $list->getId())) ?>" class="action view">
+                                <span><?= $block->escapeHtml(__('Ver itens')) ?></span>
+                            </a>
+                            <a href="<?= $block->escapeUrl($block->getAddToCartUrl((int) $list->getId())) ?>" class="action primary add-to-cart">
+                                <span><?= $block->escapeHtml(__('Adicionar ao carrinho')) ?></span>
+                            </a>
+                            <a href="<?= $block->escapeUrl($block->getDeleteUrl((int) $list->getId())) ?>"
+                               class="action delete"
+                               data-confirm="<?= $block->escapeHtmlAttr(__('Tem certeza que deseja excluir esta lista?')) ?>">
+                                <span><?= $block->escapeHtml(__('Excluir')) ?></span>
+                            </a>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        </section>
+    <?php endif; ?>
+</div>

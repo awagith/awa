@@ -1,0 +1,167 @@
+/* ===========================================
+   AWA MOTOS — OnePageCheckout Responsive Override
+   Sobrescreve _module.less do vendor Rokanthemes
+
+   PROBLEMAS CORRIGIDOS:
+   - #quick-window width: 900px fixo
+   - Colunas 48% float sem breakpoints mobile
+   - 8x float declarations sem fallback flex
+   - Zero media queries para stacking mobile
+
+   CARREGADO VIA: layout/onepagecheckout_index_index.xml
+=========================================== */
+
+/* ─── CHECKOUT COLUMNS ─── */
+body .page-wrapper .opc-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--awa-space-6, 24px);
+}
+
+body .page-wrapper .opc-wrapper .opc-shipping,
+body .page-wrapper .opc-wrapper .opc-payment,
+body .page-wrapper .opc-wrapper .opc-review {
+    float: none;
+    width: 100%;
+}
+
+/* Desktop: 2-column layout */
+@media (width >= 992px) {
+    body .page-wrapper .opc-wrapper .opc-shipping,
+    body .page-wrapper .opc-wrapper .opc-payment {
+        flex: 0 0 48%;
+        max-width: 48%;
+    }
+
+    body .page-wrapper .opc-wrapper .opc-review {
+        flex: 0 0 100%;
+    }
+}
+
+/* ─── ONEPAGECHECKOUT 2-COL OVERRIDE ─── */
+body .page-wrapper .onepagecheckout-index-index .checkout-container {
+    max-width: var(--awa-container, 1200px);
+    margin: 0 auto;
+    padding: 0 var(--awa-space-5, 20px);
+}
+
+body .page-wrapper .onepagecheckout-index-index .opc-sidebar {
+    float: none;
+    width: 100%;
+}
+
+body .page-wrapper .onepagecheckout-index-index .opc-main {
+    float: none;
+    width: 100%;
+}
+
+@media (width >= 992px) {
+    body .page-wrapper .onepagecheckout-index-index .checkout-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--awa-space-6, 24px);
+    }
+
+    body .page-wrapper .onepagecheckout-index-index .opc-main {
+        flex: 1 1 0%;
+        min-width: 0;
+    }
+
+    body .page-wrapper .onepagecheckout-index-index .opc-sidebar {
+        flex: 0 0 380px;
+        max-width: 380px;
+    }
+}
+
+/* ─── MODAL INSIDE CHECKOUT ─── */
+body .page-wrapper .onepagecheckout-index-index #quick-window,
+body .page-wrapper .onepagecheckout-index-index .modal-popup {
+    width: min(900px, 95vw);
+    max-width: 95vw;
+}
+
+/* ─── FORM FIELDS ─── */
+body .page-wrapper .onepagecheckout-index-index .field {
+    float: none;
+    width: 100%;
+    margin-bottom: var(--awa-space-3, 12px);
+}
+
+body .page-wrapper .onepagecheckout-index-index .field .control input,
+body .page-wrapper .onepagecheckout-index-index .field .control select,
+body .page-wrapper .onepagecheckout-index-index .field .control textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Desktop: 2 fields per row */
+@media (width >= 768px) {
+    body .page-wrapper .onepagecheckout-index-index .fieldset > .field {
+        display: inline-block;
+        width: 48%;
+        vertical-align: top;
+        margin-right: 2%;
+    }
+
+    body .page-wrapper .onepagecheckout-index-index .fieldset > .field:nth-child(2n) {
+        margin-right: 0;
+    }
+
+    body .page-wrapper .onepagecheckout-index-index .fieldset > .field.field-full,
+    body .page-wrapper .onepagecheckout-index-index .fieldset > .field[name*="street"],
+    body .page-wrapper .onepagecheckout-index-index .fieldset > .field._required {
+        width: 100%;
+        margin-right: 0;
+    }
+}
+
+/* ─── ORDER SUMMARY ─── */
+body .page-wrapper .onepagecheckout-index-index .opc-block-summary {
+    background: var(--awa-gray-50, #fafbfc);
+    border-radius: var(--awa-radius-md, 8px);
+    padding: var(--awa-space-5, 20px);
+    border: 1px solid var(--awa-gray-200, #e9ecef);
+}
+
+/* ─── PLACE ORDER BUTTON ─── */
+body .page-wrapper .onepagecheckout-index-index .action.primary.checkout {
+    width: 100%;
+    padding: var(--awa-space-4, 16px);
+    font-size: var(--awa-text-base, 16px);
+    border-radius: var(--awa-radius-sm, 4px);
+}
+
+/* ============================================================
+   BREAKPOINTS RESPONSIVOS
+   ============================================================ */
+
+/* Tablet (≤ 991px) */
+@media (width <= 991px) {
+    body .page-wrapper .onepagecheckout-index-index .checkout-container {
+        display: block;
+    }
+
+    body .page-wrapper .onepagecheckout-index-index .opc-main,
+    body .page-wrapper .onepagecheckout-index-index .opc-sidebar {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: var(--awa-space-5, 20px);
+    }
+}
+
+/* Mobile (≤ 680px) */
+@media (width <= 680px) {
+    body .page-wrapper .onepagecheckout-index-index .checkout-container {
+        padding: 0 var(--awa-space-3, 12px);
+    }
+
+    body .page-wrapper .onepagecheckout-index-index .opc-block-summary {
+        padding: var(--awa-space-3, 12px);
+    }
+
+    body .page-wrapper .onepagecheckout-index-index .fieldset > .field {
+        display: block;
+        width: 100%;
+        margin-right: 0;
+    }
+}

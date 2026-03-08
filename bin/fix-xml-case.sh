@@ -9,9 +9,8 @@
 #   virtualType ≠ virtualtype (lowercase = schema violation)
 #
 # Uso:
-#   ./bin/fix-xml-case.sh              # corrige todos os XMLs customizados
-#   ./bin/fix-xml-case.sh --check      # apenas verifica (exit 1 se corrompido)
-#   ./bin/fix-xml-case.sh path/file.xml  # corrige arquivo específico
+#   ./bin/fix-xml-case.sh --check [arquivo.xml]   # apenas verifica (exit 1 se corrompido)
+#   ./bin/fix-xml-case.sh --fix [arquivo.xml]     # corrige explicitamente, sob demanda
 #
 # Integração:
 #   - Git pre-commit hook: .git/hooks/pre-commit
@@ -21,7 +20,7 @@
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-CHECK_ONLY=false
+MODE="check"
 FIXED=0
 ERRORS=0
 
@@ -36,25 +35,56 @@ warn() { echo -e "${YELLOW}[XML-FIX]${NC} $*"; }
 err() { echo -e "${RED}[XML-FIX]${NC} $*" >&2; }
 
 # All corruption patterns to detect
-CORRUPTION_PATTERN='nonamespaceschemalocation|<referenceblock |<\/referenceblock>|<referencecontainer |<\/referencecontainer>|<virtualtype |<\/virtualtype>|<argument [^>]*";|<item [^>]*";|<column;|xmlns:xsi="[^"]*";'
+CORRUPTION_PATTERN='nonamespaceschemalocation|<referenceblock |<\/referenceblock>|<referencecontainer |<\/referencecontainer>|<virtualtype |<\/virtualtype>|<argument [^>]*";|<item [^>]*";|<column;|<page;|xmlns:xsi="[^"]*";|sortorder='
+
+validate_xml() {
+    local file="$1"
+
+    php -r '
+        libxml_use_internal_errors(true);
+        $dom = new DOMDocument();
+        $ok = $dom->load($argv[1]);
+        if (!$ok) {
+            foreach (libxml_get_errors() as $error) {
+                fwrite(STDERR, trim($error->message) . PHP_EOL);
+            }
+            exit(1);
+        }
+    ' "$file"
+}
+
+is_corrupted() {
+    local file="$1"
+
+    if grep -qE "$CORRUPTION_PATTERN" "$file" 2>/dev/null; then
+        return 0
+    fi
+
+    if ! validate_xml "$file" >/dev/null 2>&1; then
+        return 0
+    fi
+
+    return 1
+}
 
 fix_file() {
     local file="$1"
-    local changed=false
 
     # Skip if file doesn't exist or is not XML
     [[ ! -f "$file" ]] && return 0
     [[ "$file" != *.xml ]] && return 0
 
-    # Check for corruption patterns
-    if grep -qiE "$CORRUPTION_PATTERN" "$file" 2>/dev/null; then
-        if $CHECK_ONLY; then
+    # Check for corruption patterns (case-sensitive: only match WRONG casing)
+    if is_corrupted "$file"; then
+        if [[ "$MODE" == "check" ]]; then
             err "CORRUPTED: $file"
             return 1
         fi
 
-        # Remove immutable flag if set
-        chattr -i "$file" 2>/dev/null || true
+        if [[ ! -w "$file" ]]; then
+            err "READ-ONLY: $file"
+            return 1
+        fi
 
         # ── Fix xmlns semicolons ──────────────────────────────────────
         sed -i 's/xmlns:xsi="http:\/\/www.w3.org\/2001\/XMLSchema-instance";/xmlns:xsi="http:\/\/www.w3.org\/2001\/XMLSchema-instance"/g' "$file"
@@ -88,8 +118,12 @@ fix_file() {
         # Catches: name="handlers"; xsi:type  →  name="handlers" xsi:type
         sed -i 's/"; xsi:type/" xsi:type/g' "$file"
 
-        # Restore immutable flag
-        chattr +i "$file" 2>/dev/null || true
+        sed -i 's/sortorder=/sortOrder=/g' "$file"
+
+        if ! validate_xml "$file"; then
+            err "INVALID AFTER FIX: $file"
+            return 1
+        fi
 
         log "FIXED: $file"
         ((FIXED++))
@@ -98,7 +132,10 @@ fix_file() {
 
 # Parse arguments
 if [[ "${1:-}" == "--check" ]]; then
-    CHECK_ONLY=true
+    MODE="check"
+    shift
+elif [[ "${1:-}" == "--fix" ]]; then
+    MODE="fix"
     shift
 fi
 
@@ -115,9 +152,9 @@ else
     done < <(find "$PROJECT_ROOT/app/code" "$PROJECT_ROOT/app/design" -name '*.xml' -print0 2>/dev/null)
 fi
 
-if $CHECK_ONLY; then
+if [[ "$MODE" == "check" ]]; then
     if [[ $ERRORS -gt 0 ]]; then
-        err "$ERRORS corrupted XML file(s) found. Run: ./bin/fix-xml-case.sh"
+        err "$ERRORS corrupted XML file(s) found. Run: ./bin/fix-xml-case.sh --fix [arquivo.xml]"
         exit 1
     else
         log "All XML files OK"

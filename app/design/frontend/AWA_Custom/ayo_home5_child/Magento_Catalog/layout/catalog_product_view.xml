@@ -48,6 +48,19 @@
                    after="product.info.price" />
         </referenceContainer>
 
+        <!-- AWA Recently Viewed Tracker: persiste no localStorage + renderiza widget -->
+        <referenceContainer name="content">
+            <block class="Magento\Catalog\Block\Product\View"
+                   name="awa.recently.viewed.tracker"
+                   template="Magento_Catalog::product/view/awa-recently-viewed-tracker.phtml"
+                   after="-"
+                   cacheable="false">
+                <arguments>
+                    <argument name="image_helper" xsi:type="object">Magento\Catalog\Helper\Image</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
         <!-- Hide original attributes tab -->
         <referenceBlock name="product.attributes" remove="true"/>
 

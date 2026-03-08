@@ -11,6 +11,33 @@ use Magento\Framework\App\Action\Action;
 	$show_navigation = $block->getConfig('navigation');
 	$show_pagination = $block->getConfig('pagination');
 	$auto = $block->getConfig('auto');
+	$buildOperationalMeta = static function ($product): array {
+		$soldBy = $product->getAttributeText('sold_by');
+		if (is_array($soldBy)) {
+			$soldBy = implode(', ', array_filter(array_map('trim', $soldBy)));
+		}
+
+		$meta = [
+			[
+				'label' => (string) __('Cod'),
+				'value' => trim((string) $product->getSku()),
+			],
+			[
+				'label' => (string) __('EAN'),
+				'value' => trim((string) $product->getData('ean')),
+			],
+			[
+				'label' => (string) __('Caixa'),
+				'value' => trim((string) $product->getData('master_box_qty')),
+			],
+			[
+				'label' => (string) __('Linha'),
+				'value' => trim((string) $soldBy),
+			],
+		];
+
+		return array_values(array_filter($meta, static fn (array $item): bool => $item['value'] !== ''));
+	};
 	$imageBlock =  $block->getLayout()->createBlock('Magento\Catalog\Block\Product\Image');
 	$image = 'new_products_content_widget_grid';
 	$type = 'widget-new-grid';
@@ -19,6 +46,7 @@ use Magento\Framework\App\Action\Action;
 	?>
 <div class="list-tab-product common-tab-system-fixed">
 	<div class="rokan-product-heading clearfix">
+    	<span class="awa-producttab-eyebrow"><?php echo $block->escapeHtml(__('Curadoria B2B')); ?></span>
     	<h2><?php echo $block->escapeHtml(__('Os Principais')) ?><span class="sup-title"> <?php echo $block->escapeHtml(__('Produtos %1', date('Y'))) ?></span></h2>
     </div>
 	<div class="clearfix">
@@ -89,20 +117,25 @@ use Magento\Framework\App\Action\Action;
 											<?php echo $block->escapeHtml($_item->getName()); ?>
 										</a>
 									</h3>
-									<div class="awa-b2b-sku" style="font-size: 11px; color: #64748b; margin-bottom: 6px; font-weight: 500;">
-										<span class="label" style="text-transform: uppercase; margin-right: 2px; color: #9ca3af;">Cod:</span>
-										<span class="value" style="font-family: monospace; color: #475569; letter-spacing: 0.5px;"><?php echo $block->escapeHtml($_item->getSku()); ?></span>
+									<div class="awa-b2b-sku" data-awa-role="product-sku">
+										<span class="awa-b2b-sku__label"><?php echo $block->escapeHtml(__('Cod:')); ?></span>
+										<span class="awa-b2b-sku__value"><?php echo $block->escapeHtml($_item->getSku()); ?></span>
 									</div>
+									<?php $operationalMeta = array_slice($buildOperationalMeta($_item), 0, 4); ?>
+									<?php if ($operationalMeta !== []): ?>
+									<ul class="awa-b2b-card-meta awa-b2b-card-meta--producttab" aria-label="<?php echo $block->escapeHtmlAttr(__('Dados operacionais do produto')); ?>">
+										<?php foreach ($operationalMeta as $metaItem): ?>
+										<li class="awa-b2b-card-meta__item">
+											<span class="awa-b2b-card-meta__label"><?php echo $block->escapeHtml($metaItem['label']); ?></span>
+											<span class="awa-b2b-card-meta__value"><?php echo $block->escapeHtml($metaItem['value']); ?></span>
+										</li>
+										<?php endforeach; ?>
+									</ul>
+									<?php endif; ?>
 									<div class="product-rating">
 										<?php if ($templateType): ?>
 												<?php echo $block->getReviewsSummaryHtml($_item, $templateType,true); ?>
 											<?php endif; ?>
-									</div>
-									<div class="sold-by">
-										<?php
-											$cats = $_item->getAttributeText('sold_by');
-											echo ' <span>' . $block->escapeHtml(__('Sold by:')) . '</span>' . $block->escapeHtml($cats);
-										 ?>
 									</div>
 									<div class="info-price">
 										<?php /* @noEscape */ echo $this->helper('Rokanthemes\Themeoption\Helper\Data')->getPriceDisplayCustom($block->getProductPrice($_item)) ?>
@@ -164,9 +197,9 @@ use Magento\Framework\App\Action\Action;
 			"owl": {
 				"lazyLoad": true,
 				"autoPlay": <?php echo ($auto) ? 'true' : 'false'; ?>,
-				"items": <?php echo (int)$items ?: 3; ?>,
-				"itemsDesktop": [1366, 3],
-				"itemsDesktopSmall": [1199, 2],
+				"items": <?php echo (int)$items ?: 4; ?>,
+				"itemsDesktop": [1366, 4],
+				"itemsDesktopSmall": [1199, 3],
 				"itemsTablet": [991, 2],
 				"itemsMobile": [680, 1],
 				"slideSpeed": <?php echo (int)$speed ?: 500; ?>,

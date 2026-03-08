@@ -1,0 +1,88 @@
+/* ===========================================
+   AWA MOTOS — VerticalMenu Responsive Override
+   Sobrescreve _module.less do vendor Rokanthemes
+
+   PROBLEMAS CORRIGIDOS:
+   - width: 871px hardcoded no submenu fullwidth
+   - min-width: 230px no submenu
+   - Float-based columns (50/25/20/16.66%)
+   - Megamenu overflow em viewports < 900px
+
+   CARREGADO VIA: layout/default.xml
+=========================================== */
+
+/* ─── VERTICAL MENU CONTAINER ─── */
+body .page-wrapper .block-verticalmenu .vertical-custommenu .submenu,
+body .page-wrapper .block-verticalmenu .vertical-custommenu .subMenu {
+    min-width: min(230px, 90vw);
+    max-width: min(871px, calc(100vw - 40px));
+    width: auto;
+    box-sizing: border-box;
+}
+
+/* ─── FULLWIDTH SUBMENU ─── */
+body .page-wrapper .block-verticalmenu .vertical-custommenu .submenu.full-width,
+body .page-wrapper .block-verticalmenu .vertical-custommenu .subMenu.full-width,
+body .page-wrapper .block-verticalmenu .vertical-custommenu .submenu.fullwidth,
+body .page-wrapper .block-verticalmenu .vertical-custommenu .subMenu.fullwidth {
+    width: min(871px, calc(100vw - 40px));
+    max-width: calc(100vw - 40px);
+}
+
+/* ─── SUBMENU COLUMNS ─── */
+body .page-wrapper .block-verticalmenu .vertical-custommenu .submenu .col,
+body .page-wrapper .block-verticalmenu .vertical-custommenu .subMenu .col,
+body .page-wrapper .block-verticalmenu .vertical-custommenu .submenu .megamenu-col,
+body .page-wrapper .block-verticalmenu .vertical-custommenu .subMenu .megamenu-col {
+    float: none;
+    display: inline-block;
+    vertical-align: top;
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+/* ─── STATIC BLOCK CONTENT ─── */
+body .page-wrapper .block-verticalmenu .vertical-custommenu .submenu .static-content img,
+body .page-wrapper .block-verticalmenu .vertical-custommenu .subMenu .static-content img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* ============================================================
+   BREAKPOINTS RESPONSIVOS
+   ============================================================ */
+
+/* Tablet (≤ 991px) — vertical menu usually hidden on mobile, but guard against overflow */
+@media (width <= 991px) {
+    body .page-wrapper .block-verticalmenu .vertical-custommenu .submenu,
+    body .page-wrapper .block-verticalmenu .vertical-custommenu .subMenu {
+        position: static;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-shadow: none;
+    }
+
+    body .page-wrapper .block-verticalmenu .vertical-custommenu .submenu.full-width,
+    body .page-wrapper .block-verticalmenu .vertical-custommenu .subMenu.full-width,
+    body .page-wrapper .block-verticalmenu .vertical-custommenu .submenu.fullwidth,
+    body .page-wrapper .block-verticalmenu .vertical-custommenu .subMenu.fullwidth {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    body .page-wrapper .block-verticalmenu .vertical-custommenu .submenu .col,
+    body .page-wrapper .block-verticalmenu .vertical-custommenu .subMenu .col,
+    body .page-wrapper .block-verticalmenu .vertical-custommenu .submenu .megamenu-col,
+    body .page-wrapper .block-verticalmenu .vertical-custommenu .subMenu .megamenu-col {
+        display: block;
+        width: 100%;
+    }
+}
+
+/* Mobile (≤ 680px) */
+@media (width <= 680px) {
+    body .page-wrapper .block-verticalmenu .vertical-custommenu .submenu .static-content {
+        display: none;
+    }
+}

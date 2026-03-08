@@ -108,6 +108,16 @@ function parseArgs(argv) {
   return opts;
 }
 
+function getAuthConfig() {
+  const username = String(process.env.B2B_TEST_USER || '').trim();
+  const password = String(process.env.B2B_TEST_PASS || '');
+  return {
+    enabled: Boolean(username && password),
+    username,
+    password,
+  };
+}
+
 function ensureDir(dirPath) {
   fs.mkdirSync(dirPath, { recursive: true });
 }
@@ -499,6 +509,539 @@ async function basicVisualHealth(page) {
     pageMain: { selector: null, visible: false },
     hero: { selector: null, visible: false },
     markers: { topHome: false, ayoWrapper: false, compatBootstrap: false },
+  };
+}
+
+async function desktopHomeNavigationHealth(page) {
+  const snapshot = await withNodeTimeout(
+    page.evaluate(() => {
+      function probe(selector) {
+        const el = document.querySelector(selector);
+        if (!el) {
+          return {
+            selector,
+            exists: false,
+            visible: false,
+            display: 'none',
+            visibility: 'hidden',
+            opacity: '0',
+            pointerEvents: 'none',
+            width: 0,
+            height: 0,
+          };
+        }
+
+        const cs = window.getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        const width = Math.round(rect.width || 0);
+        const height = Math.round(rect.height || 0);
+        const visible = cs.display !== 'none'
+          && cs.visibility !== 'hidden'
+          && Number(cs.opacity || '1') > 0
+          && width > 1
+          && height > 1;
+
+        return {
+          selector,
+          exists: true,
+          visible,
+          display: cs.display || '',
+          visibility: cs.visibility || '',
+          opacity: cs.opacity || '',
+          pointerEvents: cs.pointerEvents || '',
+          width,
+          height,
+        };
+      }
+
+      const menuColumn = probe('.header-control.header-nav .menu_left_home1');
+      const mainColumn = probe('.header-control.header-nav .menu_primary');
+      const verticalMenu = probe('.header-control.header-nav .menu_left_home1 .navigation.verticalmenu.side-verticalmenu');
+      const verticalTrigger = probe('.header-control.header-nav .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > .title-category-dropdown');
+      const verticalList = probe('.header-control.header-nav .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown');
+      const mainNav = probe('.header-control.header-nav .menu_primary .navigation.custommenu.main-nav');
+
+      const triggerNode = document.querySelector(verticalTrigger.selector);
+      const triggerClickable = Boolean(
+        triggerNode
+        && verticalTrigger.visible
+        && verticalTrigger.pointerEvents !== 'none'
+        && !triggerNode.hasAttribute('disabled')
+        && String(triggerNode.getAttribute('aria-disabled') || '').toLowerCase() !== 'true'
+      );
+
+      return {
+        menuColumn,
+        mainColumn,
+        verticalMenu,
+        verticalTrigger,
+        verticalList,
+        mainNav,
+        triggerClickable,
+      };
+    }),
+    3500,
+    null
+  );
+
+  if (snapshot && typeof snapshot === 'object') {
+    return snapshot;
+  }
+
+  return {
+    menuColumn: { exists: false, visible: false, width: 0, height: 0, display: 'none' },
+    mainColumn: { exists: false, visible: false, width: 0, height: 0, display: 'none' },
+    verticalMenu: { exists: false, visible: false, width: 0, height: 0, display: 'none' },
+    verticalTrigger: { exists: false, visible: false, width: 0, height: 0, display: 'none', pointerEvents: 'none' },
+    verticalList: { exists: false, visible: false, width: 0, height: 0, display: 'none' },
+    mainNav: { exists: false, visible: false, width: 0, height: 0, display: 'none' },
+    triggerClickable: false,
+  };
+}
+
+async function homeMerchandisingHealth(page) {
+  const snapshot = await withNodeTimeout(
+    page.evaluate(() => {
+      function isVisible(el) {
+        if (!el) return false;
+        const cs = window.getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        return (
+          cs.display !== 'none' &&
+          cs.visibility !== 'hidden' &&
+          Number(cs.opacity || '1') > 0 &&
+          rect.width > 1 &&
+          rect.height > 1
+        );
+      }
+
+      function probe(entry) {
+        const root = document.querySelector(entry.selector);
+        if (!root) {
+          return {
+            key: entry.key,
+            selector: entry.selector,
+            exists: false,
+            visible: false,
+            top: -1,
+            width: 0,
+            height: 0,
+            itemCount: 0,
+            heading: '',
+          };
+        }
+
+        const rect = root.getBoundingClientRect();
+        const headingNode = root.querySelector('h2');
+        const itemCount = root.querySelectorAll('.product-item, .item-inner, .awa-application-shortcuts__card').length;
+
+        return {
+          key: entry.key,
+          selector: entry.selector,
+          exists: true,
+          visible: isVisible(root),
+          top: Math.round((window.scrollY || 0) + rect.top),
+          width: Math.round(rect.width || 0),
+          height: Math.round(rect.height || 0),
+          itemCount,
+          heading: headingNode ? String(headingNode.textContent || '').trim() : '',
+        };
+      }
+
+      const expected = [
+        { key: 'bestsellers', selector: '.top-home-content--bestsellers' },
+        { key: 'bauletos', selector: '.top-home-content--category-shelf-bauletos' },
+        { key: 'guidoes', selector: '.top-home-content--category-shelf-guidoes' },
+        { key: 'fitment', selector: '.top-home-content--fitment-search' },
+        { key: 'applications', selector: '.top-home-content--application-shortcuts' },
+        { key: 'launches', selector: '.top-home-content--launches' },
+      ];
+
+      const sections = {};
+      for (const entry of expected) {
+        sections[entry.key] = probe(entry);
+      }
+
+      const visibleSections = Object.values(sections)
+        .filter((section) => section.visible)
+        .sort((a, b) => a.top - b.top);
+      const orderKeys = visibleSections.map((section) => section.key);
+      let cursor = -1;
+      let orderOk = true;
+      for (const entry of expected) {
+        const index = orderKeys.indexOf(entry.key);
+        if (index === -1 || index < cursor) {
+          orderOk = false;
+          break;
+        }
+        cursor = index;
+      }
+
+      const appCards = document.querySelectorAll('.top-home-content--application-shortcuts .awa-application-shortcuts__card');
+      const container = document.querySelector('.top-home-content--merch > .container')
+        || document.querySelector('.top-home-content--application-shortcuts > .container')
+        || document.querySelector('.page-main.container');
+      const containerRect = container ? container.getBoundingClientRect() : { width: 0 };
+      const containerStyle = container ? window.getComputedStyle(container) : null;
+      const scrollWidth = Math.max(
+        document.documentElement ? document.documentElement.scrollWidth : 0,
+        document.body ? document.body.scrollWidth : 0
+      );
+      const viewportWidth = window.innerWidth || 0;
+
+      return {
+        sections,
+        orderKeys,
+        orderOk,
+        appCardCount: appCards.length,
+        container: {
+          width: Math.round(containerRect.width || 0),
+          paddingLeft: containerStyle ? Math.round(parseFloat(containerStyle.paddingLeft || '0')) : 0,
+          paddingRight: containerStyle ? Math.round(parseFloat(containerStyle.paddingRight || '0')) : 0,
+        },
+        overflow: {
+          scrollWidth,
+          viewportWidth,
+          hasOverflow: scrollWidth - viewportWidth > 2,
+        },
+      };
+    }),
+    3500,
+    null
+  );
+
+  if (snapshot && typeof snapshot === 'object') {
+    return snapshot;
+  }
+
+  return {
+    sections: {
+      bestsellers: { exists: false, visible: false, itemCount: 0, heading: '', top: -1, width: 0, height: 0 },
+      bauletos: { exists: false, visible: false, itemCount: 0, heading: '', top: -1, width: 0, height: 0 },
+      guidoes: { exists: false, visible: false, itemCount: 0, heading: '', top: -1, width: 0, height: 0 },
+      fitment: { exists: false, visible: false, itemCount: 0, heading: '', top: -1, width: 0, height: 0 },
+      applications: { exists: false, visible: false, itemCount: 0, heading: '', top: -1, width: 0, height: 0 },
+      launches: { exists: false, visible: false, itemCount: 0, heading: '', top: -1, width: 0, height: 0 },
+    },
+    orderKeys: [],
+    orderOk: false,
+    appCardCount: 0,
+    container: { width: 0, paddingLeft: 0, paddingRight: 0 },
+    overflow: { scrollWidth: 0, viewportWidth: 0, hasOverflow: false },
+  };
+}
+
+async function loginB2B(page, opts, auth) {
+  const loginUrl = safeUrl(opts.baseUrl, '/b2b/account/login/');
+  await gotoAndStabilize(page, loginUrl, opts.timeoutMs);
+
+  if (/\/b2b\/account\/dashboard\/?/.test(page.url())) {
+    return {
+      userSelector: null,
+      passSelector: null,
+      submitSelector: null,
+      submitted: false,
+      redirected: true,
+      finalUrl: page.url(),
+    };
+  }
+
+  const userSelector = await visible(page, [
+    '#b2b-email',
+    'input[name="login[username]"]',
+    'input[type="text"]',
+  ], 1500);
+  const passSelector = await visible(page, [
+    '#b2b-pass',
+    'input[name="login[password]"]',
+    'input[type="password"]',
+  ], 1500);
+  const submitSelector = await visible(page, [
+    '#b2b-login-form .b2b-btn-entrar',
+    '#b2b-login-form button[type="submit"]',
+    '.b2b-btn-entrar',
+    'button[type="submit"]',
+  ], 1500);
+
+  if (!userSelector || !passSelector) {
+    return {
+      userSelector,
+      passSelector,
+      submitSelector,
+      submitted: false,
+      redirected: false,
+      finalUrl: page.url(),
+    };
+  }
+
+  await page.locator(userSelector).first().fill(auth.username, { timeout: 5000 });
+  await page.locator(passSelector).first().fill(auth.password, { timeout: 5000 });
+
+  let submitted = false;
+  let redirected = false;
+  if (submitSelector) {
+    submitted = true;
+    redirected = await Promise.race([
+      Promise.all([
+        page.waitForURL(/\/b2b\/account\/dashboard\/?/i, { timeout: Math.min(opts.timeoutMs, 15000) }),
+        page.locator(submitSelector).first().click({ timeout: 5000 }),
+      ]).then(() => true).catch(() => false),
+      sleep(Math.min(opts.timeoutMs, 16000)).then(() => false),
+    ]);
+  } else {
+    submitted = true;
+    redirected = await Promise.race([
+      Promise.all([
+        page.waitForURL(/\/b2b\/account\/dashboard\/?/i, { timeout: Math.min(opts.timeoutMs, 15000) }),
+        page.locator(passSelector).first().press('Enter', { timeout: 3000 }),
+      ]).then(() => true).catch(() => false),
+      sleep(Math.min(opts.timeoutMs, 16000)).then(() => false),
+    ]);
+  }
+
+  await withNodeTimeout(waitForPageStable(page, opts.timeoutMs), 7000, null);
+  if (!redirected && /\/b2b\/account\/dashboard\/?/i.test(page.url())) {
+    redirected = true;
+  }
+
+  return {
+    userSelector,
+    passSelector,
+    submitSelector,
+    submitted,
+    redirected,
+    finalUrl: page.url(),
+  };
+}
+
+async function authenticatedDashboardHealth(page) {
+  const snapshot = await withNodeTimeout(
+    page.evaluate(() => {
+      function probe(selector) {
+        if (!selector) {
+          return { selector: '', exists: false, visible: false, width: 0, height: 0 };
+        }
+        const el = document.querySelector(selector);
+        if (!el) {
+          return { selector, exists: false, visible: false, width: 0, height: 0 };
+        }
+        const cs = window.getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        return {
+          selector,
+          exists: true,
+          visible: cs.display !== 'none'
+            && cs.visibility !== 'hidden'
+            && Number(cs.opacity || '1') > 0
+            && rect.width > 1
+            && rect.height > 1,
+          width: Math.round(rect.width || 0),
+          height: Math.round(rect.height || 0),
+        };
+      }
+
+      function probeAny(selectors) {
+        for (const selector of selectors) {
+          const result = probe(selector);
+          if (result.exists) {
+            return result;
+          }
+        }
+        return { selector: selectors[0] || '', exists: false, visible: false, width: 0, height: 0 };
+      }
+
+      const shell = probe('.awa-b2b-ops-dashboard');
+      const hero = probe('.awa-b2b-ops-hero');
+      const sidebar = probeAny([
+        '.sidebar.sidebar-main',
+        '.sidebar-main',
+        '.columns .sidebar',
+        '.column.sidebar',
+      ]);
+      const nav = probeAny([
+        '.sidebar.sidebar-main .block-collapsible-nav',
+        '.sidebar-main .block-collapsible-nav',
+        '.block-collapsible-nav',
+        '.account-nav',
+      ]);
+      const main = probe('.page-main.container');
+      const kpis = document.querySelectorAll('.awa-b2b-kpi-card').length;
+      const actions = document.querySelectorAll('.awa-b2b-action-grid__card').length;
+      const checklist = document.querySelectorAll('.awa-b2b-checklist__item').length;
+      const suggestions = document.querySelectorAll('.awa-b2b-suggestion-list__item').length;
+      const scrollWidth = Math.max(
+        document.documentElement ? document.documentElement.scrollWidth : 0,
+        document.body ? document.body.scrollWidth : 0
+      );
+      const viewportWidth = window.innerWidth || 0;
+
+      return {
+        shell,
+        hero,
+        sidebar,
+        nav,
+        main,
+        kpis,
+        actions,
+        checklist,
+        suggestions,
+        bodyClass: document.body ? (document.body.getAttribute('class') || '') : '',
+        overflow: {
+          scrollWidth,
+          viewportWidth,
+          hasOverflow: scrollWidth - viewportWidth > 2,
+        },
+      };
+    }),
+    3500,
+    null
+  );
+
+  if (snapshot && typeof snapshot === 'object') {
+    return snapshot;
+  }
+
+  return {
+    shell: { exists: false, visible: false, width: 0, height: 0 },
+    hero: { exists: false, visible: false, width: 0, height: 0 },
+    sidebar: { exists: false, visible: false, width: 0, height: 0 },
+    nav: { exists: false, visible: false, width: 0, height: 0 },
+    main: { exists: false, visible: false, width: 0, height: 0 },
+    kpis: 0,
+    actions: 0,
+    checklist: 0,
+    suggestions: 0,
+    bodyClass: '',
+    overflow: { scrollWidth: 0, viewportWidth: 0, hasOverflow: false },
+  };
+}
+
+async function authenticatedFlowPageHealth(page, pageKey) {
+  const roots = {
+    quickorder: '.awa-b2b-flow-page--quickorder',
+    shoppinglist: '.awa-b2b-flow-page--shoppinglist',
+    quoteHistory: '.awa-b2b-flow-page--quote-history',
+  };
+
+  const snapshot = await withNodeTimeout(
+    page.evaluate(({ selectorMap, key }) => {
+      function probe(selector) {
+        if (!selector) {
+          return { selector: '', exists: false, visible: false, width: 0, height: 0 };
+        }
+        const el = document.querySelector(selector);
+        if (!el) {
+          return { selector, exists: false, visible: false, width: 0, height: 0 };
+        }
+        const cs = window.getComputedStyle(el);
+        const rect = el.getBoundingClientRect();
+        return {
+          selector,
+          exists: true,
+          visible: cs.display !== 'none'
+            && cs.visibility !== 'hidden'
+            && Number(cs.opacity || '1') > 0
+            && rect.width > 1
+            && rect.height > 1,
+          width: Math.round(rect.width || 0),
+          height: Math.round(rect.height || 0),
+        };
+      }
+
+      function probeAny(selectors) {
+        for (const selector of selectors) {
+          const result = probe(selector);
+          if (result.exists) {
+            return result;
+          }
+        }
+        return { selector: selectors[0] || '', exists: false, visible: false, width: 0, height: 0 };
+      }
+
+      const scrollWidth = Math.max(
+        document.documentElement ? document.documentElement.scrollWidth : 0,
+        document.body ? document.body.scrollWidth : 0
+      );
+      const viewportWidth = window.innerWidth || 0;
+
+      return {
+        root: probe(selectorMap[key] || ''),
+        sidebar: probeAny([
+          '.sidebar.sidebar-main',
+          '.sidebar-main',
+          '.columns .sidebar',
+          '.column.sidebar',
+        ]),
+        nav: probeAny([
+          '.sidebar.sidebar-main .block-collapsible-nav',
+          '.sidebar-main .block-collapsible-nav',
+          '.block-collapsible-nav',
+          '.account-nav',
+        ]),
+        hero: probe('.awa-b2b-flow-hero'),
+        quickorder: {
+          container: probe('#quickorder-container'),
+          rows: probe('#quickorder-rows'),
+          addRow: probe('#quickorder-add-row'),
+          submit: probe('#quickorder-submit'),
+          csvZone: probe('#csv-dropzone'),
+          csvInput: probe('#csv-file-input'),
+          csvStatus: probe('#csv-status'),
+        },
+        shoppinglist: {
+          createButton: probe('#btn-create-list'),
+          createForm: probe('#create-list-form'),
+          cards: document.querySelectorAll('.shoppinglist-card.awa-b2b-list-card').length,
+          empty: probe('.awa-b2b-empty-state'),
+        },
+        quoteHistory: {
+          table: probe('#quote-history-table'),
+          rows: document.querySelectorAll('#quote-history-table tbody tr').length,
+          empty: probe('.awa-b2b-empty-state'),
+          statuses: document.querySelectorAll('.quote-status').length,
+        },
+        overflow: {
+          scrollWidth,
+          viewportWidth,
+          hasOverflow: scrollWidth - viewportWidth > 2,
+        },
+      };
+    }, { selectorMap: roots, key: pageKey }),
+    3500,
+    null
+  );
+
+  if (snapshot && typeof snapshot === 'object') {
+    return snapshot;
+  }
+
+  return {
+    root: { exists: false, visible: false, width: 0, height: 0 },
+    sidebar: { exists: false, visible: false, width: 0, height: 0 },
+    nav: { exists: false, visible: false, width: 0, height: 0 },
+    hero: { exists: false, visible: false, width: 0, height: 0 },
+    quickorder: {
+      container: { exists: false, visible: false },
+      rows: { exists: false, visible: false },
+      addRow: { exists: false, visible: false },
+      submit: { exists: false, visible: false },
+      csvZone: { exists: false, visible: false },
+      csvInput: { exists: false, visible: false },
+      csvStatus: { exists: false, visible: false },
+    },
+    shoppinglist: {
+      createButton: { exists: false, visible: false },
+      createForm: { exists: false, visible: false },
+      cards: 0,
+      empty: { exists: false, visible: false },
+    },
+    quoteHistory: {
+      table: { exists: false, visible: false },
+      rows: 0,
+      empty: { exists: false, visible: false },
+      statuses: 0,
+    },
+    overflow: { scrollWidth: 0, viewportWidth: 0, hasOverflow: false },
   };
 }
 
@@ -988,11 +1531,41 @@ async function runDesktopFlow(browser, opts, outputDir) {
         checks.push({ ok: health.footer.visible, severity: 'warn', message: 'Footer not visible on home' });
         checks.push({ ok: health.childThemeCssPresent, severity: 'warn', message: 'Child-theme assets not detected in home HTML/CSS links' });
       }
+      const navHealth = await desktopHomeNavigationHealth(page);
+      const merchHealth = await homeMerchandisingHealth(page);
+      checks.push({ ok: navHealth.menuColumn.visible, severity: 'fail', message: 'Desktop home vertical menu column (.menu_left_home1) is hidden' });
+      checks.push({ ok: navHealth.mainColumn.visible, severity: 'fail', message: 'Desktop home main navigation column (.menu_primary) is hidden' });
+      checks.push({ ok: navHealth.verticalMenu.visible && navHealth.verticalTrigger.visible, severity: 'fail', message: 'Desktop home vertical menu shell/trigger is not visible' });
+      checks.push({ ok: navHealth.verticalList.visible, severity: 'fail', message: 'Desktop home vertical menu list is hidden' });
+      checks.push({ ok: navHealth.mainNav.visible, severity: 'fail', message: 'Desktop home custom main navigation is hidden' });
+      checks.push({
+        ok: navHealth.triggerClickable || navHealth.verticalList.visible,
+        severity: 'fail',
+        message: 'Desktop home vertical menu trigger is not clickable and list is not visible',
+      });
+      checks.push({ ok: merchHealth.sections.bestsellers.visible && merchHealth.sections.bestsellers.itemCount > 0, severity: 'fail', message: 'Desktop home bestseller shelf is missing or empty' });
+      checks.push({ ok: merchHealth.sections.bauletos.visible && merchHealth.sections.bauletos.itemCount > 0, severity: 'fail', message: 'Desktop home Bauletos shelf is missing or empty' });
+      checks.push({ ok: merchHealth.sections.guidoes.visible && merchHealth.sections.guidoes.itemCount > 0, severity: 'fail', message: 'Desktop home Guidoes shelf is missing or empty' });
+      checks.push({ ok: merchHealth.sections.fitment.visible, severity: 'fail', message: 'Desktop home fitment section is missing' });
+      checks.push({ ok: merchHealth.sections.applications.visible && merchHealth.appCardCount >= 6, severity: 'fail', message: 'Desktop home Aplicacoes em alta is missing or incomplete' });
+      checks.push({ ok: merchHealth.sections.launches.visible && merchHealth.sections.launches.itemCount > 0, severity: 'fail', message: 'Desktop home Lancamentos shelf is missing or empty' });
+      checks.push({ ok: merchHealth.orderOk, severity: 'fail', message: 'Desktop home merchandising sections are not in the expected order' });
+      checks.push({ ok: !merchHealth.overflow.hasOverflow, severity: 'fail', message: 'Desktop home has horizontal overflow' });
+      checks.push({ ok: merchHealth.container.width > 0 && merchHealth.container.width <= 1200, severity: 'fail', message: 'Desktop home merchandising container exceeds 1200px' });
+      checks.push({ ok: merchHealth.container.paddingLeft >= 14 && merchHealth.container.paddingRight >= 14, severity: 'warn', message: 'Desktop home merchandising container padding is below target' });
       const notes = [`title=${health.title}`, `bodyClass=${health.bodyClass}`, `cssLinks=${health.cssLinkCount}`, `childThemeCssLinks=${health.childThemeCssLinkCount}`];
       if (discoveredProductUrl) notes.push(`Sitemap PDP candidate: ${discoveredProductUrl}`);
       if (discoveredCmsUrl) notes.push(`Sitemap CMS candidate: ${discoveredCmsUrl}`);
       if (!health.markers.compatBootstrap) notes.push('awaCustomCompatBootstrap marker not found on home HTML');
       if (stalled && hasShots) notes.push('Home DOM probe stalled in headless; using screenshot evidence');
+      notes.push(`homeNav.menuLeft display=${navHealth.menuColumn.display} size=${navHealth.menuColumn.width}x${navHealth.menuColumn.height}`);
+      notes.push(`homeNav.mainMenu display=${navHealth.mainColumn.display} size=${navHealth.mainColumn.width}x${navHealth.mainColumn.height}`);
+      notes.push(`homeNav.verticalList display=${navHealth.verticalList.display} size=${navHealth.verticalList.width}x${navHealth.verticalList.height}`);
+      notes.push(`homeNav.trigger pointerEvents=${navHealth.verticalTrigger.pointerEvents} clickable=${navHealth.triggerClickable ? 'yes' : 'no'}`);
+      notes.push(`homeMerch.order=${merchHealth.orderKeys.join(' > ') || 'none'}`);
+      notes.push(`homeMerch.cards applications=${merchHealth.appCardCount} bestsellers=${merchHealth.sections.bestsellers.itemCount} bauletos=${merchHealth.sections.bauletos.itemCount} guidoes=${merchHealth.sections.guidoes.itemCount} launches=${merchHealth.sections.launches.itemCount}`);
+      notes.push(`homeMerch.container width=${merchHealth.container.width} pad=${merchHealth.container.paddingLeft}/${merchHealth.container.paddingRight}`);
+      notes.push(`homeMerch.overflow scroll=${merchHealth.overflow.scrollWidth} viewport=${merchHealth.overflow.viewportWidth} overflow=${merchHealth.overflow.hasOverflow ? 'yes' : 'no'}`);
 
       out('[desktop][home] search interaction');
       const searchClick = await clickIfVisible(page, [
@@ -1012,6 +1585,25 @@ async function runDesktopFlow(browser, opts, outputDir) {
       }
 
       out('[desktop][home] nav interaction');
+      const verticalMenuClick = await clickIfVisible(page, [
+        '.header-control.header-nav .menu_left_home1 [data-role="awa-vertical-menu-trigger"]',
+        '.header-control.header-nav .menu_left_home1 .title-category-dropdown',
+      ], { postWaitMs: 700 });
+      if (verticalMenuClick.clicked) {
+        notes.push(`Clicked vertical menu trigger: ${verticalMenuClick.selector}`);
+      } else {
+        notes.push('Vertical menu trigger click skipped (hidden/non-clickable in desktop mode)');
+      }
+      const verticalListVisibleSel = await visible(page, [
+        '.header-control.header-nav .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown',
+        '.header-control.header-nav .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown.vmm-open',
+      ], 900);
+      if (verticalListVisibleSel) {
+        notes.push(`Vertical menu list visible: ${verticalListVisibleSel}`);
+      } else {
+        notes.push('Vertical menu list not visible after interaction');
+      }
+
       const urlBeforeNavClick = page.url();
       const navClick = await clickIfVisible(page, [
         '.navigation.custommenu.main-nav > ul > li > a',
@@ -1438,6 +2030,7 @@ async function runMobileFlow(browser, opts, outputDir) {
         '.nav-sections',
       ], 1200);
       const navDetected = Boolean(navToggleVisible || navTogglePresent || maybeDrawer);
+      const merchHealth = await homeMerchandisingHealth(page);
 
       const mobileHomeStalled = healthProbeStalled(health);
       const checks = [
@@ -1451,10 +2044,22 @@ async function runMobileFlow(browser, opts, outputDir) {
         checks.push({ ok: health.footer.visible, severity: 'warn', message: 'Mobile home footer not visible in initial state' });
         checks.push({ ok: navDetected, severity: 'warn', message: 'Mobile menu toggle/drawer not detected' });
       }
+      checks.push({ ok: merchHealth.sections.bestsellers.visible && merchHealth.sections.bestsellers.itemCount > 0, severity: 'fail', message: 'Mobile home bestseller shelf is missing or empty' });
+      checks.push({ ok: merchHealth.sections.bauletos.visible && merchHealth.sections.bauletos.itemCount > 0, severity: 'fail', message: 'Mobile home Bauletos shelf is missing or empty' });
+      checks.push({ ok: merchHealth.sections.guidoes.visible && merchHealth.sections.guidoes.itemCount > 0, severity: 'fail', message: 'Mobile home Guidoes shelf is missing or empty' });
+      checks.push({ ok: merchHealth.sections.applications.visible && merchHealth.appCardCount >= 6, severity: 'fail', message: 'Mobile home Aplicacoes em alta is missing or incomplete' });
+      checks.push({ ok: merchHealth.sections.launches.visible && merchHealth.sections.launches.itemCount > 0, severity: 'fail', message: 'Mobile home Lancamentos shelf is missing or empty' });
+      checks.push({ ok: merchHealth.orderOk, severity: 'fail', message: 'Mobile home merchandising sections are not in the expected order' });
+      checks.push({ ok: !merchHealth.overflow.hasOverflow, severity: 'fail', message: 'Mobile home has horizontal overflow' });
+      checks.push({ ok: merchHealth.container.paddingLeft >= 10 && merchHealth.container.paddingRight >= 10, severity: 'warn', message: 'Mobile home merchandising container padding is below target' });
       const notes = [
         `navToggleVisible=${navToggleVisible || 'none'}`,
         `navTogglePresent=${navTogglePresent || 'none'}`,
         `drawerMarker=${maybeDrawer || 'none'}`,
+        `homeMerch.order=${merchHealth.orderKeys.join(' > ') || 'none'}`,
+        `homeMerch.cards applications=${merchHealth.appCardCount} bestsellers=${merchHealth.sections.bestsellers.itemCount} bauletos=${merchHealth.sections.bauletos.itemCount} guidoes=${merchHealth.sections.guidoes.itemCount} launches=${merchHealth.sections.launches.itemCount}`,
+        `homeMerch.container width=${merchHealth.container.width} pad=${merchHealth.container.paddingLeft}/${merchHealth.container.paddingRight}`,
+        `homeMerch.overflow scroll=${merchHealth.overflow.scrollWidth} viewport=${merchHealth.overflow.viewportWidth} overflow=${merchHealth.overflow.hasOverflow ? 'yes' : 'no'}`,
       ];
       const shots = mobileHomeShots;
       return { final_url: page.url(), checks, notes, screenshots: [shots.viewport, shots.fullPage].filter(Boolean) };
@@ -1506,6 +2111,187 @@ async function runMobileFlow(browser, opts, outputDir) {
   if (context) {
     await withNodeTimeout(context.close(), 8000, null);
   }
+  return results;
+}
+
+async function runAuthenticatedDesktopFlow(browser, opts, outputDir, auth) {
+  const ua =
+    'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36';
+  const context = await browser.newContext({
+    viewport: { width: 1366, height: 900 },
+    userAgent: ua,
+    locale: 'pt-BR',
+    timezoneId: 'America/Sao_Paulo',
+  });
+  const page = await context.newPage();
+  page.setDefaultTimeout(opts.timeoutMs);
+  page.setDefaultNavigationTimeout(opts.timeoutMs);
+  const collector = new PageCollector(page, opts.baseUrl);
+  const screenshotDir = path.join(outputDir, 'screenshots');
+  ensureDir(screenshotDir);
+  const results = [];
+
+  results.push(
+    await withStep(page, collector, outputDir, 'desktop-auth', 'dashboard', async () => {
+      const authResult = await loginB2B(page, opts, auth);
+      await withNodeTimeout(page.waitForURL(/\/b2b\/account\/dashboard\/?/i, { timeout: 10000 }), 11000, null);
+      await withNodeTimeout(waitForPageStable(page, opts.timeoutMs), 7000, null);
+      const health = await authenticatedDashboardHealth(page);
+      const shots = await captureScreens(page, screenshotDir, 'desktop-auth-dashboard', true);
+      const checks = [
+        { ok: Boolean(authResult.userSelector && authResult.passSelector), severity: 'fail', message: 'B2B auth login fields not found in desktop auth flow' },
+        { ok: authResult.submitted, severity: 'fail', message: 'B2B auth form was not submitted in desktop auth flow' },
+        { ok: authResult.redirected && /\/b2b\/account\/dashboard\/?/i.test(page.url()), severity: 'fail', message: 'B2B auth desktop flow did not redirect to dashboard' },
+        { ok: health.shell.visible, severity: 'fail', message: 'B2B dashboard shell is not visible after login' },
+        { ok: health.hero.visible, severity: 'fail', message: 'B2B dashboard hero is not visible after login' },
+        { ok: health.kpis >= 4, severity: 'fail', message: 'B2B dashboard KPI strip is incomplete' },
+        { ok: health.actions >= 6, severity: 'fail', message: 'B2B dashboard quick actions grid is incomplete' },
+        { ok: health.sidebar.visible && health.nav.visible, severity: 'fail', message: 'B2B dashboard account sidebar is not visible on desktop' },
+        { ok: !health.overflow.hasOverflow, severity: 'fail', message: 'B2B dashboard has horizontal overflow on desktop' },
+      ];
+      const notes = [
+        `userSelector=${authResult.userSelector || 'none'}`,
+        `passSelector=${authResult.passSelector || 'none'}`,
+        `submitSelector=${authResult.submitSelector || 'none'}`,
+        `dashboardKpis=${health.kpis}`,
+        `dashboardActions=${health.actions}`,
+        `dashboardChecklist=${health.checklist}`,
+        `dashboardSuggestions=${health.suggestions}`,
+        `bodyClass=${health.bodyClass}`,
+        `overflow scroll=${health.overflow.scrollWidth} viewport=${health.overflow.viewportWidth} overflow=${health.overflow.hasOverflow ? 'yes' : 'no'}`,
+      ];
+      return { final_url: page.url(), checks, notes, screenshots: [shots.viewport, shots.fullPage].filter(Boolean) };
+    })
+  );
+
+  results.push(
+    await withStep(page, collector, outputDir, 'desktop-auth', 'quickorder', async () => {
+      await gotoAndStabilize(page, safeUrl(opts.baseUrl, '/b2b/quickorder/'), opts.timeoutMs);
+      const health = await authenticatedFlowPageHealth(page, 'quickorder');
+      const shots = await captureScreens(page, screenshotDir, 'desktop-auth-quickorder', true);
+      const checks = [
+        { ok: /\/b2b\/quickorder\/?/.test(page.url()), severity: 'fail', message: 'Desktop auth quick order route did not stay on /b2b/quickorder/' },
+        { ok: health.root.visible && health.hero.visible, severity: 'fail', message: 'Desktop auth quick order shell/hero is not visible' },
+        { ok: health.sidebar.visible && health.nav.visible, severity: 'fail', message: 'Desktop auth quick order sidebar is not visible' },
+        { ok: health.quickorder.container.visible, severity: 'fail', message: 'Quick order container is not visible' },
+        { ok: health.quickorder.rows.visible, severity: 'fail', message: 'Quick order rows container is not visible' },
+        { ok: health.quickorder.addRow.visible && health.quickorder.submit.visible, severity: 'fail', message: 'Quick order main CTAs are not visible' },
+        { ok: health.quickorder.csvZone.visible && health.quickorder.csvInput.exists && health.quickorder.csvStatus.exists, severity: 'fail', message: 'Quick order CSV hooks are missing or hidden' },
+        { ok: !health.overflow.hasOverflow, severity: 'fail', message: 'Quick order page has horizontal overflow on desktop' },
+      ];
+      const notes = [
+        `quickorder.root=${health.root.visible ? 'visible' : 'hidden'}`,
+        `quickorder.sidebar=${health.sidebar.visible ? 'visible' : 'hidden'}`,
+        `quickorder.csvInput=${health.quickorder.csvInput.exists ? 'present' : 'missing'}`,
+        `overflow scroll=${health.overflow.scrollWidth} viewport=${health.overflow.viewportWidth} overflow=${health.overflow.hasOverflow ? 'yes' : 'no'}`,
+      ];
+      return { final_url: page.url(), checks, notes, screenshots: [shots.viewport, shots.fullPage].filter(Boolean) };
+    })
+  );
+
+  results.push(
+    await withStep(page, collector, outputDir, 'desktop-auth', 'shoppinglist', async () => {
+      await gotoAndStabilize(page, safeUrl(opts.baseUrl, '/b2b/shoppinglist/'), opts.timeoutMs);
+      const health = await authenticatedFlowPageHealth(page, 'shoppinglist');
+      const shots = await captureScreens(page, screenshotDir, 'desktop-auth-shoppinglist', true);
+      const checks = [
+        { ok: /\/b2b\/shoppinglist\/?/.test(page.url()), severity: 'fail', message: 'Desktop auth shopping list route did not stay on /b2b/shoppinglist/' },
+        { ok: health.root.visible && health.hero.visible, severity: 'fail', message: 'Desktop auth shopping list shell/hero is not visible' },
+        { ok: health.sidebar.visible && health.nav.visible, severity: 'fail', message: 'Desktop auth shopping list sidebar is not visible' },
+        { ok: health.shoppinglist.createButton.visible && health.shoppinglist.createForm.exists, severity: 'fail', message: 'Shopping list create controls are missing' },
+        { ok: health.shoppinglist.cards > 0 || health.shoppinglist.empty.visible, severity: 'fail', message: 'Shopping list page has neither cards nor empty state' },
+        { ok: !health.overflow.hasOverflow, severity: 'fail', message: 'Shopping list page has horizontal overflow on desktop' },
+      ];
+      const notes = [
+        `shoppinglist.cards=${health.shoppinglist.cards}`,
+        `shoppinglist.empty=${health.shoppinglist.empty.visible ? 'visible' : 'hidden'}`,
+        `overflow scroll=${health.overflow.scrollWidth} viewport=${health.overflow.viewportWidth} overflow=${health.overflow.hasOverflow ? 'yes' : 'no'}`,
+      ];
+      return { final_url: page.url(), checks, notes, screenshots: [shots.viewport, shots.fullPage].filter(Boolean) };
+    })
+  );
+
+  results.push(
+    await withStep(page, collector, outputDir, 'desktop-auth', 'quote_history', async () => {
+      await gotoAndStabilize(page, safeUrl(opts.baseUrl, '/b2b/quote/history/'), opts.timeoutMs);
+      const health = await authenticatedFlowPageHealth(page, 'quoteHistory');
+      const shots = await captureScreens(page, screenshotDir, 'desktop-auth-quote-history', true);
+      const checks = [
+        { ok: /\/b2b\/quote\/history\/?/.test(page.url()), severity: 'fail', message: 'Desktop auth quote history route did not stay on /b2b/quote/history/' },
+        { ok: health.root.visible && health.hero.visible, severity: 'fail', message: 'Desktop auth quote history shell/hero is not visible' },
+        { ok: health.sidebar.visible && health.nav.visible, severity: 'fail', message: 'Desktop auth quote history sidebar is not visible' },
+        { ok: health.quoteHistory.table.visible || health.quoteHistory.empty.visible, severity: 'fail', message: 'Quote history page has neither table nor empty state' },
+        { ok: !health.quoteHistory.table.visible || health.quoteHistory.rows >= 0, severity: 'warn', message: 'Quote history table row count could not be read' },
+        { ok: !health.overflow.hasOverflow, severity: 'fail', message: 'Quote history page has horizontal overflow on desktop' },
+      ];
+      const notes = [
+        `quoteHistory.rows=${health.quoteHistory.rows}`,
+        `quoteHistory.statuses=${health.quoteHistory.statuses}`,
+        `quoteHistory.empty=${health.quoteHistory.empty.visible ? 'visible' : 'hidden'}`,
+        `overflow scroll=${health.overflow.scrollWidth} viewport=${health.overflow.viewportWidth} overflow=${health.overflow.hasOverflow ? 'yes' : 'no'}`,
+      ];
+      return { final_url: page.url(), checks, notes, screenshots: [shots.viewport, shots.fullPage].filter(Boolean) };
+    })
+  );
+
+  await withNodeTimeout(context.close(), 8000, null);
+  return results;
+}
+
+async function runAuthenticatedMobileFlow(browser, opts, outputDir, auth) {
+  const iphone12 = devices['iPhone 12'] || {
+    viewport: { width: 390, height: 844 },
+    userAgent:
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 16_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.0 Mobile/15E148 Safari/604.1',
+    deviceScaleFactor: 3,
+    isMobile: true,
+    hasTouch: true,
+    defaultBrowserType: 'webkit',
+  };
+  const context = await browser.newContext({
+    ...iphone12,
+    locale: 'pt-BR',
+    timezoneId: 'America/Sao_Paulo',
+  });
+  const page = await context.newPage();
+  page.setDefaultTimeout(opts.timeoutMs);
+  page.setDefaultNavigationTimeout(opts.timeoutMs);
+  const collector = new PageCollector(page, opts.baseUrl);
+  const screenshotDir = path.join(outputDir, 'screenshots');
+  ensureDir(screenshotDir);
+
+  const results = [];
+  results.push(
+    await withStep(page, collector, outputDir, 'mobile-auth', 'dashboard', async () => {
+      const authResult = await loginB2B(page, opts, auth);
+      await withNodeTimeout(page.waitForURL(/\/b2b\/account\/dashboard\/?/i, { timeout: 10000 }), 11000, null);
+      await withNodeTimeout(waitForPageStable(page, opts.timeoutMs), 7000, null);
+      const health = await authenticatedDashboardHealth(page);
+      const shots = await captureScreens(page, screenshotDir, 'mobile-auth-dashboard', true);
+      const checks = [
+        { ok: Boolean(authResult.userSelector && authResult.passSelector), severity: 'fail', message: 'B2B auth login fields not found in mobile auth flow' },
+        { ok: authResult.submitted, severity: 'fail', message: 'B2B auth form was not submitted in mobile auth flow' },
+        { ok: authResult.redirected && /\/b2b\/account\/dashboard\/?/i.test(page.url()), severity: 'fail', message: 'B2B auth mobile flow did not redirect to dashboard' },
+        { ok: health.shell.visible && health.hero.visible, severity: 'fail', message: 'B2B mobile dashboard shell/hero is not visible after login' },
+        { ok: health.kpis >= 4, severity: 'fail', message: 'B2B mobile dashboard KPI strip is incomplete' },
+        { ok: health.actions >= 6, severity: 'fail', message: 'B2B mobile dashboard quick actions grid is incomplete' },
+        { ok: health.sidebar.exists || health.nav.exists, severity: 'warn', message: 'B2B mobile dashboard account navigation block was not detected' },
+        { ok: !health.overflow.hasOverflow, severity: 'fail', message: 'B2B mobile dashboard has horizontal overflow' },
+      ];
+      const notes = [
+        `userSelector=${authResult.userSelector || 'none'}`,
+        `passSelector=${authResult.passSelector || 'none'}`,
+        `submitSelector=${authResult.submitSelector || 'none'}`,
+        `dashboardKpis=${health.kpis}`,
+        `dashboardActions=${health.actions}`,
+        `bodyClass=${health.bodyClass}`,
+        `overflow scroll=${health.overflow.scrollWidth} viewport=${health.overflow.viewportWidth} overflow=${health.overflow.hasOverflow ? 'yes' : 'no'}`,
+      ];
+      return { final_url: page.url(), checks, notes, screenshots: [shots.viewport, shots.fullPage].filter(Boolean) };
+    })
+  );
+
+  await withNodeTimeout(context.close(), 8000, null);
   return results;
 }
 
@@ -1592,6 +2378,7 @@ function buildFindingsMarkdown(report) {
 
 async function main() {
   const opts = parseArgs(process.argv);
+  const auth = getAuthConfig();
   const outputDir = opts.outDir;
   ensureDir(outputDir);
   ensureDir(path.join(outputDir, 'screenshots'));
@@ -1606,6 +2393,7 @@ async function main() {
       browser: 'chromium',
       desktop_viewport: '1366x900',
       mobile_profile: 'iPhone 12',
+      authenticated_mode: auth.enabled ? 'enabled' : 'disabled',
       output_dir: outputDir,
     },
     results: [],
@@ -1631,6 +2419,10 @@ async function main() {
 
     report.results.push(...(await runDesktopFlow(browser, opts, outputDir)));
     report.results.push(...(await runMobileFlow(browser, opts, outputDir)));
+    if (auth.enabled) {
+      report.results.push(...(await runAuthenticatedDesktopFlow(browser, opts, outputDir, auth)));
+      report.results.push(...(await runAuthenticatedMobileFlow(browser, opts, outputDir, auth)));
+    }
   } finally {
     if (browser) {
       await withNodeTimeout(browser.close(), 10000, null);

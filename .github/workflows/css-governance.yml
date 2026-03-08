@@ -1,0 +1,33 @@
+name: css-governance
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  css-governance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Node dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: CSS parse + architecture + token guard
+        run: |
+          npm run -s lint:css:parse
+          npm run -s lint:css:architecture
+          npm run -s lint:css:b2b-tokens
+
+      - name: CSS governance delta
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: npm run -s lint:css:governance

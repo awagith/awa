@@ -95,7 +95,7 @@ class SafeVerticalmenu extends \Rokanthemes\VerticalMenu\Block\Verticalmenu
             $columnClass = 'col-sm-' . $safeColumnWidth . ' mega-columns columns' . $safeColumns;
         }
 
-        $listClass = 'subchildmenu navigation__inner-list navigation__inner-list--level1';
+        $listClass = 'subchildmenu navigation__inner-list-ul navigation__inner-list--level1';
         if ($columnClass !== '') {
             $listClass .= ' ' . $columnClass;
         }

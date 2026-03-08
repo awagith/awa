@@ -1,6 +1,6 @@
 .b2b-page-shell {
-    --awa-b2b-primary: var(--aw-primary, #b73337);
-    --awa-b2b-primary-dark: var(--aw-primary-dark, #8e2629);
+    --awa-b2b-primary: var(--aw-primary);
+    --awa-b2b-primary-dark: var(--aw-primary-dark);
     --awa-b2b-ink: var(--awa-text-primary, #333333);
     --awa-b2b-muted: var(--awa-text-muted, #666666);
     --awa-b2b-border: #e5e7eb;
@@ -142,13 +142,13 @@
 }
 
 .b2b-company-page .btn-save {
-    background: var(--awa-b2b-primary, #b73337);
+    background: var(--awa-b2b-primary);
     color: #fff;
     padding: 9px 16px;
 }
 
 .b2b-company-page .btn-save:hover {
-    background: var(--awa-b2b-primary-dark, #8e2629);
+    background: var(--awa-b2b-primary-dark);
 }
 
 .b2b-company-page .form-note {

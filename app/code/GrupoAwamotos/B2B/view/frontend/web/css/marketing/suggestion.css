@@ -76,7 +76,7 @@
 .b2b-suggestion-content h3 {
     font-size: 24px;
     font-weight: 700;
-    color: #b73337;
+    color: var(--aw-primary);
     margin: 0 0 10px;
 }
 
@@ -113,7 +113,7 @@
 
 .b2b-benefits-list li:hover {
     padding-left: 5px;
-    color: #b73337;
+    color: var(--aw-primary);
 }
 
 .benefit-check {
@@ -138,7 +138,7 @@
 }
 
 .b2b-register-btn {
-    background: linear-gradient(135deg, #b73337 0%, #8e2629 100%);
+    background: linear-gradient(135deg, var(--aw-primary) 0%, var(--aw-primary-dark) 100%);
     border: none;
     padding: 14px 24px;
     font-size: 15px;
@@ -154,7 +154,7 @@
 .b2b-register-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgb(183 51 55 / 40%);
-    background: linear-gradient(135deg, #8e2629 0%, #6d1d1f 100%);
+    background: linear-gradient(135deg, var(--aw-primary-dark) 0%, var(--aw-primary-darker) 100%);
 }
 
 .b2b-continue-btn {
@@ -189,25 +189,25 @@
 }
 
 .b2b-register-widget .b2b-btn-primary {
-    background: linear-gradient(135deg, #b73337, #8e2629);
+    background: linear-gradient(135deg, var(--aw-primary), var(--aw-primary-dark));
     color: #fff;
     border: none;
 }
 
 .b2b-register-widget .b2b-btn-primary:hover {
-    background: linear-gradient(135deg, #8e2629, #6d1d1f);
+    background: linear-gradient(135deg, var(--aw-primary-dark), var(--aw-primary-darker));
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgb(183 51 55 / 40%);
 }
 
 .b2b-register-widget .b2b-btn-secondary {
     background: transparent;
-    color: #b73337;
-    border: 2px solid #b73337;
+    color: var(--aw-primary);
+    border: 2px solid var(--aw-primary);
 }
 
 .b2b-register-widget .b2b-btn-secondary:hover {
-    background: #b73337;
+    background: var(--aw-primary);
     color: #fff;
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgb(183 51 55 / 40%);
@@ -218,10 +218,10 @@
 }
 
 .b2b-promo-banner {
-    background: linear-gradient(135deg, #b73337 0%, #8e2629 50%, #6d1d1f 100%);
+    background: linear-gradient(135deg, var(--aw-primary) 0%, var(--aw-primary-dark) 50%, var(--aw-primary-darker) 100%);
     border-radius: 12px;
-    padding: 40px;
-    margin: 30px 0;
+    padding: 28px 32px;
+    margin: 16px 0;
     color: #fff;
     overflow: hidden;
     position: relative;
@@ -233,7 +233,7 @@
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
-    gap: 40px;
+    gap: 32px;
 }
 
 .b2b-promo-content {
@@ -246,7 +246,7 @@
     padding: 6px 16px;
     border-radius: 20px;
     margin-bottom: 15px;
-    color: #b73337;
+    color: var(--aw-primary);
 }
 
 .b2b-promo-badge .badge-text {
@@ -339,7 +339,7 @@
 
 .b2b-promo-actions .b2b-register-btn {
     background: linear-gradient(135deg, #fff, #f5f5f5) !important;
-    color: #b73337 !important;
+    color: var(--aw-primary) !important;
     border: none !important;
     padding: 15px 35px !important;
     font-size: 16px !important;
@@ -400,7 +400,7 @@
     width: 160px;
     height: 160px;
     background: #fff;
-    color: #b73337;
+    color: var(--aw-primary);
     border-radius: 50%;
     display: flex;
     flex-direction: column;
@@ -434,7 +434,7 @@
 }
 
 .b2b-promo-compact {
-    background: linear-gradient(135deg, #b73337, #8e2629);
+    background: linear-gradient(135deg, var(--aw-primary), var(--aw-primary-dark));
     padding: 15px 25px;
     border-radius: 8px;
     margin: 15px 0;
@@ -457,7 +457,7 @@
 
 .b2b-compact-badge {
     background: #fff;
-    color: #b73337;
+    color: var(--aw-primary);
     padding: 4px 10px;
     border-radius: 12px;
     font-size: 11px;
@@ -471,7 +471,7 @@
 
 .b2b-compact-btn {
     background: linear-gradient(135deg, #fff, #f5f5f5) !important;
-    color: #b73337 !important;
+    color: var(--aw-primary) !important;
     border: none !important;
     padding: 10px 25px !important;
     font-size: 13px !important;
@@ -489,7 +489,7 @@
 .b2b-login-cta {
     margin-top: 30px;
     padding: 25px;
-    background: linear-gradient(135deg, #b73337 0%, #8e2629 100%);
+    background: linear-gradient(135deg, var(--aw-primary) 0%, var(--aw-primary-dark) 100%);
     border-radius: 12px;
     color: #fff;
 }
@@ -530,7 +530,7 @@
 }
 
 .b2b-cta-btn {
-    background: linear-gradient(135deg, #b73337, #8e2629) !important;
+    background: linear-gradient(135deg, var(--aw-primary), var(--aw-primary-dark)) !important;
     border: 2px solid #fff !important;
     padding: 12px 24px !important;
     font-size: 14px !important;
@@ -544,7 +544,7 @@
 .b2b-cta-btn:hover {
     transform: translateY(-2px) !important;
     box-shadow: 0 4px 15px rgb(255 255 255 / 30%) !important;
-    background: linear-gradient(135deg, #8e2629, #6d1d1f) !important;
+    background: linear-gradient(135deg, var(--aw-primary-dark), var(--aw-primary-darker)) !important;
 }
 
 .b2b-info-link {
@@ -696,7 +696,7 @@
 
 .b2b-tier-qty {
     font-weight: 600;
-    color: var(--awa-text-primary, #333333);
+    color: var(--awa-text-primary, #333);
 }
 
 .b2b-tier-price {
@@ -736,8 +736,8 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    background: var(--awa-red, #b73337) !important;
-    border-color: var(--awa-red, #b73337) !important;
+    background: var(--awa-red, var(--aw-primary)) !important;
+    border-color: var(--awa-red, var(--aw-primary)) !important;
     padding: 12px 25px;
     font-size: 1rem;
     border-radius: 4px;
@@ -747,8 +747,8 @@
 }
 
 .b2b-quote-button:hover {
-    background: var(--awa-red-dark, #8e2629) !important;
-    border-color: var(--awa-red-dark, #8e2629) !important;
+    background: var(--awa-red-dark, var(--aw-primary-dark)) !important;
+    border-color: var(--awa-red-dark, var(--aw-primary-dark)) !important;
 }
 
 /* ===========================================================================
@@ -785,7 +785,7 @@
     border-radius: 8px;
     font-size: 14px;
     background: #fff;
-    color: var(--awa-text-primary, #333333);
+    color: var(--awa-text-primary, #333);
 }
 
 .b2b-payment-terms .select:focus {
@@ -913,7 +913,7 @@
     border-radius: 8px;
     font-size: 14px;
     background: #fff;
-    color: var(--awa-text-primary, #333333);
+    color: var(--awa-text-primary, #333);
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
@@ -940,7 +940,7 @@
 }
 
 .b2b-cart-quote-box {
-    background: linear-gradient(135deg, #b73337 0%, #8e2629 100%);
+    background: linear-gradient(135deg, var(--aw-primary) 0%, var(--aw-primary-dark) 100%);
     border-radius: 10px;
     padding: 20px;
     margin-top: 20px;
@@ -985,7 +985,7 @@
     font-size: 14px !important;
     font-weight: 600 !important;
     border-radius: 6px !important;
-    color: #b73337 !important;
+    color: var(--aw-primary) !important;
     text-decoration: none !important;
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
@@ -1073,7 +1073,7 @@
 .b2b-company-page .b2b-section-header h1 {
     font-size: clamp(20px, 4vw, 28px);
     font-weight: 700;
-    color: var(--awa-text-primary, #333333);
+    color: var(--awa-text-primary, #333);
     margin: 0;
 }
 
@@ -1115,7 +1115,7 @@
 
 .company-details dd {
     margin: 0;
-    color: var(--awa-text-primary, #333333);
+    color: var(--awa-text-primary, #333);
     font-size: 14px;
 }
 
@@ -1136,7 +1136,7 @@
 .company-users-header h2 {
     font-size: 18px;
     font-weight: 700;
-    color: var(--awa-text-primary, #333333);
+    color: var(--awa-text-primary, #333);
     margin: 0;
 }
 
@@ -1690,7 +1690,7 @@
 }
 
 .b2b-order-notes-input:focus-visible {
-    border-color: var(--primary-color, #b73337);
+    border-color: var(--primary-color, var(--aw-primary));
     box-shadow: 0 0 0 3px rgb(183 51 55 / 16%);
 }
 
@@ -1723,7 +1723,7 @@
     display: inline-block;
     width: 16px;
     height: 16px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
+    border: 2px solid rgb(255 255 255 / 30%);
     border-top-color: #fff;
     border-radius: 50%;
     animation: b2b-spin 0.6s linear infinite;
@@ -1786,7 +1786,7 @@
     box-shadow: 0 0 0 3px rgb(22 163 74 / 20%);
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .b2b-success-badge {
         flex-direction: column;
         gap: 10px;

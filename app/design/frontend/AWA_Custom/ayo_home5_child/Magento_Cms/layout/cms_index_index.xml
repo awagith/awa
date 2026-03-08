@@ -35,6 +35,7 @@
         <referenceBlock name="top_home">
             <arguments>
                 <argument name="category_carousel_data" xsi:type="object">GrupoAwamotos\Theme\ViewModel\CategoryCarouselData</argument>
+                <argument name="home_merchandising" xsi:type="object">GrupoAwamotos\Theme\ViewModel\HomeMerchandising</argument>
             </arguments>
         </referenceBlock>
 

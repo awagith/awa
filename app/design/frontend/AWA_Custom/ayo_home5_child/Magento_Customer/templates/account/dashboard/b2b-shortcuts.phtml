@@ -1,113 +1,290 @@
 <?php
 /**
- * B2B Shortcuts & Credit Dashboard Widget
+ * B2B account control center for the default customer dashboard.
  *
  * @var \GrupoAwamotos\B2B\Block\Account\Dashboard $block
  */
-declare(strict_types=1);
+$customer = $block->getCustomer();
+$credit = $block->getCreditLimit();
+$checklist = $block->getOnboardingChecklist();
+$suggestions = $block->getSmartSuggestions();
+$attendant = $block->getAttendantInfo();
+$progress = $block->getOnboardingProgress();
+$quotePending = $block->getPendingQuotesCount();
+$quoteApproved = $block->getApprovedQuotesCount();
+$ordersAmount = $block->getTotalOrdersAmount();
+$creditUsagePercent = 0.0;
 
-$reorderUrl   = $block->getUrl('b2b/reorder/history');
-$quickOrderUrl = $block->getUrl('b2b/quickorder');
-$addressUrl   = $block->getUrl('customer/address/');
-$creditUrl    = $block->getUrl('b2b/credit');
+if ($credit && !empty($credit['limit'])) {
+    $creditUsagePercent = min(100.0, ((float) $credit['used'] / (float) $credit['limit']) * 100);
+}
 
-// Real credit data (array with keys: limit, used, available)
-$creditData      = $block->getCreditLimit();
-$creditTotal     = (float) ($creditData['limit'] ?? 0);
-$creditUsed      = (float) ($creditData['used'] ?? 0);
-$creditAvailable = (float) ($creditData['available'] ?? 0);
-$creditPct       = $creditTotal > 0 ? min(100, ($creditUsed / $creditTotal) * 100) : 0;
-$barColor        = $creditPct > 80 ? '#b73337' : '#10b981';
-$hasCreditData   = $creditTotal > 0;
-$isApproved      = $block->isApproved();
+$primaryActions = [
+    [
+        'eyebrow' => __('Pedido por SKU'),
+        'title' => __('Pedido rapido'),
+        'description' => __('Monte pedidos em lote com codigo, quantidade e validacao operacional.'),
+        'url' => $block->getQuickOrderUrl(),
+        'kind' => 'primary',
+    ],
+    [
+        'eyebrow' => __('Recorrencia'),
+        'title' => __('Listas de compras'),
+        'description' => __('Organize reposicao por cliente, mix de giro e campanhas internas.'),
+        'url' => $block->getShoppingListUrl(),
+        'kind' => 'neutral',
+    ],
+    [
+        'eyebrow' => __('Negociacao'),
+        'title' => __('Cotacoes'),
+        'description' => __('Abra novas cotacoes ou acompanhe propostas em andamento.'),
+        'url' => $block->getQuotesListUrl(),
+        'kind' => 'neutral',
+    ],
+    [
+        'eyebrow' => __('Reposicao'),
+        'title' => __('Repetir pedidos'),
+        'description' => __('Retome pedidos anteriores para acelerar o reabastecimento.'),
+        'url' => $block->getUrl('b2b/reorder/history'),
+        'kind' => 'neutral',
+    ],
+    [
+        'eyebrow' => __('Pos-venda'),
+        'title' => __('Meus pedidos'),
+        'description' => __('Rastreie historico, status e faturamento da conta.'),
+        'url' => $block->getOrdersUrl(),
+        'kind' => 'neutral',
+    ],
+    [
+        'eyebrow' => __('Logistica'),
+        'title' => __('Enderecos'),
+        'description' => __('Gerencie multiplos destinos de entrega para operacao e filial.'),
+        'url' => $block->getUrl('customer/address/'),
+        'kind' => 'neutral',
+    ],
+];
 ?>
-<?php if (!$isApproved): ?>
-<div class="message warning awa-b2b-approval-notice" role="alert" style="margin-bottom:16px;padding:14px 18px;background:#fefce8;border:1px solid #fde047;border-radius:8px;display:flex;align-items:flex-start;gap:12px;">
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a16207" stroke-width="2" style="flex-shrink:0;margin-top:1px;" aria-hidden="true">
-        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-        <line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>
-    </svg>
-    <div>
-        <strong style="color:#a16207;font-size:14px;"><?= $block->escapeHtml(__('Conta Aguardando Aprovação')) ?></strong>
-        <p style="margin:4px 0 0;font-size:13px;color:#78350f;">
-            <?= $block->escapeHtml(__('Sua conta B2B está em análise. Você receberá um e-mail quando for aprovada e terá acesso a preços e condições especiais.')) ?>
-        </p>
-    </div>
-</div>
-<?php endif; ?>
+<?php if ($block->isB2BCustomer()): ?>
+<section class="awa-b2b-dashboard-shell" aria-label="<?= $block->escapeHtmlAttr(__('Centro de operacoes B2B')) ?>">
+    <div class="awa-b2b-dashboard-shell__hero">
+        <div class="awa-b2b-dashboard-shell__hero-copy">
+            <p class="awa-b2b-dashboard-shell__eyebrow"><?= $block->escapeHtml(__('Operacao B2B')) ?></p>
+            <h2 class="awa-b2b-dashboard-shell__title"><?= $block->escapeHtml(__('Centro de operacoes da sua conta')) ?></h2>
+            <p class="awa-b2b-dashboard-shell__lead">
+                <?= $block->escapeHtml(__('Gerencie credito, pedidos, cotacoes e reposicao sem sair do fluxo principal da sua operacao.')) ?>
+            </p>
 
-<?php if ($hasCreditData): ?>
-<div class="awa-b2b-erp-status-card" style="margin-bottom:24px;">
-    <div style="margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;">
-        <h3 style="margin:0;font-size:16px;color:#1e293b;font-weight:600;"><?= $block->escapeHtml(__('Limite de Crédito B2B')) ?></h3>
-        <a href="<?= $block->escapeUrl($creditUrl) ?>" style="font-size:12px;color:var(--aw-primary,#b73337);"><?= $block->escapeHtml(__('Ver histórico')) ?></a>
+            <div class="awa-b2b-dashboard-shell__identity">
+                <span class="awa-b2b-chip awa-b2b-chip--status <?= $block->isApproved() ? 'is-approved' : 'is-pending' ?>">
+                    <?= $block->escapeHtml($block->isApproved() ? __('Conta aprovada') : __('Conta em aprovacao')) ?>
+                </span>
+                <span class="awa-b2b-chip"><?= $block->escapeHtml($block->getCustomerGroupName()) ?></span>
+                <?php if ($block->getDiscountPercentage() > 0): ?>
+                <span class="awa-b2b-chip awa-b2b-chip--accent">
+                    <?= $block->escapeHtml(__('Desconto')) ?> <?= $block->escapeHtml((string) (int) $block->getDiscountPercentage()) ?>%
+                </span>
+                <?php endif; ?>
+                <?php if ($block->getRegistrationDate() !== ''): ?>
+                <span class="awa-b2b-chip"><?= $block->escapeHtml(__('Cliente desde %1', $block->getRegistrationDate())) ?></span>
+                <?php endif; ?>
+            </div>
+
+            <?php if ($block->getRazaoSocial() !== '' || $block->getCnpj() !== ''): ?>
+            <dl class="awa-b2b-dashboard-shell__company">
+                <?php if ($block->getRazaoSocial() !== ''): ?>
+                <div>
+                    <dt><?= $block->escapeHtml(__('Razao social')) ?></dt>
+                    <dd><?= $block->escapeHtml($block->getRazaoSocial()) ?></dd>
+                </div>
+                <?php endif; ?>
+                <?php if ($block->getCnpj() !== ''): ?>
+                <div>
+                    <dt><?= $block->escapeHtml(__('CNPJ')) ?></dt>
+                    <dd><?= $block->escapeHtml($block->getCnpj()) ?></dd>
+                </div>
+                <?php endif; ?>
+            </dl>
+            <?php endif; ?>
+        </div>
+
+        <div class="awa-b2b-dashboard-shell__hero-actions">
+            <a href="<?= $block->escapeUrl($block->getQuickOrderUrl()) ?>" class="awa-b2b-action-card awa-b2b-action-card--primary">
+                <span class="awa-b2b-action-card__eyebrow"><?= $block->escapeHtml(__('Compra recorrente')) ?></span>
+                <strong class="awa-b2b-action-card__title"><?= $block->escapeHtml(__('Pedido rapido')) ?></strong>
+                <span class="awa-b2b-action-card__description"><?= $block->escapeHtml(__('Entre com codigos e quantidades para acelerar o fechamento.')) ?></span>
+            </a>
+            <a href="<?= $block->escapeUrl($block->getShoppingListUrl()) ?>" class="awa-b2b-action-card">
+                <span class="awa-b2b-action-card__eyebrow"><?= $block->escapeHtml(__('Planejamento')) ?></span>
+                <strong class="awa-b2b-action-card__title"><?= $block->escapeHtml(__('Listas de reposicao')) ?></strong>
+                <span class="awa-b2b-action-card__description"><?= $block->escapeHtml(__('Salve mixes frequentes e reaplique pedidos com menos atrito.')) ?></span>
+            </a>
+        </div>
     </div>
-    <div style="padding:16px;background:#fff;border:1px solid #e5e7eb;border-radius:8px;">
-        <div style="display:flex;justify-content:space-between;margin-bottom:10px;font-size:14px;">
-            <span><span style="color:#64748b;"><?= $block->escapeHtml(__('Utilizado:')) ?></span>
-                  <strong><?= /* @noEscape */ $block->formatPrice($creditUsed) ?></strong></span>
-            <span><span style="color:#64748b;"><?= $block->escapeHtml(__('Disponível:')) ?></span>
-                  <strong style="color:#10b981;"><?= /* @noEscape */ $block->formatPrice($creditAvailable) ?></strong></span>
+
+    <div class="awa-b2b-dashboard-shell__metrics">
+        <?php if ($credit): ?>
+        <article class="awa-b2b-kpi-card awa-b2b-kpi-card--credit">
+            <div class="awa-b2b-kpi-card__head">
+                <span class="awa-b2b-kpi-card__label"><?= $block->escapeHtml(__('Credito disponivel')) ?></span>
+                <span class="awa-b2b-kpi-card__hint"><?= $block->escapeHtml(__('Faturamento')) ?></span>
+            </div>
+            <strong class="awa-b2b-kpi-card__value"><?= /* @noEscape */ $block->formatPrice((float) $credit['available']) ?></strong>
+            <div class="awa-b2b-kpi-card__meta">
+                <span><?= $block->escapeHtml(__('Limite:')) ?> <?= /* @noEscape */ $block->formatPrice((float) $credit['limit']) ?></span>
+                <span><?= $block->escapeHtml(__('Uso:')) ?> <?= /* @noEscape */ $block->formatPrice((float) $credit['used']) ?></span>
+            </div>
+            <div class="awa-b2b-progress" aria-hidden="true">
+                <span class="awa-b2b-progress__fill" style="width: <?= $block->escapeHtmlAttr((string) $creditUsagePercent) ?>%"></span>
+            </div>
+        </article>
+        <?php endif; ?>
+
+        <article class="awa-b2b-kpi-card">
+            <div class="awa-b2b-kpi-card__head">
+                <span class="awa-b2b-kpi-card__label"><?= $block->escapeHtml(__('Compras recentes')) ?></span>
+                <span class="awa-b2b-kpi-card__hint"><?= $block->escapeHtml(__('Ultimos 30 dias')) ?></span>
+            </div>
+            <strong class="awa-b2b-kpi-card__value"><?= /* @noEscape */ $block->formatPrice((float) $ordersAmount) ?></strong>
+            <div class="awa-b2b-kpi-card__meta">
+                <span><?= $block->escapeHtml(__('Acompanhe o historico para manter giro e recompra.')) ?></span>
+            </div>
+        </article>
+
+        <article class="awa-b2b-kpi-card">
+            <div class="awa-b2b-kpi-card__head">
+                <span class="awa-b2b-kpi-card__label"><?= $block->escapeHtml(__('Ciclo de cotacoes')) ?></span>
+                <span class="awa-b2b-kpi-card__hint"><?= $block->escapeHtml(__('Pipeline comercial')) ?></span>
+            </div>
+            <strong class="awa-b2b-kpi-card__value"><?= $block->escapeHtml((string) ($quotePending + $quoteApproved)) ?></strong>
+            <div class="awa-b2b-kpi-card__meta">
+                <span><?= $block->escapeHtml(__('Pendentes:')) ?> <?= $block->escapeHtml((string) $quotePending) ?></span>
+                <span><?= $block->escapeHtml(__('Aprovadas:')) ?> <?= $block->escapeHtml((string) $quoteApproved) ?></span>
+            </div>
+        </article>
+
+        <article class="awa-b2b-kpi-card">
+            <div class="awa-b2b-kpi-card__head">
+                <span class="awa-b2b-kpi-card__label"><?= $block->escapeHtml(__('Configuracao da conta')) ?></span>
+                <span class="awa-b2b-kpi-card__hint"><?= $block->escapeHtml(__('Prontidao operacional')) ?></span>
+            </div>
+            <strong class="awa-b2b-kpi-card__value"><?= $block->escapeHtml((string) $progress) ?>%</strong>
+            <div class="awa-b2b-kpi-card__meta">
+                <span><?= $block->escapeHtml($block->isOnboardingComplete() ? __('Conta pronta para operar') : __('Ainda existem etapas abertas')) ?></span>
+            </div>
+            <div class="awa-b2b-progress" aria-hidden="true">
+                <span class="awa-b2b-progress__fill" style="width: <?= $block->escapeHtmlAttr((string) $progress) ?>%"></span>
+            </div>
+        </article>
+    </div>
+
+    <?php if (!$block->isOnboardingComplete() && $checklist !== []): ?>
+    <section class="awa-b2b-panel awa-b2b-panel--checklist" aria-label="<?= $block->escapeHtmlAttr(__('Checklist de implantacao')) ?>">
+        <div class="awa-b2b-panel__header">
+            <div>
+                <p class="awa-b2b-panel__eyebrow"><?= $block->escapeHtml(__('Implantacao')) ?></p>
+                <h3 class="awa-b2b-panel__title"><?= $block->escapeHtml(__('Checklist de prontidao da conta')) ?></h3>
+            </div>
+            <span class="awa-b2b-panel__badge"><?= $block->escapeHtml(__('Conclusao')) ?>: <?= $block->escapeHtml((string) $progress) ?>%</span>
         </div>
-        <div style="width:100%;height:10px;background:#f1f5f9;border-radius:99px;overflow:hidden;"
-             role="progressbar" aria-valuenow="<?= (int)$creditPct ?>" aria-valuemin="0" aria-valuemax="100"
-             aria-label="<?= $block->escapeHtmlAttr(__('Crédito utilizado')) ?>">
-            <div style="width:<?= (float)$creditPct ?>%;height:100%;background:<?= $block->escapeHtmlAttr($barColor) ?>;transition:width 1s ease-in-out;"></div>
-        </div>
-        <div style="margin-top:8px;font-size:11px;color:#64748b;display:flex;justify-content:space-between;align-items:center;">
-            <span><?= $block->escapeHtml(__('Limite Total:')) ?> <strong><?= /* @noEscape */ $block->formatPrice($creditTotal) ?></strong></span>
-            <?php if ($creditPct > 80): ?>
-            <span style="color:#b73337;font-weight:600;">⚠ <?= $block->escapeHtml(__('Limite próximo do teto')) ?></span>
+        <ul class="awa-b2b-checklist" role="list">
+            <?php foreach ($checklist as $item): ?>
+            <li class="awa-b2b-checklist__item <?= !empty($item['done']) ? 'is-done' : 'is-open' ?>">
+                <div class="awa-b2b-checklist__copy">
+                    <strong><?= $block->escapeHtml($item['label']) ?></strong>
+                    <?php if (empty($item['done']) && !empty($item['action_label'])): ?>
+                    <span><?= $block->escapeHtml($item['action_label']) ?></span>
+                    <?php else: ?>
+                    <span><?= $block->escapeHtml(__('Etapa concluida')) ?></span>
+                    <?php endif; ?>
+                </div>
+                <?php if (empty($item['done']) && !empty($item['action_url'])): ?>
+                <a href="<?= $block->escapeUrl($item['action_url']) ?>" class="awa-b2b-inline-link"><?= $block->escapeHtml(__('Resolver agora')) ?></a>
+                <?php else: ?>
+                <span class="awa-b2b-checklist__state"><?= $block->escapeHtml(__('OK')) ?></span>
+                <?php endif; ?>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+    </section>
+    <?php endif; ?>
+
+    <div class="awa-b2b-dashboard-shell__columns">
+        <section class="awa-b2b-panel" aria-label="<?= $block->escapeHtmlAttr(__('Acoes rapidas')) ?>">
+            <div class="awa-b2b-panel__header">
+                <div>
+                    <p class="awa-b2b-panel__eyebrow"><?= $block->escapeHtml(__('Fluxos prioritarios')) ?></p>
+                    <h3 class="awa-b2b-panel__title"><?= $block->escapeHtml(__('Acoes rapidas da operacao')) ?></h3>
+                </div>
+            </div>
+            <div class="awa-b2b-action-grid">
+                <?php foreach ($primaryActions as $action): ?>
+                <a href="<?= $block->escapeUrl($action['url']) ?>" class="awa-b2b-ops-card <?= $action['kind'] === 'primary' ? 'is-primary' : '' ?>">
+                    <span class="awa-b2b-ops-card__eyebrow"><?= $block->escapeHtml($action['eyebrow']) ?></span>
+                    <strong class="awa-b2b-ops-card__title"><?= $block->escapeHtml($action['title']) ?></strong>
+                    <span class="awa-b2b-ops-card__description"><?= $block->escapeHtml($action['description']) ?></span>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
+        <div class="awa-b2b-dashboard-shell__stack">
+            <?php if ($suggestions !== []): ?>
+            <section class="awa-b2b-panel" aria-label="<?= $block->escapeHtmlAttr(__('Sugestoes inteligentes')) ?>">
+                <div class="awa-b2b-panel__header">
+                    <div>
+                        <p class="awa-b2b-panel__eyebrow"><?= $block->escapeHtml(__('Proxima melhor acao')) ?></p>
+                        <h3 class="awa-b2b-panel__title"><?= $block->escapeHtml(__('Sugestoes para acelerar a conta')) ?></h3>
+                    </div>
+                </div>
+                <ul class="awa-b2b-suggestion-list" role="list">
+                    <?php foreach ($suggestions as $suggestion): ?>
+                    <li class="awa-b2b-suggestion-list__item">
+                        <div class="awa-b2b-suggestion-list__copy">
+                            <strong><?= $block->escapeHtml($suggestion['title']) ?></strong>
+                            <p><?= $block->escapeHtml($suggestion['description']) ?></p>
+                        </div>
+                        <a href="<?= $block->escapeUrl($suggestion['action_url']) ?>"
+                           class="awa-b2b-inline-link"
+                           <?= !empty($suggestion['external']) ? 'target="_blank" rel="noopener"' : '' ?>>
+                            <?= $block->escapeHtml($suggestion['action_label']) ?>
+                        </a>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+            </section>
+            <?php endif; ?>
+
+            <?php if ($attendant): ?>
+            <?php $whatsappNumber = !empty($attendant['whatsapp']) ? preg_replace('/\D/', '', (string) $attendant['whatsapp']) : ''; ?>
+            <section class="awa-b2b-panel" aria-label="<?= $block->escapeHtmlAttr(__('Atendimento comercial')) ?>">
+                <div class="awa-b2b-panel__header">
+                    <div>
+                        <p class="awa-b2b-panel__eyebrow"><?= $block->escapeHtml(__('Suporte comercial')) ?></p>
+                        <h3 class="awa-b2b-panel__title"><?= $block->escapeHtml(__('Seu atendente')) ?></h3>
+                    </div>
+                </div>
+                <div class="awa-b2b-attendant">
+                    <div class="awa-b2b-attendant__copy">
+                        <strong><?= $block->escapeHtml($attendant['name'] ?? __('Equipe comercial')) ?></strong>
+                        <?php if (!empty($attendant['department'])): ?>
+                        <span><?= $block->escapeHtml($attendant['department']) ?></span>
+                        <?php endif; ?>
+                    </div>
+                    <div class="awa-b2b-attendant__actions">
+                        <?php if (!empty($attendant['email'])): ?>
+                        <a href="mailto:<?= $block->escapeHtmlAttr($attendant['email']) ?>" class="awa-b2b-inline-link"><?= $block->escapeHtml(__('E-mail')) ?></a>
+                        <?php endif; ?>
+                        <?php if (!empty($attendant['phone'])): ?>
+                        <a href="tel:<?= $block->escapeHtmlAttr($attendant['phone']) ?>" class="awa-b2b-inline-link"><?= $block->escapeHtml(__('Telefone')) ?></a>
+                        <?php endif; ?>
+                        <?php if ($whatsappNumber !== ''): ?>
+                        <a href="https://wa.me/55<?= $block->escapeHtmlAttr($whatsappNumber) ?>" target="_blank" rel="noopener" class="awa-b2b-inline-link"><?= $block->escapeHtml(__('WhatsApp')) ?></a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </section>
             <?php endif; ?>
         </div>
     </div>
-</div>
+</section>
 <?php endif; ?>
-
-<div class="b2b-dashboard-shortcuts">
-    <a href="<?= $block->escapeUrl($reorderUrl) ?>" class="b2b-shortcut-card">
-        <svg class="b2b-shortcut-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <polyline points="1 4 1 10 7 10"></polyline>
-            <path d="M3.51 15a9 9 0 1 0 .49-3.49"></path>
-        </svg>
-        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__('Repetir Pedido')) ?></span>
-        <span style="font-size:12px;color:#64748b;"><?= $block->escapeHtml(__('Compre o mesmo de antes')) ?></span>
-    </a>
-    <a href="<?= $block->escapeUrl($quickOrderUrl) ?>" class="b2b-shortcut-card">
-        <svg class="b2b-shortcut-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-        </svg>
-        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__('Compra Rápida')) ?></span>
-        <span style="font-size:12px;color:#64748b;"><?= $block->escapeHtml(__('Cole SKUs em lote ou CSV')) ?></span>
-    </a>
-    <a href="<?= $block->escapeUrl($addressUrl) ?>" class="b2b-shortcut-card">
-        <svg class="b2b-shortcut-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <rect x="1" y="3" width="15" height="13"></rect>
-            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-            <circle cx="5.5" cy="18.5" r="2.5"></circle>
-            <circle cx="18.5" cy="18.5" r="2.5"></circle>
-        </svg>
-        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__('Meus Endereços')) ?></span>
-        <span style="font-size:12px;color:#64748b;"><?= $block->escapeHtml(__('Múltiplos destinos de entrega')) ?></span>
-    </a>
-    <?php if ($hasCreditData): ?>
-    <a href="<?= $block->escapeUrl($creditUrl) ?>" class="b2b-shortcut-card">
-        <svg class="b2b-shortcut-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
-            <line x1="2" y1="10" x2="22" y2="10"></line>
-        </svg>
-        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__('Meu Crédito')) ?></span>
-        <span style="font-size:12px;color:#10b981;"><?= /* @noEscape */ $block->formatPrice($creditAvailable) ?> <?= $block->escapeHtml(__('disponível')) ?></span>
-    </a>
-    <?php else: ?>
-    <a href="<?= $block->escapeUrl($block->getUrl('sales/order/history')) ?>" class="b2b-shortcut-card">
-        <svg class="b2b-shortcut-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-            <polyline points="14 2 14 8 20 8"></polyline>
-            <line x1="16" y1="13" x2="8" y2="13"></line>
-        </svg>
-        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__('Meus Pedidos')) ?></span>
-        <span style="font-size:12px;color:#64748b;"><?= $block->escapeHtml(__('Histórico e rastreamento')) ?></span>
-    </a>
-    <?php endif; ?>
-</div>
