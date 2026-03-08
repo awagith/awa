@@ -469,3 +469,159 @@ body .page-wrapper .columns {
     }
 }
 */
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE — Enterprise B2B refinements (wave 11)
+   Mobile-first corrections para componentes wave 10/11
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── 320px – pequenos dispositivos ───────────────────────────── */
+@media (max-width: 359px) {
+    .awa-timeline {
+        padding-left: 0;
+    }
+
+    .awa-steps {
+        gap: 0;
+    }
+
+    .awa-kpi-card__value {
+        font-size: 1.375rem;
+    }
+
+    .awa-metric {
+        font-size: 1.75rem;
+    }
+}
+
+/* ── 768px – tablet ────────────────────────────────────────────── */
+@media (max-width: 767px) {
+    /* KPI grid: 2 colunas em mobile */
+    .awa-kpi-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    /* Steps horizontal → vertical */
+    .awa-steps {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .awa-steps__step {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        text-align: left;
+        min-width: unset;
+        padding-bottom: 20px;
+    }
+
+    .awa-steps__step::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 32px;
+        right: auto;
+        bottom: 0;
+        height: auto;
+        width: 2px;
+        background: var(--awa-layer-color-border, #e5e5e5);
+    }
+
+    .awa-steps__step--done::before {
+        background: var(--awa-layer-color-primary, #b73337);
+    }
+
+    .awa-steps__step:last-child::before {
+        display: none;
+    }
+
+    .awa-steps__icon {
+        flex-shrink: 0;
+        margin: 0;
+    }
+
+    .awa-steps__label {
+        text-align: left;
+        padding-top: 6px;
+    }
+
+    /* Info table: empilhar em mobile */
+    .awa-info-table,
+    .awa-info-table tbody,
+    .awa-info-table tr,
+    .awa-info-table th,
+    .awa-info-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .awa-info-table th {
+        padding-bottom: 2px;
+        border-bottom: none;
+        background: none;
+    }
+
+    .awa-info-table td {
+        padding-top: 2px;
+        padding-bottom: 10px;
+    }
+
+    /* Alert text size */
+    .awa-alert {
+        font-size: 0.8125rem;
+        padding: 12px 14px;
+    }
+
+    /* Timeline compact */
+    .awa-timeline::before {
+        left: 11px;
+    }
+
+    .awa-timeline__item {
+        padding-left: 38px;
+    }
+
+    .awa-timeline__dot {
+        width: 24px;
+        height: 24px;
+        font-size: 0.75rem;
+    }
+
+    /* Buttons: full-width em mobile */
+    .awa-btn-bulk {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ── Print refinements ────────────────────────────────────────── */
+@media print {
+    .awa-compare-bar,
+    .awa-announcement-bar,
+    .awa-sticky-bar,
+    .awa-fab {
+        display: none !important;
+    }
+
+    .awa-timeline__dot {
+        border: 2px solid #000;
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    .awa-steps__icon {
+        border: 2px solid #000;
+        background: #fff !important;
+        color: #000 !important;
+    }
+
+    .awa-kpi-card {
+        border: 1px solid #ccc;
+        break-inside: avoid;
+    }
+
+    .awa-alert {
+        border: 1px solid #ccc;
+    }
+}
