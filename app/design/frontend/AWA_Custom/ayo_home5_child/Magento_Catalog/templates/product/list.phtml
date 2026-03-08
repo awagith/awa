@@ -19,6 +19,9 @@ use Magento\Framework\App\Action\Action;
 <?php
 $_productCollection = $block->getLoadedProductCollection();
 $_helper = $this->helper('Magento\Catalog\Helper\Output');
+$_b2bHelper = $this->helper('GrupoAwamotos\B2B\Helper\Data');
+$_isB2B = $_b2bHelper->isB2BCustomer();
+$_quickAddUrl = $block->getUrl('b2b/shoppinglist/quickadd');
 $qtyControlConfig = [
     'selectors' => [
         'input' => '[data-awa-role="qty-input"]',
@@ -149,6 +152,19 @@ $qtyControlMageInit = json_encode(
 						<div class="actions-secondary">
 							<ul class="product-extra-link add-to-links">
 								<?php /* B2B: wishlist/compare desativados */ ?>
+								<?php if ($_isB2B): ?>
+								<li class="awa-save-to-list">
+									<button type="button"
+											class="awa-save-to-list-btn"
+											data-action="awa-save-to-list"
+											data-product-id="<?= $block->escapeHtmlAttr($_product->getId()) ?>"
+											aria-label="<?= $block->escapeHtml(__('Salvar %1 na lista', $_product->getName())) ?>"
+											title="<?= $block->escapeHtml(__('Salvar na Lista')) ?>">
+										<span class="awa-sl-icon" aria-hidden="true">&#9776;</span>
+										<span class="awa-sl-label"><?= $block->escapeHtml(__('Lista')) ?></span>
+									</button>
+								</li>
+								<?php endif; ?>
 								<li class="quickview-product">
 									<a class="quickview-link" data-role="quickview-button" data-id="<?php echo $block->escapeHtmlAttr($_product->getId()); ?>" href="javascript: void(0);" data-href="<?php echo $block->escapeUrl($block->getUrl('quickview/product/quickview/id/' . $_product->getId())); ?>" role="button" aria-label="<?php echo $block->escapeHtml(__('Visualização rápida de %1', $_product->getName())); ?>" title="<?php echo $block->escapeHtml(__('Quick view')); ?>"></a>
 								</li>
@@ -371,6 +387,17 @@ $qtyControlMageInit = json_encode(
 							</div>
 							<div class="product-extra-link">
 								<?php /* B2B: wishlist/compare desativados */ ?>
+								<?php if ($_isB2B): ?>
+								<button type="button"
+										class="awa-save-to-list-btn awa-save-to-list-btn--list"
+										data-action="awa-save-to-list"
+										data-product-id="<?= $block->escapeHtmlAttr($_product->getId()) ?>"
+										aria-label="<?= $block->escapeHtml(__('Salvar %1 na lista', $_product->getName())) ?>"
+										title="<?= $block->escapeHtml(__('Salvar na Lista')) ?>">
+									<span class="awa-sl-icon" aria-hidden="true">&#9776;</span>
+									<span><?= $block->escapeHtml(__('Salvar na Lista')) ?></span>
+								</button>
+								<?php endif; ?>
 							</div>
 						</div>
 					</div>
@@ -394,5 +421,17 @@ $qtyControlMageInit = json_encode(
             }
         }
         </script>
+    <?php endif; ?>
+    <?php if ($_isB2B): ?>
+    <script type="text/x-magento-init">
+    {
+        "*": {
+            "GrupoAwamotos_B2B/js/plp-save-to-list": {
+                "addUrl": "<?= $block->escapeUrl($_quickAddUrl) ?>",
+                "formKey": "<?= $block->escapeHtml($block->getFormKey()) ?>"
+            }
+        }
+    }
+    </script>
     <?php endif; ?>
 <?php endif; ?>

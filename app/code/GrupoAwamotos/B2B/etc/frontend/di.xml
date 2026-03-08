@@ -123,6 +123,13 @@
                 disabled="true"/>
     </type>
 
+    <!-- Force list mode as default for B2B customers on PLP -->
+    <type name="Magento\Catalog\Helper\Product\ProductList">
+        <plugin name="grupoawamotos_b2b_default_list_mode"
+                type="GrupoAwamotos\B2B\Plugin\Catalog\Product\DefaultListModePlugin"
+                sortOrder="20"/>
+    </type>
+
     <type name="Magento\Catalog\Controller\Product\View">
         <plugin name="grupoawamotos_b2b_restricted_product_view"
                 type="GrupoAwamotos\B2B\Plugin\Catalog\RestrictedProductViewPlugin"
