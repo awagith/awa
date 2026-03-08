@@ -332,3 +332,292 @@ body .page-wrapper input[name="qty"]::-webkit-outer-spin-button {
         min-height: 120px;
     }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   AUTH PAGES — Login e Cadastro B2B (padrão enterprise)
+   ════════════════════════════════════════════════════════════ */
+
+/* Layout 2 colunas na página de login */
+.customer-account-login .page-wrapper .page-main,
+.customer-account-create .page-wrapper .page-main {
+    max-width: var(--awa-layer-container-max, 1320px);
+    margin-inline: auto;
+    padding-inline: var(--awa-layer-space-md);
+}
+
+/* Grid login+cadastro lado a lado */
+.customer-account-login .login-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--awa-layer-space-xl);
+    align-items: start;
+}
+
+/* Bloco de login existente (account) */
+.customer-account-login .block-customer-login,
+.customer-account-login .block-new-customer {
+    background: #fff;
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: 16px;
+    padding: clamp(24px, 4vw, 40px);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 5%);
+}
+
+/* Destaque no bloco de novo cliente B2B */
+.customer-account-login .block-new-customer {
+    background: linear-gradient(145deg, #fff 0%, #fff8f8 100%);
+    border-color: #fecaca;
+}
+
+/* Títulos dos blocos de auth */
+.customer-account-login .block-title,
+.customer-account-create .block-title,
+.customer-account-forgotpassword .block-title {
+    font-size: clamp(1.125rem, 2.5vw, 1.375rem);
+    font-weight: 800;
+    color: #1e293b;
+    margin-bottom: var(--awa-layer-space-md);
+    padding-bottom: 14px;
+    border-bottom: 2px solid #f0f4f8;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.3;
+}
+
+/* Subtítulo dos blocos */
+.customer-account-login .block-content > p:first-of-type,
+.customer-account-login .block-new-customer .block-content > p {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin-bottom: var(--awa-layer-space-md);
+    line-height: 1.6;
+}
+
+/* Campos com label flutuante-like (melhora ergonomia) */
+.customer-account-login .field.email,
+.customer-account-login .field.password,
+.customer-account-create .field,
+.customer-account-forgotpassword .field {
+    position: relative;
+    margin-bottom: var(--awa-layer-space-md);
+}
+
+/* Label acima do campo */
+.customer-account-login .field .label,
+.customer-account-create .field .label,
+.customer-account-forgotpassword .field .label {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 6px;
+    letter-spacing: 0.01em;
+}
+
+.customer-account-login .field .label span,
+.customer-account-create .field .label span {
+    color: #374151;
+}
+
+/* Required asterisk */
+.customer-account-login .field .label .required,
+.customer-account-login .field._required .label::after,
+.customer-account-create .field._required .label::after {
+    content: ' *';
+    color: var(--awa-layer-color-primary);
+    font-size: 0.875rem;
+}
+
+/* Hint abaixo do campo */
+.customer-account-login .field-note,
+.customer-account-create .field-note,
+.customer-account-forgotpassword .field-note {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    margin-top: 4px;
+    line-height: 1.5;
+}
+
+/* Link "Esqueceu a senha" */
+.customer-account-login .action.remind {
+    display: inline-block;
+    font-size: 0.8125rem;
+    color: var(--awa-layer-color-primary);
+    text-decoration: none;
+    font-weight: 500;
+    margin-top: 6px;
+    transition: color 150ms ease;
+}
+
+.customer-account-login .action.remind:hover {
+    color: #8e2629;
+    text-decoration: underline;
+}
+
+/* CTA de login */
+.customer-account-login .action.login.primary {
+    width: 100%;
+    height: 50px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    border-radius: 10px;
+    margin-top: var(--awa-layer-space-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 180ms ease, transform 120ms ease, box-shadow 180ms ease;
+}
+
+.customer-account-login .action.login.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgb(183 51 55 / 30%);
+}
+
+/* CTA de cadastro no bloco new-customer */
+.customer-account-login .block-new-customer .actions-toolbar {
+    margin-top: var(--awa-layer-space-md);
+}
+
+.customer-account-login .block-new-customer .action.create.primary {
+    width: 100%;
+    height: 50px;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 180ms ease, transform 120ms ease, box-shadow 180ms ease;
+}
+
+/* Social proof mínima abaixo do bloco */
+.awa-auth-trust {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #f0f4f8;
+    flex-wrap: wrap;
+}
+
+.awa-auth-trust__item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* ── Página de cadastro ────────────────────────────────────────── */
+.customer-account-create .form-create-account {
+    max-width: 640px;
+    margin-inline: auto;
+    background: #fff;
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: 16px;
+    padding: clamp(24px, 4vw, 48px);
+    box-shadow: 0 4px 16px rgb(0 0 0 / 6%);
+}
+
+/* Fieldset de dados da conta */
+.customer-account-create .fieldset {
+    border: none;
+    padding: 0;
+    margin: 0 0 var(--awa-layer-space-lg);
+}
+
+.customer-account-create .fieldset .legend {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #94a3b8;
+    margin-bottom: var(--awa-layer-space-md);
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f0f4f8;
+    width: 100%;
+    display: block;
+}
+
+/* Grid 2 cols para nome/sobrenome */
+.customer-account-create .fieldset .field.firstname,
+.customer-account-create .fieldset .field.lastname {
+    display: grid;
+}
+
+.customer-account-create .fieldset:has(.field.firstname):has(.field.lastname) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--awa-layer-space-md);
+    column-gap: var(--awa-layer-space-md);
+}
+
+.customer-account-create .fieldset:has(.field.firstname):has(.field.lastname) .legend {
+    grid-column: 1 / -1;
+}
+
+/* CTA de cadastro */
+.customer-account-create .action.submit.primary {
+    width: 100%;
+    height: 52px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 180ms ease;
+}
+
+.customer-account-create .action.submit.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgb(183 51 55 / 30%);
+}
+
+/* ── Recuperação de senha ──────────────────────────────────────── */
+.customer-account-forgotpassword .form.password.forget {
+    max-width: 480px;
+    margin-inline: auto;
+    background: #fff;
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: 16px;
+    padding: clamp(24px, 4vw, 48px);
+    box-shadow: 0 4px 16px rgb(0 0 0 / 6%);
+}
+
+.customer-account-forgotpassword .form.password.forget .note {
+    font-size: 0.875rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: var(--awa-layer-space-lg);
+    padding: 14px 16px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+}
+
+/* ── Responsive auth ──────────────────────────────────────────── */
+@media (width <= 767px) {
+    .customer-account-login .login-container {
+        grid-template-columns: 1fr;
+        gap: var(--awa-layer-space-lg);
+    }
+
+    .customer-account-create .fieldset:has(.field.firstname):has(.field.lastname) {
+        grid-template-columns: 1fr;
+    }
+
+    .customer-account-login .block-customer-login,
+    .customer-account-login .block-new-customer {
+        padding: 20px;
+        border-radius: 12px;
+    }
+}
