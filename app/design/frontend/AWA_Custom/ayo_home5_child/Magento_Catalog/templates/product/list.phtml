@@ -22,6 +22,37 @@ $_helper = $this->helper('Magento\Catalog\Helper\Output');
 $_b2bHelper = $this->helper('GrupoAwamotos\B2B\Helper\Data');
 $_isB2B = $_b2bHelper->isB2BCustomer();
 $_quickAddUrl = $block->getUrl('b2b/shoppinglist/quickadd');
+$_quickOrderUrl = $block->getUrl('b2b/quickorder');
+$_shoppingListUrl = $block->getUrl('b2b/shoppinglist');
+$_quoteHistoryUrl = $block->getUrl('b2b/quote/history');
+$_reorderHistoryUrl = $block->getUrl('b2b/reorder/history');
+$buildOperationalMeta = static function ($product): array {
+    $soldBy = $product->getAttributeText('sold_by');
+    if (is_array($soldBy)) {
+        $soldBy = implode(', ', array_filter(array_map('trim', $soldBy)));
+    }
+
+    $meta = [
+        [
+            'label' => (string) __('Cod'),
+            'value' => trim((string) $product->getSku()),
+        ],
+        [
+            'label' => (string) __('EAN'),
+            'value' => trim((string) $product->getData('ean')),
+        ],
+        [
+            'label' => (string) __('Caixa'),
+            'value' => trim((string) $product->getData('master_box_qty')),
+        ],
+        [
+            'label' => (string) __('Linha'),
+            'value' => trim((string) $soldBy),
+        ],
+    ];
+
+    return array_values(array_filter($meta, static fn (array $item): bool => $item['value'] !== ''));
+};
 $qtyControlConfig = [
     'selectors' => [
         'input' => '[data-awa-role="qty-input"]',
@@ -79,6 +110,21 @@ $qtyControlMageInit = json_encode(
 					echo '<h2 class="hidden">' . $block->escapeHtml($category->getName()) . '</h2>';
 				}
 			?>
+		<?php if ($_isB2B): ?>
+		<div class="awa-b2b-listing-utility" aria-label="<?php echo $block->escapeHtmlAttr(__('Ferramentas B2B')); ?>">
+			<div class="awa-b2b-listing-utility__copy">
+				<span class="awa-b2b-listing-utility__eyebrow"><?php echo $block->escapeHtml(__('Operacao B2B')); ?></span>
+				<strong class="awa-b2b-listing-utility__title"><?php echo $block->escapeHtml(__('Compre por codigo, lote ou recorrencia')); ?></strong>
+				<p class="awa-b2b-listing-utility__description"><?php echo $block->escapeHtml(__('Pedido rapido, listas e repeticao de mix agora ficam acessiveis direto do catalogo.')); ?></p>
+			</div>
+			<div class="awa-b2b-listing-utility__actions">
+				<a href="<?php echo $block->escapeUrl($_quickOrderUrl); ?>" class="awa-b2b-listing-utility__link awa-b2b-listing-utility__link--primary"><?php echo $block->escapeHtml(__('Pedido rapido')); ?></a>
+				<a href="<?php echo $block->escapeUrl($_shoppingListUrl); ?>" class="awa-b2b-listing-utility__link"><?php echo $block->escapeHtml(__('Listas')); ?></a>
+				<a href="<?php echo $block->escapeUrl($_quoteHistoryUrl); ?>" class="awa-b2b-listing-utility__link"><?php echo $block->escapeHtml(__('Cotacoes')); ?></a>
+				<a href="<?php echo $block->escapeUrl($_reorderHistoryUrl); ?>" class="awa-b2b-listing-utility__link"><?php echo $block->escapeHtml(__('Repetir pedidos')); ?></a>
+			</div>
+		</div>
+		<?php endif; ?>
 		<div class="shop-tab-select toolbar-html-top check-view-mode-toolbar-<?php echo $block->escapeHtmlAttr($viewMode); ?>" data-mode="<?php echo $block->escapeHtmlAttr($viewMode); ?>">
 		<?php echo $block->getToolbarHtml() ?>
 		<?php echo $block->getAdditionalHtml() ?>
@@ -163,6 +209,17 @@ $qtyControlMageInit = json_encode(
 										<span class="awa-sl-icon" aria-hidden="true">&#9776;</span>
 										<span class="awa-sl-label"><?= $block->escapeHtml(__('Lista')) ?></span>
 									</button>
+								</li>
+								<li class="awa-quote-cta">
+									<a href="<?= $block->escapeUrl($block->getUrl('b2b/quote/index', ['product_id' => $_product->getId(), 'sku' => $_product->getSku()])) ?>"
+									   class="awa-quote-cta-btn"
+									   aria-label="<?= $block->escapeHtml(__('Solicitar cotação para %1', $_product->getName())) ?>"
+									   title="<?= $block->escapeHtml(__('Solicitar Cotação')) ?>">
+										<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+											<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+										</svg>
+										<span class="awa-quote-label"><?= $block->escapeHtml(__('Cotar')) ?></span>
+									</a>
 								</li>
 								<?php endif; ?>
 								<li class="quickview-product">
@@ -252,6 +309,17 @@ $qtyControlMageInit = json_encode(
 							<span class="label awa-b2b-sku__label"><?php echo $block->escapeHtml(__('Cod:')); ?></span>
 							<span class="value awa-b2b-sku__value"><?php echo $block->escapeHtml($_product->getSku()); ?></span>
 						</div>
+						<?php $operationalMeta = array_slice($buildOperationalMeta($_product), 0, 4); ?>
+						<?php if ($operationalMeta !== []): ?>
+						<ul class="awa-b2b-card-meta" aria-label="<?php echo $block->escapeHtmlAttr(__('Dados operacionais do produto')); ?>">
+							<?php foreach ($operationalMeta as $metaItem): ?>
+							<li class="awa-b2b-card-meta__item">
+								<span class="awa-b2b-card-meta__label"><?php echo $block->escapeHtml($metaItem['label']); ?></span>
+								<span class="awa-b2b-card-meta__value"><?php echo $block->escapeHtml($metaItem['value']); ?></span>
+							</li>
+							<?php endforeach; ?>
+						</ul>
+						<?php endif; ?>
 						<div class="product-rating">
 							<?php echo $block->getReviewsSummaryHtml($_product, $templateType, true); ?>
 						</div>
@@ -312,6 +380,17 @@ $qtyControlMageInit = json_encode(
 							<span class="label awa-b2b-sku__label"><?php echo $block->escapeHtml(__('Cod:')); ?></span>
 							<span class="value awa-b2b-sku__value"><?php echo $block->escapeHtml($_product->getSku()); ?></span>
 						</div>
+						<?php $operationalMeta = array_slice($buildOperationalMeta($_product), 0, 4); ?>
+						<?php if ($operationalMeta !== []): ?>
+						<ul class="awa-b2b-card-meta awa-b2b-card-meta--list" aria-label="<?php echo $block->escapeHtmlAttr(__('Dados operacionais do produto')); ?>">
+							<?php foreach ($operationalMeta as $metaItem): ?>
+							<li class="awa-b2b-card-meta__item">
+								<span class="awa-b2b-card-meta__label"><?php echo $block->escapeHtml($metaItem['label']); ?></span>
+								<span class="awa-b2b-card-meta__value"><?php echo $block->escapeHtml($metaItem['value']); ?></span>
+							</li>
+							<?php endforeach; ?>
+						</ul>
+						<?php endif; ?>
 
 						<div class="product-rating">
 							<?php echo $block->getReviewsSummaryHtml($_product, $templateType, true); ?>

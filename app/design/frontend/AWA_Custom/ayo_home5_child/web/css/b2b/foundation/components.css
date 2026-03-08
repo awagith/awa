@@ -278,3 +278,31 @@ body .page-wrapper .message.warning {
     gap: 10px;
     margin-top: 12px;
 }
+
+/* ============================================================
+   Quote CTA Button — PLP actions-secondary
+   ============================================================ */
+.awa-quote-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background: transparent;
+    border: 1px solid #94a3b8;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background .2s, border-color .2s, color .2s;
+    white-space: nowrap;
+}
+.awa-quote-cta-btn:hover {
+    background: var(--aw-primary, #b73337);
+    border-color: var(--aw-primary, #b73337);
+    color: #fff;
+    text-decoration: none;
+}
+.awa-quote-cta-btn svg {
+    flex-shrink: 0;
+}
