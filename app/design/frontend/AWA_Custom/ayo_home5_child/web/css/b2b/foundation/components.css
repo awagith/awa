@@ -125,3 +125,156 @@ body .page-wrapper .message.error,
 body .page-wrapper .message.warning {
     border-radius: var(--awa-radius-sm);
 }
+
+/* ═══════════════════════════════════════════════
+   Quick Order: SKU Autocomplete Dropdown
+   ─────────────────────────────────────────────── */
+.quickorder-row {
+    position: relative;
+}
+
+.qo-ac-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    min-width: 340px;
+    max-width: 480px;
+    margin: 2px 0 0;
+    padding: 4px 0;
+    list-style: none;
+    background: #fff;
+    border: 1px solid var(--awa-border, #e5e7eb);
+    border-radius: var(--awa-radius-sm, 6px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.12);
+    max-height: 320px;
+    overflow-y: auto;
+}
+
+.qo-ac-dropdown--open {
+    display: block;
+}
+
+.qo-ac-item {
+    display: grid;
+    grid-template-columns: 100px 1fr auto auto;
+    gap: 8px;
+    align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background .12s;
+    outline: none;
+}
+
+.qo-ac-item:hover,
+.qo-ac-item.qo-ac-item--active,
+.qo-ac-item:focus {
+    background: var(--awa-surface-2, #f8fafc);
+}
+
+.qo-ac-sku {
+    font-family: var(--awa-font-mono, monospace);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--awa-accent, #b73337);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.qo-ac-name {
+    color: var(--awa-text-1, #1e293b);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.qo-ac-price {
+    font-weight: 600;
+    color: var(--awa-text-1, #1e293b);
+    white-space: nowrap;
+}
+
+.qo-ac-stock {
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 99px;
+    white-space: nowrap;
+}
+
+.qo-ac-stock--ok {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.qo-ac-stock--out {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.qo-ac-empty {
+    padding: 12px;
+    font-size: 13px;
+    color: var(--awa-text-2, #64748b);
+    text-align: center;
+    list-style: none;
+}
+
+/* Scrollbar styling for the dropdown */
+.qo-ac-dropdown::-webkit-scrollbar {
+    width: 4px;
+}
+.qo-ac-dropdown::-webkit-scrollbar-track {
+    background: transparent;
+}
+.qo-ac-dropdown::-webkit-scrollbar-thumb {
+    background: var(--awa-border, #e5e7eb);
+    border-radius: 2px;
+}
+
+@media (max-width: 767px) {
+    .qo-ac-dropdown {
+        min-width: 100%;
+        max-width: 100%;
+    }
+    .qo-ac-item {
+        grid-template-columns: 80px 1fr auto;
+    }
+    .qo-ac-price {
+        display: none;
+    }
+}
+
+/* ============================================================
+   Quick Order Header Modal — Badges & Table
+   ============================================================ */
+.qo-modal-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 99px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .3px;
+}
+.qo-modal-badge--ok   { background: #d1fae5; color: #065f46; }
+.qo-modal-badge--warn { background: #fef3c7; color: #92400e; }
+.qo-modal-badge--err  { background: #fee2e2; color: #991b1b; }
+
+.qo-modal-row--issue td { opacity: .7; }
+
+#awa-quick-order-results-container {
+    margin-top: 16px;
+    overflow-x: auto;
+}
+.awa-quick-order-hint {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 6px;
+}
+.awa-quick-order-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 12px;
+}

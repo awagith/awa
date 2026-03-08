@@ -2,8 +2,9 @@ define([
     'jquery',
     'mage/translate',
     'mage/cookies',
+    'mage/url',
     'Magento_Ui/js/modal/alert'
-], function ($, $t, _cookies, alertModal) {
+], function ($, $t, _cookies, urlBuilder, alertModal) {
     'use strict';
 
     function escapeHtml(value) {
@@ -37,6 +38,172 @@ define([
 
         return '';
     }
+
+    /* ─── SKU Autocomplete ──────────────────────────────────────────────────── */
+
+    var searchUrl = urlBuilder.build('b2b/quickorder/search');
+
+    /**
+     * Debounce helper
+     */
+    function debounce(fn, delay) {
+        var timer;
+        return function () {
+            var ctx = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () { fn.apply(ctx, args); }, delay);
+        };
+    }
+
+    /**
+     * Render one autocomplete dropdown row
+     */
+    function renderSuggestion(product) {
+        var stockBadge = product.in_stock
+            ? '<span class="qo-ac-stock qo-ac-stock--ok">' + escapeHtml(product.stock) + ' un.</span>'
+            : '<span class="qo-ac-stock qo-ac-stock--out">' + $t('Indisponível') + '</span>';
+
+        return '<li class="qo-ac-item" role="option" tabindex="-1"' +
+            ' data-sku="' + escapeHtml(product.sku) + '"' +
+            ' data-name="' + escapeHtml(product.name) + '"' +
+            ' data-price="' + escapeHtml(product.price) + '">' +
+            '<span class="qo-ac-sku">' + escapeHtml(product.sku) + '</span>' +
+            '<span class="qo-ac-name">' + escapeHtml(product.name) + '</span>' +
+            '<span class="qo-ac-price">' + escapeHtml(product.price) + '</span>' +
+            stockBadge +
+            '</li>';
+    }
+
+    /**
+     * Close all open autocomplete dropdowns
+     */
+    function closeAllDropdowns() {
+        $('.qo-ac-dropdown').removeClass('qo-ac-dropdown--open').empty();
+    }
+
+    /**
+     * Bind autocomplete behavior on a single SKU input
+     */
+    function bindAutocomplete($input) {
+        var $row = $input.closest('.quickorder-row');
+
+        // Create dropdown if it doesn't exist
+        if (!$row.find('.qo-ac-dropdown').length) {
+            $row.append('<ul class="qo-ac-dropdown" role="listbox" aria-label="' +
+                $t('Sugestões de SKU') + '"></ul>');
+        }
+
+        var $dropdown = $row.find('.qo-ac-dropdown');
+        var activeXhr = null;
+
+        var doSearch = debounce(function () {
+            var query = $.trim($input.val());
+
+            if (query.length < 2) {
+                $dropdown.removeClass('qo-ac-dropdown--open').empty();
+                return;
+            }
+
+            if (activeXhr) {
+                activeXhr.abort();
+            }
+
+            activeXhr = $.ajax({
+                url: searchUrl,
+                type: 'GET',
+                dataType: 'json',
+                data: { q: query }
+            }).done(function (response) {
+                var products = (response && response.products) ? response.products : [];
+                $dropdown.empty();
+
+                if (!products.length) {
+                    $dropdown.append('<li class="qo-ac-empty">' + $t('Nenhum produto encontrado') + '</li>');
+                    $dropdown.addClass('qo-ac-dropdown--open');
+                    return;
+                }
+
+                $.each(products, function (_, product) {
+                    $dropdown.append(renderSuggestion(product));
+                });
+
+                $dropdown.addClass('qo-ac-dropdown--open');
+            }).fail(function (xhr) {
+                if (xhr.statusText !== 'abort') {
+                    $dropdown.removeClass('qo-ac-dropdown--open').empty();
+                }
+            }).always(function () {
+                activeXhr = null;
+            });
+        }, 300);
+
+        $input.on('input.qoAc', doSearch);
+
+        // Keyboard navigation inside dropdown
+        $input.on('keydown.qoAc', function (e) {
+            var $items = $dropdown.find('.qo-ac-item');
+            var $focused = $dropdown.find('.qo-ac-item:focus, .qo-ac-item.qo-ac-item--active');
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                if (!$focused.length) {
+                    $items.first().addClass('qo-ac-item--active').focus();
+                } else {
+                    var $next = $focused.next('.qo-ac-item');
+                    $focused.removeClass('qo-ac-item--active');
+                    ($next.length ? $next : $items.first()).addClass('qo-ac-item--active').focus();
+                }
+            } else if (e.key === 'Escape') {
+                $dropdown.removeClass('qo-ac-dropdown--open').empty();
+                $input.focus();
+            }
+        });
+
+        // Select suggestion by click or Enter
+        $dropdown.on('click', '.qo-ac-item', function () {
+            var $li = $(this);
+            $input.val($li.data('sku'));
+            $dropdown.removeClass('qo-ac-dropdown--open').empty();
+            // Move focus to qty field
+            $row.find('.qty-input').focus();
+        });
+
+        $dropdown.on('keydown', '.qo-ac-item', function (e) {
+            var $li = $(this);
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                $input.val($li.data('sku'));
+                $dropdown.removeClass('qo-ac-dropdown--open').empty();
+                $row.find('.qty-input').focus();
+            } else if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                var $next = $li.next('.qo-ac-item');
+                $li.removeClass('qo-ac-item--active');
+                ($next.length ? $next : $dropdown.find('.qo-ac-item').first()).addClass('qo-ac-item--active').focus();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                var $prev = $li.prev('.qo-ac-item');
+                $li.removeClass('qo-ac-item--active');
+                if ($prev.length) {
+                    $prev.addClass('qo-ac-item--active').focus();
+                } else {
+                    $input.focus();
+                }
+            } else if (e.key === 'Escape') {
+                $dropdown.removeClass('qo-ac-dropdown--open').empty();
+                $input.focus();
+            }
+        });
+    }
+
+    // Close dropdown when clicking outside
+    $(document).on('click.qoAcGlobal', function (e) {
+        if (!$(e.target).closest('.quickorder-row').length) {
+            closeAllDropdowns();
+        }
+    });
+
+    /* ─── Main widget ───────────────────────────────────────────────────────── */
 
     return function (config, element) {
         var messages = config.messages || {};
@@ -86,6 +253,9 @@ define([
 
         function addRow() {
             $rowsContainer.append(createRow());
+            // Bind autocomplete on the newly created SKU input
+            var $newInput = $rowsContainer.find('.quickorder-row').last().find('.sku-input');
+            bindAutocomplete($newInput);
         }
 
         function clearStatuses() {

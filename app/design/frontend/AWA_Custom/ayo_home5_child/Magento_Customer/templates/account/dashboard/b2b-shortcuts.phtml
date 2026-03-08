@@ -1,61 +1,114 @@
 <?php
 /**
- * B2B Shortcuts & ERP Mockup Dashboard
- * Simula dados que viriam do painel ERP.
+ * B2B Shortcuts & Credit Dashboard Widget
+ * Uses real credit data from GrupoAwamotos\B2B\Block\Account\Credit
  *
- * @var \Magento\Framework\View\Element\Template $block
+ * @var \GrupoAwamotos\B2B\Block\Account\Credit $block
  */
-$reorderUrl = $block->getUrl('b2b/reorder/history');
+$reorderUrl  = $block->getUrl('b2b/reorder/history');
 $quickOrderUrl = $block->getUrl('b2b/quickorder');
-$addressUrl = $block->getUrl('customer/address/');
-$creditUrl = $block->getUrl('b2b/credit');
-$creditLimitTotal = 15000.00;
-$creditLimitUsed = 4500.00;
-$creditLimitAvailable = $creditLimitTotal - $creditLimitUsed;
-$creditPercentage = ($creditLimitUsed / $creditLimitTotal) * 100;
-$progressBarColor = $creditPercentage > 80 ? '#b73337' : '#10b981';
-?>
+$addressUrl  = $block->getUrl('customer/address/');
+$creditUrl   = $block->getUrl('b2b/credit');
 
+// Real credit data from CreditService
+$creditData       = $block->getCreditLimit();
+$creditTotal      = $creditData->getCreditLimit();
+$creditUsed       = $creditData->getUsedCredit();
+$creditAvailable  = $creditData->getAvailableCredit();
+$creditPercentage = $block->getUsagePercent();
+$progressBarColor = $creditPercentage > 80 ? '#b73337' : '#10b981';
+$hasCreditEnabled = $creditTotal > 0;
+?>
+<?php if ($hasCreditEnabled): ?>
 <div class="awa-b2b-erp-status-card" style="margin-bottom: 24px;">
-    <div class="awa-b2b-credit-header">
+    <div class="awa-b2b-credit-header" style="margin-bottom: 12px;">
         <h3 style="margin: 0; font-size: 18px; color: #1e293b;">
-            <i class="fa fa-line-chart" aria-hidden="true" style="margin-right: 8px;"></i>
-            <?= __('Meu Limite de Crédito (ERP)') ?>
+            <?= $block->escapeHtml(__("Limite de Crédito B2B")) ?>
         </h3>
     </div>
     <div class="awa-b2b-credit-body" style="padding: 16px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;">
         <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-            <span><strong><?= __('Utilizado:') ?></strong> R$ <?= number_format($creditLimitUsed, 2, ',', '.') ?></span>
-            <span><strong><?= __('Disponível:') ?></strong> R$ <?= number_format($creditLimitAvailable, 2, ',', '.') ?></span>
+            <span>
+                <strong><?= $block->escapeHtml(__("Utilizado:")) ?></strong>
+                <?= /* @noEscape */ $block->formatPrice($creditUsed) ?>
+            </span>
+            <span>
+                <strong><?= $block->escapeHtml(__("Disponível:")) ?></strong>
+                <?= /* @noEscape */ $block->formatPrice($creditAvailable) ?>
+            </span>
         </div>
-        <div class="awa-b2b-progress-bg" style="width: 100%; height: 16px; background: #f1f5f9; border-radius: 99px; overflow: hidden;">
-            <div class="awa-b2b-progress-fill" style="width: <?= $creditPercentage ?>%; height: 100%; background: <?= $progressBarColor ?>; transition: width 1s ease-in-out;"></div>
+        <div class="awa-b2b-progress-bg"
+             style="width: 100%; height: 16px; background: #f1f5f9; border-radius: 99px; overflow: hidden;"
+             role="progressbar"
+             aria-valuenow="<?= (int) $creditPercentage ?>"
+             aria-valuemin="0"
+             aria-valuemax="100"
+             aria-label="<?= $block->escapeHtmlAttr(__("Crédito utilizado")) ?>">
+            <div class="awa-b2b-progress-fill"
+                 style="width: <?= (float) min(100, $creditPercentage) ?>%; height: 100%; background: <?= $block->escapeHtmlAttr($progressBarColor) ?>; transition: width 1s ease-in-out;">
+            </div>
         </div>
-        <div style="margin-top: 12px; font-size: 12px; color: #64748b; text-align: right;">
-            <?= __('Limite Total Aprovado:') ?> <strong>R$ <?= number_format($creditLimitTotal, 2, ',', '.') ?></strong>
+        <div style="margin-top: 12px; font-size: 12px; color: #64748b; display: flex; justify-content: space-between; align-items: center;">
+            <span><?= $block->escapeHtml(__("Limite Total:")) ?>
+                <strong><?= /* @noEscape */ $block->formatPrice($creditTotal) ?></strong>
+            </span>
+            <?php if ($creditPercentage > 80): ?>
+            <span style="color: #b73337; font-weight: 600; font-size: 11px;">
+                <?= $block->escapeHtml(__("⚠ Limite próximo do teto")) ?>
+            </span>
+            <?php endif; ?>
         </div>
     </div>
 </div>
+<?php endif; ?>
 
 <div class="b2b-dashboard-shortcuts">
     <a href="<?= $block->escapeUrl($reorderUrl) ?>" class="b2b-shortcut-card">
-        <i class="b2b-shortcut-icon fa fa-history" aria-hidden="true" style="font-family: 'FontAwesome'; font-style: normal;"></i>
-        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__('Refazer Pedido')) ?></span>
-        <span style="font-size: 12px; color: #64748b;"><?= $block->escapeHtml(__('Veja o histórico de compras')) ?></span>
+        <svg class="b2b-shortcut-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 .49-3.49"></path>
+        </svg>
+        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__("Repetir Pedido")) ?></span>
+        <span style="font-size: 12px; color: #64748b;"><?= $block->escapeHtml(__("Compre o mesmo de antes")) ?></span>
     </a>
     <a href="<?= $block->escapeUrl($quickOrderUrl) ?>" class="b2b-shortcut-card">
-        <i class="b2b-shortcut-icon fa fa-bolt" aria-hidden="true" style="font-family: 'FontAwesome'; font-style: normal;"></i>
-        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__('Compra Rápida')) ?></span>
-        <span style="font-size: 12px; color: #64748b;"><?= $block->escapeHtml(__('Cole SKUs em lote')) ?></span>
+        <svg class="b2b-shortcut-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__("Compra Rápida")) ?></span>
+        <span style="font-size: 12px; color: #64748b;"><?= $block->escapeHtml(__("Cole SKUs em lote ou CSV")) ?></span>
     </a>
     <a href="<?= $block->escapeUrl($addressUrl) ?>" class="b2b-shortcut-card">
-        <i class="b2b-shortcut-icon fa fa-truck" aria-hidden="true" style="font-family: 'FontAwesome'; font-style: normal;"></i>
-        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__('Meus Endereços')) ?></span>
-        <span style="font-size: 12px; color: #64748b;"><?= $block->escapeHtml(__('Gerencie múltiplos destinos')) ?></span>
+        <svg class="b2b-shortcut-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="1" y="3" width="15" height="13"></rect>
+            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+            <circle cx="5.5" cy="18.5" r="2.5"></circle>
+            <circle cx="18.5" cy="18.5" r="2.5"></circle>
+        </svg>
+        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__("Meus Endereços")) ?></span>
+        <span style="font-size: 12px; color: #64748b;"><?= $block->escapeHtml(__("Múltiplos destinos de entrega")) ?></span>
     </a>
+    <?php if ($hasCreditEnabled): ?>
     <a href="<?= $block->escapeUrl($creditUrl) ?>" class="b2b-shortcut-card">
-        <i class="b2b-shortcut-icon fa fa-file-text-o" aria-hidden="true" style="font-family: 'FontAwesome'; font-style: normal;"></i>
-        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__('Meu Crédito')) ?></span>
-        <span style="font-size: 12px; color: #64748b;"><?= $block->escapeHtml(__('Consulte limite e disponibilidade')) ?></span>
+        <svg class="b2b-shortcut-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+            <line x1="2" y1="10" x2="22" y2="10"></line>
+        </svg>
+        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__("Meu Crédito")) ?></span>
+        <span style="font-size: 12px; color: #64748b;">
+            <?= /* @noEscape */ $block->formatPrice($creditAvailable) ?> <?= $block->escapeHtml(__("disponível")) ?>
+        </span>
     </a>
+    <?php else: ?>
+    <a href="<?= $block->escapeUrl($block->getUrl("sales/order/history")) ?>" class="b2b-shortcut-card">
+        <svg class="b2b-shortcut-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+        </svg>
+        <span class="b2b-shortcut-title"><?= $block->escapeHtml(__("Meus Pedidos")) ?></span>
+        <span style="font-size: 12px; color: #64748b;"><?= $block->escapeHtml(__("Histórico e rastreamento")) ?></span>
+    </a>
+    <?php endif; ?>
 </div>
