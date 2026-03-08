@@ -1,0 +1,608 @@
+/**
+ * AWA Motos – Design System
+ * Layer: pages/sales.css
+ * Escopo: Pedidos — sucesso, histórico, detalhe, reorder, print
+ * Padrão: B2B enterprise
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   1. ORDER SUCCESS PAGE
+   ═══════════════════════════════════════════════════════════════ */
+
+.awa-order-success {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px var(--awa-layer-space-md) 64px;
+}
+
+.awa-order-success__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #dcfce7;
+    margin: 0 auto 24px;
+}
+
+.awa-order-success__icon svg {
+    width: 36px;
+    height: 36px;
+    color: #15803d;
+    stroke: #15803d;
+}
+
+.awa-order-success__heading {
+    text-align: center;
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--awa-layer-color-text-primary);
+    margin-bottom: 8px;
+}
+
+.awa-order-success__sub {
+    text-align: center;
+    color: var(--awa-layer-color-text-secondary);
+    font-size: 1rem;
+    margin-bottom: 32px;
+}
+
+.awa-order-success__number-box {
+    background: var(--awa-layer-color-bg-soft);
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-lg);
+    padding: 24px 32px;
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.awa-order-success__number-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--awa-layer-color-text-secondary);
+    margin-bottom: 6px;
+}
+
+.awa-order-success__number-value {
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    font-weight: 800;
+    color: var(--awa-layer-color-primary);
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+}
+
+.awa-order-success__actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--awa-layer-space-sm);
+    margin-bottom: 40px;
+}
+
+.awa-order-success__action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px 16px;
+    background: #fff;
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-md);
+    text-decoration: none;
+    color: var(--awa-layer-color-text-primary);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: center;
+    transition: border-color 200ms, box-shadow 200ms, color 200ms;
+    cursor: pointer;
+}
+
+.awa-order-success__action-btn svg {
+    width: 24px;
+    height: 24px;
+    color: var(--awa-layer-color-primary);
+    stroke: currentColor;
+    flex-shrink: 0;
+}
+
+.awa-order-success__action-btn:hover,
+.awa-order-success__action-btn:focus-visible {
+    border-color: var(--awa-layer-color-primary);
+    box-shadow: 0 0 0 2px rgb(183 51 55 / 12%);
+    color: var(--awa-layer-color-primary);
+    text-decoration: none;
+}
+
+.awa-order-success__estimate {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: var(--awa-layer-radius-md);
+    padding: 20px;
+    margin-bottom: 32px;
+}
+
+.awa-order-success__estimate svg {
+    width: 20px;
+    height: 20px;
+    color: #2563eb;
+    stroke: currentColor;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.awa-order-success__estimate-body strong {
+    display: block;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #1d4ed8;
+    margin-bottom: 4px;
+}
+
+.awa-order-success__estimate-body p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #3b82f6;
+}
+
+.awa-order-success__whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #25d366;
+    color: #fff;
+    border-radius: 999px;
+    padding: 12px 24px;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    transition: background 200ms;
+}
+
+.awa-order-success__whatsapp:hover {
+    background: #128c47;
+    color: #fff;
+    text-decoration: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   2. ORDER HISTORY PAGE
+   ═══════════════════════════════════════════════════════════════ */
+
+.awa-orders-page {
+    padding-block: var(--awa-layer-space-lg);
+}
+
+.awa-orders-page .page-title-wrapper {
+    margin-bottom: 28px;
+}
+
+.awa-orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.awa-orders-table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--awa-layer-color-text-secondary);
+    background: var(--awa-layer-color-bg-soft);
+    border-bottom: 2px solid var(--awa-layer-color-border);
+    white-space: nowrap;
+}
+
+.awa-orders-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--awa-layer-color-border);
+    vertical-align: middle;
+    color: var(--awa-layer-color-text-primary);
+}
+
+.awa-orders-table tr:last-child td {
+    border-bottom: none;
+}
+
+.awa-orders-table tbody tr {
+    transition: background 150ms;
+}
+
+.awa-orders-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.awa-orders-table .col.id a {
+    font-weight: 700;
+    color: var(--awa-layer-color-primary);
+    text-decoration: none;
+    font-variant-numeric: tabular-nums;
+}
+
+.awa-orders-table .col.id a:hover {
+    text-decoration: underline;
+}
+
+/* Order status badge */
+.awa-order-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+}
+
+.awa-order-status::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.7;
+}
+
+.awa-order-status--complete,
+.awa-order-status--closed {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.awa-order-status--processing,
+.awa-order-status--payment_review {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.awa-order-status--pending,
+.awa-order-status--pending_payment {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.awa-order-status--canceled,
+.awa-order-status--holded {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Reorder button — prominent */
+.awa-btn-reorder {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: var(--awa-layer-radius-sm);
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    border: none;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 200ms, box-shadow 200ms;
+    white-space: nowrap;
+}
+
+.awa-btn-reorder:hover,
+.awa-btn-reorder:focus-visible {
+    background: #8e2629;
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgb(183 51 55 / 30%);
+}
+
+.awa-btn-view-order {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: var(--awa-layer-radius-sm);
+    background: transparent;
+    color: var(--awa-layer-color-text-primary);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    border: 1px solid var(--awa-layer-color-border);
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 200ms, color 200ms;
+    white-space: nowrap;
+}
+
+.awa-btn-view-order:hover,
+.awa-btn-view-order:focus-visible {
+    border-color: var(--awa-layer-color-primary);
+    color: var(--awa-layer-color-primary);
+    text-decoration: none;
+}
+
+.awa-orders-table .col.actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* Magento default order history override */
+.sales-order-history .table-wrapper {
+    border-radius: var(--awa-layer-radius-lg);
+    border: 1px solid var(--awa-layer-color-border);
+    overflow: hidden;
+}
+
+.sales-order-history .orders-history th {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--awa-layer-color-text-secondary);
+    background: var(--awa-layer-color-bg-soft);
+}
+
+.sales-order-history .orders-history .col.actions .action {
+    margin-right: 8px;
+}
+
+.sales-order-history .orders-history .col.actions .action.order {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: var(--awa-layer-radius-sm);
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    border: none;
+    text-decoration: none;
+    transition: background 200ms;
+}
+
+.sales-order-history .orders-history .col.actions .action.order:hover {
+    background: #8e2629;
+    color: #fff;
+    text-decoration: none;
+}
+
+.sales-order-history .orders-history .col.actions .action.view {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: var(--awa-layer-radius-sm);
+    border: 1px solid var(--awa-layer-color-border);
+    color: var(--awa-layer-color-text-primary);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: border-color 200ms, color 200ms;
+}
+
+.sales-order-history .orders-history .col.actions .action.view:hover {
+    border-color: var(--awa-layer-color-primary);
+    color: var(--awa-layer-color-primary);
+    text-decoration: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3. ORDER DETAIL PAGE
+   ═══════════════════════════════════════════════════════════════ */
+
+.awa-order-view {
+    padding-block: var(--awa-layer-space-lg);
+}
+
+.awa-order-view__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding-bottom: 24px;
+    margin-bottom: 28px;
+    border-bottom: 2px solid var(--awa-layer-color-border);
+}
+
+.awa-order-view__header-left h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.awa-order-view__header-left .order-date {
+    font-size: 0.875rem;
+    color: var(--awa-layer-color-text-secondary);
+}
+
+.awa-order-view__header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Magento order view refinements */
+.sales-order-view .page-title-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.sales-order-view .order-status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    background: var(--awa-layer-color-bg-soft);
+    border: 1px solid var(--awa-layer-color-border);
+}
+
+.sales-order-view .order-date {
+    font-size: 0.875rem;
+    color: var(--awa-layer-color-text-secondary);
+    margin-bottom: 24px;
+}
+
+.sales-order-view .actions-toolbar {
+    margin-bottom: 32px;
+}
+
+.sales-order-view .actions-toolbar .action {
+    margin-right: 10px;
+}
+
+.sales-order-view .actions-toolbar .action.print {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-sm);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-text-primary);
+    background: transparent;
+    text-decoration: none;
+    cursor: pointer;
+    transition: border-color 200ms, color 200ms;
+}
+
+.sales-order-view .actions-toolbar .action.print:hover {
+    border-color: var(--awa-layer-color-primary);
+    color: var(--awa-layer-color-primary);
+    text-decoration: none;
+}
+
+.awa-order-totals {
+    background: var(--awa-layer-color-bg-soft);
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-lg);
+    padding: 24px;
+    margin-top: 24px;
+}
+
+.awa-order-totals table {
+    width: 100%;
+}
+
+.awa-order-totals tr td {
+    padding: 6px 0;
+}
+
+.awa-order-totals tr td:last-child {
+    text-align: right;
+    font-weight: 600;
+}
+
+.awa-order-totals .grand_total td {
+    padding-top: 12px;
+    border-top: 2px solid var(--awa-layer-color-border);
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: var(--awa-layer-color-primary);
+}
+
+.awa-order-addresses {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--awa-layer-space-md);
+    margin-bottom: var(--awa-layer-space-md);
+}
+
+.awa-order-address-block {
+    background: #fff;
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-md);
+    padding: 20px;
+}
+
+.awa-order-address-block .block-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--awa-layer-color-text-secondary);
+    margin-bottom: 12px;
+}
+
+.awa-order-address-block address {
+    font-style: normal;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--awa-layer-color-text-primary);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   4. PRINT
+   ═══════════════════════════════════════════════════════════════ */
+
+@media print {
+    .awa-order-view__header-actions,
+    .block-collapsible-nav,
+    .page-header,
+    .page-footer,
+    .back-link,
+    .message,
+    .minicart-wrapper,
+    nav {
+        display: none;
+    }
+
+    body,
+    .awa-order-view {
+        font-size: 12pt;
+        color: #000;
+    }
+
+    a[href]::after {
+        content: none;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   5. RESPONSIVE
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 767px) {
+    .awa-order-success {
+        padding: 32px var(--awa-layer-space-sm) 48px;
+    }
+
+    .awa-order-success__actions {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .awa-order-addresses {
+        grid-template-columns: 1fr;
+    }
+
+    .awa-orders-table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .awa-order-view__header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 480px) {
+    .awa-order-success__actions {
+        grid-template-columns: 1fr;
+    }
+}

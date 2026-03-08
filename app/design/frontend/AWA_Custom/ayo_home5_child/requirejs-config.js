@@ -13,6 +13,8 @@ var config = {
     paths: {
         'rokanthemes/timecircles': 'js/rokanthemes/timecircles',
         'GrupoAwamotos_Theme/js/announcement-bar': 'js/announcement-bar',
-        'GrupoAwamotos_Theme/js/pdp-sticky-bar': 'js/pdp-sticky-bar'
+        'GrupoAwamotos_Theme/js/pdp-sticky-bar': 'js/pdp-sticky-bar',
+        'AWA_Custom/js/recently-viewed': 'js/awa-recently-viewed',
+        'AWA_Custom/js/compare-bar': 'js/awa-compare-bar'
     }
 };

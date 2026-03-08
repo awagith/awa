@@ -1,0 +1,135 @@
+<?php
+/**
+ * AWA Motos — Order History (Enterprise B2B)
+ *
+ * @var \Magento\Sales\Block\Order\History $block
+ */
+declare(strict_types=1);
+
+// phpcs:disable Magento2.Templates.ThisInTemplate
+
+$_orders = $block->getOrders();
+?>
+<?= /* @noEscape */ $block->getChildHtml('info') ?>
+
+<?php if ($_orders && count($_orders)) : ?>
+
+    <div class="awa-order-history">
+
+        <!-- ── Header ──────────────────────────────── -->
+        <div class="awa-order-history__header">
+            <h2 class="awa-order-history__title"><?= $block->escapeHtml(__('Meus Pedidos')) ?></h2>
+            <span class="awa-order-history__count">
+                <?= $block->escapeHtml(__(
+                    '%1 pedido(s) encontrado(s)',
+                    count($_orders)
+                )) ?>
+            </span>
+        </div>
+
+        <!-- ── Table wrapper ──────────────────────── -->
+        <div class="table-wrapper orders-history awa-order-history__table-wrapper">
+            <table class="data table table-order-items history awa-table" id="my-orders-table">
+                <caption class="table-caption"><?= $block->escapeHtml(__('Histórico de Pedidos')) ?></caption>
+                <thead>
+                    <tr>
+                        <th scope="col" class="col id"><?= $block->escapeHtml(__('Pedido #')) ?></th>
+                        <th scope="col" class="col date"><?= $block->escapeHtml(__('Data')) ?></th>
+                        <?= /* @noEscape */ $block->getChildHtml('extra.column.header') ?>
+                        <th scope="col" class="col total"><?= $block->escapeHtml(__('Total')) ?></th>
+                        <th scope="col" class="col status"><?= $block->escapeHtml(__('Status')) ?></th>
+                        <th scope="col" class="col actions"><?= $block->escapeHtml(__('Ações')) ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($_orders as $_order) : ?>
+                        <?php
+                        $statusRaw = strtolower(str_replace([' ', '_'], '-', $_order->getStatus()));
+                        ?>
+                        <tr>
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Pedido #')) ?>" class="col id">
+                                <a href="<?= $block->escapeUrl($block->getViewUrl($_order)) ?>"
+                                   class="awa-order-history__order-link">
+                                    #<?= $block->escapeHtml($_order->getRealOrderId()) ?>
+                                </a>
+                            </td>
+
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Data')) ?>" class="col date">
+                                <?= /* @noEscape */ $block->formatDate($_order->getCreatedAt(), \IntlDateFormatter::MEDIUM) ?>
+                            </td>
+
+                            <?php $extra = $block->getChildBlock('extra.container'); ?>
+                            <?php if ($extra) : ?>
+                                <?php $extra->setOrder($_order); ?>
+                                <?= /* @noEscape */ $extra->getChildHtml() ?>
+                            <?php endif; ?>
+
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Total')) ?>" class="col total">
+                                <strong class="awa-order-history__total">
+                                    <?= /* @noEscape */ $_order->formatPrice($_order->getGrandTotal()) ?>
+                                </strong>
+                            </td>
+
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Status')) ?>" class="col status">
+                                <span class="awa-order-status awa-order-status--<?= $block->escapeHtmlAttr($statusRaw) ?>">
+                                    <?= $block->escapeHtml($_order->getStatusLabel()) ?>
+                                </span>
+                            </td>
+
+                            <td data-th="<?= $block->escapeHtmlAttr(__('Ações')) ?>" class="col actions awa-order-history__actions">
+                                <a href="<?= $block->escapeUrl($block->getViewUrl($_order)) ?>"
+                                   class="awa-btn awa-btn--sm awa-btn--secondary awa-order-history__view-btn"
+                                   aria-label="<?= $block->escapeHtmlAttr(__('Ver pedido #%1', $_order->getRealOrderId())) ?>">
+                                    <?= $block->escapeHtml(__('Ver pedido')) ?>
+                                </a>
+
+                                <?php if ($this->helper(\Magento\Sales\Helper\Reorder::class)->canReorder($_order->getEntityId())) : ?>
+                                    <a href="#"
+                                       data-post='<?= /* @noEscape */
+                                            $this->helper(\Magento\Framework\Data\Helper\PostHelper::class)
+                                                ->getPostData($block->getReorderUrl($_order))
+                                       ?>'
+                                       class="awa-btn awa-btn--sm awa-btn--primary awa-order-history__reorder-btn"
+                                       aria-label="<?= $block->escapeHtmlAttr(__('Repetir pedido #%1', $_order->getRealOrderId())) ?>">
+                                        <?= $block->escapeHtml(__('Repetir pedido')) ?>
+                                    </a>
+                                <?php endif ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ── Pager ──────────────────────────────── -->
+        <?php if ($block->getPagerHtml()) : ?>
+            <div class="order-products-toolbar toolbar bottom awa-pager">
+                <?= /* @noEscape */ $block->getPagerHtml() ?>
+            </div>
+        <?php endif ?>
+
+    </div>
+
+<?php else : ?>
+
+    <!-- ── Empty state ─────────────────────────────── -->
+    <div class="awa-empty-state awa-order-history__empty">
+        <div class="awa-empty-state__icon" aria-hidden="true">
+            <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="64" height="64" rx="32" fill="#f7f7f7"/>
+                <path d="M20 24H44M20 32H40M20 40H36" stroke="#bdbdbd" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="M28 16H36L40 20H28L28 16Z" fill="#e5e5e5"/>
+                <path d="M24 16H40C41.1046 16 42 16.8954 42 18V46C42 47.1046 41.1046 48 40 48H24C22.8954 48 22 47.1046 22 46V18C22 16.8954 22.8954 16 24 16Z" stroke="#bdbdbd" stroke-width="2"/>
+            </svg>
+        </div>
+        <h3 class="awa-empty-state__title"><?= $block->escapeHtml(__('Nenhum pedido encontrado')) ?></h3>
+        <p class="awa-empty-state__description">
+            <?= $block->escapeHtml(__('Você ainda não realizou nenhum pedido. Explore nosso catálogo e encontre as peças que precisa.')) ?>
+        </p>
+        <a href="<?= $block->escapeUrl($block->getUrl('/')) ?>"
+           class="awa-btn awa-btn--primary">
+            <?= $block->escapeHtml(__('Explorar catálogo')) ?>
+        </a>
+    </div>
+
+<?php endif ?>

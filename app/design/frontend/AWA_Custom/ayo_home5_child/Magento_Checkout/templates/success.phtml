@@ -1,0 +1,128 @@
+<?php
+/**
+ * AWA Motos — Order Success Page (Enterprise B2B)
+ *
+ * @var \Magento\Checkout\Block\Onepage\Success $block
+ */
+declare(strict_types=1);
+?>
+<div class="checkout-success awa-order-success">
+
+    <?php if ($block->getOrderId()) : ?>
+
+        <!-- ── Success hero ──────────────────────────────── -->
+        <div class="awa-order-success__hero">
+            <div class="awa-order-success__icon" aria-hidden="true">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="24" cy="24" r="24" fill="#dcfce7"/>
+                    <path d="M14 24.5L20.5 31L34 17" stroke="#15803d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <h2 class="awa-order-success__title"><?= $block->escapeHtml(__('Pedido realizado com sucesso!')) ?></h2>
+            <p class="awa-order-success__subtitle">
+                <?= $block->escapeHtml(__('Obrigado pela sua compra. Você receberá uma confirmação por e-mail em breve.')) ?>
+            </p>
+        </div>
+
+        <!-- ── Order number ──────────────────────────────── -->
+        <div class="awa-order-success__number-row">
+            <div class="awa-order-success__number-box">
+                <span class="awa-order-success__number-label"><?= $block->escapeHtml(__('Número do pedido')) ?></span>
+                <?php if ($block->getCanViewOrder()) : ?>
+                    <a href="<?= $block->escapeUrl($block->getViewOrderUrl()) ?>"
+                       class="awa-order-success__number-value"
+                       aria-label="<?= $block->escapeHtmlAttr(__('Ver pedido %1', $block->getOrderId())) ?>">
+                        #<?= $block->escapeHtml($block->getOrderId()) ?>
+                    </a>
+                <?php else : ?>
+                    <span class="awa-order-success__number-value">#<?= $block->escapeHtml($block->getOrderId()) ?></span>
+                <?php endif; ?>
+            </div>
+        </div>
+
+        <!-- ── Next steps grid ──────────────────────────── -->
+        <div class="awa-order-success__steps">
+            <div class="awa-order-success__step">
+                <div class="awa-order-success__step-icon" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 8L10.89 13.26C11.2187 13.4793 11.6049 13.5963 12 13.5963C12.3951 13.5963 12.7813 13.4793 13.11 13.26L21 8M5 19H19C19.5304 19 20.0391 18.7893 20.4142 18.4142C20.7893 18.0391 21 17.5304 21 17V7C21 6.46957 20.7893 5.96086 20.4142 5.58579C20.0391 5.21071 19.5304 5 19 5H5C4.46957 5 3.96086 5.21071 3.58579 5.58579C3.21071 5.96086 3 6.46957 3 7V17C3 17.5304 3.21071 18.0391 3.58579 18.4142C3.96086 18.7893 4.46957 19 5 19Z" stroke="#b73337" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="awa-order-success__step-text">
+                    <strong><?= $block->escapeHtml(__('Confirmação por e-mail')) ?></strong>
+                    <span><?= $block->escapeHtml(__('Enviamos um e-mail com os detalhes do seu pedido.')) ?></span>
+                </div>
+            </div>
+
+            <div class="awa-order-success__step">
+                <div class="awa-order-success__step-icon" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 5H7C6.46957 5 5.96086 5.21071 5.58579 5.58579C5.21071 5.96086 5 6.46957 5 7V19C5 19.5304 5.21071 20.0391 5.58579 20.4142C5.96086 20.7893 6.46957 21 7 21H17C17.5304 21 18.0391 20.7893 18.4142 20.4142C18.7893 20.0391 19 19.5304 19 19V7C19 6.46957 18.7893 5.96086 18.4142 5.58579C18.0391 5.21071 17.5304 5 17 5H15M9 5C9 5.53043 9.21071 6.03914 9.58579 6.41421C9.96086 6.78929 10.4696 7 11 7H13C13.5304 7 14.0391 6.78929 14.4142 6.41421C14.7893 6.03914 15 5.53043 15 5M9 5C9 4.46957 9.21071 3.96086 9.58579 3.58579C9.96086 3.21071 10.4696 3 11 3H13C13.5304 3 14.0391 3.21071 14.4142 3.58579C14.7893 3.96086 15 4.46957 15 5" stroke="#b73337" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="awa-order-success__step-text">
+                    <strong><?= $block->escapeHtml(__('Separação do pedido')) ?></strong>
+                    <span><?= $block->escapeHtml(__('Nossa equipe está preparando o seu pedido.')) ?></span>
+                </div>
+            </div>
+
+            <div class="awa-order-success__step">
+                <div class="awa-order-success__step-icon" aria-hidden="true">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6M10 21C10 21.5523 9.55228 22 9 22C8.44772 22 8 21.5523 8 21C8 20.4477 8.44772 20 9 20C9.55228 20 10 20.4477 10 21ZM21 21C21 21.5523 20.5523 22 20 22C19.4477 22 19 21.5523 19 21C19 20.4477 19.4477 20 20 20C20.5523 20 21 20.4477 21 21Z" stroke="#b73337" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="awa-order-success__step-text">
+                    <strong><?= $block->escapeHtml(__('Envio e entrega')) ?></strong>
+                    <span><?= $block->escapeHtml(__('Você receberá o código de rastreamento por e-mail.')) ?></span>
+                </div>
+            </div>
+        </div>
+
+        <?= /* @noEscape */ $block->getAdditionalInfoHtml() ?>
+
+        <!-- ── Actions ───────────────────────────────────── -->
+        <div class="awa-order-success__actions">
+            <?php if ($block->getCanViewOrder()) : ?>
+                <a href="<?= $block->escapeUrl($block->getViewOrderUrl()) ?>"
+                   class="awa-btn awa-btn--secondary awa-order-success__action">
+                    <?= $block->escapeHtml(__('Ver detalhes do pedido')) ?>
+                </a>
+            <?php endif; ?>
+
+            <a href="<?= $block->escapeUrl($block->getContinueUrl()) ?>"
+               class="awa-btn awa-btn--primary awa-order-success__action">
+                <?= $block->escapeHtml(__('Continuar comprando')) ?>
+            </a>
+
+            <a href="<?= $block->escapeUrl($block->getUrl('sales/order/history')) ?>"
+               class="awa-btn awa-btn--ghost awa-order-success__action">
+                <?= $block->escapeHtml(__('Meus pedidos')) ?>
+            </a>
+        </div>
+
+        <!-- ── Trust badges ──────────────────────────────── -->
+        <div class="awa-order-success__trust">
+            <div class="awa-order-success__trust-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M12 22S20 18 20 12V5L12 2L4 5V12C4 18 12 22 12 22Z" stroke="#15803d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span><?= $block->escapeHtml(__('Compra segura e protegida')) ?></span>
+            </div>
+            <div class="awa-order-success__trust-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M3 5H21M3 12H21M3 19H21" stroke="#15803d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span><?= $block->escapeHtml(__('NF-e emitida em até 1 dia útil')) ?></span>
+            </div>
+            <div class="awa-order-success__trust-item">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M22 16.92V19.92C22.0011 20.4853 21.7675 21.0262 21.3528 21.4134C20.938 21.8006 20.3817 21.9999 19.82 21.99C16.7428 21.6549 13.787 20.5925 11.19 18.89C8.77382 17.3315 6.72533 15.283 5.16 12.87C3.45026 10.2605 2.38739 7.29018 2.06 4.2C2.05 3.63895 2.24769 3.08321 2.63236 2.66954C3.01703 2.25587 3.55349 2.01386 4.12 2H7.12C8.12377 1.99075 8.9776 2.68788 9.12 3.68C9.24649 4.68007 9.48151 5.66273 9.82 6.61C10.0924 7.33497 9.90676 8.14755 9.36 8.68L8.09 9.95C9.51355 12.4383 11.5617 14.4865 14.05 15.91L15.32 14.64C15.8525 14.0932 16.665 13.9076 17.39 14.18C18.3373 14.5185 19.3199 14.7535 20.32 14.88C21.3257 15.0238 22.0189 15.8921 22 16.92Z" stroke="#15803d" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span><?= $block->escapeHtml(__('Suporte: (16) 3333-0000')) ?></span>
+            </div>
+        </div>
+
+    <?php endif; ?>
+
+</div>
