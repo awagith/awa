@@ -1,9 +1,23 @@
 define([
     'jquery',
     'Magento_Customer/js/customer-data',
+    'Magento_Ui/js/modal/alert',
+    'mage/translate',
     'mage/cookies'
-], function ($, customerData) {
+], function ($, customerData, alertModal, $t) {
     'use strict';
+
+    function showAlert(message) {
+        alertModal({
+            title: $t('Atenção'),
+            content: message,
+            buttons: [{
+                text: $t('OK'),
+                class: 'action primary',
+                click: function() { this.closeModal(); }
+            }]
+        });
+    }
 
     return function (config, element) {
         var $root = $(element);
@@ -35,8 +49,8 @@ define([
                 }
             }).done(function (response) {
                 if (!response || !response.success) {
-                    var message = response && response.message ? response.message : 'Erro ao adicionar produto';
-                    window.alert(message);
+                    var message = response && response.message ? response.message : $t('Erro ao adicionar produto');
+                    showAlert(message);
                     return;
                 }
 
@@ -51,10 +65,17 @@ define([
                 }
 
                 window.setTimeout(function () {
-                    window.location.reload();
+                    $button.prop('disabled', false).removeClass('erp-added');
+
+                    if (mode === 'sidebar') {
+                        $button.text('+');
+                    } else {
+                        $button.find('.btn-text').show();
+                        $button.find('.btn-loading').hide();
+                    }
                 }, reloadDelay);
             }).fail(function () {
-                window.alert('Erro de conexao. Tente novamente.');
+                showAlert($t('Erro de conexão. Tente novamente.'));
             });
         }
 

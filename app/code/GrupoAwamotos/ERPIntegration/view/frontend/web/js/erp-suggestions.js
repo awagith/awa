@@ -5,9 +5,11 @@
  */
 define([
     'jquery',
+    'mage/url',
     'mage/translate',
-    'jquery-ui-modules/widget'
-], function ($, $t) {
+    'jquery-ui-modules/widget',
+    'mage/cookies'
+], function ($, urlBuilder, $t) {
     'use strict';
 
     $.widget('grupoawamotos.erpSuggestions', {
@@ -67,21 +69,17 @@ define([
                 dataType: 'json',
                 data: {
                     type: type || 'all'
-                },
-                success: function (response) {
-                    if (response.success) {
-                        self._updateContent(response.data, type);
-                    } else {
-                        self._showError(response.message || $t('Error loading data'));
-                    }
-                },
-                error: function (xhr, status, error) {
-                    self._showError($t('Connection error. Please try again.'));
-                    console.error('ERP Suggestions Error:', error);
-                },
-                complete: function () {
-                    $container.removeClass(self.options.loadingClass);
                 }
+            }).done(function (response) {
+                if (response.success) {
+                    self._updateContent(response.data, type);
+                } else {
+                    self._showError(response.message || $t('Erro ao carregar dados'));
+                }
+            }).fail(function () {
+                self._showError($t('Erro de conexão. Tente novamente.'));
+            }).always(function () {
+                $container.removeClass(self.options.loadingClass);
             });
         },
 
@@ -90,7 +88,8 @@ define([
          */
         addToCart: function (productId, qty) {
             var self = this;
-            var addToCartUrl = window.BASE_URL + 'checkout/cart/add';
+            var addToCartUrl = urlBuilder.build('checkout/cart/add');
+            var formKey = $.mage && $.mage.cookies ? $.mage.cookies.get('form_key') : '';
 
             $.ajax({
                 url: addToCartUrl,
@@ -99,20 +98,17 @@ define([
                 data: {
                     product: productId,
                     qty: qty,
-                    form_key: $.mage.cookies.get('form_key')
-                },
-                success: function (response) {
-                    if (response.success || !response.error) {
-                        // Trigger mini cart update
-                        $('[data-block="minicart"]').trigger('contentLoading');
-                        self._showSuccess($t('Product added to cart'));
-                    } else {
-                        self._showError(response.message || $t('Could not add product to cart'));
-                    }
-                },
-                error: function () {
-                    self._showError($t('Error adding product to cart'));
+                    form_key: formKey
                 }
+            }).done(function (response) {
+                if (response.success || !response.error) {
+                    $('[data-block="minicart"]').trigger('contentLoading');
+                    self._showSuccess($t('Produto adicionado ao carrinho'));
+                } else {
+                    self._showError(response.message || $t('Não foi possível adicionar o produto ao carrinho'));
+                }
+            }).fail(function () {
+                self._showError($t('Erro ao adicionar produto ao carrinho'));
             });
         },
 
@@ -122,6 +118,7 @@ define([
         quickReorder: function (orderId) {
             var self = this;
             var reorderUrl = this.options.ajaxUrl.replace('suggestions', 'reorder');
+            var formKey = $.mage && $.mage.cookies ? $.mage.cookies.get('form_key') : '';
 
             $.ajax({
                 url: reorderUrl,
@@ -129,34 +126,33 @@ define([
                 dataType: 'json',
                 data: {
                     order_id: orderId,
-                    form_key: $.mage.cookies.get('form_key')
-                },
-                beforeSend: function () {
-                    self.element.addClass(self.options.loadingClass);
-                },
-                success: function (response) {
-                    if (response.success) {
-                        window.location.href = window.BASE_URL + 'checkout/cart';
-                    } else {
-                        self._showError(response.message || $t('Could not reorder'));
-                    }
-                },
-                error: function () {
-                    self._showError($t('Error processing reorder'));
-                },
-                complete: function () {
-                    self.element.removeClass(self.options.loadingClass);
+                    form_key: formKey
                 }
+            }).done(function (response) {
+                if (response.success) {
+                    window.location.href = urlBuilder.build('checkout/cart');
+                } else {
+                    self._showError(response.message || $t('Não foi possível refazer o pedido'));
+                }
+            }).fail(function () {
+                self._showError($t('Erro ao processar pedido'));
+            }).always(function () {
+                self.element.removeClass(self.options.loadingClass);
             });
         },
 
         /**
-         * Update content based on response
+         * Update widget content with fresh data from ERP
+         *
+         * @param {Object} data
+         * @param {string} type
          */
         _updateContent: function (data, type) {
-            // This would update specific sections based on type
-            // For now, just log the data
-            console.log('ERP Data refreshed:', data);
+            if (data && data.html) {
+                var $target = type ? this.element.find('[data-erp-section="' + type + '"]') : this.element;
+                $target = $target.length ? $target : this.element;
+                $target.html(data.html);
+            }
         },
 
         /**
@@ -182,7 +178,7 @@ define([
                 .text(message)
                 .appendTo('body');
 
-            setTimeout(function () {
+            window.setTimeout(function () {
                 $notification.fadeOut(function () {
                     $(this).remove();
                 });

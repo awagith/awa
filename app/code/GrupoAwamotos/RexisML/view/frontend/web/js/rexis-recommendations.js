@@ -7,9 +7,7 @@
  *         container: '#my-recommendations',
  *         classificacao: 'Oportunidade Cross-sell',
  *         limit: 4,
- *         onSuccess: function(data) {
- *             console.log('Loaded', data.total, 'recommendations');
- *         }
+ *         onSuccess: function(data) { ... }
  *     });
  * });
  */
@@ -17,8 +15,9 @@ define([
     'jquery',
     'mage/url',
     'mage/template',
-    'mage/storage'
-], function($, urlBuilder, mageTemplate, storage) {
+    'Magento_Customer/js/customer-data',
+    'mage/cookies'
+], function($, urlBuilder, mageTemplate, customerData) {
     'use strict';
 
     var defaultTemplate =
@@ -35,12 +34,56 @@ define([
         '           <% if (item.score >= 85) { %>' +
         '               <div class="rexis-ajax-score"><%= Math.round(item.score) %>% Match</div>' +
         '           <% } %>' +
-        '           <button class="action primary rexis-ajax-addtocart" data-sku="<%= item.sku %>">' +
+        '           <button class="action primary rexis-ajax-addtocart" data-sku="<%= item.sku %>" data-product-id="<%= item.product_id %>">' +
         '               Adicionar ao Carrinho' +
         '           </button>' +
         '       </div>' +
         '   </div>' +
         '<% }); %>';
+
+    function getFormKey() {
+        return $.mage && $.mage.cookies ? $.mage.cookies.get('form_key') : '';
+    }
+
+    /**
+     * Bind add-to-cart handlers on recommendation buttons within $container
+     *
+     * @param {jQuery} $container
+     */
+    function bindAddToCart($container) {
+        $container.find('.rexis-ajax-addtocart').on('click', function(e) {
+            e.preventDefault();
+
+            var $btn = $(this);
+            var sku = String($btn.data('sku') || '');
+
+            if (!sku || $btn.prop('disabled')) {
+                return;
+            }
+
+            $btn.prop('disabled', true).text('Adicionando...');
+
+            $.ajax({
+                url: urlBuilder.build('checkout/cart/add'),
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    sku: sku,
+                    qty: 1,
+                    form_key: getFormKey()
+                }
+            }).done(function(response) {
+                if (response && response.success !== false && !response.error) {
+                    customerData.reload(['cart'], true);
+                    $btn.text('Adicionado ✓').addClass('rexis-added');
+                } else {
+                    $btn.prop('disabled', false).text('Adicionar ao Carrinho');
+                }
+            }).fail(function() {
+                $btn.prop('disabled', false).text('Adicionar ao Carrinho');
+            });
+        });
+    }
 
     return {
         /**
@@ -62,13 +105,12 @@ define([
 
             var $container = $(settings.container);
             if ($container.length === 0) {
-                console.warn('REXIS ML: Container not found -', settings.container);
                 return;
             }
 
             // Show loader
             if (settings.showLoader) {
-                $container.html('<div class="rexis-ajax-loader">🔄 Carregando recomendações...</div>');
+                $container.html('<div class="rexis-ajax-loader">Carregando recomendações...</div>');
             }
 
             // Build URL with params
@@ -87,40 +129,29 @@ define([
                 url: url,
                 type: 'GET',
                 data: params,
-                dataType: 'json',
-                success: function(response) {
-                    if (response.success && response.recommendations.length > 0) {
-                        var template = settings.template || defaultTemplate;
-                        var compiled = mageTemplate(template);
-                        var html = compiled({
-                            recommendations: response.recommendations
-                        });
+                dataType: 'json'
+            }).done(function(response) {
+                if (response.success && response.recommendations.length > 0) {
+                    var template = settings.template || defaultTemplate;
+                    var compiled = mageTemplate(template);
+                    var html = compiled({
+                        recommendations: response.recommendations
+                    });
 
-                        $container.html(html);
+                    $container.html(html);
+                    bindAddToCart($container);
 
-                        // Bind add to cart
-                        $container.find('.rexis-ajax-addtocart').on('click', function(e) {
-                            e.preventDefault();
-                            var sku = $(this).data('sku');
-                            // Implement add to cart logic
-                            console.log('Add to cart:', sku);
-                        });
-
-                        if (settings.onSuccess) {
-                            settings.onSuccess(response);
-                        }
-                    } else {
-                        $container.html('<div class="rexis-ajax-empty">Nenhuma recomendação disponível no momento.</div>');
+                    if (settings.onSuccess) {
+                        settings.onSuccess(response);
                     }
-                },
-                error: function(xhr, status, error) {
-                    $container.html('<div class="rexis-ajax-error">Erro ao carregar recomendações.</div>');
+                } else {
+                    $container.html('<div class="rexis-ajax-empty">Nenhuma recomendação disponível no momento.</div>');
+                }
+            }).fail(function() {
+                $container.html('<div class="rexis-ajax-error">Erro ao carregar recomendações.</div>');
 
-                    if (settings.onError) {
-                        settings.onError(error);
-                    }
-
-                    console.error('REXIS ML Error:', error);
+                if (settings.onError) {
+                    settings.onError('network_error');
                 }
             });
         },
@@ -136,19 +167,23 @@ define([
         },
 
         /**
-         * Track recommendation view (for analytics)
+         * Track recommendation view (analytics integration point)
+         *
+         * @param {string|number} productId
+         * @param {number} score
          */
-        trackView: function(productId, score) {
-            // Implement tracking logic
-            console.log('REXIS ML: Tracked view -', productId, 'Score:', score);
+        trackView: function(productId, score) { // eslint-disable-line no-unused-vars
+            // Implement analytics tracking here (e.g., GA4, Meta Pixel) when required
         },
 
         /**
-         * Track recommendation click
+         * Track recommendation click (analytics integration point)
+         *
+         * @param {string|number} productId
+         * @param {number} score
          */
-        trackClick: function(productId, score) {
-            // Implement tracking logic
-            console.log('REXIS ML: Tracked click -', productId, 'Score:', score);
+        trackClick: function(productId, score) { // eslint-disable-line no-unused-vars
+            // Implement analytics tracking here (e.g., GA4, Meta Pixel) when required
         }
     };
 });

@@ -42,7 +42,7 @@ define(["jquery"], function ($) {
         });
 
         // Dismiss when clicking outside
-        $(document).on("click", function (e) {
+        $(document).on('click.b2b-discount-badge', function (e) {
             if (!$root.is(e.target) && $root.has(e.target).length === 0) {
                 setExpanded(false);
             }
@@ -50,5 +50,11 @@ define(["jquery"], function ($) {
 
         // Initialize collapsed
         setExpanded(false);
+
+        return {
+            destroy: function() {
+                $(document).off('click.b2b-discount-badge');
+            }
+        };
     };
 });

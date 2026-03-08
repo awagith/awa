@@ -1,13 +1,28 @@
 define([
     'jquery',
+    'Magento_Ui/js/modal/alert',
+    'mage/translate',
     'mage/cookies'
-], function ($) {
+], function ($, alertModal, $t) {
     'use strict';
+
+    function showAlert(message) {
+        alertModal({
+            title: $t('Atenção'),
+            content: message,
+            buttons: [{
+                text: $t('OK'),
+                class: 'action primary',
+                click: function() { this.closeModal(); }
+            }]
+        });
+    }
 
     return function (config, element) {
         var $container = $(element);
         var addBySkuUrl = String(config.addBySkuUrl || '');
         var checkoutCartUrl = String(config.checkoutCartUrl || '');
+        var freeShippingThreshold = Number(config.freeShippingThreshold || 1500);
 
         if (!$container.length || !addBySkuUrl) {
             return;
@@ -63,7 +78,6 @@ define([
             $container.find('.erp-cart-items').text(itemCount + ' produtos');
             $container.find('.erp-cart-total').text(formatPrice(subtotal));
 
-            var freeShippingThreshold = 1500;
             var remaining = freeShippingThreshold - subtotal;
 
             if (remaining <= 0) {
@@ -72,7 +86,7 @@ define([
                 $container.find('.erp-total-value').text(formatPrice(subtotal));
             } else {
                 $container.find('.erp-free-shipping').hide();
-                $container.find('.erp-shipping-info').show().find('span').text('Falta ' + formatPrice(remaining) + ' para frete gratis');
+                $container.find('.erp-shipping-info').show().find('span').text('Falta ' + formatPrice(remaining) + ' para frete grátis');
                 $container.find('.erp-total-value').text(formatPrice(subtotal + 50));
             }
         }
@@ -115,7 +129,7 @@ define([
             });
 
             if (!items.length) {
-                window.alert('Selecione pelo menos um produto para adicionar ao carrinho.');
+                showAlert($t('Selecione pelo menos um produto para adicionar ao carrinho.'));
                 return;
             }
 
@@ -131,7 +145,7 @@ define([
                     }, 1000);
                 }
             }).catch(function () {
-                window.alert('Erro ao adicionar produtos. Tente novamente.');
+                showAlert($t('Erro ao adicionar produtos. Tente novamente.'));
                 $btn.prop('disabled', false).text('Adicionar Selecionados ao Carrinho');
             });
         });

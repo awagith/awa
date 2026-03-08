@@ -43,6 +43,12 @@ define([
             return $form.find(selector);
         }
 
+        function escapeHtml(str) {
+            var div = document.createElement('div');
+            div.appendChild(document.createTextNode(String(str || '')));
+            return div.innerHTML;
+        }
+
         function hasLeadBeenTracked() {
             try {
                 return window.sessionStorage.getItem(leadStorageKey) === '1';
@@ -706,7 +712,7 @@ define([
                         '<span class="erp-alert-icon">&#128269;</span>' +
                         '<div class="erp-alert-content">' +
                             '<strong>Cliente encontrado no sistema!</strong><br>' +
-                            'E-mail cadastrado: <strong>' + erpEmailMasked + '</strong><br>' +
+                            'E-mail cadastrado: <strong>' + escapeHtml(erpEmailMasked) + '</strong><br>' +
                             '<small>Informe o mesmo e-mail para vincular sua conta automaticamente.</small>' +
                         '</div>' +
                     '</div>'
@@ -720,7 +726,7 @@ define([
                     '<div class="erp-alert erp-alert-success">' +
                         '<span class="erp-alert-icon">&#10004;</span>' +
                         '<div class="erp-alert-content">' +
-                            '<strong>E-mail confirmado!</strong> Sua conta sera vinculada automaticamente.' +
+                            '<strong>E-mail confirmado!</strong> Sua conta será vinculada automaticamente.' +
                         '</div>' +
                     '</div>'
                 );
@@ -732,9 +738,9 @@ define([
                 '<div class="erp-alert erp-alert-warning">' +
                     '<span class="erp-alert-icon">&#9888;</span>' +
                     '<div class="erp-alert-content">' +
-                        '<strong>Atencao:</strong> O e-mail cadastrado no sistema e <strong>' + erpEmailMasked + '</strong>.<br>' +
-                        'O e-mail informado e diferente. Deseja continuar com <strong>' + currentEmail + '</strong>?<br>' +
-                        '<small>Se possivel, use o mesmo e-mail para vincular seu historico de compras.</small>' +
+                        '<strong>Atenção:</strong> O e-mail cadastrado no sistema é <strong>' + escapeHtml(erpEmailMasked) + '</strong>.<br>' +
+                        'O e-mail informado é diferente. Deseja continuar com <strong>' + escapeHtml(currentEmail) + '</strong>?<br>' +
+                        '<small>Se possível, use o mesmo e-mail para vincular seu histórico de compras.</small>' +
                     '</div>' +
                 '</div>'
             );
@@ -757,7 +763,7 @@ define([
                         '<span class="email-check-alert-icon">&#9888;</span>' +
                         '<div class="email-check-alert-content">' +
                             '<strong>Confirme seu e-mail antes de criar a conta:</strong><br>' +
-                            'A aprovacao e a recuperacao de senha serao enviadas para <strong>' + email + '</strong>.' +
+                            'A aprovação e a recuperação de senha serão enviadas para <strong>' + escapeHtml(email) + '</strong>.' +
                         '</div>' +
                     '</div>'
                 );
@@ -834,7 +840,7 @@ define([
                 if (response.cnpj_duplicate) {
                     setCnpjStatus(
                         'error',
-                        response.message + ' <a href="' + loginUrl + '" class="cnpj-login-link">Fazer login</a>'
+                        escapeHtml(response.message) + ' <a href="' + escapeHtml(loginUrl) + '" class="cnpj-login-link">Fazer login</a>'
                     );
                     slideHide($companyData, 200);
                     cnpjValidated = false;
@@ -958,7 +964,7 @@ define([
                     return;
                 }
 
-                errorMsg = response.message || 'CNPJ invalido';
+                errorMsg = escapeHtml(response.message || 'CNPJ inválido');
 
                 if (response.situacao && response.situacao.toUpperCase() !== 'ATIVA') {
                     errorMsg += ' <button type="button" class="cnpj-retry-btn" id="cnpj-force-refresh">' +

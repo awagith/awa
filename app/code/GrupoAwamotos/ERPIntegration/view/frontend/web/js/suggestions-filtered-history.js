@@ -1,8 +1,23 @@
 define([
     'jquery',
+    'Magento_Ui/js/modal/alert',
+    'mage/translate',
     'mage/cookies'
-], function ($) {
+], function ($, alertModal, $t) {
     'use strict';
+
+    function showAlert(message) {
+        alertModal({
+            title: $t('Atenção'),
+            content: message,
+            buttons: [{
+                text: $t('OK'),
+                class: 'action primary',
+                click: function() { this.closeModal(); }
+            }]
+        });
+    }
+
 
     return function (config, element) {
         var $root = $(element);
@@ -184,9 +199,8 @@ define([
                     }, 2000);
                 }).catch(function () {
                     $btn.prop('disabled', false).text('Adicionar');
-                    window.alert('Erro ao adicionar.');
-                });
-            });
+                    showAlert($t('Erro ao adicionar.'))
+                });            });
 
             $list.on('change', '.erp-fh-item-select', function () {
                 var hasChecked = $list.find('.erp-fh-item-select:checked').length > 0;
@@ -290,7 +304,7 @@ define([
             });
 
             if (!items.length) {
-                window.alert('Selecione pelo menos um produto.');
+                showAlert($t('Selecione pelo menos um produto.'));
                 return;
             }
 
@@ -304,7 +318,7 @@ define([
                     $btn.prop('disabled', false).text('Adicionar Selecionados');
                 }, 2000);
             }).catch(function () {
-                window.alert('Erro ao adicionar produtos. Tente novamente.');
+                showAlert($t('Erro ao adicionar produtos. Tente novamente.'));
                 $btn.prop('disabled', false).text('Adicionar Selecionados');
             });
         });
