@@ -14,8 +14,12 @@ var config = {
         'rokanthemes/timecircles': 'js/rokanthemes/timecircles',
         'GrupoAwamotos_Theme/js/announcement-bar': 'js/announcement-bar',
         'GrupoAwamotos_Theme/js/pdp-sticky-bar': 'js/pdp-sticky-bar',
-        'AWA_Custom/js/recently-viewed': 'js/awa-recently-viewed',
-        'AWA_Custom/js/compare-bar': 'js/awa-compare-bar',
-        'AWA_Custom/js/awa-compare-bar': 'js/awa-compare-bar'
+        'AWA_Custom/js/recently-viewed':    'js/awa-recently-viewed',
+        'AWA_Custom/js/compare-bar':        'js/awa-compare-bar',
+        'AWA_Custom/js/awa-compare-bar':    'js/awa-compare-bar',
+        'AWA_Custom/js/awa-bulk-cart':      'js/awa-bulk-cart',
+        'AWA_Custom/js/awa-qty-stepper':    'js/awa-qty-stepper',
+        'AWA_Custom/js/awa-alert':          'js/awa-alert',
+        'AWA_Custom/js/awa-pdp-scroll-spy': 'js/awa-pdp-scroll-spy'
     }
 };
