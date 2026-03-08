@@ -1,0 +1,78 @@
+<?php
+/**
+ * AWA Motos — Order Info Enterprise (endereços, frete, pagamento)
+ * Override de: Magento_Sales::order/info.phtml
+ *
+ * @var \Magento\Sales\Block\Order\Info $block
+ */
+declare(strict_types=1);
+
+/** @var \Magento\Sales\Model\Order $_order */
+$_order = $block->getOrder();
+$_status = $_order->getStatus();
+$_statusLabel = $_order->getStatusLabel();
+?>
+<div class="block block-order-details-view awa-order-info">
+
+    <div class="awa-order-info__header">
+        <h3 class="awa-order-info__title">
+            <?= $block->escapeHtml(__('Informações do Pedido')) ?>
+        </h3>
+        <span class="awa-order-status-badge awa-order-status-badge--<?= $block->escapeHtmlAttr($_status) ?>">
+            <?= $block->escapeHtml($_statusLabel) ?>
+        </span>
+    </div>
+
+    <div class="awa-order-info__grid">
+
+        <?php if (!$_order->getIsVirtual()): ?>
+        <!-- Endereço de entrega -->
+        <div class="awa-order-info__box">
+            <div class="awa-order-info__box-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                <?= $block->escapeHtml(__('Endereço de Entrega')) ?>
+            </div>
+            <address class="awa-order-info__address">
+                <?= /* @noEscape */ $block->getFormattedAddress($_order->getShippingAddress()) ?>
+            </address>
+        </div>
+
+        <!-- Método de envio -->
+        <div class="awa-order-info__box">
+            <div class="awa-order-info__box-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                <?= $block->escapeHtml(__('Método de Envio')) ?>
+            </div>
+            <div class="awa-order-info__box-content">
+                <?php if ($_order->getShippingDescription()): ?>
+                    <?= $block->escapeHtml($_order->getShippingDescription()) ?>
+                <?php else: ?>
+                    <span class="awa-order-info__na"><?= $block->escapeHtml(__('Não disponível')) ?></span>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+
+        <!-- Endereço de cobrança -->
+        <div class="awa-order-info__box">
+            <div class="awa-order-info__box-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                <?= $block->escapeHtml(__('Endereço de Cobrança')) ?>
+            </div>
+            <address class="awa-order-info__address">
+                <?= /* @noEscape */ $block->getFormattedAddress($_order->getBillingAddress()) ?>
+            </address>
+        </div>
+
+        <!-- Método de pagamento -->
+        <div class="awa-order-info__box">
+            <div class="awa-order-info__box-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <?= $block->escapeHtml(__('Forma de Pagamento')) ?>
+            </div>
+            <div class="awa-order-info__box-content">
+                <?= $block->getPaymentInfoHtml() ?>
+            </div>
+        </div>
+    </div>
+</div>

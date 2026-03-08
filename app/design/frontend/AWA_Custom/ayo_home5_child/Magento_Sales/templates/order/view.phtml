@@ -1,0 +1,62 @@
+<?php
+/**
+ * AWA Motos — Order View Enterprise
+ * Override de: Magento_Sales::order/view.phtml
+ *
+ * @var \Magento\Sales\Block\Order\View $block
+ */
+declare(strict_types=1);
+
+/** @var \Magento\Sales\Model\Order $_order */
+$_order = $block->getOrder();
+$_tracks = $_order->getTracksCollection()->getItems();
+?>
+<div class="order-details-items ordered awa-order-view">
+
+    <!-- Cabeçalho da seção -->
+    <div class="awa-order-view__header">
+        <h2 class="awa-order-view__title">
+            <?= $block->escapeHtml(__('Itens do Pedido')) ?>
+        </h2>
+        <?php if (!empty($_tracks)): ?>
+            <div class="awa-order-view__track-link">
+                <?= $block->getChildHtml('tracking-info-link') ?>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Grid de itens -->
+    <div class="awa-order-view__items">
+        <?= $block->getChildHtml('order_items') ?>
+    </div>
+
+    <?php
+    // Gift message (apenas se habilitado e presente)
+    $giftHelper = $this->helper(\Magento\GiftMessage\Helper\Message::class);
+    if ($giftHelper->isMessagesAllowed('order', $_order) && $_order->getGiftMessageId()):
+        $_giftMessage = $giftHelper->getGiftMessageForEntity($_order);
+    ?>
+    <div class="awa-order-view__gift-message">
+        <div class="awa-order-view__gift-title">
+            <?= $block->escapeHtml(__('Mensagem de Presente')) ?>
+        </div>
+        <div class="awa-order-view__gift-body">
+            <dl class="awa-order-view__gift-dl">
+                <dt><?= $block->escapeHtml(__('De')) ?>:</dt>
+                <dd><?= $block->escapeHtml($_giftMessage->getSender()) ?></dd>
+                <dt><?= $block->escapeHtml(__('Para')) ?>:</dt>
+                <dd><?= $block->escapeHtml($_giftMessage->getRecipient()) ?></dd>
+                <dt><?= $block->escapeHtml(__('Mensagem')) ?>:</dt>
+                <dd><?= /* @noEscape */ $giftHelper->getEscapedGiftMessage($_order) ?></dd>
+            </dl>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Ações -->
+    <div class="awa-order-view__actions">
+        <a class="awa-btn-ghost awa-order-view__back" href="<?= $block->escapeUrl($block->getBackUrl()) ?>">
+            ← <?= $block->escapeHtml($block->getBackTitle()) ?>
+        </a>
+    </div>
+</div>

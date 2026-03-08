@@ -1,0 +1,92 @@
+<?php
+/**
+ * AWA Motos — Account Dashboard Info Enterprise
+ * Override de: Magento_Customer::account/dashboard/info.phtml
+ *
+ * @var \Magento\Customer\Block\Account\Dashboard\Info $block
+ */
+declare(strict_types=1);
+
+$_customer = $block->getCustomer();
+$_name     = $block->getName();
+$_email    = $_customer->getEmail();
+$_initials = '';
+foreach (explode(' ', $_name) as $part) {
+    if ($part) {
+        $_initials .= strtoupper($part[0]);
+    }
+    if (strlen($_initials) >= 2) {
+        break;
+    }
+}
+?>
+<div class="block block-dashboard-info awa-account-info">
+
+    <!-- Perfil do cliente -->
+    <div class="awa-account-info__profile">
+        <div class="awa-account-info__avatar" aria-hidden="true">
+            <?= $block->escapeHtml($_initials) ?>
+        </div>
+        <div class="awa-account-info__meta">
+            <div class="awa-account-info__name"><?= $block->escapeHtml($_name) ?></div>
+            <div class="awa-account-info__email"><?= $block->escapeHtml($_email) ?></div>
+            <?= $block->getChildHtml('customer.account.dashboard.info.extra') ?>
+        </div>
+    </div>
+
+    <!-- Informações e ações -->
+    <div class="awa-account-info__grid">
+
+        <!-- Dados de contato -->
+        <div class="awa-account-info__box">
+            <div class="awa-account-info__box-title">
+                <?= $block->escapeHtml(__('Informações de Contato')) ?>
+            </div>
+            <div class="awa-account-info__box-body">
+                <p>
+                    <strong><?= $block->escapeHtml($_name) ?></strong><br>
+                    <?= $block->escapeHtml($_email) ?>
+                </p>
+            </div>
+            <div class="awa-account-info__box-actions">
+                <a href="<?= $block->escapeUrl($block->getUrl('customer/account/edit')) ?>"
+                   class="action edit awa-btn-ghost awa-btn-sm">
+                    <?= $block->escapeHtml(__('Editar')) ?>
+                </a>
+                <a href="<?= $block->escapeUrl($block->getChangePasswordUrl()) ?>"
+                   class="action change-password awa-btn-link">
+                    <?= $block->escapeHtml(__('Alterar Senha')) ?>
+                </a>
+            </div>
+        </div>
+
+        <!-- Newsletter -->
+        <?php if ($block->isNewsletterEnabled()): ?>
+        <div class="awa-account-info__box">
+            <div class="awa-account-info__box-title">
+                <?= $block->escapeHtml(__('Newsletter')) ?>
+            </div>
+            <div class="awa-account-info__box-body">
+                <?php if ($block->getIsSubscribed()): ?>
+                    <span class="awa-status-badge awa-status-badge--active">
+                        ✓ <?= $block->escapeHtml(__('Inscrito na newsletter')) ?>
+                    </span>
+                <?php else: ?>
+                    <span class="awa-status-badge awa-status-badge--inactive">
+                        <?= $block->escapeHtml(__('Não inscrito')) ?>
+                    </span>
+                <?php endif; ?>
+            </div>
+            <div class="awa-account-info__box-actions">
+                <a href="<?= $block->escapeUrl($block->getUrl('newsletter/manage')) ?>"
+                   class="action edit awa-btn-ghost awa-btn-sm">
+                    <?= $block->escapeHtml(__('Gerenciar')) ?>
+                </a>
+            </div>
+        </div>
+        <?php endif; ?>
+
+    </div>
+
+    <?= $block->getChildHtml('additional_blocks') ?>
+</div>

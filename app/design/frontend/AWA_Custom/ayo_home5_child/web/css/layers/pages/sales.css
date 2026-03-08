@@ -893,3 +893,266 @@
         max-width: 100%;
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   ORDER VIEW / INFO — Enterprise (wave 13)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Order view header ────────────────────────────────────────── */
+.awa-order-view__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--awa-layer-color-border, #e5e5e5);
+}
+
+.awa-order-view__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--awa-layer-color-text-primary, #1e293b);
+    margin: 0;
+}
+
+.awa-order-view__track-link a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-primary, #b73337);
+    text-decoration: none;
+}
+
+.awa-order-view__actions {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid var(--awa-layer-color-border, #e5e5e5);
+}
+
+.awa-order-view__back {
+    font-size: 0.875rem;
+}
+
+.awa-order-view__gift-message {
+    margin-top: 24px;
+    padding: 16px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: var(--awa-layer-radius-sm, 6px);
+}
+
+.awa-order-view__gift-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #92400e;
+    margin-bottom: 10px;
+}
+
+.awa-order-view__gift-dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 12px;
+    font-size: 0.875rem;
+}
+
+.awa-order-view__gift-dl dt {
+    font-weight: 700;
+    color: #78350f;
+    white-space: nowrap;
+}
+
+/* ── Order info grid ──────────────────────────────────────────── */
+.awa-order-info__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.awa-order-info__title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--awa-layer-color-text-primary, #1e293b);
+    margin: 0;
+}
+
+.awa-order-info__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.awa-order-info__box {
+    background: var(--awa-layer-surface-soft, #fafafa);
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    padding: 16px;
+}
+
+.awa-order-info__box-title {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--awa-layer-color-text-secondary, #64748b);
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--awa-layer-color-border, #e5e5e5);
+}
+
+.awa-order-info__box-title svg {
+    color: var(--awa-layer-color-primary, #b73337);
+    flex-shrink: 0;
+}
+
+.awa-order-info__address {
+    font-size: 0.875rem;
+    color: var(--awa-layer-color-text-primary, #333);
+    line-height: 1.65;
+    font-style: normal;
+}
+
+.awa-order-info__box-content {
+    font-size: 0.875rem;
+    color: var(--awa-layer-color-text-primary, #333);
+    line-height: 1.6;
+}
+
+.awa-order-info__na {
+    color: var(--awa-layer-color-text-secondary, #94a3b8);
+    font-style: italic;
+}
+
+@media (max-width: 767px) {
+    .awa-order-info__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .awa-order-view__header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ACCOUNT DASHBOARD INFO — Enterprise (wave 13)
+   ═══════════════════════════════════════════════════════════════ */
+
+.awa-account-info__profile {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--awa-layer-color-primary, #b73337) 0%, #9b2b2e 100%);
+    border-radius: var(--awa-layer-radius-md, 12px);
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.awa-account-info__avatar {
+    width: 56px;
+    height: 56px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+}
+
+.awa-account-info__name {
+    font-size: 1.0625rem;
+    font-weight: 700;
+}
+
+.awa-account-info__email {
+    font-size: 0.875rem;
+    opacity: 0.85;
+    margin-top: 2px;
+}
+
+.awa-account-info__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.awa-account-info__box {
+    background: #fff;
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    padding: 16px;
+}
+
+.awa-account-info__box-title {
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--awa-layer-color-text-secondary, #64748b);
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--awa-layer-color-border, #e5e5e5);
+}
+
+.awa-account-info__box-body {
+    font-size: 0.875rem;
+    color: var(--awa-layer-color-text-primary, #333);
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.awa-account-info__box-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.awa-status-badge--active {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+    border-radius: 99px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+.awa-status-badge--inactive {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+    border-radius: 99px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+@media (max-width: 767px) {
+    .awa-account-info__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .awa-account-info__profile {
+        flex-direction: column;
+        text-align: center;
+    }
+}
