@@ -246,3 +246,353 @@ body.rokanthemes-onepagecheckout-index-index .checkout-payment-method {
         position: static;
     }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   CART — Refinamentos enterprise
+   ════════════════════════════════════════════════════════════ */
+
+/* Cabeçalho da página do carrinho */
+.checkout-cart-index .page-title-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: var(--awa-layer-space-lg);
+}
+
+.checkout-cart-index .page-title-wrapper .page-title {
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
+    font-weight: 700;
+    color: #1e293b;
+}
+
+/* Contador de itens no título */
+.checkout-cart-index .cart-summary .summary.title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+    padding: 0 0 14px 0;
+    margin-bottom: 16px;
+    border-bottom: 2px solid var(--awa-layer-color-border);
+    display: block;
+}
+
+/* ── Tabela de itens — empresa-grade ─────────────────────── */
+.cart.table-wrapper .cart.item {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 150ms ease;
+}
+
+.cart.table-wrapper .cart.item:hover {
+    background: #fafbfc;
+}
+
+/* Imagem do produto no carrinho */
+.cart.table-wrapper .product-item-photo {
+    width: 80px;
+    min-width: 80px;
+}
+
+.cart.table-wrapper .product-item-photo .product-image-container {
+    width: 80px !important;
+    height: 80px !important;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+}
+
+/* Nome e opções do produto */
+.cart.table-wrapper .product-item-name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #1e293b;
+    line-height: 1.4;
+    margin-bottom: 4px;
+}
+
+.cart.table-wrapper .product-item-name a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 150ms ease;
+}
+
+.cart.table-wrapper .product-item-name a:hover {
+    color: var(--awa-layer-color-primary);
+}
+
+/* SKU no carrinho */
+.cart.table-wrapper .cart-sku,
+.cart.table-wrapper .product-sku {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-variant-numeric: tabular-nums;
+    margin-bottom: 2px;
+}
+
+/* Controle de quantidade */
+.cart.table-wrapper .field.qty .input-text.qty {
+    width: 60px;
+    text-align: center;
+    padding: 6px 4px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    -moz-appearance: textfield;
+}
+
+.cart.table-wrapper .field.qty .input-text.qty::-webkit-inner-spin-button,
+.cart.table-wrapper .field.qty .input-text.qty::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+.cart.table-wrapper .field.qty .input-text.qty:focus {
+    border-color: var(--awa-layer-color-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(183 51 55 / 12%);
+}
+
+/* Preço subtotal por item */
+.cart.table-wrapper .col.subtotal .price-including-tax .price,
+.cart.table-wrapper .col.subtotal .price-excluding-tax .price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #1e293b;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Remove button */
+.cart.table-wrapper .action.action-delete {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background: transparent;
+    border: 1px solid transparent;
+    color: #94a3b8;
+    transition: all 150ms ease;
+    cursor: pointer;
+}
+
+.cart.table-wrapper .action.action-delete:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    color: #b91c1c;
+}
+
+/* ── Cart Summary (lado direito) ──────────────────────────── */
+.cart-summary {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+/* Linha de total */
+.cart-totals .grand.totals td,
+.cart-totals .grand.totals th {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1e293b;
+    padding-top: 14px;
+    border-top: 2px solid #e2e8f0;
+}
+
+/* Subtotals */
+.cart-totals .totals td,
+.cart-totals .totals th {
+    font-size: 0.875rem;
+    padding: 8px 0;
+    color: #475569;
+}
+
+/* Discount row */
+.cart-totals .totals-tax-summary td,
+.cart-totals .totals.discount td,
+.cart-totals .totals.discount th {
+    color: #15803d;
+    font-weight: 600;
+}
+
+/* Coupon field */
+.cart-discount .fieldset {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.cart-discount .field .input-text {
+    flex: 1;
+    height: 42px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 0.875rem;
+    transition: border-color 150ms ease;
+}
+
+.cart-discount .field .input-text:focus {
+    border-color: var(--awa-layer-color-primary);
+    outline: none;
+    box-shadow: 0 0 0 3px rgb(183 51 55 / 12%);
+}
+
+.cart-discount .action.apply.primary {
+    height: 42px;
+    padding: 0 18px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* CTA principal do carrinho */
+.cart-summary .checkout-methods-items .action.primary.checkout {
+    width: 100%;
+    height: 52px;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    border-radius: 8px;
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: background 180ms ease, transform 120ms ease, box-shadow 180ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.cart-summary .checkout-methods-items .action.primary.checkout:hover {
+    background: #8e2629;
+    box-shadow: 0 4px 16px rgb(183 51 55 / 30%);
+    transform: translateY(-1px);
+}
+
+/* Garantia embaixo do botão de checkout */
+.cart-summary .awa-checkout-reassurance {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   CHECKOUT — Refinamentos enterprise
+   ════════════════════════════════════════════════════════════ */
+
+/* Progress bar de etapas */
+.opc-progress-bar {
+    display: flex;
+    gap: 0;
+    margin-bottom: var(--awa-layer-space-xl);
+    list-style: none;
+    padding: 0;
+    counter-reset: opc-step;
+}
+
+.opc-progress-bar-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    position: relative;
+    text-align: center;
+}
+
+.opc-progress-bar-item::before {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: calc(-50% + 16px);
+    right: calc(50% + 16px);
+    height: 2px;
+    background: #e2e8f0;
+    z-index: 0;
+}
+
+.opc-progress-bar-item:first-child::before {
+    display: none;
+}
+
+.opc-progress-bar-item._active::before,
+.opc-progress-bar-item._complete::before {
+    background: var(--awa-layer-color-primary);
+}
+
+.opc-progress-bar-item > span {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    z-index: 1;
+}
+
+.opc-progress-bar-item > span::before {
+    counter-increment: opc-step;
+    content: counter(opc-step);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #64748b;
+    font-size: 0.875rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 200ms ease, color 200ms ease;
+}
+
+.opc-progress-bar-item._active > span::before {
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+}
+
+.opc-progress-bar-item._complete > span::before {
+    content: '✓';
+    background: #15803d;
+    color: #fff;
+}
+
+.opc-progress-bar-item > span > span {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+
+.opc-progress-bar-item._active > span > span {
+    color: var(--awa-layer-color-primary);
+    font-weight: 700;
+}
+
+.opc-progress-bar-item._complete > span > span {
+    color: #15803d;
+    font-weight: 600;
+}
+
+/* Order summary no checkout */
+.opc-block-summary .items-in-cart .product-item-name-block {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.opc-block-summary .table-totals .grand.totals td,
+.opc-block-summary .table-totals .grand.totals th {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: #1e293b;
+    padding-top: 12px;
+    border-top: 2px solid #e2e8f0;
+}

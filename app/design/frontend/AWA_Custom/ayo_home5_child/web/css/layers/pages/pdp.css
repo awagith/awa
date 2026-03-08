@@ -506,3 +506,74 @@ body.catalog-product-view .awa-btn-copy-sku[data-state="copied"] {
     color: #166534;
     border-color: #bbf7d0;
 }
+
+/* ── Trust Badges (Selos de confiança na PDP) ────────────────── */
+body.catalog-product-view .awa-trust-badges {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: var(--awa-layer-space-md);
+    padding: var(--awa-layer-space-sm);
+    background: #f8fafc;
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-md);
+}
+
+body.catalog-product-view .awa-trust-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 8px;
+    text-align: center;
+}
+
+body.catalog-product-view .awa-trust-badge__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    color: var(--awa-layer-color-primary);
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+
+body.catalog-product-view .awa-trust-badge__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+body.catalog-product-view .awa-trust-badge__text strong {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    color: #1e293b;
+    letter-spacing: 0.01em;
+    line-height: 1.3;
+}
+
+body.catalog-product-view .awa-trust-badge__text span {
+    font-size: 0.625rem;
+    color: #64748b;
+    line-height: 1.3;
+}
+
+@media (width <= 599px) {
+    body.catalog-product-view .awa-trust-badges {
+        grid-template-columns: 1fr;
+    }
+
+    body.catalog-product-view .awa-trust-badge {
+        flex-direction: row;
+        text-align: left;
+        padding: 10px 12px;
+    }
+
+    body.catalog-product-view .awa-trust-badge__text {
+        align-items: flex-start;
+    }
+}

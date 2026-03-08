@@ -399,3 +399,73 @@ body .page-wrapper .columns {
         margin: 0;
     }
 }
+
+/* ══════════════════════════════════════════════════════════════
+   EXTRA WIDE — 1600px+ (monitores grandes e ultrawide)
+   ════════════════════════════════════════════════════════════ */
+@media (width >= 1600px) {
+    /* Colunas de produto: 5 por linha em grids grandes */
+    .products-grid .product-items {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    /* Header mais denso mas sem overflow */
+    .page-header .header.content {
+        padding-block: 16px;
+    }
+
+    /* Mega menu ainda mais largo */
+    .navigation li.level0.fullwidth > ul.level0 {
+        width: min(1440px, 96vw);
+        min-width: min(1440px, 96vw);
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   REDUCED MOTION — Respeita preferência do usuário
+   ════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   HIGH CONTRAST — Suporte a modo de alto contraste
+   ════════════════════════════════════════════════════════════ */
+@media (forced-colors: active) {
+    .awa-btn,
+    .action.primary,
+    .action.tocart {
+        forced-color-adjust: none;
+        background: ButtonFace;
+        color: ButtonText;
+        border: 2px solid ButtonBorder;
+    }
+
+    .awa-stock-badge,
+    .awa-tier-save-badge,
+    .order-status {
+        forced-color-adjust: none;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   DARK MODE — Base compatível (não ativo por padrão)
+   ════════════════════════════════════════════════════════════ */
+/* Descomente se quiser suporte a dark mode do SO:
+@media (prefers-color-scheme: dark) {
+    :root {
+        --awa-layer-color-text: #e2e8f0;
+        --awa-layer-color-text-muted: #94a3b8;
+        --awa-layer-color-bg: #0f172a;
+        --awa-layer-surface-soft: #1e293b;
+        --awa-layer-color-border: #334155;
+    }
+}
+*/

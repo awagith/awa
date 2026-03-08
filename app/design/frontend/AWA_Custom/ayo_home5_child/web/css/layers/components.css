@@ -966,3 +966,347 @@ body .page-wrapper .no-items-message {
     background: #ef4444;
     flex-shrink: 0;
 }
+
+/* ══════════════════════════════════════════════════════════════
+   RECENTLY VIEWED — Widget de vistos recentemente
+   ════════════════════════════════════════════════════════════ */
+.block.widget.block-viewed-products-list,
+.block.widget.viewed-products {
+    margin-block: var(--awa-layer-space-xl);
+}
+
+.block.widget.block-viewed-products-list .block-title,
+.block.widget.viewed-products .block-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: var(--awa-layer-space-md);
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--awa-layer-color-border);
+}
+
+.block.widget.block-viewed-products-list .block-title strong {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--awa-layer-color-text);
+    letter-spacing: -0.01em;
+}
+
+.block.widget.block-viewed-products-list .products-grid .product-item,
+.block.widget.viewed-products .products-grid .product-item {
+    padding: 0 8px;
+}
+
+.block.widget.block-viewed-products-list .product-item-info {
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-md);
+    overflow: hidden;
+    transition: box-shadow 200ms ease, border-color 200ms ease;
+    background: #fff;
+}
+
+.block.widget.block-viewed-products-list .product-item-info:hover {
+    box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
+    border-color: #cbd5e1;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   COMPARE BAR — Barra de comparação de produtos
+   ════════════════════════════════════════════════════════════ */
+.comparison-list-wrapper,
+.compare-items-wrapper {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--awa-layer-z-sticky, 900);
+    background: #1e293b;
+    color: #fff;
+    padding: 12px var(--awa-layer-space-md);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 -4px 20px rgb(0 0 0 / 20%);
+    transform: translateY(100%);
+    transition: transform 250ms ease;
+}
+
+.comparison-list-wrapper.has-items,
+.compare-items-wrapper.has-items {
+    transform: translateY(0);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   PRICE BOX — Padronização do preço nas páginas de listagem
+   ════════════════════════════════════════════════════════════ */
+.price-box {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.price-box .price-container {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+/* Preço regular */
+.price-box .price-final_price .price {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.2;
+}
+
+/* Preço especial (com desconto) */
+.price-box .special-price .price {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-weight: 700;
+    color: var(--awa-layer-color-primary);
+    line-height: 1.2;
+}
+
+/* Preço antigo */
+.price-box .old-price .price {
+    font-size: 0.8125rem;
+    font-weight: 400;
+    color: #94a3b8;
+    text-decoration: line-through;
+}
+
+/* Percentual de desconto */
+.price-box .awa-discount-pct {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    background: #fee2e2;
+    color: #b91c1c;
+    border-radius: 12px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+/* Preço "faça login para ver" */
+.price-box .awa-price-login-hint {
+    font-size: 0.8125rem;
+    color: #64748b;
+    font-style: italic;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   SWATCHES — Atributos de cor/tamanho na PLP
+   ════════════════════════════════════════════════════════════ */
+.swatch-opt-listing,
+.product-item-actions .swatch-opt {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 8px 0;
+}
+
+.swatch-attribute.color .swatch-option {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    outline: 2px solid transparent;
+    cursor: pointer;
+    transition: outline-color 150ms ease, outline-offset 150ms ease;
+}
+
+.swatch-attribute.color .swatch-option.selected,
+.swatch-attribute.color .swatch-option:hover {
+    outline-color: var(--awa-layer-color-primary);
+    outline-offset: 2px;
+}
+
+.swatch-attribute.size .swatch-option,
+.swatch-attribute-options .swatch-option[option-type="0"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 26px;
+    padding: 0 8px;
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: 4px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #475569;
+    cursor: pointer;
+    transition: all 150ms ease;
+}
+
+.swatch-attribute.size .swatch-option.selected,
+.swatch-attribute.size .swatch-option:hover {
+    border-color: var(--awa-layer-color-primary);
+    color: var(--awa-layer-color-primary);
+    background: #fff5f5;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TOOLTIP — Dicas contextuais B2B
+   ════════════════════════════════════════════════════════════ */
+[data-awa-tooltip] {
+    position: relative;
+}
+
+[data-awa-tooltip]::after {
+    content: attr(data-awa-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e293b;
+    color: #fff;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 150ms ease;
+    z-index: var(--awa-layer-z-tooltip, 1100);
+    max-width: 220px;
+    text-align: center;
+    white-space: normal;
+    line-height: 1.4;
+}
+
+[data-awa-tooltip]:hover::after {
+    opacity: 1;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   NOTIFICATION BANNER — avisos persistentes de conta/pedido
+   ════════════════════════════════════════════════════════════ */
+.awa-notice-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--awa-layer-radius-md);
+    border: 1px solid transparent;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.awa-notice-banner--info {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+.awa-notice-banner--warning {
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #92400e;
+}
+
+.awa-notice-banner--success {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #15803d;
+}
+
+.awa-notice-banner--error {
+    background: #fff1f2;
+    border-color: #fecdd3;
+    color: #be123c;
+}
+
+.awa-notice-banner__icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+}
+
+.awa-notice-banner__body {
+    flex: 1;
+    min-width: 0;
+}
+
+.awa-notice-banner__title {
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ORDER HISTORY TABLE — Histórico de pedidos B2B
+   ════════════════════════════════════════════════════════════ */
+.table-order-items tbody tr td,
+.account .orders-history .table-order-items tbody tr td {
+    vertical-align: middle;
+    padding: 14px 12px;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.table-order-items tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-order-items tbody tr:hover td {
+    background: #f8fafc;
+}
+
+/* Order ID link */
+.table-order-items .col.id a {
+    font-weight: 700;
+    color: var(--awa-layer-color-primary);
+    text-decoration: none;
+    font-variant-numeric: tabular-nums;
+}
+
+.table-order-items .col.id a:hover {
+    text-decoration: underline;
+}
+
+/* Status badge inline */
+.table-order-items .col.status .order-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Status colors via data ou class */
+.table-order-items .col.status .order-status[class*="complete"],
+.table-order-items .col.status .order-status[class*="processing"] {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.table-order-items .col.status .order-status[class*="pending"] {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.table-order-items .col.status .order-status[class*="cancel"] {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* Actions cell */
+.table-order-items .col.actions a {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-primary);
+    text-decoration: none;
+    margin-right: 12px;
+    white-space: nowrap;
+}
+
+.table-order-items .col.actions a:last-child {
+    margin-right: 0;
+}

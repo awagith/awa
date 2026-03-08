@@ -430,3 +430,273 @@ body.customer-account-index .awa-b2b-attendant__actions {
 :is(body.b2b-auth-shell, body.b2b-account-login, body.b2b-register-index) .b2b-register-container {
     border-radius: var(--awa-layer-radius-md);
 }
+
+/* ══════════════════════════════════════════════════════════════
+   ACCOUNT — Refinamentos adicionais B2B
+   ════════════════════════════════════════════════════════════ */
+
+/* Dashboard — última compra em destaque */
+.account .box.box-recent-orders {
+    background: linear-gradient(135deg, #fff5f5 0%, #fff 60%);
+    border: 1px solid #fecaca;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: var(--awa-layer-space-md);
+}
+
+.account .box.box-recent-orders .box-title {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--awa-layer-color-primary);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Navegação lateral da conta */
+.account .nav.items .nav.item strong,
+.account .nav.items .nav.item a {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #475569;
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 150ms ease, color 150ms ease;
+    line-height: 1.4;
+}
+
+.account .nav.items .nav.item.current > a,
+.account .nav.items .nav.item.current > strong {
+    background: #fff1f2;
+    color: var(--awa-layer-color-primary);
+    font-weight: 700;
+}
+
+.account .nav.items .nav.item a:hover {
+    background: #f8fafc;
+    color: #1e293b;
+}
+
+/* Status KPI cards no dashboard */
+.awa-account-kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--awa-layer-space-md);
+    margin-bottom: var(--awa-layer-space-lg);
+}
+
+.awa-account-kpi {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    transition: box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.awa-account-kpi:hover {
+    box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
+    border-color: #cbd5e1;
+}
+
+.awa-account-kpi__value {
+    display: block;
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #1e293b;
+    line-height: 1;
+    margin-bottom: 6px;
+    font-variant-numeric: tabular-nums;
+}
+
+.awa-account-kpi__label {
+    font-size: 0.75rem;
+    color: #64748b;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.awa-account-kpi--primary .awa-account-kpi__value {
+    color: var(--awa-layer-color-primary);
+}
+
+.awa-account-kpi--success .awa-account-kpi__value {
+    color: #15803d;
+}
+
+/* Credit limit bar */
+.awa-credit-bar {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: var(--awa-layer-space-md);
+}
+
+.awa-credit-bar__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.awa-credit-bar__label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #475569;
+}
+
+.awa-credit-bar__values {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #1e293b;
+    font-variant-numeric: tabular-nums;
+}
+
+.awa-credit-bar__track {
+    height: 8px;
+    background: #f1f5f9;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.awa-credit-bar__fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #15803d, #22c55e);
+    transition: width 600ms ease;
+}
+
+.awa-credit-bar__fill--warning {
+    background: linear-gradient(90deg, #d97706, #f59e0b);
+}
+
+.awa-credit-bar__fill--danger {
+    background: linear-gradient(90deg, #b91c1c, #ef4444);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   WISHLIST / LISTAS SALVAS
+   ════════════════════════════════════════════════════════════ */
+.wishlist-index-index .products-grid .product-item-info,
+.wishlist-index-index .products-list .product-item-info {
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: 12px;
+    padding: 16px;
+    background: #fff;
+    transition: box-shadow 200ms ease;
+}
+
+.wishlist-index-index .products-grid .product-item-info:hover {
+    box-shadow: 0 4px 16px rgb(0 0 0 / 10%);
+}
+
+/* Ação de remover da wishlist */
+.wishlist-index-index .btn-remove.action {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    transition: all 150ms ease;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+}
+
+.wishlist-index-index .btn-remove.action:hover {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    color: #b91c1c;
+}
+
+/* ══════════════════════════════════════════════════════════════
+   B2B QUOTATION — Página de cotação enterprise
+   ════════════════════════════════════════════════════════════ */
+.awa-quote-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--awa-layer-space-sm);
+}
+
+.awa-quote-card {
+    background: #fff;
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    align-items: center;
+    gap: 20px;
+    transition: box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.awa-quote-card:hover {
+    box-shadow: 0 4px 12px rgb(0 0 0 / 8%);
+    border-color: #cbd5e1;
+}
+
+.awa-quote-card__id {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+}
+
+.awa-quote-card__title {
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: #1e293b;
+    line-height: 1.3;
+}
+
+.awa-quote-card__meta {
+    font-size: 0.8125rem;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.awa-quote-card__total {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: #1e293b;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.awa-quote-card__actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+@media (width <= 767px) {
+    .awa-quote-card {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .awa-quote-card__total {
+        text-align: left;
+    }
+
+    .awa-quote-card__actions {
+        flex-wrap: wrap;
+    }
+}
