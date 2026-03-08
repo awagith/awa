@@ -1,4 +1,110 @@
 /* AWA CSS Layers - PLP + Search */
+:is(body.catalog-category-view, body.catalogsearch-result-index) .page-main.container {
+    padding-top: clamp(12px, 1.8vw, 22px);
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .page-main.container > .columns {
+    display: grid;
+    gap: clamp(16px, 2vw, 28px);
+    align-items: start;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .page-main .columns.layout.layout-2-col.row {
+    display: grid;
+    grid-template-columns: minmax(248px, 280px) minmax(0, 1fr);
+    gap: clamp(16px, 2vw, 28px);
+    margin: 0;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .page-main .columns.layout.layout-2-col.row > [class*='col-'] {
+    min-width: 0;
+    padding-inline: 0;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-listing-utility {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) auto;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: clamp(14px, 2vw, 22px);
+    padding: 18px;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    background:
+        radial-gradient(circle at top right, rgb(183 51 55 / 12%), transparent 38%),
+        linear-gradient(180deg, #fff 0%, #fbfdff 100%);
+    box-shadow: 0 10px 24px rgb(15 23 42 / 6%);
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-listing-utility__copy {
+    display: grid;
+    gap: 8px;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-listing-utility__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    min-height: 28px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgb(183 51 55 / 10%);
+    color: var(--awa-brand-primary, #b73337);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-listing-utility__title {
+    color: #0f172a;
+    font-size: clamp(22px, 2vw, 26px);
+    line-height: 1.1;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-listing-utility__description {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-listing-utility__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-end;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-listing-utility__link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 38px;
+    padding: 8px 14px;
+    border: 1px solid #dbe3ea;
+    border-radius: 999px;
+    background: #fff;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-listing-utility__link:hover,
+:is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-listing-utility__link:focus-visible {
+    border-color: rgb(183 51 55 / 26%);
+    color: var(--awa-brand-primary, #b73337);
+    outline: 0;
+    text-decoration: none;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-listing-utility__link--primary {
+    border-color: rgb(183 51 55 / 18%);
+    background: rgb(183 51 55 / 10%);
+    color: var(--awa-brand-primary, #b73337);
+}
+
 :is(body.catalog-category-view, body.catalogsearch-result-index) .shop-tab-select .toolbar.toolbar-products {
     padding: var(--awa-layer-space-md);
     border-radius: var(--awa-layer-radius-md);
@@ -27,4 +133,327 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-card-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-card-meta__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 28px;
+    max-width: 100%;
+    padding: 5px 9px;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    background: #f8fafc;
+    color: #475569;
+    font-size: 11px;
+    line-height: 1.3;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-card-meta__label {
+    color: #94a3b8;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-card-meta__value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #334155;
+    font-weight: 700;
+}
+
+@media (width <= 991px) {
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .page-main.container > .columns,
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .page-main .columns.layout.layout-2-col.row {
+        display: block;
+    }
+
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-listing-utility {
+        grid-template-columns: 1fr;
+    }
+
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .shop-tab-select .toolbar.toolbar-products {
+        padding: var(--awa-layer-space-sm);
+    }
+}
+
+@media (width <= 767px) {
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-listing-utility {
+        padding: 14px;
+        border-radius: 16px;
+    }
+
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .awa-b2b-listing-utility__actions {
+        justify-content: start;
+    }
+}
+
+/* ================================================================
+   PLP — Layered Navigation / Filtros
+   ================================================================ */
+
+/* Sidebar de filtros — desktop */
+:is(body.catalog-category-view, body.catalogsearch-result-index) .block.filter {
+    background: var(--awa-layer-surface);
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-md);
+    overflow: hidden;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .block.filter .block-title.filter-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--awa-layer-space-md) var(--awa-layer-space-lg);
+    background: var(--awa-layer-surface-soft);
+    border-bottom: 1px solid var(--awa-layer-color-border);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--awa-layer-color-text);
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-options-item {
+    border-bottom: 1px solid var(--awa-layer-color-border);
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-options-item:last-child {
+    border-bottom: none;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-options-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--awa-layer-space-md) var(--awa-layer-space-lg);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-text);
+    cursor: pointer;
+    user-select: none;
+    transition: background 150ms ease;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-options-title:hover {
+    background: var(--awa-layer-surface-soft);
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-options-title::after {
+    content: '';
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 200ms ease;
+    flex-shrink: 0;
+    margin-left: var(--awa-layer-space-sm);
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-options-item.active .filter-options-title::after {
+    transform: rotate(-135deg);
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-options-content {
+    padding: var(--awa-layer-space-sm) var(--awa-layer-space-lg) var(--awa-layer-space-md);
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-options-content ol,
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-options-content ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-options-content a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px var(--awa-layer-space-sm);
+    font-size: 0.8125rem;
+    color: var(--awa-layer-color-text);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background 120ms ease, color 120ms ease;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-options-content a:hover,
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-options-content a:focus-visible {
+    background: rgb(183 51 55 / 6%);
+    color: var(--awa-layer-color-primary);
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-options-content .count {
+    font-size: 0.75rem;
+    color: var(--awa-layer-color-muted);
+    background: var(--awa-layer-surface-soft);
+    padding: 1px 6px;
+    border-radius: 999px;
+    flex-shrink: 0;
+}
+
+/* ── Active Filters (filtros selecionados) ───────────────────── */
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-current {
+    padding: var(--awa-layer-space-sm) var(--awa-layer-space-lg);
+    border-bottom: 1px solid var(--awa-layer-color-border);
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-current .items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--awa-layer-space-xs);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-current .item {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: rgb(183 51 55 / 10%);
+    border: 1px solid rgb(183 51 55 / 24%);
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-primary);
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-current .item .remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    margin-left: 2px;
+    border-radius: 50%;
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    font-size: 10px;
+    line-height: 1;
+    text-decoration: none;
+    flex-shrink: 0;
+    transition: background 150ms ease;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-current .item .remove:hover {
+    background: var(--awa-layer-color-primary-hover, #8e2629);
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-actions a.action.clear.filter-clear {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-muted);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color 150ms ease;
+}
+
+:is(body.catalog-category-view, body.catalogsearch-result-index) .filter-actions a.action.clear.filter-clear:hover {
+    color: var(--awa-layer-color-primary);
+}
+
+/* ── Mobile: filtro como drawer ──────────────────────────────── */
+@media (width <= 991px) {
+    /* Botão flutuante de filtros */
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .awa-filter-mobile-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--awa-layer-space-sm);
+        padding: 10px var(--awa-layer-space-lg);
+        background: var(--awa-layer-color-primary);
+        color: #fff;
+        font-size: 0.875rem;
+        font-weight: 700;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgb(183 51 55 / 30%);
+    }
+
+    /* Sidebar vira overlay no mobile */
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .sidebar.sidebar-main {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100dvh;
+        width: min(320px, 85vw);
+        background: var(--awa-layer-surface);
+        box-shadow: 4px 0 24px rgb(0 0 0 / 16%);
+        z-index: 450;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        transform: translateX(-110%);
+        transition: transform 300ms ease;
+        padding-bottom: 80px;
+    }
+
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .sidebar.sidebar-main.is-open {
+        transform: translateX(0);
+    }
+
+    /* Overlay escuro atrás do drawer */
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .awa-filter-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgb(0 0 0 / 40%);
+        z-index: 440;
+    }
+
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .awa-filter-overlay.is-active {
+        display: block;
+    }
+
+    /* Botão fechar dentro do drawer */
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .awa-filter-drawer-close {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: var(--awa-layer-space-md) var(--awa-layer-space-lg);
+        border-bottom: 1px solid var(--awa-layer-color-border);
+        font-weight: 700;
+        font-size: 0.9375rem;
+    }
+}
+
+@media (width >= 992px) {
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .awa-filter-mobile-toggle,
+    :is(body.catalog-category-view, body.catalogsearch-result-index) .awa-filter-overlay {
+        display: none;
+    }
+}
+
+/* ── Empty state de resultados ───────────────────────────────── */
+:is(body.catalog-category-view, body.catalogsearch-result-index) .search.results .message.notice,
+:is(body.catalog-category-view, body.catalogsearch-result-index) .catalog-topnav.awa-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--awa-layer-space-md);
+    padding: clamp(32px, 5vw, 64px) var(--awa-layer-space-lg);
+    text-align: center;
+    color: var(--awa-layer-color-muted);
 }

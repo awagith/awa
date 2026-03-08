@@ -4,6 +4,428 @@
     gap: var(--awa-layer-space-lg);
 }
 
+body.customer-account-index .awa-b2b-dashboard-shell {
+    display: grid;
+    gap: clamp(20px, 2.8vw, 32px);
+    margin-top: clamp(12px, 2vw, 20px);
+}
+
+body.customer-account-index .awa-b2b-dashboard-shell__hero,
+body.customer-account-index .awa-b2b-panel,
+body.customer-account-index .awa-b2b-kpi-card {
+    border: 1px solid var(--awa-gray-200, #e5e7eb);
+    border-radius: 20px;
+    background: linear-gradient(180deg, #fff 0%, #fbfdff 100%);
+    box-shadow: 0 12px 30px rgb(15 23 42 / 6%);
+}
+
+body.customer-account-index .awa-b2b-dashboard-shell__hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 0.8fr);
+    gap: clamp(18px, 2.5vw, 28px);
+    padding: clamp(18px, 2.5vw, 30px);
+    background:
+        radial-gradient(circle at top right, rgb(183 51 55 / 10%), transparent 34%),
+        linear-gradient(180deg, #fff 0%, #f8fbff 100%);
+}
+
+body.customer-account-index .awa-b2b-dashboard-shell__eyebrow,
+body.customer-account-index .awa-b2b-panel__eyebrow,
+body.customer-account-index .awa-b2b-action-card__eyebrow,
+body.customer-account-index .awa-b2b-ops-card__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    min-height: 28px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgb(183 51 55 / 10%);
+    color: var(--awa-brand-primary, #b73337);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+body.customer-account-index .awa-b2b-dashboard-shell__title {
+    margin: 12px 0 10px;
+    color: #0f172a;
+    font-size: clamp(28px, 3vw, 40px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+}
+
+body.customer-account-index .awa-b2b-dashboard-shell__lead {
+    max-width: 60ch;
+    margin: 0;
+    color: #475569;
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+body.customer-account-index .awa-b2b-dashboard-shell__identity {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+body.customer-account-index .awa-b2b-chip {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 7px 12px;
+    border: 1px solid #dbe3ea;
+    border-radius: 999px;
+    background: #fff;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+body.customer-account-index .awa-b2b-chip--status.is-approved {
+    border-color: rgb(16 185 129 / 24%);
+    background: rgb(16 185 129 / 10%);
+    color: #047857;
+}
+
+body.customer-account-index .awa-b2b-chip--status.is-pending {
+    border-color: rgb(245 158 11 / 24%);
+    background: rgb(245 158 11 / 10%);
+    color: #b45309;
+}
+
+body.customer-account-index .awa-b2b-chip--accent {
+    border-color: rgb(183 51 55 / 24%);
+    background: rgb(183 51 55 / 10%);
+    color: var(--awa-brand-primary, #b73337);
+}
+
+body.customer-account-index .awa-b2b-dashboard-shell__company {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: 18px 0 0;
+}
+
+body.customer-account-index .awa-b2b-dashboard-shell__company > div {
+    display: grid;
+    gap: 4px;
+    padding: 14px 16px;
+    border: 1px solid #edf2f7;
+    border-radius: 16px;
+    background: #fff;
+}
+
+body.customer-account-index .awa-b2b-dashboard-shell__company dt {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+body.customer-account-index .awa-b2b-dashboard-shell__company dd {
+    margin: 0;
+    color: #0f172a;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+body.customer-account-index .awa-b2b-dashboard-shell__hero-actions {
+    display: grid;
+    gap: 14px;
+}
+
+body.customer-account-index .awa-b2b-action-card,
+body.customer-account-index .awa-b2b-ops-card {
+    display: grid;
+    gap: 10px;
+    min-height: 100%;
+    padding: 18px;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    background: #fff;
+    color: inherit;
+    text-decoration: none;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+body.customer-account-index .awa-b2b-action-card:hover,
+body.customer-account-index .awa-b2b-action-card:focus-visible,
+body.customer-account-index .awa-b2b-ops-card:hover,
+body.customer-account-index .awa-b2b-ops-card:focus-visible {
+    transform: translateY(-2px);
+    border-color: rgb(183 51 55 / 24%);
+    box-shadow: 0 16px 34px rgb(15 23 42 / 10%);
+    outline: 0;
+    text-decoration: none;
+}
+
+body.customer-account-index .awa-b2b-action-card--primary,
+body.customer-account-index .awa-b2b-ops-card.is-primary {
+    border-color: rgb(183 51 55 / 20%);
+    background: linear-gradient(180deg, #fff6f6 0%, #fff 100%);
+}
+
+body.customer-account-index .awa-b2b-action-card__title,
+body.customer-account-index .awa-b2b-ops-card__title {
+    color: #0f172a;
+    font-size: 20px;
+    line-height: 1.15;
+}
+
+body.customer-account-index .awa-b2b-action-card__description,
+body.customer-account-index .awa-b2b-ops-card__description {
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+body.customer-account-index .awa-b2b-dashboard-shell__metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+body.customer-account-index .awa-b2b-kpi-card {
+    display: grid;
+    gap: 14px;
+    padding: 20px;
+}
+
+body.customer-account-index .awa-b2b-kpi-card__head,
+body.customer-account-index .awa-b2b-kpi-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 8px 12px;
+}
+
+body.customer-account-index .awa-b2b-kpi-card__label {
+    color: #334155;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+body.customer-account-index .awa-b2b-kpi-card__hint,
+body.customer-account-index .awa-b2b-kpi-card__meta {
+    color: #64748b;
+    font-size: 12px;
+}
+
+body.customer-account-index .awa-b2b-kpi-card__value {
+    color: #0f172a;
+    font-size: clamp(28px, 2.2vw, 34px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+}
+
+body.customer-account-index .awa-b2b-progress {
+    height: 10px;
+    overflow: hidden;
+    border-radius: 999px;
+    background: #e2e8f0;
+}
+
+body.customer-account-index .awa-b2b-progress__fill {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, #b73337 0%, #d95a5d 100%);
+}
+
+body.customer-account-index .awa-b2b-panel {
+    display: grid;
+    gap: 18px;
+    padding: 20px;
+}
+
+body.customer-account-index .awa-b2b-panel__header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: start;
+}
+
+body.customer-account-index .awa-b2b-panel__title {
+    margin: 10px 0 0;
+    color: #0f172a;
+    font-size: clamp(22px, 2vw, 28px);
+    line-height: 1.15;
+}
+
+body.customer-account-index .awa-b2b-panel__badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 34px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+body.customer-account-index .awa-b2b-checklist,
+body.customer-account-index .awa-b2b-suggestion-list {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+body.customer-account-index .awa-b2b-checklist__item,
+body.customer-account-index .awa-b2b-suggestion-list__item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: center;
+    padding: 14px 16px;
+    border: 1px solid #edf2f7;
+    border-radius: 16px;
+    background: #fff;
+}
+
+body.customer-account-index .awa-b2b-checklist__item.is-done {
+    border-color: rgb(16 185 129 / 18%);
+    background: linear-gradient(180deg, #fff 0%, #f6fffb 100%);
+}
+
+body.customer-account-index .awa-b2b-checklist__copy,
+body.customer-account-index .awa-b2b-suggestion-list__copy {
+    display: grid;
+    gap: 4px;
+}
+
+body.customer-account-index .awa-b2b-checklist__copy strong,
+body.customer-account-index .awa-b2b-suggestion-list__copy strong {
+    color: #0f172a;
+    font-size: 15px;
+}
+
+body.customer-account-index .awa-b2b-checklist__copy span,
+body.customer-account-index .awa-b2b-suggestion-list__copy p {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+body.customer-account-index .awa-b2b-checklist__state {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgb(16 185 129 / 10%);
+    color: #047857;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+body.customer-account-index .awa-b2b-dashboard-shell__columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.7fr);
+    gap: 18px;
+    align-items: start;
+}
+
+body.customer-account-index .awa-b2b-dashboard-shell__stack {
+    display: grid;
+    gap: 18px;
+}
+
+body.customer-account-index .awa-b2b-action-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+body.customer-account-index .awa-b2b-inline-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: 7px 12px;
+    border-radius: 999px;
+    background: rgb(183 51 55 / 10%);
+    color: var(--awa-brand-primary, #b73337);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+body.customer-account-index .awa-b2b-inline-link:hover,
+body.customer-account-index .awa-b2b-inline-link:focus-visible {
+    background: rgb(183 51 55 / 14%);
+    color: #8e2629;
+    outline: 0;
+    text-decoration: none;
+}
+
+body.customer-account-index .awa-b2b-attendant {
+    display: grid;
+    gap: 16px;
+}
+
+body.customer-account-index .awa-b2b-attendant__copy {
+    display: grid;
+    gap: 4px;
+}
+
+body.customer-account-index .awa-b2b-attendant__copy strong {
+    color: #0f172a;
+    font-size: 18px;
+}
+
+body.customer-account-index .awa-b2b-attendant__copy span {
+    color: #64748b;
+    font-size: 14px;
+}
+
+body.customer-account-index .awa-b2b-attendant__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+@media (width <= 1199px) {
+    body.customer-account-index .awa-b2b-dashboard-shell__hero {
+        grid-template-columns: 1fr;
+    }
+
+    body.customer-account-index .awa-b2b-dashboard-shell__metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body.customer-account-index .awa-b2b-dashboard-shell__columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (width <= 767px) {
+    body.customer-account-index .awa-b2b-dashboard-shell__metrics,
+    body.customer-account-index .awa-b2b-action-grid,
+    body.customer-account-index .awa-b2b-dashboard-shell__company {
+        grid-template-columns: 1fr;
+    }
+
+    body.customer-account-index .awa-b2b-dashboard-shell__hero,
+    body.customer-account-index .awa-b2b-panel,
+    body.customer-account-index .awa-b2b-kpi-card {
+        padding: 16px;
+        border-radius: 16px;
+    }
+
+    body.customer-account-index .awa-b2b-checklist__item,
+    body.customer-account-index .awa-b2b-suggestion-list__item {
+        align-items: start;
+    }
+}
+
 :is(body.b2b-auth-shell, body.b2b-account-login, body.b2b-register-index) .b2b-login-card,
 :is(body.b2b-auth-shell, body.b2b-account-login, body.b2b-register-index) .b2b-register-container {
     border-radius: var(--awa-layer-radius-md);

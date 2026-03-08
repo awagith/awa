@@ -1,0 +1,223 @@
+/* ================================================================
+   AWA CSS LAYERS — ACESSIBILIDADE (A11Y)
+   ================================================================
+   Focus-visible sistemático, skip links, reduced-motion,
+   screen-reader utilities, contraste mínimo AA.
+   Mobile-first. Sem !important (exceto casos onde o tema
+   ThemeOption zera focus com outline:0 !important).
+   ================================================================ */
+
+/* ── Skip link ───────────────────────────────────────────────── */
+.awa-skip-link,
+a.skip-link,
+a.action.skip {
+    position: absolute;
+    top: -100%;
+    left: var(--awa-layer-space-sm);
+    z-index: 9999;
+    display: inline-flex;
+    align-items: center;
+    padding: var(--awa-layer-space-sm) var(--awa-layer-space-lg);
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.875rem;
+    border-radius: var(--awa-layer-radius-sm);
+    text-decoration: none;
+    transition: top 150ms ease;
+}
+
+.awa-skip-link:focus,
+a.skip-link:focus,
+a.action.skip:focus {
+    top: var(--awa-layer-space-sm);
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+}
+
+/* ── Screen-reader only ──────────────────────────────────────── */
+.sr-only,
+.awa-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.sr-only-focusable:focus,
+.awa-sr-only-focusable:focus {
+    position: static;
+    width: auto;
+    height: auto;
+    padding: inherit;
+    margin: inherit;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+}
+
+/* ── Focus-visible global ─────────────────────────────────────
+   ThemeOption usa outline:0 em vários seletores.
+   Aqui reintroduzimos focus-visible em tudo que importa.
+   Usando !important apenas onde necessário para vencer ThemeOption.
+   ──────────────────────────────────────────────────────────── */
+
+/* Remove outline padrão — gerenciado aqui */
+body .page-wrapper :focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Foco via teclado — anel vermelho AWA */
+body .page-wrapper :focus-visible {
+    outline: 2px solid var(--awa-layer-color-primary) !important;
+    outline-offset: 2px !important;
+    border-radius: 2px;
+}
+
+/* Botões e links recebem foco mais suave */
+body .page-wrapper a:focus-visible,
+body .page-wrapper button:focus-visible,
+body .page-wrapper [role="button"]:focus-visible {
+    outline: 2px solid var(--awa-layer-color-primary) !important;
+    outline-offset: 3px !important;
+    border-radius: var(--awa-layer-radius-sm);
+    box-shadow: 0 0 0 4px rgb(183 51 55 / 16%);
+}
+
+/* Inputs e selects — foco de borda, sem anel extra */
+body .page-wrapper input:focus-visible,
+body .page-wrapper textarea:focus-visible,
+body .page-wrapper select:focus-visible {
+    outline: none !important;
+    border-color: var(--awa-layer-color-primary) !important;
+    box-shadow: 0 0 0 3px rgb(183 51 55 / 16%) !important;
+}
+
+/* Checkboxes e radios */
+body .page-wrapper input[type="checkbox"]:focus-visible,
+body .page-wrapper input[type="radio"]:focus-visible {
+    outline: 2px solid var(--awa-layer-color-primary) !important;
+    outline-offset: 2px !important;
+}
+
+/* ── Reduced motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    /* Skeleton shimmer desativado */
+    .awa-skeleton,
+    [class*="skeleton"] {
+        animation: none !important;
+        background: var(--awa-layer-color-border) !important;
+    }
+}
+
+/* ── Contraste seguro para elementos críticos ────────────────── */
+/* Texto sobre fundo primário (botões vermelhos) */
+body .page-wrapper .action.primary,
+body .page-wrapper .btn-primary,
+body .page-wrapper .tocart,
+body .page-wrapper .action-primary {
+    color: #fff;
+}
+
+/* Links com contraste AA mínimo */
+body .page-wrapper a {
+    text-underline-offset: 3px;
+}
+
+/* Placeholder acessível */
+body .page-wrapper ::placeholder {
+    color: var(--awa-layer-color-muted);
+    opacity: 0.85;
+}
+
+/* ── Estados disabled ────────────────────────────────────────── */
+body .page-wrapper [disabled],
+body .page-wrapper [aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+/* ── Áreas clicáveis mínimas (touch) ─────────────────────────── */
+body .page-wrapper .action,
+body .page-wrapper button,
+body .page-wrapper [role="button"] {
+    min-height: 36px;
+    min-width: 36px;
+}
+
+/* Mobile: 44px tap target em ações críticas */
+@media (width <= 767px) {
+    body .page-wrapper .action.primary,
+    body .page-wrapper .tocart,
+    body .page-wrapper .action-primary,
+    body .page-wrapper .btn-primary {
+        min-height: 48px;
+    }
+
+    body .page-wrapper .action.secondary,
+    body .page-wrapper .btn-secondary {
+        min-height: 44px;
+    }
+}
+
+/* ── ARIA live regions ───────────────────────────────────────── */
+[aria-live] {
+    position: relative;
+}
+
+/* Mensagens de erro inline — aria-describedby */
+body .page-wrapper [role="alert"],
+body .page-wrapper [aria-live="assertive"] {
+    color: #991b1b;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    margin-top: 4px;
+    display: block;
+}
+
+/* ── High contrast mode ──────────────────────────────────────── */
+@media (forced-colors: active) {
+    body .page-wrapper .action.primary,
+    body .page-wrapper .tocart {
+        forced-color-adjust: none;
+        background: ButtonFace;
+        color: ButtonText;
+        border: 2px solid ButtonText;
+    }
+
+    body .page-wrapper :focus-visible {
+        outline: 3px solid Highlight !important;
+    }
+}
+
+/* ── Print ───────────────────────────────────────────────────── */
+@media print {
+    body .page-wrapper .awa-skip-link,
+    body .page-wrapper .page-header,
+    body .page-wrapper .page-footer,
+    body .page-wrapper .sidebar,
+    body .page-wrapper .action.tocart,
+    body .page-wrapper .block.related {
+        display: none !important;
+    }
+
+    body .page-wrapper .page-main {
+        max-width: 100%;
+        padding: 0;
+    }
+}

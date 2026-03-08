@@ -17,6 +17,8 @@
         <css src="css/layers/buttons.css"/>
         <css src="css/layers/components.css"/>
         <css src="css/layers/utilities.css"/>
+        <css src="css/layers/a11y.css"/>
+        <css src="css/layers/responsive.css"/>
         <css src="css/layers/legacy-bridge.css"/>
         <css src="css/awa-carousel-normalize.css"/>
     </head>

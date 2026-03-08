@@ -22,3 +22,123 @@
     align-items: center;
     gap: var(--awa-layer-space-md);
 }
+
+/* ── Visibilidade responsiva ─────────────────────────────────── */
+@media (width <= 767px)  { .awa-hidden-mobile  { display: none !important; } }
+@media (width >= 768px) and (width <= 1023px) { .awa-hidden-tablet { display: none !important; } }
+@media (width >= 1024px) { .awa-hidden-desktop { display: none !important; } }
+@media (width >= 768px)  { .awa-mobile-only    { display: none !important; } }
+@media (width <= 767px)  { .awa-desktop-only   { display: none !important; } }
+
+/* ── Texto ───────────────────────────────────────────────────── */
+.awa-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.awa-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.awa-truncate-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.awa-text-xs   { font-size: 0.75rem; }
+.awa-text-sm   { font-size: 0.875rem; }
+.awa-text-base { font-size: 1rem; }
+.awa-text-lg   { font-size: 1.125rem; }
+.awa-text-xl   { font-size: 1.25rem; }
+
+.awa-text-muted   { color: var(--awa-layer-color-muted); }
+.awa-text-primary { color: var(--awa-layer-color-primary); }
+.awa-text-success { color: #2e7d32; }
+.awa-text-error   { color: #991b1b; }
+.awa-text-center  { text-align: center; }
+.awa-text-right   { text-align: right; }
+.awa-font-bold    { font-weight: 700; }
+.awa-font-medium  { font-weight: 500; }
+.awa-uppercase    { text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* ── Espaçamento ─────────────────────────────────────────────── */
+.awa-mt-0  { margin-top: 0; }
+.awa-mt-sm { margin-top: var(--awa-layer-space-sm); }
+.awa-mt-md { margin-top: var(--awa-layer-space-md); }
+.awa-mt-lg { margin-top: var(--awa-layer-space-lg); }
+.awa-mb-0  { margin-bottom: 0; }
+.awa-mb-sm { margin-bottom: var(--awa-layer-space-sm); }
+.awa-mb-md { margin-bottom: var(--awa-layer-space-md); }
+.awa-mb-lg { margin-bottom: var(--awa-layer-space-lg); }
+.awa-p-0   { padding: 0; }
+.awa-p-sm  { padding: var(--awa-layer-space-sm); }
+.awa-p-md  { padding: var(--awa-layer-space-md); }
+.awa-p-lg  { padding: var(--awa-layer-space-lg); }
+
+/* ── Flex/Grid utilitários ───────────────────────────────────── */
+.awa-flex        { display: flex; }
+.awa-flex-col    { flex-direction: column; }
+.awa-flex-wrap   { flex-wrap: wrap; }
+.awa-items-start { align-items: flex-start; }
+.awa-items-center{ align-items: center; }
+.awa-items-end   { align-items: flex-end; }
+.awa-justify-between { justify-content: space-between; }
+.awa-justify-center  { justify-content: center; }
+.awa-justify-end     { justify-content: flex-end; }
+.awa-gap-xs { gap: var(--awa-layer-space-xs); }
+.awa-gap-sm { gap: var(--awa-layer-space-sm); }
+.awa-gap-md { gap: var(--awa-layer-space-md); }
+.awa-gap-lg { gap: var(--awa-layer-space-lg); }
+.awa-grow   { flex: 1; min-width: 0; }
+.awa-shrink-0 { flex-shrink: 0; }
+
+/* ── Aspect ratio ────────────────────────────────────────────── */
+.awa-ratio-1x1   { aspect-ratio: 1 / 1; }
+.awa-ratio-4x3   { aspect-ratio: 4 / 3; }
+.awa-ratio-16x9  { aspect-ratio: 16 / 9; }
+.awa-ratio-3x2   { aspect-ratio: 3 / 2; }
+
+/* ── Imagem responsiva ───────────────────────────────────────── */
+.awa-img-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.awa-img-contain {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+}
+
+/* ── Borda e sombra ──────────────────────────────────────────── */
+.awa-border      { border: 1px solid var(--awa-layer-color-border); }
+.awa-border-top  { border-top: 1px solid var(--awa-layer-color-border); }
+.awa-rounded-sm  { border-radius: var(--awa-layer-radius-sm); }
+.awa-rounded-md  { border-radius: var(--awa-layer-radius-md); }
+.awa-rounded-full{ border-radius: 999px; }
+.awa-shadow-1    { box-shadow: var(--awa-layer-shadow-1); }
+.awa-shadow-2    { box-shadow: var(--awa-layer-shadow-2); }
+.awa-bg-soft     { background: var(--awa-layer-surface-soft); }
+.awa-bg-surface  { background: var(--awa-layer-surface); }
+
+/* ── Overflow ────────────────────────────────────────────────── */
+.awa-overflow-hidden { overflow: hidden; }
+.awa-overflow-x-auto { overflow-x: auto; }
+
+/* ── Z-index gerenciado ──────────────────────────────────────── */
+.awa-z-dropdown { z-index: 100; }
+.awa-z-modal    { z-index: 500; }
+.awa-z-overlay  { z-index: 400; }
+.awa-z-header   { z-index: 200; }
+.awa-z-sticky   { z-index: 150; }
