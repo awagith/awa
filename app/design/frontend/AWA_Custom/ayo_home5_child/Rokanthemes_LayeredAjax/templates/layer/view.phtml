@@ -1,62 +1,118 @@
 <?php
-/** @var \Magento\LayeredNavigation\Block\Navigation\Category $block */ if ($block->canShowBlock()): ?>
-    <div class="block filter" id="layered-ajax-filter-block">
-		<div class="block-content filter-content sidebar-shop sidebar-left">
-            <?php if ($block->getLayer()->getState()->getFilters()): ?>
-				<div class="widget">
-					<?php echo $block->getChildHtml('state') ?>
-					<div class="block-actions filter-actions">
-						<a href="<?php /* @escapeNotVerified */ echo $block->getClearUrl() ?>" class="action clear filter-clear"><span><?php /* @escapeNotVerified */ echo __('Clear All') ?></span></a>
-					</div>
-				</div>
-            <?php endif; ?>
-            <?php $wrapOptions = false; $activeKey = 0; $activeArray = []; ?>
-            <?php
-                // B2B: Allowlist of filter codes we want to keep
-                $allowedB2BFilters = ['brand', 'motos_modelos', 'motos_anos', 'motos_marcas', 'motos_cilindradas'];
-            ?>
-            <?php foreach ($block->getFilters() as $key => $filter): ?>
-                <?php
-                    $filterCode = $filter->getRequestVar();
-                    if (!in_array($filterCode, $allowedB2BFilters) && $filterCode !== 'cat') {
-                        continue; // Skip non-B2B filters
-                    }
-                ?>
-                <?php if ($filter->getItemsCount()): ?>
-                    <?php if (!$wrapOptions): ?>
-                       <div class="filter-options widget widget-filter" id="narrow-by-list">
-                    <?php  $wrapOptions = true; endif; ?>
-                    <div class="filter-options-item">
-                        <div class="filter-options-title"><?php /* @escapeNotVerified */ echo __($filter->getName()) ?></div>
-                        <div class="filter-options-content" style="display: block;"><?php /* @escapeNotVerified */ echo $block->getChildBlock('renderer')->render($filter); ?></div>
-                    </div>
-                    <?php
-						if($this->helper('Rokanthemes\LayeredAjax\Helper\Data')->isOpenAllTab()){
-							$activeArray[] = $activeKey;
-						}
-                        $activeKey++;
-                    ?>
-                <?php endif; ?>
-            <?php endforeach; ?>
-            <?php if ($wrapOptions): ?>
-                </div>
-				<script type="text/x-magento-init">
-					{
-						"#narrow-by-list": {
-							"accordion": {
-								"openedState": "active",
-								"collapsible": true,
-								"active": <?php echo $this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode($activeArray); ?>,
-								"multipleCollapsible": true
-							},
-							"Rokanthemes_LayeredAjax/js/layeredajax": {}
-						}
-					}
-				</script>
-            <?php endif; ?>
+/**
+ * AWA Motos — Layered Navigation (B2B Enterprise)
+ *
+ * @var \Magento\LayeredNavigation\Block\Navigation\Category $block
+ */
+declare(strict_types=1);
+
+// phpcs:disable Magento2.Templates.ThisInTemplate
+
+/**
+ * Allowlist de filtros relevantes para o contexto de peças de moto.
+ * Adicionar novos códigos de atributo aqui quando necessário.
+ */
+$allowedB2BFilters = [
+    'cat',
+    'brand',
+    'motos_modelos',
+    'motos_anos',
+    'motos_marcas',
+    'motos_cilindradas',
+    'price',
+];
+?>
+<?php if ($block->canShowBlock()) : ?>
+<div class="block filter awa-layered-filter" id="layered-ajax-filter-block">
+
+    <!-- ── Filtros ativos ──────────────────────────── -->
+    <?php if ($block->getLayer()->getState()->getFilters()) : ?>
+        <div class="awa-layered-filter__active widget">
+            <div class="awa-layered-filter__active-inner">
+                <span class="awa-layered-filter__active-label">
+                    <?= $block->escapeHtml(__('Filtros ativos:')) ?>
+                </span>
+                <?= /* @noEscape */ $block->getChildHtml('state') ?>
+            </div>
+            <a href="<?= $block->escapeUrl($block->getClearUrl()) ?>"
+               class="awa-layered-filter__clear-all action clear filter-clear">
+                <?= $block->escapeHtml(__('Limpar todos')) ?>
+            </a>
         </div>
-		<div id="layered_ajax_overlay" class="layered_ajax_overlay">
-			<div><img src="<?php /* @escapeNotVerified */ echo $block->getViewFileUrl('images/loader-1.gif'); ?>" alt="<?php echo __('Loading') ?>"></div>
-		</div>
+    <?php endif; ?>
+
+    <!-- ── Opções de filtro ───────────────────────── -->
+    <div class="block-content filter-content sidebar-shop sidebar-left">
+        <?php
+        $wrapOptions = false;
+        $activeKey   = 0;
+        $activeArray = [];
+        ?>
+
+        <?php foreach ($block->getFilters() as $filter) : ?>
+            <?php
+            $filterCode = $filter->getRequestVar();
+
+            if (!in_array($filterCode, $allowedB2BFilters, true)) {
+                continue;
+            }
+            ?>
+            <?php if ($filter->getItemsCount()) : ?>
+                <?php if (!$wrapOptions) : ?>
+                    <div class="filter-options widget widget-filter" id="narrow-by-list">
+                    <?php $wrapOptions = true; ?>
+                <?php endif; ?>
+
+                <div class="filter-options-item awa-filter-group">
+                    <div class="filter-options-title awa-filter-group__title">
+                        <?= $block->escapeHtml(__($filter->getName())) ?>
+                        <span class="awa-filter-group__arrow" aria-hidden="true">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                                <path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                    </div>
+                    <div class="filter-options-content awa-filter-group__content" style="display: block;">
+                        <?= /* @noEscape */ $block->getChildBlock('renderer')->render($filter) ?>
+                    </div>
+                </div>
+
+                <?php
+                if ($this->helper(Rokanthemes\LayeredAjax\Helper\Data::class)->isOpenAllTab()) {
+                    $activeArray[] = $activeKey;
+                }
+                $activeKey++;
+                ?>
+
+            <?php endif; ?>
+        <?php endforeach; ?>
+
+        <?php if ($wrapOptions) : ?>
+            </div><!-- /#narrow-by-list -->
+            <script type="text/x-magento-init">
+            {
+                "#narrow-by-list": {
+                    "accordion": {
+                        "openedState": "active",
+                        "collapsible": true,
+                        "active": <?= /* @noEscape */ $this->helper(Magento\Framework\Json\Helper\Data::class)->jsonEncode($activeArray) ?>,
+                        "multipleCollapsible": true
+                    },
+                    "Rokanthemes_LayeredAjax/js/layeredajax": {}
+                }
+            }
+            </script>
+        <?php endif; ?>
+    </div><!-- /.block-content -->
+
+    <!-- ── Overlay de loading ─────────────────────── -->
+    <div id="layered_ajax_overlay" class="layered_ajax_overlay" aria-hidden="true">
+        <div>
+            <img src="<?= $block->escapeUrl($block->getViewFileUrl('images/loader-1.gif')) ?>"
+                 alt="<?= $block->escapeHtmlAttr(__('Carregando...')) ?>"
+                 width="30" height="30"/>
+        </div>
     </div>
+
+</div><!-- /.block.filter -->
 <?php endif; ?>

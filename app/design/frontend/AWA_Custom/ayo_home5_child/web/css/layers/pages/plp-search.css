@@ -617,3 +617,252 @@
 :is(body.catalog-category-view, body.catalogsearch-result-index) .item-product {
     position: relative;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   Layered Navigation Enterprise (awa-layered-filter)
+   ═══════════════════════════════════════════════════════════════ */
+
+.awa-layered-filter {
+    position: relative;
+}
+
+/* Active filters strip */
+.awa-layered-filter__active {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+    padding: 12px 0;
+    margin-bottom: 16px;
+    border-bottom: 2px solid var(--awa-layer-color-border, #e5e5e5);
+}
+
+.awa-layered-filter__active-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--awa-layer-color-text-secondary, #666);
+    white-space: nowrap;
+}
+
+.awa-layered-filter__clear-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 12px;
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    border: 1px solid #fca5a5;
+    background: #fff5f5;
+    color: #b91c1c;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 150ms, border-color 150ms;
+}
+
+.awa-layered-filter__clear-all:hover {
+    background: #fee2e2;
+    border-color: #b91c1c;
+    text-decoration: none;
+}
+
+/* Filter group header */
+.awa-filter-group__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 14px 0;
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--awa-layer-color-text-primary, #333);
+    border-bottom: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    user-select: none;
+}
+
+.awa-filter-group__title:hover {
+    color: var(--awa-layer-color-primary, #b73337);
+}
+
+.awa-filter-group__arrow {
+    flex-shrink: 0;
+    color: var(--awa-layer-color-text-secondary, #666);
+    transition: transform 250ms;
+}
+
+.filter-options-item.active .awa-filter-group__arrow,
+.filter-options-item.-active .awa-filter-group__arrow {
+    transform: rotate(180deg);
+}
+
+/* Filter items */
+.awa-filter-group__content .items {
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+}
+
+.awa-filter-group__content .item {
+    padding: 0;
+    margin-bottom: 2px;
+}
+
+.awa-filter-group__content .item a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 7px 4px;
+    font-size: 0.875rem;
+    color: var(--awa-layer-color-text-primary, #333);
+    text-decoration: none;
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    transition: background 150ms, color 150ms;
+    gap: 8px;
+}
+
+.awa-filter-group__content .item a:hover {
+    background: var(--awa-layer-color-bg-soft, #f7f7f7);
+    color: var(--awa-layer-color-primary, #b73337);
+    text-decoration: none;
+}
+
+.awa-filter-group__content .item.active a,
+.awa-filter-group__content .item.-active a {
+    color: var(--awa-layer-color-primary, #b73337);
+    font-weight: 700;
+}
+
+.awa-filter-group__content .item a .count {
+    font-size: 0.75rem;
+    color: var(--awa-layer-color-text-secondary, #666);
+    background: var(--awa-layer-color-bg-soft, #f7f7f7);
+    border-radius: 100px;
+    padding: 1px 7px;
+    min-width: 24px;
+    text-align: center;
+    flex-shrink: 0;
+    transition: background 150ms, color 150ms;
+}
+
+.awa-filter-group__content .item a:hover .count {
+    background: #fef2f2;
+    color: var(--awa-layer-color-primary, #b73337);
+}
+
+/* Price slider */
+.awa-filter-group__content .range {
+    padding: 12px 4px;
+}
+
+/* Loading overlay */
+.layered_ajax_overlay {
+    position: absolute;
+    inset: 0;
+    background: rgb(255 255 255 / 80%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    border-radius: var(--awa-layer-radius-md, 8px);
+    backdrop-filter: blur(2px);
+}
+
+.layered_ajax_overlay:not(.active) {
+    display: none;
+}
+
+/* ─── Rich Empty State (0 resultados) ─────────────────────── */
+.search.results .search-results-empty,
+.catalogsearch-result-index .awa-empty-search {
+    text-align: center;
+    padding: 80px 24px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.awa-empty-search__icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+    color: #d1d5db;
+}
+
+.awa-empty-search__title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--awa-layer-color-text-primary, #333);
+    margin-bottom: 12px;
+}
+
+.awa-empty-search__subtitle {
+    font-size: 1rem;
+    color: var(--awa-layer-color-text-secondary, #666);
+    margin-bottom: 32px;
+    line-height: 1.6;
+}
+
+.awa-empty-search__suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+.awa-empty-search__suggestions-title {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--awa-layer-color-text-secondary, #666);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.awa-empty-search__tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.awa-empty-search__tag {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 100px;
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    font-size: 0.875rem;
+    color: var(--awa-layer-color-text-primary, #333);
+    text-decoration: none;
+    transition: border-color 200ms, color 200ms, background 200ms;
+}
+
+.awa-empty-search__tag:hover {
+    border-color: var(--awa-layer-color-primary, #b73337);
+    color: var(--awa-layer-color-primary, #b73337);
+    background: #fef2f2;
+    text-decoration: none;
+}
+
+.awa-empty-search__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    background: var(--awa-layer-color-primary, #b73337);
+    color: #fff;
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background 200ms;
+}
+
+.awa-empty-search__cta:hover {
+    background: #8e2629;
+    color: #fff;
+    text-decoration: none;
+}
