@@ -236,6 +236,7 @@ define([
                 '</div>'
             );
             $carousel.removeAttr('data-lazy-url');
+            callback();
         });
     }
 

@@ -28,7 +28,7 @@
 
 <div class="categorytab-container awa-cat-tabs-<?php echo $block->escapeHtmlAttr($identifyClass); ?>">
 <div class="container">
-<header class='group-title1'><?php echo '<h2>' . $title . '</h2>'; ?></header>
+<header class='group-title1'><h2><?php echo $block->escapeHtml($title); ?></h2></header>
   <ul class="tabs tabs-<?php echo $block->escapeHtmlAttr($identifyClass); ?>">
    <?php
     $k = 0;
@@ -37,7 +37,7 @@
         $cateName = $cate_model->load($cate_id)->getName();
         if ($cateName) {
    ?>
-            <li class="<?php if ($k == 0) { echo 'active'; } ?>" rel="tab<?php echo trim($cate_id) . '-' . $identifyClass; ?>"><?php echo $cateName; ?></li>
+            <li class="<?php if ($k == 0) { echo 'active'; } ?>" rel="tab<?php echo trim($cate_id) . '-' . $identifyClass; ?>"><?php echo $block->escapeHtml($cateName); ?></li>
     <?php }
         $k++;
     } ?>
