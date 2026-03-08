@@ -4,7 +4,8 @@ body {
 }
 
 body .page-wrapper .page-main .columns {
-    max-width: var(--awa-container-max, 1280px);
+    /* Herda sistema responsivo do tema pai: 1200 → 1400 → 1600px via --awa-container */
+    max-width: var(--awa-container);
     margin-inline: auto;
     padding-inline: var(--awa-container-pad, 16px);
     box-sizing: border-box;

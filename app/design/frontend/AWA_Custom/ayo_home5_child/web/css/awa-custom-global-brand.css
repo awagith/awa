@@ -117,7 +117,7 @@
     --awa-btn-height-lg: 48px;
     --awa-btn-pad-normal: 10px 20px;
     --awa-carousel-arrow-size: 40px;
-    --awa-container-max: 1280px;
+    /* --awa-container-max removido: herda sistema responsivo do tema pai via --awa-container */
     --awa-grid-product-cols: repeat(auto-fill, minmax(220px, 1fr));
     --awa-plp-toolbar-top-offset: 0px;
 }

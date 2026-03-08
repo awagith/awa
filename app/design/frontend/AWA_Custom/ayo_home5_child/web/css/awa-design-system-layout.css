@@ -1,8 +1,9 @@
 /* ================================================================
    AWA DESIGN SYSTEM — LAYOUT CANONICAL
    ================================================================
-   Single source of truth for container, grid, gap, and spacing.
-   Loaded LAST in cascade to override scattered definitions.
+   Single source of truth for grid, gap, and spacing tokens.
+   Container: usa --awa-container do tema pai (responsivo: 1200→1400→1600px).
+   NÃO redefinir --awa-container-max aqui — herdamos o breakpoint do pai.
 
    Token scale (4px rhythm):
      --awa-gap-xs:  4px   (icon inline gaps)
@@ -12,7 +13,7 @@
      --awa-gap-xl: 24px   (section separation, major blocks)
 
    Container:
-     --awa-container-max: 1200px
+     --awa-container (pai): 1200px | 1400px ≥1399px | 1600px ≥1600px
      --awa-container-pad: 16px (mobile: 12px)
    ================================================================ */
 
@@ -22,10 +23,11 @@
    ═══════════════════════════════════════════════════════════════ */
 
 :root {
-    /* ── Container ── */
-    --awa-container-max: 1200px;
+    /* ── Container: NÃO redefinir --awa-container-max nem --awa-container.
+       O tema pai (ayo_home5/awa-core.css) gerencia o breakpoint responsivo:
+         default: 1200px | ≥1399px: 1400px | ≥1600px: 1600px
+       Apenas o padding lateral é definido aqui. ── */
     --awa-container-pad: 16px;
-    --awa-container: var(--awa-container-max);
 
     /* ── Gap scale (4 px rhythm) ── */
     --awa-gap-xs:   4px;
@@ -203,30 +205,30 @@
 
 /* 2.1 Global page-main container */
 .page-wrapper .page-main.container {
-    width: 100% !important;
-    max-width: var(--awa-container-max) !important;
-    margin-inline: auto !important;
-    padding-inline: var(--awa-container-pad) !important;
-    box-sizing: border-box !important;
+    width: 100%;
+    max-width: var(--awa-container);
+    margin-inline: auto;
+    padding-inline: var(--awa-container-pad);
+    box-sizing: border-box;
 }
 
 /* 2.2 column.main inside page-main — inherit centering */
 .page-wrapper .page-main.container > .columns > .column.main {
-    width: 100% !important;
-    max-width: var(--awa-container-max) !important;
-    margin-inline: auto !important;
-    box-sizing: border-box !important;
+    width: 100%;
+    max-width: var(--awa-container);
+    margin-inline: auto;
+    box-sizing: border-box;
 }
 
 /* 2.3 Inner .container classes (homepage sections, header control) */
 .page-wrapper .header-control > .container,
 .page-wrapper .top-home-content .container,
 .page-wrapper .awa-home-section .container {
-    width: 100% !important;
-    max-width: var(--awa-container-max) !important;
-    margin-inline: auto !important;
-    padding-inline: var(--awa-container-pad) !important;
-    box-sizing: border-box !important;
+    width: 100%;
+    max-width: var(--awa-container);
+    margin-inline: auto;
+    padding-inline: var(--awa-container-pad);
+    box-sizing: border-box;
 }
 
 
