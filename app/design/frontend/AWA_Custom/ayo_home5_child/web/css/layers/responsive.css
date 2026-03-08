@@ -320,3 +320,82 @@ body .page-wrapper .columns {
         border-radius: 4px;
     }
 }
+
+/* ── Header responsivo ───────────────────────────────────────── */
+@media (width >= 768px) and (width <= 1023px) {
+    .header.content {
+        flex-wrap: nowrap;
+    }
+
+    .block-search .input-text {
+        font-size: 0.875rem;
+    }
+}
+
+@media (width >= 1024px) {
+    /* PDP sidebar: sticky mais alta */
+    body.catalog-product-view .product-info-main {
+        top: 120px;
+    }
+
+    /* Minicart: mostrar texto no desktop */
+    .minicart-wrapper .action.showcart .text {
+        display: inline;
+    }
+}
+
+/* ── Account/B2B responsivo ──────────────────────────────────── */
+@media (width <= 767px) {
+    body.customer-account-index .awa-b2b-dashboard-shell__hero {
+        grid-template-columns: 1fr;
+    }
+
+    body.customer-account .account-nav,
+    body.customer-account .sidebar-main {
+        margin-bottom: var(--awa-layer-space-lg);
+    }
+}
+
+/* ── Checkout responsivo ─────────────────────────────────────── */
+@media (width <= 767px) {
+    .opc-wrapper,
+    #checkout .opc-wrapper {
+        width: 100%;
+    }
+
+    .opc-sidebar,
+    #checkout .opc-sidebar {
+        width: 100%;
+        margin-top: var(--awa-layer-space-lg);
+    }
+}
+
+/* ── Print global ────────────────────────────────────────────── */
+@media print {
+    .page-header,
+    .page-footer,
+    .sidebar,
+    .nav-sections,
+    .nav-toggle,
+    .action.tocart,
+    .block.related {
+        display: none !important;
+    }
+
+    body {
+        font-size: 11pt;
+        color: #000;
+        background: #fff;
+    }
+
+    a {
+        color: #000;
+        text-decoration: underline;
+    }
+
+    .page-main {
+        max-width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+}

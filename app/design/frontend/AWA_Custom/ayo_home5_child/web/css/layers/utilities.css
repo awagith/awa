@@ -142,3 +142,40 @@
 .awa-z-overlay  { z-index: 400; }
 .awa-z-header   { z-index: 200; }
 .awa-z-sticky   { z-index: 150; }
+
+/* ── Display ─────────────────────────────────────────────────── */
+.awa-block   { display: block; }
+.awa-inline  { display: inline; }
+.awa-hidden  { display: none; }
+.awa-grid    { display: grid; }
+
+/* ── Width/Max-width ─────────────────────────────────────────── */
+.awa-w-full  { width: 100%; }
+.awa-w-auto  { width: auto; }
+.awa-max-content { max-width: max-content; }
+
+/* ── Position ────────────────────────────────────────────────── */
+.awa-relative { position: relative; }
+.awa-absolute { position: absolute; }
+.awa-sticky   { position: sticky; }
+
+/* ── Cursor ──────────────────────────────────────────────────── */
+.awa-pointer  { cursor: pointer; }
+.awa-not-allowed { cursor: not-allowed; }
+
+/* ── Opacidade ───────────────────────────────────────────────── */
+.awa-opacity-50 { opacity: 0.5; }
+.awa-opacity-75 { opacity: 0.75; }
+
+/* ── Transição ───────────────────────────────────────────────── */
+.awa-transition { transition: all 150ms ease; }
+
+/* ── Container centrado ──────────────────────────────────────── */
+.awa-mx-auto { margin-inline: auto; }
+
+/* ── Separador visual ────────────────────────────────────────── */
+.awa-divider {
+    border: none;
+    border-top: 1px solid var(--awa-layer-color-border);
+    margin-block: var(--awa-layer-space-md);
+}
