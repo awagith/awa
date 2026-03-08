@@ -1,0 +1,69 @@
+<?php
+/**
+ * AWA Motos — Wishlist Enterprise
+ * Override de: Magento_Wishlist::item/list.phtml
+ *
+ * @var \Magento\Wishlist\Block\Customer\Wishlist\Items $block
+ */
+declare(strict_types=1);
+
+$columns = $block->getColumns();
+$items   = $block->getItems();
+$count   = count($items);
+?>
+<div class="products-grid wishlist awa-wishlist">
+
+    <?php if ($count): ?>
+
+    <div class="awa-wishlist__toolbar">
+        <div class="awa-wishlist__count">
+            <span class="awa-overline"><?= $block->escapeHtml(__('Lista de Desejos')) ?></span>
+            <span class="awa-wishlist__count-num"><?= (int) $count ?> <?= $block->escapeHtml(__('item(ns)')) ?></span>
+        </div>
+        <div class="awa-wishlist__actions-top">
+            <button type="button"
+                    class="awa-btn-ghost awa-btn-sm"
+                    data-action="wishlist-share"
+                    title="<?= $block->escapeHtmlAttr(__('Compartilhar lista')) ?>">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                <?= $block->escapeHtml(__('Compartilhar')) ?>
+            </button>
+        </div>
+    </div>
+
+    <ol class="product-items awa-wishlist__grid" id="wishlist-view-form">
+        <?php foreach ($items as $item): ?>
+        <li class="product-item awa-wishlist__item"
+            id="item_<?= $block->escapeHtmlAttr($item->getId()) ?>"
+            data-row="product-item">
+            <div class="product-item-info awa-wishlist__item-inner" data-container="product-grid">
+                <?php foreach ($columns as $column): ?>
+                    <?= $column->setItem($item)->toHtml() ?>
+                <?php endforeach; ?>
+            </div>
+        </li>
+        <?php endforeach; ?>
+    </ol>
+
+    <?php else: ?>
+    <!-- Estado vazio -->
+    <div class="awa-empty-state awa-wishlist__empty">
+        <div class="awa-empty-state__icon" aria-hidden="true">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
+        <h3 class="awa-empty-state__title"><?= $block->escapeHtml(__('Sua lista de desejos está vazia')) ?></h3>
+        <p class="awa-empty-state__body">
+            <?= $block->escapeHtml(__('Salve produtos que você quer comprar depois. Clique no coração em qualquer produto.')) ?>
+        </p>
+        <a href="<?= $block->escapeUrl($block->getUrl('catalog/category')) ?>"
+           class="action primary awa-btn awa-btn-primary">
+            <?= $block->escapeHtml(__('Explorar Produtos')) ?>
+        </a>
+    </div>
+    <?php endif; ?>
+
+</div>
+
+<?php foreach ($columns as $column): ?>
+    <?= $column->getAdditionalHtml() ?>
+<?php endforeach; ?>

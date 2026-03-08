@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Lista de Desejos</title>
+        <css src="AWA_Custom_ayo_home5_child::css/layers/pages/account-b2b.css"/>
+    </head>
+</page>

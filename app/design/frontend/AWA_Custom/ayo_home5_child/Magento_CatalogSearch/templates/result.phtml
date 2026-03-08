@@ -1,0 +1,78 @@
+<?php
+/**
+ * AWA Motos — Search Result Enterprise
+ * Override de: Magento_CatalogSearch::result.phtml
+ *
+ * @var \Magento\CatalogSearch\Block\Result $block
+ */
+declare(strict_types=1);
+
+use Magento\CatalogSearch\Block\Result;
+
+/** @var Result $block */
+$productList  = $block->getProductListHtml();
+$queryText    = $block->getRequest()->getParam('q', '');
+$resultCount  = $block->getResultCount();
+?>
+
+<?php if ($resultCount): ?>
+<div class="search results awa-search-results">
+    <?= /* @noEscape */ $block->getChildHtml('tagged_product_list_rss_link') ?>
+    <?php if ($messages = $block->getNoteMessages()): ?>
+    <div class="awa-alert awa-alert--info awa-search-results__note">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div><?php foreach ($messages as $msg): ?><?= /* @noEscape */ $msg ?><?php endforeach; ?></div>
+    </div>
+    <?php endif; ?>
+    <?= /* @noEscape */ $productList ?>
+</div>
+
+<?php else: ?>
+<div class="awa-search-no-result">
+    <div class="awa-empty-state awa-empty-state--search">
+        <div class="awa-empty-state__icon" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11" stroke-dasharray="2 1.5"/></svg>
+        </div>
+
+        <h2 class="awa-empty-state__title">
+            <?php if ($queryText): ?>
+                <?= $block->escapeHtml(__('Nenhum resultado para "%1"', $block->escapeHtml($queryText))) ?>
+            <?php else: ?>
+                <?= $block->escapeHtml(__('Nenhum produto encontrado')) ?>
+            <?php endif; ?>
+        </h2>
+
+        <p class="awa-empty-state__body">
+            <?= $block->escapeHtml(__('Verifique a ortografia ou tente termos mais gerais.')) ?>
+        </p>
+
+        <div class="awa-search-no-result__tips">
+            <h3 class="awa-search-no-result__tips-title"><?= $block->escapeHtml(__('Sugestões')) ?></h3>
+            <ul class="awa-search-no-result__tips-list">
+                <li><?= $block->escapeHtml(__('Use palavras-chave mais curtas (ex: "bagageiro" em vez de "bagageiro Honda CG 160")')) ?></li>
+                <li><?= $block->escapeHtml(__('Verifique o modelo da moto e pesquise separado')) ?></li>
+                <li><?= $block->escapeHtml(__('Navegue pelas categorias para encontrar o produto')) ?></li>
+                <li><?= $block->escapeHtml(__('Entre em contato com nossa equipe para ajuda')) ?></li>
+            </ul>
+        </div>
+
+        <div class="awa-search-no-result__cta">
+            <a href="<?= $block->escapeUrl($block->getUrl('catalog/category')) ?>"
+               class="awa-btn awa-btn-primary">
+                <?= $block->escapeHtml(__('Ver Categorias')) ?>
+            </a>
+            <a href="<?= $block->escapeUrl($block->getUrl('contact')) ?>"
+               class="awa-btn awa-btn-ghost">
+                <?= $block->escapeHtml(__('Falar com Especialista')) ?>
+            </a>
+        </div>
+
+        <?= /* @noEscape */ $block->getAdditionalHtml() ?>
+        <?php if ($messages = $block->getNoteMessages()): ?>
+            <?php foreach ($messages as $msg): ?>
+                <p class="awa-search-no-result__note"><?= /* @noEscape */ $msg ?></p>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </div>
+</div>
+<?php endif; ?>
