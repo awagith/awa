@@ -7,7 +7,15 @@
         <css src="css/awa-page-catalog-listing.css"/>
         <css src="css/b2b/pages/plp-search-cart-refine.css"/>
         <css src="css/layers/pages/plp-search.css"/>
+        <css src="GrupoAwamotos_Fitment::css/fitment-bar.css"/>
     </head>
     <body>
+        <!-- Fitment bar: above product list, inside columns.top container -->
+        <referenceContainer name="columns.top">
+            <block class="GrupoAwamotos\Fitment\Block\FitmentBar"
+                   name="awa.fitment.bar"
+                   template="GrupoAwamotos_Fitment::fitment-bar.phtml"
+                   before="category.view.container"/>
+        </referenceContainer>
     </body>
 </page>

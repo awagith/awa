@@ -1,0 +1,220 @@
+/**
+ * Fitment Bar — PLP
+ * AWA Motos / GrupoAwamotos_Fitment
+ */
+
+/* ── Container ─────────────────────────────────────────────────────────── */
+.awa-fitment-bar {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-bottom: 3px solid var(--aw-primary, #b73337);
+    padding: 14px 0;
+    position: relative;
+    z-index: 10;
+}
+
+.awa-fitment-bar__inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* ── Label ─────────────────────────────────────────────────────────────── */
+.awa-fitment-bar__label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.awa-fitment-bar__label svg {
+    color: var(--aw-primary, #b73337);
+    flex-shrink: 0;
+}
+
+/* ── Form ──────────────────────────────────────────────────────────────── */
+.awa-fitment-bar__form {
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    flex: 1;
+    flex-wrap: wrap;
+}
+
+/* ── Selects ───────────────────────────────────────────────────────────── */
+.awa-fitment-bar__selects {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    flex-wrap: wrap;
+}
+
+.awa-fitment-select-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    flex: 1;
+    min-width: 130px;
+}
+
+.awa-fitment-select-label {
+    font-size: 10px;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+}
+
+.awa-fitment-select-control {
+    position: relative;
+}
+
+.awa-fitment-select {
+    width: 100%;
+    padding: 8px 32px 8px 12px;
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(255, 255, 255, .15);
+    border-radius: 6px;
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    transition: border-color .2s, background-color .2s;
+}
+.awa-fitment-select:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+.awa-fitment-select:not(:disabled):hover,
+.awa-fitment-select:not(:disabled):focus {
+    border-color: var(--aw-primary, #b73337);
+    background-color: rgba(255, 255, 255, .12);
+    outline: none;
+}
+.awa-fitment-select option {
+    background: #1e293b;
+    color: #fff;
+}
+
+/* Loading spinner */
+.awa-fitment-loading .awa-fitment-select {
+    opacity: .7;
+    pointer-events: none;
+}
+.awa-fitment-loading::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 12px;
+    height: 12px;
+    border: 2px solid rgba(255,255,255,.2);
+    border-top-color: var(--aw-primary, #b73337);
+    border-radius: 50%;
+    animation: aw-fitment-spin .6s linear infinite;
+}
+@keyframes aw-fitment-spin {
+    to { transform: translateY(-50%) rotate(360deg); }
+}
+
+/* ── Action buttons ────────────────────────────────────────────────────── */
+.awa-fitment-bar__actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.awa-fitment-bar__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: background .2s, opacity .2s;
+    white-space: nowrap;
+}
+
+.awa-fitment-bar__btn--search {
+    background: var(--aw-primary, #b73337);
+    color: #fff;
+}
+.awa-fitment-bar__btn--search:hover:not(:disabled) {
+    background: #9b1c1c;
+    color: #fff;
+}
+.awa-fitment-bar__btn--search:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+.awa-fitment-bar__btn--clear {
+    background: rgba(255, 255, 255, .1);
+    color: #94a3b8;
+    border: 1px solid rgba(255, 255, 255, .15);
+}
+.awa-fitment-bar__btn--clear:hover {
+    background: rgba(255, 255, 255, .18);
+    color: #e2e8f0;
+    text-decoration: none;
+}
+
+/* ── Active fitment badge ──────────────────────────────────────────────── */
+.awa-fitment-bar__active-badge {
+    width: 100%;
+    padding: 6px 0 2px;
+    border-top: 1px solid rgba(255, 255, 255, .08);
+    margin-top: 4px;
+}
+.awa-fitment-bar__active-text {
+    font-size: 12px;
+    color: #94a3b8;
+}
+.awa-fitment-bar__active-text strong {
+    color: #e2e8f0;
+    font-weight: 600;
+}
+
+/* ── Responsive ────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .awa-fitment-bar__inner {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    .awa-fitment-bar__label {
+        justify-content: center;
+    }
+    .awa-fitment-bar__form {
+        flex-direction: column;
+    }
+    .awa-fitment-bar__selects {
+        flex-direction: column;
+    }
+    .awa-fitment-select-wrap {
+        min-width: unset;
+    }
+    .awa-fitment-bar__actions {
+        justify-content: center;
+    }
+    .awa-fitment-bar__btn {
+        flex: 1;
+        justify-content: center;
+    }
+}

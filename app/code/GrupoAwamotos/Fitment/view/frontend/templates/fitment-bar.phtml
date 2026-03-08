@@ -1,0 +1,162 @@
+<?php
+/**
+ * Fitment Bar — PLP
+ * Permite filtrar produtos por Marca / Modelo / Ano de moto
+ *
+ * @var \GrupoAwamotos\Fitment\Block\FitmentBar $block
+ */
+declare(strict_types=1);
+
+$activeMarca  = $block->getActiveMarca();
+$activeModelo = $block->getActiveModelo();
+$activeAno    = $block->getActiveAno();
+$hasActive    = $block->hasFitmentActive();
+?>
+<div class="awa-fitment-bar"
+     id="awa-fitment-bar"
+     role="search"
+     aria-label="<?= $block->escapeHtmlAttr(__('Filtrar peças por moto')) ?>">
+
+    <div class="awa-fitment-bar__inner">
+        <div class="awa-fitment-bar__label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 8v4l3 3"></path>
+            </svg>
+            <span><?= $block->escapeHtml(__('Peças para minha moto:')) ?></span>
+        </div>
+
+        <form class="awa-fitment-bar__form"
+              id="awa-fitment-form"
+              action="<?= $block->escapeUrl($block->getFitmentResultsUrl()) ?>"
+              method="get"
+              novalidate>
+
+            <div class="awa-fitment-bar__selects">
+                <!-- Marca -->
+                <div class="awa-fitment-select-wrap">
+                    <label class="awa-fitment-select-label" for="fitment-bar-marca">
+                        <?= $block->escapeHtml(__('Marca')) ?>
+                    </label>
+                    <div class="awa-fitment-select-control">
+                        <select id="fitment-bar-marca"
+                                name="marca_moto"
+                                class="awa-fitment-select"
+                                data-fitment-role="marca"
+                                aria-label="<?= $block->escapeHtmlAttr(__('Selecione a marca da moto')) ?>">
+                            <option value=""><?= $block->escapeHtml(__('— Marca —')) ?></option>
+                            <?php if ($activeMarca): ?>
+                                <option value="<?= $block->escapeHtmlAttr($activeMarca) ?>" selected>
+                                    <?= $block->escapeHtml($activeMarca) ?>
+                                </option>
+                            <?php endif; ?>
+                        </select>
+                        <span class="awa-fitment-select-loader" aria-hidden="true"></span>
+                    </div>
+                </div>
+
+                <!-- Modelo -->
+                <div class="awa-fitment-select-wrap">
+                    <label class="awa-fitment-select-label" for="fitment-bar-modelo">
+                        <?= $block->escapeHtml(__('Modelo')) ?>
+                    </label>
+                    <div class="awa-fitment-select-control">
+                        <select id="fitment-bar-modelo"
+                                name="modelo_moto"
+                                class="awa-fitment-select"
+                                data-fitment-role="modelo"
+                                <?= !$activeMarca ? 'disabled' : '' ?>
+                                aria-label="<?= $block->escapeHtmlAttr(__('Selecione o modelo da moto')) ?>">
+                            <option value=""><?= $block->escapeHtml(__('— Modelo —')) ?></option>
+                            <?php if ($activeModelo): ?>
+                                <option value="<?= $block->escapeHtmlAttr($activeModelo) ?>" selected>
+                                    <?= $block->escapeHtml($activeModelo) ?>
+                                </option>
+                            <?php endif; ?>
+                        </select>
+                        <span class="awa-fitment-select-loader" aria-hidden="true"></span>
+                    </div>
+                </div>
+
+                <!-- Ano -->
+                <div class="awa-fitment-select-wrap">
+                    <label class="awa-fitment-select-label" for="fitment-bar-ano">
+                        <?= $block->escapeHtml(__('Ano')) ?>
+                    </label>
+                    <div class="awa-fitment-select-control">
+                        <select id="fitment-bar-ano"
+                                name="ano_moto"
+                                class="awa-fitment-select"
+                                data-fitment-role="ano"
+                                <?= !$activeModelo ? 'disabled' : '' ?>
+                                aria-label="<?= $block->escapeHtmlAttr(__('Selecione o ano da moto')) ?>">
+                            <option value=""><?= $block->escapeHtml(__('— Ano —')) ?></option>
+                            <?php if ($activeAno): ?>
+                                <option value="<?= $block->escapeHtmlAttr($activeAno) ?>" selected>
+                                    <?= $block->escapeHtml($activeAno) ?>
+                                </option>
+                            <?php endif; ?>
+                        </select>
+                        <span class="awa-fitment-select-loader" aria-hidden="true"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="awa-fitment-bar__actions">
+                <button type="submit"
+                        id="fitment-bar-submit"
+                        class="awa-fitment-bar__btn awa-fitment-bar__btn--search"
+                        <?= !$hasActive ? 'disabled' : '' ?>>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <span><?= $block->escapeHtml(__('Buscar')) ?></span>
+                </button>
+
+                <?php if ($hasActive): ?>
+                <a href="<?= $block->escapeUrl($block->getCurrentCategoryUrl() ?: '#') ?>"
+                   class="awa-fitment-bar__btn awa-fitment-bar__btn--clear"
+                   id="fitment-bar-clear"
+                   aria-label="<?= $block->escapeHtmlAttr(__('Limpar filtro de moto')) ?>">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                    <span><?= $block->escapeHtml(__('Limpar')) ?></span>
+                </a>
+                <?php endif; ?>
+            </div>
+
+        </form>
+
+        <?php if ($hasActive): ?>
+        <div class="awa-fitment-bar__active-badge" aria-live="polite">
+            <span class="awa-fitment-bar__active-text">
+                <?= $block->escapeHtml(__('Mostrando peças para:')) ?>
+                <strong>
+                    <?= $block->escapeHtml(implode(' › ', array_filter([$activeMarca, $activeModelo, $activeAno]))) ?>
+                </strong>
+            </span>
+        </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+{
+    "#awa-fitment-bar": {
+        "awaFitmentBar": {
+            "brandsUrl": "<?= $block->escapeJs($block->getBrandsUrl()) ?>",
+            "modelsUrl": "<?= $block->escapeJs($block->getModelsUrl()) ?>",
+            "yearsUrl":  "<?= $block->escapeJs($block->getYearsUrl()) ?>",
+            "activeMarca":  "<?= $block->escapeJs($activeMarca) ?>",
+            "activeModelo": "<?= $block->escapeJs($activeModelo) ?>",
+            "activeAno":    "<?= $block->escapeJs($activeAno) ?>"
+        }
+    }
+}
+</script>
