@@ -453,3 +453,355 @@ body .page-wrapper .message.info {
     background: #eff6ff;
     color: #1e40af;
 }
+
+/* ================================================================
+   B2B COMPONENTS — Tabela de pedidos, quotes, data tables
+   ================================================================ */
+
+/* ── Data table B2B canônica ─────────────────────────────────── */
+body .page-wrapper .data-table,
+body .page-wrapper .table-wrapper table,
+body .page-wrapper .orders-history table,
+body .page-wrapper .order-items table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    background: var(--awa-layer-surface);
+}
+
+body .page-wrapper .data-table thead,
+body .page-wrapper .table-wrapper table thead {
+    background: var(--awa-layer-surface-soft);
+    border-bottom: 2px solid var(--awa-layer-color-border);
+}
+
+body .page-wrapper .data-table th,
+body .page-wrapper .table-wrapper table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--awa-layer-color-muted);
+    white-space: nowrap;
+}
+
+body .page-wrapper .data-table td,
+body .page-wrapper .table-wrapper table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--awa-layer-color-border);
+    color: var(--awa-layer-color-text);
+    vertical-align: middle;
+}
+
+body .page-wrapper .data-table tbody tr:hover,
+body .page-wrapper .table-wrapper table tbody tr:hover {
+    background: var(--awa-layer-surface-soft);
+}
+
+body .page-wrapper .data-table tbody tr:last-child td,
+body .page-wrapper .table-wrapper table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Table wrapper scroll horizontal no mobile */
+body .page-wrapper .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-md);
+}
+
+/* ── Status badges ───────────────────────────────────────────── */
+.awa-badge,
+.order-status,
+body .page-wrapper .order-status-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.4;
+}
+
+.awa-badge--success,
+.order-status.complete,
+.order-status.delivered {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.awa-badge--warning,
+.order-status.pending,
+.order-status.pending_payment {
+    background: #fef9c3;
+    color: #a16207;
+}
+
+.awa-badge--info,
+.order-status.processing {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.awa-badge--error,
+.order-status.canceled,
+.order-status.closed {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.awa-badge--neutral {
+    background: var(--awa-layer-surface-soft);
+    color: var(--awa-layer-color-muted);
+}
+
+/* ── Empty state ─────────────────────────────────────────────── */
+.awa-empty-state,
+body .page-wrapper .cart-empty,
+body .page-wrapper .no-items-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--awa-layer-space-lg);
+    padding: clamp(32px, 6vw, 64px) var(--awa-layer-space-xl);
+    text-align: center;
+    color: var(--awa-layer-color-muted);
+}
+
+.awa-empty-state .awa-empty-state__icon {
+    font-size: 3rem;
+    opacity: 0.35;
+}
+
+.awa-empty-state .awa-empty-state__title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--awa-layer-color-text);
+    margin: 0;
+}
+
+.awa-empty-state .awa-empty-state__desc {
+    font-size: 0.9375rem;
+    max-width: 440px;
+    margin: 0;
+}
+
+/* ── Skeleton loading ────────────────────────────────────────── */
+.awa-skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--awa-layer-color-border) 25%,
+        #f5f5f5 50%,
+        var(--awa-layer-color-border) 75%
+    );
+    background-size: 200% 100%;
+    animation: awa-shimmer 1.5s infinite;
+    border-radius: var(--awa-layer-radius-sm);
+}
+
+@keyframes awa-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.awa-skeleton--text {
+    height: 1em;
+    margin-block: 0.25em;
+}
+
+.awa-skeleton--title {
+    height: 1.5em;
+    width: 60%;
+}
+
+.awa-skeleton--card {
+    aspect-ratio: 3 / 4;
+    border-radius: var(--awa-layer-radius-md);
+}
+
+/* ── Notification / alert bar ────────────────────────────────── */
+.awa-notice-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--awa-layer-space-sm);
+    padding: 10px var(--awa-layer-space-lg);
+    background: #fef9c3;
+    border: 1px solid #fde68a;
+    border-radius: var(--awa-layer-radius-sm);
+    font-size: 0.875rem;
+    color: #92400e;
+    margin-bottom: var(--awa-layer-space-md);
+}
+
+.awa-notice-bar--info {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1e40af;
+}
+
+.awa-notice-bar--success {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #15803d;
+}
+
+.awa-notice-bar--error {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #b91c1c;
+}
+
+/* ── B2B Quote card ──────────────────────────────────────────── */
+.awa-quote-card {
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-lg);
+    background: var(--awa-layer-surface);
+    padding: var(--awa-layer-space-lg);
+    display: grid;
+    gap: var(--awa-layer-space-md);
+}
+
+.awa-quote-card__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--awa-layer-space-sm);
+    flex-wrap: wrap;
+}
+
+.awa-quote-card__title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--awa-layer-color-text);
+    margin: 0;
+}
+
+.awa-quote-card__meta {
+    display: flex;
+    gap: var(--awa-layer-space-md);
+    flex-wrap: wrap;
+    font-size: 0.8125rem;
+    color: var(--awa-layer-color-muted);
+}
+
+.awa-quote-card__total {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--awa-layer-color-primary);
+}
+
+/* ── Tooltip simples ─────────────────────────────────────────── */
+[data-awa-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-awa-tooltip]::after {
+    content: attr(data-awa-tooltip);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+    max-width: 240px;
+    white-space: normal;
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    padding: 6px 10px;
+    border-radius: var(--awa-layer-radius-sm);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 150ms ease;
+    z-index: var(--awa-layer-z-tooltip, 1000);
+}
+
+[data-awa-tooltip]:hover::after,
+[data-awa-tooltip]:focus::after {
+    opacity: 1;
+}
+
+/* ── Accordion / collapse ────────────────────────────────────── */
+.awa-accordion__item {
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-sm);
+    overflow: hidden;
+}
+
+.awa-accordion__item + .awa-accordion__item {
+    margin-top: 4px;
+}
+
+.awa-accordion__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 14px var(--awa-layer-space-lg);
+    background: var(--awa-layer-surface-soft);
+    border: none;
+    cursor: pointer;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-text);
+    text-align: left;
+    transition: background 150ms ease;
+}
+
+.awa-accordion__trigger:hover {
+    background: var(--awa-layer-color-border);
+}
+
+.awa-accordion__trigger[aria-expanded="true"] {
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+}
+
+.awa-accordion__content {
+    display: none;
+    padding: var(--awa-layer-space-lg);
+    font-size: 0.9375rem;
+    color: var(--awa-layer-color-text);
+    line-height: 1.7;
+}
+
+.awa-accordion__content[aria-hidden="false"],
+.awa-accordion__item.open .awa-accordion__content {
+    display: block;
+}
+
+/* ── Fitment badge no card ───────────────────────────────────── */
+.awa-fitment-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.awa-fitment-badge--no-fit {
+    background: #fee2e2;
+    color: #b91c1c;
+    border-color: #fecaca;
+}
+
+.awa-fitment-badge--partial {
+    background: #fef9c3;
+    color: #a16207;
+    border-color: #fde68a;
+}
