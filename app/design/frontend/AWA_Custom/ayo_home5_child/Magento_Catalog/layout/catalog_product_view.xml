@@ -6,7 +6,7 @@
         <remove src="css/awa-pdp-final-polish.css"/>
         <css src="css/awa-custom-pdp-conversion.css"/>
         <css src="css/awa-custom-pdp-final-polish.css"/>
-        <css src="css/awa-page-catalog-product.css"/>
+        <!-- migrado para layers/pages/pdp.css -->
         <css src="css/layers/pages/pdp.css"/>
     </head>
     <body>
