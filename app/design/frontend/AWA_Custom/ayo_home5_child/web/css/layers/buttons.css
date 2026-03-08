@@ -309,3 +309,184 @@ body .page-wrapper .action.loading::after {
         font-size: var(--awa-text-base-plus, 1.0625rem);
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   BUTTONS — Enterprise B2B refinements (wave 11)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Floating action button (FAB) ─────────────────────────────── */
+.awa-fab {
+    position: fixed;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--awa-layer-color-primary, #b73337);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(183, 51, 55, 0.35);
+    border: none;
+    cursor: pointer;
+    transition: transform 200ms, box-shadow 200ms;
+}
+
+.awa-fab:hover {
+    transform: scale(1.07);
+    box-shadow: 0 6px 20px rgba(183, 51, 55, 0.45);
+}
+
+/* ── Split button (dropdown action) ──────────────────────────── */
+.awa-btn-split {
+    display: inline-flex;
+    align-items: stretch;
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    overflow: hidden;
+}
+
+.awa-btn-split__main {
+    flex: 1;
+    padding: 10px 16px;
+    background: var(--awa-layer-color-primary, #b73337);
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    transition: background 180ms;
+}
+
+.awa-btn-split__main:hover {
+    background: var(--awa-layer-color-primary-dark, #9b2b2e);
+}
+
+.awa-btn-split__toggle {
+    width: 38px;
+    background: color-mix(in srgb, var(--awa-layer-color-primary, #b73337) 80%, black);
+    color: #fff;
+    border: none;
+    border-left: 1px solid rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 180ms;
+}
+
+.awa-btn-split__toggle:hover {
+    background: color-mix(in srgb, var(--awa-layer-color-primary, #b73337) 65%, black);
+}
+
+/* ── Button group ─────────────────────────────────────────────── */
+.awa-btn-group {
+    display: inline-flex;
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    overflow: hidden;
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+}
+
+.awa-btn-group .action,
+.awa-btn-group button {
+    border: none;
+    border-right: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: 0;
+    padding: 9px 16px;
+    font-size: 0.8125rem;
+    background: #fff;
+    color: var(--awa-layer-color-text-primary, #333);
+    cursor: pointer;
+    transition: background 160ms, color 160ms;
+}
+
+.awa-btn-group .action:last-child,
+.awa-btn-group button:last-child {
+    border-right: none;
+}
+
+.awa-btn-group .action:hover,
+.awa-btn-group button:hover,
+.awa-btn-group .action.is-active,
+.awa-btn-group button.is-active {
+    background: var(--awa-layer-color-primary, #b73337);
+    color: #fff;
+}
+
+/* ── "Add all to cart" bulk button ───────────────────────────── */
+.awa-btn-bulk {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: #1e293b;
+    color: #fff;
+    font-weight: 700;
+    font-size: 0.9375rem;
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    border: none;
+    cursor: pointer;
+    transition: background 200ms, transform 150ms;
+}
+
+.awa-btn-bulk:hover {
+    background: #0f172a;
+    transform: translateY(-1px);
+}
+
+.awa-btn-bulk .awa-btn-bulk__count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+    background: var(--awa-layer-color-primary, #b73337);
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0;
+}
+
+/* ── Link button (inline action) ─────────────────────────────── */
+.awa-btn-link {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--awa-layer-color-primary, #b73337);
+    font-weight: 600;
+    font-size: 0.875rem;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: opacity 160ms;
+}
+
+.awa-btn-link:hover {
+    opacity: 0.75;
+}
+
+/* ── Danger / destructive ─────────────────────────────────────── */
+.awa-btn-danger,
+body .page-wrapper .action.awa-btn-danger {
+    background: #dc2626;
+    color: #fff;
+    border: none;
+}
+
+.awa-btn-danger:hover,
+body .page-wrapper .action.awa-btn-danger:hover {
+    background: #b91c1c;
+}
+
+/* ── Confirm pill (green) ─────────────────────────────────────── */
+.awa-btn-confirm,
+body .page-wrapper .action.awa-btn-confirm {
+    background: #16a34a;
+    color: #fff;
+    border: none;
+}
+
+.awa-btn-confirm:hover,
+body .page-wrapper .action.awa-btn-confirm:hover {
+    background: #15803d;
+}
