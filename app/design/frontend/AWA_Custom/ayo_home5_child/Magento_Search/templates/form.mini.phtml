@@ -46,14 +46,6 @@ $searchHelper = $this->helper('Magento\Search\Helper\Data');
                            autocapitalize="off"
                            autocorrect="off"
                            spellcheck="false" />
-                    <div id="search_autocomplete"
-                         class="search-autocomplete awa-search-autocomplete-panel searchsuite-autocomplete awa-ac"
-                         data-role="search-autocomplete"
-                         data-awa-search-panel="true"
-                         hidden
-                         role="listbox"
-                         aria-hidden="true"
-                         aria-label="<?= $block->escapeHtmlAttr(__('Sugestões de busca')) ?>"></div>
                     <?= /* @noEscape */ $block->getChildHtml() ?>
                 </div>
             </div>

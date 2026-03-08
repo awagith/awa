@@ -306,3 +306,109 @@ body .page-wrapper .message.warning {
 .awa-quote-cta-btn svg {
     flex-shrink: 0;
 }
+
+/* ============================================================
+   Mirasvit Search Autocomplete — integração tema AWA/Ayo
+   Substitui paleta padrão (#1ba1fc azul) pela cor primária AWA
+   ============================================================ */
+
+/* Borda superior colorida com cor AWA */
+.mst-searchautocomplete__autocomplete {
+    border-top-color: var(--aw-primary, #b73337) !important;
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.12);
+    margin-top: 4px;
+}
+
+/* Highlight do texto buscado */
+.mst-searchautocomplete__highlight {
+    color: var(--aw-primary, #b73337);
+    font-weight: 700;
+    background: transparent;
+}
+
+/* Botão "Add to Cart" no resultado */
+.mst-searchautocomplete__product .mst-searchautocomplete__product-actions .tocart {
+    background: var(--aw-primary, #b73337);
+    border-color: var(--aw-primary, #b73337);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 11px;
+    padding: 4px 10px;
+}
+.mst-searchautocomplete__product .mst-searchautocomplete__product-actions .tocart:hover {
+    background: #8e2427;
+    border-color: #8e2427;
+}
+
+/* Badge de estoque em destaque para B2B */
+.mst-searchautocomplete__product-stock-status {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+.mst-searchautocomplete__product-stock-status.instock {
+    color: #16a34a;
+}
+.mst-searchautocomplete__product-stock-status.out-of-stock {
+    color: #dc2626;
+}
+
+/* SKU em destaque (B2B: clientes buscam por código) */
+.mst-searchautocomplete__product-sku {
+    color: #64748b;
+    font-size: 11px;
+    font-family: monospace;
+    letter-spacing: .02em;
+}
+
+/* Header das seções (Produtos, Categorias, etc.) */
+.mst-searchautocomplete__index-title {
+    background: #f8f9fa;
+    border-bottom: 1px solid #e2e8f0;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    padding: 8px 14px;
+}
+
+/* Hover nos itens */
+.mst-searchautocomplete__item:hover,
+.mst-searchautocomplete__item._active {
+    background: #fef2f2;
+}
+
+/* Typeahead (sugestão cinza no input) */
+.mst-searchautocomplete__typeahead {
+    color: #94a3b8;
+}
+
+/* Seção popular searches */
+.mst-searchautocomplete__popular {
+    border-top: 1px solid #e2e8f0;
+    padding: 10px 14px;
+}
+.mst-searchautocomplete__popular-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #94a3b8;
+    letter-spacing: .06em;
+    margin-bottom: 6px;
+}
+.mst-searchautocomplete__popular-item a {
+    color: #475569;
+    font-size: 13px;
+    text-decoration: none;
+}
+.mst-searchautocomplete__popular-item a:hover {
+    color: var(--aw-primary, #b73337);
+}
+
+/* Spinner de loading */
+.mst-searchautocomplete__spinner {
+    border-top-color: var(--aw-primary, #b73337);
+}
