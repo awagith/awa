@@ -1,17 +1,12 @@
 <?xml version="1.0"?>
-<- name: Codacy Analysis
-/**
- * Layout: injects B2B Credit shortcuts block into the customer dashboard
- */
--->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceContainer name="content">
-            <block class="GrupoAwamotos\B2B\Block\Account\Credit"
+            <block class="GrupoAwamotos\B2B\Block\Account\Dashboard"
                    name="awa.b2b.dashboard.shortcuts"
                    template="Magento_Customer::account/dashboard/b2b-shortcuts.phtml"
-                   before="-" />
+                   before="-"/>
         </referenceContainer>
     </body>
 </page>

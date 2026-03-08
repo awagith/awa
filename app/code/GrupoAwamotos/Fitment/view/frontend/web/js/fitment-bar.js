@@ -131,6 +131,20 @@ define(['jquery', 'mage/translate'], function ($, $t) {
             activeAno = this.value;
         });
 
+        // ── Salva seleção no sessionStorage para integração com PDP ─────────
+        $bar.closest('form').on('submit', function () {
+            var selection = {
+                marca:  $marca.val()  || '',
+                modelo: $modelo.val() || '',
+                ano:    $ano.val()    || ''
+            };
+            try {
+                sessionStorage.setItem('awa_fitment', JSON.stringify(selection));
+            } catch (e) {
+                // sessionStorage não disponível — ignorar
+            }
+        });
+
         // ── Init ────────────────────────────────────────────────────────────
         loadBrands();
     };

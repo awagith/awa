@@ -1,52 +1,141 @@
 <?php
 /**
- * Product Fitment/Application List Template
+ * Fitment PDP — Template Enterprise
+ * Accordion por marca, tabela de modelos, filtro rápido e integração sessionStorage.
  *
  * @var \GrupoAwamotos\Fitment\Block\ApplicationList $block
  */
+declare(strict_types=1);
 
 if (!$block->hasApplications()) {
     return;
 }
 
 $applications = $block->getApplications();
+$totalBrands  = count($applications);
+$totalModels  = 0;
+foreach ($applications as $brandGroup) {
+    $totalModels += count($brandGroup['models']);
+}
 ?>
+<section
+    class="awa-compat"
+    id="fitment-compatibility"
+    data-mage-init='{"GrupoAwamotos_Fitment/js/fitment": {}}'
+>
+    <?php /* Banner "Minha moto" — oculto por padrão, JS revela */ ?>
+    <div id="awa-compat-my-moto">
+        <div class="awa-compat-status"></div>
+    </div>
 
-<div class="fitment-applications" id="fitment-applications">
-    <div class="fitment-header">
-        <h2 class="fitment-title">
-            <span class="fitment-icon">🏍️</span>
-            <?= $block->escapeHtml($block->getSectionTitle()) ?>
+    <?php /* Cabeçalho: título + contador + filtro */ ?>
+    <div class="awa-compat__header">
+        <h2 class="awa-compat__title">
+            🏍️ <?= $block->escapeHtml(__('Compatibilidade')) ?>
+            <span class="awa-compat__count-badge">
+                <?= (int) $totalModels ?> <?= $block->escapeHtml(__('modelos')) ?>
+            </span>
         </h2>
+        <div class="awa-compat__filter-wrap">
+            <input
+                type="search"
+                id="awa-compat-filter"
+                class="awa-compat__filter"
+                placeholder="<?= $block->escapeHtmlAttr(__('Filtrar moto...')) ?>"
+                autocomplete="off"
+                aria-label="<?= $block->escapeHtmlAttr(__('Filtrar modelos compatíveis')) ?>"
+            />
+        </div>
     </div>
 
-    <div class="fitment-content">
-        <p class="fitment-intro">
-            <?= $block->escapeHtml(__('Este produto é compatível com os seguintes modelos:')) ?>
-        </p>
+    <?php /* Accordion por marca */ ?>
+    <?php foreach ($applications as $brandGroup): ?>
+        <?php
+            $brandName    = (string) ($brandGroup['brand_name'] ?? '');
+            $brandInitial = mb_strtoupper(mb_substr($brandName, 0, 1, 'UTF-8'), 'UTF-8');
+            $modelCount   = count($brandGroup['models']);
+        ?>
+        <div
+            class="awa-compat__brand"
+            data-brand="<?= $block->escapeHtmlAttr($brandName) ?>"
+        >
+            <button
+                type="button"
+                class="awa-compat__brand-toggle"
+                aria-expanded="false"
+                aria-controls="brand-body-<?= $block->escapeHtmlAttr(strtolower(preg_replace('/\W+/', '-', $brandName))) ?>"
+            >
+                <span class="awa-compat__brand-icon" aria-hidden="true">
+                    <?= $block->escapeHtml($brandInitial) ?>
+                </span>
+                <span class="awa-compat__brand-name">
+                    <?= $block->escapeHtml($brandName) ?>
+                </span>
+                <span class="awa-compat__brand-badge">
+                    <?= (int) $modelCount ?> <?= $block->escapeHtml(__('modelos')) ?>
+                </span>
+                <svg class="awa-compat__brand-chevron"
+                     width="16" height="16" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2.5"
+                     aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"/>
+                </svg>
+            </button>
 
-        <?php foreach ($applications as $brandGroup): ?>
-            <div class="fitment-brand-group">
-                <h3 class="fitment-brand-name">
-                    <?= $block->escapeHtml($brandGroup['brand_name']) ?>
-                </h3>
-                <ul class="fitment-model-list">
-                    <?php foreach ($brandGroup['models'] as $model): ?>
-                        <li class="fitment-model-item">
-                            <span class="fitment-model-name">
-                                <?= $block->escapeHtml($block->getMotorcycleLabel($model)) ?>
-                            </span>
-                            <?= /* @noEscape */ $block->getPositionBadge($model) ?>
-                            <?= /* @noEscape */ $block->getOemBadge($model) ?>
-                            <?= /* @noEscape */ $block->getNotes($model) ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+            <div
+                class="awa-compat__brand-body"
+                id="brand-body-<?= $block->escapeHtmlAttr(strtolower(preg_replace('/\W+/', '-', $brandName))) ?>"
+                role="region"
+            >
+                <table class="awa-compat__table">
+                    <thead>
+                        <tr>
+                            <th scope="col"><?= $block->escapeHtml(__('Modelo')) ?></th>
+                            <th scope="col"><?= $block->escapeHtml(__('Anos')) ?></th>
+                            <th scope="col"><?= $block->escapeHtml(__('Motor')) ?></th>
+                            <th scope="col"><?= $block->escapeHtml(__('Posição')) ?></th>
+                            <th scope="col"><?= $block->escapeHtml(__('OEM')) ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($brandGroup['models'] as $model): ?>
+                            <tr
+                                data-model="<?= $block->escapeHtmlAttr((string) ($model['model_name'] ?? '')) ?>"
+                                data-brand="<?= $block->escapeHtmlAttr($brandName) ?>"
+                                data-years="<?= $block->escapeHtmlAttr((string) ($model['years'] ?? '')) ?>"
+                            >
+                                <td class="awa-compat__model-name">
+                                    <?= $block->escapeHtml((string) ($model['model_name'] ?? '')) ?>
+                                    <?php if (!empty($model['notes'])): ?>
+                                        <div class="awa-compat__notes">
+                                            <?= $block->escapeHtml((string) $model['notes']) ?>
+                                        </div>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="awa-compat__years">
+                                    <?= $block->escapeHtml((string) ($model['years'] ?? '')) ?>
+                                </td>
+                                <td class="awa-compat__engine">
+                                    <?= $block->escapeHtml((string) ($model['engine_cc'] ?? '')) ?>
+                                </td>
+                                <td><?= /* @noEscape */ $block->getPositionBadge($model) ?></td>
+                                <td><?= /* @noEscape */ $block->getOemBadge($model) ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
             </div>
-        <?php endforeach; ?>
+        </div>
+    <?php endforeach; ?>
 
-        <p class="fitment-disclaimer">
-            <?= $block->escapeHtml(__('⚠️ Verifique sempre as especificações do seu veículo antes da compra.')) ?>
-        </p>
+    <div class="awa-compat__no-results" role="status" aria-live="polite">
+        <?= $block->escapeHtml(__('Nenhum resultado encontrado para este filtro.')) ?>
     </div>
-</div>
+
+    <div class="awa-compat__disclaimer">
+        ⚠️ <?= $block->escapeHtml(__(
+            'Verifique sempre as especificações do seu veículo antes da compra. As informações de compatibilidade são de caráter orientativo.'
+        )) ?>
+    </div>
+</section>
+
