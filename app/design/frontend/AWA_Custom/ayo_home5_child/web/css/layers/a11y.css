@@ -221,3 +221,61 @@ body .page-wrapper [aria-live="assertive"] {
         padding: 0;
     }
 }
+
+/* ═══════════════════════════════════════════════════════════
+   WAVE 15 — Refinamentos A11Y Enterprise
+   ═══════════════════════════════════════════════════════════ */
+
+/* Contact form — foco melhorado */
+.awa-contact-form .input-text:focus-visible,
+.awa-contact-form .select:focus-visible {
+    outline: none;
+    border-color: var(--awa-layer-color-primary, #b73337) !important;
+    box-shadow: 0 0 0 3px rgb(183 51 55 / 18%) !important;
+}
+
+/* Wishlist actions — área mínima de toque */
+.awa-wishlist__item .action.towishlist,
+.awa-wishlist__item .action.delete,
+.awa-wishlist__item .action.move-to-cart {
+    min-height: 36px;
+    min-width: 36px;
+}
+
+/* Search result empty — botões acessíveis */
+.awa-search-no-result__cta .awa-btn:focus-visible {
+    outline: 2px solid var(--awa-layer-color-primary, #b73337) !important;
+    outline-offset: 3px !important;
+}
+
+/* WhatsApp btn — foco */
+.awa-btn-whatsapp:focus-visible {
+    outline: 2px solid #fff !important;
+    outline-offset: 2px !important;
+    box-shadow: 0 0 0 4px #25D366 !important;
+}
+
+/* Order view btns — foco */
+.awa-order-header__actions .action:focus-visible {
+    outline: 2px solid var(--awa-layer-color-primary, #b73337) !important;
+    outline-offset: 3px !important;
+}
+
+/* Compare bar — foco */
+.awa-compare-bar__btn:focus-visible {
+    outline: 2px solid #fff !important;
+    outline-offset: 2px !important;
+}
+
+/* Stepper qty — foco */
+.awa-qty-stepper__btn:focus-visible {
+    outline: 2px solid var(--awa-layer-color-primary, #b73337) !important;
+    outline-offset: 1px !important;
+}
+
+/* Tabs PDP — foco visible nos tabs */
+.awa-pdp-tabs__nav a:focus-visible {
+    outline: 2px solid var(--awa-layer-color-primary, #b73337) !important;
+    outline-offset: 2px !important;
+    border-radius: 4px;
+}

@@ -5,6 +5,9 @@ $compatHeaderLinks = trim((string) $this->getChildHtml('header.links'));
 $compatNotifications = trim((string) $this->getChildHtml('notifications'));
 $compatSlideshow = trim((string) $this->getChildHtml('slideshow.top'));
 ?>
+<a href="#contentarea" class="awa-skip-link">
+    <?= /* @noEscape */ __('Ir para o conteúdo principal') ?>
+</a>
 <header role="banner" data-awa-component="site-header" data-awa-variant="ayo-home5">
 <div id="header" class="header-container" data-awa-header-shell="true">
 	<div class="header-content" data-awa-header-content="true">
