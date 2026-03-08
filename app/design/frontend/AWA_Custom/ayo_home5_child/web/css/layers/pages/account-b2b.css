@@ -700,3 +700,207 @@ body.customer-account-index .awa-b2b-attendant__actions {
         flex-wrap: wrap;
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   ACCOUNT B2B — Enterprise refinements (wave 9)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Address book ─────────────────────────────────────────────── */
+.customer-address-index .block-addresses-list .items.addresses,
+.customer-address-index .block-addresses-default .items.addresses {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--awa-layer-space-lg, 24px);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.customer-address-index .item.actions {
+    list-style: none;
+}
+
+.customer-address-index .block-addresses-list .item,
+.customer-address-index .block-addresses-default .item.address {
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-base, 8px);
+    padding: var(--awa-layer-space-lg, 24px);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    transition: box-shadow 200ms;
+}
+
+.customer-address-index .block-addresses-default .item.address {
+    border-color: var(--awa-layer-color-primary, #b73337);
+    box-shadow: 0 0 0 2px rgba(183, 51, 55, 0.12);
+}
+
+.customer-address-index .block-addresses-list .item:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.customer-address-index .block-title {
+    margin-bottom: var(--awa-layer-space-xl, 32px);
+}
+
+.customer-address-index .block-title strong {
+    font-size: 1.125rem;
+    font-weight: 800;
+    color: var(--awa-layer-color-text-primary, #333);
+}
+
+.customer-address-index .box-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: auto;
+}
+
+/* ── Wishlist enterprise ──────────────────────────────────────── */
+.wishlist-index-index .products-grid .product-item {
+    position: relative;
+}
+
+.wishlist-index-index .products-grid .product-item-info {
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-base, 8px);
+    overflow: hidden;
+    transition: box-shadow 200ms;
+}
+
+.wishlist-index-index .products-grid .product-item:hover .product-item-info {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Account nav enterprise ───────────────────────────────────── */
+.customer-account .account-nav .nav.item {
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    overflow: hidden;
+    transition: background 150ms;
+}
+
+.customer-account .account-nav .nav.item a,
+.customer-account .account-nav .nav.item strong {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-text-primary, #333);
+    text-decoration: none;
+    transition: color 150ms;
+}
+
+.customer-account .account-nav .nav.item.current strong,
+.customer-account .account-nav .nav.item.current a {
+    color: var(--awa-layer-color-primary, #b73337);
+    font-weight: 700;
+}
+
+.customer-account .account-nav .nav.item.current {
+    background: rgba(183, 51, 55, 0.06);
+}
+
+.customer-account .account-nav .nav.item a:hover {
+    color: var(--awa-layer-color-primary, #b73337);
+    background: rgba(183, 51, 55, 0.04);
+}
+
+/* ── Account page titles ──────────────────────────────────────── */
+.customer-account .page-title-wrapper .page-title {
+    font-size: clamp(1.25rem, 2.5vw, 1.625rem);
+    font-weight: 800;
+    color: var(--awa-layer-color-text-primary, #333);
+    margin-bottom: var(--awa-layer-space-lg, 24px);
+}
+
+/* ── Data tables B2B (downloads, reviews, etc.) ───────────────── */
+.customer-account .data.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.customer-account .data.table thead th {
+    background: var(--awa-layer-surface-soft, #f7f7f7);
+    padding: 12px 16px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--awa-layer-color-text-secondary, #666);
+    border-bottom: 2px solid var(--awa-layer-color-border, #e5e5e5);
+    text-align: left;
+}
+
+.customer-account .data.table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--awa-layer-color-border, #f0f0f0);
+    color: var(--awa-layer-color-text-primary, #333);
+    vertical-align: middle;
+}
+
+.customer-account .data.table tbody tr:hover td {
+    background: rgba(183, 51, 55, 0.025);
+}
+
+/* ── Subscription / newsletter block ─────────────────────────── */
+.customer-account .block-dashboard-info .box-newsletter,
+.customer-account .block.newsletter {
+    background: var(--awa-layer-surface-soft, #f7f7f7);
+    border-radius: var(--awa-layer-radius-base, 8px);
+    padding: var(--awa-layer-space-lg, 24px);
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+}
+
+/* ── Account info boxes ───────────────────────────────────────── */
+.customer-account .block-dashboard-info .box,
+.customer-account .block-dashboard-addresses .box {
+    background: #fff;
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-base, 8px);
+    padding: var(--awa-layer-space-lg, 24px);
+    height: 100%;
+}
+
+.customer-account .block-dashboard-info .box-title,
+.customer-account .block-dashboard-addresses .box-title {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--awa-layer-color-text-secondary, #888);
+    margin-bottom: 12px;
+}
+
+.customer-account .block-dashboard-info .box-content,
+.customer-account .block-dashboard-addresses .box-content {
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: var(--awa-layer-color-text-primary, #333);
+}
+
+.customer-account .block-dashboard-info .box-actions,
+.customer-account .block-dashboard-addresses .box-actions {
+    margin-top: var(--awa-layer-space-md, 16px);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* ── Mobile account nav ───────────────────────────────────────── */
+@media (max-width: 767px) {
+    .customer-account .account-nav {
+        border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+        border-radius: var(--awa-layer-radius-base, 8px);
+        overflow: hidden;
+        margin-bottom: var(--awa-layer-space-lg, 24px);
+    }
+
+    .customer-address-index .items.addresses {
+        grid-template-columns: 1fr;
+    }
+}

@@ -737,3 +737,220 @@ body.catalog-product-view .awa-b2b-secondary-ctas__icon {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   PDP — Enterprise B2B refinements (wave 9)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Tier price enterprise ────────────────────────────────────── */
+.catalog-product-view .tier-prices-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-base, 8px);
+    overflow: hidden;
+    margin: 12px 0;
+}
+
+.catalog-product-view .tier-prices-table thead th {
+    background: var(--awa-layer-surface-soft, #f7f7f7);
+    padding: 10px 16px;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--awa-layer-color-text-secondary, #666);
+    text-align: left;
+    border-bottom: 1px solid var(--awa-layer-color-border, #e5e5e5);
+}
+
+.catalog-product-view .tier-prices-table tbody td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--awa-layer-color-border, #f0f0f0);
+    color: var(--awa-layer-color-text-primary, #333);
+    vertical-align: middle;
+}
+
+.catalog-product-view .tier-prices-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.catalog-product-view .tier-prices-table tbody tr:hover td {
+    background: #fff5f5;
+}
+
+.catalog-product-view .tier-prices-table .tier-savings {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #16a34a;
+    background: #dcfce7;
+    padding: 2px 8px;
+    border-radius: var(--awa-layer-radius-full, 9999px);
+    white-space: nowrap;
+}
+
+.catalog-product-view .tier-prices-table .tier-price {
+    font-weight: 700;
+    color: var(--awa-layer-color-primary, #b73337);
+}
+
+/* ── Product tabs enterprise ──────────────────────────────────── */
+.catalog-product-view .product.data.items {
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-base, 8px);
+    overflow: hidden;
+    margin-top: var(--awa-layer-space-xl, 32px);
+}
+
+.catalog-product-view .product.data.items > .item.title {
+    background: transparent;
+    border: none;
+}
+
+.catalog-product-view .product.data.items > .item.title > .switch {
+    display: block;
+    padding: 14px 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--awa-layer-color-text-secondary, #666);
+    border-bottom: 2px solid transparent;
+    transition: color 180ms, border-color 180ms;
+    cursor: pointer;
+    background: var(--awa-layer-surface-soft, #f7f7f7);
+    text-decoration: none;
+}
+
+.catalog-product-view .product.data.items > .item.title.active > .switch,
+.catalog-product-view .product.data.items > .item.title > .switch:hover {
+    color: var(--awa-layer-color-primary, #b73337);
+    border-bottom-color: var(--awa-layer-color-primary, #b73337);
+    background: #fff;
+}
+
+.catalog-product-view .product.data.items > .item.content {
+    padding: var(--awa-layer-space-xl, 32px);
+    line-height: 1.7;
+    color: var(--awa-layer-color-text-primary, #333);
+    border-top: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    background: #fff;
+}
+
+/* ── Atributos / especificações ───────────────────────────────── */
+.catalog-product-view .additional-attributes {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.catalog-product-view .additional-attributes tr {
+    border-bottom: 1px solid var(--awa-layer-color-border, #f0f0f0);
+}
+
+.catalog-product-view .additional-attributes tr:last-child {
+    border-bottom: none;
+}
+
+.catalog-product-view .additional-attributes th,
+.catalog-product-view .additional-attributes td {
+    padding: 10px 16px;
+    font-size: 0.875rem;
+    text-align: left;
+    vertical-align: top;
+}
+
+.catalog-product-view .additional-attributes th {
+    font-weight: 700;
+    color: var(--awa-layer-color-text-secondary, #666);
+    width: 40%;
+    background: var(--awa-layer-surface-soft, #fafafa);
+}
+
+.catalog-product-view .additional-attributes td {
+    color: var(--awa-layer-color-text-primary, #333);
+}
+
+.catalog-product-view .additional-attributes tr:nth-child(even) th,
+.catalog-product-view .additional-attributes tr:nth-child(even) td {
+    background: rgba(0, 0, 0, 0.015);
+}
+
+/* ── Avaliações / reviews ─────────────────────────────────────── */
+.catalog-product-view .review-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--awa-layer-space-lg, 24px);
+}
+
+.catalog-product-view .review-item {
+    padding: var(--awa-layer-space-lg, 24px);
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-base, 8px);
+    background: #fff;
+}
+
+.catalog-product-view .review-item .review-author {
+    font-weight: 700;
+    color: var(--awa-layer-color-text-primary, #333);
+    font-size: 0.9rem;
+}
+
+.catalog-product-view .review-item .review-date {
+    font-size: 0.8125rem;
+    color: var(--awa-layer-color-text-secondary, #999);
+}
+
+.catalog-product-view .review-item .review-content {
+    margin-top: 10px;
+    line-height: 1.65;
+    color: var(--awa-layer-color-text-primary, #444);
+}
+
+.catalog-product-view .review-item .review-ratings {
+    margin-bottom: 10px;
+}
+
+/* ── Related products heading ──────────────────────────────────── */
+.catalog-product-view .block.related .block-title strong,
+.catalog-product-view .block.upsell .block-title strong,
+.catalog-product-view .block.crosssell .block-title strong {
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
+    font-weight: 800;
+    color: var(--awa-layer-color-text-primary, #333);
+}
+
+/* ── Gallery dot nav ───────────────────────────────────────────── */
+.catalog-product-view .fotorama__nav--dots .fotorama__nav__frame {
+    padding: 4px;
+}
+
+.catalog-product-view .fotorama__dot {
+    width: 8px;
+    height: 8px;
+    border: 2px solid var(--awa-layer-color-border, #ccc);
+    background: transparent;
+    transition: background 180ms, border-color 180ms;
+}
+
+.catalog-product-view .fotorama__active .fotorama__dot {
+    background: var(--awa-layer-color-primary, #b73337);
+    border-color: var(--awa-layer-color-primary, #b73337);
+}
+
+/* ── Sticky bar mobile (scrolled) ──────────────────────────────── */
+@media (max-width: 767px) {
+    .catalog-product-view .product.data.items > .item.title {
+        width: 100%;
+    }
+
+    .catalog-product-view .product.data.items > .item.content {
+        padding: var(--awa-layer-space-lg, 20px) var(--awa-layer-space-md, 16px);
+    }
+
+    .catalog-product-view .additional-attributes th {
+        width: 50%;
+        font-size: 0.8125rem;
+    }
+}

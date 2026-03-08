@@ -264,3 +264,124 @@
 .awa-mb-md { margin-bottom: var(--awa-layer-space-md); }
 .awa-mt-lg { margin-top: var(--awa-layer-space-lg); }
 .awa-mb-lg { margin-bottom: var(--awa-layer-space-lg); }
+
+/* ── Print utilities ─────────────────────────────────────────── */
+@media print {
+    .awa-no-print { display: none !important; }
+    .awa-print-only { display: block !important; }
+
+    body .page-wrapper .awa-compare-bar,
+    body .page-wrapper .awa-announcement-bar,
+    body .page-wrapper .block-search,
+    body .page-wrapper .nav-sections { display: none !important; }
+
+    body .page-wrapper .page-main { padding: 0 !important; }
+    body { font-size: 11pt; color: #000; }
+    a { color: #000; text-decoration: underline; }
+}
+
+/* ── Aspect ratio helpers ────────────────────────────────────── */
+.awa-aspect-square  { aspect-ratio: 1 / 1; }
+.awa-aspect-video   { aspect-ratio: 16 / 9; }
+.awa-aspect-4-3     { aspect-ratio: 4 / 3; }
+.awa-aspect-3-2     { aspect-ratio: 3 / 2; }
+
+/* ── Overflow ────────────────────────────────────────────────── */
+.awa-overflow-hidden { overflow: hidden; }
+.awa-overflow-auto   { overflow: auto; }
+.awa-overflow-x-auto { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.awa-overflow-scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--awa-layer-color-border, #e5e5e5) transparent;
+}
+
+/* ── Position ────────────────────────────────────────────────── */
+.awa-relative { position: relative; }
+.awa-absolute { position: absolute; }
+.awa-sticky   { position: sticky; }
+
+/* ── Z-index scale ───────────────────────────────────────────── */
+.awa-z-0    { z-index: 0; }
+.awa-z-10   { z-index: 10; }
+.awa-z-50   { z-index: 50; }
+.awa-z-100  { z-index: 100; }
+.awa-z-top  { z-index: 9999; }
+
+/* ── Dividers ────────────────────────────────────────────────── */
+.awa-divider {
+    border: none;
+    border-top: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    margin: var(--awa-layer-space-xl, 32px) 0;
+}
+
+.awa-divider--sm {
+    margin: var(--awa-layer-space-md, 16px) 0;
+}
+
+.awa-divider--thick {
+    border-top-width: 2px;
+}
+
+.awa-divider--primary {
+    border-color: var(--awa-layer-color-primary, #b73337);
+}
+
+/* ── Loading shimmer ─────────────────────────────────────────── */
+.awa-shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 37%, #f0f0f0 63%);
+    background-size: 400% 100%;
+    animation: awa-shimmer 1.4s ease infinite;
+}
+
+@keyframes awa-shimmer {
+    0%   { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ── Truncate text ───────────────────────────────────────────── */
+.awa-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.awa-line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.awa-line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ── Transitions ─────────────────────────────────────────────── */
+.awa-transition         { transition: all 200ms ease; }
+.awa-transition-colors  { transition: color 180ms, background 180ms, border-color 180ms; }
+.awa-transition-shadow  { transition: box-shadow 180ms; }
+.awa-transition-opacity { transition: opacity 200ms; }
+
+/* ── Inset zero ──────────────────────────────────────────────── */
+.awa-inset-0 { inset: 0; }
+
+/* ── Object fit ──────────────────────────────────────────────── */
+.awa-object-cover   { object-fit: cover; }
+.awa-object-contain { object-fit: contain; }
+
+/* ── Pointer ─────────────────────────────────────────────────── */
+.awa-cursor-pointer { cursor: pointer; }
+.awa-cursor-default { cursor: default; }
+
+/* ── User select ─────────────────────────────────────────────── */
+.awa-select-none { user-select: none; }
+.awa-select-all  { user-select: all; }
+
+/* ── Opacity ─────────────────────────────────────────────────── */
+.awa-opacity-0   { opacity: 0; }
+.awa-opacity-50  { opacity: 0.5; }
+.awa-opacity-75  { opacity: 0.75; }
+.awa-opacity-100 { opacity: 1; }
