@@ -596,3 +596,167 @@ body.rokanthemes-onepagecheckout-index-index .checkout-payment-method {
     padding-top: 12px;
     border-top: 2px solid #e2e8f0;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   CART & CHECKOUT — Enterprise B2B refinements (wave 10)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── Cart: trust strip acima do botão checkout ────────────────── */
+.checkout-cart-index .cart-container .awa-cart-trust {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-size: 0.8125rem;
+    color: var(--awa-layer-color-text-secondary, #666);
+    margin-bottom: 12px;
+}
+
+.checkout-cart-index .cart-container .awa-cart-trust__item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+}
+
+.checkout-cart-index .cart-container .awa-cart-trust__icon {
+    color: #22c55e;
+    font-size: 1rem;
+}
+
+/* ── Cart empty state enterprise ─────────────────────────────── */
+.checkout-cart-index .cart-empty {
+    text-align: center;
+    padding: clamp(40px, 6vw, 80px) 20px;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.checkout-cart-index .cart-empty p {
+    font-size: 1.0625rem;
+    color: var(--awa-layer-color-text-secondary, #666);
+    margin-bottom: var(--awa-layer-space-xl, 32px);
+    line-height: 1.6;
+}
+
+/* ── Cart item image ──────────────────────────────────────────── */
+.checkout-cart-index .cart.item .product-item-photo {
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    overflow: hidden;
+    background: var(--awa-layer-surface-soft, #f7f7f7);
+}
+
+/* ── Checkout: shipping method table ─────────────────────────── */
+.checkout-shipping-method .table-checkout-shipping-method thead th {
+    background: var(--awa-layer-surface-soft, #f7f7f7);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--awa-layer-color-text-secondary, #666);
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--awa-layer-color-border, #e5e5e5);
+}
+
+.checkout-shipping-method .table-checkout-shipping-method tbody td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--awa-layer-color-border, #f0f0f0);
+    font-size: 0.875rem;
+    color: var(--awa-layer-color-text-primary, #333);
+    vertical-align: middle;
+}
+
+.checkout-shipping-method .table-checkout-shipping-method tbody tr:hover td {
+    background: #fff5f5;
+}
+
+.checkout-shipping-method .table-checkout-shipping-method input[type="radio"] {
+    accent-color: var(--awa-layer-color-primary, #b73337);
+    width: 16px;
+    height: 16px;
+}
+
+/* ── Checkout: payment block ──────────────────────────────────── */
+.checkout-payment-method .payment-method-title {
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    padding: 14px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: border-color 180ms, background 180ms;
+}
+
+.checkout-payment-method .payment-method._active .payment-method-title {
+    border-color: var(--awa-layer-color-primary, #b73337);
+    background: #fff5f5;
+}
+
+.checkout-payment-method .payment-method-title input[type="radio"] {
+    accent-color: var(--awa-layer-color-primary, #b73337);
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.checkout-payment-method .payment-method-title label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-text-primary, #333);
+    cursor: pointer;
+    flex: 1;
+}
+
+.checkout-payment-method .payment-method-content {
+    padding: 16px;
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    border-top: none;
+    border-radius: 0 0 var(--awa-layer-radius-sm, 6px) var(--awa-layer-radius-sm, 6px);
+    background: #fafafa;
+}
+
+/* ── Checkout: place order button ─────────────────────────────── */
+.checkout-payment-method .action.primary.checkout {
+    width: 100%;
+    min-height: 52px;
+    font-size: 1.0625rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* ── Checkout: estimated shipping ─────────────────────────────── */
+.opc-estimated-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--awa-layer-surface-soft, #f7f7f7);
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    margin-bottom: var(--awa-layer-space-md, 16px);
+    font-size: 0.9rem;
+}
+
+.opc-estimated-wrapper .estimated-label {
+    font-weight: 700;
+    color: var(--awa-layer-color-text-primary, #333);
+}
+
+.opc-estimated-wrapper .estimated-price {
+    font-weight: 800;
+    font-size: 1.0625rem;
+    color: var(--awa-layer-color-primary, #b73337);
+}
+
+@media (max-width: 767px) {
+    .checkout-shipping-method .table-checkout-shipping-method {
+        font-size: 0.8125rem;
+    }
+
+    .checkout-payment-method .payment-method-title {
+        padding: 12px 14px;
+    }
+}
