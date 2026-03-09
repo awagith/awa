@@ -168,46 +168,7 @@
         font-size: var(--awa-text-base);
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        min-height: var(--awa-btn-height);
-        margin: 0;
-        padding: 0 var(--awa-space-3-5); /* P2-fluid: era 0 14px */
-        border-radius: var(--awa-radius-sm);
-        background: var(--awa-red);
-        color: var(--awa-text-on-primary); /* BP-09: era #fff hardcoded */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
-        display: none;
-        margin-top: var(--awa-space-2); /* BP-19: era 8px */
-        border: 1px solid var(--awa-gray-200);
-        border-radius: var(--awa-radius-sm);
-        background: var(--awa-bg-surface); /* BP-12 */
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown.active + ul.togge-menu.list-category-dropdown {
-        display: block;
-    }
-
-        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu {
-            position: relative;
-        }
-
-        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu::after {
-            content: "";
-            position: absolute;
-            inset-inline: 0;
-            top: 100%;
-            height: 10px;
-        }
-
-        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu:hover > ul.togge-menu.list-category-dropdown,
-        :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu:focus-within > ul.togge-menu.list-category-dropdown {
-            display: block;
-        }
+    /* [FASE 3 STEP 4] Vertical menu Zone 1 removed — Mueller is source of truth */
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -222,54 +183,7 @@
         gap: var(--awa-space-4); /* BP-17: era 16px */
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent {
-        position: relative;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent > a {
-        padding-right: 44px;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .open-children-toggle {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 40px;
-        height: var(--awa-btn-height);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 3;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .open-children-toggle::before {
-        content: "+";
-        font-size: var(--awa-text-lg); /* BP-30: era 18px */
-        line-height: var(--awa-leading-none);
-        color: var(--awa-gray-700);
-        font-weight: var(--awa-weight-bold);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .open-children-toggle:focus-visible {
-        outline: 2px solid var(--awa-red);
-        outline-offset: -2px;
-        border-radius: var(--awa-radius-2xs);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent._active > .open-children-toggle::before {
-        content: "−";
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent > .submenu,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent > ul.level0 {
-        display: none;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent._active > .submenu,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .ui-menu-item.parent._active > ul.level0 {
-        display: block;
-    }
+    /* [FASE 3 STEP 4] Vertical menu Zone 2 removed — Mueller is source of truth */
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers {
         margin-top: var(--awa-space-3);
@@ -528,10 +442,7 @@
         flex: 0 0 auto;
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > .title-category-dropdown {
-        font-size: inherit;
-        cursor: default;
-    }
+    /* [FASE 3 STEP 4] Vertical menu Zone 3 removed — Mueller is source of truth */
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .velaServicesInner.velaServicesInner--home5 .rowFlex.rowFlexMargin.flexJustifyCenter {
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -862,33 +773,7 @@
         grid-column: 2 / 3;
     }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
-        border: 1px solid var(--awa-gray-200) !important; /* R28 — Bug #2: vence themes5.css !important hardcoded var(--awa-gray-200, #e5e7eb) */
-        border-top: 0 !important; /* R28 — Bug #2 */
-        border-radius: 0 0 var(--awa-radius-sm) var(--awa-radius-sm);
-        background: var(--awa-bg-surface); /* BP-12 */
-        box-shadow: var(--awa-shadow-dropdown);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu .ui-menu-item.level0 > a {
-        display: flex;
-        align-items: center;
-        min-height: var(--awa-btn-height);
-        padding: var(--awa-space-2-5) var(--awa-space-3-5); /* P2-fluid: era 10px 14px */
-        border-bottom: 1px solid var(--awa-gray-200);
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu .expand-category-link > a {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: var(--awa-touch-target); /* BP-04: era 44px hardcoded — WCAG 2.5.8 */
-        padding: var(--awa-space-2-5) var(--awa-space-3-5); /* P2-fluid: era 10px 14px */
-        background: var(--awa-gray-100);
-        color: var(--awa-red-dark);
-        font-weight: var(--awa-weight-semibold);
-        text-decoration: none;
-    }
+    /* [FASE 3 STEP 4] Vertical menu Zone 4 removed — Mueller is source of truth */
 
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .top-home-content--trust-and-offers .top-home-content__trust-offers-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1380,118 +1265,7 @@
     hyphens: auto;
 }
 
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.fullwidth:focus-within > .submenu,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.staticwidth:focus-within > .submenu,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.classic:focus-within > .submenu {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.classic li.parent:focus-within > .submenu,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0.classic .subchildmenu > li.parent:focus-within > .subchildmenu {
-        visibility: visible;
-        opacity: 1;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .open-children-toggle {
-        display: none;
-    }
-
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu li.level0 > a:focus-visible,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .submenu a:focus-visible,
-    :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu .subchildmenu a:focus-visible {
-        outline: 2px solid var(--awa-red);
-        outline-offset: 2px;
-        border-radius: var(--awa-radius-2xs);
-    }
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > h2.our_categories .vm-icon {
-    display: inline-flex;
-    align-items: center;
-    margin-right: var(--awa-space-2-5); /* P2-fluid: era 10px */
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > h2.our_categories .vm-icon .fa-bars {
-    font-size: var(--awa-text-md);
-    color: inherit;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link > .vm-toggle-categories {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    width: 100%;
-    padding: var(--awa-space-2-5) var(--awa-space-5); /* P2-fluid: era 10px 20px */
-    font-size: var(--awa-text-sm);
-    font-weight: var(--awa-weight-semibold);
-    color: var(--awa-red-dark);
-    background: var(--awa-gray-100);
-    border: 1px solid var(--awa-gray-200);
-    border-top: 0;
-    border-radius: 0 0 var(--awa-radius-sm) var(--awa-radius-sm);
-    cursor: pointer;
-    text-decoration: none;
-    transition: background var(--awa-transition-fast), color var(--awa-transition-fast); /* BP-08: era var(--awa-btn-transition) ease hardcoded */
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link > .vm-toggle-categories:hover {
-    background: var(--awa-gray-200);
-    color: var(--awa-red);
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link > .vm-toggle-categories::before,
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link > .vm-toggle-categories::after {
-    content: none !important;
-    display: none !important;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link > .vm-toggle-categories .vm-toggle-icon {
-    transition: transform var(--awa-transition); /* BP-08: era var(--awa-btn-transition-slow) ease hardcoded */
-    font-size: var(--awa-text-xs);
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.expand-category-link > .vm-toggle-categories.expanding .vm-toggle-icon {
-    transform: rotate(180deg);
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .sections.nav-sections.category-dropdown > .section-items > .section-item-title.nav-sections.category-dropdown-item-title {
-    display: none !important;
-    height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-    overflow: hidden !important;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .sections.nav-sections.category-dropdown .section-item-content.category-dropdown-item-content {
-    display: block !important; /* anti-tabs-widget: garante conteúdo visível */
-    margin: 0 !important;
-    padding-top: 0 !important;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown {
-    margin: 0 !important;
-    padding: 0 !important;
-    list-style: none;
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block,
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block > .vertical-menu-before,
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .navigation.verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown > li.vertical-menu-custom-block > .vertical-menu-after {
-    display: none !important;
-    height: 0 !important;
-    min-height: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: 0 !important;
-}
+    /* [FASE 3 STEP 4] Vertical menu Zones 5+6+7 removed — Mueller is source of truth */
 
     /* ═══ DEAD CASCADE REMOVED — Block 1 header grid (74px logo, 42px cart) ═══
      * Removed: 2 dangling :is() selectors (syntax bug), wp-header grid with
@@ -2183,11 +1957,4 @@
     padding: var(--awa-space-1-5, 6px) 0 !important;
 }
 
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu:hover > ul.togge-menu.list-category-dropdown,
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu:focus-within > ul.togge-menu.list-category-dropdown {
-    display: none !important; /* Force hide on hover, let JS .vmm-open handle it */
-}
-
-:is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .menu_left_home1 .verticalmenu.side-verticalmenu > ul.togge-menu.list-category-dropdown.vmm-open {
-    display: grid !important; /* Use grid layout from our custom CSS */
-}
+/* [FASE 3 STEP 4] Vertical menu Zone 8 removed — Mueller is source of truth */

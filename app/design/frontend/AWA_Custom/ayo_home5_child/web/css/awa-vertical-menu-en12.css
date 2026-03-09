@@ -1,0 +1,8 @@
+/**
+ * DEPRECATED — Fase 3 Step 4 (consolidação de menus)
+ * Motivo: Mueller é a fonte única de verdade para o menu vertical.
+ * Este arquivo é carregado via default_head_blocks.xml (imutável),
+ * por isso permanece vazio em vez de ser excluído.
+ * Original: 260 linhas — estilo flat EN12 (title-dropdown, flyout, homepage neutralization)
+ * Removido em: 2026-03-10 | Branch: feat/fase3-header-navigation
+ */
