@@ -396,24 +396,24 @@
    Arquivo: awa-rokanthemes-head-inline.css (ultimo carregado wins cascade)
    ═══════════════════════════════════════════════════════════════ */
 
-/* TOPBAR: dark navy, 32px */
+/* TOPBAR: dark navy — tokens from layers/tokens.css */
 @media (width >= 992px) {
   .top-header {
-    background: #1b2340 !important;
-    min-height: 32px !important;
-    height: 32px !important;
-    max-height: 32px !important;
+    background: var(--awa-header-topbar-bg) !important;
+    min-height: var(--awa-header-topbar-height) !important;
+    height: var(--awa-header-topbar-height) !important;
+    max-height: var(--awa-header-topbar-height) !important;
     overflow: hidden !important;
     border-bottom: none !important;
   }
-  .top-header *, .top-header a { color: rgb(255 255 255 / 72%) !important; font-size: 11.5px !important; }
+  .top-header *, .top-header a { color: rgb(255 255 255 / 72%) !important; font-size: var(--awa-header-topbar-font) !important; }
   .top-header a:hover { color: #fff !important; }
 
   .hoteline_header .wrap, .hoteline_header .wrap * {
-    line-height: 32px !important; font-size: 11.5px !important; color: rgb(255 255 255 / 72%) !important;
+    line-height: var(--awa-header-topbar-height) !important; font-size: var(--awa-header-topbar-font) !important; color: rgb(255 255 255 / 72%) !important;
   }
-  .top-header .top-account ul.header.links > li > a { height: 32px !important; line-height: 32px !important; padding: 0 10px !important; }
-  .top-header .top-header-right .top-account { height: 32px !important; line-height: 32px !important; }
+  .top-header .top-account ul.header.links > li > a { height: var(--awa-header-topbar-height) !important; line-height: var(--awa-header-topbar-height) !important; padding: 0 10px !important; }
+  .top-header .top-header-right .top-account { height: var(--awa-header-topbar-height) !important; line-height: var(--awa-header-topbar-height) !important; }
 
   /* MAIN HEADER: branco, 64px */
   .header_main, .header-main, .header-content .header {
@@ -435,9 +435,9 @@
   body .page-wrapper .header .header_main .wp-header,
   body .page-wrapper .header .header-main .wp-header {
     display: grid !important;
-    grid-template-columns: clamp(100px, 12vw, 148px) minmax(0, 1fr) !important;
-    grid-template-rows: 64px !important;
-    grid-auto-rows: 64px !important;
+    grid-template-columns: var(--awa-header-grid-columns) !important;
+    grid-template-rows: var(--awa-header-grid-rows) !important;
+    grid-auto-rows: var(--awa-header-grid-rows) !important;
     align-items: center !important;
     gap: 24px !important;
     padding: 0 24px !important;
@@ -474,7 +474,7 @@
   }
 
   body .wp-header .logo img {
-    max-height: 44px !important; width: auto !important;
+    max-height: var(--awa-header-logo-max-height) !important; width: auto !important;
     height: auto !important; display: block !important;
   }
 
@@ -482,28 +482,28 @@
     padding-left: 0 !important; padding-right: 0 !important; max-width: 100% !important;
   }
 
-  /* SEARCH BAR: 46px, borda vermelha AWA */
+  /* SEARCH BAR: tokenized height/border/radius/bg */
   body .wp-header .top-search .block-search { flex: 1 1 auto !important; min-width: 0 !important; }
   body .wp-header .block-search .control { border: none !important; }
 
   body .wp-header .block-search input[type="text"], body .wp-header .block-search input#search {
-    height: 46px !important; line-height: 46px !important;
-    border: 2px solid #d1d8e0 !important; border-right: none !important;
-    border-radius: 6px 0 0 6px !important; font-size: 14px !important;
-    padding: 0 16px !important; background: #f8f9fb !important;
+    height: var(--awa-header-search-height) !important; line-height: var(--awa-header-search-height) !important;
+    border: 2px solid var(--awa-header-search-border) !important; border-right: none !important;
+    border-radius: var(--awa-header-search-radius) 0 0 var(--awa-header-search-radius) !important; font-size: 14px !important;
+    padding: 0 16px !important; background: var(--awa-header-search-bg) !important;
     color: #1a1a1a !important; transition: border-color 0.15s, box-shadow 0.15s !important;
     box-shadow: none !important;
   }
 
   body .wp-header .block-search input:focus {
-    border-color: #b73337 !important; background: #fff !important;
+    border-color: var(--awa-header-search-focus-border) !important; background: #fff !important;
     box-shadow: 0 0 0 3px rgb(183 51 55 / 10%) !important; outline: none !important;
   }
 
   body .wp-header .block-search .action.search,
   body .wp-header .block-search button[type="submit"] {
-    height: 46px !important; background: #b73337 !important;
-    border-color: #b73337 !important; border-radius: 0 6px 6px 0 !important;
+    height: var(--awa-header-search-height) !important; background: var(--awa-layer-color-primary) !important;
+    border-color: var(--awa-layer-color-primary) !important; border-radius: 0 var(--awa-header-search-radius) var(--awa-header-search-radius) 0 !important;
     color: #fff !important; padding: 0 22px !important;
     font-weight: 600 !important; font-size: 14px !important;
     transition: background 0.15s !important;
@@ -511,7 +511,7 @@
 
   body .wp-header .block-search .action.search:hover,
   body .wp-header .block-search button[type="submit"]:hover {
-    background: #9c2427 !important; border-color: #9c2427 !important;
+    background: var(--awa-layer-color-primary-hover) !important; border-color: var(--awa-layer-color-primary-hover) !important;
   }
 
   /* MINICART: move to right of search via row-reverse + individual flex-direction reset */
@@ -527,17 +527,17 @@
   body .wp-header .top-search .mini-cart-wrapper { flex: 0 0 auto !important; margin: 0 !important; }
   body .wp-header .top-search .hoteline_header { display: none !important; }
 
-  /* NAV BAR: cinza claro, 44px */
+  /* NAV BAR: tokenized bg/height/border */
   .header-control.header-nav, .header-nav {
-    background: #f4f6f8 !important;
-    border-top: 1px solid #dde2ea !important; border-bottom: 1px solid #dde2ea !important;
-    min-height: 44px !important; height: 44px !important; overflow: visible !important;
+    background: var(--awa-header-nav-bg) !important;
+    border-top: 1px solid var(--awa-header-nav-border) !important; border-bottom: 1px solid var(--awa-header-nav-border) !important;
+    min-height: var(--awa-header-nav-height) !important; height: var(--awa-header-nav-height) !important; overflow: visible !important;
   }
 
   .header-nav .header-wrapper-sticky.enabled-header-sticky,
-  .header-nav .container-header-sticky { min-height: 44px !important; height: 44px !important; }
+  .header-nav .container-header-sticky { min-height: var(--awa-header-nav-height) !important; height: var(--awa-header-nav-height) !important; }
 
-  /* NAV LINKS: reset pill/button styling — high specificity to beat awa-fixes-home.css */
+  /* NAV LINKS: tokenized font/color/height/hover — high specificity to beat awa-fixes-home.css */
   body.cms-index-index .page-wrapper .header-nav .menu_primary ul > li > a.level-top,
   body.cms-home .page-wrapper .header-nav .menu_primary ul > li > a.level-top,
   body.cms-homepage_ayo_home5 .page-wrapper .header-nav .menu_primary ul > li > a.level-top,
@@ -546,11 +546,11 @@
     border: none !important;
     border-radius: 0 !important;
     box-shadow: none !important;
-    color: #374151 !important;
-    font-size: 13px !important;
+    color: var(--awa-header-nav-color) !important;
+    font-size: var(--awa-header-nav-font) !important;
     font-weight: 500 !important;
-    height: 44px !important;
-    line-height: 44px !important;
+    height: var(--awa-header-nav-height) !important;
+    line-height: var(--awa-header-nav-height) !important;
     padding: 0 14px !important;
     text-transform: none !important;
     letter-spacing: 0.01em !important;
@@ -566,12 +566,12 @@
   body.cms-homepage_ayo_home5 .page-wrapper .header-nav .menu_primary ul > li:hover > a.level-top,
   body .page-wrapper .header-nav .menu_primary ul > li:hover > a.level-top {
     background: transparent !important;
-    color: #b73337 !important;
-    box-shadow: inset 0 -2px 0 #b73337 !important;
+    color: var(--awa-layer-color-primary) !important;
+    box-shadow: var(--awa-header-nav-hover-shadow) !important;
     border-radius: 0 !important;
   }
 
-  /* ACTIVE/CURRENT: bottom border indicator, no filled background */
+  /* ACTIVE/CURRENT: tokenized color/shadow */
   body.cms-index-index .page-wrapper .header-nav .menu_primary ul > li.active > a.level-top,
   body.cms-home .page-wrapper .header-nav .menu_primary ul > li.active > a.level-top,
   body.cms-homepage_ayo_home5 .page-wrapper .header-nav .menu_primary ul > li.active > a.level-top,
@@ -582,15 +582,15 @@
   body.cms-home .page-wrapper .header-nav .menu_primary ul > li.awa-has-current-descendant > a.level-top,
   body.cms-homepage_ayo_home5 .page-wrapper .header-nav .menu_primary ul > li.awa-has-current-descendant > a.level-top {
     background: transparent !important;
-    color: #b73337 !important;
+    color: var(--awa-layer-color-primary) !important;
     border-radius: 0 !important;
-    box-shadow: inset 0 -2px 0 #b73337 !important;
+    box-shadow: var(--awa-header-nav-hover-shadow) !important;
   }
 
-  /* TODAS AS CATEGORIAS button — keep original red */
+  /* TODAS AS CATEGORIAS button — tokenized font/height */
   .menu_left_home1 .title-category-dropdown {
-    font-size: 13px !important; font-weight: 600 !important;
-    height: 44px !important; line-height: 44px !important;
+    font-size: var(--awa-header-nav-font) !important; font-weight: 600 !important;
+    height: var(--awa-header-nav-height) !important; line-height: var(--awa-header-nav-height) !important;
     color: #fff !important; padding: 0 16px !important;
   }
 
