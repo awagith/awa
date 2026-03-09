@@ -1,14 +1,10 @@
 <?php
 /** @var \Rokanthemes\SlideBanner\Block\Slider $block */
 /**
- * Copyright © 2015 Magento. All rights reserved.
- * See COPYING.txt for license details.
+ * AWA SlideBanner — Single-render responsive slider
  *
- * AWA SlideBanner Fix - 2026-02-10
- * - singleItem:true for hero banners (always 1 slide)
- * - autoHeight:true for SVG/mixed aspect ratios
- * - afterInit callback to trigger text animations
- * - touchDrag/mouseDrag for mobile swipe
+ * Eliminates double DOM (hidden-xs + visible-xs) by using <picture><source media>
+ * for responsive images in a single carousel instance.
  *
  * @var \Rokanthemes\SlideBanner\Block\Slider $block
  */
@@ -77,55 +73,41 @@ if ($banners = $block->getBannerCollection()):
 
         $owlConfig[$key] = $value;
     }
+
+    $totalSlides = is_countable($banners) ? count($banners) : 0;
 ?>
-<div class="wrapper_slider hidden-xs slider_<?php echo (int) $sliderId; ?>">
-    <div class="owl">
-        <?php foreach ($banners as $banner) { if ($banner->getSlideStatus() == '2') { continue; } ?>
-            <div class="banner_item">
-                <div class="banner_item_bg">
-                    <?php
-                    $slideAlt = $banner->getSlideText() ?: ($banner->getSlideTitle() ?: '');
-                    $html = $block->getImageElement($banner->getSlideImage(), $slideAlt);
-                    $link = $resolveSlideLink($banner->getSlideLink());
-                    if ($link !== '') {
-                        $html = '<a href="' . $block->escapeUrl($link) . '">' . $html . '</a>';
-                    }
-                    echo $html;
-                    ?>
-                </div>
-                <div class="text-banner">
-                    <?php if ($text = $banner->getSlideText()) {
-                        echo $block->getContentText($text);
-                    }
-                    ?>
-                </div>
+<div class="wrapper_slider slider_<?php echo (int) $sliderId; ?>"
+     role="region"
+     aria-label="<?php echo $block->escapeHtml(__('Apresentação de slides promocional')); ?>"
+     aria-roledescription="carousel">
+    <div class="owl" role="list">
+        <?php
+        $slideIndex = 0;
+        foreach ($banners as $banner):
+            if ($banner->getSlideStatus() == '2') { continue; }
+            $slideIndex++;
+            $isFirst = ($slideIndex === 1);
+            $slideAlt = $banner->getSlideText() ?: ($banner->getSlideTitle() ?: '');
+            $desktopSrc = $banner->getSlideImage();
+            $mobileSrc = $banner->getSlideImageMobile();
+            $pictureHtml = $block->getPictureElement($desktopSrc, $mobileSrc, $slideAlt, $isFirst);
+            $link = $resolveSlideLink($banner->getSlideLink());
+            if ($link !== '') {
+                $pictureHtml = '<a href="' . $block->escapeUrl($link) . '">' . $pictureHtml . '</a>';
+            }
+        ?>
+        <div class="banner_item" role="listitem"
+             aria-label="<?php echo $block->escapeHtml(__('Slide %1 de %2', $slideIndex, $totalSlides)); ?>">
+            <div class="banner_item_bg">
+                <?php echo $pictureHtml; ?>
             </div>
-        <?php } ?>
-    </div>
-</div>
-<div class="wrapper_slider visible-xs slider_<?php echo (int) $sliderId; ?>_mobile">
-    <div class="owl">
-        <?php foreach ($banners as $banner) { if ($banner->getSlideStatus() == '2') { continue; } ?>
-            <div class="banner_item">
-                <div class="banner_item_bg">
-                    <?php
-                    $slideAlt = $banner->getSlideText() ?: ($banner->getSlideTitle() ?: '');
-                    $html = $block->getImageElementMobile($banner->getSlideImageMobile(), $slideAlt);
-                    $link = $resolveSlideLink($banner->getSlideLink());
-                    if ($link !== '') {
-                        $html = '<a href="' . $block->escapeUrl($link) . '">' . $html . '</a>';
-                    }
-                    echo $html;
-                    ?>
-                </div>
-                <div class="text-banner">
-                    <?php if ($text = $banner->getSlideText()) {
-                        echo $block->getContentText($text);
-                    }
-                    ?>
-                </div>
+            <div class="text-banner">
+                <?php if ($text = $banner->getSlideText()) {
+                    echo $block->getContentText($text);
+                } ?>
             </div>
-        <?php } ?>
+        </div>
+        <?php endforeach; ?>
     </div>
 </div>
 <script type="text/x-magento-init">

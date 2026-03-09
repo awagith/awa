@@ -44,6 +44,5 @@ define([
         }
 
         $(`.slider_${sliderId} .owl`).owlCarousel(owlConfig);
-        $(`.slider_${sliderId}_mobile .owl`).owlCarousel(owlConfig);
     };
 });

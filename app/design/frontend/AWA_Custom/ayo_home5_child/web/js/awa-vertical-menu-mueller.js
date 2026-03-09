@@ -1127,6 +1127,20 @@ define([
             });
         }
 
+        function disconnectObservers() {
+            if (overlayGuardObserver) {
+                overlayGuardObserver.disconnect();
+                overlayGuardObserver = null;
+            }
+
+            if (listStyleGuardObserver) {
+                listStyleGuardObserver.disconnect();
+                listStyleGuardObserver = null;
+            }
+
+            listStyleGuardBusy = false;
+        }
+
         function setupStructure() {
             getParentItems().each(function () {
                 const $item = $(this);
@@ -1158,6 +1172,7 @@ define([
         bindGlobalEvents();
         bindOverlayGuard();
         bindListStyleGuard();
+        window.addEventListener('beforeunload', disconnectObservers, { once: true });
         syncMenuVisibility();
         disableOverlayArtifacts();
 
