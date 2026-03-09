@@ -23,6 +23,7 @@
         <css src="css/layers/legacy-bridge.css"/>
         <css src="css/layers/footer.css"/>
         <css src="css/awa-carousel-normalize.css"/>
+        <css src="css/awa-vertical-menu-en12.css"/>
     </head>
     <body>
         <referenceBlock name="awa.round2.header.minicart.js" remove="true"/>

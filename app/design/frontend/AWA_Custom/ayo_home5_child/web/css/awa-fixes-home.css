@@ -688,12 +688,12 @@
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .trust-badges-homepage {
-    padding: 18px 16px;
+    padding: var(--awa-space-4-5) var(--awa-space-4);
     border-radius: var(--awa-control-radius);
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5) .page-wrapper .trust-badges-grid {
-    gap: 14px 18px;
+    gap: var(--awa-space-3-5) var(--awa-space-4-5);
 }
 
 :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5).awa-has-security-seals .page-wrapper .ayo-home5-section--trust-badges {
@@ -828,7 +828,7 @@
     align-items: center;
     justify-content: center;
     min-height: 50px;
-    padding: 0 18px;
+    padding: 0 var(--awa-space-4-5);
     color: var(--awa-dark);
     font-size: var(--awa-text-lg); /* P1-fluid: era 19px */
     font-weight: var(--awa-weight-bold);
@@ -959,7 +959,7 @@
     align-items: center;
     justify-content: center;
     margin-top: var(--awa-space-4); /* BP-19: era 16px */
-    padding: 10px 18px;
+    padding: var(--awa-space-2-5) var(--awa-space-4-5);
     border-radius: var(--awa-radius-full); /* BP-03: era 999px hardcoded */
     background: var(--awa-red);
     color: var(--awa-text-on-primary); /* BP-09: era #fff hardcoded */

@@ -29,7 +29,7 @@
        Apenas o padding lateral é definido aqui. ── */
     --awa-container-pad: 16px;
 
-    /* ── Gap scale (4 px rhythm) ── */
+    /* ── Gap scale (homepage refinement — tighter than global tokens in layers/tokens.css) ── */
     --awa-gap-xs:   4px;
     --awa-gap-sm:   8px;
     --awa-gap-md:  12px;
@@ -81,8 +81,8 @@
     /* ── Semantic colors ── */
     --awa-bg-surface:      #fff;
     --awa-bg-muted:        #f1f5f9;
-    --awa-text-primary: #333333;
-    --awa-text-muted: #666666;
+    --awa-text-primary: #333;
+    --awa-text-muted: #666;
     --awa-text-on-primary: #fff;
 
     /* ── Status colors ── */

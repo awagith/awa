@@ -71,6 +71,32 @@ class FileAtomicPlugin
     }
 
     /**
+     * Remoção segura: verifica existência antes de deletar para evitar exceção.
+     * Adicionado para compatibilidade com Magento 2.4.8+ (File::remove).
+     */
+    public function aroundRemove(Subject $subject, callable $proceed, ?string $context): bool
+    {
+        try {
+            $staticDir = $this->filesystem->getDirectoryWrite(DirectoryList::STATIC_VIEW);
+            $path = $this->resolveFilePath($context);
+
+            if (!$staticDir->isExist($path)) {
+                return true;
+            }
+
+            return $staticDir->delete($path);
+        } catch (\Throwable $e) {
+            $this->logger->critical($e);
+            try {
+                return (bool) $proceed($context);
+            } catch (\Throwable $e2) {
+                $this->logger->critical($e2);
+                return false;
+            }
+        }
+    }
+
+    /**
      * Leitura tolerante: se o JSON estiver inválido (leitura parcial por concorrência),
      * retorna null para evitar exception no unserialize.
      */

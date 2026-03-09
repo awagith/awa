@@ -5,10 +5,10 @@ body.checkout-cart-index .cart-empty {
     border: 1px solid var(--awa-plp-border);
     border-radius: var(--awa-radius-xl);
     box-shadow: var(--awa-plp-shadow-sm);
-    padding: 28px 22px;
+    padding: var(--awa-space-7) var(--awa-space-5);
     text-align: center;
     max-width: 640px;
-    margin: 16px auto 8px;
+    margin: var(--awa-space-4) auto var(--awa-space-2);
 }
 
 body.checkout-cart-index .cart-empty p:first-child {
@@ -116,7 +116,7 @@ body.checkout-cart-index #discount-coupon-form .action.apply.primary {
 @media (width <= 767px) {
     body.checkout-cart-index .cart-empty {
         border-radius: var(--awa-radius-lg);
-        padding: 22px 16px;
-        margin-top: 12px;
+        padding: var(--awa-space-5) var(--awa-space-4);
+        margin-top: var(--awa-space-3);
     }
 }

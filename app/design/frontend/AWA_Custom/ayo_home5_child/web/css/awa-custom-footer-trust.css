@@ -85,7 +85,7 @@
     display: grid;
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
     gap: var(--awa-gap-lg);
-    padding: 18px;
+    padding: var(--awa-space-4-5);
     border: 1px solid rgba(255 255 255 / 18%);
     border-radius: var(--awa-radius-lg);
     background: rgba(0 0 0 / 12%);
@@ -131,7 +131,7 @@
     align-items: center;
     gap: var(--awa-gap-md);
     min-height: 76px;
-    padding: 14px 16px;
+    padding: var(--awa-space-3-5) var(--awa-space-4);
     border: 1px solid rgba(255 255 255 / 18%);
     border-radius: var(--awa-radius-base);
     background: rgba(255 255 255 / 8%);
@@ -204,7 +204,7 @@
     border: 1px solid rgba(255 255 255 / 18%);
     border-radius: var(--awa-radius-base);
     background: rgba(0 0 0 / 10%);
-    padding: 12px;
+    padding: var(--awa-space-3);
     min-height: 100%;
 }
 
@@ -535,7 +535,7 @@
     }
 
     .page_footer .aw-footer-b2b-contact {
-        padding: 16px !important;
+        padding: var(--awa-space-4) !important;
     }
 
     .page_footer .aw-footer-trust-b2b {
