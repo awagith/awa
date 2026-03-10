@@ -32,14 +32,137 @@
 }
 
 /* ── Header principal ────────────────────────────────────────── */
+/*
+   CRÍTICO: display:block — as 3 seções (.top-header, .header, .header-control)
+   devem empilhar verticalmente. O Bootstrap grid (.row/.col-*) dentro de cada
+   seção cuida do layout horizontal interno. NÃO usar flex aqui.
+*/
 .header-content {
+    display: block;
+}
+
+/* ── Seção 1: Top utility bar ────────────────────────────────── */
+.top-header {
+    background: var(--awa-header-topbar-bg, #1e293b);
+    color: rgba(255, 255, 255, 0.80);
+    font-size: 12px;
+    min-height: 36px;
+}
+
+.top-header a {
+    color: rgba(255, 255, 255, 0.80);
+    text-decoration: none;
+    transition: color 150ms ease;
+}
+
+.top-header a:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* Região esquerda da topbar */
+.top-header .top-bar-left {
     display: flex;
     align-items: center;
-    gap: var(--awa-layer-space-md);
-    max-width: var(--awa-container);
-    margin-inline: auto;
-    padding-inline: var(--awa-container-pad, 16px);
-    padding-block: 10px;
+    min-height: 36px;
+    gap: 16px;
+}
+
+/* Região direita da topbar */
+.top-header .top-bar-right .top-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    min-height: 36px;
+}
+
+/* Itens de info (localização, horário, telefone) */
+.top-header .topbar-info {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: rgba(255, 255, 255, 0.75);
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.top-header .topbar-info i,
+.top-header .topbar-info .icon {
+    font-size: 13px;
+    opacity: 0.85;
+}
+
+/* Shortcuts B2B no top-header */
+.top-header .awa-b2b-commercial-shortcuts {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    padding-left: 12px;
+    border-left: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+/* ── Seção 2: Main header (logo + search + minicart) ─────────── */
+.header .header_main .header-main {
+    background: #fff;
+    padding-block: 12px;
+}
+
+/* Links de conta no main header */
+.header .top-account.has-child ul.header.links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.header .top-account.has-child ul.header.links li a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--awa-layer-color-text, #333);
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    transition: color 150ms ease, background 150ms ease;
+    white-space: nowrap;
+}
+
+.header .top-account.has-child ul.header.links li a:hover {
+    color: var(--awa-layer-color-primary, #b73337);
+    background: var(--awa-layer-surface-soft, #f5f5f5);
+}
+
+/* ── Seção 3: Navigation bar ─────────────────────────────────── */
+/*
+   Barra de navegação escura com menu horizontal.
+   O sticky JS nativo do Ayo (.header-wrapper-sticky.enabled-header-sticky)
+   funciona sobre esta estrutura sem conflito.
+*/
+.header-control.header-nav {
+    background: var(--awa-header-nav-bg, #1e293b);
+    position: relative;
+    z-index: 1;
+}
+
+/* Sticky container nativo do Ayo — mantém comportamento original */
+.header-control.header-nav .header-wrapper-sticky.enabled-header-sticky {
+    background: var(--awa-header-nav-bg, #1e293b);
+}
+
+.header-control.header-nav .header-wrapper-sticky.enabled-header-sticky.sticky-fixed,
+.header-control.header-nav .header-wrapper-sticky.enabled-header-sticky.is-sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: var(--awa-layer-z-header, 900);
+    box-shadow: 0 2px 16px rgb(0 0 0 / 20%);
 }
 
 /* Logo */
@@ -443,9 +566,8 @@
     }
 
     .header-content {
-        flex-wrap: wrap;
-        gap: 8px;
-        padding-block: 8px;
+        /* display:block mantido — sem flex properties */
+        width: 100%;
     }
 
     /* Logo + toggle na mesma linha */
@@ -541,10 +663,7 @@
 
 /* ── Tablet: 768–1023px ──────────────────────────────────────── */
 @media (width >= 768px) and (width <= 1023px) {
-    .header-content {
-        gap: var(--awa-layer-space-sm);
-    }
-
+    /* .header-content é display:block — sem gap a ajustar */
     .block-search .input-text {
         height: 40px;
     }
