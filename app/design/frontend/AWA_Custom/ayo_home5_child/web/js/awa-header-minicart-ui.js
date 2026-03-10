@@ -8,11 +8,11 @@
 
     const SCROLL_THRESHOLD = 48;
     let scheduled = false;
-    let searchObserver;
-    let stickyObserver;
     let autocompleteOptionId = 0;
     let searchCompatLoading = false;
     let searchCompatLoaded = false;
+    let searchObserver = null;
+    let stickyObserver = null;
 
     function onReady(callback) {
         if (document.readyState === 'loading') {
@@ -20,6 +20,10 @@
             return;
         }
         callback();
+    }
+
+    function getBody() {
+        return document.body;
     }
 
     function getStickyWrapper() {
@@ -30,15 +34,6 @@
         return document.querySelector('.header .top-search .block-search');
     }
 
-    function getBody() {
-        return document.body;
-    }
-
-    function getHomeNavRoot() {
-        return document.querySelector('[data-awa-header-nav="true"]')
-            || document.querySelector('.header-control.header-nav.header-nav-global.cms_home_1');
-    }
-
     function isVisible(el) {
         if (!el) {
             return false;
@@ -47,16 +42,23 @@
         return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
     }
 
-    function setImportantStyle(el, property, value) {
-        if (!el) {
-            return;
+    function isPlpContext() {
+        const body = getBody();
+
+        if (!body) {
+            return false;
         }
 
-        if (el.style.getPropertyValue(property) === value && el.style.getPropertyPriority(property) === 'important') {
-            return;
+        return body.classList.contains('catalog-category-view') ||
+            body.classList.contains('catalogsearch-result-index');
+    }
+
+    function isStickyFeatureEnabled(wrapper) {
+        if (!wrapper) {
+            return false;
         }
 
-        el.style.setProperty(property, value, 'important');
+        return wrapper.classList.contains('enabled-header-sticky') || wrapper.classList.contains('enable-sticky');
     }
 
     function toOriginalProductImageUrl(url) {
@@ -115,86 +117,6 @@
                 applyProductImageCacheFallback(img);
             }
         }
-    }
-
-    function measureVisibleTopStackBottom() {
-        const selectors = [
-            '.header-wrapper-sticky',
-            '.page-wrapper .header-wrapper-sticky',
-            '.page-wrapper .top-header',
-            '.page-wrapper .header-control',
-            '.page-wrapper .header .header_main',
-            '.page-wrapper .header .header-main'
-        ];
-        const seen = [];
-        let maxBottom = 0;
-
-        for (let i = 0; i < selectors.length; i += 1) {
-            const nodes = document.querySelectorAll(selectors[i]);
-
-            for (let j = 0; j < nodes.length; j += 1) {
-                const el = nodes[j];
-
-                if (!el || seen.indexOf(el) !== -1 || !isVisible(el)) {
-                    continue;
-                }
-                seen.push(el);
-
-                const style = window.getComputedStyle ? window.getComputedStyle(el) : null;
-                const position = style ? style.position : '';
-
-                if (position !== 'fixed' && position !== 'sticky') {
-                    continue;
-                }
-
-                const rect = el.getBoundingClientRect();
-
-                if (!rect || rect.height < 20 || rect.bottom <= 0) {
-                    continue;
-                }
-
-                if (position === 'sticky' && rect.top > 2) {
-                    continue;
-                }
-
-                if (rect.bottom > maxBottom) {
-                    maxBottom = rect.bottom;
-                }
-            }
-        }
-
-        return Math.max(0, maxBottom);
-    }
-
-    function isHomeHeaderContext() {
-        const body = getBody();
-
-        if (!body) {
-            return false;
-        }
-
-        return body.classList.contains('cms-index-index') ||
-            body.classList.contains('cms-home') ||
-            body.classList.contains('cms-homepage_ayo_home5');
-    }
-
-    function isPlpContext() {
-        const body = getBody();
-
-        if (!body) {
-            return false;
-        }
-
-        return body.classList.contains('catalog-category-view') ||
-            body.classList.contains('catalogsearch-result-index');
-    }
-
-    function isStickyFeatureEnabled(wrapper) {
-        if (!wrapper) {
-            return false;
-        }
-
-        return wrapper.classList.contains('enabled-header-sticky') || wrapper.classList.contains('enable-sticky');
     }
 
     function getSearchUi() {
@@ -268,7 +190,7 @@
                 latestSearchUi.form.setAttribute('data-awa-search-compat-bound', 'true');
                 scheduleRuntimeSync();
             },
-            () => {
+            function () {
                 searchCompatLoading = false;
             }
         );
@@ -287,15 +209,6 @@
             liveRegion.setAttribute('aria-live', 'polite');
             liveRegion.setAttribute('aria-atomic', 'true');
             liveRegion.setAttribute('data-awa-search-live', 'true');
-            liveRegion.style.position = 'absolute';
-            liveRegion.style.width = '1px';
-            liveRegion.style.height = '1px';
-            liveRegion.style.padding = '0';
-            liveRegion.style.margin = '-1px';
-            liveRegion.style.overflow = 'hidden';
-            liveRegion.style.clip = 'rect(0 0 0 0)';
-            liveRegion.style.clipPath = 'inset(50%)';
-            liveRegion.style.whiteSpace = 'nowrap';
             searchUi.scope.appendChild(liveRegion);
         }
 
@@ -447,7 +360,7 @@
             const liveRegion = ensureSearchLiveRegion(searchUi);
             if (liveRegion) {
                 const optionLabel = (activeEntry.option.textContent || '').replace(/\s+/g, ' ').trim();
-                liveRegion.textContent = `Sugestão ${boundedIndex + 1} de ${options.length}: ${optionLabel}`;
+                liveRegion.textContent = `Sugestao ${boundedIndex + 1} de ${options.length}: ${optionLabel}`;
             }
         }
     }
@@ -462,7 +375,7 @@
         const liveRegion = ensureSearchLiveRegion(searchUi);
 
         if (liveRegion) {
-            liveRegion.textContent = 'Sugestões fechadas.';
+            liveRegion.textContent = 'Sugestoes fechadas.';
         }
 
         if (!searchUi.panel) {
@@ -471,6 +384,7 @@
 
         searchUi.panel.setAttribute('aria-hidden', 'true');
         searchUi.panel.classList.remove('is-open');
+        searchUi.panel.setAttribute('hidden', 'hidden');
         searchUi.form.classList.remove('is-open');
 
         if (searchUi.input) {
@@ -478,7 +392,6 @@
         }
 
         searchUi.form.setAttribute('data-awa-panel-closed', 'true');
-        setImportantStyle(searchUi.panel, 'display', 'none');
     }
 
     function announceAutocompleteSummary(searchUi, panelVisible, hasResults, optionsCount) {
@@ -488,13 +401,13 @@
         }
 
         if (panelVisible && hasResults) {
-            liveRegion.textContent = `${optionsCount} sugestões disponíveis. Use seta para baixo e cima para navegar.`;
+            liveRegion.textContent = `${optionsCount} sugestoes disponiveis. Use seta para baixo e cima para navegar.`;
             return;
         }
 
         const queryText = searchUi.input ? (searchUi.input.value || '').trim() : '';
         if (panelVisible && !hasResults && queryText.length >= 2) {
-            liveRegion.textContent = 'Nenhuma sugestão encontrada.';
+            liveRegion.textContent = 'Nenhuma sugestao encontrada.';
             return;
         }
 
@@ -568,20 +481,16 @@
         }
     }
 
-    function canUseUrlParser() {
-        return typeof window.URL === 'function';
-    }
-
     function normalizeSearchFormAction() {
         const searchUi = getSearchUi();
         const form = searchUi ? searchUi.form : null;
 
-        if (!form) {
+        if (!form || typeof window.URL !== 'function') {
             return;
         }
 
         const rawAction = form.getAttribute('action') || form.action || '';
-        if (!rawAction || !canUseUrlParser()) {
+        if (!rawAction) {
             return;
         }
 
@@ -592,17 +501,15 @@
             return;
         }
 
-        const currentOrigin = window.location.origin;
         if (!/\/catalogsearch\/result\/?/i.test(parsedAction.pathname)) {
             return;
         }
 
-        if (parsedAction.origin === currentOrigin) {
+        if (parsedAction.origin === window.location.origin) {
             return;
         }
 
-        const normalizedAction = currentOrigin + parsedAction.pathname;
-
+        const normalizedAction = window.location.origin + parsedAction.pathname;
         if (form.getAttribute('action') !== normalizedAction) {
             form.setAttribute('action', normalizedAction);
         }
@@ -677,20 +584,24 @@
             searchUi.form.setAttribute('data-awa-last-query', currentQuery);
             searchUi.form.removeAttribute('data-awa-panel-closed');
             if (searchUi.panel) {
-                searchUi.panel.style.removeProperty('display');
+                searchUi.panel.removeAttribute('hidden');
             }
         }
 
-        let panelVisible = !!(searchUi.panel && isVisible(searchUi.panel) && window.getComputedStyle(searchUi.panel).display !== 'none');
+        let panelVisible = !!(
+            searchUi.panel &&
+            !searchUi.panel.hasAttribute('hidden') &&
+            isVisible(searchUi.panel) &&
+            window.getComputedStyle(searchUi.panel).display !== 'none'
+        );
+
         const autocompleteOptions = collectAutocompleteOptions(searchUi);
         let hasResults = false;
-        let panelText = '';
 
         if (searchUi.resultsRoot && isVisible(searchUi.resultsRoot)) {
             hasResults = autocompleteOptions.length > 0 || searchUi.resultsRoot.querySelectorAll('li').length > 0;
-            panelText = (searchUi.resultsRoot.textContent || '').trim();
         } else if (searchUi.panel) {
-            panelText = (searchUi.panel.textContent || '').trim();
+            const panelText = (searchUi.panel.textContent || '').trim();
             hasResults = autocompleteOptions.length > 0 || panelText !== '' || searchUi.panel.children.length > 0;
         }
 
@@ -698,7 +609,7 @@
         if (panelForcedClosed) {
             panelVisible = false;
             if (searchUi.panel) {
-                setImportantStyle(searchUi.panel, 'display', 'none');
+                searchUi.panel.setAttribute('hidden', 'hidden');
             }
         }
 
@@ -722,7 +633,7 @@
             searchUi.panel.classList.toggle('has-results', hasResults);
 
             if (panelVisible) {
-                searchUi.panel.style.removeProperty('display');
+                searchUi.panel.removeAttribute('hidden');
             }
         }
 
@@ -805,297 +716,6 @@
         }
     }
 
-    function enforceSearchButtonTouchTarget() {
-        const searchUi = getSearchUi();
-        const searchButton = searchUi ? searchUi.button : null;
-        const actions = searchUi ? searchUi.actions : null;
-        const isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
-        let targetSize = 44;
-
-        if (!searchButton || !actions) {
-            return;
-        }
-
-        if (isMobile) {
-            targetSize = 48;
-        }
-
-        const buttonRect = searchButton.getBoundingClientRect();
-
-        setImportantStyle(actions, 'display', 'flex');
-        setImportantStyle(actions, 'position', 'static');
-        setImportantStyle(actions, 'width', `${targetSize}px`);
-        setImportantStyle(actions, 'min-width', `${targetSize}px`);
-        setImportantStyle(actions, 'flex', `0 0 ${targetSize}px`);
-        setImportantStyle(actions, 'height', '44px');
-        setImportantStyle(actions, 'max-height', '44px');
-
-        setImportantStyle(searchButton, 'position', 'static');
-        setImportantStyle(searchButton, 'width', `${targetSize}px`);
-        setImportantStyle(searchButton, 'min-width', `${targetSize}px`);
-        setImportantStyle(searchButton, 'flex', `0 0 ${targetSize}px`);
-        setImportantStyle(searchButton, 'height', '44px');
-        setImportantStyle(searchButton, 'min-height', '44px');
-        setImportantStyle(searchButton, 'max-height', '44px');
-        setImportantStyle(searchButton, 'line-height', '1');
-        setImportantStyle(searchButton, 'box-sizing', 'border-box');
-
-        if (buttonRect.width > (targetSize + 8) || isMobile) {
-            setImportantStyle(searchButton, 'padding-left', '0');
-            setImportantStyle(searchButton, 'padding-right', '0');
-            setImportantStyle(searchButton, 'font-size', '0');
-        }
-    }
-
-    function enforceSearchInlineLayout() {
-        const searchUi = getSearchUi();
-        const input = searchUi ? searchUi.input : null;
-
-        if (!searchUi) {
-            return;
-        }
-
-        setImportantStyle(searchUi.form, 'display', 'flex');
-        setImportantStyle(searchUi.form, 'align-items', 'stretch');
-        setImportantStyle(searchUi.form, 'flex-wrap', 'nowrap');
-        setImportantStyle(searchUi.form, 'width', '100%');
-        setImportantStyle(searchUi.form, 'min-width', '0');
-
-        if (searchUi.actions) {
-            setImportantStyle(searchUi.actions, 'position', 'static');
-            setImportantStyle(searchUi.actions, 'inset', 'auto');
-            setImportantStyle(searchUi.actions, 'float', 'none');
-            setImportantStyle(searchUi.actions, 'margin', '0');
-        }
-
-        if (input) {
-            setImportantStyle(input, 'width', '100%');
-            setImportantStyle(input, 'min-width', '0');
-            setImportantStyle(input, 'height', '44px');
-            setImportantStyle(input, 'min-height', '44px');
-            setImportantStyle(input, 'max-height', '44px');
-            setImportantStyle(input, 'box-sizing', 'border-box');
-        }
-    }
-
-    function suppressNonHomeNavToggle() {
-        const navToggle = document.querySelector('.header-control .action.nav-toggle, .header-control .nav-toggle');
-        const isHome = isHomeHeaderContext();
-
-        if (!navToggle) {
-            return;
-        }
-
-        if (isHome) {
-            navToggle.style.removeProperty('display');
-            navToggle.style.removeProperty('visibility');
-            navToggle.style.removeProperty('pointer-events');
-            navToggle.removeAttribute('aria-hidden');
-            if (navToggle.getAttribute('tabindex') === '-1') {
-                navToggle.removeAttribute('tabindex');
-            }
-            return;
-        }
-
-        setImportantStyle(navToggle, 'display', 'none');
-        setImportantStyle(navToggle, 'visibility', 'hidden');
-        setImportantStyle(navToggle, 'pointer-events', 'none');
-        navToggle.setAttribute('aria-hidden', 'true');
-        navToggle.setAttribute('tabindex', '-1');
-    }
-
-    function stabilizeInternalMobileHeaderLayout() {
-        const isHome = isHomeHeaderContext();
-        const isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
-        const rows = document.querySelectorAll('.header .header_main .wp-header, .header .header-main .wp-header');
-
-        if (isHome || !isMobile || !rows.length) {
-            return;
-        }
-
-        for (let i = 0; i < rows.length; i += 1) {
-            const row = rows[i];
-            const firstCol = row.querySelector(':scope > [class*="col-"]:first-child');
-            const topSearch = row.querySelector(':scope > .top-search');
-            const searchBlock = topSearch ? topSearch.querySelector(':scope > .block-search') : null;
-            const miniCartWrapper = topSearch ? topSearch.querySelector(':scope > .mini-cart-wrapper') : null;
-            const miniCarts = miniCartWrapper ? miniCartWrapper.querySelector(':scope > .mini-carts, .minicart-wrapper') : null;
-            const miniCartTrigger = miniCartWrapper ? miniCartWrapper.querySelector('.showcart, .action.showcart') : null;
-            const logo = firstCol ? firstCol.querySelector('.logo') : row.querySelector('.logo');
-            const logoLink = logo ? logo.querySelector('a') : null;
-            const logoImg = logo ? logo.querySelector('img') : null;
-
-            setImportantStyle(row, 'display', 'grid');
-            setImportantStyle(row, 'grid-template-columns', 'clamp(82px, 24vw, 108px) minmax(0, 1fr)');
-            setImportantStyle(row, 'align-items', 'center');
-            setImportantStyle(row, 'gap', '8px');
-            setImportantStyle(row, 'width', '100%');
-            setImportantStyle(row, 'max-width', '100%');
-            setImportantStyle(row, 'min-width', '0');
-
-            if (firstCol) {
-                setImportantStyle(firstCol, 'display', 'flex');
-                setImportantStyle(firstCol, 'align-items', 'center');
-                setImportantStyle(firstCol, 'justify-content', 'flex-start');
-                setImportantStyle(firstCol, 'grid-column', '1');
-                setImportantStyle(firstCol, 'width', '100%');
-                setImportantStyle(firstCol, 'max-width', '100%');
-                setImportantStyle(firstCol, 'min-width', '0');
-                setImportantStyle(firstCol, 'flex', '0 0 auto');
-                setImportantStyle(firstCol, 'overflow', 'visible');
-            }
-
-            if (topSearch) {
-                setImportantStyle(topSearch, 'display', 'grid');
-                setImportantStyle(topSearch, 'grid-template-columns', 'minmax(0, 1fr) 44px');
-                setImportantStyle(topSearch, 'grid-template-areas', '"search cart"');
-                setImportantStyle(topSearch, 'grid-template-rows', '44px');
-                setImportantStyle(topSearch, 'align-items', 'center');
-                setImportantStyle(topSearch, 'gap', '8px');
-                setImportantStyle(topSearch, 'grid-column', '2');
-                setImportantStyle(topSearch, 'width', '100%');
-                setImportantStyle(topSearch, 'max-width', '100%');
-                setImportantStyle(topSearch, 'min-width', '0');
-                setImportantStyle(topSearch, 'min-height', '44px');
-                setImportantStyle(topSearch, 'margin', '0');
-                setImportantStyle(topSearch, 'position', 'relative');
-            }
-
-            if (searchBlock) {
-                setImportantStyle(searchBlock, 'grid-area', 'search');
-                setImportantStyle(searchBlock, 'grid-column', '1');
-                setImportantStyle(searchBlock, 'width', '100%');
-                setImportantStyle(searchBlock, 'max-width', '100%');
-                setImportantStyle(searchBlock, 'min-width', '0');
-                setImportantStyle(searchBlock, 'order', '0');
-            }
-
-            if (miniCartWrapper) {
-                setImportantStyle(miniCartWrapper, 'display', 'block');
-                setImportantStyle(miniCartWrapper, 'position', 'static');
-                setImportantStyle(miniCartWrapper, 'inset', 'auto');
-                setImportantStyle(miniCartWrapper, 'top', 'auto');
-                setImportantStyle(miniCartWrapper, 'right', 'auto');
-                setImportantStyle(miniCartWrapper, 'left', 'auto');
-                setImportantStyle(miniCartWrapper, 'bottom', 'auto');
-                setImportantStyle(miniCartWrapper, 'grid-area', 'cart');
-                setImportantStyle(miniCartWrapper, 'grid-column', '2');
-                setImportantStyle(miniCartWrapper, 'width', '44px');
-                setImportantStyle(miniCartWrapper, 'min-width', '44px');
-                setImportantStyle(miniCartWrapper, 'max-width', '44px');
-                setImportantStyle(miniCartWrapper, 'min-height', '44px');
-                setImportantStyle(miniCartWrapper, 'margin', '0');
-                setImportantStyle(miniCartWrapper, 'order', '0');
-            }
-
-            if (miniCarts) {
-                setImportantStyle(miniCarts, 'position', 'static');
-                setImportantStyle(miniCarts, 'inset', 'auto');
-                setImportantStyle(miniCarts, 'width', '44px');
-                setImportantStyle(miniCarts, 'min-width', '44px');
-                setImportantStyle(miniCarts, 'max-width', '44px');
-                setImportantStyle(miniCarts, 'height', '44px');
-                setImportantStyle(miniCarts, 'display', 'flex');
-                setImportantStyle(miniCarts, 'align-items', 'center');
-                setImportantStyle(miniCarts, 'justify-content', 'center');
-            }
-
-            if (miniCartTrigger) {
-                setImportantStyle(miniCartTrigger, 'position', 'static');
-                setImportantStyle(miniCartTrigger, 'inset', 'auto');
-                setImportantStyle(miniCartTrigger, 'width', '44px');
-                setImportantStyle(miniCartTrigger, 'min-width', '44px');
-                setImportantStyle(miniCartTrigger, 'height', '44px');
-                setImportantStyle(miniCartTrigger, 'display', 'inline-flex');
-                setImportantStyle(miniCartTrigger, 'align-items', 'center');
-                setImportantStyle(miniCartTrigger, 'justify-content', 'center');
-                setImportantStyle(miniCartTrigger, 'margin', '0');
-            }
-
-            if (logo) {
-                setImportantStyle(logo, 'display', 'flex');
-                setImportantStyle(logo, 'align-items', 'center');
-                setImportantStyle(logo, 'justify-content', 'flex-start');
-                setImportantStyle(logo, 'position', 'static');
-                setImportantStyle(logo, 'left', '0');
-                setImportantStyle(logo, 'right', 'auto');
-                setImportantStyle(logo, 'width', 'clamp(82px, 24vw, 108px)');
-                setImportantStyle(logo, 'min-width', '82px');
-                setImportantStyle(logo, 'max-width', '108px');
-                setImportantStyle(logo, 'margin', '0');
-                setImportantStyle(logo, 'float', 'none');
-                setImportantStyle(logo, 'transform', 'none');
-                setImportantStyle(logo, 'overflow', 'visible');
-            }
-
-            if (logoLink) {
-                setImportantStyle(logoLink, 'display', 'inline-flex');
-                setImportantStyle(logoLink, 'align-items', 'center');
-                setImportantStyle(logoLink, 'justify-content', 'flex-start');
-                setImportantStyle(logoLink, 'position', 'static');
-                setImportantStyle(logoLink, 'left', '0');
-                setImportantStyle(logoLink, 'right', 'auto');
-                setImportantStyle(logoLink, 'width', '100%');
-                setImportantStyle(logoLink, 'max-width', '100%');
-                setImportantStyle(logoLink, 'margin', '0');
-                setImportantStyle(logoLink, 'float', 'none');
-                setImportantStyle(logoLink, 'transform', 'none');
-            }
-
-            if (logoImg) {
-                setImportantStyle(logoImg, 'display', 'block');
-                setImportantStyle(logoImg, 'width', '100%');
-                setImportantStyle(logoImg, 'max-width', '100%');
-                setImportantStyle(logoImg, 'height', 'auto');
-                setImportantStyle(logoImg, 'max-height', '56px');
-                setImportantStyle(logoImg, 'margin', '0');
-                setImportantStyle(logoImg, 'transform', 'none');
-            }
-        }
-    }
-
-    function capHomeMenuColumn() {
-        const isHome = isHomeHeaderContext();
-        const isDesktop = window.matchMedia && window.matchMedia('(min-width: 768px)').matches;
-        const navShell = getHomeNavRoot();
-        const navContainer = navShell ? navShell.querySelector(':scope > .container') : null;
-        const navRow = navContainer ? navContainer.querySelector(':scope > .row') : null;
-        const menuColumn = navShell ? navShell.querySelector('.menu_left_home1') : null;
-        const menuNav = menuColumn ? menuColumn.querySelector('.navigation.verticalmenu.side-verticalmenu') : null;
-        const list = menuColumn ? menuColumn.querySelector('.list-category-dropdown') : null;
-        const promo = list ? list.querySelector(':scope > .vertical-bg-img') : null;
-        const expandLink = list ? list.querySelector(':scope > .expand-category-link') : null;
-        const isMuellerMenu = !!(menuNav && menuNav.classList.contains('navigation--mueller'));
-
-        if (!isHome || !isDesktop || !navShell) {
-            return;
-        }
-
-        if (isMuellerMenu) {
-            // Mueller menu controls layout/overflow in its own CSS contract.
-            return;
-        }
-
-        setImportantStyle(navShell, 'height', 'auto');
-        setImportantStyle(navShell, 'min-height', '0');
-        setImportantStyle(navContainer, 'height', 'auto');
-        setImportantStyle(navContainer, 'min-height', '0');
-        setImportantStyle(navRow, 'height', 'auto');
-        setImportantStyle(navRow, 'min-height', '0');
-        setImportantStyle(menuColumn, 'max-height', 'none');
-        setImportantStyle(menuColumn, 'overflow', 'visible');
-
-        setImportantStyle(list, 'max-height', 'none');
-        setImportantStyle(list, 'overflow-x', 'visible');
-        setImportantStyle(list, 'overflow-y', 'visible');
-
-        setImportantStyle(promo, 'display', 'none');
-        setImportantStyle(expandLink, 'position', 'static');
-        setImportantStyle(expandLink, 'inset-block-end', 'auto');
-        setImportantStyle(expandLink, 'background', 'transparent');
-        setImportantStyle(expandLink, 'z-index', 'auto');
-    }
-
     function syncMobilePlpFilterToggle() {
         const body = getBody();
         const isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
@@ -1118,10 +738,12 @@
         toggle.setAttribute('role', 'button');
         toggle.setAttribute('tabindex', '0');
         toggle.setAttribute('data-awa-filter-toggle', 'true');
+
         const filterBlockId = filterBlock.getAttribute('id') || 'awa-plp-filter-panel';
         if (!filterBlock.getAttribute('id')) {
             filterBlock.setAttribute('id', filterBlockId);
         }
+
         toggle.setAttribute('aria-controls', filterBlockId);
 
         if (isMobile && !body.getAttribute('data-awa-filter-init')) {
@@ -1138,27 +760,6 @@
         toggle.setAttribute('aria-label', toggleLabel);
         toggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
         filterBlock.setAttribute('aria-hidden', collapsed ? 'true' : 'false');
-    }
-
-    function syncPlpMobileStickyToolbarOffset() {
-        const body = getBody();
-        const root = document.documentElement;
-        const isMobile = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
-        const toolbar = document.querySelector('.shop-tab-select .toolbar.toolbar-products');
-
-        if (!root) {
-            return;
-        }
-
-        if (!body || !isPlpContext() || !isMobile || !toolbar) {
-            root.style.removeProperty('--awa-plp-toolbar-top-offset');
-            return;
-        }
-
-        const topStackBottom = measureVisibleTopStackBottom();
-        const offset = Math.round(Math.min(220, Math.max(6, topStackBottom + 8)));
-
-        root.style.setProperty('--awa-plp-toolbar-top-offset', `${offset}px`);
     }
 
     function handleMobilePlpFilterToggle(event) {
@@ -1190,44 +791,6 @@
         }
     }
 
-    function enforceHeaderRuntimeGuards() {
-        normalizeSearchFormAction();
-        enforceSearchInlineLayout();
-        enforceSearchButtonTouchTarget();
-        suppressNonHomeNavToggle();
-        stabilizeInternalMobileHeaderLayout();
-        capHomeMenuColumn();
-        syncPlpMobileStickyToolbarOffset();
-        syncMobilePlpFilterToggle();
-    }
-
-    function syncRuntimeLayout() {
-        ensureSearchCompatBridge();
-        enforceHeaderRuntimeGuards();
-        bindProductImageFallback(document);
-        syncA11yLabels();
-        syncSearchState();
-        classifyTopLinks();
-        syncTopLinkCounters();
-    }
-
-    function syncRuntimeAndSticky() {
-        syncCondensedState();
-        syncRuntimeLayout();
-    }
-
-    function scheduleRuntimeSync() {
-        if (scheduled) {
-            return;
-        }
-
-        scheduled = true;
-        window.requestAnimationFrame(() => {
-            scheduled = false;
-            syncRuntimeAndSticky();
-        });
-    }
-
     function syncCondensedState() {
         const wrapper = getStickyWrapper();
         const body = getBody();
@@ -1242,7 +805,35 @@
         body.classList.toggle('awa-header-condensed', shouldCondense);
     }
 
-    onReady(() => {
+    function syncRuntimeLayout() {
+        normalizeSearchFormAction();
+        ensureSearchCompatBridge();
+        bindProductImageFallback(document);
+        syncA11yLabels();
+        syncSearchState();
+        classifyTopLinks();
+        syncTopLinkCounters();
+        syncMobilePlpFilterToggle();
+    }
+
+    function syncRuntimeAndSticky() {
+        syncCondensedState();
+        syncRuntimeLayout();
+    }
+
+    function scheduleRuntimeSync() {
+        if (scheduled) {
+            return;
+        }
+
+        scheduled = true;
+        window.requestAnimationFrame(function () {
+            scheduled = false;
+            syncRuntimeAndSticky();
+        });
+    }
+
+    onReady(function () {
         syncRuntimeAndSticky();
 
         window.addEventListener('scroll', scheduleRuntimeSync, { passive: true });
@@ -1257,24 +848,30 @@
         document.addEventListener('keydown', handleMobilePlpFilterToggleKeydown, true);
 
         if (window.MutationObserver) {
-            const wrapper = getStickyWrapper();
             const searchScope = getSearchScope();
-
-            if (wrapper) {
-                stickyObserver = new MutationObserver(scheduleRuntimeSync);
-                stickyObserver.observe(wrapper, {
-                    attributes: true,
-                    attributeFilter: ['class']
-                });
-            }
+            const wrapper = getStickyWrapper();
 
             if (searchScope) {
-                searchObserver = new MutationObserver(scheduleRuntimeSync);
+                searchObserver = new MutationObserver(function () {
+                    scheduleRuntimeSync();
+                });
+
                 searchObserver.observe(searchScope, {
                     childList: true,
                     subtree: true,
                     attributes: true,
-                    attributeFilter: ['class', 'style', 'aria-expanded', 'aria-hidden']
+                    attributeFilter: ['class', 'aria-expanded', 'aria-hidden', 'hidden']
+                });
+            }
+
+            if (wrapper) {
+                stickyObserver = new MutationObserver(function () {
+                    scheduleRuntimeSync();
+                });
+
+                stickyObserver.observe(wrapper, {
+                    attributes: true,
+                    attributeFilter: ['class']
                 });
             }
         }

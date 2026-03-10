@@ -1,10 +1,4 @@
 <?php /** @var \Rokanthemes\Themeoption\Block\Themeoption $block */ ?>
-<?php
-$compatHeader = trim((string) $this->getChildHtml('header'));
-$compatHeaderLinks = trim((string) $this->getChildHtml('header.links'));
-$compatNotifications = trim((string) $this->getChildHtml('notifications'));
-$compatSlideshow = trim((string) $this->getChildHtml('slideshow.top'));
-?>
 <a href="#contentarea" class="awa-skip-link">
     <?= /* @noEscape */ __('Ir para o conteúdo principal') ?>
 </a>
@@ -48,22 +42,7 @@ $compatSlideshow = trim((string) $this->getChildHtml('slideshow.top'));
 				</div>
 			</div>
 		</div>
-		<?php if ($compatHeaderLinks !== '' || $compatNotifications !== '' || $compatHeader !== ''): ?>
-		<div class="awa-header-compat" data-awa-header-compat="true">
-			<div class="container">
-				<?php if ($compatHeaderLinks !== ''): ?>
-				<div class="awa-header-compat__links"><?= /* @noEscape */ $compatHeaderLinks ?></div>
-				<?php endif; ?>
-				<?php if ($compatNotifications !== ''): ?>
-				<div class="awa-header-compat__notifications"><?= /* @noEscape */ $compatNotifications ?></div>
-				<?php endif; ?>
-				<?php if ($compatHeader !== ''): ?>
-				<div class="awa-header-compat__legacy"><?= /* @noEscape */ $compatHeader ?></div>
-				<?php endif; ?>
-			</div>
-		</div>
-		<?php endif; ?>
-	    <div class="header" data-awa-header-main="true">
+		    <div class="header" data-awa-header-main="true">
 	    	<div class="header_main">
 		    	<div class="header-main">
 	          		<div class="container">
@@ -114,11 +93,6 @@ $compatSlideshow = trim((string) $this->getChildHtml('slideshow.top'));
 				</div>
 			</div>
 	    </div>
-	    <?php if ($compatSlideshow !== ''): ?>
-	    <div class="awa-header-slideshow" data-awa-header-slideshow="true">
-	    	<?= /* @noEscape */ $compatSlideshow ?>
-	    </div>
-	    <?php endif; ?>
+		</div>
 	</div>
-</div>
 </header>

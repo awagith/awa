@@ -1,5 +1,6 @@
-/* AWA Themeoption Safety
-   Loaded after dynamic custom_default.css to neutralize unsafe global overrides. */
+/* AWA ThemeOption Safety
+   Loaded after dynamic custom_default.css to neutralize high-risk overrides
+   on Ayo shell areas (header/nav/search/minicart). */
 
 html,
 body {
@@ -8,6 +9,84 @@ body {
 }
 
 body .page-wrapper {
-    width: min(100%, 100%);
+    width: 100%;
+    max-width: 100%;
     margin-inline: auto;
+}
+
+/* Header shell guardrails */
+body .page-wrapper .header,
+body .page-wrapper .header .header_main,
+body .page-wrapper .header .header-main,
+body .page-wrapper .header .wp-header,
+body .page-wrapper .header .top-search,
+body .page-wrapper .header-control,
+body .page-wrapper .header-control > .container,
+body .page-wrapper .header-control > .container > .row {
+    max-width: 100%;
+    min-width: 0;
+    visibility: visible !important;
+}
+
+body .page-wrapper .header .top-search .block-search,
+body .page-wrapper .header .top-search .block-search .block-content,
+body .page-wrapper .header .top-search .block-search #search_mini_form,
+body .page-wrapper .header .top-search .block-search .field.search,
+body .page-wrapper .header .top-search .block-search .field.search .control {
+    min-width: 0;
+    width: 100%;
+}
+
+body .page-wrapper .header .top-search .block-search .actions,
+body .page-wrapper .header .top-search .minicart-wrapper,
+body .page-wrapper .header .top-search .mini-cart-wrapper,
+body .page-wrapper .header .top-search .mini-carts {
+    position: static;
+    inset: auto;
+}
+
+body .page-wrapper .header .top-search .block-search input#search,
+body .page-wrapper .header .top-search .block-search .action.search,
+body .page-wrapper .header .top-search .minicart-wrapper .action.showcart {
+    min-height: 42px;
+}
+
+body .page-wrapper .header .top-search .block-search #search_autocomplete,
+body .page-wrapper .header .top-search .minicart-wrapper .block-minicart {
+    z-index: 40;
+}
+
+/* Navigation shell guardrails */
+body .page-wrapper .header-control [data-awa-nav-toggle='true'],
+body .page-wrapper .header-control .action.nav-toggle,
+body .page-wrapper .header-control .nav-toggle {
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+
+body .page-wrapper .header-control .menu_left_home1,
+body .page-wrapper .header-control .menu_primary,
+body .page-wrapper .header-control .sections.nav-sections.category-dropdown,
+body .page-wrapper .header-control .navigation.verticalmenu.side-verticalmenu {
+    opacity: 1;
+    transform: none;
+}
+
+@media (width >= 768px) {
+    body .page-wrapper .header-control .menu_left_home1,
+    body .page-wrapper .header-control .menu_primary,
+    body .page-wrapper .header-control .sections.nav-sections.category-dropdown,
+    body .page-wrapper .header-control .navigation.verticalmenu.side-verticalmenu {
+        display: block !important;
+    }
+}
+
+@media (width <= 767px) {
+    body .page-wrapper .header-control [data-awa-nav-toggle='true'],
+    body .page-wrapper .header-control .action.nav-toggle,
+    body .page-wrapper .header-control .nav-toggle {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+    }
 }
