@@ -1,7 +1,19 @@
 :root {
     --awa-footer-trust-border: rgba(255 255 255 / 18%);
+    --awa-footer-trust-border-strong: rgba(255 255 255 / 32%);
     --awa-footer-trust-bg: rgba(0 0 0 / 10%);
+    --awa-footer-trust-bg-elevated: rgba(0 0 0 / 12%);
+    --awa-footer-trust-chip-bg: rgba(255 255 255 / 8%);
+    --awa-footer-trust-chip-bg-strong: rgba(255 255 255 / 12%);
+    --awa-footer-trust-chip-bg-active: rgba(255 255 255 / 20%);
+    --awa-footer-trust-icon-bg: rgba(255 255 255 / 20%);
     --awa-footer-trust-muted: rgba(255 255 255 / 70%);
+    --awa-footer-trust-muted-strong: rgba(255 255 255 / 72%);
+    --awa-footer-trust-muted-soft: rgba(255 255 255 / 76%);
+    --awa-footer-trust-text-soft: rgba(255 255 255 / 80%);
+    --awa-footer-trust-text-strong: rgba(255 255 255 / 90%);
+    --awa-footer-trust-accent-success: var(--awa-color-success, #2e7d32);
+    --awa-footer-trust-accent-warning: var(--awa-color-warning, #ed6c02);
 }
 
 .awa-footer-sprite {
@@ -33,9 +45,9 @@
     align-items: center;
     gap: var(--awa-gap-md);
     padding: var(--awa-gap-sm) var(--awa-gap-md);
-    border: 1px solid rgba(255 255 255 / 18%);
+    border: 1px solid var(--awa-footer-trust-border);
     border-radius: var(--awa-radius-lg);
-    background: rgba(0 0 0 / 12%);
+    background: var(--awa-footer-trust-bg-elevated);
     min-height: 64px;
 }
 
@@ -47,7 +59,7 @@
     height: var(--awa-btn-height);
     border-radius: var(--awa-radius-pill);
     flex-shrink: 0;
-    background: rgba(255 255 255 / 20%);
+    background: var(--awa-footer-trust-icon-bg);
     color: var(--awa-text-inverse);
 }
 
@@ -86,9 +98,9 @@
     grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr);
     gap: var(--awa-gap-lg);
     padding: var(--awa-space-4-5);
-    border: 1px solid rgba(255 255 255 / 18%);
+    border: 1px solid var(--awa-footer-trust-border);
     border-radius: var(--awa-radius-lg);
-    background: rgba(0 0 0 / 12%);
+    background: var(--awa-footer-trust-bg-elevated);
 }
 
 .page_footer .awa-footer-business-contact__intro {
@@ -98,7 +110,7 @@
 }
 
 .page_footer .awa-footer-business-contact__eyebrow {
-    color: rgba(255 255 255 / 72%);
+    color: var(--awa-footer-trust-muted-strong);
     font-size: var(--awa-text-2xs);
     font-weight: var(--awa-weight-bold);
     letter-spacing: 0.08em;
@@ -115,7 +127,7 @@
 
 .page_footer .awa-footer-business-contact__copy {
     margin: 0;
-    color: rgba(255 255 255 / 76%);
+    color: var(--awa-footer-trust-muted-soft);
     font-size: var(--awa-text-sm);
     line-height: 1.5;
 }
@@ -132,9 +144,9 @@
     gap: var(--awa-gap-md);
     min-height: 76px;
     padding: var(--awa-space-3-5) var(--awa-space-4);
-    border: 1px solid rgba(255 255 255 / 18%);
+    border: 1px solid var(--awa-footer-trust-border);
     border-radius: var(--awa-radius-base);
-    background: rgba(255 255 255 / 8%);
+    background: var(--awa-footer-trust-chip-bg);
     color: var(--awa-text-inverse);
     text-decoration: none;
     transition: border-color .25s ease, background-color .25s ease, transform .25s ease, box-shadow .25s ease;
@@ -144,8 +156,8 @@
 .page_footer .awa-footer-business-contact__action:focus-visible {
     color: var(--awa-text-inverse);
     text-decoration: none;
-    border-color: rgba(255 255 255 / 32%);
-    background: rgba(255 255 255 / 12%);
+    border-color: var(--awa-footer-trust-border-strong);
+    background: var(--awa-footer-trust-chip-bg-strong);
     box-shadow: 0 10px 24px rgb(15 23 42 / 18%);
     transform: translateY(-1px);
     outline: none;
@@ -163,7 +175,7 @@
     width: 44px;
     height: var(--awa-btn-height);
     border-radius: 999px;
-    background: rgba(255 255 255 / 18%);
+    background: var(--awa-footer-trust-icon-bg);
     color: var(--awa-text-inverse);
     flex: 0 0 auto;
     font-size: var(--awa-text-lg);
@@ -183,7 +195,7 @@
 }
 
 .page_footer .awa-footer-business-contact__action-copy small {
-    color: rgba(255 255 255 / 72%);
+    color: var(--awa-footer-trust-muted-strong);
     font-size: var(--awa-text-xs);
     line-height: 1.35;
 }
@@ -242,9 +254,9 @@
     display: inline-flex;
     align-items: center;
     gap: var(--awa-gap-sm);
-    border: 1px solid rgba(255 255 255 / 18%);
-    background: rgba(0 0 0 / 10%);
-    color: rgba(255 255 255 / 80%);
+    border: 1px solid var(--awa-footer-trust-border);
+    background: var(--awa-footer-trust-bg);
+    color: var(--awa-footer-trust-text-soft);
     border-radius: var(--awa-radius-pill);
     padding: 6px 10px;
     font-size: var(--awa-text-xs);
@@ -255,13 +267,13 @@
 .page_footer .awa-payment-chip svg {
     width: 16px;
     height: 16px;
-    color: rgba(255 255 255 / 80%);
+    color: var(--awa-footer-trust-text-soft);
     flex-shrink: 0;
 }
 
 .page_footer .awa-payment-chip--priority {
-    background: rgba(255 255 255 / 20%);
-    border-color: rgba(255 255 255 / 35%);
+    background: var(--awa-footer-trust-chip-bg-active);
+    border-color: var(--awa-footer-trust-border-strong);
     color: var(--awa-text-inverse);
 }
 
@@ -271,23 +283,23 @@
 
 /* --- Payment Flag Chips --- */
 .page_footer .awa-payment-chip--flag {
-    background: rgba(255 255 255 / 12%);
-    border-color: rgba(255 255 255 / 22%);
-    color: rgba(255 255 255 / 90%);
+    background: var(--awa-footer-trust-chip-bg-strong);
+    border-color: color-mix(in srgb, var(--awa-footer-trust-border) 78%, white);
+    color: var(--awa-footer-trust-text-strong);
     padding: 5px 10px;
 }
 
 .page_footer .awa-payment-chip--flag svg {
     width: 28px !important;
     height: 18px !important;
-    color: rgba(255 255 255 / 90%);
+    color: var(--awa-footer-trust-text-strong);
     flex-shrink: 0;
 }
 
 /* --- Gateway Chip --- */
 .page_footer .awa-payment-chip--gateway {
-    background: rgba(255 255 255 / 15%);
-    border-color: rgba(255 255 255 / 28%);
+    background: color-mix(in srgb, var(--awa-footer-trust-chip-bg-active) 75%, transparent);
+    border-color: color-mix(in srgb, var(--awa-footer-trust-border-strong) 85%, transparent);
     color: var(--awa-text-inverse);
     padding: 6px 12px;
 }
@@ -302,12 +314,12 @@
 /* --- Security Badge Variants --- */
 .page_footer .awa-security-badge--ra .awa-security-badge__icon--ra {
     background: rgba(0 166 81 / 25%);
-    color: #00a651;
+    color: var(--awa-footer-trust-accent-success);
 }
 
 .page_footer .awa-security-badge--ebit .awa-security-badge__icon--ebit {
     background: rgba(255 193 7 / 25%);
-    color: #ffc107;
+    color: var(--awa-footer-trust-accent-warning);
 }
 
 .page_footer .awa-security-badge-list {
@@ -320,9 +332,9 @@
     display: flex;
     align-items: center;
     gap: var(--awa-gap-md);
-    border: 1px solid rgba(255 255 255 / 18%);
+    border: 1px solid var(--awa-footer-trust-border);
     border-radius: var(--awa-radius-sm);
-    background: rgba(0 0 0 / 10%);
+    background: var(--awa-footer-trust-bg);
     padding: 10px;
     color: var(--awa-text-inverse);
     text-decoration: none;
@@ -331,7 +343,7 @@
 
 .page_footer .awa-security-badge:hover,
 .page_footer .awa-security-badge:focus-visible {
-    border-color: rgba(255 255 255 / 35%);
+    border-color: color-mix(in srgb, var(--awa-footer-trust-border-strong) 100%, white 0%);
     box-shadow: 0 4px 14px rgba(255 255 255 / 15%);
     transform: translateY(-1px);
     text-decoration: none;
@@ -345,7 +357,7 @@
     width: 36px;
     height: 36px;
     border-radius: var(--awa-radius-pill);
-    background: rgba(255 255 255 / 20%);
+    background: var(--awa-footer-trust-icon-bg);
     color: var(--awa-text-inverse);
     flex-shrink: 0;
 }
@@ -372,7 +384,7 @@
 .page_footer .awa-security-badge__copy small {
     font-size: var(--awa-text-2xs);
     line-height: 1.25;
-    color: rgba(255 255 255 / 70%);
+    color: var(--awa-footer-trust-muted);
 }
 
 .page_footer .velaFooterTitle {

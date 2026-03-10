@@ -246,126 +246,6 @@
     box-shadow: 0 2px 8px rgb(183 51 55 / 30%);
 }
 
-/* Compare bar — floating bottom */
-.awa-compare-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: #fff;
-    border-top: 2px solid var(--awa-layer-color-border, #e5e5e5);
-    box-shadow: 0 -4px 24px rgb(0 0 0 / 10%);
-    z-index: var(--awa-layer-z-sticky, 900);
-    transform: translateY(100%);
-    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
-    padding: 12px var(--awa-layer-space-md, 24px);
-}
-
-.awa-compare-bar.is-visible {
-    transform: translateY(0);
-}
-
-.awa-compare-bar__inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    max-width: var(--awa-layer-container-max, 1280px);
-    margin: 0 auto;
-    flex-wrap: wrap;
-}
-
-.awa-compare-bar__items {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.awa-compare-bar__item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 10px;
-    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
-    border-radius: var(--awa-layer-radius-sm, 6px);
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--awa-layer-color-text-primary, #333);
-    background: var(--awa-layer-color-bg-soft, #f7f7f7);
-}
-
-.awa-compare-bar__item-remove {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: #e5e5e5;
-    border: none;
-    cursor: pointer;
-    font-size: 0.625rem;
-    color: #666;
-    flex-shrink: 0;
-    transition: background 150ms;
-}
-
-.awa-compare-bar__item-remove:hover {
-    background: #fecaca;
-    color: #b91c1c;
-}
-
-.awa-compare-bar__actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.awa-compare-bar__compare-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 9px 20px;
-    border-radius: var(--awa-layer-radius-sm, 6px);
-    background: var(--awa-layer-color-primary, #b73337);
-    color: #fff;
-    font-size: 0.875rem;
-    font-weight: 700;
-    border: none;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background 200ms;
-}
-
-.awa-compare-bar__compare-btn:hover {
-    background: #8e2629;
-    color: #fff;
-    text-decoration: none;
-}
-
-.awa-compare-bar__clear-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 9px 16px;
-    border-radius: var(--awa-layer-radius-sm, 6px);
-    background: transparent;
-    color: var(--awa-layer-color-text-secondary, #666);
-    font-size: 0.875rem;
-    font-weight: 600;
-    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
-    text-decoration: none;
-    cursor: pointer;
-    transition: border-color 200ms, color 200ms;
-}
-
-.awa-compare-bar__clear-btn:hover {
-    border-color: #b91c1c;
-    color: #b91c1c;
-    text-decoration: none;
-}
-
 /* ── Responsive ────────────────────────────────────────────── */
 @media (max-width: 767px) {
     .table-comparison .cell.label {
@@ -393,8 +273,7 @@
         justify-content: stretch;
     }
 
-    .awa-compare-bar__compare-btn,
-    .awa-compare-bar__clear-btn {
+    .awa-compare-bar__btn {
         flex: 1;
         justify-content: center;
     }

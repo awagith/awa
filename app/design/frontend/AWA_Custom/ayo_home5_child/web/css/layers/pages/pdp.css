@@ -54,14 +54,6 @@ body.catalog-product-view .awa-b2b-secondary-actions .awa-b2b-action-btn:focus-v
     text-decoration: none;
 }
 
-body.catalog-product-view .awa-b2b-secondary-ctas {
-    margin-top: 18px;
-}
-
-body.catalog-product-view .awa-b2b-secondary-ctas__button {
-    min-height: 46px;
-}
-
 body.catalog-product-view .product-info-main .product-add-form .actions {
     gap: 12px;
 }
@@ -478,33 +470,6 @@ body.catalog-product-view .stock.unavailable::before {
     body.catalog-product-view.awa-has-sticky-bar .page-footer {
         padding-bottom: 80px;
     }
-}
-
-/* ── Copy SKU button ─────────────────────────────────────────── */
-body.catalog-product-view .awa-btn-copy-sku {
-    font-size: 0.6875rem;
-    padding: 2px 8px;
-    min-height: 24px;
-    border-radius: 4px;
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    color: #475569;
-    cursor: pointer;
-    transition: all 120ms ease;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-}
-
-body.catalog-product-view .awa-btn-copy-sku:hover {
-    background: var(--awa-layer-color-primary);
-    color: #fff;
-    border-color: var(--awa-layer-color-primary);
-}
-
-body.catalog-product-view .awa-btn-copy-sku[data-state="copied"] {
-    background: #dcfce7;
-    color: #166534;
-    border-color: #bbf7d0;
 }
 
 /* ── Trust Badges (Selos de confiança na PDP) ────────────────── */

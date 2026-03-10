@@ -15,13 +15,7 @@
     --awa-plp-transition: 280ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-:is(body.catalog-category-view, body.catalogsearch-result-index) .page-main .columns.layout.layout-2-col.row {
-    margin-inline: -8px;
-}
-
-:is(body.catalog-category-view, body.catalogsearch-result-index) .page-main .columns.layout.layout-2-col.row > [class*='col-'] {
-    padding-inline: 8px;
-}
+/* [MOVED to awa-layout-semantic.css — sidebar grid consolidated] */
 
 :is(body.catalog-category-view, body.catalogsearch-result-index) .page-title-wrapper .page-title {
     color: var(--awa-plp-final-text);
@@ -418,13 +412,7 @@
 }
 
 @media (width <= 991px) {
-    :is(body.catalog-category-view, body.catalogsearch-result-index) .page-main .columns.layout.layout-2-col.row {
-        margin-inline: -6px;
-    }
-
-    :is(body.catalog-category-view, body.catalogsearch-result-index) .page-main .columns.layout.layout-2-col.row > [class*='col-'] {
-        padding-inline: 6px;
-    }
+    /* sidebar gutter — moved to awa-layout-semantic.css */
 
     :is(body.catalog-category-view, body.catalogsearch-result-index) .shop-tab-select .toolbar.toolbar-products {
         border-radius: var(--awa-radius-md);

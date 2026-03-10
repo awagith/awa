@@ -1,0 +1,217 @@
+/* AWA CSS Layers - Components / Badges & Status
+   Split from components.css — Phase 1 cleanup
+   Contains: Product badges, status badges, fitment badge,
+   stock badge PLP, account link badges, savings badge */
+
+/* ── Product badges (overlay on card photo) ──────────────────── */
+body .page-wrapper .product-label-container,
+body .page-wrapper .awa-product-badges {
+    position: absolute;
+    top: var(--awa-layer-space-sm);
+    left: var(--awa-layer-space-sm);
+    display: flex;
+    flex-direction: column;
+    gap: var(--awa-layer-space-xs);
+    z-index: 2;
+}
+
+body .page-wrapper .product-label,
+body .page-wrapper .awa-product-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    border-radius: 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+body .page-wrapper .product-label--new,
+body .page-wrapper .awa-product-badge--new {
+    background: #2e7d32;
+    color: #fff;
+}
+
+body .page-wrapper .product-label--sale,
+body .page-wrapper .awa-product-badge--sale {
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+}
+
+body .page-wrapper .product-label--b2b,
+body .page-wrapper .awa-product-badge--b2b {
+    background: #1e40af;
+    color: #fff;
+}
+
+body .page-wrapper .product-label--out,
+body .page-wrapper .awa-product-badge--out {
+    background: #e5e5e5;
+    color: #666;
+}
+
+/* ── Status badges ───────────────────────────────────────────── */
+.awa-badge,
+.order-status,
+body .page-wrapper .order-status-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.4;
+}
+
+.awa-badge--success,
+.order-status.complete,
+.order-status.delivered {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.awa-badge--warning,
+.order-status.pending,
+.order-status.pending_payment {
+    background: #fef9c3;
+    color: #a16207;
+}
+
+.awa-badge--info,
+.order-status.processing {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.awa-badge--error,
+.order-status.canceled,
+.order-status.closed {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.awa-badge--neutral {
+    background: var(--awa-layer-surface-soft);
+    color: var(--awa-layer-color-muted);
+}
+
+/* ── Fitment badge no card ───────────────────────────────────── */
+.awa-fitment-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.awa-fitment-badge--no-fit {
+    background: #fee2e2;
+    color: #b91c1c;
+    border-color: #fecaca;
+}
+
+.awa-fitment-badge--partial {
+    background: #fef9c3;
+    color: #a16207;
+    border-color: #fde68a;
+}
+
+/* ── Stock Badge PLP ─────────────────────────────────────────── */
+.products-grid .stock.available,
+.products-list .stock.available {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #166534;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    line-height: 1;
+}
+
+.products-grid .stock.available::before,
+.products-list .stock.available::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #22c55e;
+    flex-shrink: 0;
+}
+
+.products-grid .stock.unavailable,
+.products-list .stock.unavailable {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #991b1b;
+    padding: 2px 8px;
+    border-radius: 20px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    line-height: 1;
+}
+
+.products-grid .stock.unavailable::before,
+.products-list .stock.unavailable::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ef4444;
+    flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ACCOUNT LINK BADGES — header/nav conta B2B
+   ═══════════════════════════════════════════════════════════════ */
+
+.awa-b2b-badge-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    border-radius: 9px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+/* ── Savings badge ───────────────────────────────────────────── */
+.awa-savings-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: var(--awa-layer-radius-full, 9999px);
+    background: #fef9c3;
+    color: #854d0e;
+    letter-spacing: 0.02em;
+}

@@ -1,0 +1,366 @@
+/* ================================================================
+   AWA DESIGN SYSTEM — SEMANTIC LAYOUT
+   ================================================================
+   Sistema unificado de grid 2-colunas (sidebar + conteúdo) para o
+   child theme AWA. Substitui o Bootstrap col-xs-* herdado do parent
+   por CSS Grid moderno, sem alterar o HTML/XML upstream.
+
+   Padrão canônico (classes BEM):
+     .layout                  → wrapper genérico (grid)
+     .layout--sidebar-left    → 2 colunas: sidebar | conteúdo
+     .layout--sidebar-right   → 2 colunas: conteúdo | sidebar
+     .layout__sidebar         → coluna lateral
+     .layout__content         → coluna principal
+
+   Bridge Magento (aplicado automaticamente via body-class):
+     PLP:       body.catalog-category-view
+     Search:    body.catalogsearch-result-index
+     Account:   body.customer-account
+     B2B:       body[class*="awa-b2b-account-flow"]
+     Cart:      body.checkout-cart-index
+
+   Tokens de sidebar:
+     --awa-sidebar-width   (reativo por breakpoint — valor efetivo)
+     --awa-sidebar-gap     (gap entre sidebar e conteúdo)
+   Breakpoints:
+     mobile  (<768px):  1 coluna empilhada, sidebar no topo
+     tablet  (≥768px):  sidebar 220px
+     desktop (≥1024px): sidebar 240px
+     large   (≥1280px): sidebar 260px
+
+   Variante B2B (override via custom properties):
+     --awa-sidebar-width-sm: 244px  → --awa-sidebar-width-lg: 280px
+
+   Compatibilidade retroativa:
+     O parent gera .columns.layout.layout-2-col.row com filhos
+     col-xs-12 col-sm-3 col-lg-2 (sidebar) e col-main col-lg-10.
+     O bridge neutraliza float/width do Bootstrap e aplica CSS Grid.
+   ================================================================ */
+
+/* ── Tokens ───────────────────────────────────────────────────── */
+:root {
+    --awa-sidebar-width-sm: 220px;
+    --awa-sidebar-width-md: 240px;
+    --awa-sidebar-width-lg: 260px;
+    --awa-sidebar-gap: var(--awa-gap-lg, 16px);
+}
+
+/* ── Base ──────────────────────────────────────────────────────── */
+.layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--awa-sidebar-gap);
+    align-items: start;
+    box-sizing: border-box;
+}
+
+/* ── Sidebar à esquerda (PLP padrão) ───────────────────────────── */
+@media (width >= 768px) {
+    .layout--sidebar-left {
+        grid-template-columns: var(--awa-sidebar-width-sm) 1fr;
+    }
+}
+
+@media (width >= 1024px) {
+    .layout--sidebar-left {
+        grid-template-columns: var(--awa-sidebar-width-md) 1fr;
+    }
+}
+
+@media (width >= 1280px) {
+    .layout--sidebar-left {
+        grid-template-columns: var(--awa-sidebar-width-lg) 1fr;
+    }
+}
+
+/* ── Sidebar à direita ─────────────────────────────────────────── */
+@media (width >= 768px) {
+    .layout--sidebar-right {
+        grid-template-columns: 1fr var(--awa-sidebar-width-sm);
+    }
+}
+
+@media (width >= 1024px) {
+    .layout--sidebar-right {
+        grid-template-columns: 1fr var(--awa-sidebar-width-md);
+    }
+}
+
+@media (width >= 1280px) {
+    .layout--sidebar-right {
+        grid-template-columns: 1fr var(--awa-sidebar-width-lg);
+    }
+}
+
+/* ── Partes do layout ──────────────────────────────────────────── */
+.layout__sidebar,
+.layout__content {
+    min-width: 0; /* evitar overflow de conteúdo dentro de grid */
+    box-sizing: border-box;
+}
+
+/* Mobile: sidebar acima do conteúdo (ordem semântica) */
+.layout__sidebar {
+    order: -1;   /* sidebar sobe no mobile */
+}
+
+@media (width >= 768px) {
+    /* Desktop: sidebar mantém posição natural do DOM */
+    .layout--sidebar-left .layout__sidebar {
+        order: 0;
+    }
+
+    .layout--sidebar-right .layout__sidebar {
+        order: 1;
+    }
+
+    .layout__sidebar {
+        order: unset;
+    }
+}
+
+/* ── Bridge: aplicar layout semântico ao container Magento ──────── */
+
+/* O .columns do Magento tem classes col-xs-12 etc. do parent theme (Bootstrap).
+   Esta regra aplica o CSS Grid moderno sobre o container legado.
+   Cobre TODAS as páginas com sidebar: PLP, Search, Customer Account, B2B, Cart. */
+
+body.catalog-category-view .page-main > .columns,
+body.catalogsearch-result-index .page-main > .columns,
+body.customer-account .page-main > .columns,
+body[class*="awa-b2b-account-flow"] .page-main > .columns,
+body.checkout-cart-index .page-main > .columns {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--awa-sidebar-gap);
+    align-items: start;
+    box-sizing: border-box;
+
+    /* Desativa float/flex legados do parent */
+    float: none;
+    width: 100%;
+    max-width: 100%;
+}
+
+@media (width >= 768px) {
+    body.catalog-category-view .page-main > .columns,
+    body.catalogsearch-result-index .page-main > .columns,
+    body.customer-account .page-main > .columns,
+    body[class*="awa-b2b-account-flow"] .page-main > .columns,
+    body.checkout-cart-index .page-main > .columns {
+        grid-template-columns: var(--awa-sidebar-width-sm) 1fr;
+    }
+}
+
+@media (width >= 1024px) {
+    body.catalog-category-view .page-main > .columns,
+    body.catalogsearch-result-index .page-main > .columns,
+    body.customer-account .page-main > .columns,
+    body[class*="awa-b2b-account-flow"] .page-main > .columns,
+    body.checkout-cart-index .page-main > .columns {
+        grid-template-columns: var(--awa-sidebar-width-md) 1fr;
+    }
+}
+
+@media (width >= 1280px) {
+    body.catalog-category-view .page-main > .columns,
+    body.catalogsearch-result-index .page-main > .columns,
+    body.customer-account .page-main > .columns,
+    body[class*="awa-b2b-account-flow"] .page-main > .columns,
+    body.checkout-cart-index .page-main > .columns {
+        grid-template-columns: var(--awa-sidebar-width-lg) 1fr;
+    }
+}
+
+/* ── Bootstrap neutralization: filhos col-* dentro do grid ──────── */
+
+/* O parent theme Ayo aplica col-xs-12, col-sm-9, col-sm-3 etc.
+   Precisamos neutralizar float, width, padding dos col-* para o grid funcionar. */
+body.catalog-category-view .page-main > .columns > [class*="col-"],
+body.catalogsearch-result-index .page-main > .columns > [class*="col-"],
+body.customer-account .page-main > .columns > [class*="col-"],
+body[class*="awa-b2b-account-flow"] .page-main > .columns > [class*="col-"],
+body.checkout-cart-index .page-main > .columns > [class*="col-"],
+body.catalog-category-view .page-main > .columns > .sidebar,
+body.catalog-category-view .page-main > .columns > .sidebar-main,
+body.catalog-category-view .page-main > .columns > .column.main,
+body.catalog-category-view .page-main > .columns > .col-main,
+body.catalogsearch-result-index .page-main > .columns > .sidebar,
+body.catalogsearch-result-index .page-main > .columns > .sidebar-main,
+body.catalogsearch-result-index .page-main > .columns > .column.main,
+body.catalogsearch-result-index .page-main > .columns > .col-main,
+body.customer-account .page-main > .columns > .sidebar,
+body.customer-account .page-main > .columns > .sidebar-main,
+body.customer-account .page-main > .columns > .column.main,
+body.customer-account .page-main > .columns > .col-main,
+body[class*="awa-b2b-account-flow"] .page-main > .columns > .sidebar,
+body[class*="awa-b2b-account-flow"] .page-main > .columns > .sidebar-main,
+body[class*="awa-b2b-account-flow"] .page-main > .columns > .column.main,
+body[class*="awa-b2b-account-flow"] .page-main > .columns > .col-main,
+body.checkout-cart-index .page-main > .columns > .sidebar,
+body.checkout-cart-index .page-main > .columns > .sidebar-main,
+body.checkout-cart-index .page-main > .columns > .column.main,
+body.checkout-cart-index .page-main > .columns > .col-main {
+    min-width: 0;
+    max-width: none !important;
+    width: 100% !important;
+    box-sizing: border-box;
+    float: none !important;
+    flex: none !important;
+    place-self: start stretch;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* ── Mapeamento determinístico de colunas (desktop/tablet) ─────── */
+@media (width >= 768px) {
+    /* Sidebar sempre na coluna 1 */
+    body.catalog-category-view .page-main > .columns > [class*="col-"]:not(.col-main, .column.main),
+    body.catalogsearch-result-index .page-main > .columns > [class*="col-"]:not(.col-main, .column.main),
+    body.customer-account .page-main > .columns > [class*="col-"]:not(.col-main, .column.main),
+    body[class*="awa-b2b-account-flow"] .page-main > .columns > [class*="col-"]:not(.col-main, .column.main),
+    body.checkout-cart-index .page-main > .columns > [class*="col-"]:not(.col-main, .column.main),
+    body.catalog-category-view .page-main > .columns > .sidebar,
+    body.catalog-category-view .page-main > .columns > .sidebar-main,
+    body.catalogsearch-result-index .page-main > .columns > .sidebar,
+    body.catalogsearch-result-index .page-main > .columns > .sidebar-main,
+    body.customer-account .page-main > .columns > .sidebar,
+    body.customer-account .page-main > .columns > .sidebar-main,
+    body[class*="awa-b2b-account-flow"] .page-main > .columns > .sidebar,
+    body[class*="awa-b2b-account-flow"] .page-main > .columns > .sidebar-main,
+    body.checkout-cart-index .page-main > .columns > .sidebar,
+    body.checkout-cart-index .page-main > .columns > .sidebar-main {
+        grid-column: 1;
+        order: 0;
+    }
+
+    /* Conteúdo principal sempre na coluna 2 */
+    body.catalog-category-view .page-main > .columns > .col-main,
+    body.catalog-category-view .page-main > .columns > .column.main,
+    body.catalogsearch-result-index .page-main > .columns > .col-main,
+    body.catalogsearch-result-index .page-main > .columns > .column.main,
+    body.customer-account .page-main > .columns > .col-main,
+    body.customer-account .page-main > .columns > .column.main,
+    body[class*="awa-b2b-account-flow"] .page-main > .columns > .col-main,
+    body[class*="awa-b2b-account-flow"] .page-main > .columns > .column.main,
+    body.checkout-cart-index .page-main > .columns > .col-main,
+    body.checkout-cart-index .page-main > .columns > .column.main {
+        grid-column: 2;
+        order: 0;
+    }
+}
+
+/* ── Guard rail: quando só existir coluna principal, usar 1 coluna ── */
+@media (width >= 768px) {
+    body.catalog-category-view .page-main > .columns > .column.main:only-child,
+    body.catalog-category-view .page-main > .columns > .col-main:only-child,
+    body.catalogsearch-result-index .page-main > .columns > .column.main:only-child,
+    body.catalogsearch-result-index .page-main > .columns > .col-main:only-child,
+    body.customer-account .page-main > .columns > .column.main:only-child,
+    body.customer-account .page-main > .columns > .col-main:only-child,
+    body[class*="awa-b2b-account-flow"] .page-main > .columns > .column.main:only-child,
+    body[class*="awa-b2b-account-flow"] .page-main > .columns > .col-main:only-child,
+    body.checkout-cart-index .page-main > .columns > .column.main:only-child,
+    body.checkout-cart-index .page-main > .columns > .col-main:only-child {
+        grid-column: 1;
+        width: 100% !important;
+    }
+
+    body.catalog-category-view .page-main > .columns:has(> .column.main:only-child),
+    body.catalog-category-view .page-main > .columns:has(> .col-main:only-child),
+    body.catalogsearch-result-index .page-main > .columns:has(> .column.main:only-child),
+    body.catalogsearch-result-index .page-main > .columns:has(> .col-main:only-child),
+    body.customer-account .page-main > .columns:has(> .column.main:only-child),
+    body.customer-account .page-main > .columns:has(> .col-main:only-child),
+    body[class*="awa-b2b-account-flow"] .page-main > .columns:has(> .column.main:only-child),
+    body[class*="awa-b2b-account-flow"] .page-main > .columns:has(> .col-main:only-child),
+    body.checkout-cart-index .page-main > .columns:has(> .column.main:only-child),
+    body.checkout-cart-index .page-main > .columns:has(> .col-main:only-child) {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── B2B variant: sidebar mais larga ────────────────────────────── */
+body[class*="awa-b2b-account-flow"] .page-main > .columns {
+    --awa-sidebar-width-sm: 244px;
+    --awa-sidebar-width-md: 260px;
+    --awa-sidebar-width-lg: 280px;
+}
+
+/* ── Mobile: sidebar acima do conteúdo ──────────────────────────── */
+@media (width <= 767px) {
+    body.catalog-category-view .page-main > .columns > [class*="col-"]:not(.col-main, .column.main),
+    body.catalogsearch-result-index .page-main > .columns > [class*="col-"]:not(.col-main, .column.main),
+    body.customer-account .page-main > .columns > [class*="col-"]:not(.col-main, .column.main),
+    body[class*="awa-b2b-account-flow"] .page-main > .columns > [class*="col-"]:not(.col-main, .column.main),
+    body.checkout-cart-index .page-main > .columns > [class*="col-"]:not(.col-main, .column.main),
+    body.catalog-category-view .page-main > .columns > .sidebar,
+    body.catalog-category-view .page-main > .columns > .sidebar-main,
+    body.catalogsearch-result-index .page-main > .columns > .sidebar,
+    body.catalogsearch-result-index .page-main > .columns > .sidebar-main,
+    body.customer-account .page-main > .columns > .sidebar,
+    body.customer-account .page-main > .columns > .sidebar-main,
+    body[class*="awa-b2b-account-flow"] .page-main > .columns > .sidebar,
+    body[class*="awa-b2b-account-flow"] .page-main > .columns > .sidebar-main,
+    body.checkout-cart-index .page-main > .columns > .sidebar,
+    body.checkout-cart-index .page-main > .columns > .sidebar-main {
+        order: -1;
+    }
+
+    /* Negative-margin hack do parent: desativar no mobile */
+    body.catalog-category-view .page-main > .columns.layout-2-col,
+    body.catalogsearch-result-index .page-main > .columns.layout-2-col,
+    body.customer-account .page-main > .columns.layout-2-col,
+    body[class*="awa-b2b-account-flow"] .page-main > .columns.layout-2-col,
+    body.checkout-cart-index .page-main > .columns.layout-2-col {
+        margin-inline: 0;
+    }
+}
+
+/* ── Container global normatização (garante sem overflow) ────────── */
+.columns,
+.col-main,
+.page-main {
+    min-width: 0; /* previne overflow em elementos dentro de flex/grid */
+    box-sizing: border-box;
+}
+
+/* ── Utilitários de alinhamento ─────────────────────────────────── */
+
+/* Flex row centrado */
+.awa-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--awa-gap-md, 12px);
+    align-items: flex-start;
+}
+
+/* Flex row espaçado */
+.awa-row--between {
+    justify-content: space-between;
+}
+
+/* Flex row centralizado */
+.awa-row--center {
+    justify-content: center;
+    align-items: center;
+}
+
+/* Grid de N colunas configurável via --awa-cols */
+.awa-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--awa-cols, 1), 1fr);
+    gap: var(--awa-gap-lg, 16px);
+}
+
+@media (width >= 640px) {
+    .awa-grid { --awa-cols: var(--awa-cols-sm, 2); }
+}
+
+@media (width >= 1024px) {
+    .awa-grid { --awa-cols: var(--awa-cols-md, 3); }
+}
+
+@media (width >= 1280px) {
+    .awa-grid { --awa-cols: var(--awa-cols-lg, 4); }
+}

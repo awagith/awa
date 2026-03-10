@@ -9,7 +9,7 @@
     border-radius: var(--awa-radius-pill);
     background: var(--awa-brand-opacity-10) !important;
     color: var(--awa-brand-primary) !important;
-    border: 1px solid rgb(183 51 55 / 18%) !important;
+    border: 1px solid var(--awa-brand-opacity-18) !important;
     transition: background-color 280ms cubic-bezier(0.4, 0, 0.2, 1), border-color 280ms cubic-bezier(0.4, 0, 0.2, 1), color 280ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -28,7 +28,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy i {
     background: var(--awa-brand-primary) !important;
     border-color: var(--awa-brand-primary) !important;
     color: var(--awa-text-inverse) !important;
-    box-shadow: 0 6px 16px rgb(183 51 55 / 18%);
+    box-shadow: 0 6px 16px var(--awa-brand-opacity-18);
 }
 
 a#back-top:hover,
@@ -55,7 +55,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
 .fixed-bottom .mobile-bottom-link > li > a:focus-visible,
 .fixed-bottom .mobile-bottom-link > li > a[aria-expanded='true'] {
     color: var(--awa-brand-primary);
-    background: rgb(183 51 55 / 8%);
+    background: var(--awa-brand-opacity-8);
     outline: none;
 }
 
@@ -76,9 +76,9 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
     align-items: center;
     justify-content: center;
     border-radius: var(--awa-radius-pill);
-    background: rgb(255 255 255 / 92%);
+    background: var(--awa-bg-surface-overlay-92);
     color: var(--awa-text-main);
-    border: 1px solid rgb(0 0 0 / 8%);
+    border: 1px solid var(--awa-outline-subtle);
 }
 
 .newsletterpopup .newletter_popup_close:hover,
@@ -86,7 +86,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
     background: var(--awa-brand-primary);
     border-color: var(--awa-brand-primary);
     color: var(--awa-text-inverse);
-    box-shadow: 0 6px 16px rgb(183 51 55 / 16%);
+    box-shadow: 0 6px 16px var(--awa-brand-opacity-16);
     outline: none;
 }
 
@@ -111,19 +111,19 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
 }
 
 .newsletterpopup .nl-popup-form .field.newsletter .control input:focus {
-    border-color: rgb(183 51 55 / 40%);
+    border-color: var(--awa-brand-opacity-40);
     box-shadow: 0 0 0 3px var(--awa-brand-opacity-10);
 }
 
 .newsletterpopup .nl-popup-form .action.subscribe.primary {
     min-height: 44px;
     border-radius: var(--awa-radius-md);
-    box-shadow: 0 8px 20px rgb(183 51 55 / 14%);
+    box-shadow: 0 8px 20px var(--awa-brand-opacity-14);
     transition: background-color 280ms cubic-bezier(0.4, 0, 0.2, 1), box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1), transform 280ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .newsletterpopup .nl-popup-form .action.subscribe.primary:hover {
-    box-shadow: 0 10px 26px rgb(183 51 55 / 20%);
+    box-shadow: 0 10px 26px var(--awa-brand-opacity-20);
     transform: translateY(-1px);
 }
 
@@ -137,7 +137,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
     width: 44px;
     height: 44px;
     border-radius: var(--awa-radius-pill);
-    border: 1px solid rgb(183 51 55 / 18%);
+    border: 1px solid var(--awa-brand-opacity-18);
     background: var(--awa-bg-surface);
     color: var(--awa-text-main);
 }
@@ -148,7 +148,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
     background: var(--awa-brand-primary);
     border-color: var(--awa-brand-primary);
     outline: none;
-    box-shadow: 0 6px 16px rgb(183 51 55 / 14%);
+    box-shadow: 0 6px 16px var(--awa-brand-opacity-14);
 }
 
 .ajaxsuite-popup-wrapper .modal-inner-wrap,
@@ -172,7 +172,7 @@ body .page-wrapper #back-top.awa-backtotop-legacy:focus-visible i {
 
 .ajaxsuite-popup-wrapper .field .input-text:focus,
 .popup-authentication .field .input-text:focus {
-    border-color: rgb(183 51 55 / 40%);
+    border-color: var(--awa-brand-opacity-40);
     box-shadow: 0 0 0 3px var(--awa-brand-opacity-10);
 }
 

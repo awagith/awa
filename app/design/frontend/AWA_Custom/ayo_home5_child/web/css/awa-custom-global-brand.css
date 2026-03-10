@@ -4,24 +4,44 @@
     --awa-color-primary-dark: #8e2629;
     --awa-brand-primary: var(--awa-color-primary);
     --awa-brand-hover: var(--awa-color-primary-dark);
+    --awa-brand-opacity-4: rgb(183 51 55 / 4%);
+    --awa-brand-opacity-7: rgb(183 51 55 / 7%);
+    --awa-brand-opacity-8: rgb(183 51 55 / 8%);
     --awa-brand-opacity-10: rgb(183 51 55 / 10%);
+    --awa-brand-opacity-12: rgb(183 51 55 / 12%);
+    --awa-brand-opacity-14: rgb(183 51 55 / 14%);
+    --awa-brand-opacity-16: rgb(183 51 55 / 16%);
+    --awa-brand-opacity-18: rgb(183 51 55 / 18%);
+    --awa-brand-opacity-20: rgb(183 51 55 / 20%);
+    --awa-brand-opacity-24: rgb(183 51 55 / 24%);
     --awa-brand-opacity-15: rgb(183 51 55 / 15%);
     --awa-brand-opacity-25: rgb(183 51 55 / 25%);
+    --awa-brand-opacity-28: rgb(183 51 55 / 28%);
+    --awa-brand-opacity-30: rgb(183 51 55 / 30%);
+    --awa-brand-opacity-40: rgb(183 51 55 / 40%);
     --awa-b2b-mode-accent: var(--awa-brand-primary);
 
     /* ═══ CORES SEMÂNTICAS ═══ */
     --awa-bg-surface: #fff;
-    --awa-bg-muted: #f1f5f9;
+    --awa-bg-muted: #f7f7f7;
+    --awa-bg-surface-overlay-92: rgb(255 255 255 / 92%);
+    --awa-bg-surface-overlay-96: rgb(255 255 255 / 96%);
     --awa-text-primary: #333;
     --awa-text-main: #333;
     --awa-text-muted: #666;
+    --awa-text-strong: #1f2937;
+    --awa-text-muted-strong: #475569;
     --awa-text-inverse: #fff;
-    --awa-color-danger: #dc2626;
-    --awa-input-error-bg: rgb(220 38 38 / 5%);
-    --awa-input-error-border: #dc2626;
+    --awa-text-inverse-soft: rgb(255 255 255 / 88%);
+    --awa-color-danger: #c62828;
+    --awa-input-error-bg: rgb(198 40 40 / 5%);
+    --awa-input-error-border: #c62828;
+    --awa-border-soft: #dfe5ee;
+    --awa-border-form: #c7d2e1;
+    --awa-outline-subtle: rgb(0 0 0 / 8%);
 
     /* ═══ CINZAS ═══ */
-    --awa-gray-200: #e2e8f0;
+    --awa-gray-200: #e5e5e5;
     --awa-gray-300: #d1d5db;
     --awa-gray-400: #94a3b8;
     --awa-gray-600: #666;

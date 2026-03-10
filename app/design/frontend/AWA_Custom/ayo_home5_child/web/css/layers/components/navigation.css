@@ -1,0 +1,151 @@
+/* AWA CSS Layers - Components / Navigation
+   Split from components.css — Phase 1 cleanup
+   Contains: Breadcrumbs, pagination, breadcrumb enterprise */
+
+/* ================================================================
+   BREADCRUMBS
+   ================================================================ */
+body .page-wrapper .breadcrumbs {
+    padding-block: var(--awa-layer-space-sm);
+    padding-inline: var(--awa-container-pad, 16px);
+}
+
+body .page-wrapper .breadcrumbs .items {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+body .page-wrapper .breadcrumbs .item {
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--awa-layer-color-muted);
+    gap: 0;
+}
+
+body .page-wrapper .breadcrumbs .item + .item::before {
+    content: '/';
+    padding-inline: 6px;
+    color: var(--awa-layer-color-border);
+}
+
+body .page-wrapper .breadcrumbs a {
+    color: var(--awa-layer-color-muted);
+    text-decoration: none;
+    transition: color 150ms ease;
+}
+
+body .page-wrapper .breadcrumbs a:hover {
+    color: var(--awa-layer-color-primary);
+    text-decoration: underline;
+}
+
+body .page-wrapper .breadcrumbs .item.strong {
+    color: var(--awa-layer-color-text);
+    font-weight: 500;
+}
+
+/* ================================================================
+   PAGINAÇÃO — override canônico
+   ================================================================ */
+body .page-wrapper .pages .items.pages-items {
+    display: flex;
+    align-items: center;
+    gap: var(--awa-layer-space-xs);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+body .page-wrapper .pages .item,
+body .page-wrapper .pages .action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    border-radius: var(--awa-layer-radius-sm);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 150ms ease, color 150ms ease;
+}
+
+body .page-wrapper .pages .item a,
+body .page-wrapper .pages .action {
+    color: var(--awa-layer-color-text);
+    background: var(--awa-layer-surface);
+    border: 1px solid var(--awa-layer-color-border);
+    padding-inline: var(--awa-layer-space-sm);
+}
+
+body .page-wrapper .pages .item a:hover,
+body .page-wrapper .pages .action:hover {
+    background: var(--awa-layer-surface-soft);
+    border-color: var(--awa-layer-color-primary);
+    color: var(--awa-layer-color-primary);
+}
+
+body .page-wrapper .pages .item.current strong {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+    height: 36px;
+    padding-inline: var(--awa-layer-space-sm);
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    border-radius: var(--awa-layer-radius-sm);
+    font-weight: 700;
+    font-size: 0.875rem;
+}
+
+/* ── Breadcrumb enterprise ────────────────────────────────────── */
+.awa-breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    font-size: 0.8125rem;
+    list-style: none;
+    padding: 0;
+    color: var(--awa-layer-color-text-secondary, #94a3b8);
+}
+
+.awa-breadcrumb li {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.awa-breadcrumb li::after {
+    content: '/';
+    opacity: 0.5;
+    font-size: 0.75rem;
+}
+
+.awa-breadcrumb li:last-child::after {
+    display: none;
+}
+
+.awa-breadcrumb a {
+    color: var(--awa-layer-color-text-secondary, #64748b);
+    text-decoration: none;
+    transition: color 160ms;
+}
+
+.awa-breadcrumb a:hover {
+    color: var(--awa-layer-color-primary, #b73337);
+}
+
+.awa-breadcrumb li:last-child span {
+    color: var(--awa-layer-color-text-primary, #333);
+    font-weight: 600;
+}

@@ -4,31 +4,38 @@
  * Estilo compacto com ícones 22px, hover vermelho AWA, dropdown overlay.
  * NÃO inclui abertura automática na homepage (controlado pelo JS).
  */
+:root {
+    --awa-mueller-surface: var(--awa-color-bg, #fff);
+    --awa-mueller-text: var(--awa-color-text-primary, #333);
+    --awa-mueller-muted: var(--awa-color-text-secondary, #666);
+    --awa-mueller-border: var(--awa-color-border, #e5e5e5);
+    --awa-mueller-border-soft: color-mix(in srgb, var(--awa-mueller-border) 88%, white);
+    --awa-mueller-brand: var(--awa-color-primary, #b73337);
+    --awa-mueller-brand-hover: var(--awa-color-primary-dark, #8e2629);
+    --awa-mueller-highlight: var(--awa-brand-opacity-10, rgb(183 51 55 / 10%));
+    --awa-mueller-focus: var(--awa-focus-ring, rgb(183 51 55 / 25%));
+    --awa-mueller-shadow: 0 18px 40px rgb(15 23 42 / 10%);
+    --awa-mueller-icon-chip: rgb(255 255 255 / 12%);
+    --awa-mueller-heading-bg: linear-gradient(180deg, var(--awa-mueller-brand) 0%, var(--awa-mueller-brand-hover) 100%);
+}
+
 .navigation.verticalmenu.navigation--mueller {
-    background: #fff;
-    border: 1px solid #e5e7eb;
+    background: var(--awa-mueller-surface);
+    border: 1px solid var(--awa-mueller-border);
     border-radius: 20px;
-    box-shadow: 0 18px 40px rgb(15 23 42 / 10%);
+    box-shadow: var(--awa-mueller-shadow);
     overflow: visible;
 }
 
 /* Rounded corners without overflow:hidden — clip each section individually */
 .navigation.verticalmenu.navigation--mueller > .title-category-dropdown {
     border-radius: 19px 19px 0 0;
-}
-
-.navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown {
-    border-radius: 0 0 19px 19px;
-    overflow: hidden;
-}
-
-.navigation.verticalmenu.navigation--mueller > .title-category-dropdown {
     min-height: 58px;
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 0 18px;
-    background: linear-gradient(180deg, #b73337 0%, #9f2529 100%) !important;
+    background: var(--awa-mueller-heading-bg) !important;
     color: #fff !important;
     border: 0;
     margin: 0;
@@ -41,17 +48,19 @@
     align-items: center;
     justify-content: center;
     border-radius: 10px;
-    background: rgb(255 255 255 / 12%);
+    background: var(--awa-mueller-icon-chip);
 }
 
 .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown {
+    border-radius: 0 0 19px 19px;
+    overflow: hidden;
     padding: 0 !important;
-    background: #fff;
+    background: var(--awa-mueller-surface);
 }
 
 .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0 {
     position: relative;
-    border-bottom: 1px solid #eceff3;
+    border-bottom: 1px solid var(--awa-mueller-border-soft);
 }
 
 .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0:last-of-type {
@@ -64,15 +73,15 @@
     display: flex;
     align-items: center;
     gap: 12px;
-    color: #243041 !important;
+    color: var(--awa-mueller-text) !important;
 }
 
 .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0:hover > a.level-top,
 .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0.awa-mueller-open > a.level-top,
 .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0.vmm-active > a.level-top,
 .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0._active > a.level-top {
-    background: rgb(183 51 55 / 6%) !important;
-    color: #b73337 !important;
+    background: var(--awa-mueller-highlight) !important;
+    color: var(--awa-mueller-brand) !important;
 }
 
 .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0 > a.level-top > .navigation__label {
@@ -89,7 +98,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: #64748b;
+    color: var(--awa-mueller-muted);
 }
 
 .navigation.verticalmenu.navigation--mueller img.menu-thumb-icon.awa-mueller-icon--image,
@@ -107,7 +116,7 @@
 .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0:hover > a.level-top .awa-mueller-icon,
 .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0.awa-mueller-open > a.level-top .awa-mueller-cat-icon,
 .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0.awa-mueller-open > a.level-top .awa-mueller-icon {
-    color: #b73337;
+    color: var(--awa-mueller-brand);
 }
 
 .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.ui-menu-item.level0 > .open-children-toggle {
@@ -133,7 +142,7 @@
     min-width: 0;
 }
 
-@media (min-width: 992px) {
+@media (width >= 992px) {
     /* No desktop o menu de categorias é sempre visível (comportamento Mueller/sidebar) */
     .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown {
         display: block !important;
@@ -162,10 +171,10 @@
         min-width: 500px;
         min-height: 100%;
         padding: 20px;
-        background: #fff;
-        border: 1px solid #e5e7eb;
+        background: var(--awa-mueller-surface);
+        border: 1px solid var(--awa-mueller-border);
         border-radius: 0 12px 12px 0;
-        box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.12);
+        box-shadow: 4px 4px 20px rgb(0 0 0 / 12%);
         z-index: 9999;
         opacity: 0;
         visibility: hidden;
@@ -185,7 +194,7 @@
     }
 }
 
-@media (max-width: 991px) {
+@media (width <= 991px) {
     .navigation.verticalmenu.navigation--mueller {
         border-radius: 16px;
         overflow: hidden;
@@ -225,7 +234,7 @@
     }
 
     .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.expand-category-link {
-        border-top: 1px solid #eceff3;
+        border-top: 1px solid var(--awa-mueller-border-soft);
     }
 
     .navigation.verticalmenu.navigation--mueller > .togge-menu.list-category-dropdown > li.expand-category-link .vm-toggle-categories {
@@ -235,12 +244,12 @@
         align-items: center;
         justify-content: space-between;
         gap: 12px;
-        color: #243041;
+        color: var(--awa-mueller-text);
         font-weight: 600;
     }
 
     .navigation.verticalmenu.navigation--mueller .awa-mobile-panel {
-        background: #fff;
+        background: var(--awa-mueller-surface);
         box-sizing: border-box;
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
@@ -257,8 +266,8 @@
         display: flex;
         align-items: center;
         gap: 12px;
-        background: #fff;
-        border-bottom: 1px solid #eceff3;
+        background: var(--awa-mueller-surface);
+        border-bottom: 1px solid var(--awa-mueller-border-soft);
         z-index: 4;
     }
 
@@ -272,7 +281,7 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        color: #243041;
+        color: var(--awa-mueller-text);
         font-weight: 700;
     }
 
@@ -280,7 +289,7 @@
         content: "\2039";
         font-size: 24px;
         line-height: 1;
-        color: #b73337;
+        color: var(--awa-mueller-brand);
     }
 
     .navigation.verticalmenu.navigation--mueller .awa-mobile-panel__back-text {
@@ -292,7 +301,7 @@
         min-width: 0;
         font-size: 15px;
         font-weight: 700;
-        color: #243041;
+        color: var(--awa-mueller-text);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -300,14 +309,14 @@
 
     .navigation.verticalmenu.navigation--mueller .awa-mobile-panel .ui-menu-item {
         position: relative;
-        border-bottom: 1px solid #eceff3;
+        border-bottom: 1px solid var(--awa-mueller-border-soft);
     }
 
     .navigation.verticalmenu.navigation--mueller .awa-mobile-panel .ui-menu-item > .navigation__inner-link,
     .navigation.verticalmenu.navigation--mueller .awa-mobile-panel .ui-menu-item > a.navigation__inner-link {
         min-height: 48px;
         padding: 12px 44px 12px 16px;
-        color: #243041 !important;
+        color: var(--awa-mueller-text) !important;
         display: flex;
         align-items: center;
         gap: 10px;
@@ -337,7 +346,7 @@
 
     .navigation.verticalmenu.navigation--mueller .awa-mobile-panel .ui-menu-item._active > .navigation__inner-link,
     .navigation.verticalmenu.navigation--mueller .awa-mobile-panel .ui-menu-item.awa-mueller-open > .navigation__inner-link {
-        background: rgb(183 51 55 / 6%) !important;
-        color: #b73337 !important;
+        background: var(--awa-mueller-highlight) !important;
+        color: var(--awa-mueller-brand) !important;
     }
 }

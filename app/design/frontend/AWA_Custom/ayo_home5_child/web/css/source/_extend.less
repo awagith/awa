@@ -209,7 +209,13 @@ textarea:focus-visible,
 .awa-ds-form-control:focus-visible {
     border-color: @awa-color-primary;
     box-shadow: 0 0 0 3px rgba(183, 51, 55, 0.16);
-    outline: none;
+    --awa-color-success: #2e7d32;
+    --awa-color-warning: #ed6c02;
+    --awa-color-error: #c62828;
+    --awa-color-danger: var(--awa-color-error);
+    --awa-color-link: var(--awa-color-primary);
+    --awa-color-link-hover: var(--awa-color-primary-dark);
+    --awa-color-disabled: #bdbdbd;
 }
 
 /* Placeholder text */
@@ -919,3 +925,4 @@ body.catalogsearch-result-index .search.results {
 }
 
 @import '_awa-b2b-phases4-7.less';
+@import '_awa-b2b-footer.less';

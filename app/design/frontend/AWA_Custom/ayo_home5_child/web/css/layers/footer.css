@@ -512,15 +512,6 @@ body .page-wrapper .page_footer .footer-nav a:hover {
     filter: grayscale(0%);
 }
 
-/* ── Copyright bar enterprise ─────────────────────────────────── */
-body .page-wrapper .page_footer .footer-copyright {
-    border-top: 1px solid var(--awa-layer-color-border, #e5e5e5);
-    padding-top: var(--awa-layer-space-md, 16px);
-    margin-top: var(--awa-layer-space-xl, 32px);
-    font-size: 0.8125rem;
-    color: var(--awa-layer-color-text-secondary, #888);
-}
-
 /* ── Social icons enterprise ─────────────────────────────────── */
 .awa-social-links {
     display: flex;

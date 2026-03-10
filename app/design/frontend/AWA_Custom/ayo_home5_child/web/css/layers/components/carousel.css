@@ -1,0 +1,47 @@
+/* AWA CSS Layers - Components / Carousel
+   Split from components.css — Phase 1 cleanup
+   Contains: Owl Carousel normalization for product grids */
+
+/* Carousel */
+body .page-wrapper .owl-carousel {
+    --awa-owl-item-gutter: var(--awa-layer-carousel-gutter);
+
+    position: relative;
+}
+
+body .page-wrapper .owl-carousel .owl-stage {
+    display: flex;
+    align-items: stretch;
+}
+
+body .page-wrapper .owl-carousel .owl-item {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: auto;
+    padding-block: var(--awa-layer-space-sm);
+}
+
+body .page-wrapper .owl-carousel .owl-item > * {
+    flex: 1;
+    min-width: 0;
+}
+
+body .page-wrapper .owl-carousel .owl-item > :is(.item, .item-inner, .product_row, .product-item, .item-product, .content-item-product) {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 0;
+}
+
+body .page-wrapper .owl-carousel .owl-nav button {
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid var(--awa-layer-color-border);
+    background: var(--awa-layer-surface);
+    color: var(--awa-layer-color-text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}

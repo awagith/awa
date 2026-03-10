@@ -1,11 +1,11 @@
 /* AWA Round2 (dual-write hotfix)
    Bridge tokens for brand consistency in round scope (header/minicart/owl tabs). */
 :root {
-    --primary-color: var(--awa-red, #b73337);
-    --primary-hover: var(--awa-red-dark, #8e2629);
-    --text-color: var(--awa-dark, #333);
-    --bg-white: var(--awa-bg-surface, #fff);
-    --awa-round2-focus-ring: 0 0 0 3px color-mix(in srgb, var(--primary-color) 22%, transparent);
+    --primary-color: var(--awa-color-primary, #b73337);
+    --primary-hover: var(--awa-color-primary-dark, #8e2629);
+    --text-color: var(--awa-color-text-primary, #333);
+    --bg-white: var(--awa-color-bg, #fff);
+    --awa-round2-focus-ring: 0 0 0 3px color-mix(in srgb, var(--awa-focus-ring, var(--primary-color)) 100%, transparent);
     --awa-round2-transition: 0.3s ease;
 }
 

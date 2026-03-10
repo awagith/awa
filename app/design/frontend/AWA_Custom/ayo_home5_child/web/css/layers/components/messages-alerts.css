@@ -1,0 +1,283 @@
+/* AWA CSS Layers - Components / Messages & Alerts
+   Split from components.css — Phase 1 cleanup
+   Contains: Magento messages, notice bars, announcement/topbar,
+   notification banners, inline alerts */
+
+/* ================================================================
+   MESSAGES — Magento native
+   ================================================================ */
+body .page-wrapper .messages .message,
+body .page-wrapper .message-container .message {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--awa-layer-space-sm);
+    padding: 12px var(--awa-layer-space-lg);
+    border-radius: var(--awa-layer-radius-sm);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin-bottom: var(--awa-layer-space-sm);
+    border-left: 3px solid currentcolor;
+}
+
+body .page-wrapper .message.success {
+    background: #f0fdf4;
+    color: #166534;
+}
+
+body .page-wrapper .message.error {
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+body .page-wrapper .message.warning,
+body .page-wrapper .message.notice {
+    background: #fffbeb;
+    color: #92400e;
+}
+
+body .page-wrapper .message.info {
+    background: #eff6ff;
+    color: #1e40af;
+}
+
+/* ── Notification / alert bar ────────────────────────────────── */
+.awa-notice-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--awa-layer-space-sm);
+    padding: 10px var(--awa-layer-space-lg);
+    background: #fef9c3;
+    border: 1px solid #fde68a;
+    border-radius: var(--awa-layer-radius-sm);
+    font-size: 0.875rem;
+    color: #92400e;
+    margin-bottom: var(--awa-layer-space-md);
+}
+
+.awa-notice-bar--info {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1e40af;
+}
+
+.awa-notice-bar--success {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #15803d;
+}
+
+.awa-notice-bar--error {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #b91c1c;
+}
+
+/* ── Announcement / Topbar ───────────────────────────────────── */
+.awa-announcement-bar {
+    position: relative;
+    z-index: 110;
+    background: var(--awa-layer-color-primary);
+    color: #fff;
+    text-align: center;
+    padding: 8px var(--awa-layer-space-md);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    line-height: 1.4;
+    overflow: hidden;
+}
+
+.awa-announcement-bar a {
+    color: #fff;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 700;
+}
+
+.awa-announcement-bar a:hover {
+    opacity: 0.85;
+}
+
+.awa-announcement-bar__close {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: rgb(255 255 255 / 80%);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 150ms ease;
+    padding: 0;
+    line-height: 1;
+    font-size: 1.125rem;
+}
+
+.awa-announcement-bar__close:hover {
+    background: rgb(0 0 0 / 20%);
+    color: #fff;
+}
+
+.awa-announcement-bar--info {
+    background: #1d4ed8;
+}
+
+.awa-announcement-bar--success {
+    background: #166534;
+}
+
+.awa-announcement-bar--warning {
+    background: #92400e;
+}
+
+/* Variante B2B: faixa dupla (frete + B2B) */
+.awa-announcement-bar--ticker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(16px, 3vw, 40px);
+    flex-wrap: wrap;
+    padding: 7px var(--awa-layer-space-md);
+}
+
+.awa-announcement-bar__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.awa-announcement-bar__item::after {
+    content: '|';
+    opacity: 0.4;
+    margin-left: clamp(8px, 2vw, 20px);
+}
+
+.awa-announcement-bar__item:last-child::after {
+    display: none;
+}
+
+.awa-announcement-bar__icon {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    opacity: 0.9;
+}
+
+@media (width <= 599px) {
+    .awa-announcement-bar--ticker {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .awa-announcement-bar__item::after {
+        display: none;
+    }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   NOTIFICATION BANNER — avisos persistentes de conta/pedido
+   ════════════════════════════════════════════════════════════ */
+.awa-notice-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--awa-layer-radius-md);
+    border: 1px solid transparent;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.awa-notice-banner--info {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1d4ed8;
+}
+
+.awa-notice-banner--warning {
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #92400e;
+}
+
+.awa-notice-banner--success {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #15803d;
+}
+
+.awa-notice-banner--error {
+    background: #fff1f2;
+    border-color: #fecdd3;
+    color: #be123c;
+}
+
+.awa-notice-banner__icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+}
+
+.awa-notice-banner__body {
+    flex: 1;
+    min-width: 0;
+}
+
+.awa-notice-banner__title {
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+/* ── Alert / notification bar inline ─────────────────────────── */
+.awa-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--awa-layer-radius-sm, 6px);
+    border: 1px solid transparent;
+    font-size: 0.875rem;
+    line-height: 1.55;
+}
+
+.awa-alert__icon {
+    flex-shrink: 0;
+    font-size: 1.125rem;
+    margin-top: 1px;
+}
+
+.awa-alert__title {
+    font-weight: 700;
+    margin-bottom: 2px;
+}
+
+.awa-alert--info {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+    color: #1e40af;
+}
+
+.awa-alert--success {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #166534;
+}
+
+.awa-alert--warning {
+    background: #fffbeb;
+    border-color: #fde68a;
+    color: #92400e;
+}
+
+.awa-alert--error {
+    background: #fef2f2;
+    border-color: #fecaca;
+    color: #991b1b;
+}

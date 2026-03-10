@@ -1,0 +1,225 @@
+/* AWA CSS Layers - Components / Tables
+   Split from components.css — Phase 1 cleanup
+   Contains: B2B data tables, order history table, info/spec table */
+
+/* ── Data table B2B canônica ─────────────────────────────────── */
+body .page-wrapper .data-table,
+body .page-wrapper .table-wrapper table,
+body .page-wrapper .orders-history table,
+body .page-wrapper .order-items table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+    background: var(--awa-layer-surface);
+}
+
+body .page-wrapper .data-table thead,
+body .page-wrapper .table-wrapper table thead {
+    background: var(--awa-layer-surface-soft);
+    border-bottom: 2px solid var(--awa-layer-color-border);
+}
+
+body .page-wrapper .data-table th,
+body .page-wrapper .table-wrapper table th {
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--awa-layer-color-muted);
+    white-space: nowrap;
+}
+
+body .page-wrapper .data-table td,
+body .page-wrapper .table-wrapper table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--awa-layer-color-border);
+    color: var(--awa-layer-color-text);
+    vertical-align: middle;
+}
+
+body .page-wrapper .data-table tbody tr:hover,
+body .page-wrapper .table-wrapper table tbody tr:hover {
+    background: var(--awa-layer-surface-soft);
+}
+
+body .page-wrapper .data-table tbody tr:last-child td,
+body .page-wrapper .table-wrapper table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Table wrapper scroll horizontal no mobile */
+body .page-wrapper .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border: 1px solid var(--awa-layer-color-border);
+    border-radius: var(--awa-layer-radius-md);
+}
+
+/* ══════════════════════════════════════════════════════════════
+   ORDER HISTORY TABLE — Histórico de pedidos B2B
+   ════════════════════════════════════════════════════════════ */
+.table-order-items tbody tr td,
+.account .orders-history .table-order-items tbody tr td {
+    vertical-align: middle;
+    padding: 14px 12px;
+    font-size: 0.875rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.table-order-items tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-order-items tbody tr:hover td {
+    background: #f8fafc;
+}
+
+/* Order ID link */
+.table-order-items .col.id a {
+    font-weight: 700;
+    color: var(--awa-layer-color-primary);
+    text-decoration: none;
+    font-variant-numeric: tabular-nums;
+}
+
+.table-order-items .col.id a:hover {
+    text-decoration: underline;
+}
+
+/* Status badge inline */
+.table-order-items .col.status .order-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Status colors via data ou class */
+.table-order-items .col.status .order-status[class*="complete"],
+.table-order-items .col.status .order-status[class*="processing"] {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.table-order-items .col.status .order-status[class*="pending"] {
+    background: #fef9c3;
+    color: #854d0e;
+}
+
+.table-order-items .col.status .order-status[class*="cancel"] {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* Actions cell */
+.table-order-items .col.actions a {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--awa-layer-color-primary);
+    text-decoration: none;
+    margin-right: 12px;
+    white-space: nowrap;
+}
+
+.table-order-items .col.actions a:last-child {
+    margin-right: 0;
+}
+
+/* ─── Order History Overrides ─────────────────────────────────── */
+.awa-order-history {
+    width: 100%;
+}
+
+.awa-order-history__header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.awa-order-history__title {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--awa-layer-color-text-primary, #333);
+    margin: 0;
+}
+
+.awa-order-history__count {
+    font-size: 0.875rem;
+    color: var(--awa-layer-color-text-secondary, #666);
+}
+
+.awa-order-history__table-wrapper {
+    border-radius: var(--awa-layer-radius-lg, 12px);
+    overflow: hidden;
+    border: 1px solid var(--awa-layer-color-border, #e5e5e5);
+    box-shadow: 0 2px 10px rgb(0 0 0 / 5%);
+}
+
+.awa-order-history__actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.awa-order-history__order-link {
+    font-weight: 700;
+    color: var(--awa-layer-color-primary, #b73337);
+    text-decoration: none;
+}
+
+.awa-order-history__order-link:hover {
+    text-decoration: underline;
+}
+
+.awa-order-history__total {
+    font-variant-numeric: tabular-nums;
+    color: var(--awa-layer-color-text-primary, #333);
+}
+
+.awa-order-history__empty {
+    text-align: center;
+    padding: 64px 24px;
+}
+
+/* ── Info table / spec sheet ─────────────────────────────────── */
+.awa-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+
+.awa-info-table tr:nth-child(even) td,
+.awa-info-table tr:nth-child(even) th {
+    background: var(--awa-layer-surface-soft, #f7f7f7);
+}
+
+.awa-info-table th {
+    text-align: left;
+    padding: 10px 14px;
+    font-weight: 700;
+    color: var(--awa-layer-color-text-secondary, #64748b);
+    font-size: 0.8125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    width: 38%;
+    border-bottom: 1px solid var(--awa-layer-color-border, #e5e5e5);
+}
+
+.awa-info-table td {
+    padding: 10px 14px;
+    color: var(--awa-layer-color-text-primary, #333);
+    border-bottom: 1px solid var(--awa-layer-color-border, #f0f0f0);
+    line-height: 1.5;
+}

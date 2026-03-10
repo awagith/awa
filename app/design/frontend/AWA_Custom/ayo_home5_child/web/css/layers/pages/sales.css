@@ -401,17 +401,6 @@
     padding-block: var(--awa-layer-space-lg);
 }
 
-.awa-order-view__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 16px;
-    padding-bottom: 24px;
-    margin-bottom: 28px;
-    border-bottom: 2px solid var(--awa-layer-color-border);
-}
-
 .awa-order-view__header-left h1 {
     font-size: 1.5rem;
     font-weight: 800;
@@ -428,32 +417,6 @@
     align-items: center;
     gap: 10px;
     flex-wrap: wrap;
-}
-
-/* Magento order view refinements */
-.sales-order-view .page-title-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 16px;
-    margin-bottom: 24px;
-}
-
-.sales-order-view .order-status {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-size: 0.8125rem;
-    font-weight: 700;
-    background: var(--awa-layer-color-bg-soft);
-    border: 1px solid var(--awa-layer-color-border);
-}
-
-.sales-order-view .order-date {
-    font-size: 0.875rem;
-    color: var(--awa-layer-color-text-secondary);
-    margin-bottom: 24px;
 }
 
 .sales-order-view .actions-toolbar {

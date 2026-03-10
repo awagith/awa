@@ -29,12 +29,7 @@
        Apenas o padding lateral é definido aqui. ── */
     --awa-container-pad: 16px;
 
-    /* ── Gap scale (homepage refinement — tighter than global tokens in layers/tokens.css) ── */
-    --awa-gap-xs:   4px;
-    --awa-gap-sm:   8px;
-    --awa-gap-md:  12px;
-    --awa-gap-lg:  16px;
-    --awa-gap-xl:  24px;
+    /* Gap scale: canonical in layers/tokens.css. Do NOT redefine here. */
 
     /* ── Space scale (aliases — same rhythm, Tailwind naming) ── */
     --awa-space-1:    4px;
@@ -596,16 +591,7 @@
     margin-bottom: 0 !important;
 }
 
-/* 4.3 2-column layout gutter (sidebar + main) */
-:is(body.catalog-category-view, body.catalogsearch-result-index)
-    .page-main .columns.layout.layout-2-col.row {
-    margin-inline: calc(-1 * var(--awa-gap-sm)) !important;
-}
-
-:is(body.catalog-category-view, body.catalogsearch-result-index)
-    .page-main .columns.layout.layout-2-col.row > [class*='col-'] {
-    padding-inline: var(--awa-gap-sm) !important;
-}
+/* 4.3 [MOVED to awa-layout-semantic.css — sidebar grid consolidated] */
 
 /* 4.4 Product cards — uniform sizing */
 :is(body.catalog-category-view, body.catalogsearch-result-index)
@@ -862,16 +848,7 @@ body.rokanthemes-onepagecheckout .fieldset {
         max-width: 80px !important;
     }
 
-    /* PLP sidebar collapse — full width columns */
-    :is(body.catalog-category-view, body.catalogsearch-result-index)
-        .page-main .columns.layout.layout-2-col.row {
-        margin-inline: 0 !important;
-    }
-
-    :is(body.catalog-category-view, body.catalogsearch-result-index)
-        .page-main .columns.layout.layout-2-col.row > [class*='col-'] {
-        padding-inline: 0 !important;
-    }
+    /* PLP sidebar gutter — moved to awa-layout-semantic.css */
 
     /* CategoryTab fallback cards smaller */
     :is(body.cms-index-index, body.cms-home, body.cms-homepage_ayo_home5)

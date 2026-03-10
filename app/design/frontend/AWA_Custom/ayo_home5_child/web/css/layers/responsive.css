@@ -7,8 +7,13 @@
    ================================================================ */
 
 /* ── Base mobile (todos os tamanhos) ─────────────────────────── */
+html,
+body {
+    max-width: 100%;
+}
+
 body .page-wrapper {
-    overflow-x: hidden;
+    max-width: 100%;
 }
 
 body .page-wrapper img,
@@ -28,7 +33,19 @@ body .page-wrapper .column.main,
 body .page-wrapper .page-main,
 body .page-wrapper .columns {
     min-width: 0;
-    overflow-x: clip;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Contenção localizada para blocos com conteúdo largo */
+body .page-wrapper .table-wrapper,
+body .page-wrapper .minicart-items-wrapper,
+body .page-wrapper .cart-container,
+body .page-wrapper .checkout-container,
+body .page-wrapper .products-grid .product-items {
+    max-width: 100%;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
 }
 
 /* ── Mobile pequeno: 320–389px ───────────────────────────────── */
@@ -77,13 +94,6 @@ body .page-wrapper .columns {
 @media (width >= 768px) and (width <= 1023px) {
     body .page-wrapper .products-grid .product-items:not(.owl-carousel) {
         grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    body .page-wrapper .columns.layout.layout-2-col {
-        display: grid;
-        grid-template-columns: 240px 1fr;
-        gap: clamp(16px, 2vw, 24px);
-        align-items: start;
     }
 
     body .page-wrapper .page-main,
@@ -172,7 +182,7 @@ body .page-wrapper .columns {
 /* ── Header responsivo ───────────────────────────────────────── */
 @media (width <= 767px) {
     /* Logo centralizado no mobile */
-    body .page-wrapper .header.content {
+    body .page-wrapper .header-content {
         display: grid;
         grid-template-columns: 44px 1fr 44px;
         align-items: center;
@@ -323,7 +333,7 @@ body .page-wrapper .columns {
 
 /* ── Header responsivo ───────────────────────────────────────── */
 @media (width >= 768px) and (width <= 1023px) {
-    .header.content {
+    .header-content {
         flex-wrap: nowrap;
     }
 
@@ -372,7 +382,7 @@ body .page-wrapper .columns {
 
 /* ── Print global ────────────────────────────────────────────── */
 @media print {
-    .page-header,
+    #header.header-container,
     .page-footer,
     .sidebar,
     .nav-sections,
@@ -410,14 +420,8 @@ body .page-wrapper .columns {
     }
 
     /* Header mais denso mas sem overflow */
-    .page-header .header.content {
+    #header.header-container .header-content {
         padding-block: 16px;
-    }
-
-    /* Mega menu ainda mais largo */
-    .navigation li.level0.fullwidth > ul.level0 {
-        width: min(1440px, 96vw);
-        min-width: min(1440px, 96vw);
     }
 }
 
@@ -458,6 +462,7 @@ body .page-wrapper .columns {
 /* ══════════════════════════════════════════════════════════════
    DARK MODE — Base compatível (não ativo por padrão)
    ════════════════════════════════════════════════════════════ */
+
 /* Descomente se quiser suporte a dark mode do SO:
 @media (prefers-color-scheme: dark) {
     :root {
@@ -476,7 +481,7 @@ body .page-wrapper .columns {
    ═══════════════════════════════════════════════════════════════ */
 
 /* ── 320px – pequenos dispositivos ───────────────────────────── */
-@media (max-width: 359px) {
+@media (width <= 359px) {
     .awa-timeline {
         padding-left: 0;
     }
@@ -495,7 +500,7 @@ body .page-wrapper .columns {
 }
 
 /* ── 768px – tablet ────────────────────────────────────────────── */
-@media (max-width: 767px) {
+@media (width <= 767px) {
     /* KPI grid: 2 colunas em mobile */
     .awa-kpi-grid {
         grid-template-columns: 1fr 1fr;
@@ -519,10 +524,7 @@ body .page-wrapper .columns {
     .awa-steps__step::before {
         content: '';
         position: absolute;
-        left: 15px;
-        top: 32px;
-        right: auto;
-        bottom: 0;
+        inset: 32px auto 0 15px;
         height: auto;
         width: 2px;
         background: var(--awa-layer-color-border, #e5e5e5);

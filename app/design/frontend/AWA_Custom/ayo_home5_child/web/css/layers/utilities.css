@@ -134,7 +134,7 @@
 
 /* ── Overflow ────────────────────────────────────────────────── */
 .awa-overflow-hidden { overflow: hidden; }
-.awa-overflow-x-auto { overflow-x: auto; }
+.awa-overflow-x-auto { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 
 /* ── Z-index gerenciado ──────────────────────────────────────── */
 .awa-z-dropdown { z-index: 100; }
@@ -232,38 +232,15 @@
     to { transform: rotate(360deg); }
 }
 
-/* ── Divider ─────────────────────────────────────────────────── */
-.awa-divider {
-    border: none;
-    border-top: 1px solid var(--awa-layer-color-border);
-    margin-block: var(--awa-layer-space-md);
-}
-
 .awa-divider--strong {
     border-top-width: 2px;
 }
 
 /* ── Text utilities extras ──────────────────────────────────── */
-.awa-text-primary  { color: var(--awa-layer-color-primary); }
-.awa-text-success  { color: #15803d; }
 .awa-text-warning  { color: #d97706; }
 .awa-text-danger   { color: #b91c1c; }
-.awa-text-muted    { color: #94a3b8; }
-.awa-text-center   { text-align: center; }
-.awa-text-right    { text-align: right; }
 .awa-text-mono     { font-family: 'SFMono-Regular', Consolas, monospace; }
-.awa-font-bold     { font-weight: 700; }
 .awa-font-semibold { font-weight: 600; }
-
-/* ── Spacing shortcuts ──────────────────────────────────────── */
-.awa-mt-0  { margin-top: 0; }
-.awa-mb-0  { margin-bottom: 0; }
-.awa-mt-sm { margin-top: var(--awa-layer-space-sm); }
-.awa-mb-sm { margin-bottom: var(--awa-layer-space-sm); }
-.awa-mt-md { margin-top: var(--awa-layer-space-md); }
-.awa-mb-md { margin-bottom: var(--awa-layer-space-md); }
-.awa-mt-lg { margin-top: var(--awa-layer-space-lg); }
-.awa-mb-lg { margin-bottom: var(--awa-layer-space-lg); }
 
 /* ── Print utilities ─────────────────────────────────────────── */
 @media print {
@@ -287,18 +264,11 @@
 .awa-aspect-3-2     { aspect-ratio: 3 / 2; }
 
 /* ── Overflow ────────────────────────────────────────────────── */
-.awa-overflow-hidden { overflow: hidden; }
 .awa-overflow-auto   { overflow: auto; }
-.awa-overflow-x-auto { overflow-x: auto; -webkit-overflow-scrolling: touch; }
 .awa-overflow-scroll-thin {
     scrollbar-width: thin;
     scrollbar-color: var(--awa-layer-color-border, #e5e5e5) transparent;
 }
-
-/* ── Position ────────────────────────────────────────────────── */
-.awa-relative { position: relative; }
-.awa-absolute { position: absolute; }
-.awa-sticky   { position: sticky; }
 
 /* ── Z-index scale ───────────────────────────────────────────── */
 .awa-z-0    { z-index: 0; }
@@ -308,12 +278,6 @@
 .awa-z-top  { z-index: 9999; }
 
 /* ── Dividers ────────────────────────────────────────────────── */
-.awa-divider {
-    border: none;
-    border-top: 1px solid var(--awa-layer-color-border, #e5e5e5);
-    margin: var(--awa-layer-space-xl, 32px) 0;
-}
-
 .awa-divider--sm {
     margin: var(--awa-layer-space-md, 16px) 0;
 }
@@ -338,13 +302,6 @@
     100% { background-position: 0% 50%; }
 }
 
-/* ── Truncate text ───────────────────────────────────────────── */
-.awa-truncate {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
 .awa-line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -360,7 +317,6 @@
 }
 
 /* ── Transitions ─────────────────────────────────────────────── */
-.awa-transition         { transition: all 200ms ease; }
 .awa-transition-colors  { transition: color 180ms, background 180ms, border-color 180ms; }
 .awa-transition-shadow  { transition: box-shadow 180ms; }
 .awa-transition-opacity { transition: opacity 200ms; }
@@ -382,6 +338,4 @@
 
 /* ── Opacity ─────────────────────────────────────────────────── */
 .awa-opacity-0   { opacity: 0; }
-.awa-opacity-50  { opacity: 0.5; }
-.awa-opacity-75  { opacity: 0.75; }
 .awa-opacity-100 { opacity: 1; }

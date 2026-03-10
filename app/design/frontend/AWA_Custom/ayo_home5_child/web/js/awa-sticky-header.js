@@ -21,7 +21,14 @@
         function onScroll() {
             const scrollY = window.pageYOffset || document.documentElement.scrollTop;
             if (scrollY > threshold && !isSticky) {
-                headerHeight = headerEl.offsetHeight;
+                let expandedMenuHeight = 0;
+                const verticalMenu = headerEl.querySelector('.vmm-open');
+                if (verticalMenu) {
+                    expandedMenuHeight = verticalMenu.offsetHeight || 0;
+                }
+                headerHeight = headerEl.offsetHeight - expandedMenuHeight;
+                if (headerHeight < 80) headerHeight = 160;
+
                 headerEl.classList.add(STICKY_CLASS);
                 document.body.style.paddingTop = `${headerHeight}px`;
                 isSticky = true;
