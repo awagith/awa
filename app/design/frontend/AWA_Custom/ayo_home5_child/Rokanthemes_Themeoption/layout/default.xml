@@ -97,8 +97,8 @@
                     </arguments>
                 </block>
                 <block class="Magento\Framework\View\Element\Template"
-                       name="footer_static5"
-                       template="Rokanthemes_Themeoption::html/footer/footer-static5.phtml"/>
+                       name="awa_footer_b2b"
+                       template="Rokanthemes_Themeoption::html/footer/awa-footer-b2b.phtml"/>
             </block>
         </referenceContainer>
 

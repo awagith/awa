@@ -2,6 +2,8 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
+        <meta name="robots" content="NOINDEX,NOFOLLOW"/>
+        <remove src="css/awa-checkout-home5.css"/>
         <css src="css/layers/pages/cart-checkout.css"/>
     </head>
 </page>

@@ -41,7 +41,7 @@
 /* ── Form ──────────────────────────────────────────────────────────────── */
 .awa-fitment-bar__form {
     display: flex;
-    align-items: flex-end;
+    align-items: stretch;
     gap: 10px;
     flex: 1;
     flex-wrap: wrap;
@@ -134,6 +134,7 @@
     gap: 8px;
     align-items: center;
     flex-shrink: 0;
+    align-self: flex-end;
 }
 
 .awa-fitment-bar__btn {
@@ -203,18 +204,29 @@
     }
     .awa-fitment-bar__form {
         flex-direction: column;
+        align-items: stretch;
+        width: 100%;
     }
     .awa-fitment-bar__selects {
         flex-direction: column;
+        width: 100%;
     }
     .awa-fitment-select-wrap {
         min-width: unset;
+        width: 100%;
+    }
+    .awa-fitment-select-control {
+        width: 100%;
     }
     .awa-fitment-bar__actions {
-        justify-content: center;
+        width: 100%;
+        align-self: auto;
+        align-items: stretch;
+        justify-content: stretch;
     }
     .awa-fitment-bar__btn {
         flex: 1;
+        width: 100%;
         justify-content: center;
     }
 }

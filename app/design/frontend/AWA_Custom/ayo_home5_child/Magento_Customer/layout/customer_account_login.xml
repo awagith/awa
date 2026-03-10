@@ -5,6 +5,9 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <meta name="robots" content="NOINDEX,NOFOLLOW"/>
+    </head>
     <body>
         <!-- B2B Info Block acima do formulário de login -->
         <referenceContainer name="content">

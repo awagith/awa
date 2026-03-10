@@ -2,19 +2,8 @@ body[class*="awa-b2b-account-flow"] .page-main.container {
     padding-top: clamp(12px, 1.8vw, 22px);
 }
 
-body[class*="awa-b2b-account-flow"] .page-main.container > .columns,
-body[class*="awa-b2b-account-flow"] .page-main .columns.layout.layout-2-col.row {
-    display: grid;
-    grid-template-columns: minmax(244px, 280px) minmax(0, 1fr);
-    gap: clamp(16px, 2vw, 28px);
-    align-items: start;
-}
-
-body[class*="awa-b2b-account-flow"] .page-main .columns.layout.layout-2-col.row > [class*='col-'] {
-    min-width: 0;
-    width: auto;
-    padding-inline: 0;
-}
+/* Grid layout herdado de awa-layout-semantic.css (B2B variant com sidebar mais larga).
+   Mantemos apenas o sticky sidebar e estilos visuais abaixo. */
 
 body[class*="awa-b2b-account-flow"] .sidebar.sidebar-main {
     position: sticky;

@@ -3,9 +3,6 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <remove src="css/awa-plp-final-polish.css"/>
-        <css src="css/awa-custom-plp-final-polish.css"/>
-        <!-- migrado para layers/pages/plp-search.css -->
-        <css src="css/b2b/pages/plp-search-cart-refine.css"/>
         <css src="css/layers/pages/plp-search.css"/>
         <css src="GrupoAwamotos_Fitment::css/fitment-bar.css"/>
     </head>

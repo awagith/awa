@@ -31,7 +31,7 @@ $searchHelper = $this->helper('Magento\Search\Helper\Data');
                            type="search"
                            name="<?= $block->escapeHtmlAttr($searchHelper->getQueryParamName()) ?>"
                            value="<?= $block->escapeHtmlAttr($searchHelper->getEscapedQueryText()) ?>"
-                           placeholder="<?= $block->escapeHtmlAttr(__('Busca por SKU, EAN ou Nome...')) ?>"
+                           placeholder="<?= $block->escapeHtmlAttr(__('Busque por SKU, Código Original, Marca ou Nome da Peça...')) ?>"
                            class="input-text"
                            minlength="2"
                            maxlength="<?= (int) $searchHelper->getMaxQueryLength() ?>"

@@ -2,6 +2,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
+        <remove src="css/awa-consistency-home5.css"/>
         <remove src="css/awa-round9-post-themeoption-overrides.css"/>
         <remove src="css/awa-components-b2b-foundation.css"/>
         <remove src="css/awa-compat-b2b-nav-plp-cart-checkout.css"/>
@@ -9,9 +10,6 @@
         <remove src="css/awa-home-final-polish.css"/>
         <remove src="css/awa-round2-home-owl-tabs.css"/>
 
-        <css src="css/awa-fixes-home.css"/>
-        <css src="css/awa-design-system-layout.css"/>
-        <css src="css/awa-custom-home-final-polish.css"/>
         <css src="css/layers/pages/home.css"/>
     </head>
     <body>
@@ -52,6 +50,12 @@
                     <argument name="load_home_owl_tabs_js" xsi:type="boolean">false</argument>
                 </arguments>
             </block>
+        </referenceContainer>
+
+        <referenceContainer name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="awa.mobile.b2b.shortcuts"
+                   template="Magento_Theme::html/mobile-b2b-shortcuts.phtml"/>
         </referenceContainer>
     </body>
 </page>

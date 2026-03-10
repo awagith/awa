@@ -101,11 +101,7 @@ if ($banners = $block->getBannerCollection()):
             <div class="banner_item_bg">
                 <?php echo $pictureHtml; ?>
             </div>
-            <div class="text-banner">
-                <?php if ($text = $banner->getSlideText()) {
-                    echo $block->getContentText($text);
-                } ?>
-            </div>
+            <?php /* Removed .text-banner block to fix duplication of "Slide Text" in B2B layout */ ?>
         </div>
         <?php endforeach; ?>
     </div>

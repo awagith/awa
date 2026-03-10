@@ -31,12 +31,15 @@
 	if ($enabled && $category_load && strtotime($block->getConfig('end_date')) >= strtotime($block->getCurrentTime())) {
 		$image = 'category_image_primary_small';
 ?>
-<?php if($this->getConfig('title')){?>
-	<div class="rokan-product-heading rokan-onsale-heading"><h2><?php echo $block->escapeHtml($this->getConfig('title')) ?>  <span class="sup-title"><?php echo $block->escapeHtml(__('Of The Day')) ?></span></h2></div>
+<?php if($this->getConfig('title')){
+	$configuredTitle = trim((string)$this->getConfig('title'));
+	$displayTitle = ($configuredTitle === 'Super Ofertas' || $configuredTitle === 'Super deals') ? 'Ofertas em Destaque' : $configuredTitle;
+?>
+	<div class="rokan-product-heading rokan-onsale-heading"><h2><?php echo $block->escapeHtml($displayTitle) ?></h2></div>
 <?php }?>
 <div class="hot-deal-tab-slider hot-deal-tab-slider-customcss">
 	<div class="countdown_block">
-		<div class="title_countdown"><?php echo $block->escapeHtml(__('Hurry Up! Offer ends in:')) ?></div>
+		<div class="title_countdown"><?php echo $block->escapeHtml(__('Condições especiais válidas até:')) ?></div>
 		<div class="super-deal-countdown" data-date="<?php echo $block->escapeHtmlAttr($block->getConfig('end_date')); ?>"></div>
 	</div>
 	<div class="row">
@@ -105,7 +108,15 @@
 							    </div>
 							    <div class="product-info-cart">
 				                    <div class="actions-primary addcart-link">
-				                      <?php if ($_item->isSaleable()): ?>
+				                      <?php 
+										$priceHtmlLocal = $this->helper('Rokanthemes\Themeoption\Helper\Data')->getPriceDisplayCustom($block->getProductPrice($_item));
+										$isPriceBlocked = strpos((string)$priceHtmlLocal, 'b2b-login-to-see-price') !== false || strpos((string)$priceHtmlLocal, 'price-login') !== false;
+									  ?>
+									  <?php if ($isPriceBlocked): ?>
+										  <a href="<?php echo $block->escapeUrl($block->getUrl('customer/account/login')) ?>" class="action primary awa-login-to-see-price-cta" title="<?php echo $block->escapeHtmlAttr(__('Faça login para comprar')); ?>">
+											  <span><?php echo $block->escapeHtml(__('Faça login para ver preços e comprar')); ?></span>
+										  </a>
+				                      <?php elseif ($_item->isSaleable()): ?>
 				                        <?php
 				                          $postDataHelper = $this->helper('Magento\Framework\Data\Helper\PostHelper');
 				                          $postData = $postDataHelper->getPostData($block->getAddToCartUrl($_item), ['product' => $_item->getEntityId()]);
@@ -137,35 +148,18 @@
 										<?php echo $block->escapeHtml($_item->getName()); ?>
 									</a>
 								</h3>
-								<div class="product-rating">
-									<?php if ($templateType): ?>
-										<?php echo $block->getReviewsSummaryHtml($_item, $templateType,true); ?>
-									<?php endif; ?>
+								<div class="product-rating" style="display:none;">
+									<?php /* Hidden in B2B */ ?>
 								</div>
-								<div class="sold-by">
-									<?php
-										$cats = $_item->getAttributeText('sold_by');
-										echo ' <span>'.$block->escapeHtml(__('Sold by:')).'</span>' . $block->escapeHtml($cats);
-									 ?>
+								<div class="sold-by" style="display:none;">
+									<?php /* Hidden in B2B */ ?>
 								</div>
 								<div class="info-price">
-									<?php /* @noEscape */ echo $this->helper('Rokanthemes\Themeoption\Helper\Data')->getPriceDisplayCustom($block->getProductPrice($_item)) ?>
+									<?php /* @noEscape */ echo isset($priceHtmlLocal) ? $priceHtmlLocal : $this->helper('Rokanthemes\Themeoption\Helper\Data')->getPriceDisplayCustom($block->getProductPrice($_item)); ?>
 								</div>
 								<?php if($_item->getTypeId() == 'simple' || $_item->getTypeId() == 'virtual' || $_item->getTypeId() == 'downloadable'): ?>
-								<div class="product-sold">
-									<?php
-										$sale_qty = $this->helper('Rokanthemes\RokanBase\Helper\Data')->getSalableQuantityDataBySku($_item->getSku());
-										$numbersold = $block->getSoldProduct($_item->getId());
-										$total = $sale_qty + $numbersold;
-										$calculator = ($total > 0) ? max(0, min(100, ($numbersold / $total) * 100)) : 0;
-									?>
-									<div class="ruler-sold" role="progressbar" aria-valuenow="<?php echo (int)$numbersold; ?>" aria-valuemin="0" aria-valuemax="<?php echo (int)$total; ?>" aria-label="<?php echo $block->escapeHtmlAttr(__('Sales progress')); ?>">
-										<div class="ruler-sold-count" style="width: <?php echo (int)$calculator; ?>%;"></div>
-									</div>
-									<div class="count-sold">
-										<?php echo $block->escapeHtml(__('Sold:')); ?>
-										<?php echo (int)$numbersold . '/' . (int)$total; ?>
-									</div>
+								<div class="product-sold" style="display:none;">
+									<?php /* Progress bar and Sold X/Y hidden in B2B */ ?>
 								</div>
 								<?php endif; ?>
 							</div>

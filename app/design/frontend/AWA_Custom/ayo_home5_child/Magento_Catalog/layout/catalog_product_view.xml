@@ -4,9 +4,6 @@
     <head>
         <remove src="css/awa-round3-pdp-conversion.css"/>
         <remove src="css/awa-pdp-final-polish.css"/>
-        <css src="css/awa-custom-pdp-conversion.css"/>
-        <css src="css/awa-custom-pdp-final-polish.css"/>
-        <!-- migrado para layers/pages/pdp.css -->
         <css src="css/layers/pages/pdp.css"/>
     </head>
     <body>
@@ -73,7 +70,7 @@
         </referenceContainer>
 
         <!-- AWA Phase 5: UI/UX Pro Max - Trust & Authority Badges under Add to Cart -->
-        <referenceContainer name="product.extrahint">
+        <referenceContainer name="product.info.extrahint">
             <block class="Magento\Framework\View\Element\Template"
                    name="awa.trust.badges"
                    template="Magento_Theme::html/awa-trust-badges.phtml"

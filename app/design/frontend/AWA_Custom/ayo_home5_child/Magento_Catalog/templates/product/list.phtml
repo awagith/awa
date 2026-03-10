@@ -19,6 +19,7 @@ use Magento\Framework\App\Action\Action;
 <?php
 $_productCollection = $block->getLoadedProductCollection();
 $_helper = $this->helper('Magento\Catalog\Helper\Output');
+$_imageHelper = $this->helper('Magento\Catalog\Helper\Image');
 $_b2bHelper = $this->helper('GrupoAwamotos\B2B\Helper\Data');
 $_isB2B = $_b2bHelper->isB2BCustomer();
 $_quickAddUrl = $block->getUrl('b2b/shoppinglist/quickadd');
@@ -26,6 +27,7 @@ $_quickOrderUrl = $block->getUrl('b2b/quickorder');
 $_shoppingListUrl = $block->getUrl('b2b/shoppinglist');
 $_quoteHistoryUrl = $block->getUrl('b2b/quote/history');
 $_reorderHistoryUrl = $block->getUrl('b2b/reorder/history');
+$_imagePlaceholderUrl = (string) $_imageHelper->getDefaultPlaceholderUrl('image');
 $buildOperationalMeta = static function ($product): array {
     $soldBy = $product->getAttributeText('sold_by');
     if (is_array($soldBy)) {
@@ -81,6 +83,8 @@ $qtyControlMageInit = json_encode(
     $showDescription = false;
     $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
     $col_grid = '';
+	$imgPlaceholderAttr = $block->escapeHtmlAttr($_imagePlaceholderUrl);
+	$imgOnError = "var o=this.getAttribute('data-original-src'),p=this.getAttribute('data-placeholder-src');this.removeAttribute('srcset');this.removeAttribute('sizes');if(o&&this.src!==o){this.onerror=function(){this.onerror=null;if(p){this.src=p;}};this.src=o;return;}this.onerror=null;if(p){this.src=p;}";
 
     if ($block->getMode() == 'list') {
         $viewMode = 'list';
@@ -150,7 +154,6 @@ $qtyControlMageInit = json_encode(
 	                    $srcset = $block->escapeUrl($productImage->getImageUrl()) . ' 700w, '
 	                            . $block->escapeUrl($productImageSm->getImageUrl()) . ' 350w';
 	                    $sizes = '(max-width: 767px) 45vw, (max-width: 991px) 30vw, 25vw';
-	                    $imgOnError = "this.onerror=null;this.removeAttribute('srcset');this.src=this.src.replace(/\\/cache\\/[^\\/]+\\//,'/');";
 
 	                    // Above-the-fold: eager load first 4, fetchpriority on first 2
 	                    $mainImgHtml = $productImage->toHtml();
@@ -161,14 +164,14 @@ $qtyControlMageInit = json_encode(
 	                    if ($iterator <= 2) {
 	                        $mainImgHtml = str_replace('decoding="async"', 'decoding="async" fetchpriority="high"', $mainImgHtml);
 	                    }
-	                    $mainImgHtml = str_replace('<img ', '<img onerror="' . $block->escapeHtmlAttr($imgOnError) . '" ', $mainImgHtml);
+	                    $mainImgHtml = str_replace('<img ', '<img data-original-src="' . $block->escapeHtmlAttr($productImage->getImageUrl()) . '" data-placeholder-src="' . $imgPlaceholderAttr . '" onerror="' . $block->escapeHtmlAttr($imgOnError) . '" ', $mainImgHtml);
 	                    ?>
 	                	<div class="product-thumb">
 	                		<a href="<?php echo $block->escapeUrl($_product->getProductUrl()); ?>" class="product-thumb-link" aria-label="<?php echo $block->escapeHtml($_product->getName()); ?>">
 								<?php
 								$productImageThumb = $block->getImage($_product, 'category_page_grid-1');
 								$productThumbHtml = $productImageThumb->toHtml();
-								$productThumbHtml = str_replace('<img ', '<img onerror="' . $block->escapeHtmlAttr($imgOnError) . '" ', $productThumbHtml);
+							$productThumbHtml = str_replace('<img ', '<img data-original-src="' . $block->escapeHtmlAttr($productImageThumb->getImageUrl()) . '" data-placeholder-src="' . $imgPlaceholderAttr . '" onerror="' . $block->escapeHtmlAttr($imgOnError) . '" ', $productThumbHtml);
 								?>
 								<span class="first-thumb">
 									<?php /* @noEscape */ echo $mainImgHtml; ?>
@@ -229,7 +232,14 @@ $qtyControlMageInit = json_encode(
 						</div>
 						<div class="product-info-cart">
 							<div class="actions-primary addcart-link">
-								<?php if ($_product->isSaleable()): ?>
+								<?php $priceBlockCustom = $this->helper('Rokanthemes\Themeoption\Helper\Data')->getPriceDisplayCustom($block->getProductPrice($_product)); ?>
+								<?php if (strpos($priceBlockCustom, 'b2b-login-to-see-price') !== false): ?>
+									<a href="<?php echo $block->escapeUrl($block->getUrl('customer/account/login')); ?>"
+									   class="btn-add-to-cart action tocart primary b2b-login-btn"
+									   title="<?php echo __('Faça login para ver preços e comprar'); ?>">
+										<span><?php echo __('Faça login para ver preços e comprar'); ?></span>
+									</a>
+								<?php elseif ($_product->isSaleable()): ?>
 									<?php $postParams = $block->getAddToCartPostParams($_product); ?>
 									<form data-role="tocart-form"
                                               data-awa-component="awa-qty-control"
@@ -321,7 +331,7 @@ $qtyControlMageInit = json_encode(
 						</ul>
 						<?php endif; ?>
 						<div class="product-rating">
-							<?php echo $block->getReviewsSummaryHtml($_product, $templateType, true); ?>
+							<?php echo $block->getReviewsSummaryHtml($_product, false, true); ?>
 						</div>
 						<div class="info-price">
 						<?php echo $this->helper('Rokanthemes\Themeoption\Helper\Data')->getPriceDisplayCustom($block->getProductPrice($_product)); ?>
@@ -339,11 +349,10 @@ $qtyControlMageInit = json_encode(
 								<?php
 									$productImage = $block->getImage($_product, $image);
 									$productImageThumb = $block->getImage($_product, 'category_image_second_small');
-									$imgOnError = "this.onerror=null;this.removeAttribute('srcset');this.src=this.src.replace(/\\/cache\\/[^\\/]+\\//,'/');";
 									$productImageHtml = $productImage->toHtml();
-									$productImageHtml = str_replace('<img ', '<img onerror="' . $block->escapeHtmlAttr($imgOnError) . '" ', $productImageHtml);
+									$productImageHtml = str_replace('<img ', '<img data-original-src="' . $block->escapeHtmlAttr($productImage->getImageUrl()) . '" data-placeholder-src="' . $imgPlaceholderAttr . '" onerror="' . $block->escapeHtmlAttr($imgOnError) . '" ', $productImageHtml);
 									$productImageThumbHtml = $productImageThumb->toHtml();
-									$productImageThumbHtml = str_replace('<img ', '<img onerror="' . $block->escapeHtmlAttr($imgOnError) . '" ', $productImageThumbHtml);
+									$productImageThumbHtml = str_replace('<img ', '<img data-original-src="' . $block->escapeHtmlAttr($productImageThumb->getImageUrl()) . '" data-placeholder-src="' . $imgPlaceholderAttr . '" onerror="' . $block->escapeHtmlAttr($imgOnError) . '" ', $productImageThumbHtml);
 								?>
 								<span class="first-thumb">
 									<?php /* @noEscape */ echo $productImageHtml; ?>
@@ -393,7 +402,7 @@ $qtyControlMageInit = json_encode(
 						<?php endif; ?>
 
 						<div class="product-rating">
-							<?php echo $block->getReviewsSummaryHtml($_product, $templateType, true); ?>
+							<?php echo $block->getReviewsSummaryHtml($_product, false, true); ?>
 						</div>
 
 						<div class="info-price">
@@ -403,7 +412,14 @@ $qtyControlMageInit = json_encode(
 						</div>
 						<div class="product-info-cart">
 							<div class="actions-primary">
-								<?php if ($_product->isSaleable()): ?>
+								<?php $priceBlockCustom = $this->helper('Rokanthemes\Themeoption\Helper\Data')->getPriceDisplayCustom($block->getProductPrice($_product)); ?>
+								<?php if (strpos($priceBlockCustom, 'b2b-login-to-see-price') !== false): ?>
+									<a href="<?php echo $block->escapeUrl($block->getUrl('customer/account/login')); ?>"
+									   class="btn-add-to-cart action tocart primary b2b-login-btn"
+									   title="<?php echo __('Faça login para ver preços e comprar'); ?>">
+										<span><?php echo __('Faça login para ver preços e comprar'); ?></span>
+									</a>
+								<?php elseif ($_product->isSaleable()): ?>
 									<?php $postParams = $block->getAddToCartPostParams($_product); ?>
 									<form data-role="tocart-form"
                                           data-awa-component="awa-qty-control"
