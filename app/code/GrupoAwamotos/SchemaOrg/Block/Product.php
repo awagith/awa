@@ -15,27 +15,23 @@ use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\Registry;
 use Magento\Framework\Pricing\Helper\Data as PriceHelper;
-use Magento\Review\Model\ReviewFactory;
 use Magento\Store\Model\StoreManagerInterface;
 
 class Product extends Template
 {
     protected Registry $registry;
     protected PriceHelper $priceHelper;
-    protected ReviewFactory $reviewFactory;
     protected StoreManagerInterface $storeManager;
 
     public function __construct(
         Context $context,
         Registry $registry,
         PriceHelper $priceHelper,
-        ReviewFactory $reviewFactory,
         StoreManagerInterface $storeManager,
         array $data = []
     ) {
         $this->registry = $registry;
         $this->priceHelper = $priceHelper;
-        $this->reviewFactory = $reviewFactory;
         $this->storeManager = $storeManager;
         parent::__construct($context, $data);
     }
@@ -58,6 +54,7 @@ class Product extends Template
             return '';
         }
 
+        /** @var \Magento\Store\Model\Store $store */
         $store = $this->storeManager->getStore();
         $currency = $store->getCurrentCurrency()->getCode();
 
@@ -83,14 +80,14 @@ class Product extends Template
         // Ofertas
         $price = $product->getFinalPrice();
         $specialPrice = $product->getSpecialPrice();
-        
+
         $offer = [
             '@type' => 'Offer',
             'price' => number_format($price, 2, '.', ''),
             'priceCurrency' => $currency,
             'url' => $product->getProductUrl(),
-            'availability' => $product->isAvailable() 
-                ? 'https://schema.org/InStock' 
+            'availability' => $product->isAvailable()
+                ? 'https://schema.org/InStock'
                 : 'https://schema.org/OutOfStock',
         ];
 
@@ -106,7 +103,7 @@ class Product extends Template
         if ($ratingSummary && $ratingSummary->getRatingSummary()) {
             $reviewCount = $product->getReviewsCollection()->getSize();
             $ratingValue = ($ratingSummary->getRatingSummary() / 20); // Converter de 0-100 para 0-5
-            
+
             if ($reviewCount > 0) {
                 $schema['aggregateRating'] = [
                     '@type' => 'AggregateRating',
@@ -127,10 +124,18 @@ class Product extends Template
     protected function getProductImage($product)
     {
         try {
-            $imageUrl = $this->storeManager->getStore()
-                ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) 
-                . 'catalog/product' . $product->getImage();
-            return $imageUrl;
+            $image = trim((string) $product->getImage());
+            if ($image === '' || $image === 'no_selection') {
+                return '';
+            }
+
+            /** @var \Magento\Store\Model\Store $store */
+            $store = $this->storeManager->getStore();
+
+            return rtrim(
+                $store->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA),
+                '/'
+            ) . '/catalog/product/' . ltrim($image, '/');
         } catch (\Exception $e) {
             return '';
         }
