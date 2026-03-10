@@ -98,6 +98,13 @@ if ($blogBlock) {
     $blogHtml = trim((string) $blogBlock->toHtml());
 }
 
+/** @var \Rokanthemes\ProductTab\Block\Producttab|null $productTabBlock */
+$productTabBlock = $layout->createBlock('Rokanthemes\ProductTab\Block\Producttab');
+$productTabHtml = '';
+if ($productTabBlock) {
+    $productTabHtml = trim((string) $productTabBlock->toHtml());
+}
+
 /** @var \Rokanthemes\Testimonials\Block\Testimonials|null $testimonialsBlock */
 $testimonialsBlock = $layout->createBlock('Rokanthemes\Testimonials\Block\Testimonials');
 $testimonialsHtml = '';
@@ -248,6 +255,14 @@ if ($benefitsHtml !== '' && strpos($benefitsHtml, 'velaServicesInner--home5') ==
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
                     <span><strong><?= $block->escapeHtml(__('Atendimento comercial')) ?></strong> <?= $block->escapeHtml(__('Equipe dedicada para revenda')) ?></span>
                 </div>
+                <div class="awa-b2b-benefits-strip__item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M1 3h15l5 8-5 8H1l5-8Z"/><path d="M10 8v8"/><path d="M7 11h6"/></svg>
+                    <span><strong><?= $block->escapeHtml(__('Entrega para todo o Brasil')) ?></strong> <?= $block->escapeHtml(__('Frete calculado no carrinho')) ?></span>
+                </div>
+                <div class="awa-b2b-benefits-strip__item">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+                    <span><strong><?= $block->escapeHtml(__('Compra protegida')) ?></strong> <?= $block->escapeHtml(__('Garantia do fabricante')) ?></span>
+                </div>
             </div>
         </div>
     </div>
@@ -346,6 +361,14 @@ if ($benefitsHtml !== '' && strpos($benefitsHtml, 'velaServicesInner--home5') ==
         </div>
     </section>
     <?php endforeach; ?>
+
+    <?php if ($productTabHtml !== ''): ?>
+    <section class="top-home-content top-home-content--product-tabs awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Vitrines de Produtos')); ?>">
+        <div class="container">
+            <?php echo $productTabHtml; ?>
+        </div>
+    </section>
+    <?php endif; ?>
 
     <?php if ($fitmentSearchHtml !== ''): ?>
     <section class="top-home-content top-home-content--fitment-search awa-home-section ayo-home5-section ayo-home5-section--fitment" aria-label="<?php echo $this->escapeHtmlAttr(__('Busca por aplicacao')); ?>">

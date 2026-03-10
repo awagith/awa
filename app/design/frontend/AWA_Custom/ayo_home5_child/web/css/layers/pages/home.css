@@ -1029,6 +1029,25 @@ body.cms-homepage_ayo_home5 .page-wrapper .top-home-content--trust-and-offers .t
     color: #0f172a;
 }
 
+/* 5 itens: grid 2+3 em telas medianas */
+@media (min-width: 768px) and (max-width: 1100px) {
+    .awa-b2b-benefits-strip__grid {
+        display: grid;
+        grid-template-columns: repeat(3, auto);
+        justify-content: center;
+        gap: 0;
+    }
+
+    .awa-b2b-benefits-strip__item:nth-child(3) {
+        border-right: none;
+    }
+
+    .awa-b2b-benefits-strip__item:nth-child(4),
+    .awa-b2b-benefits-strip__item:nth-child(5) {
+        border-top: 1px solid #e2e8f0;
+    }
+}
+
 @media (max-width: 767px) {
     .awa-b2b-benefits-strip__grid {
         flex-direction: column;
@@ -1038,10 +1057,10 @@ body.cms-homepage_ayo_home5 .page-wrapper .top-home-content--trust-and-offers .t
 
     .awa-b2b-benefits-strip__item {
         font-size: 0.75rem;
-        white-space: normal; /* Permite quebra de linha em telas pequenas */
+        white-space: normal;
         text-align: center;
         justify-content: center;
-        border-right: none; /* Remove separador lateral no layout em coluna */
+        border-right: none;
         padding-inline: 0;
         padding-block: 4px;
         border-bottom: 1px solid #e9edf4;
@@ -1125,5 +1144,133 @@ body.cms-homepage_ayo_home5 .page-wrapper .top-home-content--trust-and-offers .t
 @media (min-width: 768px) {
     .awa-mobile-b2b-shortcuts {
         display: none !important;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HOMEPAGE — ProductTab Vitrines
+   ═══════════════════════════════════════════════════════════════ */
+.top-home-content--product-tabs {
+    background: #f8fafc;
+}
+
+.top-home-content--product-tabs .container {
+    max-width: 1280px;
+}
+
+/* Eyebrow label acima da heading */
+.top-home-content--product-tabs .awa-producttab-eyebrow {
+    display: block;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--awa-brand-primary, #b73337);
+    margin-bottom: 4px;
+}
+
+/* Heading principal da seção ProductTab */
+.top-home-content--product-tabs .block-title,
+.top-home-content--product-tabs .awa-producttab-heading {
+    text-align: center;
+    font-size: clamp(1.25rem, 3vw, 1.875rem);
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+
+/* Divisor abaixo da heading */
+.top-home-content--product-tabs .ayo-home5-divider,
+.top-home-content--product-tabs .awa-producttab-divider {
+    display: block;
+    width: 40px;
+    height: 3px;
+    background: var(--awa-brand-primary, #b73337);
+    border-radius: 2px;
+    margin: 8px auto 24px;
+}
+
+/* Nav de abas — estilo en_5 */
+.top-home-content--product-tabs .block-new-products-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+}
+
+.top-home-content--product-tabs .block-new-products-tabs li {
+    list-style: none;
+}
+
+.top-home-content--product-tabs .block-new-products-tabs li a,
+.top-home-content--product-tabs .block-new-products-tabs li span {
+    display: inline-block;
+    padding: 7px 22px;
+    border-radius: 999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    background: #fff;
+    color: #475569;
+    border: 1.5px solid #e2e8f0;
+    transition: all 150ms ease;
+    white-space: nowrap;
+}
+
+.top-home-content--product-tabs .block-new-products-tabs li.active a,
+.top-home-content--product-tabs .block-new-products-tabs li.active span,
+.top-home-content--product-tabs .block-new-products-tabs li a:hover,
+.top-home-content--product-tabs .block-new-products-tabs li span:hover {
+    background: var(--awa-brand-primary, #b73337);
+    color: #fff;
+    border-color: var(--awa-brand-primary, #b73337);
+}
+
+/* Product card dentro do ProductTab — B2B meta legível */
+.top-home-content--product-tabs .product-item-info {
+    background: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    transition: box-shadow 150ms ease, transform 150ms ease;
+}
+
+.top-home-content--product-tabs .product-item-info:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,.1);
+    transform: translateY(-2px);
+}
+
+/* B2B meta tags: SKU, EAN, Caixa, Linha */
+.top-home-content--product-tabs .awa-product-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+}
+
+.top-home-content--product-tabs .awa-product-meta__tag {
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+@media (max-width: 767px) {
+    .top-home-content--product-tabs .block-new-products-tabs {
+        gap: 6px;
+        padding-inline: 0;
+    }
+
+    .top-home-content--product-tabs .block-new-products-tabs li a,
+    .top-home-content--product-tabs .block-new-products-tabs li span {
+        font-size: 0.75rem;
+        padding: 6px 14px;
     }
 }
