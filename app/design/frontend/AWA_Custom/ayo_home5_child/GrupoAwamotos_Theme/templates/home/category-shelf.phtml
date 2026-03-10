@@ -79,8 +79,12 @@ $defaultItems = max(1, (int) ($block->getdefault() ?: $itemsDesktop));
     </div>
 </div>
 <script>
-require(['jquery', 'mage/mage', 'rokanthemes/owl'], function ($) {
+require(['jquery', 'rokanthemes/owl'], function ($) {
     'use strict';
+
+    if (typeof $.fn.owlCarousel !== 'function') {
+        return;
+    }
 
     $('#<?php echo $block->escapeJsQuote($domId); ?> .category_tab_slider').owlCarousel({
         lazyLoad: true,

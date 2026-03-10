@@ -3,11 +3,26 @@
  *
  * rokanthemes/timecircles: Rokanthemes_Superdeals está desabilitado.
  * Mapeando para nosso stub noop.
+ *
+ * rokanthemes/owl shim fix: Rokanthemes declara apenas deps:["jquery"] sem exports.
+ * RequireJS não consegue verificar se o plugin foi registrado em $.fn.
+ * O init() garante que o módulo retorna $.fn.owlCarousel após o carregamento.
  */
 var config = {
     map: {
         '*': {
             awaCustomCompatBootstrap: 'js/awa-custom-compat-bootstrap'
+        }
+    },
+    shim: {
+        'rokanthemes/owl': {
+            deps: ['jquery'],
+            init: function () {
+                'use strict';
+                return window.jQuery && window.jQuery.fn && window.jQuery.fn.owlCarousel
+                    ? window.jQuery.fn.owlCarousel
+                    : undefined;
+            }
         }
     },
     paths: {

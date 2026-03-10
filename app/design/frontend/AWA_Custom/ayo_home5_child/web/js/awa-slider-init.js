@@ -24,15 +24,27 @@ define([
         });
     }
 
+    function initCarousel($el, owlConfig) {
+        if (typeof $.fn.owlCarousel !== 'function') {
+            // Plugin not yet registered on $.fn — retry after next paint
+            window.setTimeout(function () {
+                initCarousel($el, owlConfig);
+            }, 100);
+            return;
+        }
+
+        $el.owlCarousel(owlConfig);
+    }
+
     return function (config) {
         const sliderId = config.sliderId;
         const owlConfig = $.extend(true, {}, config.owlConfig || {}, {
-            afterInit(elem) {
+            afterInit: function (elem) {
                 const $firstSlide = elem.find('.owl-item').eq(0);
 
                 doAnimations($firstSlide.find('.text-banner').find("[data-animation ^= 'animated']"));
             },
-            afterMove(elem) {
+            afterMove: function (elem) {
                 const $currentSlide = elem.find('.owl-item').eq(this.currentItem);
 
                 doAnimations($currentSlide.find('.text-banner').find("[data-animation ^= 'animated']"));
@@ -43,6 +55,6 @@ define([
             owlConfig.autoPlay = false;
         }
 
-        $(`.slider_${sliderId} .owl`).owlCarousel(owlConfig);
+        initCarousel($(`.slider_${sliderId} .owl`), owlConfig);
     };
 });

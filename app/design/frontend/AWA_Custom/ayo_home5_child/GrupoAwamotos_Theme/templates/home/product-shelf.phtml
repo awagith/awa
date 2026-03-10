@@ -101,8 +101,12 @@ $legacyRootClass = $block instanceof HomeNewproduct ? 'rokan-newproduct' : 'roka
 </script>
 <?php endif; ?>
 <script>
-require(['jquery', 'mage/mage', 'rokanthemes/owl'], function ($) {
+require(['jquery', 'rokanthemes/owl'], function ($) {
     'use strict';
+
+    if (typeof $.fn.owlCarousel !== 'function') {
+        return;
+    }
 
     $('#<?php echo $block->escapeJsQuote($carouselDomId); ?> .owl').owlCarousel({
         lazyLoad: true,
