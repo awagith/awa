@@ -1274,3 +1274,146 @@ body.cms-homepage_ayo_home5 .page-wrapper .top-home-content--trust-and-offers .t
         padding: 6px 14px;
     }
 }
+
+/* ============================================================
+   PERFORMANCE — content-visibility para sections below-fold
+   ============================================================ */
+.top-home-content--fitment-search,
+.top-home-content--application-shortcuts,
+.top-home-content--launches,
+.top-home-content--popular-categories,
+.top-home-content--featured-categories,
+.top-home-content--blog,
+.top-home-content--testimonials,
+.top-home-content--b2b-promo,
+.top-home-content--recently-viewed,
+.top-home-content--trust-close {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 600px;
+}
+
+/* ============================================================
+   ALTERNATING SECTION BACKGROUNDS — ritmo visual
+   ============================================================ */
+.top-home-content--category-carousel { background: #f8fafc; }
+.top-home-content--bestsellers       { background: #fff; }
+.top-home-content--category-shelf-bauletos { background: #f8fafc; }
+.top-home-content--category-shelf-guidoes  { background: #fff; }
+.top-home-content--product-tabs      { background: #f8fafc; }
+.top-home-content--fitment-search    { background: #fff; }
+.top-home-content--application-shortcuts { background: #f8fafc; }
+.top-home-content--launches          { background: #fff; }
+.top-home-content--popular-categories,
+.top-home-content--featured-categories { background: #f8fafc; }
+.top-home-content--blog              { background: #fff; }
+.top-home-content--testimonials      { background: #f8fafc; }
+.top-home-content--recently-viewed   { background: #fff; }
+.top-home-content--trust-close       { background: #f8fafc; }
+
+/* ============================================================
+   RECENTLY VIEWED — estilos da secao homepage
+   ============================================================ */
+.awa-recently-viewed__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+.awa-recently-viewed__item {
+    background: #fff;
+    border: 1px solid #e8ecf0;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.awa-recently-viewed__item:hover {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+    transform: translateY(-2px);
+}
+
+.awa-recently-viewed__link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+}
+
+.awa-recently-viewed__image-wrap {
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #f8fafc;
+}
+
+.awa-recently-viewed__image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.awa-recently-viewed__item:hover .awa-recently-viewed__image {
+    transform: scale(1.05);
+}
+
+.awa-recently-viewed__image-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #f0f4f8 0%, #e8ecf0 100%);
+}
+
+.awa-recently-viewed__info {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+}
+
+.awa-recently-viewed__name {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #1e293b;
+    line-height: 1.35;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.awa-recently-viewed__sku {
+    font-size: 0.6875rem;
+    color: #94a3b8;
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    letter-spacing: 0.02em;
+}
+
+.awa-recently-viewed__price {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--awa-primary, #b73337);
+    margin-top: auto;
+    padding-top: 6px;
+}
+
+@media (max-width: 1024px) {
+    .awa-recently-viewed__grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px) {
+    .awa-recently-viewed__grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .awa-recently-viewed__info { padding: 8px 10px; }
+}
+
+/* ============================================================
+   B2B BAR — logged-in state
+   ============================================================ */
+.awa-hero-b2b-bar__message--logged {
+    align-items: center;
+    gap: 10px;
+}
+
+.awa-hero-b2b-bar__ctas--logged {
+    gap: 8px;
+}

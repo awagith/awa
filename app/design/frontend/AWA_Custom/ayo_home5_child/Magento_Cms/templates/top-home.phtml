@@ -174,6 +174,48 @@ if ($benefitsHtml !== '' && strpos($benefitsHtml, 'velaServicesInner--home5') ==
     <?php echo $schemaOrgHtml; ?>
 <?php endif; ?>
 
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@graph": [
+        {
+            "@type": "Organization",
+            "@id": "<?= $block->escapeHtml($block->getBaseUrl()) ?>#organization",
+            "name": "AWA Motos",
+            "url": "<?= $block->escapeHtml($block->getBaseUrl()) ?>",
+            "logo": {
+                "@type": "ImageObject",
+                "url": "<?= $block->escapeHtml($block->getBaseUrl()) ?>pub/media/logo/default/logo-awa.png"
+            },
+            "description": "Distribuidora de peças e acessórios para motos em Araraquara, SP. Especializada em Honda CG 160, Titan, Fan, Bros, XRE, Yamaha Fazer e Factor.",
+            "address": {
+                "@type": "PostalAddress",
+                "addressLocality": "Araraquara",
+                "addressRegion": "SP",
+                "addressCountry": "BR"
+            },
+            "sameAs": []
+        },
+        {
+            "@type": "WebSite",
+            "@id": "<?= $block->escapeHtml($block->getBaseUrl()) ?>#website",
+            "url": "<?= $block->escapeHtml($block->getBaseUrl()) ?>",
+            "name": "AWA Motos",
+            "publisher": {"@id": "<?= $block->escapeHtml($block->getBaseUrl()) ?>#organization"},
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": {
+                    "@type": "EntryPoint",
+                    "urlTemplate": "<?= $block->escapeHtml($block->getUrl('catalogsearch/result/')) ?>?q={search_term_string}"
+                },
+                "query-input": "required name=search_term_string"
+            }
+        }
+    ]
+}
+</script>
+
+
 <div class="ayo-home5-wrapper ayo-home5-wrapper--template-driven" role="main" aria-label="<?php echo $this->escapeHtmlAttr(__('Conteudo principal da pagina inicial')); ?>">
     <div class="top-home-content top-home-content--above-fold">
         <?php if ($heroSliderHtml !== ''): ?>
@@ -186,17 +228,31 @@ if ($benefitsHtml !== '' && strpos($benefitsHtml, 'velaServicesInner--home5') ==
             </div>
         <?php endif; ?>
 
-        <div class="awa-hero-b2b-bar" data-awa-hero-b2b-bar="true">
+        <div class="awa-hero-b2b-bar" data-awa-hero-b2b-bar="true"
+             data-mage-init='{"AWA_Custom/js/awa-home-b2b-bar": {}}'>
             <div class="container">
                 <div class="awa-hero-b2b-bar__inner">
-                    <div class="awa-hero-b2b-bar__message">
+
+                    <!-- Estado: visitante não autenticado (padrão / FPC) -->
+                    <div class="awa-hero-b2b-bar__message" data-b2b-bar-guest>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3h-8l-2 4h12l-2-4z"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
                         <span><strong><?= $block->escapeHtml(__('Portal B2B')) ?></strong> — <?= $block->escapeHtml(__('Peças para revenda com condições especiais. Faça login para ver preços exclusivos.')) ?></span>
                     </div>
-                    <div class="awa-hero-b2b-bar__ctas">
+                    <div class="awa-hero-b2b-bar__ctas" data-b2b-bar-guest>
                         <a href="<?= $block->escapeUrl($block->getUrl('customer/account/login')) ?>" class="awa-hero-b2b-bar__btn awa-hero-b2b-bar__btn--primary"><?= $block->escapeHtml(__('Fazer login')) ?></a>
                         <a href="<?= $block->escapeUrl($block->getUrl('b2b/register')) ?>" class="awa-hero-b2b-bar__btn awa-hero-b2b-bar__btn--secondary"><?= $block->escapeHtml(__('Cadastro atacado')) ?></a>
                     </div>
+
+                    <!-- Estado: cliente autenticado (renderizado via JS) -->
+                    <div class="awa-hero-b2b-bar__message awa-hero-b2b-bar__message--logged" data-b2b-bar-logged style="display:none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        <span><?= $block->escapeHtml(__('Bem-vindo de volta,')) ?> <strong data-b2b-bar-name></strong>! <?= $block->escapeHtml(__('Seu portal B2B está ativo.')) ?></span>
+                    </div>
+                    <div class="awa-hero-b2b-bar__ctas awa-hero-b2b-bar__ctas--logged" data-b2b-bar-logged style="display:none">
+                        <a href="<?= $block->escapeUrl($block->getUrl('customer/account')) ?>" class="awa-hero-b2b-bar__btn awa-hero-b2b-bar__btn--primary"><?= $block->escapeHtml(__('Minha conta')) ?></a>
+                        <a href="<?= $block->escapeUrl($block->getUrl('b2b/quickorder')) ?>" class="awa-hero-b2b-bar__btn awa-hero-b2b-bar__btn--secondary"><?= $block->escapeHtml(__('Pedido rápido')) ?></a>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -482,6 +538,22 @@ if ($benefitsHtml !== '' && strpos($benefitsHtml, 'velaServicesInner--home5') ==
         </div>
     </section>
     <?php endif; ?>
+
+    <!-- Vistos Recentemente — renderizado 100% via localStorage, zero impacto no FPC -->
+    <section id="awa-home-recently-viewed"
+             class="top-home-content top-home-content--recently-viewed awa-home-section ayo-home5-section"
+             aria-label="<?php echo $this->escapeHtmlAttr(__('Vistos Recentemente')); ?>"
+             style="display:none"
+             data-mage-init='{"AWA_Custom/js/awa-recently-viewed": {"action": "widget", "maxItems": 4}}'>
+        <div class="container">
+            <header class="awa-intent-heading ayo-home5-heading">
+                <span class="ayo-home5-label"><?php echo $this->escapeHtml(__('Historico')); ?></span>
+                <h2><?php echo $this->escapeHtml(__('Vistos Recentemente')); ?></h2>
+                <span class="ayo-home5-divider"></span>
+            </header>
+            <div class="awa-recently-viewed__grid" id="awa-rv-grid"></div>
+        </div>
+    </section>
 
     <?php if ($trustBadgesHtml !== '' || $faqQuickHtml !== ''): ?>
     <section class="top-home-content top-home-content--trust-close awa-home-section ayo-home5-section" aria-label="<?php echo $this->escapeHtmlAttr(__('Confianca e Perguntas Frequentes')); ?>">
