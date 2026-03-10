@@ -16,12 +16,15 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <!-- Recreate the toolbar entry without the original before="user" constraint -->
+        <!-- Recreate the toolbar entry without any cross-container ordering constraint.
+             The original theme-adminhtml-backend uses after="user" but 'user' lives in
+             'header' while 'notification.messages' lives in 'header.inner.right',
+             causing "Broken reference" warnings on every admin page load. -->
         <referenceBlock name="notification.messages" remove="true"/>
         <referenceContainer name="header.inner.right">
             <block class="Magento\AdminNotification\Block\ToolbarEntry"
                    name="notification.messages"
-                   after="user"
+                   after="-"
                    aclResource="Magento_AdminNotification::show_toolbar"
                    template="Magento_AdminNotification::toolbar_entry.phtml"/>
         </referenceContainer>
