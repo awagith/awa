@@ -1,9 +1,7 @@
 <?php 
 	use Magento\Framework\App\Action\Action;
 	$templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
-	$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-    $StockState = $objectManager->get('\Magento\CatalogInventory\Api\StockStateInterface');
-    $StockState2 = $objectManager->get('\Magento\CatalogInventory\Api\StockConfigurationInterface');
+	$stockState = $block->getStockState();
 	$category_load = $block->getCategory();
 	$rows = 1;
 	$enabled= $block->getConfig('enabled');

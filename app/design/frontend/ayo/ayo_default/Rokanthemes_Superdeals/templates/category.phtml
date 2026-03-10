@@ -1,9 +1,7 @@
 <?php 
 	use Magento\Framework\App\Action\Action;
 	$templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::DEFAULT_VIEW;
-	$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-    $StockState = $objectManager->get('\Magento\CatalogInventory\Api\StockStateInterface');
-    $StockState2 = $objectManager->get('\Magento\CatalogInventory\Api\StockConfigurationInterface');
+	$stockState = $block->getStockState();
 	$category_load = $block->getCategory();
 	$rows = 1;
 	$enabled= $block->getConfig('enabled');
@@ -130,7 +128,7 @@
                                 ?>
                                 <div class="product-sold">
                                     <?php
-                                    $numbertotal = $StockState->getStockQty($_item->getId());
+                                    $numbertotal = $stockState->getStockQty($_item->getId());
                                     $sale_qty = $this->helper('Rokanthemes\RokanBase\Helper\Data')->getSalableQuantityDataBySku($_item->getSku());
                                     $numbersold = $block->getSoldProduct($_item->getId());
                                     $total = $sale_qty + $numbersold;
