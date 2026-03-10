@@ -20,10 +20,7 @@
         <li class="item">
             <?php if($this->helper('Rokanthemes\LayeredAjax\Helper\Data')->isEnabledPriceRangeSliders() && $attributeModel && $attributeModel->getFrontendInput() == 'price'): ?>
                 <?php
-					$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-					$currencysymbol = $objectManager->get('Magento\Store\Model\StoreManagerInterface');
-					$currency = $objectManager->create('Magento\Directory\Model\CurrencyFactory')->create()->load($currencysymbol->getStore()->getCurrentCurrencyCode());
-					$currencySymbol = $currency->getCurrencySymbol();
+                    $currencySymbol = $block->getStore()->getCurrentCurrency()->getCurrencySymbol();
                     $productCollection = $filter->getLayer()->getProductCollection();
 					$min = $productCollection->getMinPrice();
                     $max = $productCollection->getMaxPrice();
