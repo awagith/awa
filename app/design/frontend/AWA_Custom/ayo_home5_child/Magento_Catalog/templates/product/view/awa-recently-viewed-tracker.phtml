@@ -47,7 +47,7 @@ if ($priceHelper) {
 <script type="text/x-magento-init">
 {
     "*": {
-        "AWA_Custom/js/recently-viewed": {
+        "js/awa-recently-viewed": {
             "action": "track",
             "product": {
                 "id": <?= (int) $productId ?>,
@@ -76,7 +76,7 @@ if ($priceHelper) {
 <script type="text/x-magento-init">
 {
     "#awa-recently-viewed-widget": {
-        "AWA_Custom/js/recently-viewed": {
+        "js/awa-recently-viewed": {
             "action": "widget",
             "excludeId": <?= (int) $productId ?>,
             "maxItems": 4
