@@ -6,7 +6,7 @@
  * @var \GrupoAwamotos\B2B\ViewModel\ShoppingListViewModel $viewModel
  */
 $viewModel = $block->getData('view_model');
-$list = $block->getCurrentList();
+$list      = $block->getCurrentList();
 $shoppingListViewConfig = [
     'messages' => [
         'qtyUpdateError' => (string) __('Erro ao atualizar quantidade.'),
@@ -14,182 +14,246 @@ $shoppingListViewConfig = [
 ];
 ?>
 <?php if (!$list): ?>
-    <div class="message info">
-        <span><?= $block->escapeHtml(__('Lista de compras não encontrada.')) ?></span>
+    <div class="alert alert-info">
+        <?= $block->escapeHtml(__('Lista de compras não encontrada.')) ?>
     </div>
-    <div class="actions-toolbar">
-        <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action back">
-            <span><?= $block->escapeHtml(__('Voltar para Listas')) ?></span>
+    <div class="form-group">
+        <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="btn btn-default">
+            <?= $block->escapeHtml(__('Voltar para Listas')) ?>
         </a>
     </div>
 <?php else: ?>
     <?php $items = $viewModel->getListItems((int) $list->getId()); ?>
     <div class="b2b-shoppinglist-view b2b-page-shell"
          data-mage-init='<?= /* @noEscape */ json_encode(['GrupoAwamotos_B2B/js/shoppinglist/view' => $shoppingListViewConfig]) ?>'>
-        <div class="block-title">
-            <div class="title-row">
-                <strong><?= $block->escapeHtml($list->getName()) ?></strong>
+
+        <div class="b2b-section-header clearfix">
+            <h1 class="page-title pull-left">
+                <?= $block->escapeHtml($list->getName()) ?>
                 <?php if ($list->getData('is_default')): ?>
-                    <span class="default-badge"><?= $block->escapeHtml(__('Padrão')) ?></span>
+                    <span class="label label-default">
+                        <?= $block->escapeHtml(__('Padrão')) ?>
+                    </span>
+                <?php endif; ?>
+            </h1>
+            <div class="pull-right">
+                <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="btn btn-default">
+                    <?= $block->escapeHtml(__('Voltar para Listas')) ?>
+                </a>
+                <?php if ($items->getSize() > 0): ?>
+                    <a href="<?= $block->escapeUrl($block->getAddToCartUrl()) ?>"
+                       class="btn btn-primary add-all-cart">
+                        <?= $block->escapeHtml(__('Adicionar Tudo ao Carrinho')) ?>
+                    </a>
                 <?php endif; ?>
             </div>
-            <?php if ($list->getData('description')): ?>
-                <p class="list-description"><?= $block->escapeHtml($list->getData('description')) ?></p>
-            <?php endif; ?>
         </div>
 
-        <div class="shoppinglist-top-actions">
-            <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action back">
-                <span><?= $block->escapeHtml(__('Voltar para Listas')) ?></span>
-            </a>
-            <?php if ($items->getSize() > 0): ?>
-                <a href="<?= $block->escapeUrl($block->getAddToCartUrl()) ?>" class="action primary add-all-cart">
-                    <span><?= $block->escapeHtml(__('Adicionar Tudo ao Carrinho')) ?></span>
-                </a>
-            <?php endif; ?>
-        </div>
+        <?php if ($list->getData('description')): ?>
+            <p class="text-muted"><?= $block->escapeHtml($list->getData('description')) ?></p>
+        <?php endif; ?>
 
         <!-- Configuração de Pedido Recorrente -->
         <?php if ($items->getSize() > 0): ?>
-            <div class="recurring-config-section">
-                <div class="recurring-header">
-                    <strong><?= $block->escapeHtml(__('Pedido Recorrente')) ?></strong>
+            <div class="panel panel-default panel-collapsed">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <a data-toggle="collapse"
+                           href="#recurring-config-body"
+                           aria-expanded="<?= $list->getData('is_recurring') ? 'true' : 'false' ?>">
+                            <?= $block->escapeHtml(__('Pedido Recorrente')) ?>
+                            <span class="caret"></span>
+                        </a>
+                    </h3>
                 </div>
-                <form method="post" action="<?= $block->escapeUrl($block->getSetRecurringUrl()) ?>" class="recurring-form">
-                    <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
-                    <div class="recurring-toggle">
-                        <label class="recurring-switch">
-                            <input type="checkbox" name="is_recurring" value="1"
-                                   id="recurring-toggle-input"
-                                   <?= $list->getData('is_recurring') ? 'checked' : '' ?>
-                                   data-role="recurring-toggle" />
-                            <span class="recurring-slider"></span>
-                        </label>
-                        <span class="toggle-label"><?= $block->escapeHtml(__('Ativar pedido automático')) ?></span>
+                <div id="recurring-config-body"
+                     class="panel-collapse collapse<?= $list->getData('is_recurring') ? ' in' : '' ?>">
+                    <div class="panel-body">
+                        <form method="post"
+                              action="<?= $block->escapeUrl($block->getSetRecurringUrl()) ?>"
+                              class="recurring-form">
+                            <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                            <div class="well">
+                                <div class="form-group">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox"
+                                                   name="is_recurring"
+                                                   value="1"
+                                                   id="recurring-toggle-input"
+                                                   <?= $list->getData('is_recurring') ? 'checked' : '' ?>
+                                                   data-role="recurring-toggle" />
+                                            <?= $block->escapeHtml(__('Ativar pedido automático')) ?>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div id="recurring-options"
+                                     style="<?= $list->getData('is_recurring') ? '' : 'display:none;' ?>">
+                                    <div class="form-group">
+                                        <label for="recurring_interval" class="control-label">
+                                            <?= $block->escapeHtml(__('Repetir a cada')) ?>
+                                        </label>
+                                        <select name="recurring_interval"
+                                                id="recurring_interval"
+                                                class="form-control">
+                                            <?php
+                                            $intervals = [
+                                                7  => '7 dias',
+                                                14 => '14 dias',
+                                                30 => '30 dias (mensal)',
+                                                60 => '60 dias',
+                                                90 => '90 dias (trimestral)',
+                                            ];
+                                            $currentInterval = (int) $list->getData('recurring_interval');
+                                            foreach ($intervals as $value => $label): ?>
+                                                <option value="<?= (int) $value ?>"
+                                                        <?= $currentInterval === $value ? 'selected' : '' ?>>
+                                                    <?= $block->escapeHtml(__($label)) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                    <?php if ($list->getData('next_order_date')): ?>
+                                        <p class="help-block">
+                                            <?= $block->escapeHtml(
+                                                __('Próximo pedido: %1',
+                                                    date('d/m/Y', strtotime($list->getData('next_order_date')))
+                                                )
+                                            ) ?>
+                                        </p>
+                                    <?php endif; ?>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-sm save-recurring-btn">
+                                    <?= $block->escapeHtml(__('Salvar')) ?>
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                    <div class="recurring-options" id="recurring-options" style="<?= $list->getData('is_recurring') ? '' : 'display:none;' ?>">
-                        <label for="recurring_interval"><?= $block->escapeHtml(__('Repetir a cada')) ?></label>
-                        <select name="recurring_interval" id="recurring_interval" class="recurring-select">
-                            <?php
-                            $intervals = [7 => '7 dias', 14 => '14 dias', 30 => '30 dias (mensal)', 60 => '60 dias', 90 => '90 dias (trimestral)'];
-                            $currentInterval = (int) $list->getData('recurring_interval');
-                            foreach ($intervals as $value => $label): ?>
-                                <option value="<?= (int) $value ?>" <?= $currentInterval === $value ? 'selected' : '' ?>>
-                                    <?= $block->escapeHtml(__($label)) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <?php if ($list->getData('next_order_date')): ?>
-                            <span class="next-order-info">
-                                <?= $block->escapeHtml(__('Próximo pedido: %1', date('d/m/Y', strtotime($list->getData('next_order_date'))))) ?>
-                            </span>
-                        <?php endif; ?>
-                    </div>
-                    <button type="submit" class="action secondary save-recurring-btn">
-                        <span><?= $block->escapeHtml(__('Salvar')) ?></span>
-                    </button>
-                </form>
+                </div>
             </div>
         <?php endif; ?>
 
         <?php if ($items->getSize() === 0): ?>
-            <div class="message info empty">
-                <span><?= $block->escapeHtml(__('Esta lista está vazia. Navegue pelo catálogo para adicionar produtos.')) ?></span>
+            <div class="alert alert-info">
+                <?= $block->escapeHtml(__('Esta lista está vazia. Navegue pelo catálogo para adicionar produtos.')) ?>
             </div>
         <?php else: ?>
-            <div class="shoppinglist-items-table-wrapper">
-                <table class="shoppinglist-items-table">
-                    <thead>
-                        <tr>
-                            <th class="col-image"><?= $block->escapeHtml(__('Produto')) ?></th>
-                            <th class="col-name"><?= $block->escapeHtml(__('Nome')) ?></th>
-                            <th class="col-sku"><?= $block->escapeHtml(__('SKU')) ?></th>
-                            <th class="col-price"><?= $block->escapeHtml(__('Preço')) ?></th>
-                            <th class="col-qty"><?= $block->escapeHtml(__('Qtd')) ?></th>
-                            <th class="col-subtotal"><?= $block->escapeHtml(__('Subtotal')) ?></th>
-                            <th class="col-actions"><?= $block->escapeHtml(__('Ações')) ?></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php $grandTotal = 0; ?>
-                        <?php foreach ($items as $item): ?>
-                            <?php
-                            $product = $item->getProduct();
-                            $lineTotal = $item->getLineTotal();
-                            $grandTotal += $lineTotal;
-                            $qty = (float) $item->getQty();
-                            ?>
-                            <tr class="item-row" data-item-id="<?= (int) $item->getId() ?>">
-                                <td class="col-image" data-th="<?= $block->escapeHtmlAttr(__('Produto')) ?>">
-                                    <?php if ($product): ?>
-                                        <a href="<?= $block->escapeUrl($block->getProductUrl($product)) ?>">
-                                            <img src="<?= $block->escapeUrl($viewModel->getProductImageUrl($product)) ?>"
-                                                 alt="<?= $block->escapeHtmlAttr($product->getName()) ?>"
-                                                 width="80" height="80" loading="lazy" />
-                                        </a>
-                                    <?php else: ?>
-                                        <span class="product-unavailable-img">—</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="col-name" data-th="<?= $block->escapeHtmlAttr(__('Nome')) ?>">
-                                    <?php if ($product): ?>
-                                        <a href="<?= $block->escapeUrl($block->getProductUrl($product)) ?>">
-                                            <?= $block->escapeHtml($product->getName()) ?>
-                                        </a>
-                                    <?php else: ?>
-                                        <span class="product-unavailable"><?= $block->escapeHtml(__('Produto indisponível')) ?></span>
-                                    <?php endif; ?>
-                                </td>
-                                <td class="col-sku" data-th="<?= $block->escapeHtmlAttr(__('SKU')) ?>">
-                                    <?= $block->escapeHtml($item->getData('sku') ?: ($product ? $product->getSku() : '-')) ?>
-                                </td>
-                                <td class="col-price" data-th="<?= $block->escapeHtmlAttr(__('Preço')) ?>">
-                                    <?php if ($product): ?>
-                                        <?= /* @noEscape */ $viewModel->formatPrice((float) $product->getFinalPrice()) ?>
-                                    <?php else: ?>
-                                        —
-                                    <?php endif; ?>
-                                </td>
-                                <td class="col-qty" data-th="<?= $block->escapeHtmlAttr(__('Qtd')) ?>">
-                                    <input type="number"
-                                           class="qty-input"
-                                           name="qty"
-                                           value="<?= (int) $qty ?>"
-                                           min="1"
-                                           data-item-id="<?= (int) $item->getId() ?>"
-                                           data-update-url="<?= $block->escapeUrl($block->getUpdateItemUrl()) ?>" />
-                                </td>
-                                <td class="col-subtotal" data-th="<?= $block->escapeHtmlAttr(__('Subtotal')) ?>">
-                                    <?= /* @noEscape */ $viewModel->formatPrice($lineTotal) ?>
-                                </td>
-                                <td class="col-actions" data-th="<?= $block->escapeHtmlAttr(__('Ações')) ?>">
-                                    <a href="<?= $block->escapeUrl($block->getRemoveItemUrl((int) $item->getId())) ?>"
-                                       class="action delete"
-                                       title="<?= $block->escapeHtmlAttr(__('Remover')) ?>"
-                                       data-confirm="<?= $block->escapeHtmlAttr(__('Remover este item da lista?')) ?>">
-                                        <span>&times;</span>
-                                    </a>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colspan="5" class="total-label"><?= $block->escapeHtml(__('Total Estimado')) ?></td>
-                            <td colspan="2" class="total-value"><?= /* @noEscape */ $viewModel->formatPrice($grandTotal) ?></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-
-            <div class="shoppinglist-bottom-actions">
-                <a href="<?= $block->escapeUrl($block->getAddToCartUrl()) ?>" class="action primary add-all-cart">
-                    <span><?= $block->escapeHtml(__('Adicionar Tudo ao Carrinho')) ?></span>
-                </a>
-                <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action secondary">
-                    <span><?= $block->escapeHtml(__('Voltar para Listas')) ?></span>
-                </a>
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover b2b-responsive-table">
+                            <thead>
+                                <tr>
+                                    <th class="col-image"><?= $block->escapeHtml(__('Produto')) ?></th>
+                                    <th class="col-name"><?= $block->escapeHtml(__('Nome')) ?></th>
+                                    <th class="col-sku"><?= $block->escapeHtml(__('SKU')) ?></th>
+                                    <th class="col-price"><?= $block->escapeHtml(__('Preço')) ?></th>
+                                    <th class="col-qty"><?= $block->escapeHtml(__('Qtd')) ?></th>
+                                    <th class="col-subtotal"><?= $block->escapeHtml(__('Subtotal')) ?></th>
+                                    <th class="col-actions"><?= $block->escapeHtml(__('Ações')) ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $grandTotal = 0; ?>
+                                <?php foreach ($items as $item): ?>
+                                    <?php
+                                    $product   = $item->getProduct();
+                                    $lineTotal = $item->getLineTotal();
+                                    $grandTotal += $lineTotal;
+                                    $qty = (float) $item->getQty();
+                                    ?>
+                                    <tr class="item-row" data-item-id="<?= (int) $item->getId() ?>">
+                                        <td class="col-image"
+                                            data-th="<?= $block->escapeHtmlAttr(__('Produto')) ?>">
+                                            <?php if ($product): ?>
+                                                <a href="<?= $block->escapeUrl($block->getProductUrl($product)) ?>">
+                                                    <img src="<?= $block->escapeUrl($viewModel->getProductImageUrl($product)) ?>"
+                                                         alt="<?= $block->escapeHtmlAttr($product->getName()) ?>"
+                                                         width="80" height="80" loading="lazy" />
+                                                </a>
+                                            <?php else: ?>
+                                                <span class="product-unavailable-img">—</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="col-name"
+                                            data-th="<?= $block->escapeHtmlAttr(__('Nome')) ?>">
+                                            <?php if ($product): ?>
+                                                <a href="<?= $block->escapeUrl($block->getProductUrl($product)) ?>">
+                                                    <?= $block->escapeHtml($product->getName()) ?>
+                                                </a>
+                                            <?php else: ?>
+                                                <span class="product-unavailable">
+                                                    <?= $block->escapeHtml(__('Produto indisponível')) ?>
+                                                </span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="col-sku"
+                                            data-th="<?= $block->escapeHtmlAttr(__('SKU')) ?>">
+                                            <?= $block->escapeHtml(
+                                                $item->getData('sku') ?: ($product ? $product->getSku() : '-')
+                                            ) ?>
+                                        </td>
+                                        <td class="col-price"
+                                            data-th="<?= $block->escapeHtmlAttr(__('Preço')) ?>">
+                                            <?php if ($product): ?>
+                                                <?= /* @noEscape */ $viewModel->formatPrice((float) $product->getFinalPrice()) ?>
+                                            <?php else: ?>
+                                                —
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="col-qty"
+                                            data-th="<?= $block->escapeHtmlAttr(__('Qtd')) ?>">
+                                            <input type="number"
+                                                   class="form-control input-sm qty-input"
+                                                   name="qty"
+                                                   value="<?= (int) $qty ?>"
+                                                   min="1"
+                                                   data-item-id="<?= (int) $item->getId() ?>"
+                                                   data-update-url="<?= $block->escapeUrl($block->getUpdateItemUrl()) ?>" />
+                                        </td>
+                                        <td class="col-subtotal"
+                                            data-th="<?= $block->escapeHtmlAttr(__('Subtotal')) ?>">
+                                            <?= /* @noEscape */ $viewModel->formatPrice($lineTotal) ?>
+                                        </td>
+                                        <td class="col-actions"
+                                            data-th="<?= $block->escapeHtmlAttr(__('Ações')) ?>">
+                                            <div class="btn-group btn-group-xs">
+                                                <a href="<?= $block->escapeUrl($block->getRemoveItemUrl((int) $item->getId())) ?>"
+                                                   class="btn btn-danger"
+                                                   title="<?= $block->escapeHtmlAttr(__('Remover')) ?>"
+                                                   data-confirm="<?= $block->escapeHtmlAttr(__('Remover este item da lista?')) ?>">
+                                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                                    <span class="sr-only"><?= $block->escapeHtml(__('Remover')) ?></span>
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="5" class="text-right total-label">
+                                        <strong><?= $block->escapeHtml(__('Total Estimado')) ?></strong>
+                                    </td>
+                                    <td colspan="2" class="total-value">
+                                        <strong><?= /* @noEscape */ $viewModel->formatPrice($grandTotal) ?></strong>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="form-group">
+                        <a href="<?= $block->escapeUrl($block->getAddToCartUrl()) ?>"
+                           class="btn btn-primary add-all-cart">
+                            <?= $block->escapeHtml(__('Adicionar Tudo ao Carrinho')) ?>
+                        </a>
+                        <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="btn btn-default">
+                            <?= $block->escapeHtml(__('Voltar para Listas')) ?>
+                        </a>
+                    </div>
+                </div>
             </div>
         <?php endif; ?>
+
     </div>
 <?php endif; ?>

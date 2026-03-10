@@ -10,6 +10,7 @@
         <title>Pedido Rápido</title>
     </head>
     <update handle="customer_account"/>
+    <update handle="b2b_shared_styles"/>
     <body>
         <referenceContainer name="content">
             <block class="Magento\Framework\View\Element\Template"

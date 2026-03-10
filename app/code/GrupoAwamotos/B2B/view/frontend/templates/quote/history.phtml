@@ -1,101 +1,118 @@
 <?php
 /**
  * Quote History Template
- * 
+ *
  * @var \GrupoAwamotos\B2B\Block\Quote\History $block
  */
 ?>
 <div class="b2b-quote-history b2b-page-shell">
-    <div class="block-title">
-        <strong><?= $block->escapeHtml(__('Minhas Cotações')) ?></strong>
+
+    <div class="page-title-wrapper">
+        <h1 class="page-title">
+            <span class="base"><?= $block->escapeHtml(__('Minhas Cotações')) ?></span>
+        </h1>
     </div>
-    
+
     <?php if (!$block->hasQuoteRequests()): ?>
-        <div class="message info empty">
-            <span><?= $block->escapeHtml(__('Você ainda não possui solicitações de cotação.')) ?></span>
+
+        <div class="alert alert-info">
+            <?= $block->escapeHtml(__('Você ainda não possui solicitações de cotação.')) ?>
         </div>
-        <div class="actions">
-            <a href="<?= $block->escapeUrl($block->getUrl('/')) ?>" class="action primary">
-                <span><?= $block->escapeHtml(__('Continuar Comprando')) ?></span>
+        <div style="margin-top:12px">
+            <a href="<?= $block->escapeUrl($block->getUrl('/')) ?>" class="btn btn-primary">
+                <?= $block->escapeHtml(__('Continuar Comprando')) ?>
             </a>
         </div>
+
     <?php else: ?>
-        <div class="table-wrapper quote-history">
-            <table class="data table table-quote-history" id="quote-history-table">
-                <caption class="table-caption"><?= $block->escapeHtml(__('Minhas Cotações')) ?></caption>
-                <thead>
-                    <tr>
-                        <th scope="col" class="col id"><?= $block->escapeHtml(__('Nº')) ?></th>
-                        <th scope="col" class="col date"><?= $block->escapeHtml(__('Data')) ?></th>
-                        <th scope="col" class="col status"><?= $block->escapeHtml(__('Status')) ?></th>
-                        <th scope="col" class="col total"><?= $block->escapeHtml(__('Valor')) ?></th>
-                        <th scope="col" class="col expires"><?= $block->escapeHtml(__('Validade')) ?></th>
-                        <th scope="col" class="col actions"><?= $block->escapeHtml(__('Ações')) ?></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($block->getQuoteRequests() as $quote): ?>
-                        <?php 
-                        $statusClass = '';
-                        switch ($quote->getStatus()) {
-                            case 'approved':
-                            case 'quoted':
-                                $statusClass = 'status-success';
-                                break;
-                            case 'pending':
-                            case 'processing':
-                                $statusClass = 'status-pending';
-                                break;
-                            case 'rejected':
-                            case 'expired':
-                                $statusClass = 'status-failed';
-                                break;
-                            case 'converted':
-                                $statusClass = 'status-complete';
-                                break;
-                        }
-                        ?>
-                        <tr>
-                            <td data-th="<?= $block->escapeHtmlAttr(__('Nº')) ?>" class="col id">
-                                #<?= (int) $quote->getRequestId() ?>
-                            </td>
-                            <td data-th="<?= $block->escapeHtmlAttr(__('Data')) ?>" class="col date">
-                                <?= $block->escapeHtml($block->formatQuoteDate($quote->getCreatedAt())) ?>
-                            </td>
-                            <td data-th="<?= $block->escapeHtmlAttr(__('Status')) ?>" class="col status">
-                                <span class="quote-status <?= $block->escapeHtmlAttr($statusClass) ?>">
-                                    <?= $block->escapeHtml($quote->getStatusLabel()) ?>
-                                </span>
-                            </td>
-                            <td data-th="<?= $block->escapeHtmlAttr(__('Valor')) ?>" class="col total">
-                                <?php if ($quote->getQuotedTotal()): ?>
-                                    <?= /* @noEscape */ $block->formatPrice($quote->getQuotedTotal()) ?>
-                                <?php else: ?>
-                                    <span class="no-value"><?= $block->escapeHtml(__('Aguardando')) ?></span>
-                                <?php endif; ?>
-                            </td>
-                            <td data-th="<?= $block->escapeHtmlAttr(__('Validade')) ?>" class="col expires">
-                                <?php if ($quote->getExpiresAt()): ?>
-                                    <?php if ($quote->isExpired()): ?>
-                                        <span class="expired"><?= $block->escapeHtml(__('Expirada')) ?></span>
-                                    <?php else: ?>
-                                        <?= $block->escapeHtml($block->formatQuoteDate($quote->getExpiresAt())) ?>
-                                    <?php endif; ?>
-                                <?php else: ?>
-                                    -
-                                <?php endif; ?>
-                            </td>
-                            <td data-th="<?= $block->escapeHtmlAttr(__('Ações')) ?>" class="col actions">
-                                <a href="<?= $block->escapeUrl($block->getViewUrl($quote->getRequestId())) ?>" 
-                                   class="action view"
-                                   title="<?= $block->escapeHtmlAttr(__('Ver Detalhes')) ?>">
-                                    <span><?= $block->escapeHtml(__('Ver')) ?></span>
-                                </a>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+
+        <div class="text-right" style="margin-bottom:12px">
+            <a href="<?= $block->escapeUrl($block->getUrl('b2b/quote/create')) ?>" class="btn btn-primary">
+                <?= $block->escapeHtml(__('Nova Cotação')) ?>
+            </a>
         </div>
+
+        <div class="panel panel-default">
+            <div class="panel-body no-padding">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover b2b-responsive-table" id="quote-history-table">
+                        <thead>
+                            <tr>
+                                <th class="col id"><?= $block->escapeHtml(__('Nº')) ?></th>
+                                <th class="col date"><?= $block->escapeHtml(__('Data')) ?></th>
+                                <th class="col status"><?= $block->escapeHtml(__('Status')) ?></th>
+                                <th class="col total"><?= $block->escapeHtml(__('Valor')) ?></th>
+                                <th class="col expires"><?= $block->escapeHtml(__('Validade')) ?></th>
+                                <th class="col actions"><?= $block->escapeHtml(__('Ações')) ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($block->getQuoteRequests() as $quote): ?>
+                                <?php
+                                $statusClass = '';
+                                switch ($quote->getStatus()) {
+                                    case 'approved':
+                                    case 'quoted':
+                                        $statusClass = 'b2b-label-approved';
+                                        break;
+                                    case 'pending':
+                                    case 'processing':
+                                        $statusClass = 'b2b-label-pending';
+                                        break;
+                                    case 'rejected':
+                                    case 'expired':
+                                        $statusClass = 'b2b-label-rejected';
+                                        break;
+                                    case 'converted':
+                                        $statusClass = 'b2b-label-converted';
+                                        break;
+                                }
+                                ?>
+                                <tr>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Nº')) ?>" class="col id">
+                                        #<?= (int) $quote->getRequestId() ?>
+                                    </td>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Data')) ?>" class="col date">
+                                        <?= $block->escapeHtml($block->formatQuoteDate($quote->getCreatedAt())) ?>
+                                    </td>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Status')) ?>" class="col status">
+                                        <span class="label b2b-status <?= $block->escapeHtmlAttr($statusClass) ?>">
+                                            <?= $block->escapeHtml($quote->getStatusLabel()) ?>
+                                        </span>
+                                    </td>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Valor')) ?>" class="col total">
+                                        <?php if ($quote->getQuotedTotal()): ?>
+                                            <?= /* @noEscape */ $block->formatPrice($quote->getQuotedTotal()) ?>
+                                        <?php else: ?>
+                                            <span class="text-muted"><?= $block->escapeHtml(__('Aguardando')) ?></span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Validade')) ?>" class="col expires">
+                                        <?php if ($quote->getExpiresAt()): ?>
+                                            <?php if ($quote->isExpired()): ?>
+                                                <span class="label label-danger"><?= $block->escapeHtml(__('Expirada')) ?></span>
+                                            <?php else: ?>
+                                                <?= $block->escapeHtml($block->formatQuoteDate($quote->getExpiresAt())) ?>
+                                            <?php endif; ?>
+                                        <?php else: ?>
+                                            -
+                                        <?php endif; ?>
+                                    </td>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Ações')) ?>" class="col actions">
+                                        <a href="<?= $block->escapeUrl($block->getViewUrl($quote->getRequestId())) ?>"
+                                           class="btn btn-default btn-xs"
+                                           title="<?= $block->escapeHtmlAttr(__('Ver Detalhes')) ?>">
+                                            <?= $block->escapeHtml(__('Ver')) ?>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
     <?php endif; ?>
+
 </div>

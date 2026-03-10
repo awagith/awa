@@ -1,137 +1,183 @@
 <?php
 /** @var \GrupoAwamotos\B2B\Block\Account\CompanyBlock $block */
 $company = $block->getCompany();
-$users = $block->getCompanyUsers();
+$users   = $block->getCompanyUsers();
 $isAdmin = $block->isCompanyAdmin();
-$roles = $block->getRoles();
+$roles   = $block->getRoles();
 $companyManagerConfig = [
     'manageUrl' => $block->getManageUserUrl(),
-    'messages' => [
+    'messages'  => [
         'emailRequired' => (string) __('Informe o e-mail.'),
         'confirmRemove' => (string) __('Remover este usuário da empresa?'),
-        'requestError' => (string) __('Erro. Tente novamente.'),
+        'requestError'  => (string) __('Erro. Tente novamente.'),
     ],
 ];
 ?>
 <div class="b2b-company-page b2b-page-shell"
      data-mage-init='<?= /* @noEscape */ json_encode(['GrupoAwamotos_B2B/js/account/company-manager' => $companyManagerConfig]) ?>'>
-    <div class="b2b-section-header">
-        <h1><?= __('Minha Empresa') ?></h1>
-        <?php if ($isAdmin): ?>
-            <span class="badge badge--admin"><?= __('Administrador') ?></span>
-        <?php endif; ?>
+
+    <div class="page-title-wrapper">
+        <h1 class="page-title">
+            <?= $block->escapeHtml(__('Minha Empresa')) ?>
+            <?php if ($isAdmin): ?>
+                <span class="label label-primary"><?= $block->escapeHtml(__('Administrador')) ?></span>
+            <?php endif; ?>
+        </h1>
     </div>
 
     <?php if ($company): ?>
-    <!-- Dados da Empresa -->
-    <div class="company-info-grid">
-        <div class="company-info-card">
-            <h3><?= __('Dados Cadastrais') ?></h3>
-            <dl class="company-details">
-                <dt><?= __('Razão Social') ?></dt>
-                <dd><?= $block->escapeHtml($company->getData('razao_social')) ?></dd>
 
-                <?php if ($company->getData('nome_fantasia')): ?>
-                <dt><?= __('Nome Fantasia') ?></dt>
-                <dd><?= $block->escapeHtml($company->getData('nome_fantasia')) ?></dd>
-                <?php endif; ?>
-
-                <dt><?= __('CNPJ') ?></dt>
-                <dd><?= $block->escapeHtml($company->getData('cnpj')) ?></dd>
-
-                <?php if ($company->getData('inscricao_estadual')): ?>
-                <dt><?= __('Inscrição Estadual') ?></dt>
-                <dd><?= $block->escapeHtml($company->getData('inscricao_estadual')) ?></dd>
-                <?php endif; ?>
-
-                <dt><?= __('E-mail') ?></dt>
-                <dd><?= $block->escapeHtml($company->getData('email')) ?></dd>
-
-                <?php if ($company->getData('phone')): ?>
-                <dt><?= __('Telefone') ?></dt>
-                <dd><?= $block->escapeHtml($company->getData('phone')) ?></dd>
-                <?php endif; ?>
-            </dl>
-        </div>
-    </div>
-
-    <!-- Usuários da Empresa -->
-    <div class="company-users-section">
-        <div class="company-users-header">
-            <h2><?= __('Usuários da Empresa') ?> <span class="count">(<?= count($users) ?>)</span></h2>
-            <?php if ($isAdmin): ?>
-                <button type="button" class="btn-add-user" data-action="toggle-add-user">
-                    <?= __('+ Adicionar Usuário') ?>
-                </button>
-            <?php endif; ?>
-        </div>
-
-        <?php if ($isAdmin): ?>
-        <div id="add-user-form" class="add-user-form hidden">
-            <div class="form-row">
-                <input type="email" id="new-user-email" placeholder="<?= __('E-mail do cliente Magento') ?>" class="input-text" />
-                <select id="new-user-role" class="select">
-                    <?php foreach ($roles as $roleCode => $roleLabel): ?>
-                        <option value="<?= $block->escapeHtmlAttr($roleCode) ?>"><?= $block->escapeHtml($roleLabel) ?></option>
-                    <?php endforeach; ?>
-                </select>
-                <button type="button" class="btn-save" data-action="add-user">
-                    <?= __('Adicionar') ?>
-                </button>
+        <!-- Dados da Empresa -->
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><?= $block->escapeHtml(__('Dados Cadastrais')) ?></h3>
             </div>
-            <p class="form-note"><?= __('O e-mail precisa estar cadastrado na loja.') ?></p>
-        </div>
-        <?php endif; ?>
+            <div class="panel-body">
+                <dl class="dl-horizontal">
+                    <dt><?= $block->escapeHtml(__('Razão Social')) ?></dt>
+                    <dd><?= $block->escapeHtml($company->getData('razao_social')) ?></dd>
 
-        <table class="data table table-company-users">
-            <thead>
-                <tr>
-                    <th><?= __('Nome') ?></th>
-                    <th><?= __('E-mail') ?></th>
-                    <th><?= __('Papel') ?></th>
-                    <th><?= __('Status') ?></th>
-                    <?php if ($isAdmin): ?>
-                        <th><?= __('Ações') ?></th>
+                    <?php if ($company->getData('nome_fantasia')): ?>
+                        <dt><?= $block->escapeHtml(__('Nome Fantasia')) ?></dt>
+                        <dd><?= $block->escapeHtml($company->getData('nome_fantasia')) ?></dd>
                     <?php endif; ?>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($users as $user): ?>
-                <tr>
-                    <td data-th="<?= __('Nome') ?>"><?= $block->escapeHtml($user['name']) ?></td>
-                    <td data-th="<?= __('E-mail') ?>"><?= $block->escapeHtml($user['email']) ?></td>
-                    <td data-th="<?= __('Papel') ?>">
-                        <span class="role-badge role-badge--<?= $block->escapeHtmlAttr($user['role']) ?>">
-                            <?= $block->escapeHtml($user['role_label']) ?>
-                        </span>
-                    </td>
-                    <td data-th="<?= __('Status') ?>">
-                        <span class="status-dot <?= $user['is_active'] ? 'status-dot--active' : 'status-dot--inactive' ?>"></span>
-                        <?= $user['is_active'] ? __('Ativo') : __('Inativo') ?>
-                    </td>
-                    <?php if ($isAdmin): ?>
-                    <td data-th="<?= __('Ações') ?>" class="user-actions">
-                        <select class="select select-sm js-user-role"
-                                data-customer-id="<?= (int) $user['customer_id'] ?>">
-                            <?php foreach ($roles as $roleCode => $roleLabel): ?>
-                                <option value="<?= $block->escapeHtmlAttr($roleCode) ?>" <?= $user['role'] === $roleCode ? 'selected' : '' ?>>
-                                    <?= $block->escapeHtml($roleLabel) ?>
-                                </option>
+
+                    <dt><?= $block->escapeHtml(__('CNPJ')) ?></dt>
+                    <dd><?= $block->escapeHtml($company->getData('cnpj')) ?></dd>
+
+                    <?php if ($company->getData('inscricao_estadual')): ?>
+                        <dt><?= $block->escapeHtml(__('Inscrição Estadual')) ?></dt>
+                        <dd><?= $block->escapeHtml($company->getData('inscricao_estadual')) ?></dd>
+                    <?php endif; ?>
+
+                    <dt><?= $block->escapeHtml(__('E-mail')) ?></dt>
+                    <dd><?= $block->escapeHtml($company->getData('email')) ?></dd>
+
+                    <?php if ($company->getData('phone')): ?>
+                        <dt><?= $block->escapeHtml(__('Telefone')) ?></dt>
+                        <dd><?= $block->escapeHtml($company->getData('phone')) ?></dd>
+                    <?php endif; ?>
+                </dl>
+            </div>
+        </div>
+
+        <!-- Usuários da Empresa -->
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <h3 class="panel-title pull-left">
+                    <?= $block->escapeHtml(__('Usuários da Empresa')) ?>
+                    <span class="badge"><?= count($users) ?></span>
+                </h3>
+                <?php if ($isAdmin): ?>
+                    <button type="button"
+                            class="btn btn-primary btn-sm pull-right"
+                            data-action="toggle-add-user">
+                        + <?= $block->escapeHtml(__('Adicionar Usuário')) ?>
+                    </button>
+                <?php endif; ?>
+            </div>
+            <div class="panel-body">
+
+                <?php if ($isAdmin): ?>
+                    <div id="add-user-form" class="well" style="display:none;">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="email"
+                                       id="new-user-email"
+                                       class="form-control"
+                                       placeholder="<?= $block->escapeHtmlAttr(__('E-mail do cliente Magento')) ?>" />
+                                <div class="input-group-btn">
+                                    <select id="new-user-role" class="btn btn-default">
+                                        <?php foreach ($roles as $roleCode => $roleLabel): ?>
+                                            <option value="<?= $block->escapeHtmlAttr($roleCode) ?>">
+                                                <?= $block->escapeHtml($roleLabel) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <button type="button" class="btn btn-success" data-action="add-user">
+                                        <?= $block->escapeHtml(__('Adicionar')) ?>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="help-block">
+                                <?= $block->escapeHtml(__('O e-mail precisa estar cadastrado na loja.')) ?>
+                            </p>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover b2b-responsive-table">
+                        <thead>
+                            <tr>
+                                <th><?= $block->escapeHtml(__('Nome')) ?></th>
+                                <th><?= $block->escapeHtml(__('E-mail')) ?></th>
+                                <th><?= $block->escapeHtml(__('Papel')) ?></th>
+                                <th><?= $block->escapeHtml(__('Status')) ?></th>
+                                <?php if ($isAdmin): ?>
+                                    <th><?= $block->escapeHtml(__('Ações')) ?></th>
+                                <?php endif; ?>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($users as $user): ?>
+                                <tr>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Nome')) ?>">
+                                        <?= $block->escapeHtml($user['name']) ?>
+                                    </td>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('E-mail')) ?>">
+                                        <?= $block->escapeHtml($user['email']) ?>
+                                    </td>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Papel')) ?>">
+                                        <span class="label label-default role-badge role-badge--<?= $block->escapeHtmlAttr($user['role']) ?>">
+                                            <?= $block->escapeHtml($user['role_label']) ?>
+                                        </span>
+                                    </td>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Status')) ?>">
+                                        <?php if ($user['is_active']): ?>
+                                            <span class="label label-success">
+                                                <?= $block->escapeHtml(__('Ativo')) ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="label label-danger">
+                                                <?= $block->escapeHtml(__('Inativo')) ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <?php if ($isAdmin): ?>
+                                        <td data-th="<?= $block->escapeHtmlAttr(__('Ações')) ?>" class="user-actions">
+                                            <div class="btn-group btn-group-sm">
+                                                <select class="form-control input-sm js-user-role"
+                                                        data-customer-id="<?= (int) $user['customer_id'] ?>">
+                                                    <?php foreach ($roles as $roleCode => $roleLabel): ?>
+                                                        <option value="<?= $block->escapeHtmlAttr($roleCode) ?>"
+                                                                <?= $user['role'] === $roleCode ? 'selected' : '' ?>>
+                                                            <?= $block->escapeHtml($roleLabel) ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                                <button type="button"
+                                                        class="btn btn-danger btn-sm"
+                                                        data-action="remove-user"
+                                                        data-customer-id="<?= (int) $user['customer_id'] ?>">
+                                                    <?= $block->escapeHtml(__('Remover')) ?>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    <?php endif; ?>
+                                </tr>
                             <?php endforeach; ?>
-                        </select>
-                        <button type="button" class="btn-remove"
-                                data-action="remove-user"
-                                data-customer-id="<?= (int) $user['customer_id'] ?>">
-                            <?= __('Remover') ?>
-                        </button>
-                    </td>
-                    <?php endif; ?>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    </div>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+
     <?php else: ?>
-        <p class="empty-message"><?= __('Nenhuma empresa vinculada à sua conta. Entre em contato com o suporte.') ?></p>
+        <div class="alert alert-warning">
+            <?= $block->escapeHtml(__('Nenhuma empresa vinculada à sua conta. Entre em contato com o suporte.')) ?>
+        </div>
     <?php endif; ?>
+
 </div>

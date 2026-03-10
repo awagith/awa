@@ -623,15 +623,12 @@ body.b2b-account-claim .page.messages .message-success {
     font-size: 12px;
     color: var(--b2b-login-primary);
     margin-top: 4px;
+    display: block;
+    line-height: 1.35;
 }
 
 .b2b-field input.mage-error {
     border-color: var(--b2b-login-primary);
-}
-
-.b2b-login-form .mage-error {
-    display: block;
-    line-height: 1.35;
 }
 
 /* ==========================================================================

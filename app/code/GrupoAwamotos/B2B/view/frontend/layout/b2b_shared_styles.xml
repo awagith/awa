@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * B2B Shared Design System — Bootstrap 3.3 + AWA Brand
+ * Carregado em todas as páginas B2B via <update handle="b2b_shared_styles"/>
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="GrupoAwamotos_B2B::css/b2b-design-system.css"/>
+    </head>
+</page>

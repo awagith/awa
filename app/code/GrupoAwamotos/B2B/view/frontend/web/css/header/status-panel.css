@@ -24,6 +24,10 @@
     --b2b-shadow: 0 10px 40px rgb(0 0 0 / 15%);
     --b2b-radius: 12px;
     --b2b-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    display: flex;
+    align-items: center;
+    z-index: var(--awa-z-dropdown, 99);
 }
 
 /* ===========================================================================
@@ -40,16 +44,6 @@
     align-items: center;
     gap: 10px;
     justify-content: flex-end;
-}
-
-/* ===========================================================================
-   Status Panel Container
-   =========================================================================== */
-.b2b-status-panel {
-    position: relative;
-    display: flex;
-    align-items: center;
-    z-index: var(--awa-z-dropdown, 99);
 }
 
 /* ===========================================================================

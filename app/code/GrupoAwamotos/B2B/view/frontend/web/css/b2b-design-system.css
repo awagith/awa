@@ -1,0 +1,946 @@
+/**
+ * B2B Design System — AWA Motos
+ * Bootstrap 3.3 integration + AWA brand overrides
+ *
+ * Padrão: grandes operações B2B Magento (Grainger, MSC Industrial, etc.)
+ * Bootstrap 3.3.6 carregado globalmente via Ayo theme default_head_blocks.xml
+ */
+
+/* ==========================================================================
+   1. AWA BRAND OVERRIDES — Bootstrap primary → #b73337 (AWA Red)
+   ========================================================================== */
+
+/* --- Buttons --- */
+.btn-primary,
+.b2b-page-shell .btn-primary {
+    background-color: #b73337;
+    border-color: #9a2a2d;
+    color: #fff;
+}
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-primary.active,
+.open > .dropdown-toggle.btn-primary {
+    background-color: #9a2a2d;
+    border-color: #7e2224;
+    color: #fff;
+}
+.btn-primary:active,
+.btn-primary.active,
+.open > .dropdown-toggle.btn-primary {
+    background-image: none;
+}
+.btn-primary.disabled,
+.btn-primary[disabled],
+fieldset[disabled] .btn-primary {
+    background-color: #b73337;
+    border-color: #9a2a2d;
+    opacity: .65;
+}
+
+/* --- Panels primary --- */
+.panel-primary {
+    border-color: #b73337;
+}
+.panel-primary > .panel-heading {
+    background-color: #b73337;
+    border-color: #b73337;
+    color: #fff;
+}
+.panel-primary > .panel-heading + .panel-collapse > .panel-body {
+    border-top-color: #b73337;
+}
+
+/* --- Labels primary --- */
+.label-primary {
+    background-color: #b73337;
+}
+.label-primary[href]:hover,
+.label-primary[href]:focus {
+    background-color: #9a2a2d;
+}
+
+/* --- Progress bars --- */
+.progress-bar {
+    background-color: #b73337;
+}
+
+/* --- Links --- */
+.b2b-page-shell a,
+.b2b-page-shell a:hover {
+    color: #b73337;
+}
+.b2b-page-shell a:hover {
+    color: #9a2a2d;
+}
+
+/* --- Navs active --- */
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
+    background-color: #b73337;
+}
+
+/* ==========================================================================
+   2. B2B PAGE SHELL — Layout base para todas as páginas B2B
+   ========================================================================== */
+
+.b2b-page-shell {
+    padding: 0;
+    max-width: 100%;
+}
+
+.b2b-page-shell .page-title-wrapper {
+    margin-bottom: 24px;
+}
+
+.b2b-page-shell .page-title .base {
+    font-size: 24px;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+/* ==========================================================================
+   3. B2B STATUS LABELS — Bootstrap label extensions
+   ========================================================================== */
+
+/* Quote / Order statuses */
+.b2b-label-pending {
+    background-color: #f0ad4e;
+    color: #fff;
+}
+.b2b-label-processing {
+    background-color: #5bc0de;
+    color: #fff;
+}
+.b2b-label-approved,
+.b2b-label-quoted,
+.b2b-label-complete,
+.b2b-label-converted {
+    background-color: #5cb85c;
+    color: #fff;
+}
+.b2b-label-rejected,
+.b2b-label-expired,
+.b2b-label-failed,
+.b2b-label-canceled {
+    background-color: #d9534f;
+    color: #fff;
+}
+.b2b-label-draft {
+    background-color: #777;
+    color: #fff;
+}
+
+/* Approval statuses */
+.b2b-label-level-1 { background-color: #5bc0de; }
+.b2b-label-level-2 { background-color: #f0ad4e; }
+.b2b-label-level-3 { background-color: #d9534f; }
+
+/* Reutilizável como Bootstrap label */
+.label.b2b-status { font-size: 85%; padding: .35em .65em; font-weight: 600; }
+
+/* ==========================================================================
+   4. B2B SUMMARY CARDS — KPI cards para dashboard
+   ========================================================================== */
+
+.b2b-kpi-row {
+    margin-bottom: 24px;
+}
+
+.b2b-kpi-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 20px;
+    margin-bottom: 16px;
+    border-top: 3px solid #b73337;
+    box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    transition: box-shadow .15s;
+}
+.b2b-kpi-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+.b2b-kpi-card .kpi-icon {
+    color: #b73337;
+    margin-bottom: 8px;
+}
+.b2b-kpi-card .kpi-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: #777;
+    font-weight: 600;
+    margin-bottom: 4px;
+    display: block;
+}
+.b2b-kpi-card .kpi-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2c3e50;
+    display: block;
+    line-height: 1.2;
+}
+.b2b-kpi-card .kpi-sub {
+    font-size: 12px;
+    color: #888;
+    margin-top: 4px;
+    display: block;
+}
+.b2b-kpi-card .kpi-action {
+    display: block;
+    margin-top: 12px;
+    font-size: 13px;
+}
+
+/* Credit usage within KPI card */
+.b2b-credit-bar {
+    margin-top: 10px;
+}
+.b2b-credit-bar .progress {
+    margin-bottom: 4px;
+    height: 8px;
+}
+.b2b-credit-bar .credit-legend {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #777;
+}
+
+/* ==========================================================================
+   5. B2B SECTION PANELS — Seções com Bootstrap panel
+   ========================================================================== */
+
+.b2b-section {
+    margin-bottom: 24px;
+}
+
+.b2b-section .panel {
+    margin-bottom: 0;
+}
+
+.b2b-section-header,
+.b2b-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0;
+}
+.b2b-section-header h1,
+.b2b-section-header h2,
+.b2b-section-header h3,
+.b2b-panel-header h1,
+.b2b-panel-header h2,
+.b2b-panel-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+.b2b-section-header .badge {
+    background-color: #b73337;
+}
+.b2b-section-header .view-all,
+.b2b-panel-header .view-all {
+    font-size: 13px;
+    color: #b73337;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.b2b-section-header .view-all:hover,
+.b2b-panel-header .view-all:hover {
+    color: #9a2a2d;
+    text-decoration: underline;
+}
+
+/* ==========================================================================
+   6. B2B TABLES — Bootstrap table extensions
+   ========================================================================== */
+
+.b2b-page-shell .table {
+    background: #fff;
+}
+
+.b2b-page-shell .table > thead > tr > th {
+    background-color: #f5f5f5;
+    color: #555;
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    border-bottom: 2px solid #ddd;
+    white-space: nowrap;
+}
+
+.b2b-page-shell .table > tbody > tr:hover {
+    background-color: #fef9f9;
+}
+
+.b2b-page-shell .table .actions-col {
+    white-space: nowrap;
+}
+
+/* Mobile responsive data-th */
+@media (max-width: 767px) {
+    .b2b-page-shell .table.b2b-responsive-table,
+    .b2b-page-shell .table-responsive .table {
+        display: block;
+    }
+    .b2b-page-shell .table.b2b-responsive-table thead,
+    .b2b-page-shell .table-responsive .table thead {
+        display: none;
+    }
+    .b2b-page-shell .table.b2b-responsive-table tbody tr,
+    .b2b-page-shell .table-responsive .table tbody tr {
+        display: block;
+        border: 1px solid #ddd;
+        margin-bottom: 8px;
+        border-radius: 4px;
+        overflow: hidden;
+    }
+    .b2b-page-shell .table.b2b-responsive-table tbody td,
+    .b2b-page-shell .table-responsive .table tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        border-top: 1px solid #f0f0f0;
+        font-size: 14px;
+    }
+    .b2b-page-shell .table.b2b-responsive-table tbody td:first-child,
+    .b2b-page-shell .table-responsive .table tbody td:first-child {
+        border-top: none;
+        background: #f8f8f8;
+        font-weight: 600;
+    }
+    .b2b-page-shell .table.b2b-responsive-table tbody td::before,
+    .b2b-page-shell .table-responsive .table tbody td::before {
+        content: attr(data-th) ":";
+        font-weight: 600;
+        font-size: 12px;
+        color: #777;
+        text-transform: uppercase;
+        margin-right: 8px;
+        flex-shrink: 0;
+    }
+}
+
+/* ==========================================================================
+   7. B2B HEADER BADGES — Status badges para o cabeçalho
+   ========================================================================== */
+
+.b2b-badge-approved {
+    background-color: #5cb85c;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+.b2b-badge-pending {
+    background-color: #f0ad4e;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+.b2b-badge-rfm {
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+.b2b-badge-pricelist {
+    background-color: #5bc0de;
+    color: #fff;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* Discount badge */
+.b2b-discount-panel {
+    text-align: center;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, #b73337, #9a2a2d);
+    border-radius: 4px;
+    color: #fff;
+}
+.b2b-discount-panel .discount-value {
+    display: block;
+    font-size: 36px;
+    font-weight: 800;
+    line-height: 1;
+}
+.b2b-discount-panel .discount-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    opacity: .9;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   8. B2B QUICK ACTIONS GRID
+   ========================================================================== */
+
+.b2b-actions-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+}
+.b2b-action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 12px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    text-decoration: none !important;
+    color: #2c3e50 !important;
+    min-width: 90px;
+    flex: 1 1 90px;
+    max-width: 130px;
+    text-align: center;
+    transition: all .15s;
+    font-size: 12px;
+    font-weight: 600;
+    gap: 8px;
+}
+.b2b-action-item svg {
+    color: #b73337;
+    flex-shrink: 0;
+}
+.b2b-action-item:hover {
+    border-color: #b73337;
+    box-shadow: 0 2px 8px rgba(183,51,55,.15);
+    color: #b73337 !important;
+    text-decoration: none !important;
+}
+.b2b-action-item.action-highlight {
+    border-color: #b73337;
+    background: #fff6f6;
+}
+.b2b-action-item.action-highlight svg { color: #b73337; }
+
+/* ==========================================================================
+   9. B2B ONBOARDING CHECKLIST
+   ========================================================================== */
+
+.b2b-onboarding-section .panel-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.b2b-checklist-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    gap: 12px;
+}
+.b2b-checklist-item:last-child { border-bottom: none; }
+.b2b-checklist-item.done .checklist-label { color: #777; text-decoration: line-through; }
+.b2b-checklist-item.done svg { color: #5cb85c; }
+.b2b-checklist-item .checklist-label { font-weight: 500; }
+.b2b-checklist-item .checklist-action {
+    font-size: 12px;
+    color: #b73337;
+    display: block;
+    margin-top: 2px;
+}
+
+/* ==========================================================================
+   10. B2B ERP PRODUCT GRID — Sugestões de produtos
+   ========================================================================== */
+
+.b2b-product-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 8px;
+}
+.b2b-product-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 12px;
+    flex: 1 1 140px;
+    max-width: 180px;
+    min-width: 130px;
+    text-align: center;
+    transition: box-shadow .15s;
+}
+.b2b-product-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+.b2b-product-card.unavailable {
+    opacity: .6;
+}
+.b2b-product-card img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 8px;
+}
+.b2b-product-card .product-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    display: block;
+    margin-bottom: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.b2b-product-card .product-sku {
+    font-size: 11px;
+    color: #888;
+    display: block;
+    margin-bottom: 6px;
+}
+.b2b-product-card .product-price {
+    font-size: 15px;
+    font-weight: 700;
+    color: #b73337;
+    display: block;
+}
+.b2b-product-card .customer-price {
+    color: #b73337;
+}
+.b2b-product-card .price-badge {
+    font-size: 10px;
+    background: #fff3cd;
+    color: #856404;
+    padding: 2px 6px;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 4px;
+}
+.b2b-product-card .social-proof {
+    font-size: 11px;
+    color: #888;
+    display: block;
+    margin-top: 4px;
+}
+
+/* Reorder list */
+.b2b-reorder-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.b2b-reorder-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: #fafafa;
+    border: 1px solid #f0f0f0;
+    border-radius: 4px;
+}
+.b2b-reorder-item .reorder-thumb {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.b2b-reorder-item .reorder-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.b2b-reorder-item .reorder-info {
+    flex: 1;
+    min-width: 0;
+}
+.b2b-reorder-item .reorder-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.b2b-reorder-item .reorder-sku {
+    font-size: 11px;
+    color: #888;
+    display: block;
+}
+.b2b-reorder-item .reorder-meta {
+    text-align: right;
+    flex-shrink: 0;
+}
+.b2b-reorder-item .reorder-freq {
+    display: block;
+    font-size: 11px;
+    color: #777;
+}
+.b2b-reorder-item .reorder-price {
+    font-size: 14px;
+    font-weight: 700;
+    color: #b73337;
+    display: block;
+}
+
+/* ==========================================================================
+   11. B2B ATTENDANT CARD
+   ========================================================================== */
+
+.b2b-attendant-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.b2b-attendant-card .attendant-avatar {
+    width: 52px;
+    height: 52px;
+    background: #f5f5f5;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #b73337;
+    flex-shrink: 0;
+}
+.b2b-attendant-card .attendant-info {
+    flex: 1;
+}
+.b2b-attendant-card .attendant-name {
+    font-weight: 700;
+    font-size: 15px;
+    margin: 0 0 2px;
+}
+.b2b-attendant-card .attendant-dept {
+    font-size: 12px;
+    color: #777;
+    margin: 0;
+}
+.b2b-attendant-card .attendant-contacts {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.b2b-attendant-card .contact-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+    color: #555;
+    text-decoration: none;
+    transition: all .15s;
+}
+.b2b-attendant-card .contact-link:hover {
+    border-color: #b73337;
+    color: #b73337;
+}
+.b2b-attendant-card .contact-link.whatsapp {
+    background: #25d366;
+    border-color: #25d366;
+    color: #fff;
+}
+.b2b-attendant-card .contact-link.whatsapp:hover {
+    background: #1ea355;
+    border-color: #1ea355;
+}
+
+/* ==========================================================================
+   12. B2B ERP PENDING BANNER
+   ========================================================================== */
+
+.b2b-erp-pending {
+    margin-bottom: 16px;
+}
+.b2b-erp-pending .alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+.b2b-erp-pending .alert svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+.b2b-erp-pending .pending-action {
+    margin-top: 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ==========================================================================
+   13. B2B SUGGESTIONS (CTAs)
+   ========================================================================== */
+
+.b2b-suggestion-card {
+    padding: 16px;
+    border-left: 3px solid #b73337;
+    background: #fff6f6;
+    border-radius: 0 4px 4px 0;
+    margin-bottom: 8px;
+}
+.b2b-suggestion-card h4 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+}
+.b2b-suggestion-card p {
+    margin: 0 0 8px;
+    font-size: 13px;
+    color: #555;
+}
+.b2b-suggestion-card .btn {
+    font-size: 12px;
+    padding: 4px 12px;
+}
+
+/* ==========================================================================
+   14. B2B COMPANY INFO (dl-horizontal override)
+   ========================================================================== */
+
+.b2b-page-shell .dl-horizontal dt {
+    width: 160px;
+    color: #555;
+    font-weight: 600;
+    font-size: 13px;
+}
+.b2b-page-shell .dl-horizontal dd {
+    margin-left: 180px;
+    font-size: 13px;
+    color: #333;
+}
+@media (max-width: 767px) {
+    .b2b-page-shell .dl-horizontal dt,
+    .b2b-page-shell .dl-horizontal dd {
+        float: none;
+        width: auto;
+        margin-left: 0;
+    }
+    .b2b-page-shell .dl-horizontal dd {
+        margin-bottom: 8px;
+    }
+}
+
+/* ==========================================================================
+   15. B2B FORM ENHANCEMENTS
+   ========================================================================== */
+
+.b2b-page-shell .form-group label.control-label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #555;
+}
+.b2b-page-shell .form-control:focus {
+    border-color: #b73337;
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 6px rgba(183,51,55,.3);
+}
+.b2b-page-shell .input-group-btn .btn-primary {
+    border-left: 0;
+}
+
+/* ==========================================================================
+   16. B2B QUICK ORDER — CSV dropzone + input grid
+   ========================================================================== */
+
+.b2b-csv-dropzone {
+    border: 2px dashed #b73337;
+    border-radius: 4px;
+    padding: 32px 24px;
+    text-align: center;
+    cursor: pointer;
+    background: #fff6f6;
+    transition: all .15s;
+}
+.b2b-csv-dropzone:hover,
+.b2b-csv-dropzone.dragover {
+    background: #feecec;
+    border-color: #9a2a2d;
+}
+.b2b-csv-dropzone .dropzone-icon {
+    color: #b73337;
+    margin-bottom: 8px;
+}
+.b2b-csv-dropzone .dropzone-text {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+.b2b-csv-dropzone .dropzone-hint {
+    font-size: 12px;
+    color: #777;
+    margin: 0;
+}
+
+.b2b-quickorder-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 8px;
+}
+.b2b-quickorder-row .sku-input {
+    flex: 3;
+}
+.b2b-quickorder-row .qty-input {
+    flex: 1;
+    min-width: 70px;
+    max-width: 90px;
+}
+.b2b-quickorder-row .remove-btn {
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   17. B2B SHOPPING LIST CARDS
+   ========================================================================== */
+
+.b2b-list-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 0;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: box-shadow .15s;
+}
+.b2b-list-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,.1);
+}
+.b2b-list-card .card-header {
+    padding: 12px 16px;
+    background: #f9f9f9;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.b2b-list-card .card-header h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+.b2b-list-card .card-header h3 a {
+    color: #2c3e50;
+    text-decoration: none;
+}
+.b2b-list-card .card-header h3 a:hover {
+    color: #b73337;
+}
+.b2b-list-card .card-body {
+    padding: 12px 16px;
+}
+.b2b-list-card .card-body .description {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+}
+.b2b-list-card .card-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #888;
+}
+.b2b-list-card .card-footer {
+    padding: 10px 16px;
+    background: #fafafa;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+/* ==========================================================================
+   18. B2B CREDIT PAGE
+   ========================================================================== */
+
+.b2b-credit-summary-row {
+    margin-bottom: 20px;
+}
+.b2b-credit-stat-card {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 16px;
+}
+.b2b-credit-stat-card.card-limit { border-top: 3px solid #5bc0de; }
+.b2b-credit-stat-card.card-used { border-top: 3px solid #f0ad4e; }
+.b2b-credit-stat-card.card-available { border-top: 3px solid #5cb85c; }
+.b2b-credit-stat-card .stat-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    color: #777;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 6px;
+}
+.b2b-credit-stat-card .stat-value {
+    font-size: 22px;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+/* Transaction type badges */
+.b2b-txn-credit { color: #5cb85c; font-weight: 700; }
+.b2b-txn-debit { color: #d9534f; font-weight: 700; }
+
+/* ==========================================================================
+   19. B2B QUOTE FORM
+   ========================================================================== */
+
+.b2b-quote-tfoot tr.grand-total > td {
+    background: #f5f5f5;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+/* ==========================================================================
+   20. APPROVAL WORKFLOW
+   ========================================================================== */
+
+.b2b-approval-actions .btn + .btn {
+    margin-left: 4px;
+}
+
+.approval-status.label { font-size: 12px; }
+
+/* ==========================================================================
+   21. RESPONSIVE UTILITIES
+   ========================================================================== */
+
+@media (max-width: 991px) {
+    .b2b-kpi-card .kpi-value { font-size: 18px; }
+    .b2b-product-card { max-width: 160px; }
+}
+
+@media (max-width: 767px) {
+    .b2b-action-item { max-width: 90px; min-width: 80px; }
+    .b2b-attendant-card { flex-direction: column; align-items: flex-start; }
+    .b2b-kpi-card .kpi-value { font-size: 20px; }
+    .b2b-product-grid { gap: 8px; }
+    .b2b-product-card { min-width: 120px; max-width: 150px; }
+    .b2b-section-header { flex-wrap: wrap; gap: 8px; }
+}

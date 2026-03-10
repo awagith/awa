@@ -1310,9 +1310,6 @@ html body .page-wrapper .b2b-register-page .field input.autofilled {
     .b2b-register-page .b2b-benefits {
         padding: 16px;
         gap: 12px;
-    }
-
-    .b2b-register-page .b2b-benefits {
         grid-template-columns: 1fr;
     }
 

@@ -1,84 +1,136 @@
 <?php
 /** @var \GrupoAwamotos\B2B\Block\Account\Credit $block */
-$credit = $block->getCreditLimit();
+$credit       = $block->getCreditLimit();
 $transactions = $block->getTransactions();
 $usagePercent = $block->getUsagePercent();
+
+// Bootstrap progress-bar color: verde < 70 %, warning 70–90 %, danger > 90 %
+if ($usagePercent >= 90) {
+    $progressClass = 'progress-bar-danger';
+} elseif ($usagePercent >= 70) {
+    $progressClass = 'progress-bar-warning';
+} else {
+    $progressClass = 'progress-bar-success';
+}
+$progressWidth = min(100, max(0, (float) $usagePercent));
 ?>
 <div class="b2b-credit-page b2b-page-shell">
-    <div class="b2b-section-header">
-        <h1><?= __('Meu Crédito B2B') ?></h1>
+
+    <div class="page-title-wrapper">
+        <h1 class="page-title">
+            <span class="base"><?= $block->escapeHtml(__('Meu Crédito B2B')) ?></span>
+        </h1>
     </div>
 
-    <!-- Resumo de Crédito -->
-    <div class="credit-summary-cards">
-        <div class="credit-card credit-card--limit">
-            <span class="credit-card__label"><?= __('Limite Total') ?></span>
-            <span class="credit-card__value"><?= /* @noEscape */ $block->formatPrice($credit->getCreditLimit()) ?></span>
+    <!-- KPI Cards -->
+    <div class="row b2b-credit-summary-row">
+        <div class="col-sm-4">
+            <div class="b2b-credit-stat-card card-limit">
+                <div class="b2b-stat-label"><?= $block->escapeHtml(__('Limite Total')) ?></div>
+                <div class="b2b-stat-value"><?= /* @noEscape */ $block->formatPrice($credit->getCreditLimit()) ?></div>
+            </div>
         </div>
-        <div class="credit-card credit-card--used">
-            <span class="credit-card__label"><?= __('Utilizado') ?></span>
-            <span class="credit-card__value"><?= /* @noEscape */ $block->formatPrice($credit->getUsedCredit()) ?></span>
+        <div class="col-sm-4">
+            <div class="b2b-credit-stat-card card-used">
+                <div class="b2b-stat-label"><?= $block->escapeHtml(__('Utilizado')) ?></div>
+                <div class="b2b-stat-value"><?= /* @noEscape */ $block->formatPrice($credit->getUsedCredit()) ?></div>
+            </div>
         </div>
-        <div class="credit-card credit-card--available">
-            <span class="credit-card__label"><?= __('Disponível') ?></span>
-            <span class="credit-card__value"><?= /* @noEscape */ $block->formatPrice($credit->getAvailableCredit()) ?></span>
+        <div class="col-sm-4">
+            <div class="b2b-credit-stat-card card-available">
+                <div class="b2b-stat-label"><?= $block->escapeHtml(__('Disponível')) ?></div>
+                <div class="b2b-stat-value"><?= /* @noEscape */ $block->formatPrice($credit->getAvailableCredit()) ?></div>
+            </div>
         </div>
     </div>
 
     <!-- Barra de Uso -->
-    <div class="credit-usage-bar">
-        <div class="credit-usage-bar__label">
-            <span><?= __('Uso do Crédito') ?></span>
-            <span><?= number_format($usagePercent, 0) ?>%</span>
-        </div>
-        <div class="credit-usage-bar__track">
-            <div class="credit-usage-bar__fill <?= $usagePercent > 80 ? 'credit-usage-bar__fill--warning' : '' ?>"
-                 style="width: <?= (float)$usagePercent ?>%"></div>
+    <div class="panel panel-default b2b-credit-usage-panel">
+        <div class="panel-body">
+            <div class="clearfix" style="margin-bottom:6px">
+                <span class="pull-left"><?= $block->escapeHtml(__('Uso do Crédito')) ?></span>
+                <span class="pull-right"><strong><?= number_format($usagePercent, 0) ?>%</strong></span>
+            </div>
+            <div class="progress">
+                <div class="progress-bar <?= $block->escapeHtmlAttr($progressClass) ?>"
+                     role="progressbar"
+                     aria-valuenow="<?= $block->escapeHtmlAttr(number_format($usagePercent, 0)) ?>"
+                     aria-valuemin="0"
+                     aria-valuemax="100"
+                     style="width:<?= $block->escapeHtmlAttr((string) $progressWidth) ?>%; min-width:2em">
+                    <?= number_format($usagePercent, 0) ?>%
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Histórico de Transações -->
-    <div class="credit-transactions">
-        <h2><?= __('Histórico de Transações') ?></h2>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><?= $block->escapeHtml(__('Histórico de Transações')) ?></h3>
+        </div>
 
         <?php if ($transactions->getSize() > 0): ?>
-            <table class="data table table-credit-transactions">
-                <thead>
-                    <tr>
-                        <th><?= __('Data') ?></th>
-                        <th><?= __('Tipo') ?></th>
-                        <th><?= __('Valor') ?></th>
-                        <th><?= __('Saldo Após') ?></th>
-                        <th><?= __('Referência') ?></th>
-                        <th><?= __('Observação') ?></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($transactions as $txn): ?>
-                        <?php $amount = (float) $txn->getData('amount'); ?>
-                        <tr>
-                            <td data-th="<?= __('Data') ?>">
-                                <?= $block->escapeHtml(date('d/m/Y H:i', strtotime($txn->getData('created_at')))) ?>
-                            </td>
-                            <td data-th="<?= __('Tipo') ?>">
-                                <span class="txn-type txn-type--<?= $block->escapeHtmlAttr($txn->getData('type')) ?>">
-                                    <?= $block->escapeHtml($block->getTransactionTypeLabel($txn->getData('type'))) ?>
-                                </span>
-                            </td>
-                            <td data-th="<?= __('Valor') ?>" class="<?= $amount >= 0 ? 'txn-positive' : 'txn-negative' ?>">
-                                <?= $amount >= 0 ? '+' : '' ?><?= /* @noEscape */ $block->formatPrice($amount) ?>
-                            </td>
-                            <td data-th="<?= __('Saldo') ?>">
-                                <?= /* @noEscape */ $block->formatPrice((float) $txn->getData('balance_after')) ?>
-                            </td>
-                            <td data-th="<?= __('Ref') ?>"><?= $block->escapeHtml($txn->getData('reference')) ?></td>
-                            <td data-th="<?= __('Obs') ?>"><?= $block->escapeHtml($txn->getData('comment')) ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
+            <div class="panel-body no-padding">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover table-responsive b2b-responsive-table">
+                        <thead>
+                            <tr>
+                                <th><?= $block->escapeHtml(__('Data')) ?></th>
+                                <th><?= $block->escapeHtml(__('Tipo')) ?></th>
+                                <th><?= $block->escapeHtml(__('Valor')) ?></th>
+                                <th><?= $block->escapeHtml(__('Saldo Após')) ?></th>
+                                <th><?= $block->escapeHtml(__('Referência')) ?></th>
+                                <th><?= $block->escapeHtml(__('Observação')) ?></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($transactions as $txn): ?>
+                                <?php $amount = (float) $txn->getData('amount'); ?>
+                                <tr>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Data')) ?>">
+                                        <?= $block->escapeHtml(date('d/m/Y H:i', strtotime($txn->getData('created_at')))) ?>
+                                    </td>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Tipo')) ?>">
+                                        <?php if ($amount >= 0): ?>
+                                            <span class="b2b-txn-credit">
+                                                <?= $block->escapeHtml($block->getTransactionTypeLabel($txn->getData('type'))) ?>
+                                            </span>
+                                        <?php else: ?>
+                                            <span class="b2b-txn-debit">
+                                                <?= $block->escapeHtml($block->getTransactionTypeLabel($txn->getData('type'))) ?>
+                                            </span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Valor')) ?>">
+                                        <?php if ($amount >= 0): ?>
+                                            <span class="b2b-txn-credit">+<?= /* @noEscape */ $block->formatPrice($amount) ?></span>
+                                        <?php else: ?>
+                                            <span class="b2b-txn-debit"><?= /* @noEscape */ $block->formatPrice($amount) ?></span>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Saldo')) ?>">
+                                        <?= /* @noEscape */ $block->formatPrice((float) $txn->getData('balance_after')) ?>
+                                    </td>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Ref')) ?>">
+                                        <?= $block->escapeHtml($txn->getData('reference')) ?>
+                                    </td>
+                                    <td data-th="<?= $block->escapeHtmlAttr(__('Obs')) ?>">
+                                        <?= $block->escapeHtml($txn->getData('comment')) ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         <?php else: ?>
-            <p class="empty-message"><?= __('Nenhuma transação registrada ainda.') ?></p>
+            <div class="panel-body">
+                <div class="alert alert-info">
+                    <?= $block->escapeHtml(__('Nenhuma transação registrada ainda.')) ?>
+                </div>
+            </div>
         <?php endif; ?>
     </div>
+
 </div>

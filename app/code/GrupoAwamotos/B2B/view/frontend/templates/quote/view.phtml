@@ -8,8 +8,9 @@ $quote = $block->getQuoteRequest();
 if (!$quote) {
     return;
 }
-$items = $block->getItems();
-$status = $quote->getStatus();
+$items    = $block->getItems();
+$status   = $quote->getStatus();
+$statusClass = $block->getStatusClass($status);
 $quoteViewConfig = [
     'messages' => [
         'rejectConfirm' => (string) __('Tem certeza que deseja recusar esta cotação?'),
@@ -18,124 +19,137 @@ $quoteViewConfig = [
 ?>
 <div class="b2b-quote-view b2b-page-shell"
      data-mage-init='<?= /* @noEscape */ json_encode(['GrupoAwamotos_B2B/js/quote/view' => $quoteViewConfig]) ?>'>
-    <div class="quote-view-header">
-        <div class="quote-view-title">
-            <h1><?= $block->escapeHtml(__('Cotação #%1', $quote->getRequestId())) ?></h1>
-            <span class="quote-status <?= $block->escapeHtmlAttr($block->getStatusClass($status)) ?>">
+
+    <!-- ── Header ──────────────────────────────────────────────────────── -->
+    <div class="b2b-section-header">
+        <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>"
+           class="btn btn-default btn-sm pull-right">
+            <span class="glyphicon glyphicon-arrow-left"></span>
+            <?= $block->escapeHtml(__('Voltar para Cotações')) ?>
+        </a>
+        <h1>
+            <?= $block->escapeHtml(__('Cotação #%1', $quote->getRequestId())) ?>
+            <span class="label b2b-status b2b-label-<?= $block->escapeHtmlAttr($statusClass) ?>">
                 <?= $block->escapeHtml($quote->getStatusLabel()) ?>
             </span>
-        </div>
-        <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action back">
-            <span><?= $block->escapeHtml(__('Voltar para Cotações')) ?></span>
-        </a>
+        </h1>
     </div>
 
-    <!-- Info da Cotação -->
-    <div class="quote-view-info">
-        <div class="info-grid">
-            <div class="info-item">
-                <span class="info-label"><?= $block->escapeHtml(__('Data da Solicitação')) ?></span>
-                <span class="info-value"><?= $block->escapeHtml($block->formatQuoteDate($quote->getCreatedAt())) ?></span>
-            </div>
-            <?php if ($quote->getExpiresAt()): ?>
-                <div class="info-item">
-                    <span class="info-label"><?= $block->escapeHtml(__('Válida até')) ?></span>
-                    <span class="info-value <?= $quote->isExpired() ? 'expired' : '' ?>">
+    <!-- ── Informações da Cotação ───────────────────────────────────────── -->
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><?= $block->escapeHtml(__('Informações da Cotação')) ?></h3>
+        </div>
+        <div class="panel-body">
+            <dl class="dl-horizontal">
+                <dt><?= $block->escapeHtml(__('Data da Solicitação')) ?></dt>
+                <dd><?= $block->escapeHtml($block->formatQuoteDate($quote->getCreatedAt())) ?></dd>
+
+                <?php if ($quote->getExpiresAt()): ?>
+                    <dt><?= $block->escapeHtml(__('Válida até')) ?></dt>
+                    <dd>
                         <?= $block->escapeHtml($block->formatQuoteDate($quote->getExpiresAt())) ?>
                         <?php if ($quote->isExpired()): ?>
-                            <span class="expired-badge"><?= $block->escapeHtml(__('Expirada')) ?></span>
+                            <span class="label label-danger"><?= $block->escapeHtml(__('Expirada')) ?></span>
                         <?php endif; ?>
-                    </span>
-                </div>
-            <?php endif; ?>
-            <?php if ($quote->getCompanyName()): ?>
-                <div class="info-item">
-                    <span class="info-label"><?= $block->escapeHtml(__('Empresa')) ?></span>
-                    <span class="info-value"><?= $block->escapeHtml($quote->getCompanyName()) ?></span>
-                </div>
-            <?php endif; ?>
-            <?php if ($quote->getCnpj()): ?>
-                <div class="info-item">
-                    <span class="info-label"><?= $block->escapeHtml(__('CNPJ')) ?></span>
-                    <span class="info-value"><?= $block->escapeHtml($quote->getCnpj()) ?></span>
-                </div>
-            <?php endif; ?>
-            <?php if ($quote->getQuotedTotal()): ?>
-                <div class="info-item highlighted">
-                    <span class="info-label"><?= $block->escapeHtml(__('Valor Cotado')) ?></span>
-                    <span class="info-value price"><?= /* @noEscape */ $block->formatPrice($quote->getQuotedTotal()) ?></span>
-                </div>
-            <?php endif; ?>
+                    </dd>
+                <?php endif; ?>
+
+                <?php if ($quote->getCompanyName()): ?>
+                    <dt><?= $block->escapeHtml(__('Empresa')) ?></dt>
+                    <dd><?= $block->escapeHtml($quote->getCompanyName()) ?></dd>
+                <?php endif; ?>
+
+                <?php if ($quote->getCnpj()): ?>
+                    <dt><?= $block->escapeHtml(__('CNPJ')) ?></dt>
+                    <dd><?= $block->escapeHtml($quote->getCnpj()) ?></dd>
+                <?php endif; ?>
+
+                <?php if ($quote->getQuotedTotal()): ?>
+                    <dt><?= $block->escapeHtml(__('Valor Cotado')) ?></dt>
+                    <dd><strong><?= /* @noEscape */ $block->formatPrice($quote->getQuotedTotal()) ?></strong></dd>
+                <?php endif; ?>
+            </dl>
         </div>
     </div>
 
-    <!-- Mensagem do Cliente -->
+    <!-- ── Mensagem do Cliente ──────────────────────────────────────────── -->
     <?php if ($quote->getMessage()): ?>
-        <div class="quote-view-section">
-            <h3><?= $block->escapeHtml(__('Sua Mensagem')) ?></h3>
-            <div class="quote-message">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><?= $block->escapeHtml(__('Sua Mensagem')) ?></h3>
+            </div>
+            <div class="panel-body">
                 <?= $block->escapeHtml($quote->getMessage()) ?>
             </div>
         </div>
     <?php endif; ?>
 
-    <!-- Notas do Administrador -->
+    <!-- ── Resposta do Vendedor ─────────────────────────────────────────── -->
     <?php if ($quote->getAdminNotes()): ?>
-        <div class="quote-view-section">
-            <h3><?= $block->escapeHtml(__('Resposta do Vendedor')) ?></h3>
-            <div class="quote-admin-notes">
-                <?= $block->escapeHtml($quote->getAdminNotes()) ?>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><?= $block->escapeHtml(__('Resposta do Vendedor')) ?></h3>
+            </div>
+            <div class="panel-body">
+                <div class="alert alert-info">
+                    <?= $block->escapeHtml($quote->getAdminNotes()) ?>
+                </div>
             </div>
         </div>
     <?php endif; ?>
 
-    <!-- Itens da Cotação -->
+    <!-- ── Itens da Cotação ─────────────────────────────────────────────── -->
     <?php if (!empty($items)): ?>
-        <div class="quote-view-section">
-            <h3><?= $block->escapeHtml(__('Itens Solicitados')) ?></h3>
-            <div class="table-wrapper">
-                <table class="data table table-quote-items">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><?= $block->escapeHtml(__('Itens Solicitados')) ?></h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-striped table-hover b2b-responsive-table">
                     <thead>
                         <tr>
-                            <th class="col product"><?= $block->escapeHtml(__('Produto')) ?></th>
-                            <th class="col sku"><?= $block->escapeHtml(__('SKU')) ?></th>
-                            <th class="col qty"><?= $block->escapeHtml(__('Qtd')) ?></th>
-                            <th class="col price"><?= $block->escapeHtml(__('Preço Unit.')) ?></th>
-                            <th class="col subtotal"><?= $block->escapeHtml(__('Subtotal')) ?></th>
+                            <th><?= $block->escapeHtml(__('Produto')) ?></th>
+                            <th><?= $block->escapeHtml(__('SKU')) ?></th>
+                            <th><?= $block->escapeHtml(__('Qtd')) ?></th>
+                            <th><?= $block->escapeHtml(__('Preço Unit.')) ?></th>
+                            <th><?= $block->escapeHtml(__('Subtotal')) ?></th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php $total = 0; $quotedTotal = 0; $hasQuotedPrices = false; ?>
                         <?php foreach ($items as $item): ?>
                             <?php
-                            $qty = (float) ($item['qty'] ?? 1);
+                            $qty           = (float) ($item['qty'] ?? 1);
                             $originalPrice = (float) ($item['price'] ?? $item['original_price'] ?? 0);
-                            $quotedPrice = !empty($item['quoted_price']) ? (float) $item['quoted_price'] : null;
-                            $displayPrice = $quotedPrice ?? $originalPrice;
-                            $subtotal = $qty * $displayPrice;
-                            $total += $qty * $originalPrice;
-                            $quotedTotal += $subtotal;
-                            if ($quotedPrice !== null) { $hasQuotedPrices = true; }
+                            $quotedPrice   = !empty($item['quoted_price']) ? (float) $item['quoted_price'] : null;
+                            $displayPrice  = $quotedPrice ?? $originalPrice;
+                            $subtotal      = $qty * $displayPrice;
+                            $total        += $qty * $originalPrice;
+                            $quotedTotal  += $subtotal;
+                            if ($quotedPrice !== null) {
+                                $hasQuotedPrices = true;
+                            }
                             ?>
                             <tr>
-                                <td class="col product" data-th="<?= $block->escapeHtmlAttr(__('Produto')) ?>">
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Produto')) ?>">
                                     <?= $block->escapeHtml($item['name'] ?? '-') ?>
                                 </td>
-                                <td class="col sku" data-th="<?= $block->escapeHtmlAttr(__('SKU')) ?>">
+                                <td data-th="<?= $block->escapeHtmlAttr(__('SKU')) ?>">
                                     <?= $block->escapeHtml($item['sku'] ?? '-') ?>
                                 </td>
-                                <td class="col qty" data-th="<?= $block->escapeHtmlAttr(__('Qtd')) ?>">
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Qtd')) ?>">
                                     <?= (int) $qty ?>
                                 </td>
-                                <td class="col price" data-th="<?= $block->escapeHtmlAttr(__('Preço Unit.')) ?>">
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Preço Unit.')) ?>">
                                     <?php if ($quotedPrice !== null && $quotedPrice !== $originalPrice): ?>
-                                        <span class="original-price">R$ <?= number_format($originalPrice, 2, ',', '.') ?></span>
-                                        <span class="quoted-price">R$ <?= number_format($quotedPrice, 2, ',', '.') ?></span>
+                                        <del class="text-muted">R$ <?= number_format($originalPrice, 2, ',', '.') ?></del>
+                                        <strong class="text-success">R$ <?= number_format($quotedPrice, 2, ',', '.') ?></strong>
                                     <?php else: ?>
                                         R$ <?= number_format($displayPrice, 2, ',', '.') ?>
                                     <?php endif; ?>
                                 </td>
-                                <td class="col subtotal" data-th="<?= $block->escapeHtmlAttr(__('Subtotal')) ?>">
+                                <td data-th="<?= $block->escapeHtmlAttr(__('Subtotal')) ?>">
                                     R$ <?= number_format($subtotal, 2, ',', '.') ?>
                                 </td>
                             </tr>
@@ -143,20 +157,20 @@ $quoteViewConfig = [
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="4" class="col total-label">
+                            <td colspan="4">
                                 <strong><?= $block->escapeHtml(__('Total Solicitado')) ?></strong>
                             </td>
-                            <td class="col total-value">
+                            <td>
                                 <strong>R$ <?= number_format($total, 2, ',', '.') ?></strong>
                             </td>
                         </tr>
                         <?php if ($quote->getQuotedTotal()): ?>
-                            <tr class="quoted-total">
-                                <td colspan="4" class="col total-label">
+                            <tr class="success">
+                                <td colspan="4">
                                     <strong><?= $block->escapeHtml(__('Total Cotado')) ?></strong>
                                 </td>
-                                <td class="col total-value">
-                                    <strong class="price"><?= /* @noEscape */ $block->formatPrice($quote->getQuotedTotal()) ?></strong>
+                                <td>
+                                    <strong><?= /* @noEscape */ $block->formatPrice($quote->getQuotedTotal()) ?></strong>
                                 </td>
                             </tr>
                         <?php endif; ?>
@@ -166,36 +180,53 @@ $quoteViewConfig = [
         </div>
     <?php endif; ?>
 
-    <!-- Ações de Aceitar/Rejeitar (quando status = quoted e não expirado) -->
+    <!-- ── Responder Cotação (aceitar / rejeitar) ───────────────────────── -->
     <?php if ($block->canAcceptOrReject()): ?>
-        <div class="quote-view-section quote-decision-section">
-            <h3><?= $block->escapeHtml(__('Responder Cotação')) ?></h3>
-            <p class="decision-info"><?= $block->escapeHtml(__('Analise os valores acima e escolha uma opção:')) ?></p>
-            <div class="quote-decision-actions">
-                <form method="post" action="<?= $block->escapeUrl($block->getAcceptUrl()) ?>" class="quote-accept-form">
-                    <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
-                    <button type="submit" class="action primary accept-quote-btn">
-                        <span><?= $block->escapeHtml(__('Aceitar e Ir para Pagamento')) ?></span>
-                    </button>
-                </form>
-                <form method="post" action="<?= $block->escapeUrl($block->getRejectUrl()) ?>" class="quote-reject-form"
-                      data-confirm="<?= $block->escapeHtmlAttr(__('Tem certeza que deseja recusar esta cotação?')) ?>">
-                    <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
-                    <button type="submit" class="action secondary reject-quote-btn">
-                        <span><?= $block->escapeHtml(__('Recusar Cotação')) ?></span>
-                    </button>
-                </form>
+        <div class="panel panel-warning">
+            <div class="panel-heading">
+                <h3 class="panel-title"><?= $block->escapeHtml(__('Responder Cotação')) ?></h3>
+            </div>
+            <div class="panel-body">
+                <p class="lead"><?= $block->escapeHtml(__('Analise os valores acima e escolha:')) ?></p>
+                <div class="btn-group" role="group">
+                    <form method="post"
+                          action="<?= $block->escapeUrl($block->getAcceptUrl()) ?>"
+                          class="quote-accept-form"
+                          style="display:inline-block;">
+                        <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                        <button type="submit" class="btn btn-success btn-lg">
+                            <span class="glyphicon glyphicon-ok"></span>
+                            <?= $block->escapeHtml(__('Aceitar e Ir para Pagamento')) ?>
+                        </button>
+                    </form>
+                    <form method="post"
+                          action="<?= $block->escapeUrl($block->getRejectUrl()) ?>"
+                          class="quote-reject-form"
+                          style="display:inline-block;"
+                          data-confirm="<?= $block->escapeHtmlAttr(__('Tem certeza que deseja recusar esta cotação?')) ?>">
+                        <?= /* @noEscape */ $block->getBlockHtml('formkey') ?>
+                        <button type="submit" class="btn btn-danger btn-lg">
+                            <span class="glyphicon glyphicon-remove"></span>
+                            <?= $block->escapeHtml(__('Recusar Cotação')) ?>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     <?php endif; ?>
 
-    <!-- Ações gerais -->
-    <div class="quote-view-actions">
-        <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action back">
-            <span><?= $block->escapeHtml(__('Voltar')) ?></span>
+    <!-- ── Ações gerais (rodapé) ────────────────────────────────────────── -->
+    <div class="text-right" style="margin-top:20px;margin-bottom:20px;">
+        <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>"
+           class="btn btn-default">
+            <span class="glyphicon glyphicon-arrow-left"></span>
+            <?= $block->escapeHtml(__('Voltar')) ?>
         </a>
-        <a href="<?= $block->escapeUrl($block->getNewQuoteUrl()) ?>" class="action primary">
-            <span><?= $block->escapeHtml(__('Nova Cotação')) ?></span>
+        <a href="<?= $block->escapeUrl($block->getNewQuoteUrl()) ?>"
+           class="btn btn-primary">
+            <span class="glyphicon glyphicon-plus"></span>
+            <?= $block->escapeHtml(__('Nova Cotação')) ?>
         </a>
     </div>
+
 </div>

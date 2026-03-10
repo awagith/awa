@@ -6,96 +6,126 @@
  * @var \GrupoAwamotos\B2B\ViewModel\ShoppingListViewModel $viewModel
  */
 $viewModel = $block->getData('view_model');
-$lists = $viewModel->getCustomerLists();
+$lists     = $viewModel->getCustomerLists();
 ?>
 <div class="b2b-shoppinglist-index b2b-page-shell"
      data-mage-init='<?= /* @noEscape */ json_encode(['GrupoAwamotos_B2B/js/shoppinglist/index' => new \stdClass()]) ?>'>
-    <div class="block-title">
-        <strong><?= $block->escapeHtml(__('Minhas Listas de Compras')) ?></strong>
-    </div>
 
-    <div class="shoppinglist-actions-top">
-        <button type="button" id="btn-create-list" class="action primary" title="<?= $block->escapeHtmlAttr(__('Nova Lista')) ?>">
-            <span><?= $block->escapeHtml(__('Criar Nova Lista')) ?></span>
+    <div class="b2b-section-header clearfix">
+        <h1 class="page-title pull-left">
+            <?= $block->escapeHtml(__('Minhas Listas de Compras')) ?>
+        </h1>
+        <button type="button"
+                id="btn-create-list"
+                class="btn btn-primary btn-sm pull-right"
+                title="<?= $block->escapeHtmlAttr(__('Nova Lista')) ?>">
+            <?= $block->escapeHtml(__('Criar Nova Lista')) ?>
         </button>
     </div>
 
     <!-- Create List Form (hidden by default) -->
-    <div class="shoppinglist-create-form" id="create-list-form" style="display:none;">
-        <form action="<?= $block->escapeUrl($block->getCreateUrl()) ?>" method="post"
-              data-mage-init='{"validation":{}}'>
-            <?= $block->getBlockHtml('formkey') ?>
-            <div class="field required">
-                <label for="list-name" class="label">
-                    <span><?= $block->escapeHtml(__('Nome da Lista')) ?></span>
-                </label>
-                <div class="control">
-                    <input type="text" id="list-name" name="name" required
+    <div class="panel panel-default" id="create-list-form" style="display:none;">
+        <div class="panel-heading">
+            <h3 class="panel-title"><?= $block->escapeHtml(__('Nova Lista de Compras')) ?></h3>
+        </div>
+        <div class="panel-body">
+            <form action="<?= $block->escapeUrl($block->getCreateUrl()) ?>" method="post"
+                  data-mage-init='{"validation":{}}'>
+                <?= $block->getBlockHtml('formkey') ?>
+                <div class="form-group">
+                    <label for="list-name" class="control-label">
+                        <?= $block->escapeHtml(__('Nome da Lista')) ?>
+                        <span class="required">*</span>
+                    </label>
+                    <input type="text"
+                           id="list-name"
+                           name="name"
+                           required
+                           class="form-control"
                            data-validate="{required:true}"
                            placeholder="<?= $block->escapeHtmlAttr(__('Ex: Peças para revisão')) ?>" />
                 </div>
-            </div>
-            <div class="field">
-                <label for="list-description" class="label">
-                    <span><?= $block->escapeHtml(__('Descrição (opcional)')) ?></span>
-                </label>
-                <div class="control">
-                    <textarea id="list-description" name="description" rows="2"
+                <div class="form-group">
+                    <label for="list-description" class="control-label">
+                        <?= $block->escapeHtml(__('Descrição (opcional)')) ?>
+                    </label>
+                    <textarea id="list-description"
+                              name="description"
+                              rows="2"
+                              class="form-control"
                               placeholder="<?= $block->escapeHtmlAttr(__('Descrição da lista...')) ?>"></textarea>
                 </div>
-            </div>
-            <div class="actions">
-                <button type="submit" class="action primary">
-                    <span><?= $block->escapeHtml(__('Criar')) ?></span>
-                </button>
-                <button type="button" class="action secondary" id="btn-cancel-create">
-                    <span><?= $block->escapeHtml(__('Cancelar')) ?></span>
-                </button>
-            </div>
-        </form>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">
+                        <?= $block->escapeHtml(__('Criar')) ?>
+                    </button>
+                    <button type="button" class="btn btn-default" id="btn-cancel-create">
+                        <?= $block->escapeHtml(__('Cancelar')) ?>
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <?php if ($lists->getSize() === 0): ?>
-        <div class="message info empty">
-            <span><?= $block->escapeHtml(__('Você ainda não possui listas de compras. Crie sua primeira lista para organizar seus pedidos recorrentes.')) ?></span>
+        <div class="alert alert-info">
+            <?= $block->escapeHtml(__('Você ainda não possui listas de compras. Crie sua primeira lista para organizar seus pedidos recorrentes.')) ?>
         </div>
     <?php else: ?>
-        <div class="shoppinglist-grid">
+        <div class="row">
             <?php foreach ($lists as $list): ?>
                 <?php $itemCount = $viewModel->getItemsCount((int) $list->getId()); ?>
-                <div class="shoppinglist-card">
-                    <div class="card-header">
-                        <h3 class="list-name">
-                            <a href="<?= $block->escapeUrl($block->getViewUrl((int) $list->getId())) ?>">
-                                <?= $block->escapeHtml($list->getName()) ?>
+                <div class="col-md-4 col-sm-6">
+                    <div class="b2b-list-card panel panel-default">
+                        <div class="panel-heading card-header clearfix">
+                            <h3 class="panel-title pull-left">
+                                <a href="<?= $block->escapeUrl($block->getViewUrl((int) $list->getId())) ?>">
+                                    <?= $block->escapeHtml($list->getName()) ?>
+                                </a>
+                            </h3>
+                            <?php if ($list->getData('is_default')): ?>
+                                <span class="label label-default pull-right">
+                                    <?= $block->escapeHtml(__('Padrão')) ?>
+                                </span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="panel-body card-body">
+                            <?php if ($list->getData('description')): ?>
+                                <p class="list-description text-muted">
+                                    <?= $block->escapeHtml($list->getData('description')) ?>
+                                </p>
+                            <?php endif; ?>
+                            <ul class="list-unstyled card-meta">
+                                <li>
+                                    <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                                    <strong><?= (int) $itemCount ?></strong>
+                                    <?= $block->escapeHtml(__('itens')) ?>
+                                </li>
+                                <li>
+                                    <span class="glyphicon glyphicon-tag" aria-hidden="true"></span>
+                                    <?= /* @noEscape */ $viewModel->getListTotal((int) $list->getId()) ?>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="panel-footer card-footer">
+                            <a href="<?= $block->escapeUrl($block->getViewUrl((int) $list->getId())) ?>"
+                               class="btn btn-default btn-sm">
+                                <?= $block->escapeHtml(__('Ver Itens')) ?>
                             </a>
-                        </h3>
-                        <?php if ($list->getData('is_default')): ?>
-                            <span class="default-badge"><?= $block->escapeHtml(__('Padrão')) ?></span>
-                        <?php endif; ?>
-                    </div>
-                    <?php if ($list->getData('description')): ?>
-                        <p class="list-description"><?= $block->escapeHtml($list->getData('description')) ?></p>
-                    <?php endif; ?>
-                    <div class="card-meta">
-                        <span class="item-count"><?= (int) $itemCount ?> <?= $block->escapeHtml(__('itens')) ?></span>
-                        <span class="list-total"><?= /* @noEscape */ $viewModel->getListTotal((int) $list->getId()) ?></span>
-                    </div>
-                    <div class="card-actions">
-                        <a href="<?= $block->escapeUrl($block->getViewUrl((int) $list->getId())) ?>" class="action view">
-                            <span><?= $block->escapeHtml(__('Ver Itens')) ?></span>
-                        </a>
-                        <a href="<?= $block->escapeUrl($block->getAddToCartUrl((int) $list->getId())) ?>" class="action primary add-to-cart">
-                            <span><?= $block->escapeHtml(__('Adicionar ao Carrinho')) ?></span>
-                        </a>
-                        <a href="<?= $block->escapeUrl($block->getDeleteUrl((int) $list->getId())) ?>"
-                           class="action delete"
-                           data-confirm="<?= $block->escapeHtmlAttr(__('Tem certeza que deseja excluir esta lista?')) ?>">
-                            <span><?= $block->escapeHtml(__('Excluir')) ?></span>
-                        </a>
+                            <a href="<?= $block->escapeUrl($block->getAddToCartUrl((int) $list->getId())) ?>"
+                               class="btn btn-primary btn-sm">
+                                <?= $block->escapeHtml(__('Adicionar ao Carrinho')) ?>
+                            </a>
+                            <a href="<?= $block->escapeUrl($block->getDeleteUrl((int) $list->getId())) ?>"
+                               class="btn btn-danger btn-sm"
+                               data-confirm="<?= $block->escapeHtmlAttr(__('Tem certeza que deseja excluir esta lista?')) ?>">
+                                <?= $block->escapeHtml(__('Excluir')) ?>
+                            </a>
+                        </div>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
+
 </div>
