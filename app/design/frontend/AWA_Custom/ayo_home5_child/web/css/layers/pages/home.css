@@ -151,7 +151,7 @@ body.cms-homepage_ayo_home5 .page-wrapper .top-home-content--merch .rokan-bestse
 body.cms-homepage_ayo_home5 .page-wrapper .top-home-content--merch .rokan-newproduct .product-item:hover,
 body.cms-homepage_ayo_home5 .page-wrapper .top-home-content--merch .categorytab-container .item-inner:hover {
     transform: translateY(-4px);
-    border-color: rgba(183, 51, 55, 0.28);
+    border-color: var(--awa-brand-opacity-28, rgba(183, 51, 55, 0.28));
     box-shadow: 0 16px 32px rgb(15 23 42 / 10%);
     z-index: 2;
 }
@@ -876,12 +876,14 @@ body.cms-homepage_ayo_home5 .page-wrapper .top-home-content--trust-and-offers .t
     z-index: 2;
 }
 
+/* Inner precisa de padding lateral quando sem .container filho */
 .awa-hero-b2b-bar__inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
     flex-wrap: wrap;
+    padding-inline: var(--awa-container-pad, 16px);
 }
 
 .awa-hero-b2b-bar__message {
@@ -995,6 +997,8 @@ body.cms-homepage_ayo_home5 .page-wrapper .top-home-content--trust-and-offers .t
     justify-content: center;
     gap: clamp(16px, 3vw, 40px);
     flex-wrap: wrap;
+    /* Separadores visuais entre itens */
+    container-type: inline-size;
 }
 
 .awa-b2b-benefits-strip__item {
@@ -1002,9 +1006,17 @@ body.cms-homepage_ayo_home5 .page-wrapper .top-home-content--trust-and-offers .t
     align-items: center;
     gap: 8px;
     font-size: 0.8125rem;
-    line-height: 1.3;
+    line-height: 1.4;
     color: #334155;
     white-space: nowrap;
+    /* Separador lateral entre itens na linha */
+    padding-inline: clamp(8px, 1.5vw, 16px);
+    border-right: 1px solid #e2e8f0;
+}
+
+/* Remove separador do último item */
+.awa-b2b-benefits-strip__item:last-child {
+    border-right: none;
 }
 
 .awa-b2b-benefits-strip__item svg {
@@ -1021,10 +1033,23 @@ body.cms-homepage_ayo_home5 .page-wrapper .top-home-content--trust-and-offers .t
     .awa-b2b-benefits-strip__grid {
         flex-direction: column;
         gap: 6px;
+        padding-block: 4px;
     }
 
     .awa-b2b-benefits-strip__item {
         font-size: 0.75rem;
+        white-space: normal; /* Permite quebra de linha em telas pequenas */
+        text-align: center;
+        justify-content: center;
+        border-right: none; /* Remove separador lateral no layout em coluna */
+        padding-inline: 0;
+        padding-block: 4px;
+        border-bottom: 1px solid #e9edf4;
+        width: 100%;
+    }
+
+    .awa-b2b-benefits-strip__item:last-child {
+        border-bottom: none;
     }
 }
 

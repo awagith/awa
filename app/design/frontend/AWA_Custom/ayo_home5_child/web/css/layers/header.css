@@ -17,9 +17,18 @@
     transition: box-shadow 200ms ease;
 }
 
+/* Nota: a classe .is-scrolled deve ser adicionada via JS:
+   window.addEventListener('scroll', () => {
+     document.querySelector('#header').classList.toggle('is-scrolled', window.scrollY > 60);
+   }, { passive: true });
+*/
 #header.header-container.is-scrolled,
 #header.header-container.sticky-active {
-    box-shadow: 0 2px 12px rgb(0 0 0 / 8%);
+    box-shadow: var(--awa-sticky-shadow, 0 2px 20px rgb(0 0 0 / 10%));
+    background: var(--awa-sticky-bg, rgba(255, 255, 255, 0.97));
+    backdrop-filter: var(--awa-sticky-backdrop, blur(8px) saturate(1.6));
+    -webkit-backdrop-filter: var(--awa-sticky-backdrop, blur(8px) saturate(1.6));
+    transition: box-shadow 250ms ease, background 250ms ease;
 }
 
 /* ── Header principal ────────────────────────────────────────── */
@@ -131,34 +140,48 @@
 }
 
 /* ── Minicart ────────────────────────────────────────────────── */
+/*
+   Minicart proeminente: botão preenchido com brand color AWA red.
+   Destaca-se visivelmente no header branco.
+   Em mobile reduz a padding e oculta o texto (ver breakpoint 767px).
+*/
 .minicart-wrapper {
     position: relative;
     flex-shrink: 0;
 }
 
 .minicart-wrapper .action.showcart {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
-    border: 1.5px solid var(--awa-layer-color-border);
+    gap: 8px;
+    padding: 9px 18px;
+    background: var(--awa-minicart-bg, var(--awa-brand-primary, #b73337));
+    border: 2px solid var(--awa-minicart-bg, var(--awa-brand-primary, #b73337));
     border-radius: var(--awa-layer-radius-md);
-    background: var(--awa-layer-surface-soft);
-    color: var(--awa-layer-color-text);
+    color: #fff;
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: 0.01em;
     cursor: pointer;
-    transition: all 150ms ease;
     text-decoration: none;
+    white-space: nowrap;
+    box-shadow: var(--awa-minicart-shadow, 0 2px 10px rgb(183 51 55 / 25%));
+    transition: background 180ms ease, border-color 180ms ease,
+                box-shadow 180ms ease, transform 180ms ease;
 }
 
-.minicart-wrapper .action.showcart:hover {
-    border-color: var(--awa-layer-color-primary);
-    color: var(--awa-layer-color-primary);
-    background: #fff;
+.minicart-wrapper .action.showcart:hover,
+.minicart-wrapper .action.showcart:focus-visible {
+    background: var(--awa-minicart-bg-hover, #8e2629);
+    border-color: var(--awa-minicart-bg-hover, #8e2629);
+    color: #fff;
+    box-shadow: var(--awa-minicart-shadow-hover, 0 4px 16px rgb(183 51 55 / 38%));
+    transform: translateY(-1px);
+    text-decoration: none;
+    outline: 0;
 }
 
-/* Counter de itens */
+/* Counter de itens — sobre fundo vermelho: chip branco translúcido */
 .minicart-wrapper .counter.qty {
     display: inline-flex;
     align-items: center;
@@ -166,8 +189,9 @@
     min-width: 20px;
     height: 20px;
     padding: 0 5px;
-    background: var(--awa-layer-color-primary);
+    background: var(--awa-minicart-counter-bg, rgba(255, 255, 255, 0.22));
     color: #fff;
+    border: 1px solid var(--awa-minicart-counter-border, rgba(255, 255, 255, 0.4));
     border-radius: 10px;
     font-size: 0.6875rem;
     font-weight: 700;
@@ -292,11 +316,77 @@
 }
 
 /* ── Top bar institucional ───────────────────────────────────── */
+/*
+   Estrutura esperada no PHTML:
+     .awa-header-topbar (ou .header-top-bar) > .container >
+       .top-left-static + .top-bar-right >
+         .awa-b2b-badge? + .awa-b2b-commercial-shortcuts + .top-account
+*/
 .awa-header-topbar,
 .header-top-bar {
-    background: var(--awa-layer-color-text);
+    background: var(--awa-header-topbar-bg, var(--awa-layer-color-text));
     color: rgb(255 255 255 / 75%);
-    font-size: 0.75rem;
+    font-size: var(--awa-header-topbar-font, 11.5px);
+    min-height: var(--awa-header-topbar-height, 32px);
+}
+
+.awa-header-topbar .container,
+.header-top-bar .container {
+    display: flex;
+    align-items: center;
+    height: var(--awa-header-topbar-height, 32px);
+    gap: var(--awa-topbar-gap, 24px);
+}
+
+/* Região esquerda: links institucionais */
+.awa-header-topbar .top-left-static,
+.header-top-bar .top-left-static {
+    display: flex;
+    align-items: center;
+    gap: var(--awa-gap-md, 12px);
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+}
+
+/* Região direita: badge B2B + shortcuts + conta */
+.awa-header-topbar .top-bar-right,
+.header-top-bar .top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: var(--awa-topbar-gap, 24px);
+    flex-shrink: 0;
+}
+
+/*
+   Shortcuts B2B inline — garantia de alinhamento horizontal
+   Os estilos visuais dos links (.awa-shortcut-link) são definidos
+   em awa-rokanthemes-head-inline.css (último a carregar, vence cascade).
+   Aqui definimos apenas layout/estrutura de container para a camada layers/.
+*/
+.awa-header-topbar .awa-b2b-commercial-shortcuts,
+.header-top-bar .awa-b2b-commercial-shortcuts {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--awa-topbar-shortcut-gap, 12px);
+    flex-shrink: 0;
+    /* Separador esquerdo via border */
+    padding-left: var(--awa-topbar-shortcut-gap, 12px);
+    border-left: 1px solid rgb(255 255 255 / 16%);
+}
+
+/* Separador visual entre shortcuts */
+.awa-header-topbar .awa-b2b-commercial-shortcuts + .awa-b2b-commercial-shortcuts,
+.header-top-bar .awa-b2b-commercial-shortcuts + .awa-b2b-commercial-shortcuts {
+    border-left: 1px solid rgb(255 255 255 / 16%);
+    padding-left: var(--awa-topbar-shortcut-gap, 12px);
+}
+
+/* Garante que o shortcut-link herda corretamente no contexto topbar */
+.awa-header-topbar .awa-shortcut-link,
+.header-top-bar .awa-shortcut-link {
+    line-height: 1;
+    white-space: nowrap;
 }
 
 /* ── Autocomplete / suggestions ──────────────────────────────── */
@@ -434,16 +524,18 @@
         max-height: 600px;
     }
 
-    /* Minicart: texto oculto no mobile */
+    /* Minicart: ícone visível, texto oculto, mas mantém estilo vermelho */
     .minicart-wrapper .action.showcart .text,
     .minicart-wrapper .action.showcart .label {
         display: none;
     }
 
     .minicart-wrapper .action.showcart {
-        padding: 8px;
-        width: 44px;
+        padding: 9px 12px;
+        width: auto;
+        min-width: 44px;
         justify-content: center;
+        box-shadow: var(--awa-minicart-shadow, 0 2px 10px rgb(183 51 55 / 25%));
     }
 }
 

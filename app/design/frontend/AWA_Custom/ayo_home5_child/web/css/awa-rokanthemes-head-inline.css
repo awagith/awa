@@ -456,15 +456,17 @@
       margin-right: 20px;
   }
   .awa-b2b-commercial-shortcuts .awa-shortcut-link {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 6px;
-      color: #1a1a1a !important; /* Dark text for B2B portal feel */
+      line-height: 1;                  /* alinha ícone SVG com texto */
+      color: #1a1a1a !important;
       font-size: 13px !important;
       font-weight: 500;
-      padding: 6px 10px;
+      padding: 5px 10px;
       border-radius: 4px;
-      transition: all 0.2s ease;
+      /* Transição explícita — mais performático que "all" */
+      transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease !important;
       background: #f8f9fa;
       border: 1px solid #e4e9f0;
       text-decoration: none !important;
@@ -474,19 +476,25 @@
       background: rgb(255 255 255 / 10%);
       border: 1px solid rgb(255 255 255 / 15%);
   }
-  .awa-b2b-commercial-shortcuts .awa-shortcut-link:hover {
+  .awa-b2b-commercial-shortcuts .awa-shortcut-link:hover,
+  .awa-b2b-commercial-shortcuts .awa-shortcut-link:focus-visible {
       background: #fff;
       border-color: var(--awa-layer-color-primary, #b73337);
       color: var(--awa-layer-color-primary, #b73337) !important;
+      outline: 0;
   }
-  .top-header .awa-b2b-commercial-shortcuts .awa-shortcut-link:hover {
+  .top-header .awa-b2b-commercial-shortcuts .awa-shortcut-link:hover,
+  .top-header .awa-b2b-commercial-shortcuts .awa-shortcut-link:focus-visible {
       background: rgb(255 255 255 / 20%);
       border-color: rgb(255 255 255 / 40%);
       color: #fff !important;
   }
+  /* Ícones: tamanho fixo e alinhamento vertical perfeito */
   .awa-b2b-commercial-shortcuts svg {
-      width: 16px;
-      height: 16px;
+      width: 15px;
+      height: 15px;
+      flex-shrink: 0;
+      vertical-align: middle;
   }
   
   /* De-emphasize retail top links and keep them tight */

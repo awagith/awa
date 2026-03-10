@@ -180,8 +180,9 @@ class CustomerPullManagement implements CustomerPullInterface
         $sql .= "BEGIN TRANSACTION;\n";
 
         foreach ($unregistered as $code) {
-            $h1 = strtoupper(hash('sha256', json_encode(['CODIGO' => (int) $code, 'source' => 'magento_b2b'])));
-            $h2 = strtoupper(hash('sha256', json_encode(['CODIGO' => (int) $code, 'ENDERECO' => 1, 'source' => 'magento_b2b'])));
+            // md5 mantido: hash armazenado em GR_INTEGRACAOVALIDADOR.VALIDADOR (ERP Sectra, coluna 32 chars)
+            $h1 = strtoupper(md5(json_encode(['CODIGO' => (int) $code, 'source' => 'magento_b2b'])));
+            $h2 = strtoupper(md5(json_encode(['CODIGO' => (int) $code, 'ENDERECO' => 1, 'source' => 'magento_b2b'])));
 
             $sql .= "INSERT INTO GR_INTEGRACAOVALIDADOR(INTEGRACAOORIGEM,CHAVE,VALIDADOR,CHAVEEXTERNA,DTSINCRONIZACAO)";
             $sql .= "VALUES('$origemCliente','$code','$h1','$code',GETDATE());\n";

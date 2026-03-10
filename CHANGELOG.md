@@ -1,6 +1,15 @@
 # CHANGELOG - Grupo Awamotos Magento Store
 
-## [Modo Estrito B2B] - 2026-01-28
+## [CSS Visual Upgrade] - 2026-06-20
+
+### ✨ Melhorias Visuais (feat(css))
+- **tokens.css**: 20 novos tokens para sticky header, minicart proeminente, PDP add-to-cart e panels B2B
+- **layers/header.css**: Sticky `backdrop-filter` glass; top bar layout flex completo com regiões left/right; minicart botão vermelho AWA preenchido com sombra e lift hover; counter translúcido
+- **layers/pages/home.css**: Hero B2B bar com `padding-inline` correto; benefits strip com separadores e layout mobile 1-coluna (`white-space: normal`); card hover com token `--awa-brand-opacity-28`
+- **layers/pages/pdp.css**: Gallery shadow; botão tocart 52px com gradiente AWA + sombra; NOVO `.b2b-tier-pricing` panel premium (tabela azul-índigo); NOVO `.b2b-customer-price-info` com indicador pulsante e sub-elementos
+- **awa-rokanthemes-head-inline.css**: Shortcut links `inline-flex`/`line-height:1`, transição explícita, `:focus-visible`, SVG `vertical-align:middle`
+
+
 
 ### 🎯 Implementação Principal
 **Objetivo:** Loja aceita APENAS cadastros empresariais B2B
