@@ -18,21 +18,22 @@
      aria-describedby="b2b-badge-tooltip"
      data-mage-init='{"GrupoAwamotos_B2B/js/discount-badge":{"tooltipId":"b2b-badge-tooltip"}}'>
     <div class="badge-inner" aria-hidden="false">
-        <span class="badge-icon" aria-hidden="true">🏢</span>
+        <span class="glyphicon glyphicon-briefcase" aria-hidden="true" style="margin-right:4px"></span>
         <span class="badge-text">
             <strong><?= $block->escapeHtml($groupName) ?></strong>
             <?php if ($discount > 0): ?>
-            <span class="badge-discount">-<?= (int)$discount ?>%</span>
+            <span class="badge label label-success" style="margin-left:4px">-<?= (int)$discount ?>%</span>
             <?php endif; ?>
         </span>
     </div>
     <div class="badge-tooltip" id="b2b-badge-tooltip" aria-hidden="true">
-        <p class="tooltip-greeting"><?= $block->escapeHtml(__('Olá, %1!', $firstName)) ?></p>
-        <p class="tooltip-info"><?= $block->escapeHtml(__('Você tem %1%% de desconto em todos os produtos.', $discount)) ?></p>
-        <a href="<?= $block->escapeUrl($block->getUrl('b2b/account/dashboard')) ?>" 
-           class="tooltip-link action secondary"
+        <p class="tooltip-greeting small"><strong><?= $block->escapeHtml(__('Olá, %1!', $firstName)) ?></strong></p>
+        <p class="tooltip-info small"><?= $block->escapeHtml(__('Você tem %1%% de desconto em todos os produtos.', $discount)) ?></p>
+        <a href="<?= $block->escapeUrl($block->getUrl('b2b/account/dashboard')) ?>"
+           class="btn btn-default btn-xs btn-block tooltip-link"
            aria-label="<?= $block->escapeHtmlAttr(__('Ver Painel B2B')) ?>">
-            <?= $block->escapeHtml(__('Ver Painel B2B')) ?>
+            <span class="glyphicon glyphicon-th-large" aria-hidden="true"></span>
+            <span> <?= $block->escapeHtml(__('Ver Painel B2B')) ?></span>
         </a>
     </div>
 </div>

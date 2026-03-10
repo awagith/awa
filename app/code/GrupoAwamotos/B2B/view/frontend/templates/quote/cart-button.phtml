@@ -10,17 +10,21 @@
 <div id="b2b-cart-quote-wrapper"
      class="b2b-cart-quote-wrapper"
      data-mage-init='{"GrupoAwamotos_B2B/js/quote/cart-button":{"targets":[".cart-summary",".checkout-methods-items","#cart-totals"],"fallbackTarget":".column.main","retryDelay":180,"maxAttempts":20}}'>
-    <div class="b2b-cart-quote-box">
-        <div class="b2b-quote-header">
-            <span class="b2b-quote-icon">🏢</span>
-            <span class="b2b-quote-title"><?= $block->escapeHtml(__('Compra Empresarial?')) ?></span>
+    <div class="panel panel-default b2b-cart-quote-box">
+        <div class="panel-heading">
+            <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
+            <span class="b2b-quote-title"> <?= $block->escapeHtml(__('Compra Empresarial?')) ?></span>
         </div>
-        <p class="b2b-quote-desc"><?= $block->escapeHtml(__('Solicite uma cotação personalizada com descontos especiais para sua empresa.')) ?></p>
-        <a href="<?= $block->escapeUrl($block->getQuoteUrl()) ?>" 
-           class="action primary b2b-quote-btn"
-           title="<?= $block->escapeHtmlAttr($block->getButtonText()) ?>">
-            <span><?= $block->escapeHtml($block->getButtonText()) ?></span>
-        </a>
+        <div class="panel-body">
+            <p class="b2b-quote-desc"><?= $block->escapeHtml(__('Solicite uma cotação personalizada com descontos especiais para sua empresa.')) ?></p>
+        </div>
+        <div class="panel-footer">
+            <a href="<?= $block->escapeUrl($block->getQuoteUrl()) ?>"
+               class="btn btn-primary btn-block b2b-quote-btn"
+               title="<?= $block->escapeHtmlAttr($block->getButtonText()) ?>">
+                <span><?= $block->escapeHtml($block->getButtonText()) ?></span>
+            </a>
+        </div>
     </div>
 </div>
 <?php endif; ?>

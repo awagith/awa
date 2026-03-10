@@ -5,61 +5,65 @@
  */
 ?>
 <?php if ($block->shouldDisplay()): ?>
-<div class="b2b-promo-banner">
-    <div class="b2b-promo-inner">
-        <div class="b2b-promo-content">
-            <div class="b2b-promo-badge">
-                <span class="badge-text">ATACADO</span>
-            </div>
-            <h2 class="b2b-promo-title">
+<div class="jumbotron b2b-promo-banner" style="background:linear-gradient(135deg,#7e2224 0%,#b73337 100%);color:#fff;border-radius:6px;padding:32px 40px;margin-bottom:24px">
+    <div class="row">
+        <div class="col-md-8 b2b-promo-content">
+            <p>
+                <span class="badge" style="background:rgba(255,255,255,0.25);font-size:11px;letter-spacing:1px">ATACADO</span>
+            </p>
+            <h2 class="b2b-promo-title" style="margin-top:8px;color:#fff">
                 <?= $block->escapeHtml(__('Atacado e Revendedor com preço de parceiro')) ?>
             </h2>
-            <p class="b2b-promo-subtitle">
+            <p class="b2b-promo-subtitle lead" style="color:rgba(255,255,255,0.9);font-size:15px">
                 <?= $block->escapeHtml(__('Entre para ver preços B2B, solicitar cadastro e comprar com condições diferenciadas.')) ?>
             </p>
-            
-            <div class="b2b-benefits-grid">
+
+            <?php if ($block->getBenefits()): ?>
+            <div class="row b2b-benefits-grid" style="margin-top:16px">
                 <?php foreach ($block->getBenefits() as $benefit): ?>
-                <div class="b2b-benefit-item">
-                    <div class="benefit-icon">
-                        <span class="icon-<?= $block->escapeHtmlAttr($benefit['icon']) ?>"></span>
-                    </div>
-                    <div class="benefit-content">
-                        <strong><?= $block->escapeHtml(__($benefit['title'])) ?></strong>
-                        <span><?= $block->escapeHtml(__($benefit['description'])) ?></span>
-                    </div>
+                <div class="col-sm-6 b2b-benefit-item" style="margin-bottom:10px">
+                    <span class="glyphicon glyphicon-<?= $block->escapeHtmlAttr($benefit['icon'] ?? 'ok') ?>" aria-hidden="true" style="margin-right:6px;color:rgba(255,255,255,0.8)"></span>
+                    <strong><?= $block->escapeHtml(__($benefit['title'])) ?></strong>
+                    <span style="display:block;padding-left:22px;font-size:12px;color:rgba(255,255,255,0.75)"><?= $block->escapeHtml(__($benefit['description'])) ?></span>
                 </div>
                 <?php endforeach; ?>
             </div>
-            
-            <div class="b2b-promo-actions">
+            <?php endif; ?>
+
+            <div class="b2b-promo-actions" style="margin-top:20px">
                 <a href="<?= $block->escapeUrl($block->isGuest() ? $block->getLoginUrl() : $block->getRegisterUrl()) ?>"
-                   class="action primary b2b-register-btn"
+                   class="btn btn-lg b2b-register-btn"
+                   style="background:#fff;color:#b73337;font-weight:700;margin-right:8px;margin-bottom:8px"
                    title="<?= $block->escapeHtmlAttr($block->isGuest() ? __('Entrar para ver preço') : __('Solicitar cadastro B2B')) ?>">
-                    <span><?= $block->escapeHtml($block->isGuest() ? __('Entrar para ver preço') : __('Solicitar cadastro B2B')) ?></span>
+                    <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
+                    <span> <?= $block->escapeHtml($block->isGuest() ? __('Entrar para ver preço') : __('Solicitar cadastro B2B')) ?></span>
                 </a>
                 <a href="<?= $block->escapeUrl($block->getQuoteUrl()) ?>"
-                   class="action secondary b2b-quote-btn"
+                   class="btn btn-default btn-lg b2b-quote-btn"
+                   style="background:rgba(255,255,255,0.15);color:#fff;border-color:rgba(255,255,255,0.4);margin-bottom:8px"
                    title="<?= $block->escapeHtmlAttr(__('Solicitar cotação')) ?>">
-                    <span><?= $block->escapeHtml(__('Solicitar cotação')) ?></span>
+                    <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                    <span> <?= $block->escapeHtml(__('Solicitar cotação')) ?></span>
                 </a>
-                <span class="promo-note">
+                <p style="margin-top:8px;font-size:12px;color:rgba(255,255,255,0.7)">
+                    <span class="glyphicon glyphicon-time" aria-hidden="true" style="margin-right:4px"></span>
                     <?= $block->escapeHtml(__('Cadastro rápido • análise em até 24h úteis')) ?>
-                </span>
+                </p>
             </div>
 
-            <ul class="b2b-quick-rules" role="list">
+            <?php if ($block->getQuickRules()): ?>
+            <ul class="list-inline b2b-quick-rules" style="margin-top:12px;font-size:12px;color:rgba(255,255,255,0.7)">
                 <?php foreach ($block->getQuickRules() as $rule): ?>
-                    <li><?= $block->escapeHtml(__($rule)) ?></li>
+                <li><span class="glyphicon glyphicon-ok" aria-hidden="true" style="margin-right:3px"></span><?= $block->escapeHtml(__($rule)) ?></li>
                 <?php endforeach; ?>
             </ul>
+            <?php endif; ?>
         </div>
-        
-        <div class="b2b-promo-visual">
-            <div class="discount-badge-large">
-                <span class="discount-up">ATÉ</span>
-                <span class="discount-value">20%</span>
-                <span class="discount-off">OFF</span>
+        <div class="col-md-4 b2b-promo-visual text-center hidden-sm hidden-xs" style="display:flex;align-items:center;justify-content:center">
+            <div class="discount-badge-large" style="background:rgba(255,255,255,0.15);border-radius:50%;width:140px;height:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid rgba(255,255,255,0.3)">
+                <span style="font-size:11px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,0.8)">ATÉ</span>
+                <span style="font-size:52px;font-weight:900;line-height:1;color:#fff">20%</span>
+                <span style="font-size:13px;font-weight:700;letter-spacing:1px;color:rgba(255,255,255,0.8)">OFF</span>
             </div>
         </div>
     </div>

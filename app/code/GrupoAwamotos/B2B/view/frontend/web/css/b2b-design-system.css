@@ -944,3 +944,384 @@ fieldset[disabled] .btn-primary {
     .b2b-product-card { min-width: 120px; max-width: 150px; }
     .b2b-section-header { flex-wrap: wrap; gap: 8px; }
 }
+
+/* ==========================================================================
+   22. ANIMAÇÕES DE ENTRADA — fade-in suave ao carregar seções B2B
+   ========================================================================== */
+
+@keyframes b2b-fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.b2b-page-shell .panel,
+.b2b-page-shell .alert,
+.b2b-page-shell .b2b-kpi-card {
+    animation: b2b-fade-in .25s ease-out both;
+}
+
+/* Staggered delay para múltiplos panels */
+.b2b-page-shell .panel:nth-child(1) { animation-delay: .00s; }
+.b2b-page-shell .panel:nth-child(2) { animation-delay: .05s; }
+.b2b-page-shell .panel:nth-child(3) { animation-delay: .10s; }
+.b2b-page-shell .panel:nth-child(4) { animation-delay: .15s; }
+.b2b-page-shell .panel:nth-child(5) { animation-delay: .20s; }
+
+/* KPI cards com stagger via row */
+.b2b-page-shell .row .col-md-4:nth-child(1) .b2b-kpi-card { animation-delay: .00s; }
+.b2b-page-shell .row .col-md-4:nth-child(2) .b2b-kpi-card { animation-delay: .07s; }
+.b2b-page-shell .row .col-md-4:nth-child(3) .b2b-kpi-card { animation-delay: .14s; }
+.b2b-page-shell .row .col-sm-4:nth-child(1) .b2b-kpi-card { animation-delay: .00s; }
+.b2b-page-shell .row .col-sm-4:nth-child(2) .b2b-kpi-card { animation-delay: .07s; }
+.b2b-page-shell .row .col-sm-4:nth-child(3) .b2b-kpi-card { animation-delay: .14s; }
+
+/* Respeitar preferência de movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+    .b2b-page-shell .panel,
+    .b2b-page-shell .alert,
+    .b2b-page-shell .b2b-kpi-card {
+        animation: none;
+    }
+}
+
+/* ==========================================================================
+   23. SKELETON LOADING — placeholders enquanto dados carregam via AJAX
+   ========================================================================== */
+
+@keyframes b2b-shimmer {
+    0%   { background-position: -400px 0; }
+    100% { background-position: 400px 0; }
+}
+
+.b2b-skeleton {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 800px 100%;
+    animation: b2b-shimmer 1.5s infinite;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.b2b-skeleton-line {
+    height: 14px;
+    margin-bottom: 8px;
+    border-radius: 3px;
+}
+.b2b-skeleton-line.short  { width: 40%; }
+.b2b-skeleton-line.medium { width: 65%; }
+.b2b-skeleton-line.long   { width: 90%; }
+
+.b2b-skeleton-box {
+    height: 80px;
+    width: 100%;
+    border-radius: 4px;
+}
+
+.b2b-skeleton-table-row td {
+    padding: 10px 12px;
+}
+.b2b-skeleton-table-row td::before {
+    content: '';
+    display: block;
+    height: 12px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 800px 100%;
+    animation: b2b-shimmer 1.5s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .b2b-skeleton,
+    .b2b-skeleton-table-row td::before {
+        animation: none;
+        background: #f0f0f0;
+    }
+}
+
+/* ==========================================================================
+   24. EMPTY STATES — mensagens quando não há dados
+   ========================================================================== */
+
+.b2b-empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: #888;
+}
+
+.b2b-empty-state .glyphicon {
+    font-size: 48px;
+    color: #ccc;
+    display: block;
+    margin-bottom: 16px;
+}
+
+.b2b-empty-state h4 {
+    color: #555;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.b2b-empty-state p {
+    font-size: 14px;
+    margin-bottom: 20px;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Tabela sem dados */
+.b2b-page-shell tbody.empty td {
+    text-align: center;
+    padding: 32px;
+    color: #888;
+    font-style: italic;
+}
+
+/* Panel sem conteúdo */
+.b2b-panel-empty .panel-body {
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #aaa;
+    font-size: 13px;
+}
+
+/* ==========================================================================
+   25. MICRO-INTERAÇÕES — feedback visual em botões e ações B2B
+   ========================================================================== */
+
+/* Botões com feedback de loading */
+.b2b-page-shell .btn.loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+.b2b-page-shell .btn.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 14px;
+    height: 14px;
+    margin: -7px 0 0 -7px;
+    border: 2px solid rgba(255,255,255,.5);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: b2b-spin .6s linear infinite;
+}
+@keyframes b2b-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Hover lift para KPI cards e list-cards */
+.b2b-kpi-card,
+.b2b-list-card {
+    transition: transform .15s ease, box-shadow .15s ease;
+}
+.b2b-kpi-card:hover,
+.b2b-list-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,.12);
+}
+
+/* Focus ring visível para acessibilidade */
+.b2b-page-shell .btn:focus,
+.b2b-page-shell a:focus,
+.b2b-page-shell input:focus,
+.b2b-page-shell select:focus,
+.b2b-page-shell textarea:focus {
+    outline: 2px solid #b73337;
+    outline-offset: 2px;
+}
+
+/* Transição suave em links de tabela */
+.b2b-page-shell .table a {
+    transition: color .1s;
+}
+.b2b-page-shell .table a:hover {
+    color: #9a2a2d;
+    text-decoration: none;
+}
+
+/* ==========================================================================
+   26. PRINT STYLES — impressão de cotações, pedidos e relatórios B2B
+   ========================================================================== */
+
+@media print {
+    .b2b-page-shell .btn,
+    .b2b-page-shell .panel-footer .btn-group,
+    .b2b-page-shell .b2b-action-item,
+    .b2b-page-shell .b2b-quick-actions {
+        display: none !important;
+    }
+
+    .b2b-page-shell .panel {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        break-inside: avoid;
+        animation: none !important;
+    }
+
+    .b2b-page-shell .table-responsive {
+        overflow: visible !important;
+    }
+
+    .b2b-page-shell .table th {
+        background-color: #f5f5f5 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .b2b-page-shell .label {
+        border: 1px solid #ccc;
+        color: #333 !important;
+        background: transparent !important;
+    }
+
+    /* Forçar URLs de links visíveis na impressão */
+    .b2b-page-shell a[href]::after {
+        content: none; /* evitar URLs longas em links de ação */
+    }
+}
+
+/* ==========================================================================
+   27. STATUS PANEL DROPDOWN — painel de status no header B2B
+   ========================================================================== */
+
+.b2b-status-panel .list-group {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+.b2b-status-panel .list-group-item {
+    padding: 8px 14px;
+    border-left: 0;
+    border-right: 0;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.b2b-status-panel .list-group-item:first-child {
+    border-top: 0;
+}
+.b2b-status-panel .list-group-item .badge {
+    background: #b73337;
+    font-size: 11px;
+}
+.b2b-status-panel .list-group-item .badge.badge-success {
+    background: #5cb85c;
+}
+.b2b-status-panel .list-group-item .badge.badge-warning {
+    background: #f0ad4e;
+}
+
+/* Botões de ação no dropdown */
+.b2b-status-panel .btn-block + .btn-block {
+    margin-top: 4px;
+}
+.b2b-status-panel .btn-danger {
+    border-radius: 0 0 3px 3px;
+}
+
+/* ==========================================================================
+   28. PRODUCT PAGE B2B — tier pricing, price list, banners na PDP
+   ========================================================================== */
+
+/* Tabela de preços por volume */
+.b2b-tier-pricing .panel-heading .glyphicon {
+    margin-right: 6px;
+    color: #b73337;
+}
+.b2b-tier-pricing .table th {
+    background: #f9f9f9;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .3px;
+    color: #555;
+}
+.b2b-tier-pricing .table tr.success td {
+    background: #dff0d8;
+    font-weight: 600;
+}
+.b2b-tier-pricing .table .b2b-tier-qty {
+    font-weight: 600;
+    color: #333;
+}
+.b2b-tier-pricing .table .b2b-tier-price {
+    font-weight: 700;
+    color: #b73337;
+    font-size: 14px;
+}
+
+/* Banner promocional B2B */
+.b2b-promo-banner.jumbotron {
+    padding: 24px 32px;
+    margin: 16px 0;
+}
+.b2b-promo-banner.jumbotron h2 {
+    color: #fff;
+    margin-top: 0;
+    font-size: 22px;
+}
+.b2b-promo-banner.jumbotron p {
+    color: rgba(255,255,255,.85);
+}
+.b2b-promo-banner .b2b-benefit-item {
+    text-align: center;
+    padding: 8px 4px;
+    color: rgba(255,255,255,.9);
+    font-size: 12px;
+}
+.b2b-promo-banner .b2b-benefit-item strong {
+    display: block;
+    color: #fff;
+    font-size: 13px;
+}
+
+/* Banner compact */
+.b2b-promo-compact {
+    border-left: 3px solid #b73337 !important;
+}
+
+/* Pending banner (login-to-cart) */
+.b2b-pending-banner .alert {
+    border-radius: 0;
+    margin: 0;
+}
+
+/* ==========================================================================
+   29. QUOTE + CART COMPONENTS — botões, itens e widget de carrinho
+   ========================================================================== */
+
+/* Quote button wrapper */
+.b2b-quote-button-container .btn-primary {
+    font-weight: 600;
+    letter-spacing: .3px;
+}
+
+/* Cart quote panel */
+.b2b-cart-quote-box .panel-heading {
+    background: #fff8f8;
+    border-bottom-color: #e8c4c4;
+}
+.b2b-cart-quote-box .panel-heading .glyphicon {
+    color: #b73337;
+    margin-right: 6px;
+}
+
+/* Quote items table */
+.b2b-quote-items-table tfoot tr.active td {
+    background: #f5f5f5;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+/* Success badge checkout */
+.b2b-success-badge.alert-success .media-left .glyphicon {
+    color: #3c763d;
+}
+
+/* Register CTA (login page) */
+.b2b-login-cta.well {
+    border-left: 3px solid #b73337;
+}

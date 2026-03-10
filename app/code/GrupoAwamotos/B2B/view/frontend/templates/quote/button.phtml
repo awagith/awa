@@ -6,14 +6,14 @@
  */
 ?>
 <?php if ($block->shouldDisplay()): ?>
-<div class="b2b-quote-button-container">
-    <a href="<?= $block->escapeUrl($block->getQuoteUrl()) ?>" 
-       class="action primary b2b-quote-button"
+<div class="b2b-quote-button-container" style="margin:12px 0">
+    <a href="<?= $block->escapeUrl($block->getQuoteUrl()) ?>"
+       class="btn btn-primary btn-block b2b-quote-button"
        title="<?= $block->escapeHtmlAttr($block->getButtonText()) ?>">
-        <span class="b2b-quote-icon">📋</span>
-        <span><?= $block->escapeHtml($block->getButtonText()) ?></span>
+        <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+        <span> <?= $block->escapeHtml($block->getButtonText()) ?></span>
     </a>
-    <p class="b2b-quote-note">
+    <p class="text-muted text-center" style="font-size:12px;margin:4px 0 0">
         <small><?= $block->escapeHtml(__('Receba uma proposta personalizada para sua empresa')) ?></small>
     </p>
 </div>

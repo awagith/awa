@@ -5,21 +5,22 @@
  */
 ?>
 <?php if ($block->shouldDisplay()): ?>
-<div class="b2b-login-cta">
-    <div class="b2b-login-cta-inner">
-        <div class="b2b-login-icon">🏢</div>
-        <div class="b2b-login-content">
-            <h3><?= $block->escapeHtml(__('Sua Empresa Compra Conosco?')) ?></h3>
-            <p><?= $block->escapeHtml(__('Cadastre-se como revendedor e tenha acesso a descontos de até 20%, crédito empresarial e condições exclusivas.')) ?></p>
-            <div class="b2b-login-actions">
-                <a href="<?= $block->escapeUrl($block->getRegisterUrl()) ?>" class="action primary b2b-cta-btn">
-                    <span><?= $block->escapeHtml(__('Cadastro Empresarial')) ?></span>
-                </a>
-                <a href="<?= $block->escapeUrl($block->getUrl('seja-revendedor')) ?>" class="action secondary b2b-info-link">
-                    <span><?= $block->escapeHtml(__('Saiba Mais')) ?></span>
-                </a>
-            </div>
-        </div>
+<div class="well b2b-login-cta" style="background:#fff8f8;border-color:#e8c4c4;text-align:center;padding:20px 24px">
+    <span class="glyphicon glyphicon-briefcase"
+          style="font-size:32px;color:#b73337;display:block;margin-bottom:12px"
+          aria-hidden="true"></span>
+    <h3 style="margin:0 0 8px;color:#2c3e50"><?= $block->escapeHtml(__('Sua Empresa Compra Conosco?')) ?></h3>
+    <p class="text-muted" style="margin-bottom:16px"><?= $block->escapeHtml(__('Cadastre-se como revendedor e tenha acesso a descontos de até 20%, crédito empresarial e condições exclusivas.')) ?></p>
+    <div>
+        <a href="<?= $block->escapeUrl($block->getRegisterUrl()) ?>"
+           class="btn btn-primary b2b-cta-btn"
+           style="margin-right:8px">
+            <span><?= $block->escapeHtml(__('Cadastro Empresarial')) ?></span>
+        </a>
+        <a href="<?= $block->escapeUrl($block->getUrl('seja-revendedor')) ?>"
+           class="btn btn-default b2b-info-link">
+            <span><?= $block->escapeHtml(__('Saiba Mais')) ?></span>
+        </a>
     </div>
 </div>
 <?php endif; ?>

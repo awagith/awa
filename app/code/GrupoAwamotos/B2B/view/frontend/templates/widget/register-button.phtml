@@ -5,12 +5,12 @@
  */
 ?>
 <?php if ($block->shouldDisplay()): ?>
-<div class="b2b-register-widget">
-    <a href="<?= $block->escapeUrl($block->getRegisterUrl()) ?>" 
-       class="action <?= $block->escapeHtmlAttr($block->getButtonStyle()) ?>"
+<div class="b2b-register-widget text-center" style="padding:8px 0">
+    <a href="<?= $block->escapeUrl($block->getRegisterUrl()) ?>"
+       class="btn btn-primary b2b-register-widget-btn"
        title="<?= $block->escapeHtmlAttr($block->getButtonText()) ?>">
-        <span class="b2b-icon">🏢</span>
-        <span><?= $block->escapeHtml($block->getButtonText()) ?></span>
+        <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
+        <span> <?= $block->escapeHtml($block->getButtonText()) ?></span>
     </a>
 </div>
 <?php endif; ?>

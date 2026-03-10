@@ -31,17 +31,19 @@
         </div>
         <h3><?= $block->escapeHtml(__('Você Sabia?')) ?></h3>
         <p><?= $block->escapeHtml(__('Empresas podem se cadastrar como revendedores e ter acesso a benefícios exclusivos:')) ?></p>
-        <ul class="b2b-benefits-list">
-            <li><span class="benefit-check">✓</span> <span><?= $block->escapeHtml(__('Descontos de até 20% em todos os produtos')) ?></span></li>
-            <li><span class="benefit-check">✓</span> <span><?= $block->escapeHtml(__('Crédito empresarial')) ?></span></li>
-            <li><span class="benefit-check">✓</span> <span><?= $block->escapeHtml(__('Cotações personalizadas')) ?></span></li>
-            <li><span class="benefit-check">✓</span> <span><?= $block->escapeHtml(__('Atendimento prioritário')) ?></span></li>
+        <ul class="list-unstyled b2b-benefits-list" style="text-align:left;margin:12px 0">
+            <li><span class="glyphicon glyphicon-ok text-success" aria-hidden="true" style="margin-right:6px"></span><?= $block->escapeHtml(__('Descontos de até 20% em todos os produtos')) ?></li>
+            <li><span class="glyphicon glyphicon-ok text-success" aria-hidden="true" style="margin-right:6px"></span><?= $block->escapeHtml(__('Crédito empresarial')) ?></li>
+            <li><span class="glyphicon glyphicon-ok text-success" aria-hidden="true" style="margin-right:6px"></span><?= $block->escapeHtml(__('Cotações personalizadas')) ?></li>
+            <li><span class="glyphicon glyphicon-ok text-success" aria-hidden="true" style="margin-right:6px"></span><?= $block->escapeHtml(__('Atendimento prioritário')) ?></li>
         </ul>
         <div class="b2b-suggestion-actions">
-            <a href="<?= $block->escapeUrl($block->getUrl('b2b/register')) ?>" class="action primary b2b-register-btn">
-                <?= $block->escapeHtml(__('Cadastro Empresarial B2B')) ?>
+            <a href="<?= $block->escapeUrl($block->getUrl('b2b/register')) ?>"
+               class="btn btn-primary btn-block b2b-register-btn" style="margin-bottom:8px">
+                <span class="glyphicon glyphicon-briefcase" aria-hidden="true"></span>
+                <span> <?= $block->escapeHtml(__('Cadastro Empresarial B2B')) ?></span>
             </a>
-            <button type="button" class="action secondary b2b-continue-btn">
+            <button type="button" class="btn btn-default btn-block b2b-continue-btn">
                 <?= $block->escapeHtml(__('Continuar Cadastro Normal')) ?>
             </button>
         </div>
