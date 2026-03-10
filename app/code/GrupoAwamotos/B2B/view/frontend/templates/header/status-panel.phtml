@@ -51,7 +51,7 @@
     </button>
 
     <!-- Dropdown Panel -->
-    <div id="b2b-status-dropdown" class="b2b-status-dropdown" aria-hidden="true">
+    <div id="b2b-status-dropdown" class="b2b-status-dropdown" role="menu" aria-hidden="true">
         <div class="dropdown-inner">
 
             <!-- User Info Section -->
@@ -70,45 +70,56 @@
                     <span class="user-tier" style="--tier-color: <?= $badgeColor ?>">
                         <i class="fa fa-<?= $badgeIcon ?>" aria-hidden="true"></i>
                         <?= $groupName ?>
+                        <?php if ($discount > 0): ?>
+                        <span class="badge" style="background-color:#b73337;margin-left:4px">-<?= $discount ?>%</span>
+                        <?php endif; ?>
                     </span>
                 </div>
             </div>
 
             <!-- Stats Section -->
             <?php if ($discount > 0 || $data['credit_limit'] > 0): ?>
+            <hr style="margin:8px 0">
             <div class="dropdown-section stats-section">
-                <?php if ($discount > 0): ?>
-                <div class="stat-item discount-stat">
-                    <span class="stat-icon"><i class="fa fa-percent" aria-hidden="true"></i></span>
-                    <span class="stat-content">
-                        <span class="stat-value">-<?= $discount ?>%</span>
-                        <span class="stat-label"><?= $block->escapeHtml(__('Desconto Exclusivo')) ?></span>
-                    </span>
-                </div>
-                <?php endif; ?>
-
-                <?php if ($data['credit_limit'] > 0): ?>
-                <div class="stat-item credit-stat">
-                    <span class="stat-icon"><i class="fa fa-credit-card" aria-hidden="true"></i></span>
-                    <span class="stat-content">
-                        <span class="stat-value"><?= /* @noEscape */ $block->formatPrice($data['credit_available']) ?></span>
-                        <span class="stat-label"><?= $block->escapeHtml(__('Cr&eacute;dito Dispon&iacute;vel')) ?></span>
-                    </span>
-                    <div class="credit-bar">
-                        <?php $creditPercent = $data['credit_limit'] > 0 ? ($data['credit_available'] / $data['credit_limit']) * 100 : 0; ?>
-                        <div class="credit-bar-fill" style="width: <?= min(100, (int) $creditPercent) ?>%"></div>
+                <div class="list-group" style="margin-bottom:0">
+                    <?php if ($discount > 0): ?>
+                    <div class="list-group-item">
+                        <i class="fa fa-percent" aria-hidden="true"></i>
+                        <?= $block->escapeHtml(__('Desconto Exclusivo')) ?>
+                        <span class="badge pull-right" style="background-color:#b73337">-<?= $discount ?>%</span>
                     </div>
+                    <?php endif; ?>
+                    <?php if ($data['credit_limit'] > 0): ?>
+                    <div class="list-group-item">
+                        <i class="fa fa-credit-card" aria-hidden="true"></i>
+                        <?= $block->escapeHtml(__('Cr&eacute;dito Dispon&iacute;vel')) ?>
+                        <span class="badge pull-right"><?= /* @noEscape */ $block->formatPrice($data['credit_available']) ?></span>
+                        <div class="credit-bar" style="margin-top:6px">
+                            <?php $creditPercent = $data['credit_limit'] > 0 ? ($data['credit_available'] / $data['credit_limit']) * 100 : 0; ?>
+                            <div class="progress" style="margin-bottom:0;height:6px">
+                                <div class="progress-bar progress-bar-success"
+                                     style="width:<?= min(100, (int) $creditPercent) ?>%"
+                                     role="progressbar"
+                                     aria-valuenow="<?= min(100, (int) $creditPercent) ?>"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
                 </div>
-                <?php endif; ?>
             </div>
             <?php endif; ?>
 
             <!-- Quick Actions -->
+            <hr style="margin:8px 0">
             <div class="dropdown-section actions-section">
                 <span class="section-title"><?= $block->escapeHtml(__('Acesso R&aacute;pido')) ?></span>
                 <nav class="quick-actions" aria-label="<?= $block->escapeHtmlAttr(__('A&ccedil;&otilde;es r&aacute;pidas B2B')) ?>">
                     <?php foreach ($block->getQuickActions() as $action): ?>
-                    <a href="<?= $block->escapeUrl($action['url']) ?>" class="quick-action-link">
+                    <a href="<?= $block->escapeUrl($action['url']) ?>"
+                       class="btn btn-default btn-xs btn-block quick-action-link"
+                       style="text-align:left;margin-bottom:4px">
                         <i class="fa fa-<?= $block->escapeHtmlAttr($action['icon']) ?>" aria-hidden="true"></i>
                         <span><?= $block->escapeHtml($action['label']) ?></span>
                     </a>
@@ -117,13 +128,16 @@
             </div>
 
             <!-- Footer -->
+            <hr style="margin:8px 0">
             <div class="dropdown-footer">
-                <a href="<?= $block->escapeUrl($block->getUrl('b2b/account/dashboard')) ?>" class="footer-link account-link">
+                <a href="<?= $block->escapeUrl($block->getUrl('b2b/account/dashboard')) ?>"
+                   class="btn btn-default btn-xs btn-block"
+                   style="margin-bottom:6px">
                     <i class="fa fa-user-circle-o" aria-hidden="true"></i>
                     <?= $block->escapeHtml(__('Minha Conta')) ?>
                 </a>
                 <a href="<?= $block->escapeUrl($logoutUrl) ?>"
-                   class="footer-link logout-link"
+                   class="btn btn-danger btn-xs btn-block"
                    data-post='<?= $block->escapeHtmlAttr(json_encode([
                        'action' => $logoutUrl,
                        'data' => ['uenc' => '']
