@@ -50,10 +50,7 @@
         </div>
     <?php endif ?>
     <script>
-        <?php
-            $json = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Framework\Serialize\Serializer\Json::class);
-        ?>
-        window.checkout = <?php /* @escapeNotVerified */ echo $json->serialize($block->getConfig()); ?>;
+        window.checkout = <?php /* @noEscape */ echo json_encode($block->getConfig()); ?>;
     </script>
     <script type="text/x-magento-init">
     {
