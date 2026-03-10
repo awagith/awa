@@ -16,18 +16,14 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
-        <!-- Recreate the toolbar entry without any cross-container ordering constraint.
-             The original theme-adminhtml-backend uses after="user" but 'user' lives in
-             'header' while 'notification.messages' lives in 'header.inner.right',
-             causing "Broken reference" warnings on every admin page load. -->
-        <referenceBlock name="notification.messages" remove="true"/>
-        <referenceContainer name="header.inner.right">
-            <block class="Magento\AdminNotification\Block\ToolbarEntry"
-                   name="notification.messages"
-                   after="-"
-                   aclResource="Magento_AdminNotification::show_toolbar"
-                   template="Magento_AdminNotification::toolbar_entry.phtml"/>
-        </referenceContainer>
+        <!-- Fix 1: notification.messages broken reference
+             theme-adminhtml-backend does:
+               <move element="notification.messages" after="user" destination="header.inner.right"/>
+             'user' is in 'header', 'notification.messages' ends up in 'header.inner.right'
+             → cross-container ordering = "Broken reference" on every admin page load.
+             We re-move the block within the same destination (header.inner.right) with
+             after="-" to override the broken after="user" constraint. -->
+        <move element="notification.messages" destination="header.inner.right" after="-"/>
 
         <!-- Fix 2: remove Mirasvit feature-request widget (page.main.container does not exist in adminhtml) -->
         <referenceBlock name="mst.feature-request" remove="true"/>
