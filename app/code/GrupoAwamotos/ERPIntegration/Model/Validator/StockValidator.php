@@ -25,15 +25,23 @@ class StockValidator
     private const MIN_QUANTITY = -999.99;
 
     /**
-     * Threshold for anomaly detection (percentage change)
+     * Threshold for anomaly detection on DECREASE (percentage drop).
+     * 90% = se o estoque cair mais que 90%, é suspeito.
      */
-    private const ANOMALY_THRESHOLD_PERCENT = 90;
+    private const ANOMALY_THRESHOLD_DECREASE_PERCENT = 90;
 
     /**
-     * Minimum current quantity for anomaly detection
-     * (avoid false positives when current stock is very low)
+     * Threshold for anomaly detection on INCREASE (percentage rise).
+     * 2000% = apenas aumentos acima de 20x disparam alerta.
+     * Distribuidoras recebem grandes lotes — limiar menor gera falso-positivos.
      */
-    private const ANOMALY_MIN_CURRENT_QTY = 10;
+    private const ANOMALY_THRESHOLD_INCREASE_PERCENT = 2000;
+
+    /**
+     * Minimum current quantity for anomaly detection.
+     * Raised to 50 to avoid false positives on near-zero stocks.
+     */
+    private const ANOMALY_MIN_CURRENT_QTY = 50;
 
     private StockRegistryInterface $stockRegistry;
     private LoggerInterface $logger;
@@ -165,8 +173,13 @@ class StockValidator
             $change = $newQty - $currentQty;
             $percentChange = ($change / $currentQty) * 100;
 
-            // Detect anomaly: >90% change in either direction
-            if (abs($percentChange) > self::ANOMALY_THRESHOLD_PERCENT) {
+            // Detect anomaly: asymmetric thresholds
+            // Decreases > 90% are always suspicious; increases only above 2000% (20x)
+            $threshold = $change < 0
+                ? self::ANOMALY_THRESHOLD_DECREASE_PERCENT
+                : self::ANOMALY_THRESHOLD_INCREASE_PERCENT;
+
+            if (abs($percentChange) > $threshold) {
                 $direction = $change > 0 ? 'aumento' : 'redução';
                 $result->addWarning(
                     sprintf(
