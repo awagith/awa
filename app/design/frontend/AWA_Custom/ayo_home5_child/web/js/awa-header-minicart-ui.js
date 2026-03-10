@@ -59,6 +59,64 @@
         el.style.setProperty(property, value, 'important');
     }
 
+    function toOriginalProductImageUrl(url) {
+        if (typeof url !== 'string' || url.indexOf('/media/catalog/product/cache/') === -1) {
+            return '';
+        }
+
+        const withoutQuery = url.split('?')[0];
+        const queryPart = url.indexOf('?') >= 0 ? url.slice(url.indexOf('?')) : '';
+        const originalPath = withoutQuery.replace(
+            /\/media\/catalog\/product\/cache\/[^/]+\//,
+            '/media/catalog/product/'
+        );
+
+        if (!originalPath || originalPath === withoutQuery) {
+            return '';
+        }
+
+        return `${originalPath}${queryPart}`;
+    }
+
+    function applyProductImageCacheFallback(img) {
+        if (!img || img.nodeType !== 1) {
+            return;
+        }
+
+        const currentSrc = img.currentSrc || img.getAttribute('src') || '';
+        const fallbackSrc = toOriginalProductImageUrl(currentSrc);
+
+        if (!fallbackSrc || img.getAttribute('data-awa-cache-fallback-applied') === '1') {
+            return;
+        }
+
+        img.setAttribute('data-awa-cache-fallback-applied', '1');
+        img.removeAttribute('srcset');
+        img.setAttribute('src', fallbackSrc);
+    }
+
+    function bindProductImageFallback(root) {
+        const scope = root && root.querySelectorAll ? root : document;
+        const images = scope.querySelectorAll('img[src*="/media/catalog/product/cache/"]');
+
+        for (let i = 0; i < images.length; i += 1) {
+            const img = images[i];
+
+            if (img.getAttribute('data-awa-cache-fallback-bound') === '1') {
+                continue;
+            }
+
+            img.setAttribute('data-awa-cache-fallback-bound', '1');
+            img.addEventListener('error', () => {
+                applyProductImageCacheFallback(img);
+            }, { passive: true });
+
+            if (img.complete && img.naturalWidth === 0) {
+                applyProductImageCacheFallback(img);
+            }
+        }
+    }
+
     function measureVisibleTopStackBottom() {
         const selectors = [
             '.header-wrapper-sticky',
@@ -1146,6 +1204,7 @@
     function syncRuntimeLayout() {
         ensureSearchCompatBridge();
         enforceHeaderRuntimeGuards();
+        bindProductImageFallback(document);
         syncA11yLabels();
         syncSearchState();
         classifyTopLinks();

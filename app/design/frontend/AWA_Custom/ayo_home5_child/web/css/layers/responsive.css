@@ -181,24 +181,21 @@ body .page-wrapper .products-grid .product-items {
 
 /* ── Header responsivo ───────────────────────────────────────── */
 @media (width <= 767px) {
-    /* Logo centralizado no mobile */
-    body .page-wrapper .header-content {
-        display: grid;
-        grid-template-columns: 44px 1fr 44px;
-        align-items: center;
-        gap: var(--awa-layer-space-sm);
+    /*
+     * Keep header sections stacked on mobile.
+     * The main search/cart row lives inside .header_main/.wp-header, not in
+     * .header-content root. Forcing a 3-column grid here collapses the
+     * internal header shell to ~44px and creates a large blank area.
+     */
+    body .page-wrapper #header.header-container > .header-content {
+        display: block;
         padding-block: var(--awa-layer-space-sm);
     }
 
-    body .page-wrapper .logo {
-        text-align: center;
-    }
-
-    /* Busca: full-width no mobile */
-    body .page-wrapper .block-search {
-        order: 10;
+    body .page-wrapper #header.header-container > .header-content > .header[data-awa-header-main='true'],
+    body .page-wrapper #header.header-container > .header-content > .header-control.header-nav {
         width: 100%;
-        grid-column: 1 / -1;
+        max-width: 100%;
     }
 }
 
