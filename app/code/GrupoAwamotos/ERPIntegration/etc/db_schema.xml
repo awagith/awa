@@ -2,7 +2,7 @@
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
 
-    <!-- Sync Log Table -->
+    <!-- sync log table -->
     <table name="grupoawamotos_erp_sync_log" resource="default" engine="innodb"
            comment="ERP Integration Sync Log">
         <column xsi:type="int" name="log_id" unsigned="true" nullable="false"
@@ -38,7 +38,7 @@
         </index>
     </table>
 
-    <!-- Entity Mapping Table -->
+    <!-- entity mapping table -->
     <table name="grupoawamotos_erp_entity_map" resource="default" engine="innodb"
            comment="ERP Entity Mapping (ERP Code -> Magento ID)">
         <column xsi:type="int" name="map_id" unsigned="true" nullable="false"
@@ -66,7 +66,7 @@
         </index>
     </table>
 
-    <!-- Sales Goals Table -->
+    <!-- sales goals table -->
     <table name="grupoawamotos_erp_goals" resource="default" engine="innodb"
            comment="ERP Sales Goals/Targets">
         <column xsi:type="int" name="goal_id" unsigned="true" nullable="false"
@@ -101,7 +101,8 @@
             <column name="year_month"/>
         </index>
     </table>
-    <!-- Add customer_erp_code to sales_order for direct ERP access -->
+
+    <!-- add customer_erp_code to sales_order for direct erp access -->
     <table name="sales_order" resource="sales" engine="innodb">
         <column xsi:type="varchar" name="customer_erp_code" nullable="true" length="50"
                 comment="Customer ERP Code (CODIGO from FN_FORNECEDORES)"/>
@@ -112,7 +113,7 @@
                 comment="Customer ERP Code (CODIGO from FN_FORNECEDORES)"/>
     </table>
 
-    <!-- Image Sync Hash Tracking Table -->
+    <!-- image sync hash tracking table -->
     <table name="grupoawamotos_erp_image_hash" resource="default" engine="innodb"
            comment="ERP Image Sync Hash Tracking">
         <column xsi:type="int" name="id" unsigned="true" nullable="false"
@@ -135,8 +136,8 @@
             <column name="sku"/>
             <column name="image_index"/>
         </constraint>
-        <index referenceId="IDX_ERP_IMG_HASH_SKU" indexType="btree">
-            <column name="sku"/>
+        <index referenceId="IDX_ERP_IMG_HASH_SYNCED_AT" indexType="btree">
+            <column name="synced_at"/>
         </index>
     </table>
 </schema>

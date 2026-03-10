@@ -65,6 +65,13 @@ class ImageUpload implements ImageUploadInterface
                 return ['status' => 'error', 'message' => "Extensao '$ext' nao suportada. Use: " . implode(', ', self::SUPPORTED_EXTENSIONS)];
             }
 
+            // Pre-validate base64 size before decoding (prevents memory exhaustion)
+            // base64 encodes 3 bytes as 4 chars, so 10MB decoded ≈ 13.6MB encoded
+            $maxBase64Len = (int) ceil(self::MAX_IMAGE_SIZE * 4 / 3) + 4;
+            if (strlen($imageData) > $maxBase64Len) {
+                return ['status' => 'error', 'message' => 'Dados base64 excedem o limite de tamanho'];
+            }
+
             // Decode base64
             $decoded = base64_decode($imageData, true);
             if ($decoded === false) {

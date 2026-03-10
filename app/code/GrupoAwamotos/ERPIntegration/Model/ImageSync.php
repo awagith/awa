@@ -24,6 +24,12 @@ class ImageSync implements ImageSyncInterface
     private const BATCH_SIZE = 100;
     private const SUPPORTED_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
     private const IMAGE_ROLES = ['image', 'small_image', 'thumbnail'];
+    private const MAX_URL_IMAGE_SIZE = 5 * 1024 * 1024; // 5MB for URL downloads
+    private const MAX_BLOB_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB for ERP BLOB data
+    private const ERP_LABEL_PREFIX = '[ERP] ';
+    private const DOWNLOAD_TIMEOUT = 30;
+    private const MAX_REDIRECTS = 5;
+    private const DOWNLOAD_RETRIES = 2;
 
     private ConnectionInterface $connection;
     private Helper $helper;
@@ -39,6 +45,7 @@ class ImageSync implements ImageSyncInterface
 
     private ?string $mediaPath = null;
     private ?string $tmpPath = null;
+    private ?bool $hashTableExists = null;
 
     public function __construct(
         ConnectionInterface $connection,
@@ -495,24 +502,21 @@ class ImageSync implements ImageSyncInterface
     }
 
     /**
-     * Check if image was manually uploaded (not from ERP sync)
-     * Heuristic: images with custom labels or without ERP sync markers
+     * Check if image was manually uploaded (not from ERP sync).
+     * ERP-synced images carry the [ERP] prefix in their label.
      */
     private function isManuallyUploadedImage($entry): bool
     {
         $label = $entry->getLabel() ?? '';
 
-        // If label contains manual upload indicators
-        $manualIndicators = ['manual', 'admin', 'custom', 'uploaded'];
-        foreach ($manualIndicators as $indicator) {
-            if (stripos($label, $indicator) !== false) {
-                return true;
-            }
+        // ERP-synced images carry the [ERP] prefix — anything without it is manual
+        if (str_starts_with($label, self::ERP_LABEL_PREFIX)) {
+            return false;
         }
 
-        // If label is custom (not empty and not just the SKU)
-        // This is a heuristic - manually uploaded images often have custom labels
-        if (!empty($label) && strlen($label) > 20) {
+        // Empty label could be legacy ERP sync (before prefix was introduced),
+        // so only consider it manual if there's a non-empty label
+        if (!empty($label)) {
             return true;
         }
 
@@ -792,12 +796,29 @@ class ImageSync implements ImageSyncInterface
             return [];
         }
 
-        // Build URL with SKU
         $imageUrl = str_replace('{sku}', $sku, $baseUrl);
 
-        // Check if URL is accessible
-        $headers = @get_headers($imageUrl);
-        if ($headers && strpos($headers[0], '200') !== false) {
+        if (!$this->isAllowedUrl($imageUrl)) {
+            $this->logger->warning('[ERP] Blocked URL for image sync (SSRF protection): ' . $imageUrl);
+            return [];
+        }
+
+        // HEAD request via cURL to check accessibility
+        $ch = curl_init($imageUrl);
+        curl_setopt_array($ch, [
+            CURLOPT_NOBODY => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_MAXREDIRS => self::MAX_REDIRECTS,
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+            CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+        ]);
+        curl_exec($ch);
+        $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode === 200) {
             return [
                 [
                     'path' => $imageUrl,
@@ -932,18 +953,13 @@ class ImageSync implements ImageSyncInterface
 
         try {
             if (filter_var($sourcePath, FILTER_VALIDATE_URL)) {
-                // Download from URL with timeout and size limit
-                $ctx = stream_context_create([
-                    'http' => [
-                        'timeout' => 30,
-                        'max_redirects' => 3,
-                    ],
-                ]);
-                $content = @file_get_contents($sourcePath, false, $ctx);
-                if ($content === false || \strlen($content) > 10 * 1024 * 1024) {
+                if (!$this->isAllowedUrl($sourcePath)) {
+                    $this->logger->warning('[ERP] Blocked URL download (SSRF protection): ' . $sourcePath);
                     return null;
                 }
-                file_put_contents($tmpFile, $content);
+                if (!$this->downloadWithCurl($sourcePath, $tmpFile)) {
+                    return null;
+                }
             } else {
                 // Copy from local/network path
                 if (!copy($sourcePath, $tmpFile)) {
@@ -954,13 +970,16 @@ class ImageSync implements ImageSyncInterface
             // Validate downloaded/copied image
             $imageInfo = @getimagesize($tmpFile);
             if ($imageInfo === false) {
-                $this->ioFile->rm($tmpFile);
+                @unlink($tmpFile);
                 return null;
             }
 
             return $tmpFile;
         } catch (\Exception $e) {
             $this->logger->warning('[ERP] Failed to download image: ' . $e->getMessage());
+            if (file_exists($tmpFile)) {
+                @unlink($tmpFile);
+            }
             return null;
         }
     }
@@ -1000,26 +1019,32 @@ class ImageSync implements ImageSyncInterface
     {
         $sku = $product->getSku();
 
-        $imageContent = $this->imageContentFactory->create();
-        $imageContent->setBase64EncodedData(base64_encode(file_get_contents($imagePath)));
-        $imageContent->setType(mime_content_type($imagePath));
-        // Sanitize name: replace dots with underscores to prevent Magento's
-        // ImageContentValidator from misinterpreting them as file extensions
-        $imageName = str_replace('.', '_', pathinfo($imagePath, PATHINFO_FILENAME));
-        $imageContent->setName($imageName);
+        try {
+            $imageContent = $this->imageContentFactory->create();
+            $imageContent->setBase64EncodedData(base64_encode(file_get_contents($imagePath)));
+            $imageContent->setType(mime_content_type($imagePath));
+            // Sanitize filename: basename to prevent path traversal, then strip unsafe chars
+            $rawName = basename(pathinfo($imagePath, PATHINFO_FILENAME));
+            $imageName = preg_replace('/[^a-zA-Z0-9_-]/', '_', $rawName);
+            $imageContent->setName($imageName);
 
-        $entry = $this->galleryEntryFactory->create();
-        $entry->setMediaType('image');
-        $entry->setLabel($label ?: $sku);
-        $entry->setPosition($position);
-        $entry->setDisabled(false);
-        $entry->setTypes($roles);
-        $entry->setContent($imageContent);
+            // Sanitize label to prevent XSS, add ERP prefix for identification
+            $sanitizedLabel = strip_tags(trim($label ?: $sku));
+            $prefixedLabel = self::ERP_LABEL_PREFIX . $sanitizedLabel;
 
-        $this->mediaGalleryManagement->create($sku, $entry);
+            $entry = $this->galleryEntryFactory->create();
+            $entry->setMediaType('image');
+            $entry->setLabel($prefixedLabel);
+            $entry->setPosition($position);
+            $entry->setDisabled(false);
+            $entry->setTypes($roles);
+            $entry->setContent($imageContent);
 
-        // Clean up tmp file
-        @unlink($imagePath);
+            $this->mediaGalleryManagement->create($sku, $entry);
+        } finally {
+            // Clean up tmp file in all cases (success or exception)
+            @unlink($imagePath);
+        }
     }
 
     /**
@@ -1121,7 +1146,9 @@ class ImageSync implements ImageSyncInterface
     }
 
     /**
-     * Detect if data is binary (VARBINARY/IMAGE blob) vs a path string
+     * Detect if data is binary (VARBINARY/IMAGE blob) vs a path string.
+     * Checks magic bytes first for known image formats, then falls back to
+     * non-printable character detection.
      */
     private function isBinaryData($data): bool
     {
@@ -1129,7 +1156,27 @@ class ImageSync implements ImageSyncInterface
             return true;
         }
 
-        // If it contains non-printable bytes in the first 100 chars, it's binary
+        if (strlen($data) < 4) {
+            return false; // Too short to be an image blob — likely a path
+        }
+
+        // Check magic bytes for known image formats
+        $header = substr($data, 0, 4);
+        if (
+            str_starts_with($header, "\xFF\xD8\xFF")   // JPEG
+            || str_starts_with($header, "\x89PNG")      // PNG
+            || str_starts_with($header, "GIF8")         // GIF
+            || str_starts_with($header, "RIFF")         // WEBP
+        ) {
+            return true;
+        }
+
+        // If it looks like a file path (starts with / or drive letter), it's not binary
+        if (preg_match('#^[a-zA-Z]:[/\\\\]|^/#', $data)) {
+            return false;
+        }
+
+        // Fallback: check for non-printable bytes
         return preg_match('/[^\x20-\x7E\x0A\x0D\x09]/', substr($data, 0, 100)) === 1;
     }
 
@@ -1138,6 +1185,11 @@ class ImageSync implements ImageSyncInterface
      */
     private function saveBlobToTmp(string $blobData, string $sku, int $index): ?string
     {
+        if (strlen($blobData) > self::MAX_BLOB_IMAGE_SIZE) {
+            $this->logger->warning(sprintf('[ERP] Blob for SKU %s exceeds 10MB limit (%d bytes)', $sku, strlen($blobData)));
+            return null;
+        }
+
         $tmpDir = $this->getTmpPath();
         $ext = $this->detectImageExtension($blobData);
         $tmpFile = $tmpDir . DIRECTORY_SEPARATOR . $sku . '_blob_' . $index . '.' . $ext;
@@ -1190,8 +1242,7 @@ class ImageSync implements ImageSyncInterface
             $connection = $this->syncLogResource->getConnection();
             $tableName = $connection->getTableName('grupoawamotos_erp_image_hash');
 
-            // Check if table exists (first sync after upgrade)
-            if (!$connection->isTableExists($tableName)) {
+            if (!$this->isHashTableExists($connection, $tableName)) {
                 return null;
             }
 
@@ -1216,7 +1267,7 @@ class ImageSync implements ImageSyncInterface
             $connection = $this->syncLogResource->getConnection();
             $tableName = $connection->getTableName('grupoawamotos_erp_image_hash');
 
-            if (!$connection->isTableExists($tableName)) {
+            if (!$this->isHashTableExists($connection, $tableName)) {
                 return;
             }
 
@@ -1240,6 +1291,131 @@ class ImageSync implements ImageSyncInterface
         } catch (\Exception $e) {
             $this->logger->debug(sprintf('[ERP] Failed to save image hash for SKU %s: %s', $sku, $e->getMessage()));
         }
+    }
+
+    /**
+     * Check if the image hash table exists (cached per request)
+     */
+    private function isHashTableExists($connection, string $tableName): bool
+    {
+        if ($this->hashTableExists === null) {
+            $this->hashTableExists = $connection->isTableExists($tableName);
+        }
+        return $this->hashTableExists;
+    }
+
+    /**
+     * Validate URL is allowed for download (SSRF protection).
+     * Rejects private IPs, localhost, metadata endpoints, and non-HTTP(S) schemes.
+     */
+    private function isAllowedUrl(string $url): bool
+    {
+        $parsed = parse_url($url);
+        if (!$parsed || !isset($parsed['host'])) {
+            return false;
+        }
+
+        $scheme = strtolower($parsed['scheme'] ?? '');
+        if (!in_array($scheme, ['http', 'https'], true)) {
+            return false;
+        }
+
+        $host = strtolower($parsed['host']);
+
+        // Block localhost and metadata endpoints
+        $blockedHosts = ['localhost', '127.0.0.1', '0.0.0.0', '[::1]', '169.254.169.254', 'metadata.google.internal'];
+        if (in_array($host, $blockedHosts, true)) {
+            return false;
+        }
+
+        // Resolve hostname and validate IP
+        $ip = gethostbyname($host);
+        if ($ip === $host) {
+            return false; // DNS resolution failed
+        }
+
+        // Block private and reserved IP ranges
+        if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Download URL via cURL with SSRF protection, Content-Type validation,
+     * size limits, redirect handling, and retry logic.
+     */
+    private function downloadWithCurl(string $url, string $destPath): bool
+    {
+        $lastError = '';
+
+        for ($attempt = 1; $attempt <= self::DOWNLOAD_RETRIES; $attempt++) {
+            $fp = fopen($destPath, 'wb');
+            if ($fp === false) {
+                return false;
+            }
+
+            $ch = curl_init($url);
+            curl_setopt_array($ch, [
+                CURLOPT_FILE => $fp,
+                CURLOPT_TIMEOUT => self::DOWNLOAD_TIMEOUT,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_MAXREDIRS => self::MAX_REDIRECTS,
+                CURLOPT_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+                CURLOPT_REDIR_PROTOCOLS => CURLPROTO_HTTP | CURLPROTO_HTTPS,
+                CURLOPT_MAXFILESIZE => self::MAX_URL_IMAGE_SIZE,
+                CURLOPT_FAILONERROR => true,
+            ]);
+
+            $success = curl_exec($ch);
+            $httpCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $contentType = curl_getinfo($ch, CURLINFO_CONTENT_TYPE) ?: '';
+            $lastError = curl_error($ch);
+            $effectiveUrl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+            curl_close($ch);
+            fclose($fp);
+
+            if (!$success || $httpCode !== 200) {
+                @unlink($destPath);
+                if ($attempt < self::DOWNLOAD_RETRIES) {
+                    usleep($attempt * 500_000); // Backoff: 0.5s, 1s
+                    continue;
+                }
+                $this->logger->warning(sprintf(
+                    '[ERP] Image download failed after %d attempts: %s (HTTP %d, error: %s)',
+                    self::DOWNLOAD_RETRIES,
+                    $url,
+                    $httpCode,
+                    $lastError
+                ));
+                return false;
+            }
+
+            // Validate effective URL after redirects (SSRF via redirect)
+            if ($effectiveUrl && $effectiveUrl !== $url) {
+                if (!$this->isAllowedUrl($effectiveUrl)) {
+                    @unlink($destPath);
+                    $this->logger->warning('[ERP] Redirect to blocked URL: ' . $effectiveUrl);
+                    return false;
+                }
+            }
+
+            // Validate Content-Type is an image
+            if (!empty($contentType) && stripos($contentType, 'image/') !== 0) {
+                @unlink($destPath);
+                $this->logger->warning(sprintf(
+                    '[ERP] Invalid Content-Type for image download: %s (URL: %s)',
+                    $contentType,
+                    $url
+                ));
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
