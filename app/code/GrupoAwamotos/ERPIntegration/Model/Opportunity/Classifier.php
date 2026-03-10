@@ -463,7 +463,7 @@ class Classifier
      */
     private function buildCacheKey(int $customerCode, string $type, array $filters): string
     {
-        return self::CACHE_PREFIX . $customerCode . '_' . $type . '_' . md5(json_encode($filters));
+        return self::CACHE_PREFIX . $customerCode . '_' . $type . '_' . hash('sha256', json_encode($filters));
     }
 
     /**

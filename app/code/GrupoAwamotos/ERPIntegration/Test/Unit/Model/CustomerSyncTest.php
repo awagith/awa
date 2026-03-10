@@ -266,7 +266,7 @@ class CustomerSyncTest extends TestCase
         $this->connection->method('query')->willReturn([$customerData]);
 
         // Same hash means no changes
-        $dataHash = md5(json_encode($customerData));
+        $dataHash = hash('sha256', json_encode($customerData));
         $this->syncLogResource->method('getEntityMapHash')->willReturn($dataHash);
 
         // Should NOT try to create/update customer

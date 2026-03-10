@@ -1,0 +1,126 @@
+<?php
+/**
+ * Footer Static 5 — Sobre Empresa, Links Rápidos, Políticas e Ajuda, Horário + Redes Sociais.
+ * Template controlado por Git, substituindo o CMS block footer_static5.
+ * Social links inlinados (elimina a query do CMS block social_block por request).
+ *
+ * @var \Magento\Framework\View\Element\Template $block
+ * @var \Magento\Framework\Escaper $escaper
+ */
+declare(strict_types=1);
+
+/** @var \GrupoAwamotos\B2B\Helper\Config $b2bConfig */
+$b2bConfig = $this->helper('GrupoAwamotos\\B2B\\Helper\\Config');
+$isB2bEnabled = $b2bConfig->isEnabled();
+$isStrictB2b = $isB2bEnabled && $b2bConfig->isStrictB2B();
+$accountUrl = $isStrictB2b ? $block->getUrl('b2b/account/login') : $block->getUrl('customer/account');
+$accountLabel = $isStrictB2b ? 'Acesse Sua Conta' : 'Crie Sua Conta';
+$registerUrl = $isB2bEnabled ? $block->getUrl('b2b/register') : $block->getUrl('customer/account/create');
+$brandsUrl = $block->getUrl('', ['_direct' => 'marcas.html']);
+$aboutUrl = $block->getUrl('about-us');
+$termsUrl = $block->getUrl('termos-e-condicoes');
+$privacyUrl = $block->getUrl('privacy-policy-cookie-restriction-mode');
+$shippingUrl = $block->getUrl('shipping');
+$returnsUrl = $block->getUrl('returns');
+$warrantyUrl = $block->getUrl('warranty');
+?>
+<div class="footer-static velaBlock awa-b2b-footer-static" role="contentinfo">
+    <div class="container">
+        <div class="row">
+
+            <!-- Coluna 1: Atendimento e Horários -->
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="vela-content footer-about awa-b2b-footer-col">
+                    <h4 class="velaFooterTitle">Atendimento AWA</h4>
+                    <div class="velaContent">
+                        <ul class="footer-hours list-unstyled mb-3" role="list">
+                            <li><strong>Seg&ndash;Sex:</strong> 08h às 18h</li>
+                            <li><strong>Sábado:</strong> 08h às 12h</li>
+                        </ul>
+                        <div class="footer-contact-list">
+                            <div class="contact-item d-flex align-items-start mb-2">
+                                <i class="fa fa-whatsapp mt-1 mr-2" aria-hidden="true"></i>
+                                <a href="https://wa.me/5516997367588" target="_blank" rel="noopener noreferrer">(16) 99736-7588</a>
+                            </div>
+                            <div class="contact-item d-flex align-items-start mb-2">
+                                <i class="fa fa-phone mt-1 mr-2" aria-hidden="true"></i>
+                                <a href="tel:+551633220000">(16) 3322-0000</a>
+                            </div>
+                            <div class="contact-item d-flex align-items-start mb-2">
+                                <i class="fa fa-envelope mt-1 mr-2" aria-hidden="true"></i>
+                                <a href="mailto:contato@awamotos.com.br">contato@awamotos.com.br</a>
+                            </div>
+                            <div class="contact-item d-flex align-items-start mb-2">
+                                <i class="fa fa-map-marker mt-1 mr-2" aria-hidden="true"></i>
+                                <span>Rua Castro Alves, 1234&nbsp;&mdash; Centro, Araraquara-SP</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna 2: Portal do Lojista -->
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="vela-content awa-b2b-footer-col">
+                    <h4 class="velaFooterTitle">Portal do Lojista</h4>
+                    <div class="velaContent">
+                        <ul class="footer-links list-unstyled font-weight-bold" role="list">
+                            <li><a href="<?= $escaper->escapeUrl($accountUrl) ?>"><?= $escaper->escapeHtml(__($accountLabel)) ?></a></li>
+                            <li><a href="<?= $escaper->escapeUrl($registerUrl) ?>">Cadastro B2B</a></li>
+                            <li><a href="/sales/order/history/">Meus Pedidos</a></li>
+                            <li><a href="/b2b/quickorder/">Compra Rápida</a></li>
+                            <li><a href="<?= $escaper->escapeUrl($brandsUrl) ?>">Comprar por Marca</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna 3: Institucional e Políticas -->
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="vela-content awa-b2b-footer-col">
+                    <h4 class="velaFooterTitle">Políticas e Ajuda</h4>
+                    <div class="velaContent">
+                        <ul class="footer-links list-unstyled" role="list">
+                            <li><a href="<?= $escaper->escapeUrl($aboutUrl) ?>">Sobre a AWA Motos</a></li>
+                            <li><a href="<?= $escaper->escapeUrl($termsUrl) ?>">Termos e Condições</a></li>
+                            <li><a href="<?= $escaper->escapeUrl($privacyUrl) ?>">Política de Privacidade</a></li>
+                            <li><a href="<?= $escaper->escapeUrl($shippingUrl) ?>">Política de Envio</a></li>
+                            <li><a href="<?= $escaper->escapeUrl($returnsUrl) ?>">Trocas e Devoluções</a></li>
+                            <li><a href="<?= $escaper->escapeUrl($warrantyUrl) ?>">Garantia</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Coluna 4: Newsletter + Redes Sociais -->
+            <div class="col-lg-3 col-md-6 col-sm-12">
+                <div class="vela-content awa-b2b-footer-col">
+                    <h4 class="velaFooterTitle">Novidades p/ Lojistas</h4>
+                    <div class="velaContent">
+                        <p class="mb-3 text-sm text-light">Receba encartes de peças e ofertas exclusivas no atacado.</p>
+                        <?= $block->getLayout()->createBlock('Magento\Newsletter\Block\Subscribe')->setTemplate('Magento_Newsletter::subscribe.phtml')->toHtml(); ?>
+
+                        <div class="footer-social-section mt-4">
+                            <h5 class="mb-2 text-uppercase font-weight-bold" style="font-size: 12px; letter-spacing: 0.5px;">Siga-nos:</h5>
+                            <div class="social-links d-flex" style="gap: 16px;" aria-label="Redes sociais da AWA Motos">
+                                <a href="https://www.instagram.com/awamotos" target="_blank" rel="noopener noreferrer" class="instagram" aria-label="Instagram">
+                                    <i class="fa fa-instagram fa-lg" aria-hidden="true"></i>
+                                </a>
+                                <a href="https://www.facebook.com/awamotos" target="_blank" rel="noopener noreferrer" class="facebook" aria-label="Facebook">
+                                    <i class="fa fa-facebook fa-lg" aria-hidden="true"></i>
+                                </a>
+                                <a href="https://www.youtube.com/@awamotos" target="_blank" rel="noopener noreferrer" class="youtube" aria-label="YouTube">
+                                    <i class="fa fa-youtube fa-lg" aria-hidden="true"></i>
+                                </a>
+                                <a href="https://wa.me/5516997367588" target="_blank" rel="noopener noreferrer" class="whatsapp" aria-label="WhatsApp">
+                                    <i class="fa fa-whatsapp fa-lg" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

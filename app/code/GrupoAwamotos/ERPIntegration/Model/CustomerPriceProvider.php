@@ -157,7 +157,7 @@ class CustomerPriceProvider
         }
 
         // Check persistent cache
-        $persistKey = self::CACHE_PREFIX . md5($cacheKey);
+        $persistKey = self::CACHE_PREFIX . hash('sha256', $cacheKey);
         $cached = $this->cache->load($persistKey);
         if ($cached !== false) {
             $price = $cached === '' ? null : (float) $cached;

@@ -224,7 +224,7 @@ class ProductSuggestion
      */
     public function getComplementaryProducts(string $materialCode, int $limit = 5): array
     {
-        $cacheKey = self::CACHE_PREFIX . 'complementary_' . md5($materialCode);
+        $cacheKey = self::CACHE_PREFIX . 'complementary_' . hash('sha256', $materialCode);
         $cached = $this->cache->load($cacheKey);
 
         if ($cached) {

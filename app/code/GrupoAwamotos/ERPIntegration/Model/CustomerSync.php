@@ -305,7 +305,7 @@ class CustomerSync implements CustomerSyncInterface
                 'customer',
                 (string)$erpCode,
                 $customerId,
-                md5(json_encode($erpCustomer))
+                hash('sha256', json_encode($erpCustomer))
             );
 
             // Atualiza atributo custom no cliente
@@ -491,7 +491,7 @@ class CustomerSync implements CustomerSyncInterface
         }
 
         $erpCode = (int)$row['CODIGO'];
-        $dataHash = md5(json_encode($row));
+        $dataHash = hash('sha256', json_encode($row));
 
         // Verifica se dados mudaram desde último sync
         $existingHash = $this->syncLogResource->getEntityMapHash('customer', (string)$erpCode);

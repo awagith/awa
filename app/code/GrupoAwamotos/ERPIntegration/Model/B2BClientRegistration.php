@@ -89,7 +89,7 @@ class B2BClientRegistration
         }
 
         try {
-            $validadorHash = strtoupper(md5(json_encode([
+            $validadorHash = strtoupper(hash('sha256', json_encode([
                 'CODIGO' => $erpClientCode,
                 'source' => 'magento_b2b',
                 'ts' => date('Y-m-d'),
@@ -109,7 +109,7 @@ class B2BClientRegistration
             ]);
 
             // 2. Register address
-            $enderecoHash = strtoupper(md5(json_encode([
+            $enderecoHash = strtoupper(hash('sha256', json_encode([
                 'CODIGO' => $erpClientCode,
                 'ENDERECO' => 1,
                 'source' => 'magento_b2b',
@@ -209,8 +209,8 @@ class B2BClientRegistration
 
         foreach ($unregistered as $c) {
             $code = $c['erp_code'];
-            $hash = strtoupper(md5(json_encode(['CODIGO' => $code, 'source' => 'magento_b2b'])));
-            $hashEnd = strtoupper(md5(json_encode(['CODIGO' => $code, 'ENDERECO' => 1, 'source' => 'magento_b2b'])));
+            $hash = strtoupper(hash('sha256', json_encode(['CODIGO' => $code, 'source' => 'magento_b2b'])));
+            $hashEnd = strtoupper(hash('sha256', json_encode(['CODIGO' => $code, 'ENDERECO' => 1, 'source' => 'magento_b2b'])));
 
             $sql .= "-- Cliente: " . $c['razao'] . " (CNPJ: " . $c['cgc'] . ")\n";
             $sql .= "INSERT INTO GR_INTEGRACAOVALIDADOR (INTEGRACAOORIGEM, CHAVE, VALIDADOR, CHAVEEXTERNA, DTSINCRONIZACAO)\n";

@@ -240,7 +240,7 @@ class ProductSyncTest extends TestCase
         $this->connection->method('query')->willReturn([$erpProduct]);
 
         // Same hash exists in entity map
-        $expectedHash = md5(json_encode($erpProduct));
+        $expectedHash = hash('sha256', json_encode($erpProduct));
         $this->syncLogResource->method('getEntityMapHash')
             ->with('product', 'SKU-001')
             ->willReturn($expectedHash);

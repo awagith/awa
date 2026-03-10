@@ -261,7 +261,7 @@ class CategorySyncTest extends TestCase
         $this->categoryRepository->method('get')->willReturn($rootCategory);
 
         // Same hash → skipped
-        $dataHash = md5(json_encode($erpCategories[0]));
+        $dataHash = hash('sha256', json_encode($erpCategories[0]));
         $this->syncLogResource->method('getEntityMapHash')
             ->with('category', 'CAT01')
             ->willReturn($dataHash);
