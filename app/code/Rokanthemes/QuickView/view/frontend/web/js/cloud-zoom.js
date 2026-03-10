@@ -318,13 +318,13 @@
         };
 
         img1 = new Image();
-        $(img1).on('load', function() { 
+        $(img1).on('load', function() {
             ctx.init2(this, 0);
         });
         img1.src = sImg.attr('src');
 
         img2 = new Image();
-        $(img2).on('load', function() { 
+        $(img2).on('load', function() {
             ctx.init2(this, 1);
         });
         img2.src = jWin.attr('href');
@@ -336,10 +336,20 @@
             document.execCommand("BackgroundImageCache", false, true);
         } catch (e) {}
         this.each(function () {
-            var	relOpts, opts;
-            // Hmm...eval...slap on wrist.
-            eval('var	a = {' + $(this).attr('rel') + '}');
-            relOpts = a;
+            var relOpts = {}, opts;
+            var relAttr = $(this).attr('rel');
+
+            if (relAttr) {
+                try {
+                    var normalizedRelAttr = relAttr
+                        .replace(/(^|,)\s*([a-zA-Z0-9_]+)\s*:/g, '$1"$2":')
+                        .replace(/'/g, '"');
+                    relOpts = JSON.parse('{' + normalizedRelAttr + '}');
+                } catch (ignore) {
+                    relOpts = {};
+                }
+            }
+
             if ($(this).is('.cloud-zoom')) {
                 opts = $.extend({}, $.fn.CloudZoom.defaults, options);
                 opts = $.extend({}, opts, relOpts);

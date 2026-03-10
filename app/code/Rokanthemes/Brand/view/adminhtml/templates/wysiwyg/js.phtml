@@ -72,7 +72,7 @@ var brandWysiwygEditor = {
     },
     okDialogWindow : function(dialogWindow) {
         if (dialogWindow.options.firedElementId) {
-            wysiwygObj = eval('wysiwyg'+dialogWindow.options.firedElementId+'_editor');
+            wysiwygObj = window['wysiwyg' + dialogWindow.options.firedElementId + '_editor'];
             wysiwygObj.turnOff();
             if (tinyMCE.get(wysiwygObj.id)) {
                 $(dialogWindow.options.firedElementId).value = tinyMCE.get(wysiwygObj.id).getContent();
@@ -99,7 +99,7 @@ var brandWysiwygEditor = {
         }
 
         //destroy the instance of editor
-        wysiwygObj = eval('wysiwyg'+dialogWindow.options.firedElementId+'_editor');
+        wysiwygObj = window['wysiwyg' + dialogWindow.options.firedElementId + '_editor'];
         if (tinyMCE.get(wysiwygObj.id)) {
            tinyMCE.execCommand('mceRemoveControl', true, wysiwygObj.id);
         }
