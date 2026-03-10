@@ -24,6 +24,21 @@ $compatSlideshow = trim((string) $this->getChildHtml('slideshow.top'));
 								<div class="top-info" data-awa-header-account-group="true">
 									<?= $this->getChildHtml('awaB2bModeBadge') ?>
 									<?= $this->getChildHtml('awa.header.contact.links') ?>
+									
+									<div class="awa-b2b-commercial-shortcuts hidden-xs">
+										<a href="<?= $block->escapeUrl($block->getUrl('b2b/quickorder')) ?>" class="awa-shortcut-link" title="<?= $block->escapeHtmlAttr(__('Pedido Rápido')) ?>">
+											<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+											<span><?= $block->escapeHtml(__('Pedido Rápido')) ?></span>
+										</a>
+										<a href="<?= $block->escapeUrl($block->getUrl('b2b/quote')) ?>" class="awa-shortcut-link" title="<?= $block->escapeHtmlAttr(__('Minhas Cotações')) ?>">
+											<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="M8 14h.01"/><path d="M12 14h.01"/><path d="M16 14h.01"/><path d="M8 18h.01"/><path d="M12 18h.01"/><path d="M16 18h.01"/></svg>
+											<span><?= $block->escapeHtml(__('Cotações')) ?></span>
+										</a>
+										<a href="<?= $block->escapeUrl($block->getUrl('sales/order/history')) ?>" class="awa-shortcut-link" title="<?= $block->escapeHtmlAttr(__('Minhas Compras e Recompra')) ?>">
+											<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/></svg>
+											<span><?= $block->escapeHtml(__('Recompra')) ?></span>
+										</a>
+									</div>
 									<div class="top-account has-child" data-awa-top-account="true">
 										<?php echo $this->getChildHtml("top.links"); ?>
 									</div>

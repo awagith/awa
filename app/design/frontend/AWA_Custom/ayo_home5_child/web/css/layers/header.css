@@ -8,7 +8,7 @@
    ================================================================ */
 
 /* ── Sticky header base ──────────────────────────────────────── */
-.page-header {
+#header.header-container {
     position: sticky;
     top: 0;
     z-index: var(--awa-layer-z-header, 900);
@@ -17,13 +17,13 @@
     transition: box-shadow 200ms ease;
 }
 
-.page-header.is-scrolled,
-.page-header.sticky-active {
+#header.header-container.is-scrolled,
+#header.header-container.sticky-active {
     box-shadow: 0 2px 12px rgb(0 0 0 / 8%);
 }
 
 /* ── Header principal ────────────────────────────────────────── */
-.header.content {
+.header-content {
     display: flex;
     align-items: center;
     gap: var(--awa-layer-space-md);
@@ -96,8 +96,7 @@
     background: var(--awa-layer-color-primary-dark, #8e2629);
 }
 
-/* Header links (conta, minicart) */
-.header.links,
+/* Header links (conta) */
 .header-account-links {
     display: flex;
     align-items: center;
@@ -108,12 +107,10 @@
     padding: 0;
 }
 
-.header.links li,
 .header-account-links li {
     position: relative;
 }
 
-.header.links a,
 .header-account-links a {
     display: flex;
     align-items: center;
@@ -128,7 +125,6 @@
     white-space: nowrap;
 }
 
-.header.links a:hover,
 .header-account-links a:hover {
     color: var(--awa-layer-color-primary);
     background: var(--awa-layer-surface-soft);
@@ -297,25 +293,10 @@
 
 /* ── Top bar institucional ───────────────────────────────────── */
 .awa-header-topbar,
-.header-top-bar,
-.panel.header {
+.header-top-bar {
     background: var(--awa-layer-color-text);
     color: rgb(255 255 255 / 75%);
     font-size: 0.75rem;
-}
-
-.panel.header .header.links {
-    justify-content: flex-end;
-}
-
-.panel.header .header.links a {
-    color: rgb(255 255 255 / 75%);
-    font-size: 0.75rem;
-}
-
-.panel.header .header.links a:hover {
-    color: #fff;
-    background: transparent;
 }
 
 /* ── Autocomplete / suggestions ──────────────────────────────── */
@@ -371,7 +352,7 @@
         display: flex;
     }
 
-    .header.content {
+    .header-content {
         flex-wrap: wrap;
         gap: 8px;
         padding-block: 8px;
@@ -387,11 +368,6 @@
         order: 3;
         flex: 0 0 100%;
         min-width: 0;
-    }
-
-    /* Links de conta: ocultos, movidos para menu mobile */
-    .header.links:not(.panel .header.links) {
-        display: none;
     }
 
     /* Nav sections: offcanvas */
@@ -473,7 +449,7 @@
 
 /* ── Tablet: 768–1023px ──────────────────────────────────────── */
 @media (width >= 768px) and (width <= 1023px) {
-    .header.content {
+    .header-content {
         gap: var(--awa-layer-space-sm);
     }
 
@@ -485,184 +461,6 @@
     .navigation li.level0 > a {
         padding-inline: 12px;
         font-size: 0.8125rem;
-    }
-}
-
-/* ══════════════════════════════════════════════════════════════
-   MEGA MENU — padrão B2B enterprise
-   ════════════════════════════════════════════════════════════ */
-
-/* Mega menu container (Rokanthemes CustomMenu com fullwidth) */
-.navigation li.level0.fullwidth > ul.level0,
-.navigation li.level0[class*="mega"] > ul.level0,
-.navigation .nav-item.level0.fullwidth > .submenu {
-    left: 50%;
-    transform: translateX(-50%);
-    width: min(1320px, 96vw);
-    min-width: min(1320px, 96vw);
-    flex-flow: row wrap;
-    padding: 24px;
-    gap: 0;
-    column-gap: 0;
-}
-
-/* Grupo de coluna dentro do mega menu */
-.navigation .mega-group,
-.navigation li.level0.fullwidth > ul.level0 > li.level1.mega-group {
-    flex: 0 0 25%;
-    padding: 0 20px 20px 0;
-    border-right: 1px solid #f0f4f8;
-}
-
-.navigation .mega-group:last-child {
-    border-right: none;
-    padding-right: 0;
-}
-
-/* Título de categoria no mega menu */
-.navigation .mega-group__title,
-.navigation li.level0.fullwidth > ul.level0 > li.level1 > a {
-    display: block;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    padding: 0 0 10px;
-    margin-bottom: 8px;
-    border-bottom: 1px solid #f0f4f8;
-    pointer-events: none;
-}
-
-/* Sub-itens de segundo nível no mega menu */
-.navigation li.level0.fullwidth > ul.level0 li.level2 a,
-.navigation .mega-group li.level2 a {
-    padding: 6px 0;
-    font-size: 0.8125rem;
-    color: #475569;
-    border: none;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: color 120ms ease, gap 120ms ease;
-}
-
-.navigation li.level0.fullwidth > ul.level0 li.level2 a:hover,
-.navigation .mega-group li.level2 a:hover {
-    color: var(--awa-layer-color-primary);
-    gap: 10px;
-    background: transparent;
-}
-
-/* Seta micro no hover do item de submenu */
-.navigation li.level0.fullwidth > ul.level0 li.level2 a::before {
-    content: '›';
-    opacity: 0;
-    transition: opacity 120ms ease;
-    color: var(--awa-layer-color-primary);
-    font-size: 1rem;
-    line-height: 1;
-}
-
-.navigation li.level0.fullwidth > ul.level0 li.level2 a:hover::before {
-    opacity: 1;
-}
-
-/* Badge "Novo" / "Oferta" nos itens do mega menu */
-.navigation .mega-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-size: 0.5625rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    pointer-events: none;
-    margin-left: auto;
-    flex-shrink: 0;
-}
-
-.navigation .mega-badge--new {
-    background: #dbeafe;
-    color: #1d4ed8;
-}
-
-.navigation .mega-badge--sale {
-    background: #fee2e2;
-    color: #b91c1c;
-}
-
-/* Bloco promocional dentro do mega menu (banner lateral) */
-.navigation .mega-promo {
-    flex: 0 0 25%;
-    padding: 0 0 0 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    border-left: 1px solid #f0f4f8;
-}
-
-.navigation .mega-promo__card {
-    background: linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%);
-    border: 1px solid #fecaca;
-    border-radius: 8px;
-    padding: 16px;
-    text-decoration: none;
-    display: block;
-    transition: box-shadow 150ms ease;
-}
-
-.navigation .mega-promo__card:hover {
-    box-shadow: 0 4px 12px rgb(183 51 55 / 15%);
-    text-decoration: none;
-}
-
-.navigation .mega-promo__card-label {
-    font-size: 0.625rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--awa-layer-color-primary);
-    display: block;
-    margin-bottom: 4px;
-}
-
-.navigation .mega-promo__card-title {
-    font-size: 0.875rem;
-    font-weight: 700;
-    color: #1e293b;
-    line-height: 1.4;
-}
-
-/* ── Animação de abertura suave ────────────────────────────── */
-@media (hover: hover) {
-    .navigation li.level0 ul.level0 {
-        display: flex;
-        opacity: 0;
-        transform: translateY(-6px);
-        pointer-events: none;
-        transition: opacity 180ms ease, transform 180ms ease;
-    }
-
-    .navigation li.level0:hover ul.level0,
-    .navigation li.level0:focus-within ul.level0 {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: auto;
-    }
-}
-
-/* Fallback para touch/no-hover (mantém display none/flex original) */
-@media (hover: none) {
-    .navigation li.level0 ul.level0 {
-        display: none;
-    }
-
-    .navigation li.level0.open ul.level0,
-    .navigation li.level0.active ul.level0 {
-        display: flex;
     }
 }
 

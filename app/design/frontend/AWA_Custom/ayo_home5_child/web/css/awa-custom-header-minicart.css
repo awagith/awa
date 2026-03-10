@@ -48,15 +48,10 @@ body .page-wrapper .awa-header-contact-links__items {
 body .page-wrapper .awa-header-contact-links__item {
     display: inline-flex;
     align-items: center;
-    gap: var(--awa-gap-xs);
     min-height: 32px;
     padding: 4px 10px;
     border-radius: var(--awa-radius-pill, 999px);
     border: 1px solid var(--border-color, #e2e8f0);
-    background: var(--awa-bg-surface);
-    color: var(--text-color, #1e293b);
-    font-size: var(--awa-text-xs);
-    font-weight: var(--awa-weight-semibold);
     line-height: 1.15;
     text-decoration: none;
     transition: border-color var(--awa-transition, 250ms cubic-bezier(0.4, 0, 0.2, 1)), background-color var(--awa-transition, 250ms cubic-bezier(0.4, 0, 0.2, 1)), box-shadow var(--awa-transition, 250ms cubic-bezier(0.4, 0, 0.2, 1));
@@ -72,19 +67,19 @@ body .page-wrapper .awa-header-contact-links__item:hover {
 body .page-wrapper .awa-header-contact-links__item:focus-visible {
     outline: none;
     border-color: var(--awa-brand-primary);
-    box-shadow: 0 0 0 3px rgb(183 51 55 / 18%);
+    box-shadow: 0 0 0 3px var(--awa-brand-opacity-18);
 }
 
 body .page-wrapper .awa-header-contact-links__item--whatsapp {
-    border-color: rgb(34 197 94 / 24%);
-    background: rgb(34 197 94 / 10%);
-    color: #166534;
+    border-color: var(--awa-whatsapp-border);
+    background: var(--awa-whatsapp-bg);
+    color: var(--awa-whatsapp-text);
 }
 
 body .page-wrapper .awa-header-contact-links__item--whatsapp:hover {
-    border-color: rgb(34 197 94 / 36%);
-    background: rgb(34 197 94 / 14%);
-    color: #166534;
+    border-color: var(--awa-whatsapp-border-hover);
+    background: var(--awa-whatsapp-bg-hover);
+    color: var(--awa-whatsapp-text-hover);
 }
 
 body .page-wrapper .awa-header-contact-links__icon {
@@ -193,7 +188,7 @@ body .page-wrapper .top-account ul.header.links > li > a:hover {
 body .page-wrapper .top-account ul.header.links > li > a:focus-visible {
     outline: none;
     border-color: var(--awa-brand-primary);
-    box-shadow: 0 0 0 3px rgb(183 51 55 / 18%);
+    box-shadow: 0 0 0 3px var(--awa-brand-opacity-18);
 }
 
 /* ================================================================
@@ -442,7 +437,7 @@ body .page-wrapper .header .top-search .minicart-wrapper .block-minicart {
     border-radius: var(--awa-radius-xl, 16px);
     box-shadow: var(--awa-shadow-lg, 0 8px 30px rgb(0 0 0 / 10%));
     backdrop-filter: blur(8px);
-    background: rgb(255 255 255 / 98%);
+    background: var(--awa-bg-surface-overlay-98);
 }
 
 body .page-wrapper .header .top-search .minicart-wrapper .block-minicart .action.viewcart,
@@ -502,9 +497,9 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
 
 @media (width >= 768px) {
     body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header-control .menu_primary {
-        flex: 0 0 83.333333% !important;
-        width: 83.333333% !important;
-        max-width: 83.333333% !important;
+        flex: 0 0 83.3333% !important;
+        width: 83.3333% !important;
+        max-width: 83.3333% !important;
     }
 }
 
@@ -903,7 +898,7 @@ body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .he
     body .page-wrapper .header .top-search .minicart-wrapper .block-minicart {
         width: min(360px, calc(100vw - 12px));
         max-width: calc(100vw - 12px);
-        right: -4px;
+        right: 0;
     }
 }
 
@@ -948,13 +943,6 @@ body .page-wrapper .header .top-search .block-search form.form.minisearch .actio
     flex: 0 0 48px !important;
     height: var(--awa-btn-height) !important;
     max-height: var(--awa-btn-height) !important;
-}
-
-body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header-control .action.nav-toggle,
-body:not(.cms-index-index, .cms-home, .cms-homepage_ayo_home5) .page-wrapper .header-control .nav-toggle {
-    display: none !important;
-    visibility: hidden !important;
-    pointer-events: none !important;
 }
 
 @media (width >= 768px) {

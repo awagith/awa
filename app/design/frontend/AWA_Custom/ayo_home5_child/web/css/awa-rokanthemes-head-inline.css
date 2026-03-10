@@ -446,6 +446,63 @@
     margin: 0 auto !important;
     max-width: 100% !important;
   }
+  
+  /* B2B Commercial Shortcuts */
+  .awa-b2b-commercial-shortcuts {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-left: auto;
+      margin-right: 20px;
+  }
+  .awa-b2b-commercial-shortcuts .awa-shortcut-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #1a1a1a !important; /* Dark text for B2B portal feel */
+      font-size: 13px !important;
+      font-weight: 500;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+      background: #f8f9fa;
+      border: 1px solid #e4e9f0;
+      text-decoration: none !important;
+  }
+  .top-header .awa-b2b-commercial-shortcuts .awa-shortcut-link {
+      color: rgb(255 255 255 / 90%) !important;
+      background: rgb(255 255 255 / 10%);
+      border: 1px solid rgb(255 255 255 / 15%);
+  }
+  .awa-b2b-commercial-shortcuts .awa-shortcut-link:hover {
+      background: #fff;
+      border-color: var(--awa-layer-color-primary, #b73337);
+      color: var(--awa-layer-color-primary, #b73337) !important;
+  }
+  .top-header .awa-b2b-commercial-shortcuts .awa-shortcut-link:hover {
+      background: rgb(255 255 255 / 20%);
+      border-color: rgb(255 255 255 / 40%);
+      color: #fff !important;
+  }
+  .awa-b2b-commercial-shortcuts svg {
+      width: 16px;
+      height: 16px;
+  }
+  
+  /* De-emphasize retail top links and keep them tight */
+  .top-account .header.links {
+      display: flex;
+      align-items: center;
+  }
+  .top-account .header.links .link.wishlist,
+  .top-account .header.links .link.compare {
+      opacity: 0.6;
+      font-size: 12px !important;
+  }
+  .top-account .header.links .link.wishlist:hover,
+  .top-account .header.links .link.compare:hover {
+      opacity: 1;
+  }
 
   body .page-wrapper .header .wp-header > [class*="col-"] {
     float: none !important; padding: 0 !important; margin: 0 !important;
@@ -524,8 +581,22 @@
 
   /* block-search fills remaining space; minicart is small fixed width on the right */
   body .wp-header .top-search .block-search { flex: 1 1 auto !important; min-width: 0 !important; }
-  body .wp-header .top-search .mini-cart-wrapper { flex: 0 0 auto !important; margin: 0 !important; }
+  body .wp-header .top-search .mini-cart-wrapper { flex: 0 0 auto !important; margin: 0 !important; pointer-events: auto !important; }
   body .wp-header .top-search .hoteline_header { display: none !important; }
+  
+  /* B2B PERFORMANCE: Disable the flying minicart dropdown dialogue *completely* */
+  .block-minicart[data-role="dropdownDialog"],
+  .minicart-wrapper .block-minicart {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+  }
+  
+  /* B2B SEARCH: Hide the category selector dropdown inside the search bar so the SKU input takes full width */
+  body .wp-header .block-search .field-by-cat-search {
+      display: none !important;
+  }
 
   /* NAV BAR: tokenized bg/height/border */
   .header-control.header-nav, .header-nav {
@@ -594,12 +665,48 @@
     color: #fff !important; padding: 0 16px !important;
   }
 
-  /* Ocultar icones FA no nav desktop */
+  /* Ocultar icones FA no nav desktop e vertical menu para limpeza visual (B2B Scanability) */
   .header-nav .level-top > a > i.fa,
   .header-nav .level-top > a > i[class*="fa-"],
   .header-nav a.level-top > i.fa,
   .container-header-sticky .level-top > a > i.fa,
-  .header-nav .rokanthemes-custom-menu i.fa { display: none !important; }
+  .header-nav .rokanthemes-custom-menu i.fa,
+  .navigation.custommenu.rokanthemes-custom-menu .level0 > a > i.fa,
+  .navigation.custommenu.rokanthemes-custom-menu .level0 > a > .icon-font { display: none !important; }
+
+  /* VERTICAL MENU B2B OPTIMIZATIONS (SAFE JS LAYER) */
+  /* Remove promotional banners from vertical dropdowns sem quebrar JS */
+  .navigation.custommenu.rokanthemes-custom-menu .mega-block-right,
+  .navigation.custommenu.rokanthemes-custom-menu .mega-block-bottom,
+  .navigation.custommenu.rokanthemes-custom-menu .mega-block-top {
+      display: none !important;
+  }
+  
+  /* Ajuste de padding/margem para compensar a perda do bloco direito */
+  .navigation.custommenu.rokanthemes-custom-menu ul.mega-block-left {
+      width: 100% !important;
+      padding-right: 0 !important;
+  }
+
+  /* =========================================================
+     COMPORTAMENTO HOME 12: Menu Vertical sempre aberto na Home
+  ========================================================= */
+  @media (min-width: 992px) {
+      body.cms-index-index .navigation.verticalmenu .togge-menu {
+          display: block !important;
+          opacity: 1 !important;
+          visibility: visible !important;
+      }
+      /* Remove o ícone de setinha (dropdown) pois agora é fixo */
+      body.cms-index-index .navigation.verticalmenu .title-category-dropdown i.fa-angle-down {
+          display: none !important;
+      }
+      /* Previne o clique acidental de fechar via Javascript */
+      body.cms-index-index .navigation.verticalmenu .title-category-dropdown {
+          pointer-events: none !important;
+          cursor: default !important;
+      }
+  }
 
   /* Badge Quente! */
   .header-nav .menu-label--hot, .header-nav .menu-label {
@@ -620,3 +727,34 @@
   .nav-sections .level-top > a > i.fa,
   .nav-sections .level-top > a > i[class*="fa-"] { display: none !important; }
 }
+
+/* =========================================================
+   B2B FUNNEL REFINEMENT: PLP, PDP & CART
+========================================================= */
+
+/* B2B PLP (Categories): Hide retail elements and emphasize SKU */
+.products-grid .product-rating,
+.products-list .product-rating { display: none !important; }
+
+.awa-b2b-sku__value { font-size: 1.15em !important; font-weight: 700 !important; color: #111 !important; }
+.awa-b2b-sku { border-bottom: 1px dashed #ddd; padding-bottom: 4px; margin-bottom: 8px; margin-top: 4px; }
+
+/* B2B PDP (Product Detail): Brutalist tech spec box & hide shares */
+.awa-b2b-pdp-technical-summary table {
+    border: 2px solid #333 !important;
+    background: #fdfdfd !important;
+    width: 100% !important;
+    margin-bottom: 15px !important;
+}
+.awa-b2b-pdp-technical-summary td { padding: 8px 12px !important; border-bottom: 1px solid #ccc !important; font-size: 14px !important; color: #333 !important; font-weight: 600 !important; }
+.awa-b2b-pdp-technical-summary tr:last-child td { border-bottom: 0 !important; }
+.awa-b2b-pdp-technical-summary td:first-child { background: #f0f0f0 !important; width: 40% !important; border-right: 1px solid #ccc !important; color: #555 !important; font-weight: bold !important; }
+
+.product-social-links,
+.product-addto-links,
+.block-bundle-summary .product-addto-links { display: none !important; }
+
+/* B2B Cart: Expand QTY and hide cross-sells */
+.cart-container .crosssell,
+.cart-summary .block.discount { display: none !important; }
+.cart-container .control.qty input.qty { width: 80px !important; text-align: center !important; font-weight: bold !important; font-size: 16px !important; }

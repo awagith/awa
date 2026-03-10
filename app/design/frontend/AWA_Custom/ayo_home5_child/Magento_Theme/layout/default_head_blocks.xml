@@ -1,22 +1,40 @@
 <?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
+        <!-- Remove stack legado herdado do tema pai (substituído por layers/*) -->
+        <remove src="css/source/_awa-tokens.css"/>
+        <remove src="css/awa-core.css"/>
+        <remove src="css/awa-layout.css"/>
+        <remove src="css/awa-components.css"/>
+        <remove src="css/awa-consistency.css"/>
+        <remove src="css/awa-consistency-ui.css"/>
+        <remove src="css/awa-fixes.css"/>
+        <remove src="css/awa-grid-unified.css"/>
+
         <css src="css/awa-vertical-menu-mueller.css"/>
         <css src="css/awa-custom-brand-bridge.css"/>
         <css src="css/awa-custom-header-minicart.css"/>
         <css src="css/awa-custom-footer-trust.css"/>
         <css src="css/awa-custom-global-brand.css"/>
         <css src="css/awa-custom-ux-refine.css"/>
+        <css src="css/awa-rokanthemes-head-inline.css"/>
         <css src="css/b2b/gate/refine.css"/>
         <css src="css/layers/tokens.css"/>
         <css src="css/layers/base.css"/>
         <css src="css/layers/layout.css"/>
+        <css src="css/layers/awa-layout-semantic.css"/>
         <css src="css/layers/header.css"/>
         <css src="css/layers/typography.css"/>
         <css src="css/layers/forms.css"/>
         <css src="css/layers/buttons.css"/>
-        <css src="css/layers/components.css"/>
+        <!-- components.css decomposed into 7 sub-files (phase 1) -->
+        <css src="css/layers/components/carousel.css"/>
+        <css src="css/layers/components/navigation.css"/>
+        <css src="css/layers/components/messages-alerts.css"/>
+        <css src="css/layers/components/badges-status.css"/>
+        <css src="css/layers/components/tables.css"/>
+        <css src="css/layers/components/product-cards.css"/>
+        <css src="css/layers/components/b2b-panels.css"/>
         <css src="css/layers/utilities.css"/>
         <css src="css/layers/a11y.css"/>
         <css src="css/layers/responsive.css"/>
