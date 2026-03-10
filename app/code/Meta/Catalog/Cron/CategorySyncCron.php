@@ -68,7 +68,7 @@ class CategorySyncCron
                 }
 
                 $categories[] = [
-                    'id' => 'cat_' . $categoryId,
+                    // Meta categories endpoint rejects "id" in data payload (#100).
                     'name' => $name,
                     'url' => $url
                 ];

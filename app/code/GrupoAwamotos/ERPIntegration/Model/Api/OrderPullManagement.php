@@ -168,6 +168,18 @@ class OrderPullManagement implements OrderPullInterface
             (int) $order->getEntityId()
         );
 
+        // Mark as imported in SQL Bridge dedup table (oc_order_imported)
+        // This removes the order from oc_order VIEW so Sectra doesn't re-import via SQL
+        $connection = $this->syncLogResource->getConnection();
+        $connection->insertOnDuplicate(
+            'oc_order_imported',
+            [
+                'order_id' => (int) $order->getEntityId(),
+                'date_imported' => date('Y-m-d H:i:s'),
+            ],
+            ['date_imported']
+        );
+
         // Update order status to 'processing' if still pending/new
         $currentState = $order->getState();
         if (in_array($currentState, [

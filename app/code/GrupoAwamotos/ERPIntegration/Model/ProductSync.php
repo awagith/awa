@@ -17,6 +17,7 @@ use Magento\Catalog\Api\CategoryLinkManagementInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\App\State as AppState;
+use Magento\Eav\Model\Config as EavConfig;
 use Psr\Log\LoggerInterface;
 
 class ProductSync implements ProductSyncInterface
@@ -41,6 +42,7 @@ class ProductSync implements ProductSyncInterface
     private LoggerInterface $logger;
     private AppState $appState;
     private CategoryLinkManagementInterface $categoryLinkManagement;
+    private EavConfig $eavConfig;
     private ?int $defaultAttributeSetId = null;
 
     public function __construct(
@@ -53,7 +55,8 @@ class ProductSync implements ProductSyncInterface
         ProductValidator $productValidator,
         LoggerInterface $logger,
         AppState $appState,
-        CategoryLinkManagementInterface $categoryLinkManagement
+        CategoryLinkManagementInterface $categoryLinkManagement,
+        EavConfig $eavConfig
     ) {
         $this->connection = $connection;
         $this->helper = $helper;
@@ -65,6 +68,7 @@ class ProductSync implements ProductSyncInterface
         $this->logger = $logger;
         $this->appState = $appState;
         $this->categoryLinkManagement = $categoryLinkManagement;
+        $this->eavConfig = $eavConfig;
     }
 
     /**
@@ -107,7 +111,9 @@ class ProductSync implements ProductSyncInterface
 
         // SQL Server requires integer literals for OFFSET/FETCH, not parameters
         if ($limit > 0) {
-            $sql .= " OFFSET {$offset} ROWS FETCH NEXT {$limit} ROWS ONLY";
+            $safeOffset = (int) $offset;
+            $safeLimit = (int) $limit;
+            $sql .= " OFFSET {$safeOffset} ROWS FETCH NEXT {$safeLimit} ROWS ONLY";
         }
 
         $params = [
@@ -314,7 +320,7 @@ class ProductSync implements ProductSyncInterface
         }
 
         // Check if data has changed using hash
-        $dataHash = md5(json_encode($erpProduct));
+        $dataHash = hash('sha256', json_encode($erpProduct, JSON_THROW_ON_ERROR));
         $existingHash = $this->syncLogResource->getEntityMapHash('product', $sku);
 
         if ($existingHash === $dataHash) {
@@ -531,8 +537,8 @@ class ProductSync implements ProductSyncInterface
     private function getDefaultAttributeSetId(): int
     {
         if ($this->defaultAttributeSetId === null) {
-            // Get from default product or use 4 as fallback
-            $this->defaultAttributeSetId = 4;
+            $entityType = $this->eavConfig->getEntityType(\Magento\Catalog\Api\Data\ProductAttributeInterface::ENTITY_TYPE_CODE);
+            $this->defaultAttributeSetId = (int) $entityType->getDefaultAttributeSetId();
         }
 
         return $this->defaultAttributeSetId;
@@ -610,9 +616,34 @@ class ProductSync implements ProductSyncInterface
                 ':sku' => $sku,
             ]);
 
-            return $row !== null;
+            if ($row === null) {
+                $this->logger->warning('[ERP] Product not found in ERP for SKU: ' . $sku);
+                return false;
+            }
+
+            $validationResult = $this->productValidator->validate($row);
+            if (!$validationResult->isValid()) {
+                $this->logger->warning('[ERP] Single product validation failed', [
+                    'sku' => $sku,
+                    'errors' => $validationResult->getErrors(),
+                ]);
+                return false;
+            }
+
+            $websiteIds = [$this->storeManager->getDefaultStoreView()->getWebsiteId()];
+            $result = $this->syncSingleProduct($row, $websiteIds, $validationResult);
+
+            $this->logger->info('[ERP] Single product sync completed', [
+                'sku' => $sku,
+                'result' => $result,
+            ]);
+
+            return $result !== 'skipped' || true;
         } catch (\Exception $e) {
-            $this->logger->error('[ERP] Single product sync error: ' . $e->getMessage());
+            $this->logger->error('[ERP] Single product sync error', [
+                'sku' => $sku,
+                'error' => $e->getMessage(),
+            ]);
             return false;
         }
     }

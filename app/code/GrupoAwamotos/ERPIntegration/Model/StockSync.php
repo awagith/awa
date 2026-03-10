@@ -59,7 +59,7 @@ class StockSync implements StockSyncInterface
      */
     private function generateCacheKeys(string $sku, array $filiais): array
     {
-        $suffix = md5($sku . '_' . implode(',', $filiais));
+        $suffix = hash('sha256', $sku . '_' . implode(',', $filiais));
         return [
             'positive' => self::CACHE_PREFIX . $suffix,
             'negative' => self::CACHE_NEGATIVE_PREFIX . $suffix,
@@ -80,10 +80,14 @@ class StockSync implements StockSyncInterface
 
         $cached = $this->cache->load($cacheKey);
         if ($cached !== false) {
-            $decoded = json_decode($cached, true);
-            if (is_array($decoded)) {
-                $this->logger->debug('[ERP] Stock cache hit for SKU: ' . $sku);
-                return $decoded;
+            try {
+                $decoded = json_decode($cached, true, 512, JSON_THROW_ON_ERROR);
+                if (is_array($decoded)) {
+                    $this->logger->debug('[ERP] Stock cache hit for SKU: ' . $sku);
+                    return $decoded;
+                }
+            } catch (\JsonException $e) {
+                $this->logger->warning('[ERP] Corrupted stock cache for SKU: ' . $sku);
             }
             $this->cache->remove($cacheKey);
         }
@@ -100,7 +104,7 @@ class StockSync implements StockSyncInterface
             $result['cached_at'] = date('Y-m-d H:i:s');
             $result['cache_ttl'] = $this->helper->getStockCacheTtl();
             $tags = $this->buildCacheTags($result);
-            $this->cache->save(json_encode($result), $cacheKey, $tags, $this->helper->getStockCacheTtl());
+            $this->cache->save(json_encode($result, JSON_THROW_ON_ERROR), $cacheKey, $tags, $this->helper->getStockCacheTtl());
             $this->logger->debug('[ERP] Stock cached for SKU: ' . $sku);
         } else {
             $this->cache->save('not_found', $negativeCacheKey, ['erp_stock', 'erp_stock_negative'], $this->helper->getNegativeCacheTtl());
@@ -288,19 +292,17 @@ class StockSync implements StockSyncInterface
     public function invalidateCache(string $sku): void
     {
         $filiais = $this->helper->getStockFiliais();
-        $cacheKey = self::CACHE_PREFIX . md5($sku . '_' . implode(',', $filiais));
-        $negativeCacheKey = self::CACHE_NEGATIVE_PREFIX . md5($sku . '_' . implode(',', $filiais));
+        $keys = $this->generateCacheKeys($sku, $filiais);
 
         // Remove both positive and negative cache
-        $this->cache->remove($cacheKey);
-        $this->cache->remove($negativeCacheKey);
+        $this->cache->remove($keys['positive']);
+        $this->cache->remove($keys['negative']);
 
         // Also invalidate single-branch cache key for backwards compatibility
         if (count($filiais) === 1) {
-            $singleKey = self::CACHE_PREFIX . md5($sku . '_' . $filiais[0]);
-            $singleNegativeKey = self::CACHE_NEGATIVE_PREFIX . md5($sku . '_' . $filiais[0]);
-            $this->cache->remove($singleKey);
-            $this->cache->remove($singleNegativeKey);
+            $singleKeys = $this->generateCacheKeys($sku, [$filiais[0]]);
+            $this->cache->remove($singleKeys['positive']);
+            $this->cache->remove($singleKeys['negative']);
         }
 
         $this->logger->debug('[ERP] Stock cache invalidated for SKU: ' . $sku);

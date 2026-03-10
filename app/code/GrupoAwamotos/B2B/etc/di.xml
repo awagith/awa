@@ -3,6 +3,8 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="GrupoAwamotos\B2B\Api\PriceVisibilityInterface"
                 type="GrupoAwamotos\B2B\Model\PriceVisibility"/>
+    <preference for="GrupoAwamotos\B2B\Api\QuoteRequestRepositoryInterface"
+                type="GrupoAwamotos\B2B\Model\QuoteRequestRepository"/>
 
     <type name="GrupoAwamotos\B2B\Model\PriceVisibility">
         <arguments>
@@ -74,4 +76,48 @@
             </argument>
         </arguments>
     </type>
+
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="b2b_carrier_listing_data_source" xsi:type="string">GrupoAwamotos\B2B\Model\ResourceModel\Carrier\Grid\Collection</item>
+                <item name="grupoawamotos_b2b_approval_listing_data_source" xsi:type="string">GrupoAwamotos\B2B\Model\ResourceModel\OrderApproval\Grid\Collection</item>
+                <item name="grupoawamotos_b2b_notification_listing_data_source" xsi:type="string">GrupoAwamotos\B2B\Model\ResourceModel\NotificationLog\Grid\Collection</item>
+                <item name="grupoawamotos_b2b_attendant_listing_data_source" xsi:type="string">GrupoAwamotos\B2B\Model\ResourceModel\Attendant\Grid\Collection</item>
+                <item name="grupoawamotos_b2b_customer_listing_data_source" xsi:type="string">Magento\Customer\Model\ResourceModel\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+
+    <virtualType name="GrupoAwamotos\B2B\Model\ResourceModel\Carrier\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">grupoawamotos_b2b_carrier</argument>
+            <argument name="resourceModel" xsi:type="string">GrupoAwamotos\B2B\Model\ResourceModel\Carrier</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="GrupoAwamotos\B2B\Model\ResourceModel\OrderApproval\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">grupoawamotos_b2b_order_approval</argument>
+            <argument name="resourceModel" xsi:type="string">GrupoAwamotos\B2B\Model\ResourceModel\OrderApproval</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="GrupoAwamotos\B2B\Model\ResourceModel\NotificationLog\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">grupoawamotos_b2b_notifications</argument>
+            <argument name="resourceModel" xsi:type="string">GrupoAwamotos\B2B\Model\ResourceModel\NotificationLog</argument>
+        </arguments>
+    </virtualType>
+
+    <virtualType name="GrupoAwamotos\B2B\Model\ResourceModel\Attendant\Grid\Collection"
+                 type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">grupoawamotos_b2b_attendants</argument>
+            <argument name="resourceModel" xsi:type="string">GrupoAwamotos\B2B\Model\ResourceModel\Attendant</argument>
+        </arguments>
+    </virtualType>
 </config>

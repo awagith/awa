@@ -7,6 +7,7 @@
             <module name="Magento_Theme"/>
             <module name="Magento_Backend"/>
             <module name="Magento_AdminNotification"/>
+            <module name="Mirasvit_Core"/>
         </sequence>
     </module>
 </config>

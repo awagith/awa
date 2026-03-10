@@ -247,15 +247,23 @@ class CircuitBreaker
             ];
         }
 
-        $decoded = json_decode($data, true);
-        return is_array($decoded) ? $decoded : [];
+        try {
+            $decoded = json_decode($data, true, 512, JSON_THROW_ON_ERROR);
+            return is_array($decoded) ? $decoded : [];
+        } catch (\JsonException $e) {
+            $this->logger->warning('[ERP CircuitBreaker] Corrupted state data, resetting', [
+                'service' => $this->serviceName,
+                'error' => $e->getMessage(),
+            ]);
+            return [];
+        }
     }
 
     private function saveStateData(array $data): void
     {
         $cacheKey = $this->getCacheKey();
         $this->cache->save(
-            json_encode($data),
+            json_encode($data, JSON_THROW_ON_ERROR),
             $cacheKey,
             ['erp_circuit_breaker'],
             self::CACHE_LIFETIME
@@ -326,6 +334,12 @@ class CircuitBreaker
         return max(0, $remaining);
     }
 
+    /**
+     * @note Race condition: read-modify-write on Redis cache is not atomic.
+     * Concurrent cron jobs may overwrite each other's increments. Acceptable
+     * because circuit breaker thresholds are soft limits (5 failures, 3 successes)
+     * and the worst case is a slightly delayed state transition.
+     */
     private function incrementFailureCount(): int
     {
         $data = $this->getStateData();
@@ -336,6 +350,7 @@ class CircuitBreaker
         return $data['failure_count'];
     }
 
+    /** @see incrementFailureCount() for race condition note */
     private function incrementSuccessCount(): int
     {
         $data = $this->getStateData();

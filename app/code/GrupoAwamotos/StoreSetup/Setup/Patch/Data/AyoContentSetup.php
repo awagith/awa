@@ -293,7 +293,7 @@ HTML;
                         <ul class="footer-links" role="list">
                             <li><a href="/about-us">Sobre Nós</a></li>
                             <li><a href="/blog">Blog</a></li>
-                            <li><a href="/brands">Nossas Marcas</a></li>
+                            <li><a href="{{store url='marcas.html'}}">Nossas Marcas</a></li>
                             <li><a href="/store-locator">Nossa Loja</a></li>
                             <li><a href="/faq">Perguntas Frequentes</a></li>
                             <li><a href="/customer/account/create">Crie Sua Conta</a></li>
@@ -308,8 +308,8 @@ HTML;
                     <h4 class="velaFooterTitle">Políticas e Ajuda</h4>
                     <div class="velaContent">
                         <ul class="footer-links" role="list">
-                            <li><a href="/termos-e-condicoes">Termos e Condições</a></li>
-                            <li><a href="/politica-de-privacidade">Política de Privacidade</a></li>
+                            <li><a href="{{store url='termos-e-condicoes'}}">Termos e Condições</a></li>
+                            <li><a href="{{store url='privacy-policy-cookie-restriction-mode'}}">Política de Privacidade</a></li>
                             <li><a href="/shipping">Política de Envio</a></li>
                             <li><a href="/returns">Trocas e Devoluções</a></li>
                             <li><a href="/warranty">Garantia</a></li>
@@ -472,11 +472,11 @@ HTML;
                 <li><a href="/about-us">Sobre Nós</a></li>
                 <li><a href="/blog">Blog</a></li>
                 <li><a href="/faq">FAQ</a></li>
-                <li><a href="/brands">Marcas</a></li>
+                <li><a href="{{store url='marcas.html'}}">Marcas</a></li>
                 <li><a href="/store-locator">Loja Física</a></li>
                 <li><a href="/customer-service">Atendimento</a></li>
-                <li><a href="/termos-e-condicoes">Termos</a></li>
-                <li><a href="/politica-de-privacidade">Privacidade</a></li>
+                <li><a href="{{store url='termos-e-condicoes'}}">Termos</a></li>
+                <li><a href="{{store url='privacy-policy-cookie-restriction-mode'}}">Privacidade</a></li>
             </ul>
         </div>
     </div>

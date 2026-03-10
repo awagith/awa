@@ -13,6 +13,7 @@
     <body>
         <referenceContainer name="notices.wrapper" remove="true"/>
         <referenceContainer name="page.formkey" remove="true"/>
+        <referenceContainer name="page.main.container" remove="true"/>
         <referenceContainer name="page.main.actions" remove="true"/>
         <referenceContainer name="menu.wrapper" remove="true"/>
     </body>
